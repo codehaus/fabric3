@@ -56,7 +56,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.jaxb.control.api.JAXBTransformationService;
-import org.fabric3.scdl.PolicyAware;
+import org.fabric3.model.type.PolicyAware;
 import org.w3c.dom.Document;
 
 public class JMSBindingLoaderTestCase extends TestCase {

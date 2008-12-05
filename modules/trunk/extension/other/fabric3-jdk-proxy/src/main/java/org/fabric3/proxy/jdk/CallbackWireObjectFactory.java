@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.fabric3.spi.invocation.WorkContextTunnel;
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.ScopeContainer;

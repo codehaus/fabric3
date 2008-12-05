@@ -16,30 +16,30 @@
  */
 package org.fabric3.exist.introspection;
 
-import antlr.collections.AST;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import antlr.collections.AST;
 import org.exist.xquery.ExternalModule;
 import org.exist.xquery.PathExpr;
 import org.exist.xquery.parser.XQueryLexer;
 import org.exist.xquery.parser.XQueryParser;
 import org.exist.xquery.parser.XQueryTreeParser;
-import org.fabric3.xquery.introspection.*;
-import org.fabric3.xquery.scdl.XQueryComponentType;
-import org.fabric3.xquery.scdl.XQueryImplementation;
-
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.component.InvalidImplementation;
+import org.fabric3.model.type.component.MissingResource;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.validation.InvalidImplementation;
-import org.fabric3.scdl.validation.MissingResource;
+import org.fabric3.xquery.introspection.XQueryImplementationProcessor;
+import org.fabric3.xquery.scdl.XQueryComponentType;
+import org.fabric3.xquery.scdl.XQueryImplementation;
 import org.fabric3.xquery.scdl.XQueryServiceContract;
 
 /**

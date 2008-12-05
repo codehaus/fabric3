@@ -16,8 +16,8 @@
  */
 package org.fabric3.web.introspection;
 
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.ValidationFailure;
 
 /**
  * Denotes an illegal reference declaration.

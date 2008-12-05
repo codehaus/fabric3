@@ -29,8 +29,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;

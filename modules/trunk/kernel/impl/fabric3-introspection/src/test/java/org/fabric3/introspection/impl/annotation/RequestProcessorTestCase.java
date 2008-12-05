@@ -40,9 +40,9 @@ import junit.framework.TestCase;
 
 import org.fabric3.api.annotation.scope.Request;
 import org.fabric3.api.annotation.scope.Scopes;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 @SuppressWarnings("unchecked")
 public class RequestProcessorTestCase extends TestCase {

@@ -22,8 +22,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.List;
 
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**

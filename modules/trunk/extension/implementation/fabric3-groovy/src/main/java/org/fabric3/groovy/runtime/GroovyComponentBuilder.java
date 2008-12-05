@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;

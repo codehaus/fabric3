@@ -38,7 +38,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.definitions.PolicySet;
 
 import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.developer.JAXWSProperties;

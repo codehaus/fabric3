@@ -23,9 +23,9 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeReference;
-import org.fabric3.scdl.CompositeService;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.CompositeReference;
+import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;

@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.generator;
 
-import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 

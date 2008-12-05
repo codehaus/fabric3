@@ -18,7 +18,7 @@ package org.fabric3.spi.services.contribution;
 
 import java.util.jar.Manifest;
 
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * @version $Revision$ $Date$

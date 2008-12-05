@@ -16,7 +16,7 @@
  */
 package org.fabric3.xquery.scdl;
 
-import org.fabric3.scdl.ComponentType;
+import org.fabric3.model.type.component.ComponentType;
 
 /**
  * @version $Rev$ $Date$

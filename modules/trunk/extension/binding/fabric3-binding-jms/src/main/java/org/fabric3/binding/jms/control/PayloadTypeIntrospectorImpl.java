@@ -42,8 +42,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.Namespaces;
 
 /**

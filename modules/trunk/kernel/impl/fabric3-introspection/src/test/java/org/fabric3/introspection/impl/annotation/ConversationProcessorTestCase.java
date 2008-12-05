@@ -40,9 +40,9 @@ import junit.framework.TestCase;
 
 import org.fabric3.api.annotation.scope.Conversation;
 import org.fabric3.api.annotation.scope.Scopes;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 @SuppressWarnings("unchecked")
 public class ConversationProcessorTestCase extends TestCase {
@@ -51,8 +51,8 @@ public class ConversationProcessorTestCase extends TestCase {
         
         ConversationAnnotated componentToProcess = new ConversationAnnotated();
         Conversation annotation = componentToProcess.getClass().getAnnotation(Conversation.class);        
-        ConversationProcessor<Implementation<? extends InjectingComponentType>> processor = 
-                                new ConversationProcessor<Implementation<? extends InjectingComponentType>>();        
+        ConversationProcessor<Implementation<? extends InjectingComponentType>> processor =
+                                new ConversationProcessor<Implementation<? extends InjectingComponentType>>();
         processor.visitType(annotation, componentToProcess.getClass(), componentToProcess, null);
         
         assertEquals("Unexpected scope", Scopes.CONVERSATION, componentToProcess.getScope());

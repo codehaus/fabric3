@@ -16,7 +16,7 @@
  */
 package org.fabric3.web.provision;
 
-import org.fabric3.scdl.InjectionSite;
+import org.fabric3.model.type.java.InjectionSite;
 
 /**
  * An injection site specialized for web applications.

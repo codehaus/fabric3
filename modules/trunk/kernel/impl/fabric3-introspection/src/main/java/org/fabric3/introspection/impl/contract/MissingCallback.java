@@ -16,7 +16,7 @@
  */
 package org.fabric3.introspection.impl.contract;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
 
 /**
  * Denotes an missing callback interface

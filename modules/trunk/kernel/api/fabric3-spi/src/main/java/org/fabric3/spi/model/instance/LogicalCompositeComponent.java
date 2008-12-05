@@ -23,8 +23,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.CompositeImplementation;
 
 /**
  * Represents a composite component.

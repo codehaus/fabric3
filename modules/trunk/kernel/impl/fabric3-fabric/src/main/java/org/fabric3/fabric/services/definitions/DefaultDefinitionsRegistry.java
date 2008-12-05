@@ -24,11 +24,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.definitions.AbstractDefinition;
-import org.fabric3.scdl.definitions.BindingType;
-import org.fabric3.scdl.definitions.ImplementationType;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.definitions.AbstractDefinition;
+import org.fabric3.model.type.definitions.BindingType;
+import org.fabric3.model.type.definitions.ImplementationType;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.Resource;

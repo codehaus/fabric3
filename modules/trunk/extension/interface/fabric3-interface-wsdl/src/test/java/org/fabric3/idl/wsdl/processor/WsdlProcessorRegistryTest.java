@@ -25,8 +25,8 @@ import junit.framework.TestCase;
 
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.DefaultWsdlVersionChecker;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 
 /**
  * @version $Revision$ $Date$

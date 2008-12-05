@@ -41,7 +41,7 @@ import org.osoa.sca.Constants;
 import org.w3c.dom.Document;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding

@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResult;
 

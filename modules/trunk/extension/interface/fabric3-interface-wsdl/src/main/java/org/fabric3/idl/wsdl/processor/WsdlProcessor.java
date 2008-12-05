@@ -22,7 +22,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.Operation;
 
 /**
  * Abstraction for processing WSDL.

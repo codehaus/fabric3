@@ -18,7 +18,7 @@ package org.fabric3.rs.scdl;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.spi.Namespaces;
 
 /**

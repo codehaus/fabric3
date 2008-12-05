@@ -19,7 +19,7 @@ package org.fabric3.transform.dom2java;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;

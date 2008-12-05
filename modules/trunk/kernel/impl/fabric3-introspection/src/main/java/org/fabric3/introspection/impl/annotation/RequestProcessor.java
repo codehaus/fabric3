@@ -39,8 +39,8 @@ import org.osoa.sca.annotations.Scope;
 import org.fabric3.api.annotation.scope.Request;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 
 public class RequestProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Request, I> {

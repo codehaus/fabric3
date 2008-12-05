@@ -35,9 +35,9 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
-import org.fabric3.scdl.ConstructorInjectionSite;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectionSite;
+import org.fabric3.model.type.java.ConstructorInjectionSite;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectionSite;
 
 /**
  * @version $Rev$ $Date$

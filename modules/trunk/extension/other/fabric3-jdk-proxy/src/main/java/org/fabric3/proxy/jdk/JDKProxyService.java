@@ -47,7 +47,7 @@ import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;

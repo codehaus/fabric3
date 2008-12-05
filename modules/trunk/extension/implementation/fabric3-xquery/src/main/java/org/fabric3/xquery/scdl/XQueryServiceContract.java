@@ -19,8 +19,8 @@
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import javax.xml.namespace.QName;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

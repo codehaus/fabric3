@@ -18,7 +18,8 @@ package org.fabric3.binding.test;
 
 import java.net.URI;
 
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
+
 import org.w3c.dom.Document;
 
 /**

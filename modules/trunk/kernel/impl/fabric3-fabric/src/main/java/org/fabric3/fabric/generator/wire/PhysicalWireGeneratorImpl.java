@@ -26,14 +26,14 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ResourceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;

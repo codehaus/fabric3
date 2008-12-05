@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.model.type;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 
 /**
  * Specialization of DataType for Java Classes.

@@ -18,7 +18,7 @@ package org.fabric3.spi.model.type;
 
 import java.lang.reflect.ParameterizedType;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 
 /**
  *

@@ -18,9 +18,8 @@ package org.fabric3.resource.model;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ResourceDefinition;
 
 /**
  *

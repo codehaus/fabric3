@@ -23,10 +23,10 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
-import org.fabric3.scdl.JavaServiceContract;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.service.JavaServiceContract;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;

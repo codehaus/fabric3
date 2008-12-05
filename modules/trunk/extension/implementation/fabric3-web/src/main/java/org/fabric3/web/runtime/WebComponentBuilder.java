@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.container.web.spi.WebApplicationActivator;
-import org.fabric3.scdl.InjectionSite;
+import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;

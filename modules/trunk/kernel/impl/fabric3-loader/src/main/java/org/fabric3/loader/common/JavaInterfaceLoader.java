@@ -49,7 +49,7 @@ import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.ResourceNotFound;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * Loads a Java interface definition from an XML-based assembly file

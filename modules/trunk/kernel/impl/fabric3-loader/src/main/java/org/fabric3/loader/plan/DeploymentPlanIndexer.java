@@ -27,7 +27,7 @@ import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;

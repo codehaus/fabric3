@@ -34,7 +34,7 @@
  */
 package org.fabric3.spi.component;
 
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 
 /**
  * Manages {@link ScopeContainer}s in the runtime

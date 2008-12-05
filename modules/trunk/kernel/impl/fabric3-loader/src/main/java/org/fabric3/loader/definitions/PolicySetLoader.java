@@ -43,8 +43,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-import org.fabric3.scdl.definitions.PolicyPhase;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.definitions.PolicyPhase;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;

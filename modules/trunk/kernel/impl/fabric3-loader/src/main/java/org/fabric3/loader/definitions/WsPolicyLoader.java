@@ -25,14 +25,14 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.scdl.policy.AllPolicyOperator;
-import org.fabric3.scdl.policy.ComplexAssertionParameter;
-import org.fabric3.scdl.policy.ExactlyOnePolicyOperator;
-import org.fabric3.scdl.policy.PolicyAssertion;
-import org.fabric3.scdl.policy.PolicyNode;
-import org.fabric3.scdl.policy.PolicyOperator;
-import org.fabric3.scdl.policy.PolicyOperatorParent;
-import org.fabric3.scdl.policy.SimpleAssertionParameter;
+import org.fabric3.model.type.policy.AllPolicyOperator;
+import org.fabric3.model.type.policy.ComplexAssertionParameter;
+import org.fabric3.model.type.policy.ExactlyOnePolicyOperator;
+import org.fabric3.model.type.policy.PolicyAssertion;
+import org.fabric3.model.type.policy.PolicyNode;
+import org.fabric3.model.type.policy.PolicyOperator;
+import org.fabric3.model.type.policy.PolicyOperatorParent;
+import org.fabric3.model.type.policy.SimpleAssertionParameter;
 
 public class WsPolicyLoader {
     

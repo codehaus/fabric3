@@ -21,7 +21,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.Constants;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.component.Implementation;
 
 /**
  * Represents a Java component implementation type.

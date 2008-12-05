@@ -16,12 +16,11 @@
  */
 package org.fabric3.rs.control;
 
-import java.net.URI;
 import org.fabric3.rs.scdl.RsBindingDefinition;
 import org.fabric3.rs.provision.RsWireSourceDefinition;
 import org.fabric3.rs.provision.RsWireTargetDefinition;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;

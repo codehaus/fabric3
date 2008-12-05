@@ -29,7 +29,7 @@ import javax.transaction.TransactionManager;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;

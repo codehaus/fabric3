@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.InjectionSite;
+import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**

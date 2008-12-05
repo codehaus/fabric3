@@ -53,13 +53,13 @@ import org.fabric3.spi.introspection.contract.InterfaceIntrospector;
 import org.fabric3.spi.introspection.contract.OperationIntrospector;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
-import static org.fabric3.scdl.Operation.CONVERSATION_END;
-import static org.fabric3.scdl.Operation.NO_CONVERSATION;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.JavaServiceContract;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
+import static org.fabric3.model.type.service.Operation.CONVERSATION_END;
+import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.ValidationContext;
+import org.fabric3.model.type.service.JavaServiceContract;
 
 /**
  * Default implementation of a ContractProcessor for Java interfaces.

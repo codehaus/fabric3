@@ -40,9 +40,9 @@ import junit.framework.TestCase;
 
 import org.fabric3.api.annotation.scope.Composite;
 import org.fabric3.api.annotation.scope.Scopes;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 @SuppressWarnings("unchecked")
 public class CompositeProcessorTestCase extends TestCase {
@@ -51,7 +51,7 @@ public class CompositeProcessorTestCase extends TestCase {
         
         CompositeAnnotated componentToProcess = new CompositeAnnotated();
         Composite annotation = componentToProcess.getClass().getAnnotation(Composite.class);        
-        CompositeProcessor<Implementation<? extends InjectingComponentType>> processor = 
+        CompositeProcessor<Implementation<? extends InjectingComponentType>> processor =
                                 new CompositeProcessor<Implementation<? extends InjectingComponentType>>();        
         processor.visitType(annotation, componentToProcess.getClass(), componentToProcess, null);
         

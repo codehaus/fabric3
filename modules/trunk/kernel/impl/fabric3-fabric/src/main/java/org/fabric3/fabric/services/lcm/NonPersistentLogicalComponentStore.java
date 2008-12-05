@@ -19,10 +19,10 @@ package org.fabric3.fabric.services.lcm;
 import java.net.URI;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.model.type.component.Autowire;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.CompositeImplementation;
+import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
 import org.fabric3.spi.services.lcm.ReadException;

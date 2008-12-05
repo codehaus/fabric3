@@ -42,9 +42,9 @@ import junit.framework.TestCase;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;

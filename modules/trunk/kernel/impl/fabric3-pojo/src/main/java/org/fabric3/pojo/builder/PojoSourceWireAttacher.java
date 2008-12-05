@@ -45,8 +45,8 @@ import org.w3c.dom.Node;
 
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.provision.PojoWireSourceDefinition;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;

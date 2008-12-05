@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.definitions.AbstractDefinition;
+import org.fabric3.model.type.definitions.AbstractDefinition;
 
 /**
  * Registry of binding types, implementation types, intents and policy sets 

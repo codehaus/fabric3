@@ -43,7 +43,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.PolicyAware;
+import org.fabric3.model.type.PolicyAware;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**

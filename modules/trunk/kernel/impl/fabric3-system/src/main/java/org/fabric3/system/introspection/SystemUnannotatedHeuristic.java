@@ -32,16 +32,16 @@ import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.UnknownInjectionType;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.ConstructorInjectionSite;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.Multiplicity;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.java.ConstructorInjectionSite;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.model.type.component.Multiplicity;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

@@ -38,9 +38,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.Serializable;
 
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.java.Signature;
 
 /**
  * Base class for instance factory definitions.

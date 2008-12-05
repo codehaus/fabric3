@@ -20,8 +20,8 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 

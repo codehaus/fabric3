@@ -18,8 +18,8 @@ package org.fabric3.spi.introspection.validation;
 
 import java.util.Comparator;
 
-import org.fabric3.scdl.ValidationFailure;
-import org.fabric3.scdl.ArtifactValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.model.type.ArtifactValidationFailure;
 
 /**
  * Orders ValidationFailures. ArtifactValidationFailures are ordered after other types.

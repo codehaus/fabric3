@@ -45,8 +45,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.introspection.java.AnnotationProcessor;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * @version $Rev$ $Date$

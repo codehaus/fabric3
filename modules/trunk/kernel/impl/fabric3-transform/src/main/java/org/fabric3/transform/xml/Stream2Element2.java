@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPushTransformer;
 import org.fabric3.spi.transform.TransformationException;

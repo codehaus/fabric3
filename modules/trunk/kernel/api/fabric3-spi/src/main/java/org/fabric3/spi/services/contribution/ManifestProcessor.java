@@ -19,7 +19,7 @@ package org.fabric3.spi.services.contribution;
 import java.io.InputStream;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * Processes an artifact containing manifest information in a contribution archive.

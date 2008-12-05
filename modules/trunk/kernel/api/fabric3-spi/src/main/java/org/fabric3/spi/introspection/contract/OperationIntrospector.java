@@ -36,8 +36,8 @@ package org.fabric3.spi.introspection.contract;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * Implementations evaluate the methods of a Java-based interface and populate the operation on the corresponding service contract with relevant

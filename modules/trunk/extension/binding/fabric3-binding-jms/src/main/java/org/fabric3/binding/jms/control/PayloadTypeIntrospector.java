@@ -35,7 +35,7 @@
 package org.fabric3.binding.jms.control;
 
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.Operation;
 
 /**
  * Introspects an operation's in parameters to determine the payload type.

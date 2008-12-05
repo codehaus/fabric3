@@ -19,7 +19,7 @@ package org.fabric3.junit.scdl;
 import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.Namespaces;
 
 /**

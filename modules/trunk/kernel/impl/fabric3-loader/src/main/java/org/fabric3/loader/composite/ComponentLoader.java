@@ -58,14 +58,14 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentReference;
-import org.fabric3.scdl.ComponentService;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Autowire;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.ComponentReference;
+import org.fabric3.model.type.component.ComponentService;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.PropertyValue;
 
 import org.osoa.sca.annotations.Reference;
 

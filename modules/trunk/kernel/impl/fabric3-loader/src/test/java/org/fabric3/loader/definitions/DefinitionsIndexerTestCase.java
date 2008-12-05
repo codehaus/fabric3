@@ -28,8 +28,8 @@ import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.DefaultValidationContext;
+import org.fabric3.model.type.ValidationContext;
+import org.fabric3.model.type.DefaultValidationContext;
 
 /**
  * @version $Revision$ $Date$

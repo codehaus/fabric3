@@ -22,7 +22,7 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;

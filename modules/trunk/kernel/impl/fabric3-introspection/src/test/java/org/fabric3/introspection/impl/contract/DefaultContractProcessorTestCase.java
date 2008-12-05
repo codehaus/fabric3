@@ -47,11 +47,11 @@ import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.DefaultValidationContext;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DefaultValidationContext;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * @version $Rev$ $Date$

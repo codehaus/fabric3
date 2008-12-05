@@ -22,8 +22,8 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.jmx.provision.JMXWireSourceDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.Bindable;

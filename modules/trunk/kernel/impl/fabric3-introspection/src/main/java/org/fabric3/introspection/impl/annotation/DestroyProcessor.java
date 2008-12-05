@@ -40,9 +40,9 @@ import org.osoa.sca.annotations.Destroy;
 
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.Signature;
 
 /**
  * @version $Rev$ $Date$

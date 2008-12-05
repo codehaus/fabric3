@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 
 /**
  * The default implementation of a scope registry

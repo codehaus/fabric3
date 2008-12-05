@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.services.contribution.wire.ContributionWireInstantiatorRegistry;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.StoreException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionWire;

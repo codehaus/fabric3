@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.host.Names;
-import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;

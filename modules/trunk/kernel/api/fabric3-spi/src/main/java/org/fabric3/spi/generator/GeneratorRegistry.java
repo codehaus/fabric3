@@ -38,9 +38,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**

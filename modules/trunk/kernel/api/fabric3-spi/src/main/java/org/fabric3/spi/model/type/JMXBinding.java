@@ -18,7 +18,7 @@ package org.fabric3.spi.model.type;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
 
 /**
  * Represents a service bound to a JMX provider.

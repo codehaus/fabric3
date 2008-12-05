@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.instantiator;
 
-import org.fabric3.scdl.Composite;
+import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**

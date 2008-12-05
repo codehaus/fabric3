@@ -18,7 +18,7 @@ package org.fabric3.security.authorization;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;

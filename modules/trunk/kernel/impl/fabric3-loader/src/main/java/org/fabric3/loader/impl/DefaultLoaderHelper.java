@@ -61,7 +61,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-import org.fabric3.scdl.PolicyAware;
+import org.fabric3.model.type.PolicyAware;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;

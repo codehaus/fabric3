@@ -40,6 +40,11 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
+
 /**
  * @version $Rev$ $Date$
  */

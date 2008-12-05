@@ -30,7 +30,7 @@ import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.validation.InvalidImplementation;
+import org.fabric3.model.type.component.InvalidImplementation;
 
 /**
  * @version $Rev$ $Date$

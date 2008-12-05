@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;

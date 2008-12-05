@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.DetachWireCommand;
 import org.fabric3.fabric.command.WireCommand;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;

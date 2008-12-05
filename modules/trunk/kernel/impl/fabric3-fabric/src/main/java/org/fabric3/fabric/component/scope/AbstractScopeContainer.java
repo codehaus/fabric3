@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ConversationExpirationCallback;

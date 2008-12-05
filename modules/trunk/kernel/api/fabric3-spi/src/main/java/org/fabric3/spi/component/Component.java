@@ -38,7 +38,7 @@ import java.net.URI;
 import java.util.Map;
 
 import org.fabric3.spi.Lifecycle;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.model.type.component.PropertyValue;
 
 /**
  * The runtime instantiation of an SCA component

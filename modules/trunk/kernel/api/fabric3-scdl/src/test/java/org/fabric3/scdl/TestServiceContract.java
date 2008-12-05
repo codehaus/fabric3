@@ -36,6 +36,8 @@ package org.fabric3.scdl;
 
 import java.lang.reflect.Type;
 
+import org.fabric3.model.type.service.ServiceContract;
+
 /**
  * @version $Rev$ $Date$
  */

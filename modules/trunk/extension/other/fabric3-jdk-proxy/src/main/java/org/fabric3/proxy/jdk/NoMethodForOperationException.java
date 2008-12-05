@@ -35,9 +35,10 @@
 package org.fabric3.proxy.jdk;
 
 import org.fabric3.pojo.builder.ProxyCreationException;
+import org.fabric3.model.type.service.Operation;
 
 /**
- * Thrown when an {@link org.fabric3.scdl.Operation} cannot be mapped to a method on an interface
+ * Thrown when an {@link Operation} cannot be mapped to a method on an interface
  *
  * @version $Rev: 2957 $ $Date: 2008-02-29 08:59:16 -0800 (Fri, 29 Feb 2008) $
  */

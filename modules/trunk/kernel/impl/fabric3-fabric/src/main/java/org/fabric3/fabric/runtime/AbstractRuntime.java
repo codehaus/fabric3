@@ -55,7 +55,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.scdl.Autowire;
+import org.fabric3.model.type.component.Autowire;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;

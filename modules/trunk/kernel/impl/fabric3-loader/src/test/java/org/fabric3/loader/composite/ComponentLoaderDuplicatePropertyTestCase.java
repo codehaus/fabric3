@@ -50,10 +50,10 @@ import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.PropertyValue;
 
 /**
  * @version $Rev$ $Date$

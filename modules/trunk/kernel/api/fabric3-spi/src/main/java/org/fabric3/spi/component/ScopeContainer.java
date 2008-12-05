@@ -39,7 +39,7 @@ import java.util.List;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.ConversationEndedException;
 
-import org.fabric3.scdl.Scope;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.Lifecycle;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;

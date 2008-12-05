@@ -40,7 +40,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import javax.naming.Context;
 
-import org.fabric3.scdl.ModelObject;
+import org.fabric3.model.type.ModelObject;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding

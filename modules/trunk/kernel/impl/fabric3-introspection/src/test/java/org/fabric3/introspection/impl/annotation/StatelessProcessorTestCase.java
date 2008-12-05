@@ -40,9 +40,9 @@ import junit.framework.TestCase;
 
 import org.fabric3.api.annotation.scope.Scopes;
 import org.fabric3.api.annotation.scope.Stateless;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 @SuppressWarnings("unchecked")
 public class StatelessProcessorTestCase extends TestCase {
@@ -51,8 +51,8 @@ public class StatelessProcessorTestCase extends TestCase {
         
         StatelessAnnotated componentToProcess = new StatelessAnnotated();
         Stateless annotation = componentToProcess.getClass().getAnnotation(Stateless.class);        
-        StatelessProcessor<Implementation<? extends InjectingComponentType>> processor = 
-                                new StatelessProcessor<Implementation<? extends InjectingComponentType>>();        
+        StatelessProcessor<Implementation<? extends InjectingComponentType>> processor =
+                                new StatelessProcessor<Implementation<? extends InjectingComponentType>>();
         processor.visitType(annotation, componentToProcess.getClass(), componentToProcess, null);
         
         assertEquals("Unexpected scope", Scopes.STATELESS, componentToProcess.getScope());

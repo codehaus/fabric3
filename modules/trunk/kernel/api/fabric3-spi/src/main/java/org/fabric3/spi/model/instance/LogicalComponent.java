@@ -44,10 +44,10 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.Constants;
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Autowire;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Implementation;
 
 /**
  * Represents an instantiated component in the service network.

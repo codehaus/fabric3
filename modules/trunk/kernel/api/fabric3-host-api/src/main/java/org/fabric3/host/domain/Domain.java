@@ -20,7 +20,7 @@ import java.net.URI;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.Composite;
+import org.fabric3.model.type.component.Composite;
 
 /**
  * Represents a domain.

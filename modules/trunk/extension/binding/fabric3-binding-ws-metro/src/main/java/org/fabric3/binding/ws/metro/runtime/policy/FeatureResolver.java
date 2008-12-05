@@ -39,7 +39,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Gets the list of features.

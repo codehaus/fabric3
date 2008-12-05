@@ -19,7 +19,7 @@ package org.fabric3.loader.composite;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.spi.introspection.xml.XmlValidationFailure;
-import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.model.type.component.ComponentDefinition;
 
 /**
  * A validation failure indicating an attempt to configure a non-existent component property.

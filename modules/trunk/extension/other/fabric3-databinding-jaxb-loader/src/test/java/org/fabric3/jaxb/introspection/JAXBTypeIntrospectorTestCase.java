@@ -24,8 +24,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import junit.framework.TestCase;
 
 import org.fabric3.jaxb.provision.JAXBConstants;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 
 /**
  * @version $Revision$ $Date$

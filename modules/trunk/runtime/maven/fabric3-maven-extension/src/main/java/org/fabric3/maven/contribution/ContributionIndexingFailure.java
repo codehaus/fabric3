@@ -16,7 +16,7 @@
  */
 package org.fabric3.maven.contribution;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
 
 import java.io.File;
 

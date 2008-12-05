@@ -16,9 +16,8 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * Responsible for handling the specifics of an archive-based contribution.

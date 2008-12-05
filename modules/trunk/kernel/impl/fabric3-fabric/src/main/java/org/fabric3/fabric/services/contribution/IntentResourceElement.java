@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 

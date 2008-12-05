@@ -39,7 +39,7 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.spi.Namespaces;
 
 /**

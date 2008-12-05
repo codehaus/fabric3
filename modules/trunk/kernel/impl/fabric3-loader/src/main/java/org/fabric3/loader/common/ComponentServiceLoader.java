@@ -51,11 +51,11 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.ComponentService;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.OperationDefinition;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.ComponentService;
+import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.service.OperationDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * Loads a service definition from an XML-based assembly file

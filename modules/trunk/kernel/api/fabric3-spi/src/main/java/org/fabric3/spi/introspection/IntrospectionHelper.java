@@ -42,8 +42,8 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Set;
 
-import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 
 /**

@@ -23,7 +23,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 
 import org.fabric3.binding.ftp.common.Constants;
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
 
 /**
  * Binding definition loaded from the SCDL.

@@ -38,12 +38,12 @@ import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
-import static org.fabric3.scdl.Scope.COMPOSITE;
-import static org.fabric3.scdl.Scope.CONVERSATION;
-import static org.fabric3.scdl.Scope.REQUEST;
-import static org.fabric3.scdl.Scope.STATELESS;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
+import static org.fabric3.model.type.component.Scope.COMPOSITE;
+import static org.fabric3.model.type.component.Scope.CONVERSATION;
+import static org.fabric3.model.type.component.Scope.REQUEST;
+import static org.fabric3.model.type.component.Scope.STATELESS;
 
 /**
  * @version $Rev$ $Date$

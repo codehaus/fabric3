@@ -32,13 +32,13 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.rs.scdl.RsBindingDefinition;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.osoa.sca.annotations.Reference;
-import static org.fabric3.scdl.Operation.NO_CONVERSATION;
+import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
 
 /**
  * This would better have been implemented as a custom ImplementationProcessor/Heuristic

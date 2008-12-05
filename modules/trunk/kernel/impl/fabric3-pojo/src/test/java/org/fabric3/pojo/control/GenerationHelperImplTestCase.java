@@ -41,13 +41,13 @@ import junit.framework.TestCase;
 
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ConstructorInjectionSite;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.java.ConstructorInjectionSite;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**

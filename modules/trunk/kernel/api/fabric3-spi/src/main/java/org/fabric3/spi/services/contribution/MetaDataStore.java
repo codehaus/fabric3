@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.host.contribution.StoreException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * Implementations store contribution metadata.

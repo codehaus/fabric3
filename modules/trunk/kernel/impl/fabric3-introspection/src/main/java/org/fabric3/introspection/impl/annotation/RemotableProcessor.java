@@ -42,10 +42,10 @@ import org.osoa.sca.annotations.Remotable;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$

@@ -29,12 +29,12 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.resource.model.SystemSourcedResource;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.ResourceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

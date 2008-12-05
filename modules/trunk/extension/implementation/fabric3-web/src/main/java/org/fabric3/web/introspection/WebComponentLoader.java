@@ -35,9 +35,9 @@ import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
 
 /**
  * Loads <code><implementation.web></code> from a composite.

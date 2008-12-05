@@ -42,8 +42,8 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.rs.scdl.RsBindingDefinition;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$

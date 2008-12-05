@@ -20,8 +20,8 @@ import java.net.URI;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.WireInstantiator;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.WireDefinition;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.WireDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;

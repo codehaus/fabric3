@@ -33,7 +33,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
-import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.model.type.definitions.Intent;
 
 /**
  * Loader for definitions.

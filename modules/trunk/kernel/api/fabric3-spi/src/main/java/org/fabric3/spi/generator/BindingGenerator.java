@@ -34,9 +34,9 @@
  */
 package org.fabric3.spi.generator;
 
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;

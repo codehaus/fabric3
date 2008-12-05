@@ -18,7 +18,7 @@ package org.fabric3.fabric.generator.wire;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**

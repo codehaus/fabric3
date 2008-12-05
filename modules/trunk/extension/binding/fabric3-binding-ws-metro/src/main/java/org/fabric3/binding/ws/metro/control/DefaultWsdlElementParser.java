@@ -41,8 +41,8 @@ import com.sun.xml.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.ws.api.model.wsdl.WSDLService;
 
 import org.fabric3.binding.ws.provision.WsdlElement;
-import org.fabric3.scdl.JavaServiceContract;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.service.JavaServiceContract;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.GenerationException;
 
 /**

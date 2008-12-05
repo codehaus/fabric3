@@ -24,8 +24,8 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Element;
 
 import org.fabric3.policy.infoset.PolicySetEvaluator;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;

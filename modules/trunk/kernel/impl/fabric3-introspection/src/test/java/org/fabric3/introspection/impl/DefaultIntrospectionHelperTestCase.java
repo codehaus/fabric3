@@ -46,10 +46,10 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.scdl.DefaultValidationContext;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.DefaultValidationContext;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.introspection.TypeMapping;
 
 /**

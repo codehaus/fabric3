@@ -18,7 +18,7 @@ package org.fabric3.idl.wsdl.scdl;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * WSDL Service contract.

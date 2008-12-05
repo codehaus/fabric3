@@ -31,7 +31,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.scdl.validation.MissingResource;
+import org.fabric3.model.type.component.MissingResource;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;

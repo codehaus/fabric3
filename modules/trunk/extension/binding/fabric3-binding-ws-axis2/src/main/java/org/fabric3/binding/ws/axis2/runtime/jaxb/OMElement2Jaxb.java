@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;

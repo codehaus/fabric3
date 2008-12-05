@@ -31,7 +31,7 @@ import org.fabric3.spi.services.contribution.Constants;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.maven.CompositeQNameService;
 import org.fabric3.maven.InvalidResourceException;
-import org.fabric3.scdl.Composite;
+import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;

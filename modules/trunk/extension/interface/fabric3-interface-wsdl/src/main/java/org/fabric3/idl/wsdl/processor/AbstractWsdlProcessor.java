@@ -21,7 +21,7 @@ import javax.xml.namespace.QName;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 
 /**
  * Super class for WSDL processors.

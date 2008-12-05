@@ -18,9 +18,8 @@ package org.fabric3.spi.services.contribution;
 
 import java.util.List;
 
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * Interface for services that process contributions. Contribution processing occurs in several phases. Contribution metadata is first processed,

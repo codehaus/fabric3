@@ -20,7 +20,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * Processes an XML-based entry that contains manifest information. Invoked when a contribution is introspected and an XML content type is encountered

@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
 
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * Represents a resolved service

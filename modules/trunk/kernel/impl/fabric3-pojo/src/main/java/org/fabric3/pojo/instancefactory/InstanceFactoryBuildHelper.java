@@ -37,7 +37,7 @@ package org.fabric3.pojo.instancefactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.java.Signature;
 
 /**
  * Utility methods used when creating ReflectiveInstanceFactoryProviders.

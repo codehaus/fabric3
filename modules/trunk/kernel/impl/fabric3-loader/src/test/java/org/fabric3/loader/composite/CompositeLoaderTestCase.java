@@ -44,9 +44,9 @@ import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.PolicyAware;
+import org.fabric3.model.type.component.Autowire;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.PolicyAware;
 
 /**
  * @version $Rev$ $Date$

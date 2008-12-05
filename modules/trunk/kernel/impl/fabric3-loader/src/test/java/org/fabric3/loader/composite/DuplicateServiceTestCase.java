@@ -44,17 +44,17 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.scdl.ArtifactValidationFailure;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.CompositeService;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.ArtifactValidationFailure;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.CompositeService;
+import org.fabric3.model.type.component.Implementation;
 
 /**
  * @version $Rev$ $Date$

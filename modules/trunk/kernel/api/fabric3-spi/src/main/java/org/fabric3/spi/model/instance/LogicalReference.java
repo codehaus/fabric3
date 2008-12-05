@@ -42,8 +42,8 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
 
-import org.fabric3.scdl.ComponentReference;
-import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.model.type.component.ComponentReference;
+import org.fabric3.model.type.component.ReferenceDefinition;
 
 /**
  * Represents a resolved reference

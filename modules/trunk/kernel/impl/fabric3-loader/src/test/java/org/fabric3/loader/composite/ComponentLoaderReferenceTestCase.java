@@ -44,9 +44,9 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.scdl.ComponentReference;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.component.ComponentReference;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;

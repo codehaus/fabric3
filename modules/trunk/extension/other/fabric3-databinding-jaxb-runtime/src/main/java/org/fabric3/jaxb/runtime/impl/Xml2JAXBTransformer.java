@@ -21,7 +21,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;

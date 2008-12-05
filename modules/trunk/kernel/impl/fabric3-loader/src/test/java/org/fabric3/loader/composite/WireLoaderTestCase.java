@@ -41,7 +41,7 @@ import javax.xml.stream.XMLStreamConstants;
 
 import junit.framework.TestCase;
 
-import org.fabric3.scdl.WireDefinition;
+import org.fabric3.model.type.component.WireDefinition;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.loader.impl.DefaultLoaderHelper;

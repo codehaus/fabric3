@@ -37,7 +37,7 @@ package org.fabric3.pojo.reflection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceDestructionException;

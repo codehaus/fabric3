@@ -34,7 +34,7 @@
  */
 package org.fabric3.binding.jms.common;
 
-import org.fabric3.scdl.ModelObject;
+import org.fabric3.model.type.ModelObject;
 
 /**
  * @version $Revision$ $Date$

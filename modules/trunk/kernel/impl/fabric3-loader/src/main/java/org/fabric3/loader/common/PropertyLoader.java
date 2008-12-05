@@ -46,7 +46,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.scdl.Property;
+import org.fabric3.model.type.component.Property;
 
 /**
  * Loads a property declaration from an XML-based assembly file

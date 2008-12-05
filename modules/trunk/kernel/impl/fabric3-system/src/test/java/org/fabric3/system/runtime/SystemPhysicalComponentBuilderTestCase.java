@@ -43,7 +43,7 @@ import org.easymock.EasyMock;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;

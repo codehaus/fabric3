@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.Constants;
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
 
 /**
  * Logical binding definition for web services.

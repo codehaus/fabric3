@@ -50,11 +50,11 @@ import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ArtifactValidationFailure;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.ArtifactValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$

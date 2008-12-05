@@ -52,11 +52,11 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * Loads a generic component type.

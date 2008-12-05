@@ -28,12 +28,12 @@ import org.w3c.dom.Document;
 
 import static org.fabric3.container.web.spi.WebApplicationActivator.CONTEXT_ATTRIBUTE;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;

@@ -17,7 +17,7 @@
 package org.fabric3.spi.services.lcm;
 
 import org.fabric3.api.annotation.Management;
-import org.fabric3.scdl.Composite;
+import org.fabric3.model.type.component.Composite;
 
 /**
  * @version $Rev$ $Date$

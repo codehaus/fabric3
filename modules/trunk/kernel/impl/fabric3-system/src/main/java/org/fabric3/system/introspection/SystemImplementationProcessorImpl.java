@@ -37,8 +37,8 @@ package org.fabric3.system.introspection;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.validation.InvalidImplementation;
-import org.fabric3.scdl.validation.MissingResource;
+import org.fabric3.model.type.component.InvalidImplementation;
+import org.fabric3.model.type.component.MissingResource;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;

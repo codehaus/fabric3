@@ -41,8 +41,8 @@ import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -69,7 +69,7 @@ public class EagerInitProcessor<I extends Implementation<? extends InjectingComp
             return true;
         }
         Scope scope = type.getAnnotation(Scope.class);
-        if (scope == null || !org.fabric3.scdl.Scope.COMPOSITE.getScope().equals(scope.value())) {
+        if (scope == null || !org.fabric3.model.type.component.Scope.COMPOSITE.getScope().equals(scope.value())) {
             EagerInitNotSupported warning = new EagerInitNotSupported(type);
             context.addWarning(warning);
             return false;

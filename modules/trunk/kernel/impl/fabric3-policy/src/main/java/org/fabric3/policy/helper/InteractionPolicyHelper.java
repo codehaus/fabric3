@@ -18,9 +18,9 @@ package org.fabric3.policy.helper;
 
 import java.util.Set;
 
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.w3c.dom.Element;

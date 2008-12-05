@@ -21,7 +21,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
 
 /**
  * @version $Revision$ $Date$

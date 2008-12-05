@@ -28,7 +28,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.junit.scdl.JUnitBindingDefinition;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$

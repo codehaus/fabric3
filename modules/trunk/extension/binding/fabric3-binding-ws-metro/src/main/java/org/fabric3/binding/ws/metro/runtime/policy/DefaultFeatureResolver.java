@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.MTOMFeature;
 
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.definitions.PolicySet;
 
 import com.sun.xml.ws.developer.BindingTypeFeature;
 import com.sun.xml.ws.developer.JAXWSProperties;

@@ -18,8 +18,8 @@ package org.fabric3.spi.policy;
 
 import java.util.List;
 
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Result of resolving intents and policy sets on a wire. The policies are resolved for 

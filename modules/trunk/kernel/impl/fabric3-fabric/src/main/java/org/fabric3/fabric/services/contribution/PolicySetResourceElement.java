@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 

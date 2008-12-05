@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.policy.Policy;

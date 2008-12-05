@@ -34,10 +34,10 @@ import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.junit.scdl.JUnitServiceContract;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$

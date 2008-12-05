@@ -45,11 +45,11 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.ComponentContext;
 
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;

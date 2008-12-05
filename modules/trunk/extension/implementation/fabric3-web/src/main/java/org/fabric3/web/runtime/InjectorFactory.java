@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.scdl.InjectionSite;
+import org.fabric3.model.type.java.InjectionSite;
 
 /**
  * Creates Injector collections for injecting references, properties and context proxies into web application artifacts. These include servlets,

@@ -22,8 +22,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 
-import org.fabric3.scdl.DefaultValidationContext;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.DefaultValidationContext;
+import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MavenExport;
 

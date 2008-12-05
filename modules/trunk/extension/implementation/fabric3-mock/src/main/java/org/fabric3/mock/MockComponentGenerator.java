@@ -16,9 +16,7 @@
  */
 package org.fabric3.mock;
 
-import java.net.URI;
-
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;

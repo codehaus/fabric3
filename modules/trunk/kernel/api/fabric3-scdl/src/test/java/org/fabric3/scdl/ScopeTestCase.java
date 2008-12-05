@@ -38,6 +38,8 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
+import org.fabric3.model.type.component.Scope;
+
 /**
  * @version $Rev$ $Date$
  */

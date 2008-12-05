@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.policy;
 
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 

@@ -39,7 +39,7 @@ import java.io.Serializable;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttribute;
 
 /**
  * Represents a physical wire source definition.

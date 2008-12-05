@@ -62,11 +62,11 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.Signature;
 
 /**
  * @version $Rev$ $Date$

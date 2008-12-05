@@ -36,7 +36,7 @@ package org.fabric3.pojo.instancefactory;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.spi.ObjectFactory;
 
 /**

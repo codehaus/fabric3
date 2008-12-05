@@ -27,9 +27,9 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.component.ReferenceDefinition;
 
 /**
  * Default implementation of WebImplementationIntrospector.

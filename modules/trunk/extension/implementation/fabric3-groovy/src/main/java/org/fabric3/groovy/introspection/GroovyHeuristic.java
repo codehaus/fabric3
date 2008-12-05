@@ -20,7 +20,7 @@ import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.java.Signature;
 
 /**
  * @version $Rev$ $Date$

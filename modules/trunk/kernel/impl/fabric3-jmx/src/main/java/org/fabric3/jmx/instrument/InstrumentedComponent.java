@@ -29,7 +29,7 @@ import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 
 import org.fabric3.spi.component.Component;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.model.type.component.PropertyValue;
 
 /**
  * This is Ruscany component exposed as a dynamic MBean. Currently it only supports a read-only vew of all the

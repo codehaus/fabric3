@@ -16,12 +16,12 @@
  */
 package org.fabric3.spi.introspection.java;
 
-import org.fabric3.scdl.ValidationFailure;
-import org.fabric3.scdl.ConstructorInjectionSite;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.model.type.java.ConstructorInjectionSite;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.java.MethodInjectionSite;
 
 /**
  * Denotes an unknown InjectableAttributeType.

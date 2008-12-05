@@ -16,11 +16,11 @@
  */
 package org.fabric3.mock;
 
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ResourceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * @version $Revision$ $Date$

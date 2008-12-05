@@ -26,11 +26,11 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 import org.fabric3.policy.infoset.PolicySetEvaluator;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.definitions.ImplementationType;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.definitions.ImplementationType;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;

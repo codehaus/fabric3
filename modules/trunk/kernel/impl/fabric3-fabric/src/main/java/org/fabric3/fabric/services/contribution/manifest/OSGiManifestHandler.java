@@ -24,7 +24,7 @@ import java.util.jar.Manifest;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.JarManifestHandler;
 

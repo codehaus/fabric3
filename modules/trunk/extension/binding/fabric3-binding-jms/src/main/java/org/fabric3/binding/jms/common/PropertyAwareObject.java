@@ -38,7 +38,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.scdl.ModelObject;
+import org.fabric3.model.type.ModelObject;
 
 public abstract class PropertyAwareObject extends ModelObject {
     private static final long serialVersionUID = 7862305926561642783L;

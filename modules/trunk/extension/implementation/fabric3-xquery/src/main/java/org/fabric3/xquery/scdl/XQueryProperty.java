@@ -17,7 +17,7 @@
  package org.fabric3.xquery.scdl;
 
 import javax.xml.namespace.QName;
-import org.fabric3.scdl.Property;
+import org.fabric3.model.type.component.Property;
 
 /**
  * @version $Rev$ $Date$

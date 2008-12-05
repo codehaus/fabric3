@@ -41,8 +41,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.pojo.builder.ProxyService;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.WiringException;

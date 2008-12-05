@@ -21,7 +21,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.model.type.ValidationContext;
 
 /**
  * The system registry of contribution processors

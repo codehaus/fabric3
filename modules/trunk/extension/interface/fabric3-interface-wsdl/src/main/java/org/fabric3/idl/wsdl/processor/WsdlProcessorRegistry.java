@@ -26,7 +26,7 @@ import javax.xml.namespace.QName;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
-import org.fabric3.scdl.Operation;
+import org.fabric3.model.type.service.Operation;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 

@@ -42,8 +42,8 @@ import javax.xml.namespace.QName;
 import org.fabric3.api.annotation.PropagatesConversation;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.Namespaces;
 
 /**

@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.Signature;
+import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**

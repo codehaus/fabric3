@@ -51,11 +51,11 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.CompositeService;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.CompositeService;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * Verifies loading of a service definition from an XML-based assembly

@@ -18,7 +18,7 @@ package org.fabric3.introspection.impl.contract;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
 
 /**
  * Indicates that a service contract specification contains an overloaded method.

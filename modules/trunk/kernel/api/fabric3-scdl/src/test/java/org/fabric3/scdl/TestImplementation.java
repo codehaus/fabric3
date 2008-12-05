@@ -36,6 +36,9 @@ package org.fabric3.scdl;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
+
 /**
  * @version $Rev$ $Date$
  */

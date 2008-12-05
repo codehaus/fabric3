@@ -41,8 +41,8 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.injection.ComponentObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;

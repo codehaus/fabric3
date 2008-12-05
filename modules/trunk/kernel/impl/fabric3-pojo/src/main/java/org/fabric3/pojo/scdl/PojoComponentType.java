@@ -34,7 +34,7 @@
  */
 package org.fabric3.pojo.scdl;
 
-import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * A component type specialization for POJO implementations

@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.DataType;
+import org.fabric3.model.type.service.DataType;
 
 /**
  * Specialization of DataType representing types from the XML Schema type system.

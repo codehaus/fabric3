@@ -49,7 +49,7 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
-import org.fabric3.scdl.definitions.BindingType;
+import org.fabric3.model.type.definitions.BindingType;
 
 /**
  * Loader for definitions.

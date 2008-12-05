@@ -19,7 +19,7 @@ package org.fabric3.fabric.services.contribution;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.model.type.ValidationFailure;
 
 /**
  * Thrown when a deployable composite specified in the sca-contribution is invalid.

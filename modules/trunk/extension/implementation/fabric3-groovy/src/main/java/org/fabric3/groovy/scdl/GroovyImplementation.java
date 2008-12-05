@@ -19,7 +19,7 @@ package org.fabric3.groovy.scdl;
 import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.model.type.component.Implementation;
 
 /**
  * A component implemented in Groovy. The implementation can be a script in source or compiled form.
