@@ -44,7 +44,7 @@ import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.pojo.ConversationImpl;
+import org.fabric3.pojo.component.ConversationImpl;
 import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.InstanceInvocationException;

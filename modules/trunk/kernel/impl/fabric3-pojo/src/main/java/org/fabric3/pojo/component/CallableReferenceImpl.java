@@ -32,37 +32,51 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.component;
+package org.fabric3.pojo.component;
 
-import org.osoa.sca.ServiceReference;
+import org.osoa.sca.CallableReference;
+import org.osoa.sca.Conversation;
+import org.osoa.sca.ServiceRuntimeException;
 
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.ObjectCreationException;
 
 /**
- * Default implementation of a ServiceReference.
- *
+ * Base class for implementations of service and callback references.
+ * 
  * @version $Rev$ $Date$
  * @param <B> the type of the business interface
  */
-public class ServiceReferenceImpl<B> extends CallableReferenceImpl<B> implements ServiceReference<B> {
-    public ServiceReferenceImpl(Class<B> businessInterface, ObjectFactory<B> factory) {
-        super(businessInterface, factory);
+public abstract class CallableReferenceImpl<B> implements CallableReference<B> {
+    private final Class<B> businessInterface;
+    private final ObjectFactory<B> factory;
+
+    protected CallableReferenceImpl(Class<B> businessInterface, ObjectFactory<B> factory) {
+        this.businessInterface = businessInterface;
+        this.factory = factory;
     }
 
-    public Object getConversationID() {
+    public B getService() {
+        try {
+            return factory.getInstance();
+        } catch (ObjectCreationException e) {
+            throw new ServiceRuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public Class<B> getBusinessInterface() {
+        return businessInterface;
+    }
+
+    public boolean isConversational() {
+        return false;
+    }
+
+    public Conversation getConversation() {
         return null;
     }
 
-    public void setConversationID(Object conversationId) throws IllegalStateException {
-    }
-
-    public void setCallbackID(Object callbackID) {
-    }
-
-    public Object getCallback() {
+    public Object getCallbackID() {
         return null;
-    }
-
-    public void setCallback(Object callback) {
     }
 }

@@ -39,7 +39,6 @@ import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
 import org.osoa.sca.Conversation;
 
-import org.fabric3.pojo.ConversationImpl;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
@@ -95,7 +94,7 @@ public class ConversationalScopeContainerTestCase extends TestCase {
         control = EasyMock.createControl();
         store = control.createMock(InstanceWrapperStore.class);
         container = new ConversationalScopeContainer(null, store);
-        conversation = new ConversationImpl("contextId", container);
+        conversation = EasyMock.createMock(Conversation.class);
         workContext = new WorkContext();
         CallFrame frame = new CallFrame(null, null, conversation, ConversationContext.NEW);
         workContext.addCallFrame(frame);

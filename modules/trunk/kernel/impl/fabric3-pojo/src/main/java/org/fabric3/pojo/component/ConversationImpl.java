@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.pojo;
+package org.fabric3.pojo.component;
 
 import java.io.Serializable;
 

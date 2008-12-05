@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.component;
+package org.fabric3.pojo.component;
 
 import org.fabric3.spi.ObjectFactory;
 
