@@ -16,6 +16,14 @@
  */
 package org.fabric3.fabric.runtime;
 
+import static org.fabric3.fabric.runtime.FabricNames.DEFINITIONS_REGISTRY;
+import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.FabricNames.METADATA_STORE_URI;
+import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
+import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
+import static org.fabric3.spi.Namespaces.IMPLEMENTATION;
+
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,11 +32,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import javax.xml.namespace.QName;
 
-import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
-import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
@@ -44,15 +50,11 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
-import static org.fabric3.spi.Namespaces.IMPLEMENTATION;
-import static org.fabric3.fabric.runtime.FabricNames.DEFINITIONS_REGISTRY;
-import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.FabricNames.METADATA_STORE_URI;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.event.EventService;
@@ -74,6 +76,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     private List<URL> bootExports;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
+    private List<ContributionSource> policies;
 
     public enum State {
         UNINITIALIZED,
@@ -93,6 +96,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         bootExports = configuration.getBootLibraryExports();
         intents = configuration.getIntents();
         extensions = configuration.getExtensions();
+        policies = configuration.getPolicies();
     }
 
     public void bootPrimordial() throws InitializationException {
@@ -114,7 +118,10 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         bootstrapper.bootSystem();
 
         try {
-            activateIntents(intents);
+            activateDefinitions(intents);
+            for (ContributionSource policy : policies) {
+                activateDefinitions(policy);
+            }
             includeExtensions(extensions);
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
@@ -177,14 +184,14 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         return new SyncFuture();
     }
 
-    protected void activateIntents(ContributionSource source) throws InitializationException {
+    protected void activateDefinitions(ContributionSource source) throws InitializationException {
         try {
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI uri = contributionService.contribute(source);
             DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
-            List<URI> intents = new ArrayList<URI>();
-            intents.add(uri);
-            definitionsRegistry.activateDefinitions(intents);
+            List<URI> definitions = new ArrayList<URI>();
+            definitions.add(uri);
+            definitionsRegistry.activateDefinitions(definitions);
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {

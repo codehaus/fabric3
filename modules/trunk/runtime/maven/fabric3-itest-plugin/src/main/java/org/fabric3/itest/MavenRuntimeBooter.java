@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -72,6 +73,7 @@ public class MavenRuntimeBooter {
     private org.apache.maven.model.Dependency[] extensions;
     private List<FeatureSet> featureSets;
     private Log log;
+    private List<URL> policyUrls;
 
 
     private RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, ScdlBootstrapper> coordinator;
@@ -93,6 +95,7 @@ public class MavenRuntimeBooter {
         featureSets = configuration.getFeatureSets();
         log = configuration.getLog();
         extensionHelper = configuration.getExtensionHelper();
+        policyUrls = configuration.getPolicyUrls();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -151,6 +154,13 @@ public class MavenRuntimeBooter {
         ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
         configuration.setIntents(source);
         configuration.setRuntime(runtime);
+        
+        List<ContributionSource> policyContributions = new LinkedList<ContributionSource>();
+        for (URL policyUrl : policyUrls) {
+            policyContributions.add(new FileContributionSource(Names.USER_POLICY_CONTRIBUTION, policyUrl, -1, new byte[0]));
+        }
+        configuration.setPolicies(policyContributions);
+        
         return configuration;
     }
 

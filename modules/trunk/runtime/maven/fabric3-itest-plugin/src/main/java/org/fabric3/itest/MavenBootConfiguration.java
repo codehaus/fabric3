@@ -25,6 +25,7 @@ public class MavenBootConfiguration {
     private List<FeatureSet> featureSets;
     private Log log;
     private ExtensionHelper extensionHelper;
+    private List<URL> policyUrls;
 
     public URL getSystemScdl() {
         return systemScdl;
@@ -136,5 +137,13 @@ public class MavenBootConfiguration {
 
     public void setExtensionHelper(ExtensionHelper extensionHelper) {
         this.extensionHelper = extensionHelper;
+    }
+
+    public List<URL> getPolicyUrls() {
+        return policyUrls;
+    }
+
+    public void setPolicyUrls(List<URL> policyUrls) {
+        this.policyUrls = policyUrls;
     }
 }

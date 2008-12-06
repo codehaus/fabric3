@@ -35,6 +35,7 @@
 package org.fabric3.host.runtime;
 
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.fabric3.host.contribution.ContributionSource;
@@ -52,6 +53,7 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
     private ContributionSource intents;
     private List<ContributionSource> extensions;
     private List<ContributionSource> userExtensions;
+    private List<ContributionSource> policies = new LinkedList<ContributionSource>();
 
     public RUNTIME getRuntime() {
         return runtime;
@@ -107,6 +109,14 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
 
     public void setUserExtensions(List<ContributionSource> userExtensions) {
         this.userExtensions = userExtensions;
+    }
+
+    public List<ContributionSource> getPolicies() {
+        return policies;
+    }
+    
+    public void setPolicies(List<ContributionSource> policies) {
+        this.policies = policies;
     }
 
 }

@@ -49,6 +49,8 @@ public interface Names {
 
     URI CORE_INTENTS_CONTRIBUTION = URI.create("fabric3-core-intents");
 
+    URI USER_POLICY_CONTRIBUTION = URI.create("fabric3-user-policies");
+
     String RUNTIME_NAME = "fabric3://runtime";
 
     URI RUNTIME_URI = URI.create(RUNTIME_NAME);

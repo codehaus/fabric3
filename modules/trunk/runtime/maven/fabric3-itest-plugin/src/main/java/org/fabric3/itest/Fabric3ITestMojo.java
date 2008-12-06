@@ -49,7 +49,6 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
@@ -168,6 +167,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public URL intentsLocation;
 
     /**
+     * The location of the default user policy file for the Fabric3 runtime.
+     *
+     * @parameter
+     */
+    public String[] policyLocations;
+
+    /**
      * The version of the runtime to use.
      *
      * @parameter expression="0.7"
@@ -224,15 +230,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     public ArtifactRepository localRepository;
-
-    /**
-     * Used to look up Artifacts in the remote repository.
-     *
-     * @parameter expression="${component.org.apache.maven.artifact.factory.ArtifactFactory}"
-     * @required
-     * @readonly
-     */
-    public ArtifactFactory _artifactFactory;
 
     /**
      * @parameter expression="${component.org.fabric3.itest.ArtifactHelper}"
@@ -341,6 +338,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setExtensions(extensions);
         
         configuration.setIntentsLocation(intentsLocation);
+        List<URL> policyUrls = getPolicyUrls();
+        configuration.setPolicyUrls(policyUrls);
         configuration.setModuleDependencies(moduleDependencies);
         configuration.setOutputDirectory(outputDirectory);
         configuration.setProperties(properties);
@@ -348,6 +347,30 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setSystemConfigDir(systemConfigDir);
         configuration.setSystemScdl(systemScdl);
         return configuration;
+    }
+    
+    /**
+     * Creates user specified policy URLs.
+     */
+    private List<URL> getPolicyUrls() throws MojoExecutionException {
+
+        
+        List<URL> policyUrls = new LinkedList<URL>();
+        if (policyLocations != null) {
+            for (String policyLocation : policyLocations) {
+                File policyFile = new File(project.getBasedir(), "target");
+                policyFile = new File(policyFile, "classes");
+                policyFile = new File(policyFile, policyLocation);
+                try {
+                    policyUrls.add(policyFile.toURL());
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException(e.getMessage(), e);
+                }
+            }
+        }
+        
+        return policyUrls;
+        
     }
 
     /**
