@@ -77,6 +77,7 @@ public class JarClasspathProcessor implements ClasspathProcessor {
     }
 
     private void addLibraries(List<URL> classpath, URL jar) throws IOException {
+        
         File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
         dir.mkdir();
         InputStream is = jar.openStream();
@@ -91,7 +92,12 @@ public class JarClasspathProcessor implements ClasspathProcessor {
                 if (!path.startsWith("META-INF/lib/")) {
                     continue;
                 }
-                File jarFile = File.createTempFile("fabric3", ".jar", dir);
+                // File jarFile = File.createTempFile("fabric3", ".jar", dir);
+                String fileName = path.substring(path.lastIndexOf('/'));
+                File jarFile = new File(dir, fileName);
+                if (!jarFile.exists()) {
+                    jarFile.createNewFile();
+                }
                 OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
                 try {
                     IOHelper.copy(jarStream, os);
