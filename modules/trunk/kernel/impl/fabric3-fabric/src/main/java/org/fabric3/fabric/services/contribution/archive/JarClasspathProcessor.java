@@ -79,7 +79,11 @@ public class JarClasspathProcessor implements ClasspathProcessor {
     private void addLibraries(List<URL> classpath, URL jar) throws IOException {
         
         File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
-        dir.mkdir();
+        
+        //String parentArchive = jar.toString().substring(jar.toString().lastIndexOf("/"));
+        //dir = new File(dir, parentArchive);
+        
+        dir.mkdirs();
         InputStream is = jar.openStream();
         try {
             JarInputStream jarStream = new JarInputStream(is);
@@ -97,15 +101,15 @@ public class JarClasspathProcessor implements ClasspathProcessor {
                 File jarFile = new File(dir, fileName);
                 if (!jarFile.exists()) {
                     jarFile.createNewFile();
+                    OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
+                    try {
+                        IOHelper.copy(jarStream, os);
+                        os.flush();
+                    } finally {
+                        os.close();
+                    }
+                    jarFile.deleteOnExit();
                 }
-                OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
-                try {
-                    IOHelper.copy(jarStream, os);
-                    os.flush();
-                } finally {
-                    os.close();
-                }
-                jarFile.deleteOnExit();
                 classpath.add(jarFile.toURI().toURL());
             }
         } finally {
