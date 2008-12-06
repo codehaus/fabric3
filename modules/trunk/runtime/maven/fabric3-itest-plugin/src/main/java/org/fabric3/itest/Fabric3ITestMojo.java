@@ -34,9 +34,7 @@
  */
 package org.fabric3.itest;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -69,6 +67,7 @@ import org.xml.sax.SAXException;
  * @version $Rev$ $Date$
  * @goal test
  * @phase integration-test
+ * @execute phase="integration-test"
  */
 public class Fabric3ITestMojo extends AbstractMojo {
 
@@ -273,7 +272,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        clearTempFiles("start");
+        clearTempFiles();
 
         if (!testScdl.exists()) {
             getLog().info("No itest composite found, skipping integration tests");
@@ -311,17 +310,17 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 // ignore
             }
 
-            clearTempFiles("exit");
+            clearTempFiles();
         }
     }
 
-    private void clearTempFiles(String phase) {
+    private void clearTempFiles() {
         
         // At least clean the temporary jar files between runs
         File f3TempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
         for (File tempFile : f3TempDir.listFiles()) {
             boolean deleted = tempFile.delete();
-            getLog().info("*********** Deleted on " + phase + " " + tempFile + ": " + deleted);
+            getLog().info("*********** Deleted " + tempFile + ": " + deleted);
         }
     }
 
