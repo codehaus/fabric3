@@ -22,6 +22,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
 
 /**
@@ -59,6 +60,7 @@ public class JarClasspathProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ClasspathProcessorRegistry registry = EasyMock.createNiceMock(ClasspathProcessorRegistry.class);
-        processor = new JarClasspathProcessor(registry);
+        HostInfo info = EasyMock.createNiceMock(HostInfo.class);
+        processor = new JarClasspathProcessor(registry, info);
     }
 }

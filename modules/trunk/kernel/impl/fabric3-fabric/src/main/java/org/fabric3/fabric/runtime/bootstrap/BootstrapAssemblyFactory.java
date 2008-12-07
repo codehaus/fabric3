@@ -281,7 +281,7 @@ public class BootstrapAssemblyFactory {
                                                                HostInfo info) {
 
         LocalContributionUriResolver resolver = new LocalContributionUriResolver(metaDataStore);
-        JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry);
+        JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry, info);
         classpathProcessor.init();
         return new ClassLoaderBuilderImpl(classLoaderRegistry, resolver, cpRegistry, componentManager, info);
     }

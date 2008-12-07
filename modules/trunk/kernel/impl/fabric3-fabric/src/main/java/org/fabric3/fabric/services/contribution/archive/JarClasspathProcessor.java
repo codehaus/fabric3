@@ -35,21 +35,34 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.util.io.IOHelper;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.archive.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.util.io.IOHelper;
 
 /**
- * Creates a classpath based on the contents of a jar. Specifically, adds the jar and any zip/jar archives found in META-INF/lib to the classpath
+ * Creates a classpath based on the contents of a jar by adding the jar and any zip/jar archives found in META-INF/lib to the classpath. This is dome
+ * using one of two strategies. If the <code>fabric3.extensions.dependecies.extract</code> system property is set to false (the default), embedded
+ * jars will be copied to a temporary file, which is placed on the classpath using a jar: URL. If set to true, the contents of the embedded jar file
+ * will be extracted to the filesystem and placed on the classpath using a file: URL instead.
+ * <p/>
+ * The extract option is designed to work around a bug on Windows where the Sun JVM acquires an OS read lock on jar files when accessing resources
+ * from a jar: URL and does not release it. This results holding open temporary file handles and not being able to delete those files until the JVM
+ * terminates. This issue does not occur on Unix systems.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class JarClasspathProcessor implements ClasspathProcessor {
-    private final ClasspathProcessorRegistry registry;
+    // system property to set when exploding jars
+    private static final String EXTRACT = "fabric3.extensions.dependecies.extract";
 
-    public JarClasspathProcessor(@Reference ClasspathProcessorRegistry registry) {
+    private final ClasspathProcessorRegistry registry;
+    private boolean explodeJars;
+
+    public JarClasspathProcessor(@Reference ClasspathProcessorRegistry registry, @Reference HostInfo hostInfo) {
         this.registry = registry;
+        explodeJars = Boolean.valueOf(hostInfo.getProperty(EXTRACT, "false"));
     }
 
     @Init
@@ -79,12 +92,12 @@ public class JarClasspathProcessor implements ClasspathProcessor {
     }
 
     private void addLibraries(List<URL> classpath, URL jar) throws IOException {
-        
+
         File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
-        
+
         //String parentArchive = jar.toString().substring(jar.toString().lastIndexOf("/"));
         //dir = new File(dir, parentArchive);
-        
+
         dir.mkdirs();
         InputStream is = jar.openStream();
         try {
@@ -98,10 +111,23 @@ public class JarClasspathProcessor implements ClasspathProcessor {
                 if (!path.startsWith("META-INF/lib/")) {
                     continue;
                 }
-                String fileName = path.substring(path.lastIndexOf('/'));
-                File explodedDirectory = new File(dir, fileName);
-                explodeJar(dir, jarStream, explodedDirectory);
-                classpath.add(explodedDirectory.toURI().toURL());
+                if (explodeJars) {
+                    String fileName = path.substring(path.lastIndexOf('/'));
+                    File explodedDirectory = new File(dir, fileName);
+                    explodeJar(dir, jarStream, explodedDirectory);
+                    classpath.add(explodedDirectory.toURI().toURL());
+                } else {
+                    File jarFile = File.createTempFile("fabric3", ".jar", dir);
+                    OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
+                    try {
+                        IOHelper.copy(jarStream, os);
+                        os.flush();
+                    } finally {
+                        os.close();
+                    }
+                    jarFile.deleteOnExit();
+                    classpath.add(jarFile.toURI().toURL());
+                }
             }
         } finally {
             is.close();
@@ -109,47 +135,47 @@ public class JarClasspathProcessor implements ClasspathProcessor {
     }
 
     private void explodeJar(File dir, JarInputStream jarStream, File explodedDirectory) throws IOException, FileNotFoundException {
-        
+
         if (!explodedDirectory.exists()) {
-            
+
             explodedDirectory.mkdirs();
             File jarFile = File.createTempFile("fabric3", ".jar", dir);
             jarFile.createNewFile();
             OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
-            
+
             try {
                 IOHelper.copy(jarStream, os);
                 os.flush();
             } finally {
                 os.close();
             }
-            
+
             try {
-                
+
                 FileInputStream inputStream = new FileInputStream(jarFile);
                 JarInputStream jarInputStream = new JarInputStream(inputStream);
 
                 JarEntry entry;
                 while ((entry = jarInputStream.getNextJarEntry()) != null) {
-                    
+
                     String filePath = entry.getName();
                     if (entry.isDirectory()) {
                         continue;
                     }
-                    
+
                     File entryFile = new File(explodedDirectory, filePath);
                     entryFile.getParentFile().mkdirs();
-                    
+
                     entryFile.createNewFile();
                     OutputStream entryOutputStream = new BufferedOutputStream(new FileOutputStream(entryFile));
                     IOHelper.copy(jarInputStream, entryOutputStream);
                     entryOutputStream.flush();
                     entryOutputStream.close();
-                    
+
                 }
 
                 inputStream.close();
-                
+
             } finally {
                 jarFile.delete();
             }

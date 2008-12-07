@@ -45,7 +45,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -56,10 +55,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.xml.sax.SAXException;
+
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.maven.MavenEmbeddedRuntime;
-import org.xml.sax.SAXException;
+import org.fabric3.util.io.FileHelper;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -70,6 +71,16 @@ import org.xml.sax.SAXException;
  * @execute phase="integration-test"
  */
 public class Fabric3ITestMojo extends AbstractMojo {
+    private static final String CLEAN = "fabric3.extensions.dependecies.cleanup";
+
+    static {
+        // This static block is used to optionally clean the temporary directory between test runs. A static block is used as the iTest plugin may
+        // be instantiated multiple times during a run.
+        boolean clearTmp = Boolean.valueOf(System.getProperty(CLEAN, "false"));
+        if (clearTmp) {
+            clearTempFiles();
+        }
+    }
 
     /**
      * POM
@@ -272,8 +283,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        //clearTempFiles();
-
         if (!testScdl.exists()) {
             getLog().info("No itest composite found, skipping integration tests");
             return;
@@ -310,19 +319,20 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 // ignore
             }
 
-            //clearTempFiles();
         }
     }
 
-    /*private void clearTempFiles() {
-        
-        // At least clean the temporary jar files between runs
+    /**
+     * Recursively cleans the F3 temporary directory.
+     */
+    private static void clearTempFiles() {
         File f3TempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
-        for (File tempFile : f3TempDir.listFiles()) {
-            boolean deleted = tempFile.delete();
-            getLog().info("*********** Deleted " + tempFile + ": " + deleted);
+        try {
+            FileHelper.deleteDirectory(f3TempDir);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }*/
+    }
 
     /**
      * Creates the configuration to boot the Maven runtime, including resolving dependencies.
@@ -331,7 +341,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @throws MojoExecutionException if there is an error creating the configuration
      */
     private MavenBootConfiguration createBootConfiguration() throws MojoExecutionException {
-        
+
         List<FeatureSet> featureSets = resolveFeatureSets();
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
         Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared, featureSets);
@@ -351,7 +361,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         configuration.setFeatureSets(featureSets);
         configuration.setExtensions(extensions);
-        
+
         configuration.setIntentsLocation(intentsLocation);
         List<URL> policyUrls = getPolicyUrls();
         configuration.setPolicyUrls(policyUrls);
@@ -363,13 +373,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setSystemScdl(systemScdl);
         return configuration;
     }
-    
+
     /**
      * Creates user specified policy URLs.
      */
     private List<URL> getPolicyUrls() throws MojoExecutionException {
 
-        
+
         List<URL> policyUrls = new LinkedList<URL>();
         if (policyLocations != null) {
             for (String policyLocation : policyLocations) {
@@ -383,9 +393,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 }
             }
         }
-        
+
         return policyUrls;
-        
+
     }
 
     /**
