@@ -272,7 +272,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        clearTempFiles();
+        //clearTempFiles();
 
         if (!testScdl.exists()) {
             getLog().info("No itest composite found, skipping integration tests");
@@ -310,11 +310,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 // ignore
             }
 
-            clearTempFiles();
+            //clearTempFiles();
         }
     }
 
-    private void clearTempFiles() {
+    /*private void clearTempFiles() {
         
         // At least clean the temporary jar files between runs
         File f3TempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
@@ -322,7 +322,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             boolean deleted = tempFile.delete();
             getLog().info("*********** Deleted " + tempFile + ": " + deleted);
         }
-    }
+    }*/
 
     /**
      * Creates the configuration to boot the Maven runtime, including resolving dependencies.
