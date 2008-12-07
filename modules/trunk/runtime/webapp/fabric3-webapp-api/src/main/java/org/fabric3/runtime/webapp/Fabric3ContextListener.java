@@ -34,6 +34,17 @@
  */
 package org.fabric3.runtime.webapp;
 
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_COMPOSITE_PATH_DEFAULT;
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_COMPOSITE_PATH_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
+import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.POLICY_PARAM;
+import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,10 +56,13 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -66,16 +80,6 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.jmx.agent.Agent;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_COMPOSITE_PATH_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_COMPOSITE_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
-import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 
 /**
  * Launches a Fabric3 runtime in a web application, loading information from servlet context parameters. This listener manages one runtime per servlet
@@ -89,7 +93,6 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 public class Fabric3ContextListener implements ServletContextListener {
 
     private RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> coordinator;
-    private Agent agent;
 
     public void contextInitialized(ServletContextEvent event) {
 
@@ -214,6 +217,20 @@ public class Fabric3ContextListener implements ServletContextListener {
         ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
         configuration.setIntents(source);
         configuration.setRuntime(runtime);
+        
+        String policies = utils.getInitParameter(POLICY_PARAM, null);
+        if (policies != null) {
+            List<ContributionSource> policyContributions = new LinkedList<ContributionSource>();
+            StringTokenizer tok = new StringTokenizer(policies);
+            int i = 0;
+            while (tok.hasMoreElements()) {
+                String policy = tok.nextToken();
+                URL policyUrl = webappClassLoader.getResource(policy);
+                URI uri = URI.create(Names.USER_POLICY_CONTRIBUTION.toASCIIString() + i++);
+                policyContributions.add(new FileContributionSource(uri, policyUrl, -1, new byte[0]));
+            }
+            configuration.setPolicies(policyContributions);
+        }
 
         return configuration;
 

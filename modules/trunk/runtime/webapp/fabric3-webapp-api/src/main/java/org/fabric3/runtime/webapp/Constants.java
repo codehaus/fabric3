@@ -72,6 +72,11 @@ public final class Constants {
     public static final String COMPONENT_PARAM = "fabric3.component";
 
     /**
+     * Name of the servlet context-param that should contain the token separated list of policy files.
+     */
+    public static final String POLICY_PARAM = "fabric3.policy";
+
+    /**
      * Servlet context-param name for user-specified application SCDL path.
      */
     public static final String APPLICATION_COMPOSITE_PATH_PARAM = "fabric3.applicationCompositePath";
