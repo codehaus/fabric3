@@ -18,8 +18,7 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-impl="urn:fabric3.org:implementation"           
-           xmlns:f3-core="urn:fabric3.org:core"     
-           xmlns:f3-policy="urn:fabric3.org:policy"
+           xmlns:f3-core="urn:fabric3.org:core"
            name="Axis2TestComposite">
 
     <component name="EchoTest">
@@ -42,8 +41,8 @@
         <implementation.java class="org.fabric3.tests.binding.axis2.Axis2EchoServiceImpl"/>
         <service name="Axis2EchoService">
             <binding.ws uri="echoService"/>
-            <operation name="echoWsUsernameToken" requires="sca:authentication.message f3-policy:authorization.message"/>
-            <operation name="echoWsX509Token" requires="sca:authentication.message f3-policy:authorization.message"/>
+            <operation name="echoWsUsernameToken" requires="sca:authentication.message"/>
+            <operation name="echoWsX509Token" requires="sca:authentication.message"/>
         </service>
     </component>
 

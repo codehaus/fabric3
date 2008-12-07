@@ -34,7 +34,7 @@ public interface Axis2EchoService {
      * @param message request payload
      * @return response payload
      */
-    @WebMethod(action="echoWs")
+    @WebMethod(action="echoWsUsernameToken")
     OMElement echoWsUsernameToken(OMElement message);
     
     /**

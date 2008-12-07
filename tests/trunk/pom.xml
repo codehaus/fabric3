@@ -38,17 +38,18 @@
             </activation>
 
             <modules>
+                <module>test-ds-extension</module>
+                <!--module>test-jpa-implementation</module-->
+                <module>test-jpa-hibernate</module>
                 <module>test-function</module>
                 <module>test-groovy</module>
                 <module>test-policy</module>
                 <module>test-mock</module>
-                <module>test-security-policy</module>
                 <module>test-runtime-jetty</module>
                 <module>test-binding-axis2</module>
                 <module>test-binding-burlap</module>
                 <module>test-binding-hessian</module>
                 <module>test-binding-jms</module>
-                <module>test-ds-extension</module>
                 <module>test-ftp-security-policy</module>
                 <module>test-ftp-server-extension</module>
                 <module>test-binding-ftp</module>
@@ -56,9 +57,7 @@
                 <module>test-rs</module>
                 <module>test-xquery-exist</module>
                 <module>test-binding-metro</module>
-                <module>test-jpa-hibernate</module>
                 <module>test-binding-axis2-jaxb</module>
-                <module>test-jpa-implementation</module>
             </modules>
         </profile>
     </profiles>
