@@ -14,22 +14,31 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.tests.binding.axis.jaxb;
+package org.fabric3.tests.binding.axis2.jaxb;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.ws.WebFault;
 
 /**
  * @version $Rev$ $Date$
  */
-@XmlRootElement
-public class BadWeatherFault {
-    private String type;
+@WebFault
+public class WeatherException extends Exception {
 
-    public String getType() {
-        return type;
+    private static final long serialVersionUID = -5442856978625675327L;
+    
+    private BadWeatherFault faultInfo;
+
+    public WeatherException(String message, BadWeatherFault faultInfo) {
+        super(message);
+        this.faultInfo = faultInfo;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public WeatherException(String message, BadWeatherFault faultInfo, Throwable throwable) {
+        super(message, throwable);
+        this.faultInfo = faultInfo;
+    }
+
+    public BadWeatherFault getFaultInfo() {
+        return faultInfo;
     }
 }

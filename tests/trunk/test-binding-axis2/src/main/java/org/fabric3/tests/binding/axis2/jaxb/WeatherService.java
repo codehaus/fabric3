@@ -14,32 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.tests.binding.axis.jaxb;
+package org.fabric3.tests.binding.axis2.jaxb;
 
-import java.util.Date;
+public interface WeatherService {
+    
+    WeatherResponse getWeather(WeatherRequest request);
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
-public class WeatherRequest {
-    
-    private String city;
-    private Date date;
-    
-    public String getCity() {
-        return city;
-    }
-    
-    public void setCity(String city) {
-        this.city = city;
-    }
-    
-    public Date getDate() {
-        return date;
-    }
-    
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    void getBadWeather() throws WeatherException;
 
 }

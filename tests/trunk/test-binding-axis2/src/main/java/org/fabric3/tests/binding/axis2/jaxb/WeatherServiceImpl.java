@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.tests.binding.axis.jaxb;
+package org.fabric3.tests.binding.axis2.jaxb;
 
 public class WeatherServiceImpl implements WeatherService {
 

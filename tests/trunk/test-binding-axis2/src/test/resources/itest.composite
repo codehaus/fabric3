@@ -20,6 +20,8 @@
            xmlns:f3-impl="urn:fabric3.org:implementation"           
            xmlns:f3-core="urn:fabric3.org:core"
            name="Axis2TestComposite">
+           
+    <include name="Axis2JaxbTest" />
 
     <component name="EchoTest">
         <f3-impl:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>

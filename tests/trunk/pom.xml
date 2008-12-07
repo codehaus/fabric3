@@ -55,7 +55,6 @@
                 <module>test-rs</module>
                 <module>test-xquery-exist</module>
                 <module>test-binding-metro</module>
-                <module>test-binding-axis2-jaxb</module>
                 <module>test-jpa-implementation</module>
             </modules>
         </profile>
