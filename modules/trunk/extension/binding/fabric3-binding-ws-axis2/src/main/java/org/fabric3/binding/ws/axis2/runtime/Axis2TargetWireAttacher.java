@@ -55,30 +55,23 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTargetDefinition> {
-    private final PolicyApplier policyApplier;
-    private final F3Configurator f3Configurator;
-    private ExpressionExpander expander;
-    private ClassLoaderRegistry classLoaderRegistry;
-
-    public Axis2TargetWireAttacher(@Reference PolicyApplier policyApplier,
-                                   @Reference F3Configurator f3Configurator,
-                                   @Reference ExpressionExpander expander,
-                                   @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.policyApplier = policyApplier;
-        this.f3Configurator = f3Configurator;
-        this.expander = expander;
-        this.classLoaderRegistry = classLoaderRegistry;
-    }
+    
+    @Reference protected PolicyApplier policyApplier;
+    @Reference protected F3Configurator f3Configurator;
+    @Reference protected ExpressionExpander expander;
+    @Reference protected ClassLoaderRegistry classLoaderRegistry;
 
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire) throws WiringException {
 
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
+        
         List<String> endpointUris = new LinkedList<String>();
         String endpointUri = expandUri(target.getUri());
         StringTokenizer tok = new StringTokenizer(endpointUri);
         while (tok.hasMoreElements()) {
             endpointUris.add(tok.nextToken().trim());
         }
-        AxisService axisService = createAxisClientService(target);
+        AxisService axisService = createAxisClientService(target, classLoader);
         
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
@@ -87,8 +80,15 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             Set<AxisPolicy> policies = target.getPolicies(operation);
             Map<String, String> opInfo = target.getOperationInfo() != null ? target.getOperationInfo().get(operation) : null;
 
-            Interceptor interceptor =
-                    new Axis2TargetInterceptor(endpointUris, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier, axisService);
+            Interceptor interceptor = new Axis2TargetInterceptor(endpointUris, 
+                                                                 operation, 
+                                                                 policies, 
+                                                                 opInfo, 
+                                                                 target.getConfig(), 
+                                                                 f3Configurator, 
+                                                                 policyApplier, 
+                                                                 axisService,
+                                                                 classLoader);
             entry.getValue().addInterceptor(interceptor);
         }
 
@@ -121,23 +121,23 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
         }
     }
     
-    private URL getWsdlURL(String wsdlLocation, URI classLoaderId) {
+    private URL getWsdlURL(String wsdlLocation, ClassLoader classLoader) {
         if (wsdlLocation == null) {
             return null;
         }        
         try {
             return new URL(wsdlLocation);
         } catch (MalformedURLException e) {
-            return classLoaderRegistry.getClassLoader(classLoaderId).getResource(wsdlLocation);
+            return classLoader.getResource(wsdlLocation);
         }        
     }
     
     /*
      * Create instance of client side Axis2 service to get info about the Webservice
      */
-    private AxisService createAxisClientService(Axis2WireTargetDefinition target) throws WiringException{
+    private AxisService createAxisClientService(Axis2WireTargetDefinition target, ClassLoader classLoader) throws WiringException{
         
-        URL wsdlURL = getWsdlURL(target.getWsdlLocation(), target.getClassLoaderId());    
+        URL wsdlURL = getWsdlURL(target.getWsdlLocation(), classLoader);    
         if(wsdlURL != null) {
             try {
                 return AxisService.createClientSideAxisService(wsdlURL,

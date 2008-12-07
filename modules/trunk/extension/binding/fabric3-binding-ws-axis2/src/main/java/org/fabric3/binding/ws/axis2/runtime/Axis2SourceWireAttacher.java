@@ -23,6 +23,7 @@ import org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
@@ -34,14 +35,8 @@ import org.fabric3.spi.wire.Wire;
 @EagerInit
 public class Axis2SourceWireAttacher implements SourceWireAttacher<Axis2WireSourceDefinition> {
 
-    private final Axis2ServiceProvisioner serviceProvisioner;
-
-    /**
-     * @param serviceProvisioner axis service provisioner
-     */
-    public Axis2SourceWireAttacher(@Reference Axis2ServiceProvisioner serviceProvisioner) {
-        this.serviceProvisioner = serviceProvisioner;
-    }
+    @Reference protected Axis2ServiceProvisioner serviceProvisioner;
+    @Reference protected ClassLoaderRegistry classLoaderRegistry;
 
     public void attachToSource(Axis2WireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
         serviceProvisioner.provision(source, wire);

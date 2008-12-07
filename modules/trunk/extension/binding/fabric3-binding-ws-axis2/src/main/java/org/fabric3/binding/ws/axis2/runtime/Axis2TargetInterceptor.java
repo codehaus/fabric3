@@ -42,6 +42,7 @@ import org.fabric3.binding.ws.axis2.common.Constant;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
@@ -64,19 +65,17 @@ public class Axis2TargetInterceptor implements Interceptor {
     private Random random = new Random();
     private List<String> failedUris = new LinkedList<String>();
     private AxisService axisService;
+    private ClassLoader classLoader;
 
-    /**
-     * Initializes the end point reference.
-     * 
-     * @param endpointUri the endpoint uri.
-     * @param operation Operation name.
-     * @param policies the set of policies applied to the service or reference configuration
-     * @param f3Configurator a configuration helper for classloading
-     * @param policyApplier the helper for applying configured policies
-     * @param axisService client side axis2 service.
-     */
-    public Axis2TargetInterceptor(List<String> endpointUris, String operation, Set<AxisPolicy> policies, Map<String, String> operationInfo,
-            Map<String, String> config, F3Configurator f3Configurator, PolicyApplier policyApplier, AxisService axisService) {
+    public Axis2TargetInterceptor(List<String> endpointUris, 
+                                  String operation, 
+                                  Set<AxisPolicy> policies, 
+                                  Map<String, String> operationInfo,
+                                  Map<String, String> config, 
+                                  F3Configurator f3Configurator, 
+                                  PolicyApplier policyApplier, 
+                                  AxisService axisService,
+                                  ClassLoader classLoader) {
 
         this.operation = operation;
         this.endpointUris = endpointUris;
@@ -86,6 +85,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         this.operationInfo = operationInfo;
         this.config = config;
         this.axisService = axisService;
+        this.classLoader = classLoader;
     }
 
     public Interceptor getNext() {
@@ -111,17 +111,12 @@ public class Axis2TargetInterceptor implements Interceptor {
         ClassLoader oldCl = currentThread.getContextClassLoader();
 
         try {
-            // The extension classloader is a temporary workaround for Axis2
-            // security. The security provider is installed in a separate
-            // extension
-            // contribution which is loaded in a child classloader of the Axis2
-            // extensin (i.e. it imports the Axis2 extension). Axis2 expects the
-            // security callback class to be visible from the TCCL. The
-            // extension classloader is the classloader that loaded the security
-            // contribution and hence has both the security and Axis2 classes
-            // visible to it.
 
-            currentThread.setContextClassLoader(f3Configurator.getExtensionClassLoader());
+            if (classLoader instanceof MultiParentClassLoader) {
+                MultiParentClassLoader mpcl = (MultiParentClassLoader) classLoader;
+                mpcl.addParent(getClass().getClassLoader());
+            }
+            currentThread.setContextClassLoader(classLoader);
 
             ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);
             sender.setOptions(options);

@@ -17,6 +17,9 @@
 package org.fabric3.binding.ws.axis2.runtime.servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,12 +28,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.AxisServlet;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @SuppressWarnings("serial")
 public class F3AxisServlet extends AxisServlet {
+    
+    private Map<String, ClassLoader> classLoaders = new HashMap<String, ClassLoader>();
 
     /**
      * Initializes the Axis configuration context.
@@ -39,6 +45,16 @@ public class F3AxisServlet extends AxisServlet {
      */
     public F3AxisServlet(final ConfigurationContext configurationContext) {
         this.configContext = configurationContext;
+    }
+    
+    /**
+     * Registers a classloader with the incoming path.
+     * 
+     * @param path Path of the incoming request.
+     * @param classLoader Classloader used by the request.
+     */
+    public void registerClassLoader(String path, ClassLoader classLoader) {
+        classLoaders.put(path, classLoader);
     }
 
     /**
@@ -64,9 +80,14 @@ public class F3AxisServlet extends AxisServlet {
 
         try {
 
-            // TODO May be we want to do an MPCL with app cl as well
-            ClassLoader systemCl = getClass().getClassLoader();
-            currentThread.setContextClassLoader(systemCl);
+            String requestUri = request.getRequestURI();
+            ClassLoader classLoader = classLoaders.get(requestUri);
+            if (classLoader instanceof MultiParentClassLoader) {
+                MultiParentClassLoader mpcl = (MultiParentClassLoader) classLoader;
+                mpcl.addParent(getClass().getClassLoader());
+            }
+            currentThread.setContextClassLoader(getClass().getClassLoader());
+            
             super.service(request, response);
 
         } finally {

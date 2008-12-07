@@ -156,8 +156,10 @@ public class MavenRuntimeBooter {
         configuration.setRuntime(runtime);
         
         List<ContributionSource> policyContributions = new LinkedList<ContributionSource>();
+        int i = 0;
         for (URL policyUrl : policyUrls) {
-            policyContributions.add(new FileContributionSource(Names.USER_POLICY_CONTRIBUTION, policyUrl, -1, new byte[0]));
+            URI uri = URI.create(Names.USER_POLICY_CONTRIBUTION.toASCIIString() + i++);
+            policyContributions.add(new FileContributionSource(uri, policyUrl, -1, new byte[0]));
         }
         configuration.setPolicies(policyContributions);
         
