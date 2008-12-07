@@ -64,6 +64,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
 
     public MavenEmbeddedRuntimeImpl() {
         super(MavenHostInfo.class, null);
+//     URL.setURLStreamHandlerFactory(new F3UrlStreamHandlerFactory());
     }
 
     public void deploy(URL base, QName qName) throws ContributionException, DeploymentException {

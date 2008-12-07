@@ -57,11 +57,5 @@ public interface StandaloneHostInfo extends HostInfo {
      */
     File getExtensionsDirectory();
 
-    /**
-     * Returns the user extensions directory.
-     *
-     * @return the user extensions directory
-     */
-    File getUserExtensionsDirectory();
 
 }

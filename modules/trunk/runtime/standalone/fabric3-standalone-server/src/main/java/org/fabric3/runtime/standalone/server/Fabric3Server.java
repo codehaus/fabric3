@@ -252,11 +252,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
         // process extensions
         File extensionsDir = runtime.getHostInfo().getExtensionsDirectory();
-        File userExtensionsDir = runtime.getHostInfo().getUserExtensionsDirectory();
         List<ContributionSource> extensions = getExtensionContributions(extensionsDir);
         configuration.setExtensions(extensions);
-        List<ContributionSource> userExtensions = getExtensionContributions(userExtensionsDir);
-        configuration.setUserExtensions(userExtensions);
 
         // process the baseline intents
         ContributionSource source = getIntentsContribution(hostInfo.getConfigDirectory());

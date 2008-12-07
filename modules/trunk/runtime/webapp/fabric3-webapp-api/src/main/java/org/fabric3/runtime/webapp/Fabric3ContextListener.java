@@ -205,8 +205,6 @@ public class Fabric3ContextListener implements ServletContextListener {
         ServletContext context = runtime.getHostInfo().getServletContext();
         List<ContributionSource> extensions = getExtensionContributions("/WEB-INF/lib/f3Extensions.properties", context);
         configuration.setExtensions(extensions);
-        List<ContributionSource> userExtensions = getExtensionContributions("/WEB-INF/lib/f3UserExtensions.properties", context);
-        configuration.setUserExtensions(userExtensions);
 
         // process the baseline intents
         URL intentsLocation = utils.getIntentsLocation(webappClassLoader);

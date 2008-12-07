@@ -210,8 +210,6 @@ public final class BootstrapHelper {
         boolean online = !Boolean.parseBoolean(props.getProperty("offline", "false"));
         File extensionsDir = getDirectory(baseDir, "extensions");
 
-        File userExtensionsDir = getDirectory(baseDir, "user");
-
         try {
 
             // set the domain from runtime properties
@@ -223,7 +221,7 @@ public final class BootstrapHelper {
                 throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, userExtensionsDir, configDir, online, props);
+            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, configDir, online, props);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }

@@ -45,7 +45,6 @@ import org.fabric3.host.runtime.AbstractHostInfo;
  */
 public class StandaloneHostInfoImpl extends AbstractHostInfo implements StandaloneHostInfo {
     private final File extensionsDirectory;
-    private final File userExtensionsDirectory;
     private final File configDirectory;
 
     /**
@@ -54,7 +53,6 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
      * @param domain            the SCA domain this runtime belongs to
      * @param baseDir           directory containing the standalone installation
      * @param extensionsDir     directory containing the standalone extensions
-     * @param userExtensionsDir the directory containing user-contributed extensions
      * @param configDir         directory containing the standalone configuration
      * @param online            true if this runtime should consider itself online
      * @param properties        properties for this runtime
@@ -62,21 +60,16 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
     public StandaloneHostInfoImpl(final URI domain,
                                   final File baseDir,
                                   final File extensionsDir,
-                                  File userExtensionsDir, final File configDir,
+                                  final File configDir,
                                   final boolean online,
                                   final Properties properties) {
         super(domain, baseDir, online, properties);
         this.extensionsDirectory = extensionsDir;
-        userExtensionsDirectory = userExtensionsDir;
         this.configDirectory = configDir;
     }
 
     public File getExtensionsDirectory() {
         return extensionsDirectory;
-    }
-
-    public File getUserExtensionsDirectory() {
-        return userExtensionsDirectory;
     }
 
     public File getConfigDirectory() {

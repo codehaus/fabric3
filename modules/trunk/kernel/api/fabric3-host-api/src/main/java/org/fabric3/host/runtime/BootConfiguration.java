@@ -52,7 +52,6 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
     private List<URL> bootExports;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
-    private List<ContributionSource> userExtensions;
     private List<ContributionSource> policies = new LinkedList<ContributionSource>();
 
     public RUNTIME getRuntime() {
@@ -101,14 +100,6 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
 
     public void setExtensions(List<ContributionSource> extensions) {
         this.extensions = extensions;
-    }
-
-    public List<ContributionSource> getUserExtensions() {
-        return userExtensions;
-    }
-
-    public void setUserExtensions(List<ContributionSource> userExtensions) {
-        this.userExtensions = userExtensions;
     }
 
     public List<ContributionSource> getPolicies() {
