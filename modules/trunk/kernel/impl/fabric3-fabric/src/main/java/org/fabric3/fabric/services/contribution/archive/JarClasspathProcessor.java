@@ -18,6 +18,8 @@ package org.fabric3.fabric.services.contribution.archive;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -96,24 +98,61 @@ public class JarClasspathProcessor implements ClasspathProcessor {
                 if (!path.startsWith("META-INF/lib/")) {
                     continue;
                 }
-                // File jarFile = File.createTempFile("fabric3", ".jar", dir);
                 String fileName = path.substring(path.lastIndexOf('/'));
-                File jarFile = new File(dir, fileName);
-                if (!jarFile.exists()) {
-                    jarFile.createNewFile();
-                    OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
-                    try {
-                        IOHelper.copy(jarStream, os);
-                        os.flush();
-                    } finally {
-                        os.close();
-                    }
-                    jarFile.deleteOnExit();
-                }
-                classpath.add(jarFile.toURI().toURL());
+                File explodedDirectory = new File(dir, fileName);
+                explodeJar(dir, jarStream, explodedDirectory);
+                classpath.add(explodedDirectory.toURI().toURL());
             }
         } finally {
             is.close();
+        }
+    }
+
+    private void explodeJar(File dir, JarInputStream jarStream, File explodedDirectory) throws IOException, FileNotFoundException {
+        
+        if (!explodedDirectory.exists()) {
+            
+            explodedDirectory.mkdirs();
+            File jarFile = File.createTempFile("fabric3", ".jar", dir);
+            jarFile.createNewFile();
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
+            
+            try {
+                IOHelper.copy(jarStream, os);
+                os.flush();
+            } finally {
+                os.close();
+            }
+            
+            try {
+                
+                FileInputStream inputStream = new FileInputStream(jarFile);
+                JarInputStream jarInputStream = new JarInputStream(inputStream);
+
+                JarEntry entry;
+                while ((entry = jarInputStream.getNextJarEntry()) != null) {
+                    
+                    String filePath = entry.getName();
+                    if (entry.isDirectory()) {
+                        continue;
+                    }
+                    
+                    File entryFile = new File(explodedDirectory, filePath);
+                    entryFile.getParentFile().mkdirs();
+                    
+                    entryFile.createNewFile();
+                    OutputStream entryOutputStream = new BufferedOutputStream(new FileOutputStream(entryFile));
+                    IOHelper.copy(jarInputStream, entryOutputStream);
+                    entryOutputStream.flush();
+                    entryOutputStream.close();
+                    
+                }
+
+                inputStream.close();
+                
+            } finally {
+                jarFile.delete();
+            }
         }
     }
 }
