@@ -79,11 +79,6 @@
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
-                            <groupId>org.codehaus.fabric3.tests</groupId>
-                            <artifactId>test-ftp-security-policy</artifactId>
-                            <version>0.1-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-ftp-spi</artifactId>
                             <version>0.7-SNAPSHOT</version>
@@ -142,6 +137,9 @@
                             </exclusions>
                         </dependency>
                     </shared>
+					<policyLocations>
+						<policyLocation>test-ftp-security.xml</policyLocation>
+					</policyLocations>
                     <systemConfig>
                         <![CDATA[
                         <config>
