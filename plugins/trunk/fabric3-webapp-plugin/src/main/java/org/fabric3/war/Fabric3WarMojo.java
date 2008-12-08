@@ -40,12 +40,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -79,7 +76,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Add fabric3 runtime dependencies to a webapp. The wenapp runtime in Fabric3 currently doesn't support classloader isolation. All JAR files are
  * added to the WEB-INF/lib directory. All system and user extensions are added to the same directory as well. The list of system extensions are
- * specified in the properties file f3Extensions.properties and the list of user extensions are specified in the f3UserExtenion.properties.
+ * specified in the properties file f3Extensions.properties.
  * <p/>
  * Both system and user extensions are exploded and the contents of the META-INF/lib directory are copied to the WEB-INF/lib directory.
  * <p/>
@@ -106,11 +103,6 @@ public class Fabric3WarMojo extends AbstractMojo {
      * Fabric3 extensions path.
      */
     private static final String EXTENSIONS_PATH = "WEB-INF/lib";
-
-    /**
-     * Fabric3 user extensions path.
-     */
-    private static final String USER_EXTENSIONS_PATH = "WEB-INF/lib";
 
     /**
      * The directory where the webapp is built.
@@ -190,20 +182,6 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @parameter
      */
     public boolean excludeDefaultFeatures;
-
-    /**
-     * Set of user extension artifacts that should be deployed to the runtime.
-     *
-     * @parameter
-     */
-    public Dependency[] userExtensions;
-
-    /**
-     * Set of user extension artifacts that are not Maven artifacts.
-     *
-     * @parameter
-     */
-    public File[] userExtensionsArchives;
 
     /**
      * The default version of the runtime to use.
@@ -304,16 +282,6 @@ public class Fabric3WarMojo extends AbstractMojo {
                 }
             }
             processExtensions(EXTENSIONS_PATH, "f3Extensions.properties", uniqueExtensions);
-            uniqueExtensions.clear();
-            if (userExtensions != null) {
-                for (Dependency extension : userExtensions) {
-                    if (extension.getVersion() == null) {
-                        resolveDependencyVersion(extension);
-                    }
-                    uniqueExtensions.add(extension);
-                }
-                processExtensions(USER_EXTENSIONS_PATH, "f3UserExtensions.properties", uniqueExtensions);
-            }
 
         } catch (SAXParseException e) {
             throw new MojoExecutionException(e.getMessage(), e);
@@ -386,30 +354,6 @@ public class Fabric3WarMojo extends AbstractMojo {
                 props.put(extensionArtifact.getFile().getName(), extensionArtifact.getFile().getName());
 
             }
-
-            // process extensions that are not Maven archives, e.g. XML contributions
-            if (userExtensionsArchives != null) {
-                Map<String, String> names = new HashMap<String, String>();
-                for (File entry : userExtensionsArchives) {
-                    if (!entry.exists()) {
-                        throw new MojoExecutionException("User extension does not exist: " + entry);
-                    }
-                    String name = entry.getName();
-                    if (names.containsKey(name)) {
-                        throw new MojoExecutionException("User extensions must have unique names: " + name);
-                    }
-                    names.put(name, name);
-                    // copy to directory
-                    File destinationFile = new File(extensionsDir, name);
-                    FileOutputStream outputStream = new FileOutputStream(destinationFile);
-                    InputStream inputStream = entry.toURL().openStream();
-                    IOUtil.copy(inputStream, outputStream);
-                    IOUtil.close(inputStream);
-                    IOUtil.close(outputStream);
-                    props.put(name, name);
-                }
-            }
-
 
             props.store(new FileOutputStream(new File(extensionsDir, extensionProperties)), null);
 
