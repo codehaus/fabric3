@@ -363,7 +363,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setExtensions(extensions);
 
         configuration.setIntentsLocation(intentsLocation);
-        List<URL> policyUrls = getPolicyUrls();
+        List<URL> policyUrls = getPolicyUrls(moduleDependencies);
         configuration.setPolicyUrls(policyUrls);
         configuration.setModuleDependencies(moduleDependencies);
         configuration.setOutputDirectory(outputDirectory);
@@ -377,25 +377,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * Creates user specified policy URLs.
      */
-    private List<URL> getPolicyUrls() throws MojoExecutionException {
-
-
-        List<URL> policyUrls = new LinkedList<URL>();
-        if (policyLocations != null) {
-            for (String policyLocation : policyLocations) {
-                File policyFile = new File(project.getBasedir(), "target");
-                policyFile = new File(policyFile, "classes");
-                policyFile = new File(policyFile, policyLocation);
-                try {
-                    policyUrls.add(policyFile.toURL());
-                } catch (MalformedURLException e) {
-                    throw new MojoExecutionException(e.getMessage(), e);
-                }
-            }
-        }
-
-        return policyUrls;
-
+    private List<URL> getPolicyUrls(Set<URL> moduleDependencies) throws MojoExecutionException {
+        return PolicyFileHelper.getPolicyUrls(project, moduleDependencies, policyLocations);
     }
 
     /**
