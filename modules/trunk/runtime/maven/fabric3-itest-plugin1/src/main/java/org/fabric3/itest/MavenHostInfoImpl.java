@@ -60,6 +60,10 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         return null;
     }
 
+	public File getTempDir() {
+        return null;
+    }
+	
     public boolean isOnline() {
         throw new UnsupportedOperationException();
     }

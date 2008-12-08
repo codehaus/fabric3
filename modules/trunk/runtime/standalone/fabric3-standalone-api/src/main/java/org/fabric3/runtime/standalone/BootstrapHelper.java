@@ -207,6 +207,7 @@ public final class BootstrapHelper {
     public static StandaloneHostInfo createHostInfo(File baseDir, File configDir, Properties props) throws BootstrapException, IOException {
 
         File extensionsDir = getDirectory(baseDir, "extensions");
+        File tempDir = getDirectory(baseDir, "tmp");
 
         try {
 
@@ -219,7 +220,7 @@ public final class BootstrapHelper {
                 throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, configDir, props);
+            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, configDir, props, tempDir);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }

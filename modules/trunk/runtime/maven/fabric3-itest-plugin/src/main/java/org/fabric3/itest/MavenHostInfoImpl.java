@@ -34,11 +34,11 @@
  */
 package org.fabric3.itest;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Set;
-import java.io.File;
 
 import org.fabric3.maven.MavenHostInfo;
 
@@ -49,15 +49,21 @@ public class MavenHostInfoImpl implements MavenHostInfo {
     private final URI domain;
     private final Properties hostProperties;
     private final Set<URL> dependencyUrls;
+    private final File tempDir;
 
-    public MavenHostInfoImpl(URI domain, Properties hostProperties, Set<URL> dependencyUrls) {
+    public MavenHostInfoImpl(URI domain, Properties hostProperties, Set<URL> dependencyUrls, File tempDir) {
         this.domain = domain;
         this.hostProperties = hostProperties;
         this.dependencyUrls = dependencyUrls;
+        this.tempDir = tempDir;
     }
 
     public File getBaseDir() {
         return null;
+    }
+
+    public File getTempDir() {
+        return tempDir;
     }
 
     public boolean isOnline() {

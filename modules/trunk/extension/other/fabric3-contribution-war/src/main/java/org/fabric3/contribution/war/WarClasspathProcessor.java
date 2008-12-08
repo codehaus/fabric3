@@ -34,6 +34,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.archive.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
 
@@ -48,9 +49,11 @@ public class WarClasspathProcessor implements ClasspathProcessor {
     private static final Random RANDOM = new Random();
 
     private final ClasspathProcessorRegistry registry;
+    private HostInfo info;
 
-    public WarClasspathProcessor(@Reference ClasspathProcessorRegistry registry) {
+    public WarClasspathProcessor(@Reference ClasspathProcessorRegistry registry, @Reference HostInfo info) {
         this.registry = registry;
+        this.info = info;
     }
 
     @Init
@@ -80,8 +83,7 @@ public class WarClasspathProcessor implements ClasspathProcessor {
     }
 
     private void addLibraries(List<URL> classpath, URL jar) throws IOException {
-        File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
-        dir.mkdir();
+        File dir = info.getTempDir();
         InputStream is = jar.openStream();
         try {
             JarInputStream jarStream = new JarInputStream(is);

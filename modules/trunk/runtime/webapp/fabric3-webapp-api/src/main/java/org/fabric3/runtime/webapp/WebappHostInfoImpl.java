@@ -42,15 +42,17 @@ import javax.servlet.ServletContext;
  * @version $Rev$ $Date$
  */
 public class WebappHostInfoImpl implements WebappHostInfo {
-    
+
     private final ServletContext servletContext;
     private final URI domain;
     private final File baseDir;
+    private File tempDirectory;
 
-    public WebappHostInfoImpl(ServletContext servletContext, URI domain, File baseDir) {
+    public WebappHostInfoImpl(ServletContext servletContext, URI domain, File baseDir, File tempDirectory) {
         this.servletContext = servletContext;
         this.domain = domain;
         this.baseDir = baseDir;
+        this.tempDirectory = tempDirectory;
     }
 
     public ServletContext getServletContext() {
@@ -59,6 +61,10 @@ public class WebappHostInfoImpl implements WebappHostInfo {
 
     public File getBaseDir() {
         return baseDir;
+    }
+
+    public File getTempDir() {
+        return tempDirectory;
     }
 
     public File getInstallDirectory() {

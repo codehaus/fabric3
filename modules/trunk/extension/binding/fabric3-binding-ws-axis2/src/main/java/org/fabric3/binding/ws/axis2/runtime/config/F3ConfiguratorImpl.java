@@ -38,6 +38,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
@@ -46,6 +47,7 @@ import org.fabric3.host.work.WorkScheduler;
 @EagerInit
 public class F3ConfiguratorImpl implements F3Configurator {
     private WorkScheduler scheduler;
+    private HostInfo info;
     private ConfigurationContext configurationContext;
     private String servicePath = "axis2";
     private Map<String, AxisModule> modules = new HashMap<String, AxisModule>();
@@ -54,8 +56,9 @@ public class F3ConfiguratorImpl implements F3Configurator {
     private String cacheLargeAttachements = "true";
     private String cacheThreshold = "100000";
 
-    public F3ConfiguratorImpl(@Reference WorkScheduler scheduler) {
+    public F3ConfiguratorImpl(@Reference WorkScheduler scheduler, @Reference HostInfo info) {
         this.scheduler = scheduler;
+        this.info = info;
     }
 
     /**
@@ -112,8 +115,7 @@ public class F3ConfiguratorImpl implements F3Configurator {
         // setup streaming large attachements to disk to avoid buffering in memory
         configurationContext.setProperty(Constants.Configuration.CACHE_ATTACHMENTS, cacheLargeAttachements);
         configurationContext.setProperty(Constants.Configuration.FILE_SIZE_THRESHOLD, cacheThreshold);
-        File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
-        dir.mkdir();
+        File dir = info.getTempDir();
         File attachementDir = new File(dir, "axis2");
         attachementDir.mkdir();
         configurationContext.setProperty(Constants.Configuration.ATTACHMENT_TEMP_DIR, attachementDir.toString());

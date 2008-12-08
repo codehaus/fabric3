@@ -32,6 +32,8 @@ import java.util.concurrent.Future;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.xml.sax.InputSource;
+
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
@@ -46,7 +48,6 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.MavenEmbeddedRuntime;
-import org.xml.sax.InputSource;
 
 /**
  * @version $Revision$ $Date$
@@ -115,7 +116,10 @@ public class MavenRuntimeBooter {
         runtime.setHostClassLoader(hostClassLoader);
 
         Properties hostProperties = properties != null ? properties : System.getProperties();
-        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(DOMAIN), hostProperties, moduleDependencies);
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
+        tempDir.mkdir();
+        
+        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(DOMAIN), hostProperties, moduleDependencies, tempDir);
         runtime.setHostInfo(hostInfo);
 
         runtime.setJmxSubDomain(managementDomain);
@@ -154,7 +158,7 @@ public class MavenRuntimeBooter {
         ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
         configuration.setIntents(source);
         configuration.setRuntime(runtime);
-        
+
         List<ContributionSource> policyContributions = new LinkedList<ContributionSource>();
         int i = 0;
         for (URL policyUrl : policyUrls) {
@@ -162,7 +166,7 @@ public class MavenRuntimeBooter {
             policyContributions.add(new FileContributionSource(uri, policyUrl, -1, new byte[0]));
         }
         configuration.setPolicies(policyContributions);
-        
+
         return configuration;
     }
 

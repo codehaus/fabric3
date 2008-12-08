@@ -58,10 +58,12 @@ public class JarClasspathProcessor implements ClasspathProcessor {
     private static final String EXTRACT = "fabric3.extensions.dependecies.extract";
 
     private final ClasspathProcessorRegistry registry;
+    private HostInfo hostInfo;
     private boolean explodeJars;
 
     public JarClasspathProcessor(@Reference ClasspathProcessorRegistry registry, @Reference HostInfo hostInfo) {
         this.registry = registry;
+        this.hostInfo = hostInfo;
         explodeJars = Boolean.valueOf(hostInfo.getProperty(EXTRACT, "false"));
     }
 
@@ -93,12 +95,8 @@ public class JarClasspathProcessor implements ClasspathProcessor {
 
     private void addLibraries(List<URL> classpath, URL jar) throws IOException {
 
-        File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
+        File dir = hostInfo.getTempDir();
 
-        //String parentArchive = jar.toString().substring(jar.toString().lastIndexOf("/"));
-        //dir = new File(dir, parentArchive);
-
-        dir.mkdirs();
         InputStream is = jar.openStream();
         try {
             JarInputStream jarStream = new JarInputStream(is);

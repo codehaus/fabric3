@@ -47,6 +47,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
     private final Properties properties;
     private final File extensionsDirectory;
     private final File configDirectory;
+    private final File tempDirectory;
 
     /**
      * Constructor.
@@ -56,13 +57,15 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
      * @param extensionsDir directory containing the standalone extensions
      * @param configDir     directory containing the standalone configuration
      * @param properties    properties for this runtime
+     * @param tempDirectory the directory for writing temporary files
      */
-    public StandaloneHostInfoImpl(URI domain, File baseDir, File extensionsDir, File configDir, Properties properties) {
+    public StandaloneHostInfoImpl(URI domain, File baseDir, File extensionsDir, File configDir, Properties properties, File tempDirectory) {
         this.domain = domain;
         this.baseDir = baseDir;
         this.properties = properties;
         this.extensionsDirectory = extensionsDir;
         this.configDirectory = configDir;
+        this.tempDirectory = tempDirectory;
     }
 
     public URI getDomain() {
@@ -71,6 +74,10 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
 
     public final File getBaseDir() {
         return baseDir;
+    }
+
+    public File getTempDir() {
+        return tempDirectory;
     }
 
     public String getProperty(String name, String defaultValue) {

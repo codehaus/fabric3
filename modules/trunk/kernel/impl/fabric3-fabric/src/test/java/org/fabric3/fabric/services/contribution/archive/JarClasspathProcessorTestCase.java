@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.contribution.archive;
 
 import java.net.URL;
 import java.util.List;
+import java.io.File;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -61,6 +62,8 @@ public class JarClasspathProcessorTestCase extends TestCase {
         super.setUp();
         ClasspathProcessorRegistry registry = EasyMock.createNiceMock(ClasspathProcessorRegistry.class);
         HostInfo info = EasyMock.createNiceMock(HostInfo.class);
+        EasyMock.expect(info.getTempDir()).andReturn(new File(System.getProperty("java.io.tmpdir"), ".f3"));
+        EasyMock.replay(info);
         processor = new JarClasspathProcessor(registry, info);
     }
 }
