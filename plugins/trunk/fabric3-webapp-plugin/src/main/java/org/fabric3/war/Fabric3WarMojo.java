@@ -74,11 +74,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Add fabric3 runtime dependencies to a webapp. The wenapp runtime in Fabric3 currently doesn't support classloader isolation. All JAR files are
- * added to the WEB-INF/lib directory. All system and user extensions are added to the same directory as well. The list of system extensions are
- * specified in the properties file f3Extensions.properties.
+ * Add Fabric3 runtime dependencies to a webapp. The webapp runtime loads user and runtime libraries using the webapp classloader. Consequently, all
+ * runtime, extension, and user jars are added to the WEB-INF/lib directory. The list of system extensions are specified in the properties file
+ * f3Extensions.properties.
  * <p/>
- * Both system and user extensions are exploded and the contents of the META-INF/lib directory are copied to the WEB-INF/lib directory.
+ * Extensions are exploded and the contents of the META-INF/lib directory are copied to the WEB-INF/lib directory.
  * <p/>
  * <p/>
  * Performs the following tasks.
@@ -98,11 +98,6 @@ public class Fabric3WarMojo extends AbstractMojo {
      * Fabric3 boot path.
      */
     private static final String BOOT_PATH = "WEB-INF/lib";
-
-    /**
-     * Fabric3 extensions path.
-     */
-    private static final String EXTENSIONS_PATH = "WEB-INF/lib";
 
     /**
      * The directory where the webapp is built.
@@ -281,7 +276,7 @@ public class Fabric3WarMojo extends AbstractMojo {
                     }
                 }
             }
-            processExtensions(EXTENSIONS_PATH, "f3Extensions.properties", uniqueExtensions);
+            processExtensions(BOOT_PATH, "f3Extensions.properties", uniqueExtensions);
 
         } catch (SAXParseException e) {
             throw new MojoExecutionException(e.getMessage(), e);
