@@ -55,7 +55,7 @@ import org.fabric3.util.io.IOHelper;
 @EagerInit
 public class JarClasspathProcessor implements ClasspathProcessor {
     // system property to set when exploding jars
-    private static final String EXTRACT = "fabric3.extensions.dependecies.extract";
+    private static final String EXTRACT = "fabric3.extensions.dependencies.extract";
 
     private final ClasspathProcessorRegistry registry;
     private HostInfo hostInfo;

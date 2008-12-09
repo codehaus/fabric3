@@ -71,7 +71,7 @@ import org.fabric3.util.io.FileHelper;
  * @execute phase="integration-test"
  */
 public class Fabric3ITestMojo extends AbstractMojo {
-    private static final String CLEAN = "fabric3.extensions.dependecies.cleanup";
+    private static final String CLEAN = "fabric3.extensions.dependencies.cleanup";
 
     static {
         // This static block is used to optionally clean the temporary directory between test runs. A static block is used as the iTest plugin may
