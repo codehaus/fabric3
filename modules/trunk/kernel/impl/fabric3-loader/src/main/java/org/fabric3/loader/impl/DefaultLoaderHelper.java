@@ -75,10 +75,16 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
  */
 public class DefaultLoaderHelper implements LoaderHelper {
     private final DocumentBuilderFactory documentBuilderFactory;
+    private final DocumentBuilder builder;
 
     public DefaultLoaderHelper() {
-        documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
+        try {
+            documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            builder = documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError(e);
+        }
     }
 
     /**
@@ -92,13 +98,6 @@ public class DefaultLoaderHelper implements LoaderHelper {
         String key = reader.getAttributeValue(Namespaces.CORE, "key");
         if (key == null) {
             return null;
-        }
-        
-        DocumentBuilder builder;
-        try {
-            builder = documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError(e);
         }
 
         // create a document with a root element to hold the key value
