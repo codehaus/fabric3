@@ -136,7 +136,9 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             axisService.addParameter(interfaceParameter);
 
             setMessageReceivers(wire, axisService);
-
+            // Reset the name
+            axisService.setName(uri);
+            
             configurationContext.getAxisConfiguration().addService(axisService);
 
             applyPolicies(pwsd, axisService);
