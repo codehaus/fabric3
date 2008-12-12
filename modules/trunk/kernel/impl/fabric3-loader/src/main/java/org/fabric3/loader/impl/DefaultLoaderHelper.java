@@ -88,16 +88,17 @@ public class DefaultLoaderHelper implements LoaderHelper {
      * @return a standalone document containing the value
      */
     public Document loadKey(XMLStreamReader reader) {
+
+        String key = reader.getAttributeValue(Namespaces.CORE, "key");
+        if (key == null) {
+            return null;
+        }
+        
         DocumentBuilder builder;
         try {
             builder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             throw new AssertionError(e);
-        }
-
-        String key = reader.getAttributeValue(Namespaces.CORE, "key");
-        if (key == null) {
-            return null;
         }
 
         // create a document with a root element to hold the key value
