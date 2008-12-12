@@ -42,9 +42,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -184,6 +186,13 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @parameter expression="RELEASE"
      */
     public String runTimeVersion;
+    
+    /**
+     * Exclude any embedded dependencies from extensions.
+     * 
+     * @parameter
+     */
+    public List<String> excludes = new LinkedList<String>();
 
     /**
      * POM
@@ -328,6 +337,9 @@ public class Fabric3WarMojo extends AbstractMojo {
                     String entryName = jarEntry.getName();
                     if (entryName.startsWith("META-INF/lib") && entryName.endsWith(".jar")) {
                         String extractedLibraryName = entryName.substring(entryName.lastIndexOf('/') + 1);
+                        if (excludes.contains(extractedLibraryName)) {
+                            continue;
+                        }
                         File extractedLibraryFile = new File(extensionsDir, extractedLibraryName);
                         if (!extractedLibraryFile.exists()) {
                             FileOutputStream outputStream = new FileOutputStream(extractedLibraryFile);
