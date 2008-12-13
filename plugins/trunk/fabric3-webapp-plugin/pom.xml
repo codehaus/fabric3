@@ -36,12 +36,13 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-plugins-parent-pom</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <version>0.7-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-webapp-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Webapp Plugin</name>
+    <version>0.7-SNAPSHOT</version>
     <description>Fabric3 Webapp Plugin.</description>
 
     <distributionManagement>
