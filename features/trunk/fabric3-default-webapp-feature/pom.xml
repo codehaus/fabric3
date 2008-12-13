@@ -46,45 +46,44 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jdk-proxy</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                             <scope>runtime</scope>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-java</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-provision</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-loader</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-runtime</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-conversation-propagation</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-web</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                             <scope>runtime</scope>
                         </dependency>
-
                         <dependency>
                             <groupId>org.codehaus.fabric3.webapp</groupId>
                             <artifactId>fabric3-webapp-extension</artifactId>
-                            <version>0.7-SNAPSHOT</version>
+                            <version>0.7</version>
                         </dependency>
 
                         <!--<dependency>-->
