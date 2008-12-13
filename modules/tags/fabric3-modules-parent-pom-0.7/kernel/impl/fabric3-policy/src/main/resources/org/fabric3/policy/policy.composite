@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+    Policy configuraion.
+    
+    $Rev: 593 $ $Date: 2007-07-26 04:55:15 +0100 (Thu, 26 Jul 2007) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           name="PolicyBootComposite"
+           autowire="true">
+
+    <!-- Policy Infoset Builder -->
+    <component name="PolicyInfosetBuilder">
+        <f3-impl:implementation.system class="org.fabric3.policy.infoset.DefaultPolicyInfosetBuilder"/>
+    </component>
+
+    <!-- Policy Set Evaluator -->
+    <component name="PolicySetEvaluator">
+        <f3-impl:implementation.system class="org.fabric3.policy.infoset.DefaultPolicySetEvaluator"/>
+    </component>
+
+    <!-- Interception policy helper -->
+    <component name="InteractionPolicyHelper">
+        <f3-impl:implementation.system class="org.fabric3.policy.helper.InteractionPolicyHelperImpl"/>
+    </component>
+
+    <!-- Implementation policy helper -->
+    <component name="ImplementationPolicyHelper">
+        <f3-impl:implementation.system class="org.fabric3.policy.helper.ImplementationPolicyHelperImpl"/>
+    </component>
+
+    <!-- Policy resolver -->
+    <component name="DefaultPolicyResolver">
+        <f3-impl:implementation.system class="org.fabric3.policy.DefaultPolicyResolver"/>
+    </component>
+
+    <!-- Simple interceptor builder -->
+    <component name="SimpleInterceptorBuilder" f3-core:key="org.fabric3.policy.interceptor.simple.SimpleInterceptorDefinition">
+        <f3-impl:implementation.system class="org.fabric3.policy.interceptor.simple.SimpleInterceptorBuilder"/>
+    </component>
+
+    <!-- Simple interceptor generator -->
+    <component name="SimpleInterceptorDefinitionGenerator">
+        <f3-impl:implementation.system class="org.fabric3.policy.interceptor.simple.SimpleInterceptorDefinitionGenerator"/>
+    </component>
+
+</composite>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+    $Rev: 3127 $ $Date: 2008-03-17 03:35:09 -0700 (Mon, 17 Mar 2008) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           name="WebImplementationRuntimeExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
+           autowire="true">
+
+    <component name="WebComponentBuilder">
+        <f3-impl:implementation.system class="org.fabric3.web.runtime.WebComponentBuilder"/>
+    </component>
+    <component name="InjectionFactory">
+        <f3-impl:implementation.system class="org.fabric3.web.runtime.InjectorFactoryImpl"/>
+    </component>
+
+    <component name="WebSourceWireAttacher" f3-core:key="org.fabric3.web.provision.WebComponentWireSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.web.runtime.WebComponentSourceWireAttacher"/>
+    </component>
+
+</composite>
