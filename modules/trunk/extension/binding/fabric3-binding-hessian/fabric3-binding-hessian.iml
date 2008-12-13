@@ -29,7 +29,6 @@
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="javax.servlet:servlet-api:2.4">
         <CLASSES>

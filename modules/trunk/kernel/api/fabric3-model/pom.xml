@@ -39,9 +39,9 @@
         <version>0.7-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-scdl</artifactId>
+    <artifactId>fabric3-model</artifactId>
     <name>Fabric3 SCDL Model</name>
-    <description>Fabric3 model of standard SCDL concepts.</description>
+    <description>Fabric3 model of assembly concepts.</description>
 
     <dependencies>
         <dependency>
@@ -61,9 +61,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-scdl</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-scdl</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/api/fabric3-scdl</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-model</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-model</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/api/fabric3-model</url>
     </scm>
 
 </project>

@@ -58,7 +58,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-scdl</artifactId>
+            <artifactId>fabric3-model</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
 
