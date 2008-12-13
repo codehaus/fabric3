@@ -152,7 +152,7 @@
 
     <wire source="MetaDataStore/instantiatorRegistry" target="ContributionWireInstantiatorRegistry"/>
 
-    <component name="QNameWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.manifest.QNameImport">
+    <component name="QNameWireInstantiator" f3-core:key="org.fabric3.spi.contribution.manifest.QNameImport">
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.QNameWireInstantiator"/>
     </component>
 
@@ -164,7 +164,7 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.LocationContributionWireInstantiator"/>
     </component>
 
-    <component name="MavenContributionWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.manifest.MavenImport">
+    <component name="MavenContributionWireInstantiator" f3-core:key="org.fabric3.spi.contribution.manifest.MavenImport">
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.MavenContributionWireInstantiator"/>
     </component>
 

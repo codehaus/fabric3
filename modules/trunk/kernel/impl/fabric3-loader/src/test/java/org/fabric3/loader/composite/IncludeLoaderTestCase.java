@@ -57,9 +57,9 @@ import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
 import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.ResourceElement;
 
 /**
  * @version $Rev$ $Date$

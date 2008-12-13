@@ -36,8 +36,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.contribution.archive.ClasspathProcessor;
-import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.contribution.archive.ClasspathProcessor;
+import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
 import org.fabric3.util.io.IOHelper;
 
 /**

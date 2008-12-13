@@ -27,11 +27,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.xml.XmlIndexer;
-import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.xml.XmlIndexer;
+import org.fabric3.spi.contribution.xml.XmlIndexerRegistry;
 
 /**
  * Adds an index entry for the web.xml descriptor to the symbol space of a WAR contribution.

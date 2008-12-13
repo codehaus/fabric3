@@ -19,7 +19,7 @@ package org.fabric3.contribution;
 import java.util.List;
 
 import org.fabric3.util.graph.Cycle;
-import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.contribution.Contribution;
 
 /**
  * Denotes a cyclic dependency between two or more contributions.

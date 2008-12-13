@@ -33,13 +33,13 @@ import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.UnresolvedImportException;
+import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.UnresolvedImportException;
 
 /**
  * Default implementation of the ContributionLoader. Classloaders corresponding to loaded contributions are registered by name with the system

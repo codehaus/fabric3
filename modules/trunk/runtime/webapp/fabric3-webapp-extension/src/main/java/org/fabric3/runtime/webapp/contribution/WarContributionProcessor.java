@@ -40,12 +40,12 @@ import org.fabric3.runtime.webapp.WebappHostInfo;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contribution.archive.Action;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionProcessor;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.contribution.archive.Action;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionProcessor;
+import org.fabric3.spi.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.Resource;
 
 /**
  * Processes a WAR contribution in an embedded runtime.

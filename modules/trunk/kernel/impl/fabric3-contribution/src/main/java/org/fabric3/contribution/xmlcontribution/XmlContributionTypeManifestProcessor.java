@@ -37,11 +37,11 @@ import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.manifest.XmlElementManifestProcessor;
-import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.contribution.manifest.XmlElementManifestProcessor;
+import org.fabric3.spi.contribution.manifest.XmlManifestProcessorRegistry;
 
 /**
  * @version $Revision$ $Date$

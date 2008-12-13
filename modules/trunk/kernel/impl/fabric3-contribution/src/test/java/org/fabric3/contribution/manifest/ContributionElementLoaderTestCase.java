@@ -28,9 +28,9 @@ import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * @version $Rev$ $Date$

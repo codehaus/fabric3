@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.Constants;
+import org.fabric3.spi.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -37,9 +37,9 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * Loads a contribution manifest from a contribution element

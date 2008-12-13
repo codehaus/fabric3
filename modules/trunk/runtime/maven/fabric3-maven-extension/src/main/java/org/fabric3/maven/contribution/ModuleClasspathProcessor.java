@@ -28,8 +28,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.maven.MavenHostInfo;
-import org.fabric3.spi.services.contribution.archive.ClasspathProcessor;
-import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.contribution.archive.ClasspathProcessor;
+import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
 
 /**
  * Fabricates a classpath for a Maven module by including the classes and test-classes directories and any module dependencies.

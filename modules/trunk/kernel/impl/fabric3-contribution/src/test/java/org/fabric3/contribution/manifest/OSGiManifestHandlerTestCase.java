@@ -22,7 +22,7 @@ import java.util.jar.Manifest;
 import junit.framework.TestCase;
 
 import org.fabric3.model.type.DefaultValidationContext;
-import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionManifest;
 
 /**
  * @version $Revision$ $Date$

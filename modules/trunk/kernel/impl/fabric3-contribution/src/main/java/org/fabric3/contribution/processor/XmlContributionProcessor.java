@@ -33,14 +33,14 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionProcessor;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
-import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
-import org.fabric3.spi.services.contribution.xml.XmlProcessorRegistry;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionProcessor;
+import org.fabric3.spi.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.xml.XmlIndexerRegistry;
+import org.fabric3.spi.contribution.manifest.XmlManifestProcessorRegistry;
+import org.fabric3.spi.contribution.xml.XmlProcessorRegistry;
 
 /**
  * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of the document element.

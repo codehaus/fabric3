@@ -25,7 +25,7 @@ import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.domain.RoutingService;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**

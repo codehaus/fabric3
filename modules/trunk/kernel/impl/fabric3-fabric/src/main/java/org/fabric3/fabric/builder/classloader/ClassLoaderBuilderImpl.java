@@ -50,9 +50,9 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
-import org.fabric3.spi.services.contribution.ContributionUriResolver;
-import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.contribution.ContributionUriResolver;
+import org.fabric3.spi.contribution.ResolutionException;
 import org.fabric3.spi.component.Component;
 
 /**

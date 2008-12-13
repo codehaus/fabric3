@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.MetaDataStore;
 
 /**
  * Returns the contents of a contribution associated with the encoded servlet path. The servlet path corresponds to the contribution URI.

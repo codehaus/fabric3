@@ -26,8 +26,8 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.services.contribution.ContributionUriEncoder;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.ContributionUriEncoder;
+import org.fabric3.spi.contribution.MetaDataStore;
 
 /**
  * Encodes a contribution URI so it can be dereferenced in a domain via HTTP. The encoding maps from the contribution URI to an HTTP-based URI.

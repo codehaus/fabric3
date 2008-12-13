@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
 
 /**
  * @version $Rev$ $Date$

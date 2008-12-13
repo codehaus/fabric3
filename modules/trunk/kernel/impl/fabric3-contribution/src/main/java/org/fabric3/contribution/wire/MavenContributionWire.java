@@ -18,11 +18,11 @@ package org.fabric3.contribution.wire;
 
 import java.net.URI;
 
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.manifest.MavenExport;
-import org.fabric3.spi.services.contribution.manifest.MavenImport;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.manifest.MavenExport;
+import org.fabric3.spi.contribution.manifest.MavenImport;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.Symbol;
 
 /**
  * Wires two contributions using Maven artifact identifiers, making all artifacts from one contribution visible to the other importing contribution.

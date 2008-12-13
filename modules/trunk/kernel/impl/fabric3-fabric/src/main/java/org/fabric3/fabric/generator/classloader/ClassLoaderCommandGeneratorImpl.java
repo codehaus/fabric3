@@ -37,10 +37,10 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionUriEncoder;
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionUriEncoder;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.MetaDataStore;
 
 /**
  * Fabric3 may be configured to enforce a modular environment where isolation is maintained between user an extension contributions.

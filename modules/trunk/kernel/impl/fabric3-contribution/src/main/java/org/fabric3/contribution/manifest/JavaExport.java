@@ -19,8 +19,8 @@ package org.fabric3.contribution.manifest;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * Represents an <code>export.java</code> entry in a contribution manifest.

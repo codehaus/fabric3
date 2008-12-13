@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.spi.services.contribution.Constants;
+import org.fabric3.spi.contribution.Constants;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -40,11 +40,11 @@ import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contribution.archive.Action;
-import org.fabric3.spi.services.contribution.archive.ArchiveContributionHandler;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.archive.Action;
+import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ProcessorRegistry;
 
 /**
  * Introspects a WAR contribution, delegating to ResourceProcessors for handling leaf-level children.

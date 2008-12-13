@@ -24,8 +24,8 @@ import junit.framework.TestCase;
 
 import org.fabric3.model.type.DefaultValidationContext;
 import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.manifest.MavenExport;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.manifest.MavenExport;
 
 /**
  * @version $Rev$ $Date$

@@ -33,16 +33,16 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.Symbol;
-import org.fabric3.spi.services.contribution.UnresolvedImportException;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.Symbol;
+import org.fabric3.spi.contribution.UnresolvedImportException;
 
 /**
  * Default MetaDataStore implementation

@@ -20,8 +20,8 @@ import java.net.URI;
 
 import org.fabric3.contribution.manifest.ContributionExport;
 import org.fabric3.contribution.manifest.ContributionImport;
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Symbol;
 
 /**
  * Wires two contributions using an explicit target contribution reference, making all artifacts exported from one contribution visible to the other

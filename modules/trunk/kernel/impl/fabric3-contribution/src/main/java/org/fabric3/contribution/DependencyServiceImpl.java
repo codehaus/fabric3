@@ -33,11 +33,11 @@ import org.fabric3.util.graph.TopologicalSorter;
 import org.fabric3.util.graph.TopologicalSorterImpl;
 import org.fabric3.util.graph.Vertex;
 import org.fabric3.util.graph.VertexImpl;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.contribution.MetaDataStore;
 
 /**
  * Default implementation of the DependencyService

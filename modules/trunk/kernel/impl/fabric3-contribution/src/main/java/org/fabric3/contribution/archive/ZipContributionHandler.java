@@ -38,13 +38,13 @@ import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contribution.archive.Action;
-import org.fabric3.spi.services.contribution.archive.ArchiveContributionHandler;
-import org.fabric3.spi.services.contribution.Constants;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.manifest.JarManifestHandler;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.archive.Action;
+import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
+import org.fabric3.spi.contribution.Constants;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.manifest.JarManifestHandler;
+import org.fabric3.spi.contribution.ProcessorRegistry;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.

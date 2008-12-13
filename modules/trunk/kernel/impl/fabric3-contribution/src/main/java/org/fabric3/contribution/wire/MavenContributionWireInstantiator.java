@@ -18,8 +18,8 @@ package org.fabric3.contribution.wire;
 
 import java.net.URI;
 
-import org.fabric3.spi.services.contribution.manifest.MavenExport;
-import org.fabric3.spi.services.contribution.manifest.MavenImport;
+import org.fabric3.spi.contribution.manifest.MavenExport;
+import org.fabric3.spi.contribution.manifest.MavenImport;
 
 /**
  * @version $Revision$ $Date$

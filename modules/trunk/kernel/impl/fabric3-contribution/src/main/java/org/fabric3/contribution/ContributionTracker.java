@@ -36,8 +36,8 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionServiceListener;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionServiceListener;
 
 /**
  * Records changes to the state of persistent contributions.

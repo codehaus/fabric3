@@ -20,8 +20,8 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * Exports the entire package contents of a contribution. This export type is used for API and SPI contributions where all contents are visible to

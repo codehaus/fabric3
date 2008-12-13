@@ -49,8 +49,8 @@ import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.management.contribution.ContributionLockedManagementException;
 import org.fabric3.management.contribution.ErrorInfo;
 import org.fabric3.management.contribution.ArtifactErrorInfo;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.model.type.ArtifactValidationFailure;
 
 /**

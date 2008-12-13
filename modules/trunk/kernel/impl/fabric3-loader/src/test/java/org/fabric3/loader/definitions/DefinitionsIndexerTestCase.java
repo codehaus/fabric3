@@ -25,9 +25,9 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.model.type.DefaultValidationContext;
 

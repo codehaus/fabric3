@@ -18,8 +18,8 @@ package org.fabric3.contribution.wire;
 
 import java.net.URI;
 
-import org.fabric3.spi.services.contribution.manifest.QNameExport;
-import org.fabric3.spi.services.contribution.manifest.QNameImport;
+import org.fabric3.spi.contribution.manifest.QNameExport;
+import org.fabric3.spi.contribution.manifest.QNameImport;
 
 /**
  * Creates a QNameContributionWire corresponding to a resolved contribution import.

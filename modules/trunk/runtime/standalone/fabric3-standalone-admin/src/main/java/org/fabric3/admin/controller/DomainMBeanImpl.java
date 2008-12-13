@@ -38,8 +38,8 @@ import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.management.domain.InvalidDeploymentException;
 import org.fabric3.management.domain.ContributionNotInstalledManagementException;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.MetaDataStore;
 
 /**
  * @version $Revision$ $Date$

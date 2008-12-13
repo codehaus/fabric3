@@ -29,11 +29,11 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ManifestProcessor;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
-import org.fabric3.spi.services.contribution.manifest.XmlElementManifestProcessor;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ManifestProcessor;
+import org.fabric3.spi.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.manifest.XmlManifestProcessorRegistry;
+import org.fabric3.spi.contribution.manifest.XmlElementManifestProcessor;
 
 /**
  * Processes XML artifacts in a contribution that contain manifest information. Dispatches to {@link XmlElementManifestProcessor}

@@ -20,7 +20,7 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * Imports a contribution by URI. All contents of the resolved exporting contribution are visible.

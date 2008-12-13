@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.Constants;
+import org.fabric3.spi.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
@@ -41,15 +41,15 @@ import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
-import org.fabric3.spi.services.contribution.Symbol;
-import org.fabric3.spi.services.contribution.xml.XmlProcessor;
-import org.fabric3.spi.services.contribution.xml.XmlProcessorRegistry;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.ResourceElementNotFoundException;
+import org.fabric3.spi.contribution.Symbol;
+import org.fabric3.spi.contribution.xml.XmlProcessor;
+import org.fabric3.spi.contribution.xml.XmlProcessorRegistry;
 
 /**
  * Loader for definitions.

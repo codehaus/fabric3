@@ -20,7 +20,7 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * Represents an <code>import.java</code> entry in a contribution manifest.

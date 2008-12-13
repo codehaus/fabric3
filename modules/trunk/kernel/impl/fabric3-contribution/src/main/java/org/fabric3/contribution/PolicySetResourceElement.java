@@ -17,8 +17,8 @@
 package org.fabric3.contribution;
 
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.ResourceElement;
 
 /**
  * @version $Rev$ $Date$

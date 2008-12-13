@@ -22,8 +22,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.services.contribution.ContributionProcessor;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.ContributionProcessor;
+import org.fabric3.spi.contribution.ProcessorRegistry;
 
 /**
  * The base class for ContributionProcessor implementations

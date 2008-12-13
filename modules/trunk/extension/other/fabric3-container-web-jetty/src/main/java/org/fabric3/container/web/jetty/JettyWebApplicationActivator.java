@@ -39,7 +39,7 @@ import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.services.contribution.ContributionUriResolver;
+import org.fabric3.spi.contribution.ContributionUriResolver;
 
 /**
  * Activates a web application in an embedded Jetty instance.

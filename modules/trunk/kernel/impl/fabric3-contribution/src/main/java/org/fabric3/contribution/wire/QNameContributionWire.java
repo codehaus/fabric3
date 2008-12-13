@@ -18,11 +18,11 @@ package org.fabric3.contribution.wire;
 
 import java.net.URI;
 
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.manifest.QNameExport;
-import org.fabric3.spi.services.contribution.manifest.QNameImport;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.manifest.QNameExport;
+import org.fabric3.spi.contribution.manifest.QNameImport;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.Symbol;
 
 /**
  * Wires two contributions using the SCA import/export mechanism, making QName-based artifacts exported from one contribution visible to the other

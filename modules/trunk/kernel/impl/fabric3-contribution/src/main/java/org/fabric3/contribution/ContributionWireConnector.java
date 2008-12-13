@@ -17,7 +17,7 @@
 package org.fabric3.contribution;
 
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.services.contribution.ContributionWire;
+import org.fabric3.spi.contribution.ContributionWire;
 
 /**
  * Connects an importing contribution classloader to the classloader of the contribution containing the resolved export as specified by a

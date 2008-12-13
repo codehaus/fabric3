@@ -27,17 +27,17 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.Constants;
+import org.fabric3.spi.contribution.Constants;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.maven.CompositeQNameService;
 import org.fabric3.maven.InvalidResourceException;
 import org.fabric3.model.type.component.Composite;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.Symbol;
 import org.fabric3.spi.xml.XMLFactory;
 
 /**

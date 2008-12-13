@@ -18,9 +18,9 @@ package org.fabric3.contribution.wire;
 
 import java.net.URI;
 
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.Export;
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * A registry used to dispatch to ContributionWireInstantiators.

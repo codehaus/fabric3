@@ -57,10 +57,10 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.host.contribution.StoreException;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.ResourceElement;
 
 /**
  * Loader that handles &lt;include&gt; elements.

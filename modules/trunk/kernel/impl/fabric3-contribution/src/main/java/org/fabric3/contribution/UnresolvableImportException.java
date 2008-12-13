@@ -16,7 +16,7 @@
  */
 package org.fabric3.contribution;
 
-import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.contribution.Import;
 
 /**
  * @version $Rev$ $Date$

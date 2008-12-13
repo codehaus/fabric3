@@ -18,7 +18,7 @@ package org.fabric3.contribution;
 
 import java.net.URI;
 
-import org.fabric3.spi.services.contribution.ContributionUriEncoder;
+import org.fabric3.spi.contribution.ContributionUriEncoder;
 
 /**
  * An no-op encoder used when provisioning contributions to the same VM. Locally provisioned contribution URIs do not need to be encoded as they can

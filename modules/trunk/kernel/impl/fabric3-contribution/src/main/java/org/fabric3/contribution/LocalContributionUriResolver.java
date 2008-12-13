@@ -22,10 +22,10 @@ import java.net.URL;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionUriResolver;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionUriResolver;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.ResolutionException;
 
 /**
  * Resolves contribution URIs locally (i.e. in the same runtime VM).

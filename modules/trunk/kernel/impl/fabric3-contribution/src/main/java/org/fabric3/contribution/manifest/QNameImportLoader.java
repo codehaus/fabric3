@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.services.contribution.manifest.QNameImport;
+import org.fabric3.spi.contribution.manifest.QNameImport;
 
 /**
  * Processes a QName-based <code>import</code> element in a contribution manifest

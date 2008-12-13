@@ -20,8 +20,8 @@ import java.net.URI;
 
 import org.fabric3.contribution.manifest.JavaExport;
 import org.fabric3.contribution.manifest.JavaImport;
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Symbol;
 
 /**
  * Wires two contributions, using the Java import/export mechanism, making a set of classes from the exporting contribution visibile to the importing

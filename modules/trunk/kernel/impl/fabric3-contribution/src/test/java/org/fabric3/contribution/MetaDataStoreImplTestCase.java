@@ -32,15 +32,15 @@ import org.fabric3.contribution.wire.ContributionWireInstantiator;
 import org.fabric3.contribution.wire.ContributionWireInstantiatorRegistryImpl;
 import org.fabric3.contribution.wire.QNameWireInstantiator;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.manifest.QNameExport;
-import org.fabric3.spi.services.contribution.manifest.QNameImport;
-import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameExport;
+import org.fabric3.spi.contribution.manifest.QNameImport;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.util.io.FileHelper;
 
 /**

@@ -23,9 +23,9 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.xml.XmlIndexer;
-import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.xml.XmlIndexer;
+import org.fabric3.spi.contribution.xml.XmlIndexerRegistry;
 
 /**
  * Default impelmentation of an XmlIndexerRegistry.

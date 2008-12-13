@@ -46,7 +46,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.services.contribution.ContributionUriEncoder;
+import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.introspection.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
