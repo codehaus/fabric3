@@ -76,7 +76,6 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.7-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>

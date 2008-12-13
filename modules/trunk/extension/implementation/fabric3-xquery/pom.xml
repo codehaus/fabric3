@@ -58,7 +58,6 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
