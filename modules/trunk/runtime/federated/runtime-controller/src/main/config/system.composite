@@ -86,20 +86,20 @@
 
     <component name="LocalContributionUriEncoder">
         <f3-impl:implementation.system
-                class="org.fabric3.fabric.services.contribution.LocalContributionUriEncoder"/>
+                class="org.fabric3.contribution.LocalContributionUriEncoder"/>
     </component>
 
     <component name="LocalContributionUriResolver">
         <f3-impl:implementation.system
-                class="org.fabric3.fabric.services.contribution.LocalContributionUriResolver"/>
+                class="org.fabric3.contribution.LocalContributionUriResolver"/>
     </component>
     
     <component name="ContributionReplayer">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionReplayer"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.ContributionReplayer"/>
     </component>
 
     <component name="ContributionTracker">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionTracker"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.ContributionTracker"/>
     </component>
 
 

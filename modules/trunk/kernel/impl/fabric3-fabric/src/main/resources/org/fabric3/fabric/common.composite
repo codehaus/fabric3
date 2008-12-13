@@ -115,15 +115,15 @@
     </component>
 
     <component name="ClasspathProcessorRegistry">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.ClasspathProcessorRegistryImpl"/>
     </component>
 
     <component name="JarClasspathProcessor">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.archive.JarClasspathProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.archive.JarClasspathProcessor"/>
     </component>
 
     <component name="ProcessorRegistry">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.ProcessorRegistryImpl"/>
     </component>
     <!-- reinjects the metadata store after runtime bootstrap -->
     <wire source="MetaDataStore/processorRegistry" target="ProcessorRegistry"/>

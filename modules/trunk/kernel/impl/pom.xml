@@ -41,6 +41,7 @@
 		<module>fabric3-system</module>
         <module>fabric3-thread-pool</module>
 		<module>fabric3-transform</module>
+		<module>fabric3-contribution</module>
 		<module>fabric3-util</module>
 	</modules>
 </project>

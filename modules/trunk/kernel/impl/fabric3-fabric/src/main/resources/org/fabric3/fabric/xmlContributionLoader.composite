@@ -25,15 +25,15 @@
 
     <!-- Definitions SCDL loader implementation -->
     <component name="XmlContributionTypeLoader">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.xmlcontribution.XmlContributionTypeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.xmlcontribution.XmlContributionTypeLoader"/>
     </component>
 
     <component name="XmlContributionTypeIndexer">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.xmlcontribution.XmlContributionTypeIndexer"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.xmlcontribution.XmlContributionTypeIndexer"/>
     </component>
 
     <component name="XmlContributionTypeManifestProcessor">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.xmlcontribution.XmlContributionTypeManifestProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.xmlcontribution.XmlContributionTypeManifestProcessor"/>
     </component>
 
 </composite>

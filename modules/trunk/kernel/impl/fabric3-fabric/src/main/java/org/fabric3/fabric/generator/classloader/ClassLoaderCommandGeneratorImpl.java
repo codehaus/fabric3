@@ -30,8 +30,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
-import org.fabric3.fabric.services.contribution.DependencyException;
-import org.fabric3.fabric.services.contribution.DependencyService;
+import org.fabric3.contribution.DependencyException;
+import org.fabric3.contribution.DependencyService;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
