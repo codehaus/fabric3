@@ -49,27 +49,27 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-spi</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.7</version>
         </dependency>
        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-jetty</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.7</version>
         </dependency>
  	<dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-web</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.7</version>
 	</dependency>  		
 	<dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-contribution-war</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.7</version>
 	</dependency>  		
 	<dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-contribution-scanner-war</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.7</version>
 	</dependency>  		
    </dependencies>
 
