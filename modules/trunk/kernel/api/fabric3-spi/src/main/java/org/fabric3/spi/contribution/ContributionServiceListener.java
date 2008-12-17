@@ -31,6 +31,13 @@ public interface ContributionServiceListener {
     void onStore(Contribution contribution);
 
     /**
+     * Called when the manifest has been processed.
+     *
+     * @param contribution the contribution
+     */
+    void onProcessManifest(Contribution contribution);
+
+    /**
      * Called when a contribution is installed.
      *
      * @param contribution the contribution
@@ -57,4 +64,5 @@ public interface ContributionServiceListener {
      * @param contribution the contribution
      */
     void onRemove(Contribution contribution);
+
 }

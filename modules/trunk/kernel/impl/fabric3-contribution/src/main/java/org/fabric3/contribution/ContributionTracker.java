@@ -34,10 +34,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionServiceListener;
+import org.fabric3.spi.xml.XMLFactory;
 
 /**
  * Records changes to the state of persistent contributions.
@@ -72,6 +72,10 @@ public class ContributionTracker implements ContributionServiceListener {
         }
         contributions.put(contribution.getUri(), contribution);
         persist();
+    }
+
+    public void onProcessManifest(Contribution contribution) {
+        // no-op
     }
 
     public void onInstall(Contribution contribution) {

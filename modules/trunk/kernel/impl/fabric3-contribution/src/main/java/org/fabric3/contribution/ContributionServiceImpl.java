@@ -383,6 +383,10 @@ public class ContributionServiceImpl implements ContributionService {
             warnings.add(warning);
             throw new InvalidContributionException(failures, warnings);
         }
+        for (ContributionServiceListener listener : listeners) {
+            listener.onProcessManifest(contribution);
+        }
+
     }
 
     /**
