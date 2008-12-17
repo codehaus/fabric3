@@ -14,10 +14,9 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.java.introspection;
+package org.fabric3.java.api;
 
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
-import org.fabric3.java.scdl.JavaImplementation;
 
 /**
  * Strongly typed ImplementationProcessor for Java implementations.

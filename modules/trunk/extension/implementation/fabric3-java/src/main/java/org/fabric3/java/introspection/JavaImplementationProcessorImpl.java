@@ -28,7 +28,8 @@ import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.java.scdl.JavaImplementation;
+import org.fabric3.java.api.JavaImplementation;
+import org.fabric3.java.api.JavaImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.model.type.component.InvalidImplementation;
 

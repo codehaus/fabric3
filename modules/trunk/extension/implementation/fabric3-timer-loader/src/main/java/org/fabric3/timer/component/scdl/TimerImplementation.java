@@ -18,7 +18,7 @@ package org.fabric3.timer.component.scdl;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.java.scdl.JavaImplementation;
+import org.fabric3.java.api.JavaImplementation;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.timer.component.provision.TriggerData;
 

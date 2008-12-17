@@ -31,7 +31,7 @@ import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.java.introspection.ImplementationArtifactNotFound;
-import org.fabric3.java.introspection.JavaImplementationProcessor;
+import org.fabric3.java.api.JavaImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.timer.component.provision.TriggerData;
 import static org.fabric3.timer.component.provision.TriggerData.UNSPECIFIED;

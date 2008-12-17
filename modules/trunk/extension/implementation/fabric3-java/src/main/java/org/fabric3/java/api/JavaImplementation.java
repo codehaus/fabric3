@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.java.scdl;
+package org.fabric3.java.api;
 
 import javax.xml.namespace.QName;
 

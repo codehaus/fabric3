@@ -27,7 +27,8 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.java.scdl.JavaImplementation;
+import org.fabric3.java.api.JavaImplementation;
+import org.fabric3.java.api.JavaImplementationProcessor;
 
 /**
  * Loads <implementation.java> in a composite.

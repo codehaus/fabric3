@@ -26,7 +26,7 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.java.scdl.JavaImplementation;
+import org.fabric3.java.api.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;

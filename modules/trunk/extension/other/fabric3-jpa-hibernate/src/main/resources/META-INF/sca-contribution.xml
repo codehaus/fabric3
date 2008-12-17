@@ -5,6 +5,5 @@
     <maven:import artifactId="fabric3-resource" groupId="org.codehaus.fabric3" version="0.8-SNAPSHOT"/>
     <maven:import artifactId="fabric3-spi" groupId="org.codehaus.fabric3" version="0.8-SNAPSHOT"/>
     <maven:import artifactId="fabric3-java" groupId="org.codehaus.fabric3"/>
-    <maven:import artifactId="fabric3-java" groupId="org.codehaus.fabric3"/>
     <export.java package="org.hibernate.*"/>
 </contribution>
