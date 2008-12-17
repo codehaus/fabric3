@@ -38,8 +38,8 @@
         <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
     </component>
 
-    <component name="HibernatePersistenceManifestProcessor">
-        <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.HibernatePersistenceManifestProcessor"/>
+    <component name="HibernateContributionListener">
+        <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.HibernateContributionListener"/>
     </component>
 
     <include name="JPACore" scdlResource="META-INF/jpa.composite"/>

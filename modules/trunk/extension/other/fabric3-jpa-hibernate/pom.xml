@@ -41,8 +41,8 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-    </repositories>    
-    
+    </repositories>
+
     <properties>
         <f3Shared>
             <![CDATA[
@@ -102,13 +102,30 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>3.3.1.ga</version>
-            <!--<scope>provided</scope>-->
             <exclusions>
                 <exclusion>
                     <groupId>javax.transaction</groupId>
                     <artifactId>jta</artifactId>
                 </exclusion>
+                <!-- Exclude clogging as it interferes with classloading. It is replaced by SLF4J below. -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- SLF4J replaces clogging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.5.6</version>
         </dependency>
 
         <dependency>
@@ -146,29 +163,6 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-spi</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-resource</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-spi</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-java</artifactId>
-                        </mavenImport>
-                    </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/hibernate.composite</deployable>
-                    </deployables>
-                </configuration>
             </plugin>
         </plugins>
     </build>

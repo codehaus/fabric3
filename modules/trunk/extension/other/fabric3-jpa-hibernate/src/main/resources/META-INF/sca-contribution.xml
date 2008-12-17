@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3="urn:fabric3.org:core" xmlns:maven="urn:fabric3.org:maven">
+    <deployable xmlns:ns="org.codehaus.fabric3" composite="ns:HibernateJpaExtension"/>
+    <maven:import artifactId="fabric3-jpa-spi" groupId="org.codehaus.fabric3" version="0.8-SNAPSHOT"/>
+    <maven:import artifactId="fabric3-resource" groupId="org.codehaus.fabric3" version="0.8-SNAPSHOT"/>
+    <maven:import artifactId="fabric3-spi" groupId="org.codehaus.fabric3" version="0.8-SNAPSHOT"/>
+    <maven:import artifactId="fabric3-java" groupId="org.codehaus.fabric3"/>
+    <maven:import artifactId="fabric3-java" groupId="org.codehaus.fabric3"/>
+    <export.java package="org.hibernate.*"/>
+</contribution>
