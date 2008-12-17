@@ -14,9 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution.manifest;
+package org.fabric3.spi.contribution.manifest;
 
 import junit.framework.TestCase;
+
+import org.fabric3.spi.contribution.manifest.PackageInfo;
+import org.fabric3.spi.contribution.manifest.PackageVersion;
 
 /**
  * @version $Revision$ $Date$

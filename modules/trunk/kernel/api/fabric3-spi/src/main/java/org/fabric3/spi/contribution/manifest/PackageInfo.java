@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution.manifest;
+package org.fabric3.spi.contribution.manifest;
 
 /**
  * Represents Java package information specified in a Java import or export contribution manifest declaration.

@@ -156,7 +156,7 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.QNameWireInstantiator"/>
     </component>
 
-    <component name="JavaContributionWireInstantiator" f3-core:key="org.fabric3.contribution.manifest.JavaImport">
+    <component name="JavaContributionWireInstantiator" f3-core:key="org.fabric3.spi.contribution.manifest.JavaImport">
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.JavaContributionWireInstantiator"/>
     </component>
 

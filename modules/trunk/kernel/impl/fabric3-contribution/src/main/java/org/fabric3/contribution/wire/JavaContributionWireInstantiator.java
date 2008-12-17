@@ -18,8 +18,8 @@ package org.fabric3.contribution.wire;
 
 import java.net.URI;
 
-import org.fabric3.contribution.manifest.JavaExport;
-import org.fabric3.contribution.manifest.JavaImport;
+import org.fabric3.spi.contribution.manifest.JavaExport;
+import org.fabric3.spi.contribution.manifest.JavaImport;
 
 /**
  * Creates JavaContributionWire instances.

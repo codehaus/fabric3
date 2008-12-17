@@ -30,7 +30,7 @@
  * limitations under the License.
  *
  */
-package org.fabric3.contribution.manifest;
+package org.fabric3.spi.contribution.manifest;
 
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;

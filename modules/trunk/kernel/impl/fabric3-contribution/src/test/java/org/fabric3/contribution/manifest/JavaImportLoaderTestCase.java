@@ -22,6 +22,10 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 
+import org.fabric3.spi.contribution.manifest.JavaImport;
+import org.fabric3.spi.contribution.manifest.PackageInfo;
+import org.fabric3.spi.contribution.manifest.PackageVersion;
+
 /**
  * @version $Rev$ $Date$
  */

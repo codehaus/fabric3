@@ -23,6 +23,8 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.contribution.manifest.JavaExport;
+import org.fabric3.spi.contribution.manifest.PackageInfo;
 
 /**
  * Loads an <code>export.java</code> entry in a contribution manifest.

@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution.manifest;
+package org.fabric3.spi.contribution.manifest;
 
 import java.net.URI;
 import javax.xml.namespace.QName;

@@ -24,6 +24,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.contribution.manifest.JavaImport;
+import org.fabric3.spi.contribution.manifest.PackageInfo;
+import org.fabric3.spi.contribution.manifest.PackageVersion;
 
 /**
  * Processes a <code>import.java</code> element in a contribution manifest
