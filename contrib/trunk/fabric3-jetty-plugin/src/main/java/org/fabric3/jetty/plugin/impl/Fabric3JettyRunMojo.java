@@ -10,24 +10,36 @@ import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Exclusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.mortbay.jetty.plugin.Jetty6RunMojo;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
+import org.mortbay.jetty.plugin.Jetty6RunMojo;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 /**
  *
@@ -48,7 +60,7 @@ public class Fabric3JettyRunMojo extends Jetty6RunMojo {
 	/**
 	 * The version of the runtime to use.
 	 *
-	 * @parameter expression="0.5"
+	 * @parameter expression="0.7"
 	 */
 	public String runTimeVersion;
 
@@ -60,18 +72,25 @@ public class Fabric3JettyRunMojo extends Jetty6RunMojo {
 	public Dependency[] extensions;
 
     /**
-	 * Set of user extension artifacts that should be deployed to the runtime.
-	 *
-	 * @parameter
-	 */
-	public Dependency[] userExtensions;
+     * Set of extension artifacts that should be deployed to the runtime expressed as feature sets.
+     *
+     * @parameter
+     */
+    public Dependency[] features;
 
     /**
-	 * Set of extension artifacts that should be deployed to the runtime.
-	 *
-	 * @parameter
-	 */
-	public Dependency[] shared;
+     * Whether to exclude default features.
+     *
+     * @parameter
+     */
+    public boolean excludeDefaultFeatures;
+
+    /**
+     * Exclude any embedded dependencies from extensions.
+     *
+     * @parameter
+     */
+    public List<String> excludes = new LinkedList<String>();
 
 	/**
 	 * Used to look up Artifacts in the remote repository.
@@ -118,6 +137,17 @@ public class Fabric3JettyRunMojo extends Jetty6RunMojo {
 	 */
 	public ArtifactFactory artifactFactory;
 
+    /**
+     * The directory for the generated WAR.
+     *
+     * @parameter
+     */
+    public Dependency[] bootLibs;
+
+    private File bootDir;
+
+    private DocumentBuilder db;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -134,250 +164,246 @@ public class Fabric3JettyRunMojo extends Jetty6RunMojo {
 	@Override
 	public List getClassPathFiles() {
         // Ensure that we have a target directory for our various properties files
-        File libTargetPath = new File(getWebAppSourceDirectory(), LIB_PATH);
-        if (!libTargetPath.exists()) {
-            libTargetPath.mkdirs();
+        bootDir = new File(getWebAppSourceDirectory(), LIB_PATH);
+        if (!bootDir.exists()) {
+            bootDir.mkdirs();
         }
 
         try {
-			List<File> list = super.getClassPathFiles();
-			list.addAll(setUpBootRuntime());
-			list.addAll(setUpExtensions(extensions, libTargetPath, new File(libTargetPath, "f3Extensions.properties")));
-            list.addAll(setUpExtensions(userExtensions, libTargetPath, new File(libTargetPath, "f3UserExtensions.properties")));
-            list.addAll(setUpShared());
+            // Create a document builder
+            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+        	List<File> list = super.getClassPathFiles();
+			list.addAll(installRuntime());
+			list.addAll(installExtensions());
+//            list.addAll(setUpExtensions(userExtensions, libTargetPath, new File(libTargetPath, "f3UserExtensions.properties")));
+//            list.addAll(setUpShared());
             return list;
 		} catch (MojoExecutionException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (ParserConfigurationException e) {
+			throw new RuntimeException(e);
 		}
 
 	}
 
-	/**
-	 * Sets up the extension directory
-	 *
-	 * @throws MojoExecutionException
-	 */
-	private List<File> setUpExtensions(Dependency[] extensions, File libTarget, File propertiesTarget)
-            throws MojoExecutionException {
-		List<File> extensionLibs = new ArrayList<File>();
-        List<Artifact> extensionArtifacts = new ArrayList<Artifact>();
-        resolveExtensions(extensionLibs, extensionArtifacts, extensions);
+    private List<File> installRuntime() throws MojoExecutionException, IOException {
 
-        // Copy the libraries into place
-        Iterator<File> libIterator = extensionLibs.iterator();
-		while (libIterator.hasNext()) {
-			File lib = libIterator.next();
+        getLog().info("Using fabric3 runtime version " + runTimeVersion);
 
-            try {
-                FileUtils.copyFile(lib, new File(libTarget, lib.getName()));
-            } catch (IOException ex) {
-                throw new MojoExecutionException("Failed to copy library " + lib.getName(), ex);
-            }
+        if (bootLibs == null) {
+            Dependency dependancy = new Dependency("org.codehaus.fabric3.webapp", "fabric3-webapp-host", runTimeVersion);
+            bootLibs = new Dependency[]{dependancy};
         }
 
-        // Generate the properties file
-        Properties props = new Properties();
-        Iterator<Artifact> artifactIt = extensionArtifacts.iterator();
-        while (artifactIt.hasNext()) {
-            Artifact a = artifactIt.next();
-
-            props.put(a.getFile().getName(), a.getFile().getName());
-        }
-
-        try {
-            FileOutputStream fos = new FileOutputStream(propertiesTarget);
-            props.store(fos, "Generated by Fabric3 Jetty Plugin");
-            fos.close();
-        } catch (IOException ex) {
-            throw new MojoExecutionException("Failed to generate properties file " + propertiesTarget.getName(), ex);
-        }
-
-        return extensionLibs;
-    }
-
-	/**
-	 * Sets up the boot runitme.
-	 * @throws MojoExecutionException
-	 */
-	private List<File> setUpBootRuntime() throws MojoExecutionException {
-		List<File> bootLibs = new ArrayList<File>();
-		addWebappRuntime(bootLibs);
-
-        return bootLibs;
-    }
-
-    /**
-	 * Sets up the shared dependencies.
-	 * @throws MojoExecutionException
-	 */
-	private List<File> setUpShared() throws MojoExecutionException {
-		List<File> sharedLibs = new ArrayList<File>();
-
-        for (Dependency dep : shared) {
-            resolveDependency(sharedLibs, dep);
-        }
-
-        return sharedLibs;
-    }
-
-    /**
-	 * Method to add the fabric3-webapp-host dependency on the Boot Classpath.
-	 *
-	 * @param classpath
-	 * @throws MojoExecutionException
-	 */
-	private void addWebappRuntime(List<File> classpath)
-			throws MojoExecutionException {
-		Set<Artifact> artifacts = new HashSet<Artifact>();
-		List<Exclusion> exclusions = Collections.emptyList();
-		Dependency dependency = new Dependency();
-		dependency.setGroupId("org.codehaus.fabric3.webapp");
-		dependency.setArtifactId("fabric3-webapp-host");
-		dependency.setVersion(runTimeVersion);
-		dependency.setExclusions(exclusions);
-		addArtifacts(artifacts, dependency);
-
-		Iterator<Artifact> artifactIterator = artifacts.iterator();
-
-		while (artifactIterator.hasNext()) {
-			Artifact artifact = artifactIterator.next();
-			classpath.add(artifact.getFile());
-		}
-	}
-
-	/**
-	 * Resolves the dependency version, in case the versions are provided in the dependencyManagement of parent POM.
-	 * @param extension
-	 */
-	private void resolveDependencyVersion(Dependency extension) {
-
-		List<org.apache.maven.model.Dependency> dependencies = getProject()
-				.getDependencyManagement().getDependencies();
-		for (org.apache.maven.model.Dependency dependecy : dependencies) {
-			if (dependecy.getGroupId().equals(extension.getGroupId())
-					&& dependecy.getArtifactId().equals(
-							extension.getArtifactId())) {
-				extension.setVersion(dependecy.getVersion());
-
-			}
-		}
-	}
-
-	/**
-	 * Resolves the dependency transitively and adds to the current artifacts List.
-	 * @param artifacts list to which the dependencies will be added.
-	 * @param extension dependency to resolve.
-	 * @throws MojoExecutionException
-	 */
-	private void addArtifacts(Set<Artifact> artifacts, Dependency extension)
-			throws MojoExecutionException {
-
-		if (extension.getVersion() == null) {
-			resolveDependencyVersion(extension);
-		}
-		final List<Exclusion> exclusions = extension.getExclusions();
-
-		Artifact artifact = createArtifact(extension);
-		try {
-			resolver.resolve(artifact, remoteRepositories, localRepository);
-			ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact,
-					localRepository, remoteRepositories);
-			ArtifactFilter filter = new ArtifactFilter() {
-
-				public boolean include(Artifact artifact) {
-					String groupId = artifact.getGroupId();
-					String artifactId = artifact.getArtifactId();
-
-					for (Exclusion exclusion : exclusions) {
-						if (artifactId.equals(exclusion.getArtifactId())
-								&& groupId.equals(exclusion.getGroupId())) {
-							return false;
-						}
-					}
-					return true;
-				}
-
-			};
-			ArtifactResolutionResult result = resolver.resolveTransitively(
-					resolutionGroup.getArtifacts(), artifact, Collections
-							.emptyMap(), localRepository, remoteRepositories,
-					metadataSource, filter);
-			@SuppressWarnings("unchecked")
-			Set<Artifact> resolvedArtifacts = result.getArtifacts();
-			artifacts.add(artifact);
-			artifacts.addAll(resolvedArtifacts);
-		} catch (ArtifactResolutionException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		} catch (ArtifactNotFoundException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		} catch (ArtifactMetadataRetrievalException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 *  Creates an artifact in the repository.
-	 * @param dependency
-	 * @return
-	 */
-	private Artifact createArtifact(Dependency dependency) {
-		return artifactFactory.createArtifact(dependency.getGroupId(),
-				dependency.getArtifactId(), dependency.getVersion(),
-				Artifact.SCOPE_RUNTIME, dependency.getType());
-	}
-
-	/**
-	 * Add extensions to the ClassPath.
-	 * @param classPathFiles
-	 * @throws MojoExecutionException
-	 */
-	private void resolveExtensions(List<File> classPathFiles, List<Artifact> extensionArtifacts,
-                               Dependency[] configuredExtensions)
-			throws MojoExecutionException {
-		if (configuredExtensions == null) {
-			return;
-		}
-
-		for (Dependency dependency : configuredExtensions) {
-            // Resolve the version if necessary
+        List<File> result = new ArrayList<File>();
+        for (Dependency dependency : bootLibs) {
             if (dependency.getVersion() == null) {
                 resolveDependencyVersion(dependency);
             }
+            for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), true)) {
+                FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
+                result.add(new File(bootDir, artifact.getFile().getName()));
+            }
+        }
 
-            // Resolve and create the artifact
-            Artifact dependencyArtifact = createArtifact(dependency);
-            try {
-                resolver.resolve(dependencyArtifact, remoteRepositories, localRepository);
-                extensionArtifacts.add(dependencyArtifact);
-            } catch (ArtifactResolutionException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
+        return result;
+    }
+
+    private List<File> installExtensions() throws MojoExecutionException {
+        List<File> result = new ArrayList<File>();
+
+        try {
+
+            Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
+            if (extensions != null) {
+                for (Dependency extension : extensions) {
+                    if (extension.getVersion() == null) {
+                        resolveDependencyVersion(extension);
+                    }
+                    uniqueExtensions.add(extension);
+                }
             }
 
-            resolveDependency(classPathFiles, dependency);
-		}
-	}
+            List<Dependency> featuresToInstall = getFeaturesToInstall();
 
-    private void resolveDependency(List<File> classPathFiles, Dependency dependency) throws MojoExecutionException {
-        if (dependency.getVersion() == null) {
-            resolveDependencyVersion(dependency);
+            if (!featuresToInstall.isEmpty()) {
+                for (Dependency feature : featuresToInstall) {
+                    if (feature.getVersion() == null) {
+                        resolveDependencyVersion(feature);
+                    }
+                    Artifact featureArtifact = feature.getArtifact(artifactFactory);
+                    featureArtifact = resolveArtifact(featureArtifact, false).iterator().next();
+
+                    Document featureSetDoc = db.parse(featureArtifact.getFile());
+
+                    NodeList extensionList = featureSetDoc.getElementsByTagName("extension");
+
+                    for (int i = 0; i < extensionList.getLength(); i++) {
+
+                        Element extensionElement = (Element) extensionList.item(i);
+
+                        Element artifactIdElement = (Element) extensionElement.getElementsByTagName("artifactId").item(0);
+                        Element groupIdElement = (Element) extensionElement.getElementsByTagName("groupId").item(0);
+                        Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
+
+                        Dependency extension =
+                                new Dependency(groupIdElement.getTextContent(), artifactIdElement.getTextContent(), versionElement.getTextContent());
+
+                        uniqueExtensions.add(extension);
+
+                    }
+                }
+            }
+            result.addAll(processExtensions(bootDir, "f3Extensions.properties", uniqueExtensions));
+
+        } catch (SAXParseException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (SAXException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
-        Set<Artifact> artifacts = new HashSet();
-        addArtifacts(artifacts, dependency);
 
-        for (Artifact a : artifacts) {
-            classPathFiles.add(a.getFile());
+        return result;
+    }
+
+    private List<Dependency> getFeaturesToInstall() {
+        List<Dependency> featuresToInstall = new ArrayList<Dependency>();
+
+        if (features != null) {
+            featuresToInstall.addAll(Arrays.asList(features));
         }
+        if (!excludeDefaultFeatures) {
+            Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-default-webapp-feature", runTimeVersion);
+            dependency.setType("xml");
+            featuresToInstall.add(dependency);
+        }
+        return featuresToInstall;
+    }
 
-        /*Artifact artifact = createArtifact(dependency);
+    private List<File> processExtensions(File extensionsDir, String extensionProperties, Set<Dependency> extensions) throws MojoExecutionException {
+        List<File> result = new ArrayList<File>();
+
         try {
+            Properties props = new Properties();
+            
+            // process Maven dependencies
+            for (Dependency dependency : extensions) {
+
+                if (dependency.getVersion() == null) {
+                    resolveDependencyVersion(dependency);
+                }
+
+                Artifact extensionArtifact = dependency.getArtifact(artifactFactory);
+                extensionArtifact = resolveArtifact(extensionArtifact, false).iterator().next();
+
+                File deflatedExtensionFile = new File(extensionsDir, extensionArtifact.getFile().getName());
+                JarOutputStream deflatedExtensionOutputStream = new JarOutputStream(new FileOutputStream(deflatedExtensionFile));
+
+                JarFile extensionFile = new JarFile(extensionArtifact.getFile());
+                Enumeration<JarEntry> entries = extensionFile.entries();
+                while (entries.hasMoreElements()) {
+                    JarEntry jarEntry = entries.nextElement();
+                    String entryName = jarEntry.getName();
+                    if (entryName.startsWith("META-INF/lib") && entryName.endsWith(".jar")) {
+                        String extractedLibraryName = entryName.substring(entryName.lastIndexOf('/') + 1);
+                        if (excludes.contains(extractedLibraryName)) {
+                            continue;
+                        }
+                        File extractedLibraryFile = new File(extensionsDir, extractedLibraryName);
+                        if (!extractedLibraryFile.exists()) {
+                            FileOutputStream outputStream = new FileOutputStream(extractedLibraryFile);
+                            InputStream inputStream = extensionFile.getInputStream(jarEntry);
+                            IOUtil.copy(inputStream, outputStream);
+                            IOUtil.close(inputStream);
+                            IOUtil.close(outputStream);
+                        }
+                        result.add(extractedLibraryFile);
+                    } else {
+                        deflatedExtensionOutputStream.putNextEntry(jarEntry);
+                        InputStream inputStream = extensionFile.getInputStream(jarEntry);
+                        IOUtil.copy(inputStream, deflatedExtensionOutputStream);
+                        IOUtil.close(inputStream);
+                    }
+                }
+
+                IOUtil.close(deflatedExtensionOutputStream);
+                result.add(deflatedExtensionFile);
+
+                props.put(extensionArtifact.getFile().getName(), extensionArtifact.getFile().getName());
+
+            }
+
+            props.store(new FileOutputStream(new File(extensionsDir, extensionProperties)), null);
+
+            return result;
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+
+    }
+
+    /**
+     * Resolve the dependency for the given extension from the dependencyManagement from the pom
+     *
+     * @param extension the dependcy information for the extension
+     */
+    @SuppressWarnings({"unchecked"})
+    private void resolveDependencyVersion(Dependency extension) {
+        List<org.apache.maven.model.Dependency> dependencies = getProject().getDependencyManagement().getDependencies();
+        for (org.apache.maven.model.Dependency dependecy : dependencies) {
+            if (dependecy.getGroupId().equals(extension.getGroupId())
+                    && dependecy.getArtifactId().equals(extension.getArtifactId())) {
+                extension.setVersion(dependecy.getVersion());
+
+            }
+        }
+    }
+
+    /**
+     * Resolves the specified artifact.
+     *
+     * @param artifact   Artifact to be resolved.
+     * @param transitive Whether to resolve transitively.
+     * @return A set of resolved artifacts.
+     * @throws MojoExecutionException if there is an error resolving the artifact
+     */
+    private Set<Artifact> resolveArtifact(Artifact artifact, boolean transitive) throws MojoExecutionException {
+
+        try {
+            Set<Artifact> resolvedArtifacts = new HashSet<Artifact>();
+
+            // Resolve the artifact
             resolver.resolve(artifact, remoteRepositories, localRepository);
-            classPathFiles.add(artifact.getFile());
+            resolvedArtifacts.add(artifact);
+
+            if (!transitive) {
+                return resolvedArtifacts;
+            }
+
+            // Transitively resolve all the dependencies
+            ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact, localRepository, remoteRepositories);
+            ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
+                                                                           artifact,
+                                                                           remoteRepositories,
+                                                                           localRepository,
+                                                                           metadataSource);
+
+            // Add the artifacts to the deployment unit
+            for (Object depArtifact : result.getArtifacts()) {
+                resolvedArtifacts.add((Artifact) depArtifact);
+            }
+            return resolvedArtifacts;
+
         } catch (ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (ArtifactNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
-        }*/
+        } catch (ArtifactMetadataRetrievalException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
     }
 }
