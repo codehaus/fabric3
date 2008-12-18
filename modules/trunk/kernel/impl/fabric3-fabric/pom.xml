@@ -43,21 +43,6 @@
     <name>Fabric3 Fabric</name>
     <description>Fabric3 Core Fabric.</description>
 
-    <repositories>
-        <!-- repo needed for the Apache Tuscany version of the commonj API -->
-        <repository>
-            <id>apache.incubator</id>
-            <name>Apache Incubator Repository</name>
-            <url>http://people.apache.org/repo/m2-incubating-repository</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
 
         <dependency>
@@ -137,13 +122,6 @@
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
             <version>1.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tuscany</groupId>
-            <artifactId>commonj-api_r1.1</artifactId>
-            <version>1.0-incubator-M2</version>
             <scope>provided</scope>
         </dependency>
 

@@ -75,21 +75,6 @@
             <version>2.4</version>
         </dependency>
 
-        <!-- dependencies that are defined as provided in the spi module -->
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <!-- use version 1.0 as it is the version bundled in JDK 6 -->
-            <version>1.0</version>
-            <scope>runtime</scope>
-        </dependency> 
-              
-        <dependency>
-            <groupId>org.apache.tuscany</groupId>
-            <artifactId>commonj-api_r1.1</artifactId>
-            <version>1.0-incubator-M2</version>
-        </dependency>
-
     </dependencies>
 
     <build>
