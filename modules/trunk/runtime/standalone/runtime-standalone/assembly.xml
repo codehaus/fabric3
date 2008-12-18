@@ -81,7 +81,6 @@
                 <include>org.apache.geronimo.specs:geronimo-annotation_1.0_spec</include>
                 <include>org.codehaus.fabric3:fabric3-jmx-agent</include>
                 <include>javax.servlet:servlet-api</include>
-                <include>stax:stax-api</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
         </dependencySet>
@@ -94,7 +93,7 @@
                 <include>org.mortbay.jetty:jsp-api-2.1</include>
                 <include>javax.activation:activation</include>
                 <include>javax.xml.bind:jaxb-api:jar:2.1</include>
-
+                <include>stax:stax-api</include>
             </includes>
             <outputDirectory>host</outputDirectory>
         </dependencySet>
