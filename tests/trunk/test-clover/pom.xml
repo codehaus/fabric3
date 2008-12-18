@@ -57,9 +57,9 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.7-SNAPSHOT</version>
+                <version>0.8-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.8-SNAPSHOT</runtimeVersion>
                     <compositeName>CloverTestComposite</compositeName>
                 </configuration>
                 <executions>
