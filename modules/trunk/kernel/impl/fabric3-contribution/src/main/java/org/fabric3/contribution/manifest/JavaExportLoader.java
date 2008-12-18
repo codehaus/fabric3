@@ -21,10 +21,11 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.contribution.manifest.JavaExport;
 import org.fabric3.spi.contribution.manifest.PackageInfo;
+import org.fabric3.spi.contribution.manifest.PackageVersion;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.TypeLoader;
 
 /**
  * Loads an <code>export.java</code> entry in a contribution manifest.
@@ -42,8 +43,14 @@ public class JavaExportLoader implements TypeLoader<JavaExport> {
             context.addError(failure);
             return null;
         }
-        // TODO add version and uses parsing
-        PackageInfo info = new PackageInfo(statement);
+        PackageInfo info;
+        String version = reader.getAttributeValue(null, "version");
+        if (version != null) {
+            PackageVersion packageVersion = new PackageVersion(version);
+            info = new PackageInfo(statement, packageVersion, true, true);
+        } else {
+            info = new PackageInfo(statement);
+        }
         return new JavaExport(info);
     }
 

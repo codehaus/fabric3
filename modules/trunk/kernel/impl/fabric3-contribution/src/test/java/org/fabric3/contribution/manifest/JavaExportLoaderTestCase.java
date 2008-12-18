@@ -29,7 +29,7 @@ import org.fabric3.spi.contribution.manifest.PackageInfo;
  * @version $Rev$ $Date$
  */
 public class JavaExportLoaderTestCase extends TestCase {
-    private static final String XML = "<export.java package=\"org.bar\"/>";
+    private static final String XML = "<export.java package=\"org.bar\" version=\"1.0.1\"/>";
 
     private JavaExportLoader loader;
     private XMLStreamReader reader;
@@ -38,6 +38,9 @@ public class JavaExportLoaderTestCase extends TestCase {
         JavaExport export = loader.load(reader, null);
         PackageInfo info = export.getPackageInfo();
         assertEquals("org.bar", info.getName());
+        assertEquals(1, info.getMinVersion().getMajor());
+        assertEquals(0, info.getMinVersion().getMinor());
+        assertEquals(1, info.getMinVersion().getMicro());
     }
 
 

@@ -22,13 +22,14 @@ package org.fabric3.spi.contribution.manifest;
  * @version $Revision$ $Date$
  */
 public final class PackageInfo {
+    private static final PackageVersion NON_SPECIFIED = new PackageVersion(0, 0, 0);
     private String name;
-    private PackageVersion minVersion;
+    private PackageVersion minVersion = NON_SPECIFIED;
     private PackageVersion maxVersion;
     private boolean required;
     private String[] packageNames;
-    private boolean minInclusive;
-    private boolean maxInclusive;
+    private boolean minInclusive = true;
+    private boolean maxInclusive =true;
 
     /**
      * Constructor for an import package declaration specifying a version range.
