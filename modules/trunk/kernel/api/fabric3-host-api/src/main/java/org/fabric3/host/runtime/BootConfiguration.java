@@ -37,6 +37,7 @@ package org.fabric3.host.runtime;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.fabric3.host.contribution.ContributionSource;
 
@@ -53,6 +54,7 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
     private ContributionSource intents;
     private List<ContributionSource> extensions;
     private List<ContributionSource> policies = new LinkedList<ContributionSource>();
+    private Map<String, String> exportedPackages;
 
     public RUNTIME getRuntime() {
         return runtime;
@@ -76,6 +78,14 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
 
     public void setBootClassLoader(ClassLoader bootClassLoader) {
         this.bootClassLoader = bootClassLoader;
+    }
+
+    public Map<String, String> getExportedPackages() {
+        return exportedPackages;
+    }
+
+    public void setExportedPackages(Map<String, String> exportedPackages) {
+        this.exportedPackages = exportedPackages;
     }
 
     public List<URL> getBootLibraryExports() {

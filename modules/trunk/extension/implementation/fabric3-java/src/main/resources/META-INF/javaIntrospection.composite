@@ -34,10 +34,6 @@
         <reference name="heuristic" target="JavaHeuristic"/>
     </component>
 
-    <component name="ClassWalker">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
-    </component>
-
     <component name="JavaHeuristic">
         <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaHeuristic"/>
         <reference name="service" target="JavaServiceHeuristic"/>

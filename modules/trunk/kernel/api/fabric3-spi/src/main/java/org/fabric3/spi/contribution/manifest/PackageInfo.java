@@ -29,7 +29,7 @@ public final class PackageInfo {
     private boolean required;
     private String[] packageNames;
     private boolean minInclusive = true;
-    private boolean maxInclusive =true;
+    private boolean maxInclusive = true;
 
     /**
      * Constructor for an import package declaration specifying a version range.
@@ -78,6 +78,17 @@ public final class PackageInfo {
     public PackageInfo(String name) {
         setName(name);
         this.required = true;
+    }
+
+    /**
+     * Constructor for an export package declaration.
+     *
+     * @param name    the package name
+     * @param version the version
+     */
+    public PackageInfo(String name, PackageVersion version) {
+        setName(name);
+        this.minVersion = version;
     }
 
     /**

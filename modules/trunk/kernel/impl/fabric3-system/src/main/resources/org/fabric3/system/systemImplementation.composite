@@ -61,12 +61,7 @@
 
     <component name="SystemImplementationProcessorImpl">
         <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemImplementationProcessorImpl"/>
-        <reference name="classWalker" target="SystemClassWalker"/>
         <reference name="heuristic" target="SystemHeuristic"/>
-    </component>
-
-    <component name="SystemClassWalker">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
     <component name="SystemHeuristic">

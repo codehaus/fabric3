@@ -42,6 +42,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
@@ -250,6 +252,11 @@ public class Fabric3Server implements Fabric3ServerMBean {
         bootExports.add(bootClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml"));
         configuration.setBootLibraryExports(bootExports);
 
+        Map<String, String> exportedPackages = new HashMap<String, String>();
+        exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.pojo.*", Names.VERSION);
+        configuration.setExportedPackages(exportedPackages);
+        
         // process extensions
         File extensionsDir = runtime.getHostInfo().getExtensionsDirectory();
         List<ContributionSource> extensions = getExtensionContributions(extensionsDir);

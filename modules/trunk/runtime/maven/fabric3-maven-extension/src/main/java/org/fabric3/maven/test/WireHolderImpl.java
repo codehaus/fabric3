@@ -19,7 +19,7 @@ package org.fabric3.maven.test;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.fabric3.TestWireHolder;
+import org.fabric3.test.spi.TestWireHolder;
 import org.fabric3.spi.wire.Wire;
 
 /**

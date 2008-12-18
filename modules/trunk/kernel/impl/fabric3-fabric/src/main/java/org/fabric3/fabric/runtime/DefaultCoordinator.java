@@ -16,25 +16,23 @@
  */
 package org.fabric3.fabric.runtime;
 
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import javax.xml.namespace.QName;
+
 import static org.fabric3.fabric.runtime.FabricNames.DEFINITIONS_REGISTRY;
 import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
 import static org.fabric3.fabric.runtime.FabricNames.METADATA_STORE_URI;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
-import static org.fabric3.spi.Namespaces.IMPLEMENTATION;
-
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import javax.xml.namespace.QName;
-
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
@@ -50,6 +48,7 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
+import static org.fabric3.spi.Namespaces.IMPLEMENTATION;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.Resource;
@@ -77,6 +76,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     private ContributionSource intents;
     private List<ContributionSource> extensions;
     private List<ContributionSource> policies;
+    private Map<String, String> exportedPackages;
 
     public enum State {
         UNINITIALIZED,
@@ -94,6 +94,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         bootstrapper = configuration.getBootstrapper();
         bootClassLoader = configuration.getBootClassLoader();
         bootExports = configuration.getBootLibraryExports();
+        exportedPackages = configuration.getExportedPackages();
         intents = configuration.getIntents();
         extensions = configuration.getExtensions();
         policies = configuration.getPolicies();
@@ -104,7 +105,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             throw new IllegalStateException("Not in UNINITIALIZED state");
         }
         runtime.initialize();
-        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, bootExports);
+        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, bootExports, exportedPackages);
         state = State.PRIMORDIAL;
     }
 

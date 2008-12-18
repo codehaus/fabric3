@@ -25,7 +25,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.junit.provision.JUnitWireSourceDefinition;
-import org.fabric3.TestWireHolder;
+import org.fabric3.test.spi.TestWireHolder;
 
 /**
  * @version $Revision$ $Date$

@@ -23,8 +23,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -118,7 +120,7 @@ public class MavenRuntimeBooter {
         Properties hostProperties = properties != null ? properties : System.getProperties();
         File tempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
         tempDir.mkdir();
-        
+
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(DOMAIN), hostProperties, moduleDependencies, tempDir);
         runtime.setHostInfo(hostInfo);
 
@@ -148,6 +150,12 @@ public class MavenRuntimeBooter {
         bootExports.add(bootClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml"));
         configuration.setBootLibraryExports(bootExports);
 
+        Map<String, String> exportedPackages = new HashMap<String, String>();
+        exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.pojo.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.test.spi", Names.VERSION);
+        exportedPackages.put("org.fabric3.maven", Names.VERSION);
+        configuration.setExportedPackages(exportedPackages);
         // process extensions
         extensionHelper.processExtensions(configuration, extensions, featureSets);
 

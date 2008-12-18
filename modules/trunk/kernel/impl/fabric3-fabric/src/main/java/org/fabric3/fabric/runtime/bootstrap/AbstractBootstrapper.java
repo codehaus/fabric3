@@ -40,6 +40,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.management.MBeanServer;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -48,12 +49,12 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
-import org.fabric3.fabric.instantiator.ComponentInstantiator;
-import org.fabric3.fabric.runtime.FabricNames;
-import org.fabric3.fabric.runtime.RuntimeServices;
 import org.fabric3.contribution.manifest.ContributionExport;
 import org.fabric3.contribution.manifest.MavenPOMProcessor;
+import org.fabric3.fabric.instantiator.ComponentInstantiator;
+import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
+import org.fabric3.fabric.runtime.FabricNames;
+import org.fabric3.fabric.runtime.RuntimeServices;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.synthesizer.SingletonComponentSynthesizer;
@@ -70,22 +71,25 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.DefaultValidationContext;
 import org.fabric3.model.type.ValidationContext;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionState;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.manifest.JavaExport;
+import org.fabric3.spi.contribution.manifest.PackageInfo;
+import org.fabric3.spi.contribution.manifest.PackageVersion;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.contribution.Contribution;
-import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.ContributionState;
-import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.synthesize.ComponentSynthesizer;
@@ -124,6 +128,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     private Fabric3Runtime<?> runtime;
     private ClassLoader bootClassLoader;
     private List<URL> bootManifests;
+    private Map<String, String> exportedPackages;
     private ClassLoader hostClassLoader;
 
     protected AbstractBootstrapper(XMLFactory xmlFactory) {
@@ -136,11 +141,15 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         systemImplementationProcessor = BootstrapIntrospectionFactory.createSystemImplementationProcessor();
     }
 
-    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, List<URL> bootManifests) throws InitializationException {
+    public void bootRuntimeDomain(Fabric3Runtime<?> runtime,
+                                  ClassLoader bootClassLoader,
+                                  List<URL> bootManifests,
+                                  Map<String, String> exportedPackages) throws InitializationException {
 
         this.runtime = runtime;
         this.bootClassLoader = bootClassLoader;
         this.bootManifests = bootManifests;
+        this.exportedPackages = exportedPackages;
         // classloader shared by extension and application classes
         this.hostClassLoader = runtime.getHostClassLoader();
 
@@ -313,8 +322,8 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void synthesizeContributions() throws InitializationException {
         try {
-            synthesizeContribution(HOST_CONTRIBUTION, Collections.<URL>emptyList(), hostClassLoader);
-            synthesizeContribution(BOOT_CONTRIBUTION, bootManifests, bootClassLoader);
+            synthesizeContribution(HOST_CONTRIBUTION, Collections.<URL>emptyList(), Collections.<String, String>emptyMap(), hostClassLoader);
+            synthesizeContribution(BOOT_CONTRIBUTION, bootManifests, exportedPackages, bootClassLoader);
         } catch (ContributionException e) {
             throw new InitializationException(e);
         }
@@ -323,12 +332,13 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     /**
      * Synthesizes a contribution from a classloader and installs it.
      *
-     * @param contributionUri the contribution URI
-     * @param manifests       a list of URLs to introspect to create an SCA manifest containing exports for the contribution
-     * @param loader          the classloader
-     * @throws ContributionException if there is an error synthesizing the contribution
+     * @param contributionUri  the contribution URI
+     * @param manifests        a list of URLs to introspect to create an SCA manifest containing exports for the contribution
+     * @param exportedPackages the packages exported by the contribution
+     * @param loader           the classloader @throws ContributionException if there is an error synthesizing the contribution
      */
-    private void synthesizeContribution(URI contributionUri, List<URL> manifests, ClassLoader loader) throws ContributionException {
+    private void synthesizeContribution(URI contributionUri, List<URL> manifests, Map<String, String> exportedPackages, ClassLoader loader)
+            throws ContributionException {
         Contribution contribution = new Contribution(contributionUri);
         contribution.setState(ContributionState.INSTALLED);
         ContributionManifest manifest = contribution.getManifest();
@@ -371,6 +381,12 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
                     e.printStackTrace();
                 }
             }
+        }
+        for (Map.Entry<String, String> entry : exportedPackages.entrySet()) {
+            PackageVersion version = new PackageVersion(entry.getValue());
+            PackageInfo info = new PackageInfo(entry.getKey(), version);
+            JavaExport export = new JavaExport(info);
+            manifest.addExport(export);
         }
         if (context.hasErrors()) {
             throw new InvalidContributionException(context.getErrors(), context.getWarnings());

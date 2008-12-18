@@ -42,6 +42,10 @@
            name="AnnotationProcessorsComposite" targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
            autowire="true">
 
+    <component name="ClassWalker">
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+    </component>
+    
     <!-- OSOA Specification Annotations -->
 
     <component name="CallbackProcessor" f3-core:key="org.osoa.sca.annotations.Callback">

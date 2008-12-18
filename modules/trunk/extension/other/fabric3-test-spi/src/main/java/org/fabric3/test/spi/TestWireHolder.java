@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3;
+package org.fabric3.test.spi;
 
 import java.util.Map;
 

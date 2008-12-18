@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.maven.TestSuiteFactory;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.TestWireHolder;
+import org.fabric3.test.spi.TestWireHolder;
 
 /**
  * @version $Revision$ $Date$

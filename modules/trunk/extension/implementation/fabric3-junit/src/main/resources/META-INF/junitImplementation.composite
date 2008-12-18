@@ -27,12 +27,7 @@
 
     <component name="JUnitImplementationProcessorImpl">
         <f3-impl:implementation.system class="org.fabric3.junit.introspection.JUnitImplementationProcessorImpl"/>
-        <reference name="classWalker" target="JUnitClassWalker"/>
         <reference name="heuristic" target="JUnitHeuristic"/>
-    </component>
-
-    <component name="JUnitClassWalker">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
     <component name="JUnitHeuristic">

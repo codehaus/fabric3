@@ -29,12 +29,7 @@
 
     <component name="GroovyImplementationProcessor">
         <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationProcessor"/>
-        <reference name="classWalker" target="GroovyClassWalker"/>
         <reference name="heuristic" target="GroovyHeuristic"/>
-    </component>
-
-    <component name="GroovyClassWalker">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
     <component name="GroovyHeuristic">
