@@ -16,6 +16,7 @@
  */
 package org.fabric3.contribution.manifest;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -28,18 +29,18 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
-import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
+import org.fabric3.spi.contribution.Constants;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.Export;
-import org.fabric3.spi.contribution.Import;
 
 /**
  * Loads a contribution manifest from a contribution element
@@ -94,7 +95,9 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                         String localPart = name.substring(index + 1);
                         String ns = reader.getNamespaceContext().getNamespaceURI(prefix);
                         if (ns == null) {
-                            context.addError(new InvalidQNamePrefix(prefix, reader));
+                            URI uri = context.getContributionUri();
+                            context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the contribution manifest file for "
+                                    + uri + " is invalid", prefix, reader));
                             return null;
                         }
                         qName = new QName(ns, localPart, prefix);

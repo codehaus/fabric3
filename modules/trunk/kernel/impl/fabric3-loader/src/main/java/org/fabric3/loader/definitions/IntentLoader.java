@@ -16,6 +16,7 @@
  */
 package org.fabric3.loader.definitions;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -27,13 +28,13 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
+import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
-import org.fabric3.model.type.definitions.Intent;
 
 /**
  * Loader for definitions.
@@ -59,7 +60,10 @@ public class IntentLoader implements TypeLoader<Intent> {
             try {
                 constrains = helper.createQName(constrainsVal, reader);
             } catch (InvalidPrefixException e) {
-                context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+                String prefix = e.getPrefix();
+                URI uri = context.getContributionUri();
+                context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
+                        + " is invalid", prefix, reader));
                 return null;
             }
         }
@@ -75,7 +79,10 @@ public class IntentLoader implements TypeLoader<Intent> {
                     QName id = helper.createQName(tok.nextToken(), reader);
                     requires.add(id);
                 } catch (InvalidPrefixException e) {
-                    context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+                    String prefix = e.getPrefix();
+                    URI uri = context.getContributionUri();
+                    context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
+                            + " is invalid", prefix, reader));
                     return null;
                 }
             }

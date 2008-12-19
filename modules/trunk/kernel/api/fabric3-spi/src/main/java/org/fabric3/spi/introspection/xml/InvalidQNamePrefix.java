@@ -22,7 +22,8 @@ import javax.xml.stream.XMLStreamReader;
  * @version $Revision$ $Date$
  */
 public class InvalidQNamePrefix extends XmlValidationFailure<String> {
-    public InvalidQNamePrefix(String modelObject, XMLStreamReader reader) {
-        super("Invalid prefix: " + modelObject, modelObject, reader);
+
+    public InvalidQNamePrefix(String message, String modelObject, XMLStreamReader reader) {
+        super(message, modelObject, reader);
     }
 }

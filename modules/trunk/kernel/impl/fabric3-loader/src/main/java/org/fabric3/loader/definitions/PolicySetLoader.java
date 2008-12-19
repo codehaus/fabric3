@@ -16,6 +16,7 @@
  */
 package org.fabric3.loader.definitions;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -95,7 +96,10 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
             try {
                 provides.add(helper.createQName(tok.nextToken(), reader));
             } catch (InvalidPrefixException e) {
-                context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+                String prefix = e.getPrefix();
+                URI uri = context.getContributionUri();
+                context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
+                        + " is invalid", prefix, reader));
                 return null;
             }
         }

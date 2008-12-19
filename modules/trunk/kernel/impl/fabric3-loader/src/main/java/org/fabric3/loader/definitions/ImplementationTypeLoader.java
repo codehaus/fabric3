@@ -34,6 +34,7 @@
  */
 package org.fabric3.loader.definitions;
 
+import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -42,14 +43,14 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.definitions.ImplementationType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
+import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
-import org.fabric3.model.type.definitions.ImplementationType;
 
 /**
  * Loader for definitions.
@@ -78,7 +79,10 @@ public class ImplementationTypeLoader implements TypeLoader<ImplementationType> 
             return new ImplementationType(qName, alwaysProvides, mayProvide);
 
         } catch (InvalidPrefixException e) {
-            context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+            String prefix = e.getPrefix();
+            URI uri = context.getContributionUri();
+            context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
+                    + " is invalid", prefix, reader));
 
         }
         return null;

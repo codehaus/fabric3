@@ -142,7 +142,10 @@ public class DefaultLoaderHelper implements LoaderHelper {
             policyAware.setIntents(parseListOfQNames(reader, "requires"));
             policyAware.setPolicySets(parseListOfQNames(reader, "policySets"));
         } catch (InvalidPrefixException e) {
-            context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+            String prefix = e.getPrefix();
+            URI uri = context.getContributionUri();
+            context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
+                    + " is invalid", prefix, reader));
         }
 
     }
