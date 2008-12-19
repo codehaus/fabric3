@@ -17,9 +17,8 @@
 <definitions
         xmlns="http://www.osoa.org/xmlns/sca/1.0"
         xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-        targetNamespace="urn:fabric3.org:policy"
-        xmlns:f3-policy="urn:fabric3.org:policy"
-        xmlns:f3-core="urn:fabric3.org:core">
+        xmlns:f3-impl="urn:fabric3.org:implementation"
+        targetNamespace="urn:fabric3.org:policy">
 
     <implementationType name="f3-impl:implementation.timer" mayProvide="sca:managedTransaction"/>
 
