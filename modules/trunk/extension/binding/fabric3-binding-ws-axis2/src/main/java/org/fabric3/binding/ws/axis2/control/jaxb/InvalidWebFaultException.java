@@ -23,10 +23,19 @@ import org.fabric3.spi.generator.GenerationException;
  */
 public class InvalidWebFaultException extends GenerationException {
 
-    public InvalidWebFaultException(String identifier) {
+  
+	private static final long serialVersionUID = -8043500136247288946L;
+
+    /**
+     * Create Web Fault by the given identifier
+     */	
+	public InvalidWebFaultException(String identifier) {
         super(identifier);
     }
 
+	/**
+	 * Return the Message related to this web Fault
+	 */
     public String getMessage() {
         return "Exception class does not have @WebFault annotation required by JAX-WS: " + getIdentifier();
     }

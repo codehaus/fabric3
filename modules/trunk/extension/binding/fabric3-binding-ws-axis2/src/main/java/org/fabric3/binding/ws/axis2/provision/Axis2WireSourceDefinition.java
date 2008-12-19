@@ -27,7 +27,10 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision$ $Date$
  */
 public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition implements Axis2PolicyAware {
-    private String serviceInterface;
+	
+	private static final long serialVersionUID = -4225747629340608153L;
+	
+	private String serviceInterface;
     private Map<String, Set<AxisPolicy>> policies = new HashMap<String, Set<AxisPolicy>>();
 
     /**

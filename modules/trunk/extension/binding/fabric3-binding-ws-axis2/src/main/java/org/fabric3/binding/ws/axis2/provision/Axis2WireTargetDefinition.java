@@ -30,7 +30,10 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  */
 public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition implements Axis2PolicyAware {
 
-    private String referenceInterface;
+   
+	private static final long serialVersionUID = 157147784561060006L;
+	
+	private String referenceInterface;
     private Map<String, Set<AxisPolicy>> policies = new HashMap<String, Set<AxisPolicy>>();
     private Map<String, Map<String, String>> operationInfo;
     private Map<String, String> config;

@@ -22,10 +22,20 @@ import org.fabric3.spi.generator.GenerationException;
  * @version $Rev$ $Date$
  */
 public class MissingFaultInfoException extends GenerationException {
+
+	private static final long serialVersionUID = -7430125382485707975L;
+
+	/**
+	 * Create a Missing Fault Exception by a given Identifier 
+	 * @param identifier
+	 */
     public MissingFaultInfoException(String identifier) {
         super(identifier);
     }
 
+    /**
+     * Return the Message to this Exception
+     */
     public String getMessage() {
         return "Exception class does not have getFaultInfo() method required by JAX-WS: " + getIdentifier();
     }
