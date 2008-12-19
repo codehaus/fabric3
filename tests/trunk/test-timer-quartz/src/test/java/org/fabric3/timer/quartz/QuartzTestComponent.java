@@ -78,10 +78,10 @@ public class QuartzTestComponent extends TestCase {
 
         public void run() {
             try {
-                latch.countDown();
                 if (tm.getStatus() == Status.STATUS_ACTIVE) {
                     trxStarted = true;
                 }
+                latch.countDown();
             } catch (SystemException e) {
                 // this will cause the test to fail by not setting noTrx
             }
@@ -107,10 +107,10 @@ public class QuartzTestComponent extends TestCase {
 
         public void run() {
             try {
-                latch.countDown();
                 if (tm.getStatus() == Status.STATUS_NO_TRANSACTION) {
                     noTrx = true;
                 }
+                latch.countDown();
             } catch (SystemException e) {
                 // this will cause the test to fail
             }
