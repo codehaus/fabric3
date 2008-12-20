@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.scanner.scanner;
+package org.fabric3.scanner.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +46,8 @@ import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.domain.Domain;
-import org.fabric3.spi.scanner.FileSystemResource;
-import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
+import org.fabric3.scanner.spi.FileSystemResource;
+import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3EventListener;

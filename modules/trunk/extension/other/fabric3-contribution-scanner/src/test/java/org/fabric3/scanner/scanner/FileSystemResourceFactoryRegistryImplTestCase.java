@@ -21,8 +21,9 @@ import java.io.File;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.spi.scanner.FileSystemResource;
-import org.fabric3.spi.scanner.FileSystemResourceFactory;
+import org.fabric3.scanner.spi.FileSystemResource;
+import org.fabric3.scanner.spi.FileSystemResourceFactory;
+import org.fabric3.scanner.impl.FileSystemResourceFactoryRegistryImpl;
 
 /**
  * @version $Rev$ $Date$

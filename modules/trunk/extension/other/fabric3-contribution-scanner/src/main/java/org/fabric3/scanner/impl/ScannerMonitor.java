@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.scanner.scanner;
+package org.fabric3.scanner.impl;
 
 import org.fabric3.api.annotation.logging.Fine;
 import org.fabric3.api.annotation.logging.Info;

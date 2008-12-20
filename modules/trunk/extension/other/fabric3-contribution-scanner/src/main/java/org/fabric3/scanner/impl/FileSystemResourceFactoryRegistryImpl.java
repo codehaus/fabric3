@@ -14,15 +14,15 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.scanner.scanner;
+package org.fabric3.scanner.impl;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
-import org.fabric3.spi.scanner.FileSystemResourceFactory;
-import org.fabric3.spi.scanner.FileSystemResource;
+import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
+import org.fabric3.scanner.spi.FileSystemResourceFactory;
+import org.fabric3.scanner.spi.FileSystemResource;
 
 /**
  * Default implementation of the FileSystemResourceFactoryRegistry.

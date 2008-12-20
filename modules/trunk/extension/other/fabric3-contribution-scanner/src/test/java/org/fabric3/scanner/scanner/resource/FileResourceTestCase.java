@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.scanner.FileResource;
+import org.fabric3.scanner.spi.FileResource;
 
 /**
  * @version $Rev$ $Date$
