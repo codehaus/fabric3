@@ -16,12 +16,10 @@
 
     $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:maven="urn:fabric3.org:maven">
-    <maven:import artifactId="fabric3-jpa-spi" groupId="org.codehaus.fabric3" version="0.8-SNAPSHOT"/>
-    <maven:import artifactId="fabric3-resource" groupId="org.codehaus.fabric3" version="0.8-SNAPSHOT"/>
-
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
     <import.java package="org.fabric3.spi" version="0.8"/>
-    <import.java package="org.fabric3.java.control" version="0.8"/>
-    <export.java package="org.hibernate.*"/>
-    <deployable xmlns:ns="org.codehaus.fabric3" composite="ns:HibernateJpaExtension"/>
+    <import.java package="org.fabric3.pojo" version="0.8"/>
+    <import.java package="org.fabric3.java" version="0.8"/>
+    <import.java package="org.fabric3.timer.component.provision" version="0.8"/>
+    <deployable composite="ns:TimerLoaderExtension"/>
 </contribution>

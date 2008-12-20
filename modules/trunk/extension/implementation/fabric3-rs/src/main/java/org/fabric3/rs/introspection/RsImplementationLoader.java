@@ -31,7 +31,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.java.api.JavaImplementation;
+import org.fabric3.java.control.JavaImplementation;
 
 /**
  * @version $Rev$ $Date$

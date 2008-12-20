@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.java.api;
+package org.fabric3.java.control;
 
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
 

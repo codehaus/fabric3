@@ -20,18 +20,18 @@ import java.net.URL;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.java.control.JavaImplementationProcessor;
+import org.fabric3.model.type.component.InvalidImplementation;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.java.api.JavaImplementation;
-import org.fabric3.java.api.JavaImplementationProcessor;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.model.type.component.InvalidImplementation;
 
 /**
  * @version $Rev$ $Date$
@@ -41,8 +41,8 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
     private final HeuristicProcessor<JavaImplementation> heuristic;
     private final IntrospectionHelper helper;
 
-    public JavaImplementationProcessorImpl(@Reference(name = "classWalker")ClassWalker<JavaImplementation> classWalker,
-                                           @Reference(name = "heuristic")HeuristicProcessor<JavaImplementation> heuristic,
+    public JavaImplementationProcessorImpl(@Reference(name = "classWalker") ClassWalker<JavaImplementation> classWalker,
+                                           @Reference(name = "heuristic") HeuristicProcessor<JavaImplementation> heuristic,
                                            @Reference(name = "helper") IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristic = heuristic;

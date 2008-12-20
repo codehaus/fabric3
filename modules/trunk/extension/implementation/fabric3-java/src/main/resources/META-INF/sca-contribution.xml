@@ -19,7 +19,10 @@
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-java="urn:maven:org.codehaus.fabric3:fabric3-java">
     <import.java package="org.fabric3.spi" version="0.8"/>
     <import.java package="org.fabric3.pojo" version="0.8"/>
-    <export.java package="org.fabric3.java.api" version="0.8"/>
+    <export.java package="org.fabric3.java.control" version="0.8"/>
+    <export.java package="org.fabric3.java.provision" version="0.8"/>
+    <export.java package="org.fabric3.java.introspection" version="0.8"/>
+    <export.java package="org.fabric3.java.runtime" version="0.8"/>
     <deployable composite="f3-java:JavaControllerExtension"/>
     <deployable composite="f3-java:JavaRuntimeExtension"/>
     <deployable composite="f3-java:JavaIntrospectionExtension"/>

@@ -25,7 +25,7 @@ import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.java.api.JavaImplementation;
+import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**

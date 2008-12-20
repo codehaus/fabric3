@@ -18,14 +18,25 @@ package org.fabric3.jpa.introspection;
 
 import java.lang.reflect.Type;
 import java.net.URI;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContextType;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.api.jpa.ConversationalDaoImpl;
+import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.java.control.JavaImplementationProcessor;
+import org.fabric3.jpa.scdl.PersistenceContextResource;
+import org.fabric3.model.type.DefaultValidationContext;
+import org.fabric3.model.type.ValidationContext;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
@@ -34,17 +45,6 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.java.api.JavaImplementationProcessor;
-import org.fabric3.java.api.JavaImplementation;
-import org.fabric3.jpa.scdl.PersistenceContextResource;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.model.type.DefaultValidationContext;
-import org.fabric3.model.type.ValidationContext;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.spi.Namespaces;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation loader for JPA component.

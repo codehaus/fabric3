@@ -19,7 +19,7 @@ package org.fabric3.java.control;
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
-import org.fabric3.java.api.JavaImplementation;
+import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;

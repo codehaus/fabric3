@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
-import org.fabric3.java.api.JavaImplementation;
+import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;

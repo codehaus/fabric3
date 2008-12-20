@@ -18,7 +18,7 @@ package org.fabric3.rs.introspection;
 
 import java.net.URI;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.java.api.JavaImplementation;
+import org.fabric3.java.control.JavaImplementation;
 
 /**
  * @version $Rev$ $Date$
