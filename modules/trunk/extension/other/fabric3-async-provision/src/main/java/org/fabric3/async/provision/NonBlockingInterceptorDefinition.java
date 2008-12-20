@@ -14,28 +14,16 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.async;
+package org.fabric3.async.provision;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
- * Creates a non-blocking interceptor
+ * Physical definition for non-blocking operations.
  *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class NonBlockingInterceptorBuilder implements InterceptorBuilder<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
-    private WorkScheduler scheduler;
-
-    public NonBlockingInterceptorBuilder(@Reference WorkScheduler scheduler) {
-        this.scheduler = scheduler;
-    }
-
-    public NonBlockingInterceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
-        return new NonBlockingInterceptor(scheduler);
-    }
+public class NonBlockingInterceptorDefinition extends PhysicalInterceptorDefinition {
 
 }
+ 

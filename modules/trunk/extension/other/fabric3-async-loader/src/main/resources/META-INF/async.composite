@@ -23,7 +23,7 @@
            autowire="true">
 
     <component name="NonBlockingGenerator">
-        <f3-impl:implementation.system class="org.fabric3.async.NonBlockingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.async.control.NonBlockingGenerator"/>
     </component>
 
 </composite>

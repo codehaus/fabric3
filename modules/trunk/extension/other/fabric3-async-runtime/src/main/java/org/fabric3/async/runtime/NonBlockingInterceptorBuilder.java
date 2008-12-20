@@ -14,18 +14,29 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.async;
+package org.fabric3.async.runtime;
 
-import junit.framework.TestCase;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 
 /**
+ * Creates a non-blocking interceptor
+ *
  * @version $Rev$ $Date$
  */
-public class NonBlockingInterceptorBuilderTestCase extends TestCase {
+public class NonBlockingInterceptorBuilder implements InterceptorBuilder<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
+    private WorkScheduler scheduler;
 
-    public void testBuild() throws Exception {
-        NonBlockingInterceptorBuilder builder = new NonBlockingInterceptorBuilder(null);
-        NonBlockingInterceptorDefinition definition = new NonBlockingInterceptorDefinition();
-        assertNotNull(builder.build(definition));
+    public NonBlockingInterceptorBuilder(@Reference WorkScheduler scheduler) {
+        this.scheduler = scheduler;
     }
+
+    public NonBlockingInterceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
+        return new NonBlockingInterceptor(scheduler);
+    }
+
 }

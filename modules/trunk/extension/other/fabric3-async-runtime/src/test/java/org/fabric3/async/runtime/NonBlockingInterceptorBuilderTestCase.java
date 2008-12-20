@@ -14,16 +14,20 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.async;
+package org.fabric3.async.runtime;
 
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import junit.framework.TestCase;
+
+import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 
 /**
- * Physical definition for non-blocking operations.
- *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class NonBlockingInterceptorDefinition extends PhysicalInterceptorDefinition {
+public class NonBlockingInterceptorBuilderTestCase extends TestCase {
 
+    public void testBuild() throws Exception {
+        NonBlockingInterceptorBuilder builder = new NonBlockingInterceptorBuilder(null);
+        NonBlockingInterceptorDefinition definition = new NonBlockingInterceptorDefinition();
+        assertNotNull(builder.build(definition));
+    }
 }
- 

@@ -26,7 +26,7 @@
     <artifactId>fabric3-async-loader</artifactId>
     <name>Fabric3 Asynchronous Definitions</name>
     <description>Fabric3 Asynchronous Definitions.</description>
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -56,31 +56,6 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-spi</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-async-provision</artifactId>
-                        </mavenImport>
-                    </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/async.composite</deployable>
-                    </deployables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-async-loader</connection>

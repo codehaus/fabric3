@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.async;
+package org.fabric3.async.runtime;
 
 import java.util.List;
 import java.util.Map;

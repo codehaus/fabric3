@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.async;
+package org.fabric3.async.control;
 
 import javax.xml.namespace.QName;
 
@@ -30,6 +30,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 
 /**
  * Creates {@link NonBlockingInterceptorDefinition}s for one-way operations.

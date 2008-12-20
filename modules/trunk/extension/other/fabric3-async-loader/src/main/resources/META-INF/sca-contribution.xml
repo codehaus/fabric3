@@ -14,16 +14,10 @@
  different terms.  See the separate licenses for those programs included in the
  distribution for the permitted and restricted uses of such software.
 
+    $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:f3-impl="urn:fabric3.org:implementation"
-           targetNamespace="org.codehaus.fabric3"
-           name="AsyncRuntimeExtension"
-           autowire="true">
-
-    <component f3-core:key="org.fabric3.async.provision.NonBlockingInterceptorDefinition" name="NonBlockingInterceptorBuilder">
-        <f3-impl:implementation.system class="org.fabric3.async.runtime.NonBlockingInterceptorBuilder"/>
-    </component>
-
-</composite>
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
+    <import.java package="org.fabric3.spi" version="0.8"/>
+    <import.java package="org.fabric3.async.provision" version="0.8"/>
+    <deployable composite="ns:AsyncLoaderExtension"/>
+</contribution>
