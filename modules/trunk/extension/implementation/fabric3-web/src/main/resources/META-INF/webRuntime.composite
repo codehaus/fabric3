@@ -20,7 +20,7 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="WebImplementationRuntimeExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
+           name="WebImplementationRuntimeExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-web"
            autowire="true">
 
     <component name="WebComponentBuilder">
