@@ -26,7 +26,7 @@
     <artifactId>fabric3-tx-jotm</artifactId>
     <name>Fabric3 JOTM Transaction Manager</name>
     <description>Fabric3 JOTM Transaction Manager.</description>
-    <packaging>sca-contribution-jar</packaging>    
+    <packaging>sca-contribution-jar</packaging>
 
     <repositories>
         <repository>
@@ -116,17 +116,6 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-spi</artifactId>
-                        </mavenImport>
-                    </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/jotm.composite</deployable>
-                    </deployables>
-                </configuration>
             </plugin>
         </plugins>
     </build>
