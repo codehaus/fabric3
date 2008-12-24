@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaParameterizedType;
-import org.fabric3.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractPullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 

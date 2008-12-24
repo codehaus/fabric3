@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$

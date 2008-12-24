@@ -33,7 +33,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.transform.AbstractPushTransformer;
+import org.fabric3.spi.transform.AbstractPushTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**

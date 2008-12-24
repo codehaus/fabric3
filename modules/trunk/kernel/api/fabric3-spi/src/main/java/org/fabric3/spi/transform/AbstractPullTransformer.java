@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.transform;
+package org.fabric3.spi.transform;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -24,8 +24,6 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -69,9 +67,6 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
         registry.unregister(this);
     }
 
-    /**
-     * @see org.fabric3.spi.transform.Transformer#getSourceType()
-     */
     public DataType<?> getSourceType() {
         return DEFAULT_SOURCE;
     }

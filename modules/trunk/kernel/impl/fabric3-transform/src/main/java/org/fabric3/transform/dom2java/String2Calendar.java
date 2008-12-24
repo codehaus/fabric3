@@ -27,7 +27,7 @@ import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractPullTransformer;
 
 /**
  * String format for Calendar, expects format of date per XMLSchema (2007-10-31T01:02:03Z)

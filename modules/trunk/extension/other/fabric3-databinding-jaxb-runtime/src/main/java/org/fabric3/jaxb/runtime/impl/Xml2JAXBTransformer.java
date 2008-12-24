@@ -24,7 +24,7 @@ import javax.xml.bind.Unmarshaller;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractPullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 
 /**

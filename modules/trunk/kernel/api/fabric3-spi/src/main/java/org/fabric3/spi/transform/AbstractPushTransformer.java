@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.transform;
+package org.fabric3.spi.transform;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -22,8 +22,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.service.DataType;
-import org.fabric3.spi.transform.PushTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$

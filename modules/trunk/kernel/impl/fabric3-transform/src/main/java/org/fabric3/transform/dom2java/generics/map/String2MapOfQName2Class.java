@@ -27,7 +27,7 @@ import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractPullTransformer;
 
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;

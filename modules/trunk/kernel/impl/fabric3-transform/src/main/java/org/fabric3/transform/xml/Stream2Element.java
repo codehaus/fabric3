@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.w3c.dom.Element;
 
 import org.fabric3.model.type.service.DataType;
-import org.fabric3.transform.AbstractPushTransformer;
+import org.fabric3.spi.transform.AbstractPushTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
