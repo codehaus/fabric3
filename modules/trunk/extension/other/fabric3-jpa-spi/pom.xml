@@ -30,7 +30,7 @@
     <name>Fabric3 JPA Integration (SPI)</name>
     <description>Fabric3 JPA Integration (SPI).</description>
     
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>jar</packaging>
 
     <repositories>
         <repository>
@@ -45,8 +45,9 @@
     
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-spi</artifactId>
+            <artifactId>fabric3-host-api</artifactId>
             <version>0.8-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
@@ -69,23 +70,6 @@
         </dependency>
         
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
-                    </mavenImports>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-jpa-spi</connection>
