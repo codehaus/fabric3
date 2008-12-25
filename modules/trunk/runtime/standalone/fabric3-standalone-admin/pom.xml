@@ -42,7 +42,7 @@
     <artifactId>fabric3-standalone-admin</artifactId>
     <name>Fabric3 Standalone Runtime Admin Extension</name>
     <description>Fabric3 Standalone Runtime Admin Extension.</description>
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -70,30 +70,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-   <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-spi</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jetty</artifactId>
-                        </mavenImport>
-                    </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/standaloneAdmin.composite</deployable>
-                    </deployables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-admin</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-admin</developerConnection>
