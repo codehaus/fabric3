@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.jetty;
+package org.fabric3.jetty.impl;
 
 import org.mortbay.log.Logger;
 

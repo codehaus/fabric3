@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.jetty;
+package org.fabric3.jetty.impl;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -62,6 +62,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.jetty.JettyService;
 
 /**
  * Implements an HTTP transport service using Jetty.

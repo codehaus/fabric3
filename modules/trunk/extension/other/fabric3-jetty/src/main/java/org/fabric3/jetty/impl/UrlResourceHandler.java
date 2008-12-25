@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.jetty;
+package org.fabric3.jetty.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -32,29 +32,56 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.jetty;
+package org.fabric3.jetty.impl;
 
-import org.fabric3.host.Fabric3Exception;
+import org.fabric3.api.annotation.logging.Fine;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
+import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.api.annotation.logging.Warning;
 
 /**
- * @version $Rev$ $Date$
+ * The monitoring interfaces used by the Jetty system service
+ *
+ * @version $$Rev$$ $$Date$$
  */
-public class JettyInitializationException extends Fabric3Exception {
-    private static final long serialVersionUID = 1918582897250667465L;
+public interface TransportMonitor {
 
-    public JettyInitializationException(String message) {
-        super(message);
-    }
+    /**
+     * Called after the service is initialized
+     */
+    @Info
+    void extensionStarted();
 
-    public JettyInitializationException(String message, String identifier) {
-        super(message, identifier);
-    }
+    /**
+     * Called after the service is stopped
+     */
+    @Info
+    void extensionStopped();
 
-    public JettyInitializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    @Info
+    void startHttpListener(int port);
 
-    public JettyInitializationException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
+    @Info
+    void startHttpsListener(int port);
+
+    /**
+     * Captures Jetty warnings
+     *
+     * @param msg  the warning message
+     * @param args arguments
+     */
+    @Warning
+    void warn(String msg, Object... args);
+
+    /**
+     * Captures Jetty debug events
+     *
+     * @param msg  the debug message
+     * @param args arguments
+     */
+    @Fine
+    void debug(String msg, Object... args);
+
 }
