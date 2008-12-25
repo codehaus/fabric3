@@ -42,7 +42,7 @@
     <artifactId>fabric3-maven-extension</artifactId>
     <name>Fabric3 Maven Exension</name>
     <description>Fabric3 Maven Runtime Exension.</description>
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -104,34 +104,6 @@
         </dependency>
 
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-spi</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-test-spi</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-maven-api</artifactId>
-                        </mavenImport>
-                    </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/mavenExtension.composite</deployable>
-                    </deployables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-maven-extension</connection>
