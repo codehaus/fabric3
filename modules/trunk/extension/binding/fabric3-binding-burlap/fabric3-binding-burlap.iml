@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library name="com.caucho:burlap:2.1.12">
         <CLASSES>
           <root url="jar://$M2_REPO$/com/caucho/burlap/2.1.12/burlap-2.1.12.jar!/" />
@@ -26,9 +26,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-spi" exported="" />
-    <orderEntry type="module" module-name="fabric3-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-spi" />
     <orderEntry type="module-library">
       <library name="javax.servlet:servlet-api:2.4">
         <CLASSES>
