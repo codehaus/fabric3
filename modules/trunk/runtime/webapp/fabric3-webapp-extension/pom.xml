@@ -26,7 +26,7 @@
     <artifactId>fabric3-webapp-extension</artifactId>
     <name>Fabric3 Webapp Runtime Extension</name>
     <description>Fabric3 Webapp Runtime Extension.</description>
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -91,35 +91,7 @@
         
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
-                        <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-pojo</artifactId>
-                       </mavenImport>
-                        <mavenImport>
-                           <groupId>org.codehaus.fabric3.webapp</groupId>
-                           <artifactId>fabric3-webapp-api</artifactId>
-                       </mavenImport>
-                    </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/webappExtension.composite</deployable>
-                    </deployables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
+    
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/wenapp/fabric3-webapp-extension</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-extension</developerConnection>

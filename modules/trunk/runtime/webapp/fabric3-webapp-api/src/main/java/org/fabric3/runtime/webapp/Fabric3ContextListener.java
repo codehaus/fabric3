@@ -211,7 +211,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         exportedPackages.put("org.fabric3.management.*", Names.VERSION);
         exportedPackages.put("org.fabric3.model.*", Names.VERSION);
         exportedPackages.put("org.fabric3.pojo.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.webapp", Names.VERSION);
+        exportedPackages.put("org.fabric3.runtime.webapp", Names.VERSION);
         exportedPackages.put("org.fabric3.container.web.spi", Names.VERSION);
         configuration.setExportedPackages(exportedPackages);
 
