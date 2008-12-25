@@ -29,7 +29,7 @@
     <artifactId>fabric3-http-provisioning</artifactId>
     <name>Fabric3 HTTP Provisioning</name>
     <description>Fabric3 HTTP-based Artifact Provisioning</description>
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
 
@@ -53,27 +53,6 @@
         </dependency>
 
     </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
-                    </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/http.provisioning.composite</deployable>
-                    </deployables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-discovery-jxta</connection>
