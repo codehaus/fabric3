@@ -17,7 +17,6 @@
 package org.fabric3.contribution.manifest;
 
 import java.net.URI;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
@@ -29,7 +28,7 @@ import org.fabric3.spi.contribution.manifest.QNameImport;
  * @version $Rev$ $Date$
  */
 public class QNameImportLoaderTestCase extends TestCase {
-    private static final QName QNAME = new QName("namespace");
+    private static final String QNAME = "namespace";
     private static final URI LOCATION = URI.create("location");
     private QNameImportLoader loader = new QNameImportLoader();
     private XMLStreamReader reader;

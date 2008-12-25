@@ -30,7 +30,7 @@ import org.fabric3.spi.contribution.Import;
 public class QNameImport implements Import {
     private static final long serialVersionUID = 7714960525252585065L;
     private static final QName TYPE = new QName(Namespaces.CORE, "qNameImport");
-    private QName namespace;
+    private String namespace;
     private URI location;
 
     public URI getLocation() {
@@ -41,11 +41,11 @@ public class QNameImport implements Import {
         this.location = location;
     }
 
-    public QNameImport(QName namespace) {
+    public QNameImport(String namespace) {
         this.namespace = namespace;
     }
 
-    public QName getNamespace() {
+    public String getNamespace() {
         return namespace;
     }
 

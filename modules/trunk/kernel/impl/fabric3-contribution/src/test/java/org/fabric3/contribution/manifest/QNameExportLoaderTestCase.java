@@ -16,7 +16,6 @@
  */
 package org.fabric3.contribution.manifest;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
@@ -28,7 +27,7 @@ import org.fabric3.spi.contribution.manifest.QNameExport;
  * @version $Rev$ $Date$
  */
 public class QNameExportLoaderTestCase extends TestCase {
-    private static final QName QNAME = new QName("namespace");
+    private static final String QNAME = "namespace";
     private QNameExportLoader loader = new QNameExportLoader();
     private XMLStreamReader reader;
 

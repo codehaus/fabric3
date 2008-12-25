@@ -30,13 +30,13 @@ import org.fabric3.spi.contribution.Import;
 public class QNameExport implements Export {
     private static final long serialVersionUID = -6813997109078522174L;
     private static final QName TYPE = new QName(Namespaces.CORE, "qNameImport");
-    private QName namespace;
+    private String namespace;
 
-    public QNameExport(QName namespace) {
+    public QNameExport(String namespace) {
         this.namespace = namespace;
     }
 
-    public QName getNamespace() {
+    public String getNamespace() {
         return namespace;
     }
 

@@ -49,8 +49,8 @@ import org.fabric3.util.io.FileHelper;
 public class MetaDataStoreImplTestCase extends TestCase {
     private static final URI RESOURCE_URI = URI.create("test-resource");
     private static final URI RESOURCE_URI2 = URI.create("test-resource2");
-    private static final QName IMPORT_EXPORT_QNAME = new QName("test", "test");
-    private static final QName IMPORT_EXPORT_QNAME2 = new QName("test2", "test2");
+    private static final String IMPORT_EXPORT_QNAME = "test";
+    private static final String IMPORT_EXPORT_QNAME2 = "test2";
     private MetaDataStoreImpl store;
 
     public void testResolve() throws Exception {

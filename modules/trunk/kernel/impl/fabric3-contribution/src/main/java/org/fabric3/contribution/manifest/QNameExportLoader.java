@@ -16,16 +16,15 @@
  */
 package org.fabric3.contribution.manifest;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.spi.contribution.manifest.QNameExport;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.contribution.manifest.QNameExport;
 
 /**
  * Processes a QName-based <code>export</code> element in a contribution manifest
@@ -44,7 +43,7 @@ public class QNameExportLoader implements TypeLoader<QNameExport> {
             context.addError(failure);
             return null;
         }
-        return new QNameExport(new QName(ns));
+        return new QNameExport(ns);
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {

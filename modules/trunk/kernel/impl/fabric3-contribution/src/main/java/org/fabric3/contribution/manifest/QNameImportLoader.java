@@ -17,16 +17,15 @@
 package org.fabric3.contribution.manifest;
 
 import java.net.URI;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.spi.contribution.manifest.QNameImport;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.contribution.manifest.QNameImport;
 
 /**
  * Processes a QName-based <code>import</code> element in a contribution manifest
@@ -45,14 +44,14 @@ public class QNameImportLoader implements TypeLoader<QNameImport> {
             return null;
         }
         String location = reader.getAttributeValue(null, "location");
-        QNameImport contributionImport = new QNameImport(new QName(ns));
+        QNameImport contributionImport = new QNameImport(ns);
         if (location != null) {
             contributionImport.setLocation(URI.create(location));
         }
         return contributionImport;
     }
 
-        private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
             if (!"namespace".equals(name)) {
