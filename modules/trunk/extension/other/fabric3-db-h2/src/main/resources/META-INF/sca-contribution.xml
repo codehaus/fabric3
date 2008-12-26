@@ -18,5 +18,5 @@
 -->
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
     <import.java package="org.fabric3.spi" version="0.8"/>
-    <export namepace="org.codehaus.fabric3:h2"/>
+    <export namespace="org.codehaus.fabric3:h2"/>
 </contribution>
