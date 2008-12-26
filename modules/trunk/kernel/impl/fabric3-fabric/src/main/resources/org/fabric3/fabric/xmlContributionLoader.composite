@@ -18,22 +18,15 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="XmlContributionLoaderBootComposite" >
 
-    <!-- Definitions SCDL loader implementation -->
     <component name="XmlContributionTypeLoader">
         <f3-impl:implementation.system class="org.fabric3.contribution.xmlcontribution.XmlContributionTypeLoader"/>
     </component>
 
     <component name="XmlContributionTypeIndexer">
         <f3-impl:implementation.system class="org.fabric3.contribution.xmlcontribution.XmlContributionTypeIndexer"/>
-    </component>
-
-    <component name="XmlContributionTypeManifestProcessor">
-        <f3-impl:implementation.system class="org.fabric3.contribution.xmlcontribution.XmlContributionTypeManifestProcessor"/>
     </component>
 
 </composite>

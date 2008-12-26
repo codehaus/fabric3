@@ -32,19 +32,19 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.contribution.Constants;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.archive.Action;
+import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
+import org.fabric3.spi.contribution.manifest.JarManifestHandler;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.contribution.archive.Action;
-import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
-import org.fabric3.spi.contribution.Constants;
-import org.fabric3.spi.contribution.Contribution;
-import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.manifest.JarManifestHandler;
-import org.fabric3.spi.contribution.ProcessorRegistry;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
@@ -128,26 +128,6 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
                 e.printStackTrace();
             }
         }
-        iterateArtifacts(contribution, new Action() {
-            public void process(Contribution contribution, String contentType, URL url)
-                    throws InstallException {
-                InputStream stream = null;
-                try {
-                    stream = url.openStream();
-                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
-                } catch (IOException e) {
-                    throw new InstallException(e);
-                } finally {
-                    try {
-                        if (stream != null) {
-                            stream.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     public void iterateArtifacts(Contribution contribution, Action action) throws InstallException {

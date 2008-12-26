@@ -16,7 +16,6 @@
  */
 package org.fabric3.spi.contribution;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
@@ -44,20 +43,6 @@ public interface ProcessorRegistry {
     void unregisterContributionProcessor(String contentType);
 
     /**
-     * Register a ManifestProcessor using the content type as the key
-     *
-     * @param processor the processor to registrer
-     */
-    void register(ManifestProcessor processor);
-
-    /**
-     * Unregister a ManifestProcessor for a content type
-     *
-     * @param contentType the content
-     */
-    void unregisterManifestProcessor(String contentType);
-
-    /**
      * Register a ResourceProcessor using the content type as the key
      *
      * @param processor the processor to registrer
@@ -79,18 +64,6 @@ public interface ProcessorRegistry {
      * @throws InstallException if there was a problem processing the manifest
      */
     void processManifest(Contribution contribution, ValidationContext context) throws InstallException;
-
-    /**
-     * Dispatches to a {@link ManifestProcessor} to process a manifest artifact contaned in a contribution.
-     *
-     * @param manifest    the manifest to update
-     * @param contentType the artifact MIME type
-     * @param inputStream the input stream for the artifact
-     * @param context     the context to which validation errors and warnings are reported
-     * @throws InstallException if there was a problem processing the artifact
-     */
-    void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream, ValidationContext context)
-            throws InstallException;
 
     /**
      * Dispatches to a {@link ContributionProcessor} to index a contribution.

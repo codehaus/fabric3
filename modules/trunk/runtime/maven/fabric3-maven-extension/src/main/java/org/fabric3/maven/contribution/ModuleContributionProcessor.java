@@ -19,7 +19,6 @@ package org.fabric3.maven.contribution;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -30,21 +29,21 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.util.io.FileHelper;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
-import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.contribution.archive.Action;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ContributionProcessor;
 import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.archive.Action;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.Loader;
+import org.fabric3.spi.introspection.xml.LoaderException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolver;
+import org.fabric3.util.io.FileHelper;
 
 /**
  * Processes a Maven module directory.
@@ -117,26 +116,6 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             // ignore no manifest found
         }
 
-        iterateArtifacts(contribution, context, new Action() {
-            public void process(Contribution contribution, String contentType, URL url)
-                    throws InstallException {
-                InputStream stream = null;
-                try {
-                    stream = url.openStream();
-                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
-                } catch (IOException e) {
-                    throw new InstallException(e);
-                } finally {
-                    try {
-                        if (stream != null) {
-                            stream.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     public void index(Contribution contribution, final ValidationContext context) throws InstallException {

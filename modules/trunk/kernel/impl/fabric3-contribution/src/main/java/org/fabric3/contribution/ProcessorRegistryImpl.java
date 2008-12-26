@@ -16,7 +16,6 @@
  */
 package org.fabric3.contribution;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
@@ -28,9 +27,7 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
-import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ContributionProcessor;
-import org.fabric3.spi.contribution.ManifestProcessor;
 import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceProcessor;
@@ -46,7 +43,6 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
     private Map<String, ContributionProcessor> contributionProcessorCache =
             new HashMap<String, ContributionProcessor>();
     private Map<String, ResourceProcessor> resourceProcessorCache = new HashMap<String, ResourceProcessor>();
-    private Map<String, ManifestProcessor> manifestProcessorCache = new HashMap<String, ManifestProcessor>();
 
     public ProcessorRegistryImpl() {
     }
@@ -69,14 +65,6 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         resourceProcessorCache.remove(contentType);
     }
 
-    public void register(ManifestProcessor processor) {
-        manifestProcessorCache.put(processor.getContentType(), processor);
-    }
-
-    public void unregisterManifestProcessor(String contentType) {
-        manifestProcessorCache.remove(contentType);
-    }
-
     public void processManifest(Contribution contribution, ValidationContext context) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
@@ -86,14 +74,6 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         }
         processor.processManifest(contribution, context);
 
-    }
-
-    public void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream, ValidationContext context)
-            throws InstallException {
-        ManifestProcessor processor = manifestProcessorCache.get(contentType);
-        if (processor != null) {
-            processor.process(manifest, inputStream, context);
-        }
     }
 
     public void indexContribution(Contribution contribution, ValidationContext context) throws InstallException {

@@ -35,7 +35,6 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:f3-maven="urn:fabric3.org:maven"
            name="DeploymentBootComposite"
            autowire="true">
 
@@ -84,10 +83,6 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.processor.XmlContributionProcessor"/>
     </component>
 
-    <component name="XmlManifestProcessorRegistry">
-        <f3-impl:implementation.system class="org.fabric3.contribution.manifest.XmlManifestProcessorRegistryImpl"/>
-    </component>
-
     <component name="XmlIndexerRegistry">
         <f3-impl:implementation.system class="org.fabric3.contribution.processor.XmlIndexerRegistryImpl"/>
     </component>
@@ -98,10 +93,6 @@
 
     <component name="XmlResourceElementLoaderRegistry">
         <f3-impl:implementation.system class="org.fabric3.contribution.processor.XmlResourceElementLoaderRegistryImpl"/>
-    </component>
-
-    <component name="XmlManifestProcessor">
-        <f3-impl:implementation.system class="org.fabric3.contribution.manifest.XmlManifestProcessor"/>
     </component>
 
     <component name="DefinitionsProcessor">
@@ -152,10 +143,6 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.LocationContributionWireInstantiator"/>
     </component>
 
-    <component name="MavenContributionWireInstantiator" f3-core:key="org.fabric3.spi.contribution.manifest.MavenImport">
-        <f3-impl:implementation.system class="org.fabric3.contribution.wire.MavenContributionWireInstantiator"/>
-    </component>
-
     <component name="JavaContributionWireConnector" f3-core:key="org.fabric3.contribution.wire.JavaContributionWire">
         <f3-impl:implementation.system class="org.fabric3.contribution.connector.JavaContributionWireConnector"/>
     </component>
@@ -166,10 +153,6 @@
 
     <component name="LocationContributionWireConnector" f3-core:key="org.fabric3.contribution.wire.LocationContributionWire">
         <f3-impl:implementation.system class="org.fabric3.contribution.connector.LocationContributionWireConnector"/>
-    </component>
-
-    <component name="MavenContributionWireConnector" f3-core:key="org.fabric3.contribution.wire.MavenContributionWire">
-        <f3-impl:implementation.system class="org.fabric3.contribution.connector.MavenContributionWireConnector"/>
     </component>
 
     <component name="OSGiManifestHandler">
