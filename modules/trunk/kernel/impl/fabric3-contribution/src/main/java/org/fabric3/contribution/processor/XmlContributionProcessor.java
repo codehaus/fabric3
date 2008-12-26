@@ -188,6 +188,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
                         ContributionManifest embeddedManifest = loader.load(reader, ContributionManifest.class, childContext);
                         if (childContext.hasErrors()) {
                             context.addErrors(childContext.getErrors());
+                            return;
                         }
                         if (childContext.hasWarnings()) {
                             context.addWarnings(childContext.getWarnings());
