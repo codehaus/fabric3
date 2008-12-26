@@ -89,11 +89,6 @@
                             <version>0.8-SNAPSHOT</version>
                         </dependency>
                         <dependency>
-                            <groupId>org.codehaus.fabric3.tests</groupId>
-                            <artifactId>test-ftp-server-extension</artifactId>
-                            <version>0.1-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-ftp</artifactId>
                             <version>0.8-SNAPSHOT</version>
@@ -146,6 +141,14 @@
                             <web.server>
                                 <http port="8900"/>
                             </web.server>
+                            <ftp.server>
+	                            <commandPort>2000</commandPort>
+	                            <minPassivePort>6000</minPassivePort>
+	                            <maxPassivePort>7000</maxPassivePort>
+	                            <users>
+	                                <meeraj>password</meeraj>
+	                            </users>
+                            </ftp.server>
                         </config>
                         ]]>
                     </systemConfig>

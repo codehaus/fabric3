@@ -49,7 +49,6 @@
                 <module>test-binding-burlap</module>
                 <module>test-binding-hessian</module>
                 <module>test-binding-jms</module>
-                <module>test-ftp-server-extension</module>
                 <module>test-binding-ftp</module>
                 <module>test-binding-tcp</module>
                 <module>test-rs</module>
