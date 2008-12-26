@@ -42,28 +42,28 @@ public class QuartzTestComponent extends TestCase {
 
     public void testTransactionalScheduleInterval() throws Exception {
         TrxTestRunnable runnable = new TrxTestRunnable(2);  // test multiple firings
-        trxTimerService.scheduleWithFixedDelay(runnable, 0, 10, TimeUnit.MILLISECONDS);
+        trxTimerService.scheduleWithFixedDelay(runnable, 0, 100, TimeUnit.MILLISECONDS);
         runnable.await();
         assertTrue(runnable.isTrxStarted());
     }
 
     public void testNonTransactionalScheduleInterval() throws Exception {
         NoTrxTestRunnable runnable = new NoTrxTestRunnable(2);  // test multiple firings
-        timerService.scheduleWithFixedDelay(runnable, 0, 10, TimeUnit.MILLISECONDS);
+        timerService.scheduleWithFixedDelay(runnable, 0, 100, TimeUnit.MILLISECONDS);
         runnable.await();
         assertTrue(runnable.isNoTrx());
     }
 
     public void testTransactionalScheduleWithDelay() throws Exception {
         TrxTestRunnable runnable = new TrxTestRunnable(1); // fires once
-        trxTimerService.schedule(runnable, 10, TimeUnit.MILLISECONDS);
+        trxTimerService.schedule(runnable, 100, TimeUnit.MILLISECONDS);
         runnable.await();
         assertTrue(runnable.isTrxStarted());
     }
 
     public void testNonTransactionalScheduleWithDelay() throws Exception {
         NoTrxTestRunnable runnable = new NoTrxTestRunnable(1);   // fires once
-        timerService.schedule(runnable, 10, TimeUnit.MILLISECONDS);
+        timerService.schedule(runnable, 100, TimeUnit.MILLISECONDS);
         runnable.await();
         assertTrue(runnable.isNoTrx());
     }
