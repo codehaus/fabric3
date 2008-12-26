@@ -19,5 +19,7 @@
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
     <import.java package="org.fabric3.spi" version="0.8"/>
     <import.java package="org.fabric3.pojo" version="0.8"/>
+    <export.java package="groovy.lang" version="1.5.7"/>
+    <export.java package="org.codehaus.groovy.runtime" version="1.5.7"/>
     <deployable composite="ns:GroovyExtension"/>
 </contribution>
