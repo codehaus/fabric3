@@ -24,5 +24,7 @@
     <import.java package="org.mortbay.jetty.web" version="6.1.5"/>
     <import.java package="org.mortbay.component" version="6.1.5"/>
     <import.java package="org.mortbay.jetty" version="6.1.5"/>
+    <import.java package="org.apache.jasper.runtime" version="6.1.5"/>
+    <import.java package="com.sun.el" version="6.1.5"/>
     <deployable composite="ns:JettyWebContainerExtension"/>
 </contribution>
