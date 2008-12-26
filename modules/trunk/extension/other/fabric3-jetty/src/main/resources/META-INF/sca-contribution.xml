@@ -22,5 +22,8 @@
     <export.java package="org.mortbay.jetty.web" version="6.1.5"/>
     <export.java package="org.mortbay.component" version="6.1.5"/>
     <export.java package="org.mortbay.jetty" version="6.1.5"/>
+    <!-- The following exports are required for JSP compilation -->
+    <export.java package="org.apache.jasper.runtime" version="6.1.5"/>
+    <export.java package="com.sun.el" version="6.1.5"/>
     <deployable composite="ns:JettyExtension"/>
 </contribution>
