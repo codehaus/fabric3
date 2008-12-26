@@ -51,40 +51,40 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionInUseException;
+import org.fabric3.host.contribution.ContributionLockedException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.DuplicateContributionException;
-import org.fabric3.model.type.ValidationFailure;
-import org.fabric3.host.contribution.ContributionLockedException;
-import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.host.contribution.UpdateException;
-import org.fabric3.host.contribution.UninstallException;
 import org.fabric3.host.contribution.RemoveException;
-import org.fabric3.host.contribution.ContributionInUseException;
-import org.fabric3.spi.introspection.validation.InvalidContributionException;
-import org.fabric3.spi.introspection.validation.ValidationUtils;
+import org.fabric3.host.contribution.StoreException;
+import org.fabric3.host.contribution.UninstallException;
+import org.fabric3.host.contribution.UpdateException;
 import org.fabric3.model.type.ArtifactValidationFailure;
+import org.fabric3.model.type.DefaultValidationContext;
+import org.fabric3.model.type.ValidationContext;
+import org.fabric3.model.type.ValidationFailure;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.CompositeImplementation;
-import org.fabric3.model.type.DefaultValidationContext;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.archive.ArchiveStore;
-import org.fabric3.spi.services.archive.ArchiveStoreException;
-import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionServiceListener;
 import org.fabric3.spi.contribution.ContributionState;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.ProcessorRegistry;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.introspection.validation.InvalidContributionException;
+import org.fabric3.spi.introspection.validation.ValidationUtils;
+import org.fabric3.spi.services.archive.ArchiveStore;
+import org.fabric3.spi.services.archive.ArchiveStoreException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 
 /**
  * Default ContributionService implementation
@@ -544,7 +544,11 @@ public class ContributionServiceImpl implements ContributionService {
                 Composite componentType = compositeImplementation.getComponentType();
                 addContributionUri(contribution, componentType);
             }
-            definition.setContributionUri(contribution.getUri());
+            if (definition.getContributionUri() == null) {
+                // Check if the contribution URI has already been set. It can be set previously if a composite is used as an implementation
+                // (implementation.composite) and is contained in another contribution (i.e. imported into another contribution that uses it). 
+                definition.setContributionUri(contribution.getUri());
+            }
         }
     }
 
