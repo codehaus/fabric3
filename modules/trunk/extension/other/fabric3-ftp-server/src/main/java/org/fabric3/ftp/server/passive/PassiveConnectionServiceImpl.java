@@ -29,8 +29,8 @@ import org.osoa.sca.annotations.Property;
 @EagerInit
 public class PassiveConnectionServiceImpl implements PassiveConnectionService {
     
-    private int minPort;
-    private int maxPort;
+    private int minPort = 6000;
+    private int maxPort = 7000;
     private Stack<Integer> ports = new Stack<Integer>();
     
     /**

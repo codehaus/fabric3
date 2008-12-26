@@ -38,10 +38,10 @@
     <!-- FTP Server -->
     <component name="F3FtpHost">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.host.F3FtpHost"/>
-        <property name="commandPort" source="$config//commandPort"/>
-        <property name="listenAddress" source="$config//listenAddress"/>
+        <property name="commandPort" source="$systemConfig//ftp.server/commandPort"/>
+        <property name="listenAddress" source="$systemConfig//ftp.server/listenAddress"/>
         <!-- sets the optional socket idle timeout -->
-        <property name="idleTimeout" source="$config//idleTimeout"/>
+        <property name="idleTimeout" source="$systemConfig//ftp.server/idleTimeout"/>
     </component>
 
     <!-- promote the reference so it can be autowired -->
@@ -70,7 +70,7 @@
     <!-- PASV Request Handler -->
     <component name="PasvRequestHandler" f3-core:key="PASV">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.PasvRequestHandler"/>
-        <property name="listenAddress" source="$config//listenAddress"/>
+        <property name="listenAddress" source="$systemConfig//ftp.server/listenAddress"/>
     </component>
 
     <!-- STOR Request Handler -->
@@ -109,14 +109,14 @@
     <!-- TODO May be this should be promoted out -->
     <component name="FileSystemUserManager">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.security.FileSystemUserManager"/>
-        <property name="users" source="$config//users/*"/>
+        <property name="users" source="$systemConfig//ftp.server/users/*"/>
     </component>
 
     <!-- Passive Connection Service -->
     <component name="PassiveConnectionService">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.passive.PassiveConnectionServiceImpl"/>
-        <property name="minPort" source="$config//minPassivePort"/>
-        <property name="maxPort" source="$config//maxPassivePort"/>
+        <property name="minPort" source="$systemConfig//ftp.server/minPassivePort"/>
+        <property name="maxPort" source="$systemConfig//ftp.server/maxPassivePort"/>
     </component>
 
     <!-- FtpLet container -->

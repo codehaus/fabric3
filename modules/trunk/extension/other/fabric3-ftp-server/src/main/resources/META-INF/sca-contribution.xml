@@ -19,5 +19,5 @@
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
     <import.java package="org.fabric3.host.work" version="0.8"/>
     <import.java package="org.fabric3.ftp.spi" version="0.8"/>
-    <!--<deployable composite="ns:FtpServerExtension"/>-->
+    <deployable composite="ns:FtpServerExtension"/>
 </contribution>

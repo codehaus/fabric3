@@ -47,7 +47,7 @@ import org.fabric3.host.work.WorkScheduler;
 public class F3FtpHost implements FtpHost {
     private FtpHostMonitor monitor;
     private WorkScheduler workScheduler;
-    private int commandPort = 21;
+    private int commandPort = 2000;
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
     private ProtocolCodecFactory codecFactory;
