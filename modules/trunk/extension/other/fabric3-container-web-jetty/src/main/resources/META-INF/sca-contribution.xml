@@ -21,6 +21,7 @@
     <import.java package="org.fabric3.pojo" version="0.8"/>
     <import.java package="org.fabric3.container.web.spi" version="0.8"/>
     <import.java package="org.fabric3.jetty" version="0.8"/>
+    <!-- Jetty, Jasper and EL classes must be visible for as this extension accesses Jetty classes and for JSP compilation -->
     <import.java package="org.mortbay.jetty.web" version="6.1.5"/>
     <import.java package="org.mortbay.component" version="6.1.5"/>
     <import.java package="org.mortbay.jetty" version="6.1.5"/>
