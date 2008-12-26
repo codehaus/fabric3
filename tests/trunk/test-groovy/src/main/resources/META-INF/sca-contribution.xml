@@ -18,7 +18,8 @@
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
               xmlns:f3-maven="urn:fabric3.org:maven"
               xmlns:f3-core="urn:fabric3.org:core">
-    <f3-maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-groovy" version="0.3-SNAPSHOT"/>
+    <import.java package="groovy.lang" version="1.5.7"/>
+    <import.java package="org.codehaus.groovy.runtime" version="1.5.7"/>
     <deployable composite="GroovyTestHarnessComposite"/>
 </contribution>
 
