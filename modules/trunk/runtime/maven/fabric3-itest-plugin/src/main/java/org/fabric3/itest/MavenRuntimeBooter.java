@@ -22,7 +22,6 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -141,14 +140,6 @@ public class MavenRuntimeBooter {
         // create the runtime bootrapper
         ScdlBootstrapper bootstrapper = createBootstrapper(bootClassLoader);
         configuration.setBootstrapper(bootstrapper);
-
-        // add the boot libraries to export as contributions. This is necessary so extension contributions can import them
-        List<URL> bootExports = new ArrayList<URL>();
-        bootExports.add(bootClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-maven-api/pom.xml"));
-        bootExports.add(bootClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml"));
-        bootExports.add(bootClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-test-spi/pom.xml"));
-        bootExports.add(bootClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml"));
-        configuration.setBootLibraryExports(bootExports);
 
         Map<String, String> exportedPackages = new HashMap<String, String>();
         exportedPackages.put("org.fabric3.spi.*", Names.VERSION);

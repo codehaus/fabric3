@@ -126,18 +126,6 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.manifest.QNameImportLoader"/>
     </component>
 
-    <component name="MavenImportLoader" f3-core:key="f3-maven:import">
-        <f3-impl:implementation.system class="org.fabric3.contribution.manifest.MavenImportLoader"/>
-    </component>
-
-    <component name="MavenExportLoader" f3-core:key="f3-maven:export">
-        <f3-impl:implementation.system class="org.fabric3.contribution.manifest.MavenExportLoader"/>
-    </component>
-
-    <component name="MavenPOMLoader">
-        <f3-impl:implementation.system class="org.fabric3.contribution.manifest.MavenPOMProcessor"/>
-    </component>
-
     <component name="JavaExportLoader" f3-core:key="sca:export.java">
         <f3-impl:implementation.system class="org.fabric3.contribution.manifest.JavaExportLoader"/>
     </component>

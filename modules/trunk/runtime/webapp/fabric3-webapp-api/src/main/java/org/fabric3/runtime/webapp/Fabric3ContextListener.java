@@ -197,14 +197,6 @@ public class Fabric3ContextListener implements ServletContextListener {
         bootstrapper.setScdlLocation(systemScdl);
         configuration.setBootstrapper(bootstrapper);
 
-        // add the boot libraries to export as contributions. This is necessary so extension contributions can import them
-        List<URL> bootExports = new ArrayList<URL>();
-        bootExports.add(webappClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml"));
-        bootExports.add(webappClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml"));
-        bootExports.add(webappClassLoader.getResource("META-INF/maven/org.codehaus.fabric3/fabric3-container-web-spi/pom.xml"));
-        bootExports.add(webappClassLoader.getResource("META-INF/maven/org.codehaus.fabric3.webapp/fabric3-webapp-api/pom.xml"));
-        configuration.setBootLibraryExports(bootExports);
-
         Map<String, String> exportedPackages = new HashMap<String, String>();
         exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
         exportedPackages.put("org.fabric3.host.*", Names.VERSION);

@@ -17,7 +17,6 @@
 package org.fabric3.fabric.runtime;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +71,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     private RUNTIME runtime;
     private BOOTSTRAPPER bootstrapper;
     private ClassLoader bootClassLoader;
-    private List<URL> bootExports;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
     private List<ContributionSource> policies;
@@ -93,7 +91,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         runtime = configuration.getRuntime();
         bootstrapper = configuration.getBootstrapper();
         bootClassLoader = configuration.getBootClassLoader();
-        bootExports = configuration.getBootLibraryExports();
         exportedPackages = configuration.getExportedPackages();
         intents = configuration.getIntents();
         extensions = configuration.getExtensions();
@@ -105,7 +102,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             throw new IllegalStateException("Not in UNINITIALIZED state");
         }
         runtime.initialize();
-        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, bootExports, exportedPackages);
+        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, exportedPackages);
         state = State.PRIMORDIAL;
     }
 

@@ -34,23 +34,17 @@
  */
 package org.fabric3.fabric.runtime.bootstrap;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import javax.management.MBeanServer;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Document;
 
 import org.fabric3.contribution.manifest.ContributionExport;
-import org.fabric3.contribution.manifest.MavenPOMProcessor;
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.runtime.FabricNames;
@@ -127,7 +121,6 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
     private Fabric3Runtime<?> runtime;
     private ClassLoader bootClassLoader;
-    private List<URL> bootManifests;
     private Map<String, String> exportedPackages;
     private ClassLoader hostClassLoader;
 
@@ -143,12 +136,10 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
     public void bootRuntimeDomain(Fabric3Runtime<?> runtime,
                                   ClassLoader bootClassLoader,
-                                  List<URL> bootManifests,
                                   Map<String, String> exportedPackages) throws InitializationException {
 
         this.runtime = runtime;
         this.bootClassLoader = bootClassLoader;
-        this.bootManifests = bootManifests;
         this.exportedPackages = exportedPackages;
         // classloader shared by extension and application classes
         this.hostClassLoader = runtime.getHostClassLoader();
@@ -322,8 +313,8 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void synthesizeContributions() throws InitializationException {
         try {
-            synthesizeContribution(HOST_CONTRIBUTION, Collections.<URL>emptyList(), Collections.<String, String>emptyMap(), hostClassLoader);
-            synthesizeContribution(BOOT_CONTRIBUTION, bootManifests, exportedPackages, bootClassLoader);
+            synthesizeContribution(HOST_CONTRIBUTION, Collections.<String, String>emptyMap(), hostClassLoader);
+            synthesizeContribution(BOOT_CONTRIBUTION, exportedPackages, bootClassLoader);
         } catch (ContributionException e) {
             throw new InitializationException(e);
         }
@@ -333,11 +324,11 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      * Synthesizes a contribution from a classloader and installs it.
      *
      * @param contributionUri  the contribution URI
-     * @param manifests        a list of URLs to introspect to create an SCA manifest containing exports for the contribution
      * @param exportedPackages the packages exported by the contribution
-     * @param loader           the classloader @throws ContributionException if there is an error synthesizing the contribution
+     * @param loader           the classloader
+     * @throws ContributionException if there is an error synthesizing the contribution
      */
-    private void synthesizeContribution(URI contributionUri, List<URL> manifests, Map<String, String> exportedPackages, ClassLoader loader)
+    private void synthesizeContribution(URI contributionUri, Map<String, String> exportedPackages, ClassLoader loader)
             throws ContributionException {
         Contribution contribution = new Contribution(contributionUri);
         contribution.setState(ContributionState.INSTALLED);
@@ -348,40 +339,6 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         XMLInputFactory xmlInputFactory = xmlFactory.newInputFactoryInstance();
         InputStream stream = null;
         XMLStreamReader reader = null;
-        for (URL url : manifests) {
-            try {
-                stream = url.openStream();
-                MavenPOMProcessor processor = new MavenPOMProcessor();
-                reader = xmlInputFactory.createXMLStreamReader(stream);
-                // advance to first tag
-                while (reader.hasNext() && XMLStreamConstants.START_ELEMENT != reader.getEventType()) {
-                    reader.next();
-                }
-                if (XMLStreamConstants.END_DOCUMENT == reader.getEventType()) {
-                    return;
-                }
-                processor.process(manifest, reader, context);
-            } catch (IOException e) {
-                throw new ContributionException("Invalid manifest: " + url, e);
-            } catch (XMLStreamException e) {
-                throw new ContributionException("Unable to read manifest: " + url, e);
-            } finally {
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (XMLStreamException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    if (stream != null) {
-                        stream.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         for (Map.Entry<String, String> entry : exportedPackages.entrySet()) {
             PackageVersion version = new PackageVersion(entry.getValue());
             PackageInfo info = new PackageInfo(entry.getKey(), version);
