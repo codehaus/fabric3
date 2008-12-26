@@ -65,6 +65,6 @@ public class QNameContributionWire implements ContributionWire<QNameImport, QNam
             return false;
         }
         QNameSymbol symbol = (QNameSymbol) resource;
-        return imprt.getNamespace().equals(symbol.getKey());
+        return imprt.getNamespace().equals(symbol.getKey().getNamespaceURI());
     }
 }
