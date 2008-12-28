@@ -35,7 +35,6 @@
 package org.fabric3.binding.jms.common;
 
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;

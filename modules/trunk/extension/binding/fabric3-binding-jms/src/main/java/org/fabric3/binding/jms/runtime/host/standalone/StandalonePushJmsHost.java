@@ -35,9 +35,7 @@
 package org.fabric3.binding.jms.runtime.host.standalone;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.jms.Connection;

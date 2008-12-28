@@ -36,8 +36,6 @@ package org.fabric3.binding.jms.runtime;
 
 
 import org.fabric3.api.annotation.logging.Info;
-import org.fabric3.api.annotation.logging.LogLevel;
-import org.fabric3.api.annotation.logging.LogLevels;
 
 /**
  * Monitor interface for JMS Host.

@@ -62,20 +62,13 @@ import org.fabric3.spi.wire.InvocationChain;
 public class ResponseMessageListenerImpl implements ResponseMessageListener {
 
     private Map<String, ChainHolder> operations;
-
-    /**
-     * Correlation scheme.
-     */
     private final CorrelationScheme correlationScheme;
-
-    /**
-     * Transaction type.
-     */
     private final TransactionType transactionType;
 
-    /**
-     * Callback URI.
+    /*
+     * Will be removed once callback are working
      */
+    @SuppressWarnings("unused")
     private final String callBackURI;
 
     /**

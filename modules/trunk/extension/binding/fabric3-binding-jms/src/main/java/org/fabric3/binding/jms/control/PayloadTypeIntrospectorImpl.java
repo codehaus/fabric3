@@ -77,6 +77,8 @@ public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
                     return calculatePrimitivePayloadType(clazz);
                 } else if (InputStream.class.isAssignableFrom(clazz)) {
                     return PayloadType.STREAM;
+                } else if (String.class.isAssignableFrom(clazz)) {
+                    return PayloadType.TEXT;
                 } else if (Serializable.class.isAssignableFrom(clazz)) {
                     return PayloadType.OBJECT;
                 }

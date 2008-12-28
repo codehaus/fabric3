@@ -90,8 +90,7 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
             Interceptor interceptor = holder.getHeadInterceptor();
             PayloadType payloadType = holder.getType();
             Object payload = MessageHelper.getPayload(request, payloadType);
-            if (payloadType != PayloadType.OBJECT && payloadType != PayloadType.TEXT) {
-                // Encode primitives and streams as an array. Text payloads mus be decoded by an interceptor downstream. Object messages are already encoded.
+            if (payloadType != PayloadType.OBJECT) {
                 payload = new Object[]{payload};
             }
             WorkContext workContext = new WorkContext();
