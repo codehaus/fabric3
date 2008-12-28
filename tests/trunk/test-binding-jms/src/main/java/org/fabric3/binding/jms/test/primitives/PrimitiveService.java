@@ -26,5 +26,7 @@ public interface PrimitiveService {
     int[] testArrayInt(int[] param);
 
     String testString(String param);
+    
+    int testMulti(String param, int[] arrayInt);
 
 }

@@ -32,4 +32,9 @@ public class PrimitiveServiceImpl implements PrimitiveService {
     public String testString(String param) {
         return param;
     }
+
+	public int testMulti(String param, int[] arrayInt) {
+		
+		return arrayInt[1];
+	}
 }
