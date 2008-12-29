@@ -44,7 +44,6 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.PolicyAware;
-import org.fabric3.model.type.ValidationContext;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
@@ -347,17 +346,4 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
         return name.equals(that.name);
     }
 
-    @Override
-    public void validate(ValidationContext context) {
-        super.validate(context);
-        for (Include include : includes.values()) {
-            include.validate(context);
-        }
-        for (ComponentDefinition<? extends Implementation<?>> component : components.values()) {
-            component.validate(context);
-        }
-        for (WireDefinition wire : wires) {
-            wire.validate(context);
-        }
-    }
 }

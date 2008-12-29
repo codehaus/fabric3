@@ -37,8 +37,6 @@ package org.fabric3.model.type.component;
 import java.net.URI;
 import java.util.List;
 
-import org.fabric3.model.type.ValidationContext;
-
 /**
  * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
  */
@@ -76,12 +74,4 @@ public class CompositeReference extends ReferenceDefinition {
         promotedUris.add(uri);
     }
 
-    @Override
-    public void validate(ValidationContext context) {
-        super.validate(context);
-        if (promotedUris == null || promotedUris.isEmpty()) {
-            MissingPromotion error = new MissingPromotion("Promotion not specied on composite reference " + getName(), this);
-            context.addError(error);
-        }
-    }
 }

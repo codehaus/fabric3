@@ -38,7 +38,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.ValidationContext;
 
 /**
  * Model object that represents the include of a composite by value.
@@ -105,8 +104,4 @@ public class Include extends ModelObject {
         this.included = included;
     }
 
-    @Override
-    public void validate(ValidationContext context) {
-        included.validate(context);
-    }
 }

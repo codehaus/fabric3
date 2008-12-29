@@ -44,11 +44,4 @@ import java.io.Serializable;
 public abstract class ModelObject implements Serializable {
     private static final long serialVersionUID = -4731760911483352681L;
 
-    /**
-     * Perform semantic validation on this model object.
-     *
-     * @param context the validation context
-     */
-    public void validate(ValidationContext context) {
-    }
 }

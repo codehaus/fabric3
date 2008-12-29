@@ -34,20 +34,25 @@
  */
 package org.fabric3.loader.composite;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.osoa.sca.Constants.SCA_NS;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Autowire;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.ComponentReference;
+import org.fabric3.model.type.component.ComponentService;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.Loader;
@@ -58,16 +63,6 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.model.type.component.AbstractComponentType;
-import org.fabric3.model.type.component.Autowire;
-import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.component.ComponentReference;
-import org.fabric3.model.type.component.ComponentService;
-import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.component.Property;
-import org.fabric3.model.type.component.PropertyValue;
-
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Loads a component definition from an XML-based assembly file
@@ -81,16 +76,8 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
     private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
-    private static final DocumentBuilder documentBuilder;
 
     static {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            documentBuilder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new ExceptionInInitializerError(e);
-        }
         ATTRIBUTES.put("name", "name");
         ATTRIBUTES.put("autowire", "autowire");
         ATTRIBUTES.put("requires", "requires");
@@ -106,10 +93,10 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private final LoaderHelper loaderHelper;
 
     public ComponentLoader(@Reference Loader loader,
-                           @Reference(name = "propertyValue")TypeLoader<PropertyValue> propertyValueLoader,
-                           @Reference(name = "reference")TypeLoader<ComponentReference> referenceLoader,
-                           @Reference(name = "service")TypeLoader<ComponentService> serviceLoader,
-                           @Reference(name = "loaderHelper")LoaderHelper loaderHelper) {
+                           @Reference(name = "propertyValue") TypeLoader<PropertyValue> propertyValueLoader,
+                           @Reference(name = "reference") TypeLoader<ComponentReference> referenceLoader,
+                           @Reference(name = "service") TypeLoader<ComponentService> serviceLoader,
+                           @Reference(name = "loaderHelper") LoaderHelper loaderHelper) {
         this.loader = loader;
         this.propertyValueLoader = propertyValueLoader;
         this.referenceLoader = referenceLoader;
@@ -138,6 +125,18 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         try {
             reader.nextTag();
             QName elementName = reader.getName();
+            if (COMPONENT.equals(elementName)) {
+                // the reader has hit the end of the component definition without an implementation being specified
+                MissingComponentImplementation error =
+                        new MissingComponentImplementation("The component " + name + " must specify an implementation", name, reader);
+                context.addError(error);
+                return componentDefinition;
+            } else if (PROPERTY.equals(elementName) ||REFERENCE.equals(elementName)  ||SERVICE.equals(elementName)  ) {
+                MissingComponentImplementation error =
+                        new MissingComponentImplementation("The component " + name + " must specify an implementation as the first child element", name, reader);
+                context.addError(error);
+                return componentDefinition;
+            }
             impl = loader.load(reader, Implementation.class, context);
             if (impl == null || impl.getComponentType() == null) {
                 // error loading impl

@@ -121,7 +121,6 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         } catch (LoaderException e) {
             throw new InstallException(e);
         }
-        composite.validate(childContext);
         boolean found = false;
         for (ResourceElement element : resource.getResourceElements()) {
             if (element.getSymbol().getKey().equals(composite.getName())) {

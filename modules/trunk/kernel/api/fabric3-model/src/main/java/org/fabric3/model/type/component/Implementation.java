@@ -37,7 +37,6 @@ package org.fabric3.model.type.component;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.AbstractPolicyAware;
-import org.fabric3.model.type.ValidationContext;
 
 /**
  * Represents a component implementation
@@ -91,13 +90,4 @@ public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>
      */
     public abstract QName getType();
 
-    @Override
-    public void validate(ValidationContext context) {
-        super.validate(context);
-        if (componentType == null) {
-            context.addError(new MissingComponentType(this));
-        } else {
-            componentType.validate(context);
-        }
-    }
 }

@@ -47,6 +47,12 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.CompositeReference;
+import org.fabric3.model.type.component.Multiplicity;
+import org.fabric3.model.type.service.OperationDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.Loader;
@@ -56,12 +62,6 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.model.type.component.CompositeReference;
-import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.component.Multiplicity;
-import org.fabric3.model.type.service.OperationDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -99,6 +99,10 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         }
 
         List<URI> promotedUris = loaderHelper.parseListOfUris(reader, "promote");
+        if (promotedUris == null || promotedUris.isEmpty()) {
+            MissingPromotion error = new MissingPromotion("Promotion not specied on composite reference " + name, name, reader);
+            context.addError(error);
+        }
         CompositeReference referenceDefinition = new CompositeReference(name, promotedUris);
         loaderHelper.loadPolicySetsAndIntents(referenceDefinition, reader, context);
 

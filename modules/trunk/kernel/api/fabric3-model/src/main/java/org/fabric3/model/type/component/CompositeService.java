@@ -69,12 +69,4 @@ public class CompositeService extends ServiceDefinition {
         return promote;
     }
 
-    @Override
-    public void validate(ValidationContext context) {
-        super.validate(context);
-        if (promote == null) {
-            MissingPromotion error = new MissingPromotion("Promotion not specified on composite service " + getName(), this);
-            context.addError(error);
-        }
-    }
 }

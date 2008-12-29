@@ -115,7 +115,6 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
             // load the system composite
             IntrospectionContext introspectionContext = new DefaultIntrospectionContext(bootClassLoader, contributionUri, scdlLocation);
             Composite composite = loader.load(scdlLocation, Composite.class, introspectionContext);
-            composite.validate(introspectionContext);
             if (introspectionContext.hasErrors()) {
                 QName name = composite.getName();
                 List<ValidationFailure> errors = introspectionContext.getErrors();

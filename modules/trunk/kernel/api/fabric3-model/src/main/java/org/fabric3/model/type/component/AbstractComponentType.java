@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.ValidationContext;
 
 /**
  * The definition of the configurable aspects of an implementation in terms of the services it exposes, the services it references, and properties
@@ -270,19 +269,4 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
         return resources.containsKey(name);
     }
 
-    @Override
-    public void validate(ValidationContext context) {
-        for (S s : services.values()) {
-            s.validate(context);
-        }
-        for (R r : references.values()) {
-            r.validate(context);
-        }
-        for (RD rd : resources.values()) {
-            rd.validate(context);
-        }
-        for (P p : properties.values()) {
-            p.validate(context);
-        }
-    }
 }

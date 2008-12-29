@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fabric3.model.type.AbstractPolicyAware;
-import org.fabric3.model.type.ValidationContext;
 import org.fabric3.model.type.service.OperationDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 
@@ -160,16 +159,4 @@ public class ServiceDefinition extends AbstractPolicyAware {
         operations.add(operation);
     }
 
-    public void validate(ValidationContext context) {
-        super.validate(context);
-        for (BindingDefinition binding : bindings) {
-            binding.validate(context);
-        }
-        for (BindingDefinition callbackBinding : callbackBindings) {
-            callbackBinding.validate(context);
-        }
-        for (OperationDefinition operation : operations) {
-            operation.validate(context);
-        }
-    }
 }

@@ -43,19 +43,19 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.CompositeService;
+import org.fabric3.model.type.service.OperationDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.model.type.component.CompositeService;
-import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.service.OperationDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -81,6 +81,10 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
             return null;
         }
         String promote = reader.getAttributeValue(null, "promote");
+        if (promote == null) {
+            MissingPromotion error = new MissingPromotion("Promotion not specied on composite service " + name, name, reader);
+            context.addError(error);
+        }
         CompositeService def = new CompositeService(name, null, loaderHelper.getURI(promote));
 
         loaderHelper.loadPolicySetsAndIntents(def, reader, context);
