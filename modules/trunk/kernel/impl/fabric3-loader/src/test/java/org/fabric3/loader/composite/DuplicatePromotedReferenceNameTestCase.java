@@ -46,6 +46,8 @@ import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.host.contribution.ArtifactValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
@@ -53,8 +55,6 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.model.type.component.ComponentType;
 import org.fabric3.model.type.component.CompositeReference;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.ArtifactValidationFailure;
-import org.fabric3.model.type.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$

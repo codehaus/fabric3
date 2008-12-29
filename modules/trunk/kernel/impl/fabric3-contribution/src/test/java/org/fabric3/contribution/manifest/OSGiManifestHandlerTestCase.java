@@ -21,7 +21,7 @@ import java.util.jar.Manifest;
 
 import junit.framework.TestCase;
 
-import org.fabric3.model.type.DefaultValidationContext;
+import org.fabric3.spi.introspection.DefaultValidationContext;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.manifest.JavaImport;
 import org.fabric3.spi.contribution.manifest.JavaExport;

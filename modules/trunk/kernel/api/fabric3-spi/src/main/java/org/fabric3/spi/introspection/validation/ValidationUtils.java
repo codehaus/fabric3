@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.fabric3.model.type.ValidationFailure;
-import org.fabric3.model.type.ArtifactValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.host.contribution.ArtifactValidationFailure;
 
 /**
  * @version $Revision$ $Date$

@@ -27,11 +27,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.DefaultValidationContext;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
-import org.fabric3.model.type.DefaultValidationContext;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.component.Implementation;

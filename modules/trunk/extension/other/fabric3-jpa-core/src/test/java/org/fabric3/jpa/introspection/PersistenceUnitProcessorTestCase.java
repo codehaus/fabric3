@@ -25,7 +25,7 @@ import org.easymock.EasyMock;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 

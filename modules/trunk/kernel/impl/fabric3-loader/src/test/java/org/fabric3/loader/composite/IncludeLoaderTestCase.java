@@ -52,11 +52,11 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
-import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.ResourceElement;

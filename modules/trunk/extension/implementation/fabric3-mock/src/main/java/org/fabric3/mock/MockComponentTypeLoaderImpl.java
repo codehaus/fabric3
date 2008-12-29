@@ -25,12 +25,12 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.DefaultValidationContext;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.model.type.DefaultValidationContext;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.ValidationContext;
-import org.fabric3.model.type.component.MissingResource;
+import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.java.MissingResource;
 
 /**
  * @version $Revision$ $Date$

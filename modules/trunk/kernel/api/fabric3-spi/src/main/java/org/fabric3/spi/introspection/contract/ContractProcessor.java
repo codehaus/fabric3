@@ -37,7 +37,7 @@ package org.fabric3.spi.introspection.contract;
 import java.lang.reflect.Type;
 
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.introspection.TypeMapping;
 
 /**

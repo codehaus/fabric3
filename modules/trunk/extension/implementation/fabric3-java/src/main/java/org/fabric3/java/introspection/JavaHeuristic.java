@@ -45,7 +45,7 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.java.Signature;
-import org.fabric3.model.type.java.AmbiguousConstructor;
+import org.fabric3.spi.introspection.java.AmbiguousConstructor;
 
 /**
  * @version $Rev$ $Date$

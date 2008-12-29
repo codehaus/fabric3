@@ -36,7 +36,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.BindingType;
 import org.fabric3.model.type.definitions.ImplementationType;

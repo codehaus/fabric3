@@ -26,8 +26,8 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.model.type.DefaultValidationContext;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.DefaultValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;

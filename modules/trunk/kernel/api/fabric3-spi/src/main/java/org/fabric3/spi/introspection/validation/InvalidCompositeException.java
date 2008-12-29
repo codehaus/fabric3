@@ -40,7 +40,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.contribution.ValidationException;
-import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$

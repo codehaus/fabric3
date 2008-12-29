@@ -32,19 +32,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.model.type.java;
+package org.fabric3.spi.introspection.java;
 
-import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * @version $Rev: 5937 $ $Date: 2008-11-14 21:52:29 -0800 (Fri, 14 Nov 2008) $
+ * Denotes a missing resource such as a class file.
+ *
+ * @version $Revision$ $Date$
  */
-public class AmbiguousConstructor extends ValidationFailure<Class<?>> {
-    public AmbiguousConstructor(Class<?> clazz) {
-        super(clazz);
+public class MissingResource extends ValidationFailure<String> {
+    private String description;
+
+    public MissingResource(String description, String name) {
+        super(name);
+        this.description = description;
     }
 
     public String getMessage() {
-        return "Multiple constructors are annotated with @Constructor in class: " + getValidatable();
+        return description + ": " + getValidatable();
     }
 }

@@ -18,7 +18,7 @@ package org.fabric3.spi.contribution.manifest;
 
 import java.util.jar.Manifest;
 
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.ContributionManifest;
 
 /**

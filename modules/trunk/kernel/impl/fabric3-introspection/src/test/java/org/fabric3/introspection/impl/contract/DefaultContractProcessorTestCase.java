@@ -46,12 +46,12 @@ import org.osoa.sca.annotations.EndsConversation;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.DefaultValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.DefaultValidationContext;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.ValidationContext;
 
 /**
  * @version $Rev$ $Date$

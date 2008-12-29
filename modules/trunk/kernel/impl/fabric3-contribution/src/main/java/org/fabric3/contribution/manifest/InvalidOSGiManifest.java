@@ -16,7 +16,7 @@
  */
 package org.fabric3.contribution.manifest;
 
-import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Revision$ $Date$

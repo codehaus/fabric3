@@ -25,7 +25,7 @@ import org.fabric3.spi.introspection.contract.OperationIntrospector;
 import org.fabric3.jaxb.provision.JAXBConstants;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 
 /**
  * Introspects operations for the presence of JAXB types. If a parameter is a JAXB type, the JAXB intent is added to the operation.

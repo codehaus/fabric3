@@ -32,38 +32,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.model.type;
+package org.fabric3.spi.introspection.java;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
+ * Denotes an invalid implementation.
+ *
  * @version $Revision$ $Date$
  */
-public class ArtifactValidationFailure extends ValidationFailure<Void> {
-    private List<ValidationFailure> failures;
-    private String artifactName;
+public class InvalidImplementation extends ValidationFailure<String> {
+    private String description;
 
-    public ArtifactValidationFailure(String artifactName) {
-        super(null);
-        this.artifactName = artifactName;
-        this.failures = new ArrayList<ValidationFailure>();
+    public InvalidImplementation(String description, String name) {
+        super(name);
+        this.description = description;
     }
 
-    public String getArtifactName() {
-        return artifactName;
+    public String getMessage() {
+        return description + ": " + getValidatable();
     }
-
-    public List<ValidationFailure> getFailures() {
-        return failures;
-    }
-
-    public void addFailure(ValidationFailure failure) {
-        failures.add(failure);
-    }
-
-    public void addFailures(List<ValidationFailure> failures) {
-        this.failures.addAll(failures);
-    }
-
 }

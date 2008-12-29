@@ -36,7 +36,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
-import org.fabric3.model.type.DefaultValidationContext;
+import org.fabric3.spi.introspection.DefaultValidationContext;
 import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;

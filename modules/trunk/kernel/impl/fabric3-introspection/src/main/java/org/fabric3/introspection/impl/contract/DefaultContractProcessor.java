@@ -53,12 +53,12 @@ import org.fabric3.spi.introspection.contract.InterfaceIntrospector;
 import org.fabric3.spi.introspection.contract.OperationIntrospector;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import static org.fabric3.model.type.service.Operation.CONVERSATION_END;
 import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.ValidationContext;
 import org.fabric3.model.type.service.JavaServiceContract;
 
 /**

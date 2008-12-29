@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.model.type;
+package org.fabric3.host.contribution;
 
 /**
  * Base class for validation failures.

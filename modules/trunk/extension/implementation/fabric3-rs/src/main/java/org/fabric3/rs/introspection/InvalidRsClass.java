@@ -18,7 +18,7 @@ package org.fabric3.rs.introspection;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
-import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$

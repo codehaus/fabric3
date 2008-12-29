@@ -22,7 +22,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.model.type.java.Signature;
-import org.fabric3.model.type.java.AmbiguousConstructor;
+import org.fabric3.spi.introspection.java.AmbiguousConstructor;
 import org.fabric3.spi.introspection.java.NoConstructorFound;
 import org.fabric3.system.scdl.SystemImplementation;
 

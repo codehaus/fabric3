@@ -20,7 +20,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 
 /**
  * Implmentations process a contribution resource for a MIME type.

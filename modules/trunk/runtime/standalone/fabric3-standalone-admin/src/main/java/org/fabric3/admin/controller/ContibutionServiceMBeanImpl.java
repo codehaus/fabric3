@@ -36,8 +36,9 @@ import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.ValidationException;
-import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.contribution.ContributionLockedException;
+import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.jetty.JettyService;
 import org.fabric3.management.contribution.ContributionInUseManagementException;
 import org.fabric3.management.contribution.ContributionInfo;
@@ -51,7 +52,6 @@ import org.fabric3.management.contribution.ErrorInfo;
 import org.fabric3.management.contribution.ArtifactErrorInfo;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.model.type.ArtifactValidationFailure;
 
 /**
  * @version $Revision$ $Date$

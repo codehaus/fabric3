@@ -32,24 +32,52 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.model.type.component;
+package org.fabric3.spi.introspection;
 
-import org.fabric3.model.type.ValidationFailure;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.fabric3.host.contribution.ValidationFailure;
+
 
 /**
- * Denotes a missing resource such as a class file.
- *
  * @version $Revision$ $Date$
  */
-public class MissingResource extends ValidationFailure<String> {
-    private String description;
+public class DefaultValidationContext implements ValidationContext {
+    private final List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
+    private final List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
 
-    public MissingResource(String description, String name) {
-        super(name);
-        this.description = description;
+    public boolean hasErrors() {
+        return !errors.isEmpty();
     }
 
-    public String getMessage() {
-        return description + ": " + getValidatable();
+    public List<ValidationFailure> getErrors() {
+        return errors;
     }
+
+    public void addError(ValidationFailure e) {
+        errors.add(e);
+    }
+
+    public void addErrors(List<ValidationFailure> errors) {
+        this.errors.addAll(errors);
+    }
+
+    public boolean hasWarnings() {
+        return !warnings.isEmpty();
+    }
+
+    public List<ValidationFailure> getWarnings() {
+        return warnings;
+    }
+
+    public void addWarning(ValidationFailure e) {
+        warnings.add(e);
+    }
+
+    public void addWarnings(List<ValidationFailure> warnings) {
+        this.warnings.addAll(warnings);
+    }
+
+
 }

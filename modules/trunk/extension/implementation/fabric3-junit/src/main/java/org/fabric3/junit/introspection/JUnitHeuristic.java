@@ -32,6 +32,7 @@ import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.NoConstructorFound;
 import org.fabric3.spi.introspection.java.UnknownInjectionType;
+import org.fabric3.spi.introspection.java.AmbiguousConstructor;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
@@ -45,7 +46,6 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.java.Signature;
-import org.fabric3.model.type.java.AmbiguousConstructor;
 
 /**
  * @version $Rev$ $Date$

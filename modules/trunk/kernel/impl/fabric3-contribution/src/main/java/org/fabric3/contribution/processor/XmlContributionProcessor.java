@@ -37,7 +37,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ContributionProcessor;

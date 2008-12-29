@@ -32,50 +32,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.model.type;
+package org.fabric3.host.contribution;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * @version $Revision$ $Date$
  */
-public class DefaultValidationContext implements ValidationContext {
-    private final List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
-    private final List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
+public class ArtifactValidationFailure extends ValidationFailure<Void> {
+    private List<ValidationFailure> failures;
+    private String artifactName;
 
-    public boolean hasErrors() {
-        return !errors.isEmpty();
+    public ArtifactValidationFailure(String artifactName) {
+        super(null);
+        this.artifactName = artifactName;
+        this.failures = new ArrayList<ValidationFailure>();
     }
 
-    public List<ValidationFailure> getErrors() {
-        return errors;
+    public String getArtifactName() {
+        return artifactName;
     }
 
-    public void addError(ValidationFailure e) {
-        errors.add(e);
+    public List<ValidationFailure> getFailures() {
+        return failures;
     }
 
-    public void addErrors(List<ValidationFailure> errors) {
-        this.errors.addAll(errors);
+    public void addFailure(ValidationFailure failure) {
+        failures.add(failure);
     }
 
-    public boolean hasWarnings() {
-        return !warnings.isEmpty();
+    public void addFailures(List<ValidationFailure> failures) {
+        this.failures.addAll(failures);
     }
-
-    public List<ValidationFailure> getWarnings() {
-        return warnings;
-    }
-
-    public void addWarning(ValidationFailure e) {
-        warnings.add(e);
-    }
-
-    public void addWarnings(List<ValidationFailure> warnings) {
-        this.warnings.addAll(warnings);
-    }
-
 
 }

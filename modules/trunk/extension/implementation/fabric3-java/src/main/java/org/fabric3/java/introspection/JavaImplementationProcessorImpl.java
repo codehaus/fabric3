@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.java.control.JavaImplementationProcessor;
-import org.fabric3.model.type.component.InvalidImplementation;
+import org.fabric3.spi.introspection.java.InvalidImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;

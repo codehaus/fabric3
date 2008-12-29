@@ -14,9 +14,11 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.model.type;
+package org.fabric3.spi.introspection;
 
 import java.util.List;
+
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Context for gathering the results of model validation.

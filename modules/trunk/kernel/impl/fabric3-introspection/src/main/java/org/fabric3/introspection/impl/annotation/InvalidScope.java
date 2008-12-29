@@ -34,7 +34,7 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
-import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Revision$ $Date$

@@ -37,8 +37,6 @@ package org.fabric3.spi.introspection;
 import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.model.type.ValidationContext;
-
 /**
  * Context for the current introspection session.
  * <p/>

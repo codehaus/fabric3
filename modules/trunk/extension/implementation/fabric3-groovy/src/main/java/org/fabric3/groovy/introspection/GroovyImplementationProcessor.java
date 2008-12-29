@@ -33,7 +33,7 @@ import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.model.type.component.MissingResource;
+import org.fabric3.spi.introspection.java.MissingResource;
 
 /**
  * @version $Rev$ $Date$

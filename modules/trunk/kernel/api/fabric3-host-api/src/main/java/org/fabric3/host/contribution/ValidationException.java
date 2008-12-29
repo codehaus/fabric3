@@ -18,8 +18,6 @@ package org.fabric3.host.contribution;
 
 import java.util.List;
 
-import org.fabric3.model.type.ValidationFailure;
-
 /**
  * Base class for exceptions indicating a contribution has failed validation.
  *

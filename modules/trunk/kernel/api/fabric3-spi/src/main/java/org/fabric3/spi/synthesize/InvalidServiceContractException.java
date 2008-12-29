@@ -36,7 +36,7 @@ package org.fabric3.spi.synthesize;
 
 import java.util.List;
 
-import org.fabric3.model.type.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**

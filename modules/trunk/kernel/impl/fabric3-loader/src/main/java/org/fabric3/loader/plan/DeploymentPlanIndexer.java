@@ -25,9 +25,9 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
+import org.fabric3.spi.introspection.ValidationContext;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
-import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
