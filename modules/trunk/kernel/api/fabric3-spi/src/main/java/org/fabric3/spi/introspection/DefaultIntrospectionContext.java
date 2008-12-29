@@ -29,13 +29,16 @@ import org.fabric3.host.contribution.ValidationFailure;
  * @version $Rev$ $Date$
  */
 public class DefaultIntrospectionContext implements IntrospectionContext {
-    private final List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
-    private final List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
-    private final ClassLoader targetClassLoader;
-    private final URL sourceBase;
-    private final String targetNamespace;
-    private final URI contributionUri;
-    private final TypeMapping typeMapping;
+    private List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
+    private List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
+    private ClassLoader targetClassLoader;
+    private URL sourceBase;
+    private String targetNamespace;
+    private URI contributionUri;
+    private TypeMapping typeMapping;
+
+    public DefaultIntrospectionContext() {
+    }
 
     public DefaultIntrospectionContext(ClassLoader targetClassLoader,
                                        URL sourceBase,

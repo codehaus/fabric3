@@ -26,13 +26,13 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.spi.introspection.DefaultValidationContext;
-import org.fabric3.spi.introspection.ValidationContext;
-import org.fabric3.spi.plan.DeploymentPlan;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoaderRegistry;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.plan.DeploymentPlan;
 
 /**
  * @version $Revision$ $Date$
@@ -59,7 +59,7 @@ public class DeploymentPlanProcessorTestCase extends TestCase {
         ResourceElement<QNameSymbol, DeploymentPlan> element = new ResourceElement<QNameSymbol, DeploymentPlan>(symbol);
         resource.addResourceElement(element);
         URI uri = URI.create("uri");
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         processor.load(reader, uri, resource, context, getClass().getClassLoader());
         DeploymentPlan plan = element.getValue();
         assertNotNull(plan);

@@ -25,12 +25,12 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionProcessor;
 import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Default implementation of ProcessorRegistry
@@ -65,7 +65,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         resourceProcessorCache.remove(contentType);
     }
 
-    public void processManifest(Contribution contribution, ValidationContext context) throws InstallException {
+    public void processManifest(Contribution contribution, IntrospectionContext context) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
@@ -76,7 +76,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
 
     }
 
-    public void indexContribution(Contribution contribution, ValidationContext context) throws InstallException {
+    public void indexContribution(Contribution contribution, IntrospectionContext context) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
@@ -86,7 +86,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.index(contribution, context);
     }
 
-    public void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws InstallException {
+    public void indexResource(Contribution contribution, String contentType, URL url, IntrospectionContext context) throws InstallException {
         ResourceProcessor processor = resourceProcessorCache.get(contentType);
         if (processor == null) {
             // unknown type, skip
@@ -95,7 +95,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.index(contribution, url, context);
     }
 
-    public void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
+    public void processContribution(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
@@ -105,7 +105,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.process(contribution, context, loader);
     }
 
-    public void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException {
+    public void processResource(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException {
         ResourceProcessor processor = resourceProcessorCache.get(resource.getContentType());
         if (processor == null) {
             // FIXME for now, return null

@@ -25,11 +25,11 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
-import org.fabric3.spi.introspection.ValidationContext;
-import org.fabric3.spi.introspection.DefaultValidationContext;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * @version $Revision$ $Date$
@@ -40,7 +40,7 @@ public class DefinitionsIndexerTestCase extends TestCase {
 
     public void testIndex() throws Exception {
         Resource resource = new Resource(null, "foo");
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         loader.index(resource, reader, context);
 
         List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();

@@ -21,11 +21,12 @@ import java.util.jar.Manifest;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.introspection.DefaultValidationContext;
 import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.manifest.JavaImport;
 import org.fabric3.spi.contribution.manifest.JavaExport;
+import org.fabric3.spi.contribution.manifest.JavaImport;
 import org.fabric3.spi.contribution.manifest.PackageVersion;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * @version $Revision$ $Date$
@@ -41,7 +42,7 @@ public class OSGiManifestHandlerTestCase extends TestCase {
     public void testHeaderParse() throws Exception {
         Manifest manifest = new Manifest(new ByteArrayInputStream(MANIFEST.getBytes()));
         ContributionManifest contributionManifest = new ContributionManifest();
-        DefaultValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         handler.processManifest(contributionManifest, manifest, context);
 
         assertFalse(context.hasErrors());

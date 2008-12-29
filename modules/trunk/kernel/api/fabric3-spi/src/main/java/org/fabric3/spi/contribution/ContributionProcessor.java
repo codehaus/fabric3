@@ -19,7 +19,7 @@ package org.fabric3.spi.contribution;
 import java.util.List;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Interface for services that process contributions. Contribution processing occurs in several phases. Contribution metadata is first processed,
@@ -48,7 +48,7 @@ public interface ContributionProcessor {
      * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if there was a problem with the contribution
      */
-    void processManifest(Contribution contribution, ValidationContext context) throws InstallException;
+    void processManifest(Contribution contribution, IntrospectionContext context) throws InstallException;
 
     /**
      * Indexes all contribution resources
@@ -57,7 +57,7 @@ public interface ContributionProcessor {
      * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if there was a problem indexing
      */
-    void index(Contribution contribution, ValidationContext context) throws InstallException;
+    void index(Contribution contribution, IntrospectionContext context) throws InstallException;
 
     /**
      * Loads all resources in the contribution.
@@ -67,6 +67,6 @@ public interface ContributionProcessor {
      * @param loader       the classloader contribution resources must be loaded in
      * @throws InstallException if there was a problem loading the contribution resoruces
      */
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException;
+    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException;
 
 }

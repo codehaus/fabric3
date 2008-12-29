@@ -37,7 +37,7 @@ package org.fabric3.spi.introspection.contract;
 import java.lang.reflect.Method;
 
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Implementations evaluate the methods of a Java-based interface and populate the operation on the corresponding service contract with relevant
@@ -54,6 +54,6 @@ public interface OperationIntrospector {
      * @param method    the method to evaluate
      * @param context   the validation cotnext to report errors and warnings.
      */
-    <T> void introspect(Operation<T> operation, Method method, ValidationContext context);
+    <T> void introspect(Operation<T> operation, Method method, IntrospectionContext context);
 
 }

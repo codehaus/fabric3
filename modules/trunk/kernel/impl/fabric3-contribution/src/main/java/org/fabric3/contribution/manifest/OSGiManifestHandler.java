@@ -24,13 +24,13 @@ import java.util.jar.Manifest;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.manifest.JarManifestHandler;
-import org.fabric3.spi.contribution.manifest.JavaImport;
 import org.fabric3.spi.contribution.manifest.JavaExport;
+import org.fabric3.spi.contribution.manifest.JavaImport;
 import org.fabric3.spi.contribution.manifest.PackageInfo;
 import org.fabric3.spi.contribution.manifest.PackageVersion;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Parses OSGi manifest headers and adds the metadta to the SCA contribution manifest.
@@ -44,7 +44,7 @@ public class OSGiManifestHandler implements JarManifestHandler {
     private static final String VERSION = "version=";
     private static final String RESOLUTION = "resolution:=";
 
-    public void processManifest(ContributionManifest contributionManifest, Manifest jarManifest, ValidationContext context) {
+    public void processManifest(ContributionManifest contributionManifest, Manifest jarManifest, IntrospectionContext context) {
         Attributes attributes = jarManifest.getMainAttributes();
         for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
             if (entry.getKey().toString().equalsIgnoreCase(IMPORT_HEADER)) {
@@ -70,7 +70,7 @@ public class OSGiManifestHandler implements JarManifestHandler {
         }
     }
 
-    private List<JavaImport> parseImportHeader(String header, ValidationContext context) {
+    private List<JavaImport> parseImportHeader(String header, IntrospectionContext context) {
         OSGiManifestEntryParser parser = new OSGiManifestEntryParser(header);
         List<JavaImport> imports = new ArrayList<JavaImport>();
         PackageInfo info = null;
@@ -106,7 +106,7 @@ public class OSGiManifestHandler implements JarManifestHandler {
         }
     }
 
-    private List<JavaExport> parseExportHeader(String header, ValidationContext context) {
+    private List<JavaExport> parseExportHeader(String header, IntrospectionContext context) {
         OSGiManifestEntryParser parser = new OSGiManifestEntryParser(header);
         List<JavaExport> imports = new ArrayList<JavaExport>();
         PackageInfo info = null;
@@ -136,7 +136,7 @@ public class OSGiManifestHandler implements JarManifestHandler {
         }
     }
 
-    private boolean parseVersion(String text, PackageInfo info, ValidationContext context) {
+    private boolean parseVersion(String text, PackageInfo info, IntrospectionContext context) {
         String val = text.substring(VERSION.length());
         if (val.startsWith("\"[")) {
             info.setMinInclusive(true);

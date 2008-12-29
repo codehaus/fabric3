@@ -25,7 +25,7 @@ import org.fabric3.spi.introspection.contract.OperationIntrospector;
 import org.fabric3.jaxb.provision.JAXBConstants;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Introspects operations for the presence of JAXB types. If a parameter is a JAXB type, the JAXB intent is added to the operation.
@@ -34,7 +34,7 @@ import org.fabric3.spi.introspection.ValidationContext;
  */
 public class JAXBTypeIntrospector implements OperationIntrospector {
 
-    public <T> void introspect(Operation<T> operation, Method method, ValidationContext context) {
+    public <T> void introspect(Operation<T> operation, Method method, IntrospectionContext context) {
         // TODO perform error checking, e.g. mixing of databindings
         DataType<List<DataType<T>>> inputType = operation.getInputType();
         for (DataType<?> type : inputType.getLogical()) {

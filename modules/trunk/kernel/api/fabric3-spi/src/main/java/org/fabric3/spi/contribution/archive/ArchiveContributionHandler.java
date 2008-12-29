@@ -17,8 +17,8 @@
 package org.fabric3.spi.contribution.archive;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Responsible for handling the specifics of an archive-based contribution.
@@ -50,7 +50,7 @@ public interface ArchiveContributionHandler {
      * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if an error occurs processing the manifest
      */
-    void processManifest(Contribution contribution, ValidationContext context) throws InstallException;
+    void processManifest(Contribution contribution, IntrospectionContext context) throws InstallException;
 
     /**
      * Iterates through a contribution calling the supplied action when a contained artifact is encountered.

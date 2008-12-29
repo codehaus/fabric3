@@ -31,7 +31,6 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.contribution.wire.ContributionWireInstantiatorRegistry;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.StoreException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionWire;
@@ -43,6 +42,7 @@ import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.Symbol;
 import org.fabric3.spi.contribution.UnresolvedImportException;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Default MetaDataStore implementation
@@ -149,7 +149,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
     public <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri,
                                                                                     Class<V> type,
                                                                                     S symbol,
-                                                                                    ValidationContext context)
+                                                                                    IntrospectionContext context)
             throws StoreException {
         Contribution contribution = find(contributionUri);
         if (contribution == null) {
@@ -230,7 +230,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolveInternal(Contribution contribution,
                                                                                              Class<V> type,
                                                                                              S symbol,
-                                                                                             ValidationContext context)
+                                                                                             IntrospectionContext context)
             throws StoreException {
         URI contributionUri = contribution.getUri();
         ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);

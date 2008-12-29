@@ -25,18 +25,17 @@ import javax.persistence.PersistenceUnit;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.jpa.scdl.PersistenceUnitResource;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.DefaultValidationContext;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.jpa.scdl.PersistenceUnitResource;
-import org.fabric3.spi.introspection.ValidationContext;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -48,7 +47,7 @@ public class PersistenceUnitProcessor<I extends Implementation<? extends Injecti
 
     public PersistenceUnitProcessor(@Reference ContractProcessor contractProcessor) {
         super(PersistenceUnit.class);
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManagerFactory.class, context);
         assert !context.hasErrors(); // should not happen
     }

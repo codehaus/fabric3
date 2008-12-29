@@ -23,7 +23,7 @@ import javax.jws.WebMethod;
 import org.fabric3.binding.ws.axis2.common.Constant;
 import org.fabric3.spi.introspection.contract.OperationIntrospector;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Introspects operations for the presence of JAX-WS annotations. JAX-WS annotations are used to configure the Axis2 engine.
@@ -32,7 +32,7 @@ import org.fabric3.spi.introspection.ValidationContext;
  */
 public class JAXWSTypeIntrospector implements OperationIntrospector {
 
-    public <T> void introspect(Operation<T> operation, Method method, ValidationContext context) {
+    public <T> void introspect(Operation<T> operation, Method method, IntrospectionContext context) {
         WebMethod webMethod = method.getAnnotation(WebMethod.class);
         if (webMethod != null) {
             String soapAction = webMethod.action();

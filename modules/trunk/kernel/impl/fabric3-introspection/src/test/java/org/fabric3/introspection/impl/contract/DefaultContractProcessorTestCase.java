@@ -43,15 +43,15 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.DefaultValidationContext;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -62,7 +62,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     private TypeMapping emptyMapping;
 
     public void testSimpleInterface() {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         ServiceContract<Type> contract = impl.introspect(emptyMapping, Simple.class, context);
         assertEquals("Simple", contract.getInterfaceName());
         assertEquals(Simple.class.getName(), contract.getQualifiedInterfaceName());
@@ -89,7 +89,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testBoundGenericInterface() {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         ServiceContract<Type> contract = impl.introspect(boundMapping, Generic.class, context);
         assertEquals("Generic", contract.getInterfaceName());
 
@@ -110,7 +110,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testMethodGeneric() {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         ServiceContract<Type> contract = impl.introspect(boundMapping, Generic.class, context);
         List<Operation<Type>> operations = contract.getOperations();
         Operation<Type> operation =null;
@@ -129,7 +129,8 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testCallbackInterface() {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
+
         ServiceContract<?> contract = impl.introspect(emptyMapping, ForwardInterface.class, context);
         ServiceContract<?> callback = contract.getCallbackContract();
         assertEquals("CallbackInterface", callback.getInterfaceName());
@@ -141,7 +142,8 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testConversationalInformationIntrospection() throws Exception {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
+
         ServiceContract<Type> contract = impl.introspect(emptyMapping, Foo.class, context);
         assertTrue(contract.isConversational());
         boolean testedContinue = false;
@@ -160,7 +162,8 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testNonConversationalInformationIntrospection() throws Exception {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
+
         ServiceContract<Type> contract = impl.introspect(emptyMapping, NonConversationalFoo.class, context);
         assertFalse(contract.isConversational());
         boolean tested = false;
@@ -175,7 +178,8 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testInvalidConversationalAttribute() throws Exception {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
+
         impl.introspect(emptyMapping, BadConversation.class, context);
         assertTrue(context.getErrors().get(0) instanceof InvalidConversationalOperation);
     }

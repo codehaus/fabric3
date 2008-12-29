@@ -34,13 +34,10 @@
  */
 package org.fabric3.fabric.runtime.bootstrap;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import javax.management.MBeanServer;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Document;
 
@@ -65,8 +62,6 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.spi.introspection.DefaultValidationContext;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
@@ -81,7 +76,6 @@ import org.fabric3.spi.contribution.manifest.PackageVersion;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
-import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -335,18 +329,11 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         ContributionManifest manifest = contribution.getManifest();
         // add the ContributionExport
         manifest.addExport(new ContributionExport(contributionUri));
-        ValidationContext context = new DefaultValidationContext();
-        XMLInputFactory xmlInputFactory = xmlFactory.newInputFactoryInstance();
-        InputStream stream = null;
-        XMLStreamReader reader = null;
         for (Map.Entry<String, String> entry : exportedPackages.entrySet()) {
             PackageVersion version = new PackageVersion(entry.getValue());
             PackageInfo info = new PackageInfo(entry.getKey(), version);
             JavaExport export = new JavaExport(info);
             manifest.addExport(export);
-        }
-        if (context.hasErrors()) {
-            throw new InvalidContributionException(context.getErrors(), context.getWarnings());
         }
         metaDataStore.store(contribution);
         classLoaderRegistry.register(contributionUri, loader);

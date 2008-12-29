@@ -31,7 +31,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Constants;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
@@ -85,7 +84,7 @@ public class WarContributionHandler implements ArchiveContributionHandler {
         return sourceUrl.endsWith(".war");
     }
 
-    public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
+    public void processManifest(Contribution contribution, final IntrospectionContext context) throws InstallException {
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();

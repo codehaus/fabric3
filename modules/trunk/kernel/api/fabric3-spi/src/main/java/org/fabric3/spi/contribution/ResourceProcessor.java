@@ -20,7 +20,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Implmentations process a contribution resource for a MIME type.
@@ -44,7 +44,7 @@ public interface ResourceProcessor {
      * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if an error occurs during indexing
      */
-    void index(Contribution contribution, URL url, ValidationContext context) throws InstallException;
+    void index(Contribution contribution, URL url, IntrospectionContext context) throws InstallException;
 
     /**
      * Loads the the Resource
@@ -56,6 +56,6 @@ public interface ResourceProcessor {
      *                        introspection
      * @throws InstallException if an error processing the contribution occurs
      */
-    void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException;
+    void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException;
 
 }

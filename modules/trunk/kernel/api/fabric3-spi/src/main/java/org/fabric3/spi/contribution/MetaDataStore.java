@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.host.contribution.StoreException;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Implementations store contribution metadata.
@@ -89,7 +89,7 @@ public interface MetaDataStore {
      * @throws org.fabric3.host.contribution.StoreException
      *          if an error occurs during resolution
      */
-    <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
+    <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, IntrospectionContext context)
             throws StoreException;
 
     /**

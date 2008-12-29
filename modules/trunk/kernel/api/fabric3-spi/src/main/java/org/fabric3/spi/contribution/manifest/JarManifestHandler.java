@@ -18,14 +18,14 @@ package org.fabric3.spi.contribution.manifest;
 
 import java.util.jar.Manifest;
 
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * @version $Revision$ $Date$
  */
 public interface JarManifestHandler {
 
-    void processManifest(ContributionManifest contributionManifest, Manifest jarManifest, ValidationContext context);
+    void processManifest(ContributionManifest contributionManifest, Manifest jarManifest, IntrospectionContext context);
 
 }

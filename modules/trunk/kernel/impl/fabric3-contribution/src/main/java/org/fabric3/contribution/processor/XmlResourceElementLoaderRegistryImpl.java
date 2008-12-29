@@ -24,10 +24,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoader;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoaderRegistry;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Default impelmentation of an XmlIndexerRegistry.
@@ -46,7 +46,7 @@ public class XmlResourceElementLoaderRegistryImpl implements XmlResourceElementL
     }
 
     @SuppressWarnings({"unchecked"})
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context,  ClassLoader loader)
+    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context,  ClassLoader loader)
             throws InstallException, XMLStreamException {
         try {
             QName name = reader.getName();

@@ -31,24 +31,23 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
-import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.BindingType;
 import org.fabric3.model.type.definitions.ImplementationType;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.ResourceElementNotFoundException;
 import org.fabric3.spi.contribution.Symbol;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoader;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoaderRegistry;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.Loader;
+import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loader for definitions.
@@ -84,7 +83,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
         return DEFINITIONS;
     }
 
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
+    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
             throws InstallException, XMLStreamException {
         validateAttributes(reader, context);
 
@@ -158,7 +157,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
 
     }
 
-    private void validateAttributes(XMLStreamReader reader, ValidationContext context) {
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
             if (!"targetNamespace".equals(name)) {

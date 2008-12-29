@@ -22,14 +22,13 @@ import java.util.List;
 import org.easymock.IMocksControl;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.DefaultValidationContext;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.introspection.java.MissingResource;
 
 /**
@@ -43,7 +42,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
     public MockComponentTypeLoaderImpl(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         ServiceContract<Type> controlServiceContract = introspect(IMocksControl.class, context);
         assert !context.hasErrors(); // should not happen
         controlService = new ServiceDefinition("mockControl", controlServiceContract);
@@ -87,7 +86,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
 
     }
 
-    private ServiceContract<Type> introspect(Class<?> interfaceClass, ValidationContext context) {
+    private ServiceContract<Type> introspect(Class<?> interfaceClass, IntrospectionContext context) {
         TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
         return contractProcessor.introspect(typeMapping, interfaceClass, context);
     }

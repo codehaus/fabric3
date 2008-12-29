@@ -37,7 +37,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ContributionProcessor;
@@ -89,7 +88,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         return CONTENT_TYPES;
     }
 
-    public void processManifest(Contribution contribution, ValidationContext context) throws InstallException {
+    public void processManifest(Contribution contribution, IntrospectionContext context) throws InstallException {
         ContributionManifest manifest = contribution.getManifest();
         InputStream stream = null;
         XMLStreamReader reader = null;
@@ -112,7 +111,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void index(Contribution contribution, ValidationContext context) throws InstallException {
+    public void index(Contribution contribution, IntrospectionContext context) throws InstallException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
@@ -136,7 +135,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
+    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
         XMLStreamReader reader = null;
@@ -175,7 +174,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         }
     }
 
-    private void processManifest(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws InstallException {
+    private void processManifest(ContributionManifest manifest, XMLStreamReader reader, IntrospectionContext context) throws InstallException {
         try {
             while (true) {
                 int i = reader.next();

@@ -30,7 +30,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ContributionProcessor;
@@ -75,7 +74,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         registry.register(this);
     }
 
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
+    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         URI contributionUri = contribution.getUri();
         try {
@@ -90,7 +89,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
+    public void processManifest(Contribution contribution, final IntrospectionContext context) throws InstallException {
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
@@ -118,7 +117,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
 
     }
 
-    public void index(Contribution contribution, final ValidationContext context) throws InstallException {
+    public void index(Contribution contribution, final IntrospectionContext context) throws InstallException {
         iterateArtifacts(contribution, context, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
                     throws InstallException {
@@ -127,13 +126,13 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         });
     }
 
-    private void iterateArtifacts(Contribution contribution, final ValidationContext context, Action action) throws InstallException {
+    private void iterateArtifacts(Contribution contribution, final IntrospectionContext context, Action action) throws InstallException {
         File root = FileHelper.toFile(contribution.getLocation());
         assert root.isDirectory();
         iterateArtifactsResursive(contribution, context, action, root);
     }
 
-    private void iterateArtifactsResursive(Contribution contribution, final ValidationContext context, Action action, File dir)
+    private void iterateArtifactsResursive(Contribution contribution, final IntrospectionContext context, Action action, File dir)
             throws InstallException {
         File[] files = dir.listFiles();
         for (File file : files) {

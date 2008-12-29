@@ -25,7 +25,7 @@ import org.easymock.EasyMock;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 
@@ -57,7 +57,7 @@ public class PersistenceUnitProcessorTestCase extends TestCase {
         ServiceContract contract = new JavaServiceContract(EntityManagerFactory.class);
         EasyMock.expect(contractProcessor.introspect(EasyMock.isA(TypeMapping.class),
                                                      EasyMock.eq(EntityManagerFactory.class),
-                                                     EasyMock.isA(ValidationContext.class))).andReturn(contract);
+                                                     EasyMock.isA(IntrospectionContext.class))).andReturn(contract);
         EasyMock.replay(contractProcessor);
         processor = new PersistenceUnitProcessor(contractProcessor);
     }

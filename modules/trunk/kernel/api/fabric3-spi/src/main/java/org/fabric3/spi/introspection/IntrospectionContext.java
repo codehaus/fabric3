@@ -36,15 +36,76 @@ package org.fabric3.spi.introspection;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Context for the current introspection session.
  * <p/>
- * It provides information about the environment in which the components being introspected will be used.
+ * The context allows both errors and warnings to be gathered. Errors indicate problems that will prevent an assembly from being activated such as a
+ * missing component implementation. Warnings indicate issues that are not in themselves fatal but which may result in an activation failure.
  *
  * @version $Rev$ $Date$
  */
-public interface IntrospectionContext extends ValidationContext {
+public interface IntrospectionContext {
+
+    /**
+     * Returns true if the validation has detected any fatal errors.
+     *
+     * @return true if the validation has detected any fatal errors
+     */
+    boolean hasErrors();
+
+    /**
+     * Returns the list of fatal errors detected during validation.
+     *
+     * @return the list of fatal errors detected during validation
+     */
+    List<ValidationFailure> getErrors();
+
+    /**
+     * Add a fatal error to the validation results.
+     *
+     * @param e the fatal error that has been found
+     */
+    void addError(ValidationFailure e);
+
+    /**
+     * Add a collection of fatal errors to the validation results.
+     *
+     * @param errors the fatal errors that have been found
+     */
+    void addErrors(List<ValidationFailure> errors);
+
+    /**
+     * Returns true if the validation has detected any non-fatal warnings.
+     *
+     * @return true if the validation has detected any non-fatal warnings
+     */
+    boolean hasWarnings();
+
+    /**
+     * Returns the list of non-fatal warnings detected during validation.
+     *
+     * @return the list of non-fatal warnings detected during validation
+     */
+    List<ValidationFailure> getWarnings();
+
+    /**
+     * Add a non-fatal warning to the validation results.
+     *
+     * @param e the non-fatal warning that has been found
+     */
+    void addWarning(ValidationFailure e);
+
+
+    /**
+     * Add a collection of non-fatal warnings to the validation results.
+     *
+     * @param warnings the non-fatal warnings that have been found
+     */
+    void addWarnings(List<ValidationFailure> warnings);
 
     /**
      * Returns a class loader that can be used to load application resources.

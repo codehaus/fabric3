@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.Resource;
@@ -71,7 +71,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         return "application/xml";
     }
 
-    public void index(Contribution contribution, URL url, ValidationContext context) throws InstallException {
+    public void index(Contribution contribution, URL url, IntrospectionContext context) throws InstallException {
         XMLStreamReader reader = null;
         InputStream stream = null;
         try {
@@ -105,7 +105,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         }
     }
 
-    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException {
+    public void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {

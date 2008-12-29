@@ -24,12 +24,12 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.spi.introspection.DefaultValidationContext;
-import org.fabric3.spi.introspection.ValidationContext;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.xml.XmlIndexerRegistry;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * @version $Revision$ $Date$
@@ -51,7 +51,7 @@ public class DeploymentPlanIndexerTestCase extends TestCase {
 
     public void testIndexer() throws Exception {
         Resource resource = new Resource(null, "test");
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         indexer.index(resource, reader, context);
         ResourceElement<?, ?> element = resource.getResourceElements().get(0);
         QNameSymbol symbol = (QNameSymbol) element.getSymbol();

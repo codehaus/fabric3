@@ -28,18 +28,18 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.xml.LoaderUtil;
-import org.fabric3.spi.introspection.xml.MissingAttribute;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.plan.DeploymentPlan;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoader;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoaderRegistry;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
+import org.fabric3.spi.plan.DeploymentPlan;
 
 /**
  * Processes a deployment plan.
@@ -66,7 +66,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
         registry.register(this);
     }
 
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
+    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
             throws InstallException {
         try {
             QName qname = reader.getName();
@@ -112,7 +112,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
      * @param context the validation context
      * @return true if the mapping was processed successfully, false if there was a validation error
      */
-    private boolean processDeployableMapping(DeploymentPlan plan, XMLStreamReader reader, ValidationContext context) {
+    private boolean processDeployableMapping(DeploymentPlan plan, XMLStreamReader reader, IntrospectionContext context) {
         String deployableName = reader.getAttributeValue(null, "deployable");
         if (deployableName == null) {
             context.addError(new MissingAttribute("Deployable name not specified in mapping", "deployable", reader));

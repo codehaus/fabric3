@@ -51,7 +51,6 @@ import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.component.AbstractComponentType;
 
 @SuppressWarnings("unchecked")
@@ -151,7 +150,7 @@ public class ReferenceProcessorTestCase extends TestCase {
 
         ContractProcessor contractProcessor = new ContractProcessor() {
 
-            public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, ValidationContext context) {
+            public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
                 return contract;
             }
         };

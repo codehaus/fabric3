@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
 import org.fabric3.spi.plan.DeploymentPlan;
@@ -59,7 +59,7 @@ public class DeploymentPlanIndexer implements XmlIndexer {
         return PLAN;
     }
 
-    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException {
+    public void index(Resource resource, XMLStreamReader reader, IntrospectionContext context) throws InstallException {
         QName qname = reader.getName();
         assert PLAN.equals(qname);
         String name = reader.getAttributeValue(null, "name");

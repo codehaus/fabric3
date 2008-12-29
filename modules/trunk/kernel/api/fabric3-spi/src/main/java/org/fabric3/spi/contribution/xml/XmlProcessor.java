@@ -20,8 +20,8 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Processes an XML-based contribution
@@ -46,6 +46,6 @@ public interface XmlProcessor {
      * @param loader       the classloader to perform resolution in
      * @throws InstallException if an error occurs processing
      */
-    void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader loader)
+    void processContent(Contribution contribution, IntrospectionContext context, XMLStreamReader reader, ClassLoader loader)
             throws InstallException;
 }

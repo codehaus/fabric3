@@ -22,10 +22,10 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.xml.XmlProcessor;
 import org.fabric3.spi.contribution.xml.XmlProcessorRegistry;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Default impelmentation of an XmlProcessorRegistry.
@@ -43,7 +43,7 @@ public class XmlProcessorRegistryImpl implements XmlProcessorRegistry {
         cache.remove(name);
     }
 
-    public void process(Contribution contribution, XMLStreamReader reader, ValidationContext context, ClassLoader loader)
+    public void process(Contribution contribution, XMLStreamReader reader, IntrospectionContext context, ClassLoader loader)
             throws InstallException {
         QName name = reader.getName();
         XmlProcessor processor = cache.get(name);

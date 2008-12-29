@@ -29,7 +29,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.runtime.webapp.WebappHostInfo;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
@@ -78,7 +77,7 @@ public class WarContributionProcessor implements ContributionProcessor {
         registry.register(this);
     }
 
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
+    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
         URI contributionUri = contribution.getUri();
         for (Resource resource : contribution.getResources()) {
             if (!resource.isProcessed()) {
@@ -87,7 +86,7 @@ public class WarContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
+    public void processManifest(Contribution contribution, final IntrospectionContext context) throws InstallException {
         URL manifestURL;
         try {
             manifestURL = info.getServletContext().getResource("/WEB-INF/sca-contribution.xml");
@@ -118,7 +117,7 @@ public class WarContributionProcessor implements ContributionProcessor {
 
     }
 
-    public void index(Contribution contribution, final ValidationContext context) throws InstallException {
+    public void index(Contribution contribution, final IntrospectionContext context) throws InstallException {
         iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
                     throws InstallException {

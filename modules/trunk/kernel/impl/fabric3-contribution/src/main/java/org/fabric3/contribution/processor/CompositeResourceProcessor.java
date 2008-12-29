@@ -32,7 +32,6 @@ import org.fabric3.spi.contribution.Constants;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
@@ -69,7 +68,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         return Constants.COMPOSITE_CONTENT_TYPE;
     }
 
-    public void index(Contribution contribution, URL url, ValidationContext context) throws InstallException {
+    public void index(Contribution contribution, URL url, IntrospectionContext context) throws InstallException {
         XMLStreamReader reader = null;
         InputStream stream = null;
         try {
@@ -111,7 +110,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     }
 
     @SuppressWarnings({"unchecked"})
-    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader classLoader) throws InstallException {
+    public void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader classLoader) throws InstallException {
         URL url = resource.getUrl();
         IntrospectionContext childContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
         Composite composite;

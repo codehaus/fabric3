@@ -48,18 +48,18 @@ import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.contract.InterfaceIntrospector;
-import org.fabric3.spi.introspection.contract.OperationIntrospector;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.Operation;
 import static org.fabric3.model.type.service.Operation.CONVERSATION_END;
 import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.service.JavaServiceContract;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.contract.InterfaceIntrospector;
+import org.fabric3.spi.introspection.contract.OperationIntrospector;
 
 /**
  * Default implementation of a ContractProcessor for Java interfaces.
@@ -91,7 +91,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         this.operationIntrospectors = operationIntrospectors;
     }
 
-    public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, ValidationContext context) {
+    public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
         if (type instanceof Class) {
             return introspect(typeMapping, (Class<?>) type, context);
         } else {
@@ -99,7 +99,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         }
     }
 
-    private JavaServiceContract introspect(TypeMapping typeMapping, Class<?> interfaze, ValidationContext context) {
+    private JavaServiceContract introspect(TypeMapping typeMapping, Class<?> interfaze, IntrospectionContext context) {
         JavaServiceContract contract = introspectInterface(typeMapping, interfaze, context);
         Callback callback = interfaze.getAnnotation(Callback.class);
         if (callback != null) {
@@ -122,7 +122,7 @@ public class DefaultContractProcessor implements ContractProcessor {
      * @param context     the current validation context to report errors
      * @return the service contract
      */
-    private JavaServiceContract introspectInterface(TypeMapping typeMapping, Class<?> interfaze, ValidationContext context) {
+    private JavaServiceContract introspectInterface(TypeMapping typeMapping, Class<?> interfaze, IntrospectionContext context) {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
         contract.setInterfaceName(interfaze.getSimpleName());
 
@@ -144,7 +144,7 @@ public class DefaultContractProcessor implements ContractProcessor {
                                                     Class<T> type,
                                                     boolean remotable,
                                                     boolean conversational,
-                                                    ValidationContext context) {
+                                                    IntrospectionContext context) {
         Method[] methods = type.getMethods();
         List<Operation<Type>> operations = new ArrayList<Operation<Type>>(methods.length);
         for (Method method : methods) {

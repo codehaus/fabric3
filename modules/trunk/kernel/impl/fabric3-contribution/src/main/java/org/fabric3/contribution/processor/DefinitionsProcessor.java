@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.xml.XmlProcessor;
@@ -53,7 +53,7 @@ public class DefinitionsProcessor implements XmlProcessor {
         return DEFINITIONS;
     }
 
-    public void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader cl)
+    public void processContent(Contribution contribution, IntrospectionContext context, XMLStreamReader reader, ClassLoader cl)
             throws InstallException {
         try {
             URI uri = contribution.getUri();

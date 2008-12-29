@@ -52,7 +52,6 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.model.type.component.Composite;
@@ -95,7 +94,7 @@ public class IncludeLoaderTestCase extends TestCase {
         ResourceElement<QNameSymbol, Composite> element = new ResourceElement<QNameSymbol, Composite>(symbol);
         element.setValue(include);
         // FIXME null check
-        expect(store.resolve((URI) EasyMock.isNull(), eq(Composite.class), isA(QNameSymbol.class), isA(ValidationContext.class))).andReturn(element);
+        expect(store.resolve((URI) EasyMock.isNull(), eq(Composite.class), isA(QNameSymbol.class), isA(IntrospectionContext.class))).andReturn(element);
         replay(registry, reader, namespaceContext, context, store);
 
         loader.load(reader, context);

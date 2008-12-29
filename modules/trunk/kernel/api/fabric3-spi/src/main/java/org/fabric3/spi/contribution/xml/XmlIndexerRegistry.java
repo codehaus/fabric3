@@ -20,8 +20,8 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * A registry of XmlIndexers
@@ -51,6 +51,6 @@ public interface XmlIndexerRegistry {
      * @param context  the context to which validation errors and warnings are reported
      * @throws InstallException if an error occurs during indexing
      */
-    void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException;
+    void index(Resource resource, XMLStreamReader reader, IntrospectionContext context) throws InstallException;
 
 }

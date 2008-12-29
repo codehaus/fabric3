@@ -20,7 +20,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * The system registry of contribution processors
@@ -63,7 +63,7 @@ public interface ProcessorRegistry {
      * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if there was a problem processing the manifest
      */
-    void processManifest(Contribution contribution, ValidationContext context) throws InstallException;
+    void processManifest(Contribution contribution, IntrospectionContext context) throws InstallException;
 
     /**
      * Dispatches to a {@link ContributionProcessor} to index a contribution.
@@ -72,7 +72,7 @@ public interface ProcessorRegistry {
      * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if there was a problem indexing the contribution
      */
-    void indexContribution(Contribution contribution, ValidationContext context) throws InstallException;
+    void indexContribution(Contribution contribution, IntrospectionContext context) throws InstallException;
 
     /**
      * Dispatches to a {@link ResourceProcessor} to index a resource contained in a contribution.
@@ -83,7 +83,7 @@ public interface ProcessorRegistry {
      * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if there was a problem indexing the contribution
      */
-    void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws InstallException;
+    void indexResource(Contribution contribution, String contentType, URL url, IntrospectionContext context) throws InstallException;
 
     /**
      * Loads all indexed resources in a contribution.
@@ -93,7 +93,7 @@ public interface ProcessorRegistry {
      * @param loader       the classloader conribution resources must be laoded in
      * @throws InstallException if there was a problem loading resources in the contribution
      */
-    void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException;
+    void processContribution(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException;
 
     /**
      * Loads a contained resource in a contribution.
@@ -104,6 +104,6 @@ public interface ProcessorRegistry {
      * @param loader          the classloader contribution the resource must be loaded in
      * @throws InstallException if there was a problem loading the resoure
      */
-    void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException;
+    void processResource(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException;
 
 }

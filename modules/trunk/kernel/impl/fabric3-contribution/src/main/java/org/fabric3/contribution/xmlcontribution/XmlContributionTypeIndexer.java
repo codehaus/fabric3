@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.model.type.component.Composite;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
@@ -63,7 +63,7 @@ public class XmlContributionTypeIndexer implements XmlIndexer {
         return XML_CONTRIBUTION;
     }
 
-    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException {
+    public void index(Resource resource, XMLStreamReader reader, IntrospectionContext context) throws InstallException {
 
         while (true) {
             try {

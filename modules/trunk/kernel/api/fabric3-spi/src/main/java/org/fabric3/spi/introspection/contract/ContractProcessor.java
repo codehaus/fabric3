@@ -37,7 +37,7 @@ package org.fabric3.spi.introspection.contract;
 import java.lang.reflect.Type;
 
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.spi.introspection.ValidationContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
 
 /**
@@ -55,5 +55,5 @@ public interface ContractProcessor {
      * @param context     the validation context for reporting errors and warnings
      * @return the ServiceContract corresponding to the interface type
      */
-    ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, ValidationContext context);
+    ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, IntrospectionContext context);
 }

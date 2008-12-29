@@ -22,8 +22,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Loads the value of a ResourceElement from an XML artifact.
@@ -50,7 +50,7 @@ public interface XmlResourceElementLoader {
      * @throws InstallException   if a general load error occurs
      * @throws XMLStreamException if there is an error reading the XML stream
      */
-    void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
+    void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
             throws InstallException, XMLStreamException;
 
 }

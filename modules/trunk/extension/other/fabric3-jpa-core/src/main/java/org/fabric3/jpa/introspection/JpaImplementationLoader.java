@@ -31,8 +31,6 @@ import org.fabric3.api.jpa.ConversationalDaoImpl;
 import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.java.control.JavaImplementationProcessor;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
-import org.fabric3.spi.introspection.DefaultValidationContext;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -61,7 +59,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
 
     public JpaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor, @Reference ContractProcessor contractProcessor) {
         this.implementationProcessor = implementationProcessor;
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class, context);
         assert !context.hasErrors();  // should not happen
     }

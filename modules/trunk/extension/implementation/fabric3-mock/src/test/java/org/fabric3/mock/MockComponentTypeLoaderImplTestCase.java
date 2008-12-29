@@ -23,10 +23,9 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
@@ -54,10 +53,10 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
         ServiceContract fooContract = new JavaServiceContract(Foo.class);
         EasyMock.expect(processor.introspect(EasyMock.isA(TypeMapping.class),
                                              EasyMock.eq(IMocksControl.class),
-                                             EasyMock.isA(ValidationContext.class))).andReturn(controlContract);
+                                             EasyMock.isA(IntrospectionContext.class))).andReturn(controlContract);
         EasyMock.expect(processor.introspect(EasyMock.isA(TypeMapping.class),
                                              EasyMock.eq(Foo.class),
-                                             EasyMock.isA(ValidationContext.class))).andReturn(fooContract);
+                                             EasyMock.isA(IntrospectionContext.class))).andReturn(fooContract);
         EasyMock.replay(processor);
 
         MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(helper, processor);

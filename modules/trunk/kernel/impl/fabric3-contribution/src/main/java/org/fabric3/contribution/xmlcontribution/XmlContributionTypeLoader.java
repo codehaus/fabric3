@@ -30,26 +30,25 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.ValidationContext;
-import org.fabric3.spi.introspection.xml.Loader;
-import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.Namespaces;
+import org.fabric3.spi.contribution.Constants;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.ResourceElementNotFoundException;
 import org.fabric3.spi.contribution.Symbol;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.xml.XmlProcessor;
 import org.fabric3.spi.contribution.xml.XmlProcessorRegistry;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.Loader;
+import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loader for definitions.
@@ -78,7 +77,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
         return XML_CONTRIBUTION;
     }
 
-    public void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader classLoader)
+    public void processContent(Contribution contribution, IntrospectionContext context, XMLStreamReader reader, ClassLoader classLoader)
             throws InstallException {
         validateAttributes(reader, context);
         List<Composite> composites = new ArrayList<Composite>();
@@ -152,7 +151,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
 
     }
 
-    private void validateAttributes(XMLStreamReader reader, ValidationContext context) {
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
             if (!"targetNamespace".equals(name)) {

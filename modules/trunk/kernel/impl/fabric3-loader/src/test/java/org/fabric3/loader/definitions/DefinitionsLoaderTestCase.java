@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -30,20 +29,20 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 
+import org.fabric3.loader.impl.DefaultLoaderHelper;
+import org.fabric3.model.type.definitions.AbstractDefinition;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.spi.Namespaces;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.loader.impl.DefaultLoaderHelper;
-import org.fabric3.spi.introspection.DefaultValidationContext;
-import org.fabric3.model.type.definitions.AbstractDefinition;
-import org.fabric3.model.type.definitions.Intent;
-import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.contribution.Resource;
-import org.fabric3.spi.contribution.ResourceElement;
 
 /**
  * @version $Revision$ $Date$
@@ -68,7 +67,8 @@ public class DefinitionsLoaderTestCase extends TestCase {
     @SuppressWarnings({"unchecked", "deprecation"})
     public void testLoad() throws Exception {
 
-        loader.load(reader, null, resource, new DefaultValidationContext(), null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
+        loader.load(reader, null, resource, context, null);
 
         List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
         assertNotNull(resourceElements);

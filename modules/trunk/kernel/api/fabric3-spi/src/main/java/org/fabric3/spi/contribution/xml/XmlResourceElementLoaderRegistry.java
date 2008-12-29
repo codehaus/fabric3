@@ -22,8 +22,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * A registry of XmlResourceElementLoaders
@@ -56,7 +56,7 @@ public interface XmlResourceElementLoaderRegistry {
      * @throws InstallException if a fatal error loading the resource occurs
      * @throws XMLStreamException    if an error parsing the XML stream occurs
      */
-    void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
+    void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
             throws InstallException, XMLStreamException;
 
 }

@@ -25,11 +25,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.contribution.UnsupportedContentTypeException;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.introspection.ValidationContext;
-import org.fabric3.spi.contribution.archive.Action;
-import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.archive.Action;
+import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Handles common processing for contribution archives
@@ -54,12 +54,12 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
         return CONTENT_TYPES;
     }
 
-    public void processManifest(Contribution contribution, ValidationContext context) throws InstallException {
+    public void processManifest(Contribution contribution, IntrospectionContext context) throws InstallException {
         ArchiveContributionHandler handler = getHandler(contribution);
         handler.processManifest(contribution, context);
     }
 
-    public void index(Contribution contribution, final ValidationContext context) throws InstallException {
+    public void index(Contribution contribution, final IntrospectionContext context) throws InstallException {
         ArchiveContributionHandler handler = getHandler(contribution);
         handler.iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
@@ -70,7 +70,7 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
 
     }
 
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
+    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         URI contributionUri = contribution.getUri();
         try {

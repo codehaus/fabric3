@@ -50,6 +50,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.contribution.ContributionLockedException;
@@ -63,10 +64,7 @@ import org.fabric3.host.contribution.RemoveException;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.contribution.UninstallException;
 import org.fabric3.host.contribution.UpdateException;
-import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.host.contribution.ValidationFailure;
-import org.fabric3.spi.introspection.DefaultValidationContext;
-import org.fabric3.spi.introspection.ValidationContext;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.CompositeImplementation;
@@ -79,6 +77,8 @@ import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.introspection.validation.ValidationUtils;
 import org.fabric3.spi.services.archive.ArchiveStore;
@@ -370,7 +370,7 @@ public class ContributionServiceImpl implements ContributionService {
      * @throws InstallException if there is an error during introspection such as an invalid contribution
      */
     private void introspect(Contribution contribution) throws InstallException {
-        ValidationContext context = new DefaultValidationContext();
+        IntrospectionContext context = new DefaultIntrospectionContext();
         processorRegistry.processManifest(contribution, context);
         if (context.hasErrors()) {
             ArtifactValidationFailure failure = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
@@ -398,13 +398,13 @@ public class ContributionServiceImpl implements ContributionService {
      */
     private void processContents(Contribution contribution, ClassLoader loader) throws InstallException {
         try {
-            ValidationContext context = new DefaultValidationContext();
+            IntrospectionContext context = new DefaultIntrospectionContext();
             processorRegistry.indexContribution(contribution, context);
             if (context.hasErrors()) {
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             metaDataStore.store(contribution);
-            context = new DefaultValidationContext();
+            context = new DefaultIntrospectionContext();
             processorRegistry.processContribution(contribution, context, loader);
             validateContribution(contribution, context);
             if (context.hasErrors()) {
@@ -425,7 +425,7 @@ public class ContributionServiceImpl implements ContributionService {
      * @param contribution the contribution to validate
      * @param context      the validation context
      */
-    private void validateContribution(Contribution contribution, ValidationContext context) {
+    private void validateContribution(Contribution contribution, IntrospectionContext context) {
         for (Deployable deployable : contribution.getManifest().getDeployables()) {
             QName name = deployable.getName();
             QNameSymbol symbol = new QNameSymbol(name);
