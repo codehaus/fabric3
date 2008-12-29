@@ -80,6 +80,7 @@ public class HibernateDelegate implements EmfBuilderDelegate {
      * Explicitly
      */
     private void setTransactionManagerLookup(Ejb3Configuration configuration) {
+    	
 	     configuration.getProperties().setProperty("hibernate.transaction.manager_lookup_class", 
 	    		                                   "org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup");
 	}
