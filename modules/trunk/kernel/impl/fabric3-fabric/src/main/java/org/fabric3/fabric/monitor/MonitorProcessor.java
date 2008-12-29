@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.impl.annotation;
+package org.fabric3.fabric.monitor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -42,18 +42,17 @@ import java.lang.reflect.Type;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.component.MonitorResource;
+import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$

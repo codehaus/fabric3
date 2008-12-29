@@ -32,8 +32,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.model.type.component;
+package org.fabric3.fabric.monitor;
 
+import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**

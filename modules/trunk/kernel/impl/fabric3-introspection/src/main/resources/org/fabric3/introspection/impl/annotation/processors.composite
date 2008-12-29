@@ -94,10 +94,6 @@
 
     <!-- Fabric3 Annotations -->
 
-    <component name="MonitorProcessor" f3-core:key="org.fabric3.api.annotation.Monitor">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.MonitorProcessor"/>
-    </component>
-
     <component name="ConversationProcessor" f3-core:key="org.fabric3.api.annotation.scope.Conversation">
         <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationProcessor"/>
     </component>

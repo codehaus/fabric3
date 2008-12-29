@@ -21,7 +21,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.component.MonitorResource;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
@@ -36,7 +35,7 @@ public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTa
 
     private final GeneratorRegistry registry;
 
-    public MonitorWireGenerator(@Reference(name = "registry")GeneratorRegistry registry) {
+    public MonitorWireGenerator(@Reference(name = "registry") GeneratorRegistry registry) {
         this.registry = registry;
     }
 

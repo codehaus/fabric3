@@ -32,7 +32,7 @@ import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.annotation.DestroyProcessor;
 import org.fabric3.introspection.impl.annotation.EagerInitProcessor;
 import org.fabric3.introspection.impl.annotation.InitProcessor;
-import org.fabric3.introspection.impl.annotation.MonitorProcessor;
+import org.fabric3.fabric.monitor.MonitorProcessor;
 import org.fabric3.introspection.impl.annotation.PropertyProcessor;
 import org.fabric3.introspection.impl.annotation.ReferenceProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
