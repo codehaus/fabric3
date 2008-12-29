@@ -43,7 +43,14 @@ import org.fabric3.model.type.ValidationFailure;
  * @version $Rev: 5937 $ $Date: 2008-11-14 21:52:29 -0800 (Fri, 14 Nov 2008) $
  */
 public class MissingPromotion extends ValidationFailure {
-    public MissingPromotion(ModelObject modelObject) {
+    private String description;
+
+    public MissingPromotion(String description, ModelObject modelObject) {
         super(modelObject);
+        this.description = description;
+    }
+
+    public String getMessage() {
+        return description;
     }
 }

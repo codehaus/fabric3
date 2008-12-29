@@ -73,7 +73,8 @@ public class CompositeService extends ServiceDefinition {
     public void validate(ValidationContext context) {
         super.validate(context);
         if (promote == null) {
-            context.addError(new MissingPromotion(this));
+            MissingPromotion error = new MissingPromotion("Promotion not specified on composite service " + getName(), this);
+            context.addError(error);
         }
     }
 }

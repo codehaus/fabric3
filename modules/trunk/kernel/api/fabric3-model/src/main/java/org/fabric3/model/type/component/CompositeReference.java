@@ -80,7 +80,8 @@ public class CompositeReference extends ReferenceDefinition {
     public void validate(ValidationContext context) {
         super.validate(context);
         if (promotedUris == null || promotedUris.isEmpty()) {
-            context.addError(new MissingPromotion(this));
+            MissingPromotion error = new MissingPromotion("Promotion not specied on composite reference " + getName(), this);
+            context.addError(error);
         }
     }
 }
