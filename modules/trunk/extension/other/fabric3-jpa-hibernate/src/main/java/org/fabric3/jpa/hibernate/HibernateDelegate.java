@@ -24,6 +24,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.ejb.Ejb3Configuration;
 import org.osoa.sca.annotations.Reference;
 
@@ -41,17 +42,10 @@ public class HibernateDelegate implements EmfBuilderDelegate {
 
     private DataSourceRegistry dataSourceRegistry;
     private ComponentSynthesizer synthesizer;
-
-    @Reference
-    public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
-        this.dataSourceRegistry = dataSourceRegistry;
-    }
-
-    @Reference
-    public void setSynthesizer(ComponentSynthesizer synthesizer) {
-        this.synthesizer = synthesizer;
-    }
-
+    
+    /**
+     * Build the entity Manager factory (Hibernate {@link SessionFactory} )
+     */
     public EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, String dataSourceName) throws EmfBuilderException {
 
         Ejb3Configuration cfg = new Ejb3Configuration();
@@ -63,12 +57,34 @@ public class HibernateDelegate implements EmfBuilderDelegate {
             }
             cfg.setDataSource(dataSource);
         }
+        
+        setTransactionManagerLookup(cfg);
         cfg.configure(info, Collections.emptyMap());
 
         return cfg.buildEntityManagerFactory();
     }
 
-    /**
+    
+    @Reference
+    public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
+        this.dataSourceRegistry = dataSourceRegistry;
+    }
+
+    @Reference
+    public void setSynthesizer(ComponentSynthesizer synthesizer) {
+        this.synthesizer = synthesizer;
+    }
+
+    /*
+     * Set the Transaction Manager Lookup so that it does not need to be set
+     * Explicitly
+     */
+    private void setTransactionManagerLookup(Ejb3Configuration configuration) {
+	     configuration.getProperties().setProperty("hibernate.transaction.manager_lookup_class", 
+	    		                                   "org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup");
+	}
+
+	/**
      * Maps a datasource from JNDI to a Fabric3 system component. This provides the defaulting behavior where a user does not have to explicitly
      * configure a Fabric3 DataSourceProxy when deploying to a managed environment that provides its own datasources.
      * <p/>
