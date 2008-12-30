@@ -23,10 +23,10 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicateInclude extends XmlValidationFailure<String> {
+public class DuplicateInclude extends XmlValidationFailure {
 
     public DuplicateInclude(String includeName, XMLStreamReader reader) {
-        super("An included composite with the name" + includeName + "is already specified", includeName, reader);
+        super("An included composite with the name" + includeName + "is already specified", reader);
     }
 
 }

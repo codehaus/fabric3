@@ -26,7 +26,7 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Rev$ $Date$
  */
-public class InvalidDeployable extends ValidationFailure<URI> {
+public class InvalidDeployable extends ValidationFailure {
     private String message;
     private QName deployable;
 
@@ -38,7 +38,7 @@ public class InvalidDeployable extends ValidationFailure<URI> {
      * @param deployable the deployable qualified name
      */
     public InvalidDeployable(String message, URI uri, QName deployable) {
-        super(uri);
+        super();
         this.message = message;
         this.deployable = deployable;
     }

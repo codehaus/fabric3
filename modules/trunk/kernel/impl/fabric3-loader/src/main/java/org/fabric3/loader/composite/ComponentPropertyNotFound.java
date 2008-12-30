@@ -26,12 +26,12 @@ import org.fabric3.model.type.component.ComponentDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentPropertyNotFound extends XmlValidationFailure<ComponentDefinition> {
+public class ComponentPropertyNotFound extends XmlValidationFailure {
     private String propertyName;
     private ComponentDefinition definition;
 
     public ComponentPropertyNotFound(String propertyName, ComponentDefinition definition, XMLStreamReader reader) {
-        super("The component " + definition.getName() + " does not have a property " + propertyName, definition, reader);
+        super("The component " + definition.getName() + " does not have a property " + propertyName, reader);
         this.propertyName = propertyName;
         this.definition = definition;
     }

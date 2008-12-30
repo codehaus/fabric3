@@ -25,9 +25,9 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
  *
  * @version $Rev$ $Date$
  */
-public class DuplicateComponentName extends XmlValidationFailure<String> {
+public class DuplicateComponentName extends XmlValidationFailure {
 
     public DuplicateComponentName(String name, XMLStreamReader reader) {
-        super("More than one component configured with name: " + name, name, reader);
+        super("More than one component configured with name: " + name, reader);
     }
 }

@@ -118,7 +118,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 uriMeta = JmsURIMetadata.parseURI(uri);
                 metadata = JmsLoaderHelper.getJmsMetadataFromURI(uriMeta);
             } catch (URISyntaxException e) {
-                InvalidValue failure = new InvalidValue("Invalid JMS binding URI: " + uri, uri, reader, e);
+                InvalidValue failure = new InvalidValue("Invalid JMS binding URI: " + uri, reader, e);
                 introspectionContext.addError(failure);
                 return null;
             }
@@ -266,7 +266,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 headers.setJMSDeliveryMode(Integer.valueOf(deliveryMode));
             } catch (NumberFormatException nfe) {
                 InvalidValue failure =
-                        new InvalidValue(deliveryMode + " is not a legal int value for JMSDeliveryMode", deliveryMode, reader, nfe);
+                        new InvalidValue(deliveryMode + " is not a legal int value for JMSDeliveryMode", reader, nfe);
                 introspectionContext.addError(failure);
             }
         }
@@ -276,7 +276,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 headers.setJMSPriority(Integer.valueOf(priority));
             } catch (NumberFormatException nfe) {
                 InvalidValue failure =
-                        new InvalidValue(priority + " is not a legal int value for JMSPriority", priority, reader, nfe);
+                        new InvalidValue(priority + " is not a legal int value for JMSPriority", reader, nfe);
                 introspectionContext.addError(failure);
             }
         }
@@ -286,7 +286,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 headers.setJMSTimeToLive(Long.valueOf(timeToLive));
             } catch (NumberFormatException nfe) {
                 InvalidValue failure =
-                        new InvalidValue(timeToLive + " is not a legal int value for JMSTimeToLive", timeToLive, reader, nfe);
+                        new InvalidValue(timeToLive + " is not a legal int value for JMSTimeToLive", reader, nfe);
                 introspectionContext.addError(failure);
             }
         }

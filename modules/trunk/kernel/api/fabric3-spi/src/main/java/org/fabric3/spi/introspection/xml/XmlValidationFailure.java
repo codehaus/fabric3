@@ -26,14 +26,13 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Revision$ $Date$
  */
-public abstract class XmlValidationFailure<T> extends ValidationFailure<T> {
+public abstract class XmlValidationFailure extends ValidationFailure {
     private final int line;
     private final int column;
     private final String message;
     private String resourceURI;
 
-    protected XmlValidationFailure(String message, T modelObject, XMLStreamReader reader) {
-        super(modelObject);
+    protected XmlValidationFailure(String message, XMLStreamReader reader) {
         this.message = message;
         Location location = reader.getLocation();
         line = location.getLineNumber();

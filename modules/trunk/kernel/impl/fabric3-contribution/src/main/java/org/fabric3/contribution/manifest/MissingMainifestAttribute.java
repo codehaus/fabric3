@@ -25,8 +25,8 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
  *
  * @version $Revision$ $Date$
  */
-public class MissingMainifestAttribute extends XmlValidationFailure<String> {
-    public MissingMainifestAttribute(String message, String attributeName, XMLStreamReader reader) {
-        super(message, attributeName, reader);
+public class MissingMainifestAttribute extends XmlValidationFailure {
+    public MissingMainifestAttribute(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

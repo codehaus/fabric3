@@ -23,11 +23,11 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class ImplementationLoadFailure extends XmlValidationFailure<String> {
+public class ImplementationLoadFailure extends XmlValidationFailure {
     private Throwable cause;
 
-    public ImplementationLoadFailure(String message, String componentName, Throwable cause, XMLStreamReader reader) {
-        super(message, componentName, reader);
+    public ImplementationLoadFailure(String message, Throwable cause, XMLStreamReader reader) {
+        super(message, reader);
         this.cause = cause;
     }
 

@@ -25,9 +25,9 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
  *
  * @version $Rev$ $Date$
  */
-public class InvalidPOM extends XmlValidationFailure<String> {
+public class InvalidPOM extends XmlValidationFailure {
 
-    public InvalidPOM(String message, String element, XMLStreamReader reader) {
-        super(message, element, reader);
+    public InvalidPOM(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

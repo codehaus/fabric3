@@ -41,10 +41,10 @@ import javax.xml.stream.XMLStreamReader;
  *
  * @version $Rev$ $Date$
  */
-public class MissingAttribute extends XmlValidationFailure<String> {
+public class MissingAttribute extends XmlValidationFailure {
 
-    public MissingAttribute(String message, String attributeName, XMLStreamReader reader) {
-        super(message, attributeName, reader);
+    public MissingAttribute(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
 }

@@ -76,13 +76,13 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
         validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            MissingAttribute failure = new MissingAttribute("Service name not specified", "name", reader);
+            MissingAttribute failure = new MissingAttribute("Service name not specified", reader);
             context.addError(failure);
             return null;
         }
         String promote = reader.getAttributeValue(null, "promote");
         if (promote == null) {
-            MissingPromotion error = new MissingPromotion("Promotion not specied on composite service " + name, name, reader);
+            MissingPromotion error = new MissingPromotion("Promotion not specied on composite service " + name, reader);
             context.addError(error);
         }
         CompositeService def = new CompositeService(name, null, loaderHelper.getURI(promote));

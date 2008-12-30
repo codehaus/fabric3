@@ -26,12 +26,12 @@ import org.fabric3.model.type.component.ComponentDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentReferenceNotFound extends XmlValidationFailure<ComponentDefinition> {
+public class ComponentReferenceNotFound extends XmlValidationFailure {
     private String referenceName;
     private ComponentDefinition definition;
 
     public ComponentReferenceNotFound(String referenceName, ComponentDefinition definition, XMLStreamReader reader) {
-        super("The component " + definition.getName() + " does not have a reference " + referenceName, definition, reader);
+        super("The component " + definition.getName() + " does not have a reference " + referenceName, reader);
         this.referenceName = referenceName;
         this.definition = definition;
     }

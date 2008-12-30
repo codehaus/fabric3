@@ -21,11 +21,11 @@ import javax.xml.stream.XMLStreamReader;
 /**
  * @version $Revision$ $Date$
  */
-public class ElementLoadFailure extends XmlValidationFailure<Void> {
+public class ElementLoadFailure extends XmlValidationFailure {
     private Throwable cause;
 
     public ElementLoadFailure(String message, Throwable cause, XMLStreamReader reader) {
-        super(message, null, reader);
+        super(message, reader);
         this.cause = cause;
     }
 

@@ -77,7 +77,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             reader.nextTag();
             String name = reader.getAttributeValue(null, "name");
             if (name == null) {
-                context.addError(new MissingAttribute("Composite name not specified", "name", reader));
+                context.addError(new MissingAttribute("Composite name not specified", reader));
                 return;
             }
             Resource resource = new Resource(url, Constants.COMPOSITE_CONTENT_TYPE);

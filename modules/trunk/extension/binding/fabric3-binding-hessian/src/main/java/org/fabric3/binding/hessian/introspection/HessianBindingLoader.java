@@ -78,7 +78,7 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
 
             uri = reader.getAttributeValue(null, "uri");
             if (uri == null) {
-                MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", "uri", reader);
+                MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", reader);
                 introspectionContext.addError(failure);
                 return null;
             }
@@ -87,7 +87,7 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("The Hessian binding URI is not valid: " + uri, "uri", reader);
+            InvalidValue failure = new InvalidValue("The Hessian binding URI is not valid: " + uri, reader);
             introspectionContext.addError(failure);
         }
 

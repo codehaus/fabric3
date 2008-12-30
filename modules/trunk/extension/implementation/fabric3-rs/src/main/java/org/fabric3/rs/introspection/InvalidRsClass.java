@@ -18,19 +18,25 @@ package org.fabric3.rs.introspection;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
+
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class InvalidRsClass extends ValidationFailure<Class<?>> {
+public class InvalidRsClass extends ValidationFailure {
+    private Class<?> implClass;
 
     public InvalidRsClass(Class<?> implClass) {
-        super(implClass);
+        super();
+        this.implClass = implClass;
     }
 
     @Override
     public String getMessage() {
-        return String.format("Implementation class %s is not annotated with REST annotation %s or %s ", getValidatable().getName(), Path.class.getName(), Provider.class.getName());
+        return String.format("Implementation class %s is not annotated with REST annotation %s or %s ",
+                             implClass.getName(),
+                             Path.class.getName(),
+                             Provider.class.getName());
     }
 }

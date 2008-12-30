@@ -93,14 +93,14 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            MissingAttribute failure = new MissingAttribute("Reference name not specified", "name", reader);
+            MissingAttribute failure = new MissingAttribute("Reference name not specified", reader);
             context.addError(failure);
             return null;
         }
 
         List<URI> promotedUris = loaderHelper.parseListOfUris(reader, "promote");
         if (promotedUris == null || promotedUris.isEmpty()) {
-            MissingPromotion error = new MissingPromotion("Promotion not specied on composite reference " + name, name, reader);
+            MissingPromotion error = new MissingPromotion("Promotion not specied on composite reference " + name, reader);
             context.addError(error);
         }
         CompositeReference referenceDefinition = new CompositeReference(name, promotedUris);
@@ -113,7 +113,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                 referenceDefinition.setMultiplicity(multiplicity);
             }
         } catch (IllegalArgumentException e) {
-            InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, value, reader);
+            InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, reader);
             context.addError(failure);
         }
         boolean callback = false;

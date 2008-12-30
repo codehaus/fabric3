@@ -23,11 +23,11 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class DefinitionProcessingFailure extends XmlValidationFailure<Void> {
+public class DefinitionProcessingFailure extends XmlValidationFailure {
     private Throwable cause;
 
     public DefinitionProcessingFailure(String message, Throwable cause, XMLStreamReader reader) {
-        super(message, null, reader);
+        super(message, reader);
         this.cause = cause;
     }
 

@@ -95,7 +95,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
 
         String interfaze = reader.getAttributeValue(null, "interface");
         if (interfaze == null) {
-            MissingAttribute failure = new MissingAttribute("Interface attribute is required", "interface", reader);
+            MissingAttribute failure = new MissingAttribute("Interface attribute is required", reader);
             context.addError(failure);
             return;
         }
@@ -113,7 +113,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
         String wsdlLocation = reader.getAttributeValue(null, "wsdlLocation");
         if (wsdlLocation == null) {
             // We don't support auto dereferecing of namespace URI
-            MissingAttribute failure = new MissingAttribute("wsdlLocation Location is required", "wsdlLocation", reader);
+            MissingAttribute failure = new MissingAttribute("wsdlLocation Location is required", reader);
             context.addError(failure);
             return null;
         }

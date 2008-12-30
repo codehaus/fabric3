@@ -23,8 +23,8 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidWSDLLocation extends XmlValidationFailure<String> {
+public class InvalidWSDLLocation extends XmlValidationFailure {
     protected InvalidWSDLLocation(String message, String url, XMLStreamReader reader) {
-        super(message, url, reader);
+        super(message, reader);
     }
 }

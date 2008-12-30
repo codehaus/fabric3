@@ -40,12 +40,11 @@ import java.util.List;
 /**
  * @version $Revision$ $Date$
  */
-public class ArtifactValidationFailure extends ValidationFailure<Void> {
+public class ArtifactValidationFailure extends ValidationFailure {
     private List<ValidationFailure> failures;
     private String artifactName;
 
     public ArtifactValidationFailure(String artifactName) {
-        super(null);
         this.artifactName = artifactName;
         this.failures = new ArrayList<ValidationFailure>();
     }
@@ -66,4 +65,7 @@ public class ArtifactValidationFailure extends ValidationFailure<Void> {
         this.failures.addAll(failures);
     }
 
+    public String getMessage() {
+        return "Errors were reported in artifact " + artifactName;
+    }
 }

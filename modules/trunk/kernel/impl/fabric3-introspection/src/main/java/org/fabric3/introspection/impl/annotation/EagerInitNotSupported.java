@@ -39,14 +39,16 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class EagerInitNotSupported extends ValidationFailure<Class<?>> {
+public class EagerInitNotSupported extends ValidationFailure {
+    private Class<?> clazz;
 
     protected EagerInitNotSupported(Class<?> clazz) {
-        super(clazz);
+        super();
+        this.clazz = clazz;
     }
 
     public String getMessage() {
-        return getValidatable() + " is annotated with @EagerInit on a non-composite scope implementation. " +
+        return clazz.getName() + " is annotated with @EagerInit on a non-composite scope implementation. " +
                 "Eager initialization is only supported on composite scope implementations.";
     }
 }

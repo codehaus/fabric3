@@ -63,7 +63,7 @@ public class IntentLoader implements TypeLoader<Intent> {
                 String prefix = e.getPrefix();
                 URI uri = context.getContributionUri();
                 context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
-                        + " is invalid", prefix, reader));
+                        + " is invalid", reader));
                 return null;
             }
         }
@@ -82,7 +82,7 @@ public class IntentLoader implements TypeLoader<Intent> {
                     String prefix = e.getPrefix();
                     URI uri = context.getContributionUri();
                     context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
-                            + " is invalid", prefix, reader));
+                            + " is invalid", reader));
                     return null;
                 }
             }

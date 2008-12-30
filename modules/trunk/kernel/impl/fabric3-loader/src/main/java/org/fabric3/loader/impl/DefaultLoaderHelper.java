@@ -145,7 +145,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
             String prefix = e.getPrefix();
             URI uri = context.getContributionUri();
             context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the definitions.xml file in contribution " + uri
-                    + " is invalid", prefix, reader));
+                    + " is invalid", reader));
         }
 
     }

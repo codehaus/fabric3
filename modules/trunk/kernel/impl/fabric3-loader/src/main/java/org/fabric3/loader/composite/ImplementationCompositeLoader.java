@@ -118,7 +118,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             try {
                 url = new URL(introspectionContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlLocation, scdlLocation, reader);
+                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlLocation, reader);
                 introspectionContext.addError(failure);
                 return impl;
             }
@@ -149,7 +149,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlResource, scdlResource, reader);
+                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlResource, reader);
                 introspectionContext.addError(failure);
                 return impl;
             }
@@ -181,7 +181,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 throw new UnsupportedOperationException("scdlLocation or scdlResource must be supplied as no MetaDataStore is available");
             }
             if (nameAttr == null || nameAttr.length() == 0) {
-                MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+                MissingAttribute failure = new MissingAttribute("Missing name attribute", reader);
                 introspectionContext.addError(failure);
                 return null;
             }
@@ -192,7 +192,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol, introspectionContext);
                 if (element == null) {
                     String id = name.toString();
-                    MissingComposite failure = new MissingComposite("Composite with qualified name not found: " + id, id, reader);
+                    MissingComposite failure = new MissingComposite("Composite with qualified name not found: " + id, reader);
                     introspectionContext.addError(failure);
                     return impl;
                 }

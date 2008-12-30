@@ -21,11 +21,12 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidGroovySource extends ValidationFailure<String> {
+public class InvalidGroovySource extends ValidationFailure {
+    private String source;
     private Throwable cause;
 
     protected InvalidGroovySource(String source, Throwable cause) {
-        super(source);
+        this.source = source;
         this.cause = cause;
     }
 

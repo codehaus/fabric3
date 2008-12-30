@@ -78,7 +78,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             JavaImplementation implementation = new JavaImplementation();
             String persistenceUnit = reader.getAttributeValue(null, "persistenceUnit");
             if (persistenceUnit == null) {
-                MissingAttribute failure = new MissingAttribute("Missing attribute: persistenceUnit", "persistenceUnit", reader);
+                MissingAttribute failure = new MissingAttribute("Missing attribute: persistenceUnit", reader);
                 context.addError(failure);
                 return implementation;
             }

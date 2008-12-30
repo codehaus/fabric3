@@ -51,7 +51,7 @@ public class GroovyImplementationLoader implements TypeLoader<GroovyImplementati
         String scriptName = reader.getAttributeValue(null, "script");
 
         if (className == null && scriptName == null) {
-            MissingAttribute failure = new MissingAttribute("No Groovy script or class name specified", "class", reader);
+            MissingAttribute failure = new MissingAttribute("No Groovy script or class name specified", reader);
             context.addError(failure);
             return null;
         }

@@ -24,11 +24,11 @@ import org.fabric3.model.type.component.Property;
 /**
  * @version $Rev$ $Date$
  */
-public class RequiredPropertyNotProvided extends XmlValidationFailure<Property> {
+public class RequiredPropertyNotProvided extends XmlValidationFailure {
     private String componentName;
 
     public RequiredPropertyNotProvided(Property property, String componentName, XMLStreamReader reader) {
-        super("Component " + componentName + " has a required property " + property.getName() + " that is not set", property, reader);
+        super("Component " + componentName + " has a required property " + property.getName() + " that is not set", reader);
         this.componentName = componentName;
     }
 

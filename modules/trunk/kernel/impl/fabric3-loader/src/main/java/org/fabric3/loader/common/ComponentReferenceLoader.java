@@ -110,7 +110,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                 reference.setMultiplicity(multiplicity);
             }
         } catch (IllegalArgumentException e) {
-            InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, value, reader);
+            InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, reader);
             context.addError(failure);
         }
 

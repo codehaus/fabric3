@@ -41,15 +41,17 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Revision$ $Date$
  */
-public class MissingResource extends ValidationFailure<String> {
+public class MissingResource extends ValidationFailure {
     private String description;
+    private String name;
 
     public MissingResource(String description, String name) {
-        super(name);
+        super();
         this.description = description;
+        this.name = name;
     }
 
     public String getMessage() {
-        return description + ": " + getValidatable();
+        return description + ": " + name;
     }
 }

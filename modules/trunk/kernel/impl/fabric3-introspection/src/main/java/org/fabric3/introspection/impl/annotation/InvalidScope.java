@@ -39,15 +39,16 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidScope extends ValidationFailure<Class<?>> {
+public class InvalidScope extends ValidationFailure {
+    private Class<?> clazz;
     private String scopeName;
 
-    protected InvalidScope(Class<?> modelObject, String scopeName) {
-        super(modelObject);
+    protected InvalidScope(Class<?> clazz, String scopeName) {
+        this.clazz = clazz;
         this.scopeName = scopeName;
     }
 
     public String getMessage() {
-        return "Invalid scope " + scopeName + " specified on " + getValidatable().getName();
+        return "Invalid scope " + scopeName + " specified on " + clazz.getName();
     }
 }

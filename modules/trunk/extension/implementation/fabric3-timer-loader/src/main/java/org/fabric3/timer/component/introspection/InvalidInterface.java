@@ -22,12 +22,14 @@ import org.fabric3.timer.component.scdl.TimerImplementation;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidInterface extends ValidationFailure<TimerImplementation> {
+public class InvalidInterface extends ValidationFailure {
+    private TimerImplementation implementation;
+
     public InvalidInterface(TimerImplementation implementation) {
-        super(implementation);
+        this.implementation = implementation;
     }
 
     public String getMessage() {
-        return "Component must implement java.lang.Runnable: " + getValidatable().getImplementationClass();
+        return "Component must implement java.lang.Runnable: " + implementation.getImplementationClass();
     }
 }

@@ -24,12 +24,12 @@ import org.fabric3.model.type.component.ComponentDefinition;
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicateConfiguredProperty extends XmlValidationFailure<ComponentDefinition> {
+public class DuplicateConfiguredProperty extends XmlValidationFailure {
     private String propertyName;
     private ComponentDefinition definition;
 
     public DuplicateConfiguredProperty(String propertyName, ComponentDefinition definition, XMLStreamReader reader) {
-        super("The property " + propertyName + " on component " + definition.getName() + "is configured more than once", definition, reader);
+        super("The property " + propertyName + " on component " + definition.getName() + "is configured more than once", reader);
         this.propertyName = propertyName;
         this.definition = definition;
     }

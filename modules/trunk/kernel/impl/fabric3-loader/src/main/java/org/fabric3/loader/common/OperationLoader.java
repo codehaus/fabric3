@@ -67,7 +67,7 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
         OperationDefinition operationDefinition = new OperationDefinition();
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            MissingAttribute failure = new MissingAttribute("Operation name not specified", "name", reader);
+            MissingAttribute failure = new MissingAttribute("Operation name not specified", reader);
             context.addError(failure);
         }
         operationDefinition.setName(name);

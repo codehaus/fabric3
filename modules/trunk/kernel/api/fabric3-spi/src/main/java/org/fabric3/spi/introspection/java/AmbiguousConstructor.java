@@ -39,12 +39,15 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * @version $Rev: 5937 $ $Date: 2008-11-14 21:52:29 -0800 (Fri, 14 Nov 2008) $
  */
-public class AmbiguousConstructor extends ValidationFailure<Class<?>> {
+public class AmbiguousConstructor extends ValidationFailure {
+    private Class<?> clazz;
+
     public AmbiguousConstructor(Class<?> clazz) {
-        super(clazz);
+        super();
+        this.clazz = clazz;
     }
 
     public String getMessage() {
-        return "Multiple constructors are annotated with @Constructor in class " + getValidatable();
+        return "Multiple constructors are annotated with @Constructor in class " + clazz.getName();
     }
 }

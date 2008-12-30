@@ -28,12 +28,14 @@ import org.fabric3.model.type.java.MethodInjectionSite;
  *
  * @version $Rev$ $Date$
  */
-public class UnknownInjectionType extends ValidationFailure<InjectionSite> {
+public class UnknownInjectionType extends ValidationFailure {
+    private InjectionSite site;
     private InjectableAttributeType type;
     private String clazz;
 
     public UnknownInjectionType(InjectionSite site, InjectableAttributeType type, String clazz) {
-        super(site);
+        super();
+        this.site = site;
         this.type = type;
         this.clazz = clazz;
     }
@@ -43,7 +45,6 @@ public class UnknownInjectionType extends ValidationFailure<InjectionSite> {
     }
 
     public String getMessage() {
-        InjectionSite site = getValidatable();
         if (site instanceof FieldInjectionSite) {
             FieldInjectionSite field = (FieldInjectionSite) site;
             return "Unknow injection type " + type + " on field " + field.getName() + " in class " + clazz;

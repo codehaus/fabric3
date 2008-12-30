@@ -73,7 +73,7 @@ public class XmlContributionTypeIndexer implements XmlIndexer {
                     if (COMPOSITE.equals(qname)) {
                         String name = reader.getAttributeValue(null, "name");
                         if (name == null) {
-                            context.addError(new MissingAttribute("Composite name not specified", "name", reader));
+                            context.addError(new MissingAttribute("Composite name not specified", reader));
                             return;
                         }
                         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");

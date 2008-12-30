@@ -90,7 +90,7 @@ public class IncludeLoader implements TypeLoader<Include> {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+            MissingAttribute failure = new MissingAttribute("Missing name attribute", reader);
             context.addError(failure);
             return null;
         }
@@ -107,14 +107,14 @@ public class IncludeLoader implements TypeLoader<Include> {
                 url = new URL(context.getSourceBase(), scdlLocation);
                 return loadFromSideFile(name, cl, contributionUri, url, reader, context);
             } catch (MalformedURLException e) {
-                MissingComposite failure = new MissingComposite("Error parsing composite url: " + scdlResource, scdlResource, reader);
+                MissingComposite failure = new MissingComposite("Error parsing composite url: " + scdlResource, reader);
                 context.addError(failure);
                 return null;
             }
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlResource, scdlResource, reader);
+                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlResource, reader);
                 context.addError(failure);
                 return null;
             }
@@ -130,7 +130,7 @@ public class IncludeLoader implements TypeLoader<Include> {
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol, context);
                 if (element == null) {
                     String id = name.toString();
-                    MissingComposite failure = new MissingComposite("Composite file not found: " + id, id, reader);
+                    MissingComposite failure = new MissingComposite("Composite file not found: " + id, reader);
                     context.addError(failure);
                     return null;
                 }
@@ -154,7 +154,7 @@ public class IncludeLoader implements TypeLoader<Include> {
         try {
             composite = loader.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
-            InvalidValue failure = new InvalidValue("Error loading include", null, reader);
+            InvalidValue failure = new InvalidValue("Error loading include", reader);
             context.addError(failure);
             e.printStackTrace();
             return include;

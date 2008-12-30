@@ -21,28 +21,12 @@ package org.fabric3.host.contribution;
  *
  * @version $Rev$ $Date$
  */
-public abstract class ValidationFailure<T> {
-    private final T validatable;
+public abstract class ValidationFailure {
 
     /**
-     * Constructor specifying the validatable object associated with this failure.
+     * Returns the message associated with the error.
      *
-     * @param modelObject the model object associated with this failure
+     * @return the message associated with the error.
      */
-    protected ValidationFailure(T modelObject) {
-        this.validatable = modelObject;
-    }
-
-    /**
-     * Returns the object that failed validation.
-     *
-     * @return the object that failed validation
-     */
-    public T getValidatable() {
-        return validatable;
-    }
-
-    public String getMessage() {
-        return getClass().getName();
-    }
+    public abstract String getMessage();
 }

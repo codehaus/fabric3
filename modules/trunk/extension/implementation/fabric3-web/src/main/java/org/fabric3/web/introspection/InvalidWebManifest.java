@@ -23,12 +23,12 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Revision$ $Date$
  */
-public class InvalidWebManifest extends ValidationFailure<Void> {
+public class InvalidWebManifest extends ValidationFailure {
     private String message;
     private Throwable cause;
 
     public InvalidWebManifest(String message, Throwable cause) {
-        super(null);
+        super();
         this.message = message;
         this.cause = cause;
     }

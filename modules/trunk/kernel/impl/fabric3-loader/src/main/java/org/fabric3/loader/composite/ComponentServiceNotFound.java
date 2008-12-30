@@ -26,12 +26,12 @@ import org.fabric3.model.type.component.ComponentDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentServiceNotFound extends XmlValidationFailure<ComponentDefinition> {
+public class ComponentServiceNotFound extends XmlValidationFailure {
     private String serviceName;
     private ComponentDefinition definition;
 
     public ComponentServiceNotFound(String serviceName, ComponentDefinition definition, XMLStreamReader reader) {
-        super("The component " + definition.getName() + " does not have a service " + serviceName, definition, reader);
+        super("The component " + definition.getName() + " does not have a service " + serviceName, reader);
         this.serviceName = serviceName;
         this.definition = definition;
     }

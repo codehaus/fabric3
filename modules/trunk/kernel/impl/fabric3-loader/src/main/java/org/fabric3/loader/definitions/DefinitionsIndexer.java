@@ -83,7 +83,7 @@ public class DefinitionsIndexer implements XmlIndexer {
                     }
                     String nameAttr = reader.getAttributeValue(null, "name");
                     if (nameAttr == null) {
-                        context.addError(new MissingAttribute("Definition name not specified", "name", reader));
+                        context.addError(new MissingAttribute("Definition name not specified", reader));
                         return;
                     }
                     NamespaceContext namespaceContext = reader.getNamespaceContext();

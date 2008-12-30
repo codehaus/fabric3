@@ -21,12 +21,12 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidOSGiManifest extends ValidationFailure<String> {
+public class InvalidOSGiManifest extends ValidationFailure {
     private String message;
     private Exception ex;
 
     public InvalidOSGiManifest(String message, Exception ex) {
-        super(message);
+        super();
         this.message = message;
         this.ex = ex;
     }

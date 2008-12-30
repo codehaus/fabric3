@@ -75,7 +75,7 @@ public class JavaImportLoader implements TypeLoader<JavaImport> {
             PackageVersion packageVersion = new PackageVersion(version);
             return new PackageInfo(statement, packageVersion, minInclusive, required);
         } catch (IllegalArgumentException e) {
-            InvalidValue failure = new InvalidValue("Invalid import package version", version, reader, e);
+            InvalidValue failure = new InvalidValue("Invalid import package version", reader, e);
             context.addError(failure);
             return null;
         }
@@ -94,7 +94,7 @@ public class JavaImportLoader implements TypeLoader<JavaImport> {
         try {
             minimum = new PackageVersion(minVersion);
         } catch (IllegalArgumentException e) {
-            InvalidValue failure = new InvalidValue("Invalid minimum package version", minVersion, reader, e);
+            InvalidValue failure = new InvalidValue("Invalid minimum package version", reader, e);
             context.addError(failure);
             return null;
         }
@@ -102,7 +102,7 @@ public class JavaImportLoader implements TypeLoader<JavaImport> {
             try {
                 maximum = new PackageVersion(maxVersion);
             } catch (IllegalArgumentException e) {
-                InvalidValue failure = new InvalidValue("Invalid maximum package version", maxVersion, reader, e);
+                InvalidValue failure = new InvalidValue("Invalid maximum package version", reader, e);
                 context.addError(failure);
                 return null;
             }

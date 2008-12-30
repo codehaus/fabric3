@@ -64,7 +64,7 @@ public class DeploymentPlanIndexer implements XmlIndexer {
         assert PLAN.equals(qname);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            context.addError(new MissingAttribute("Deployment plan name not specified", "name", reader));
+            context.addError(new MissingAttribute("Deployment plan name not specified", reader));
             return;
         }
         QName planQName = new QName(PLAN_NAMESPACE, name);

@@ -108,7 +108,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            MissingAttribute failure = new MissingAttribute("Component name not specified", "name", reader);
+            MissingAttribute failure = new MissingAttribute("Component name not specified", reader);
             context.addError(failure);
             return null;
         }
@@ -128,12 +128,13 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             if (COMPONENT.equals(elementName)) {
                 // the reader has hit the end of the component definition without an implementation being specified
                 MissingComponentImplementation error =
-                        new MissingComponentImplementation("The component " + name + " must specify an implementation", name, reader);
+                        new MissingComponentImplementation("The component " + name + " must specify an implementation", reader);
                 context.addError(error);
                 return componentDefinition;
             } else if (PROPERTY.equals(elementName) ||REFERENCE.equals(elementName)  ||SERVICE.equals(elementName)  ) {
                 MissingComponentImplementation error =
-                        new MissingComponentImplementation("The component " + name + " must specify an implementation as the first child element", name, reader);
+                        new MissingComponentImplementation("The component " + name + " must specify an implementation as the first child element",
+                                                           reader);
                 context.addError(error);
                 return componentDefinition;
             }
@@ -289,7 +290,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                 Integer level = Integer.valueOf(initLevel);
                 componentDefinition.setInitLevel(level);
             } catch (NumberFormatException e) {
-                InvalidValue failure = new InvalidValue("Component initialization level must be an integer: " + initLevel, initLevel, reader);
+                InvalidValue failure = new InvalidValue("Component initialization level must be an integer: " + initLevel, reader);
                 context.addError(failure);
             }
         }

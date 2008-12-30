@@ -23,10 +23,10 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicateProperty extends XmlValidationFailure<String> {
+public class DuplicateProperty extends XmlValidationFailure {
 
     public DuplicateProperty(String propertyName, XMLStreamReader reader) {
-        super("The property " + propertyName + "is configured more than once on the component ", propertyName, reader);
+        super("The property " + propertyName + "is configured more than once on the component ", reader);
     }
 
 }

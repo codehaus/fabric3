@@ -74,7 +74,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
             String planName = reader.getAttributeValue(null, "name");
             if (planName == null) {
                 // this won't happen as it is checked in the indexer
-                context.addError(new MissingAttribute("Deployment plan name not specified", "name", reader));
+                context.addError(new MissingAttribute("Deployment plan name not specified", reader));
                 return;
             }
             DeploymentPlan plan = new DeploymentPlan(planName);
@@ -115,13 +115,13 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
     private boolean processDeployableMapping(DeploymentPlan plan, XMLStreamReader reader, IntrospectionContext context) {
         String deployableName = reader.getAttributeValue(null, "deployable");
         if (deployableName == null) {
-            context.addError(new MissingAttribute("Deployable name not specified in mapping", "deployable", reader));
+            context.addError(new MissingAttribute("Deployable name not specified in mapping", reader));
             return false;
         }
         QName deployable = LoaderUtil.getQName(deployableName, null, reader.getNamespaceContext());
         String zoneName = reader.getAttributeValue(null, "zone");
         if (zoneName == null) {
-            context.addError(new MissingAttribute("Zone not specified in mapping", "zone", reader));
+            context.addError(new MissingAttribute("Zone not specified in mapping", reader));
             return false;
         }
         plan.addDeployableMapping(deployable, zoneName);

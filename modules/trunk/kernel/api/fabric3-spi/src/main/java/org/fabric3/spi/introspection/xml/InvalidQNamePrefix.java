@@ -21,9 +21,9 @@ import javax.xml.stream.XMLStreamReader;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidQNamePrefix extends XmlValidationFailure<String> {
+public class InvalidQNamePrefix extends XmlValidationFailure {
 
-    public InvalidQNamePrefix(String message, String modelObject, XMLStreamReader reader) {
-        super(message, modelObject, reader);
+    public InvalidQNamePrefix(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

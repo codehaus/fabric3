@@ -64,7 +64,7 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
             uri = reader.getAttributeValue(null, "uri");
             String transferMode = reader.getAttributeValue(null, "mode");
             if (uri == null) {
-                MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", "uri", reader);
+                MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", reader);
                 introspectionContext.addError(failure);
                 return null;
             }
@@ -101,10 +101,10 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
             }
 
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("The FTP binding URI is not valid: " + uri, "uri", reader);
+            InvalidValue failure = new InvalidValue("The FTP binding URI is not valid: " + uri, reader);
             introspectionContext.addError(failure);
         } catch (UnsupportedEncodingException e) {
-            InvalidValue failure = new InvalidValue("Invalid encoding for URI: " + uri + "\n" + e, "uri", reader);
+            InvalidValue failure = new InvalidValue("Invalid encoding for URI: " + uri + "\n" + e, reader);
             introspectionContext.addError(failure);
         }
 

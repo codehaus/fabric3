@@ -77,7 +77,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
         validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+            MissingAttribute failure = new MissingAttribute("Missing name attribute", reader);
             context.addError(failure);
             return null;
         }

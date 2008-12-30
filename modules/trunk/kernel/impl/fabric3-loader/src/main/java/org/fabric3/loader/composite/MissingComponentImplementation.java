@@ -25,10 +25,10 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
  *
  * @version $Rev$ $Date$
  */
-public class MissingComponentImplementation extends XmlValidationFailure<String> {
+public class MissingComponentImplementation extends XmlValidationFailure {
 
-    public MissingComponentImplementation(String message, String name, XMLStreamReader reader) {
-        super(message, name, reader);
+    public MissingComponentImplementation(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
 }

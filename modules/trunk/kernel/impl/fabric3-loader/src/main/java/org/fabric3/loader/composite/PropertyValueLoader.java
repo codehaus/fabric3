@@ -80,7 +80,7 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
         validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
-            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+            MissingAttribute failure = new MissingAttribute("Missing name attribute", reader);
             context.addError(failure);
             return null;
         }
@@ -99,7 +99,7 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
                 LoaderUtil.skipToEndElement(reader);
                 return new PropertyValue(name, uri);
             } catch (URISyntaxException e) {
-                InvalidValue failure = new InvalidValue("File specified for property " + name + " is invalid: " + file, name, reader, e);
+                InvalidValue failure = new InvalidValue("File specified for property " + name + " is invalid: " + file, reader, e);
                 context.addError(failure);
                 return null;
             }
@@ -114,7 +114,7 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
         String element = reader.getAttributeValue(null, "element");
         if (type != null) {
             if (element != null) {
-                InvalidValue failure = new InvalidValue("Cannot supply both type and element for property: " + name, name, reader);
+                InvalidValue failure = new InvalidValue("Cannot supply both type and element for property: " + name, reader);
                 context.addError(failure);
                 return null;
             }

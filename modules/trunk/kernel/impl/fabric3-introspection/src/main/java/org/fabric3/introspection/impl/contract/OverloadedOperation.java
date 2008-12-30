@@ -25,14 +25,16 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Rev$ $Date$
  */
-public class OverloadedOperation extends ValidationFailure<Method> {
+public class OverloadedOperation extends ValidationFailure {
+    private Method method;
 
     public OverloadedOperation(Method method) {
-        super(method);
+        super();
+        this.method = method;
     }
 
     public String getMessage() {
-        return "Overloaded operation not allowed on remotable interface: " + getValidatable();
+        return "Overloaded operation not allowed on remotable interface: " + method;
     }
 
 }

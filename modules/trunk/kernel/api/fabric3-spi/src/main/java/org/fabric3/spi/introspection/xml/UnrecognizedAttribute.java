@@ -41,7 +41,8 @@ import javax.xml.stream.XMLStreamReader;
  *
  * @version $Rev$ $Date$
  */
-public class UnrecognizedAttribute extends XmlValidationFailure<String> {
+public class UnrecognizedAttribute extends XmlValidationFailure {
+    String name;
 
     /**
      * Constructor.
@@ -50,11 +51,12 @@ public class UnrecognizedAttribute extends XmlValidationFailure<String> {
      * @param reader the StAX reader positioned on the unrecognized element
      */
     public UnrecognizedAttribute(String name, XMLStreamReader reader) {
-        super("Unrecognized element", name, reader);
+        super("Unrecognized element", reader);
+        this.name = name;
     }
 
     public String getMessage() {
-        StringBuffer b = new StringBuffer("The attribute ").append(getValidatable()).append(" specified in ").append(getResourceURI()).append(
+        StringBuffer b = new StringBuffer("The attribute ").append(name).append(" specified in ").append(getResourceURI()).append(
                 " at ").append(getLine()).append(",").append(getColumn()).append(" was not recognized.");
         return b.toString();
     }

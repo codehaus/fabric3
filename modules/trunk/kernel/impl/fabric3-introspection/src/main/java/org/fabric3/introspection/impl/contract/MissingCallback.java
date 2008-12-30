@@ -24,13 +24,15 @@ import org.fabric3.host.contribution.ValidationFailure;
  * @version $Rev$ $Date$
  */
 
-public class MissingCallback extends ValidationFailure<Class<?>> {
+public class MissingCallback extends ValidationFailure {
+    private Class<?> clazz;
 
     public MissingCallback(Class<?> clazz) {
-        super(clazz);
+        super();
+        this.clazz = clazz;
     }
 
     public String getMessage() {
-        return "No interface was specified in the @Callback annotation on the service interface " + getValidatable().getName();
+        return "No interface was specified in the @Callback annotation on the service interface " + clazz.getName();
     }
 }

@@ -23,13 +23,14 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Revision$ $Date$
  */
-public class IncompatibleReferenceDefinitions extends ValidationFailure<String> {
+public class IncompatibleReferenceDefinitions extends ValidationFailure {
+    private String name;
 
     public IncompatibleReferenceDefinitions(String name) {
-        super(name);
+        this.name = name;
     }
 
     public String getMessage() {
-        return "Reference contracts do not match for reference: " + getValidatable();
+        return "Reference contracts do not match for reference: " + name;
     }
 }

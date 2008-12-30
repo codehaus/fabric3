@@ -16,29 +16,30 @@
  */
 package org.fabric3.maven.contribution;
 
-import org.fabric3.host.contribution.ValidationFailure;
-
 import java.io.File;
+
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Validation warning indicating that the possible contribution file with the given File could not be loaded.
  *
  * @version $Rev$ $Date$
  */
-public class ContributionIndexingFailure extends ValidationFailure<File> {
+public class ContributionIndexingFailure extends ValidationFailure {
+    private File file;
     private Exception ex;
 
     public ContributionIndexingFailure(File file, Exception ex) {
-        super(file);
+        this.file = file;
         this.ex = ex;
     }
 
     /**
-     * Retrieves the message for the failure that includes both the standard ValidationFailure message along with
-     * details of the exception.
+     * Retrieves the message for the failure that includes both the standard ValidationFailure message along with details of the exception.
+     *
      * @return the mesasge.
      */
     public String getMessage() {
-        return super.getMessage() + " " + ex;
+        return "Error indexing file " + file + "\n " + ex;
     }
 }

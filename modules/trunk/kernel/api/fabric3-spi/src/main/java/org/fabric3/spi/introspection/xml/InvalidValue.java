@@ -23,15 +23,15 @@ import javax.xml.stream.XMLStreamReader;
  *
  * @version $Rev$ $Date$
  */
-public class InvalidValue extends XmlValidationFailure<String> {
+public class InvalidValue extends XmlValidationFailure {
     private Throwable cause;
 
-    public InvalidValue(String message, String value, XMLStreamReader reader) {
-        super(message, value, reader);
+    public InvalidValue(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
-    public InvalidValue(String message, String value, XMLStreamReader reader, Throwable cause) {
-        super(message, value, reader);
+    public InvalidValue(String message, XMLStreamReader reader, Throwable cause) {
+        super(message, reader);
         this.cause = cause;
     }
 

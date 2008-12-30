@@ -83,7 +83,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
                         MissingMainifestAttribute failure =
-                                new MissingMainifestAttribute("Composite attribute must be specified", "composite", reader);
+                                new MissingMainifestAttribute("Composite attribute must be specified", reader);
                         context.addError(failure);
                         return null;
                     }
@@ -97,7 +97,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                         if (ns == null) {
                             URI uri = context.getContributionUri();
                             context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in the contribution manifest file for "
-                                    + uri + " is invalid", prefix, reader));
+                                    + uri + " is invalid", reader));
                             return null;
                         }
                         qName = new QName(ns, localPart, prefix);

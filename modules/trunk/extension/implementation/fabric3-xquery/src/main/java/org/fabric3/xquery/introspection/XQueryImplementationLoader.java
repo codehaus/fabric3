@@ -47,7 +47,7 @@ public class XQueryImplementationLoader implements TypeLoader<XQueryImplementati
         String location = reader.getAttributeValue(null, "location");
 
         if (location == null) {
-            MissingAttribute failure = new MissingAttribute("No XQuery file location specified", "class", reader);
+            MissingAttribute failure = new MissingAttribute("No XQuery file location specified", reader);
             introspectionContext.addError(failure);
             return null;
         }

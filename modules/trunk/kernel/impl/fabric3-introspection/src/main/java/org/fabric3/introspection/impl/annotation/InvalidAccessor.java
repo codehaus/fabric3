@@ -41,12 +41,14 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Revision$ $Date$
  */
-public class InvalidAccessor extends ValidationFailure<Class<?>> {
+public class InvalidAccessor extends ValidationFailure {
     private String message;
+    private Class<?> implClass;
 
     public InvalidAccessor(String message, Class<?> implClass) {
-        super(implClass);
+        super();
         this.message = message;
+        this.implClass = implClass;
     }
 
     public String getMessage() {

@@ -21,12 +21,15 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * @version $Rev$ $Date$
  */
-public class NoConstructorFound extends ValidationFailure<Class<?>> {
+public class NoConstructorFound extends ValidationFailure {
+    private Class<?> clazz;
+
     public NoConstructorFound(Class<?> clazz) {
-        super(clazz);
+        super();
+        this.clazz = clazz;
     }
 
     public String getMessage() {
-        return "The class has multiple constructors, use @Constructor to select one: " + getValidatable();
+        return "The class has multiple constructors, use @Constructor to select one: " + clazz.getName();
     }
 }

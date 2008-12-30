@@ -25,9 +25,9 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
  *
  * @version $Rev$ $Date$
  */
-public class MissingPackage extends XmlValidationFailure<String> {
+public class MissingPackage extends XmlValidationFailure {
 
     public MissingPackage(String message, XMLStreamReader reader) {
-        super(message, null, reader);
+        super(message, reader);
     }
 }

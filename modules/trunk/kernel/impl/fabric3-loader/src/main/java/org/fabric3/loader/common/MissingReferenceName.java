@@ -41,10 +41,10 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Rev$ $Date$
  */
-public class MissingReferenceName extends XmlValidationFailure<Void> {
+public class MissingReferenceName extends XmlValidationFailure {
 
     public MissingReferenceName(XMLStreamReader reader) {
-        super("No reference name specified", null, reader);
+        super("No reference name specified", reader);
     }
 
 }

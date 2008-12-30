@@ -45,10 +45,10 @@ public class ValidationUtilsTestCase extends TestCase {
         failures.add(new Failure());
     }
 
-    private static class Failure extends ValidationFailure<Object> {
+    private static class Failure extends ValidationFailure {
 
         public Failure() {
-            super(null);
+            super();
         }
 
         public String getMessage() {

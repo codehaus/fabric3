@@ -23,15 +23,15 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidTimerExpression extends XmlValidationFailure<String> {
+public class InvalidTimerExpression extends XmlValidationFailure {
     private Throwable cause;
 
     public InvalidTimerExpression(String message, XMLStreamReader reader) {
-        super(message, null, reader);
+        super(message, reader);
     }
 
-    public InvalidTimerExpression(String message, String value, XMLStreamReader reader, Throwable cause) {
-        super(message, value, reader);
+    public InvalidTimerExpression(String message, XMLStreamReader reader, Throwable cause) {
+        super(message, reader);
         this.cause = cause;
     }
 

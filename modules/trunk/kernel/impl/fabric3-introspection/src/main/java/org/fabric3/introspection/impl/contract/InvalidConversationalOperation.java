@@ -43,13 +43,15 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Rev$ $Date$
  */
-public class InvalidConversationalOperation extends ValidationFailure<Method> {
+public class InvalidConversationalOperation extends ValidationFailure {
+    private Method method;
 
     public InvalidConversationalOperation(Method method) {
-        super(method);
+        super();
+        this.method = method;
     }
 
     public String getMessage() {
-        return "Method is marked as end conversation but contract is not conversational: " + getValidatable();
+        return "Method is marked as end conversation but contract is not conversational: " + method;
     }
 }

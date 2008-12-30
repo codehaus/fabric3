@@ -97,7 +97,6 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
                 && data.getFireOnce() == UNSPECIFIED) {
             MissingAttribute failure =
                     new MissingAttribute("A cron expression, fixed rate, repeat interval, or fire once time must be specified on the timer component",
-                                         null,
                                          reader);
             context.addError(failure);
         }
@@ -108,7 +107,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
 
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            MissingAttribute failure = new MissingAttribute("The class attribute was not specified", "class", reader);
+            MissingAttribute failure = new MissingAttribute("The class attribute was not specified", reader);
             context.addError(failure);
             LoaderUtil.skipToEndElement(reader);
             return false;
@@ -141,7 +140,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
                 data.setCronExpression(cronExpression);
             } catch (ParseException e) {
                 InvalidTimerExpression failure =
-                        new InvalidTimerExpression("Cron expression is invalid: " + cronExpression, cronExpression, reader, e);
+                        new InvalidTimerExpression("Cron expression is invalid: " + cronExpression, reader, e);
                 introspectionContext.addError(failure);
             }
         }
@@ -160,7 +159,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
                 data.setRepeatInterval(repeat);
             } catch (NumberFormatException e) {
                 InvalidTimerExpression failure =
-                        new InvalidTimerExpression("Repeat interval is invalid: " + repeatInterval, repeatInterval, reader, e);
+                        new InvalidTimerExpression("Repeat interval is invalid: " + repeatInterval, reader, e);
                 introspectionContext.addError(failure);
             }
         }
@@ -183,7 +182,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
                 data.setFixedRate(rate);
             } catch (NumberFormatException e) {
                 InvalidTimerExpression failure =
-                        new InvalidTimerExpression("Fixed rate interval is invalid: " + fixedRate, fixedRate, reader, e);
+                        new InvalidTimerExpression("Fixed rate interval is invalid: " + fixedRate, reader, e);
                 introspectionContext.addError(failure);
             }
         }
@@ -210,7 +209,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
                 data.setFireOnce(rate);
             } catch (NumberFormatException e) {
                 InvalidTimerExpression failure =
-                        new InvalidTimerExpression("Fire once time is invalid: " + time, time, reader, e);
+                        new InvalidTimerExpression("Fire once time is invalid: " + time, reader, e);
                 introspectionContext.addError(failure);
             }
         }

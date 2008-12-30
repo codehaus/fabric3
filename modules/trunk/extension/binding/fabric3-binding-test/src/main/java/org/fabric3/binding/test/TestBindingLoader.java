@@ -61,14 +61,14 @@ public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
         try {
             uri = reader.getAttributeValue(null, "uri");
             if (uri == null) {
-                MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", "uri", reader);
+                MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", reader);
                 context.addError(failure);
                 return null;
             } else {
                 definition = new TestBindingDefinition(new URI(uri), loaderHelper.loadKey(reader));
             }
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("The Burlap binding URI is not valid: " + uri, "uri", reader);
+            InvalidValue failure = new InvalidValue("The Burlap binding URI is not valid: " + uri, reader);
             context.addError(failure);
         }
         LoaderUtil.skipToEndElement(reader);

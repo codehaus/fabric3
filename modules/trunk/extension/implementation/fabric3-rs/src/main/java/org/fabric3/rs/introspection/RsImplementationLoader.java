@@ -58,20 +58,20 @@ public class RsImplementationLoader implements TypeLoader<JavaImplementation> {
         URI webAppURI = null;
 
         if (className == null) {
-            MissingAttribute failure = new MissingAttribute("No class name specified", "class", reader);
+            MissingAttribute failure = new MissingAttribute("No class name specified", reader);
             context.addError(failure);
             return null;
         }
 
         if (webApp == null) {
-            MissingAttribute failure = new MissingAttribute("No web application URI specified", "uri", reader);
+            MissingAttribute failure = new MissingAttribute("No web application URI specified", reader);
             context.addError(failure);
             return null;
         }
         try {
             webAppURI = new URI(webApp);
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("invalid URI value", "uri", reader);
+            InvalidValue failure = new InvalidValue("invalid URI value", reader);
             context.addError(failure);
             return null;
         }

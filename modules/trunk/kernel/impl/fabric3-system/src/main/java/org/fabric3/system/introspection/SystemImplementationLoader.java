@@ -72,7 +72,7 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
         validateAttributes(reader, introspectionContext);
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            MissingAttribute failure = new MissingAttribute("Implementation class must be specified using the class attribute", "class", reader);
+            MissingAttribute failure = new MissingAttribute("Implementation class must be specified using the class attribute", reader);
             introspectionContext.addError(failure);
             return null;
         }

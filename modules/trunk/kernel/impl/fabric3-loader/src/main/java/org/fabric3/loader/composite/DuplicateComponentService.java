@@ -23,11 +23,11 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicateComponentService extends XmlValidationFailure<String> {
+public class DuplicateComponentService extends XmlValidationFailure {
     private String componentName;
 
     public DuplicateComponentService(String referenceName, String componentName, XMLStreamReader reader) {
-        super("The service " + referenceName + "is configured more than once on the component ", referenceName, reader);
+        super("The service " + referenceName + "is configured more than once on the component ", reader);
         this.componentName = componentName;
     }
 

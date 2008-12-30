@@ -42,7 +42,8 @@ import javax.xml.stream.XMLStreamReader;
  *
  * @version $Rev$ $Date$
  */
-public class UnrecognizedElement extends XmlValidationFailure<QName> {
+public class UnrecognizedElement extends XmlValidationFailure {
+    private QName name;
 
     /**
      * Constructor that indicates which resource could not be found. The supplied parameter is also returned as the message.
@@ -50,11 +51,12 @@ public class UnrecognizedElement extends XmlValidationFailure<QName> {
      * @param reader the StAX reader positioned on the unrecognized element
      */
     public UnrecognizedElement(XMLStreamReader reader) {
-        super("Unrecognized element", reader.getName(), reader);
+        super("Unrecognized element", reader);
+        name = reader.getName();
     }
 
     public String getMessage() {
-        StringBuffer b = new StringBuffer("The element ").append(getValidatable()).append(" specified in ").append(getResourceURI()).append(
+        StringBuffer b = new StringBuffer("The element ").append(name).append(" specified in ").append(getResourceURI()).append(
                 " at ").append(getLine()).append(",").append(getColumn()).append(" was not recognized. If this is not a typo, check to").append(
                 " ensure extensions are configured properly.");
         return b.toString();

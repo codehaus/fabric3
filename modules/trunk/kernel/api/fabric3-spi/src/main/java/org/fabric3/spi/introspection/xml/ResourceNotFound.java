@@ -39,8 +39,8 @@ import javax.xml.stream.XMLStreamReader;
 /**
  * @version $Revision$ $Date$
  */
-public class ResourceNotFound extends XmlValidationFailure<String> {
-    public ResourceNotFound(String message, String modelObject, XMLStreamReader reader) {
-        super(message, modelObject, reader);
+public class ResourceNotFound extends XmlValidationFailure {
+    public ResourceNotFound(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

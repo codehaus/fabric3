@@ -24,15 +24,17 @@ import org.fabric3.host.contribution.ValidationFailure;
  *
  * @version $Revision$ $Date$
  */
-public class IllegalConversationalReferenceInjection extends ValidationFailure<ReferenceDefinition> {
+public class IllegalConversationalReferenceInjection extends ValidationFailure {
+    private ReferenceDefinition definition;
     private String servletName;
 
     public IllegalConversationalReferenceInjection(ReferenceDefinition definition, String servletName) {
-        super(definition);
+        super();
+        this.definition = definition;
         this.servletName = servletName;
     }
 
     public String getMessage() {
-        return "Cannot inject a conversational serivce for reference " + getValidatable().getName() + " on servlet " + servletName;
+        return "Cannot inject a conversational serivce for reference " + definition.getName() + " on servlet " + servletName;
     }
 }

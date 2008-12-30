@@ -99,7 +99,7 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
             if (uri == null) {
-                MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", "uri", reader);
+                MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", reader);
                 introspectionContext.addError(failure);
                 bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
             } else {
@@ -115,10 +115,10 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             // TODO Add rest of the WSDL support
 
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("The web services binding URI is not a valid: " + uri, "uri", reader);
+            InvalidValue failure = new InvalidValue("The web services binding URI is not a valid: " + uri, reader);
             introspectionContext.addError(failure);
         } catch (UnsupportedEncodingException e) {
-            InvalidValue failure = new InvalidValue("Invalid encoding for URI: " + uri + "\n" + e, "uri", reader);
+            InvalidValue failure = new InvalidValue("Invalid encoding for URI: " + uri + "\n" + e, reader);
             introspectionContext.addError(failure);
         }
 

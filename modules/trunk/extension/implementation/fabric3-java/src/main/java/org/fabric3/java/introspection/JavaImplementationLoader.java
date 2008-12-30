@@ -53,7 +53,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            MissingAttribute failure = new MissingAttribute("The class attribute was not specified", "class", reader);
+            MissingAttribute failure = new MissingAttribute("The class attribute was not specified", reader);
             introspectionContext.addError(failure);
             LoaderUtil.skipToEndElement(reader);
             return implementation;
