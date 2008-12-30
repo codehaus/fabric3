@@ -116,7 +116,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
-                DuplicateProperty error = new DuplicateProperty(parent.getUri(), name);
+                DuplicateProperty error = new DuplicateProperty(name, parent.getUri(), parent.getDefinition().getContributionUri());
                 change.addError(error);
             } else {
                 change.addProperty(name, property.getDefaultValue());

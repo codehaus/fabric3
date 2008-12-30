@@ -23,8 +23,8 @@ import org.fabric3.host.domain.AssemblyFailure;
 public class WireTargetNotFound extends AssemblyFailure {
     private URI targetUri;
 
-    public WireTargetNotFound(URI targetUri, URI compositeUri) {
-        super(compositeUri);
+    public WireTargetNotFound(URI targetUri, URI compositeUri, URI contributionUri) {
+        super(compositeUri, contributionUri);
         this.targetUri = targetUri;
     }
 

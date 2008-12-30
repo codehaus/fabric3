@@ -19,28 +19,19 @@ package org.fabric3.fabric.instantiator.target;
 import java.net.URI;
 
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.spi.model.instance.LogicalReference;
 
 public class TargetComponentNotFound extends AssemblyFailure {
-    private LogicalReference reference;
+    private URI referenceUri;
     private URI targetUri;
 
-    public TargetComponentNotFound(LogicalReference reference, URI targetUri) {
-        super(reference.getUri());
-        this.reference = reference;
+    public TargetComponentNotFound(URI referenceUri, URI targetUri, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
+        this.referenceUri = referenceUri;
         this.targetUri = targetUri;
     }
 
-    public LogicalReference getReference() {
-        return reference;
-    }
-
-    public URI getTargetUri() {
-        return targetUri;
-    }
-
     public String getMessage() {
-        return "Target component for reference " + reference.getUri() + " not found: " + targetUri;
+        return "Target component for reference " + referenceUri + " not found: " + targetUri;
     }
 
 }

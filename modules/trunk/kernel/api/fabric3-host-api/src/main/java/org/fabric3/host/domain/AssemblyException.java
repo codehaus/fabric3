@@ -56,7 +56,7 @@ public class AssemblyException extends DeploymentException {
             // sort the errors by component
             Collections.sort(sorted, COMPARATOR);
             for (AssemblyFailure error : sorted) {
-                writer.write(error.getMessage());
+                writer.write(error.getMessage() + " (" + error.getContributionUri() + ")");
                 writer.write("\n\n");
             }
         }

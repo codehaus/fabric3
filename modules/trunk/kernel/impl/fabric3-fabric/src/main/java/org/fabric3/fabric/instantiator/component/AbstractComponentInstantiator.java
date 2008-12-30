@@ -42,13 +42,13 @@ import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.OperationDefinition;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.OperationDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -124,7 +124,9 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                     try {
                         value = deriveValueFromXPath(propertyValue.getSource(), component.getParent());
                     } catch (XPathExpressionException e) {
-                        InvalidProperty error = new InvalidProperty(component.getUri(), name, e);
+                        URI uri = component.getUri();
+                        URI contributionUri = component.getDefinition().getContributionUri();
+                        InvalidProperty error = new InvalidProperty(name, e, uri, contributionUri);
                         change.addError(error);
                         return;
                     }
@@ -136,7 +138,9 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
             }
             if (property.isRequired() && value == null) {
                 // The XPath expression returned an empty value. Since the property is required, throw an exception
-                PropertySourceNotFound error = new PropertySourceNotFound(component.getUri(), name);
+                URI uri = component.getUri();
+                URI contributionUri = component.getDefinition().getContributionUri();
+                PropertySourceNotFound error = new PropertySourceNotFound(name, uri, contributionUri);
                 change.addError(error);
             } else if (!property.isRequired() && value == null) {
                 // The XPath expression returned an empty value. Since the property is optional, ignore it
@@ -215,11 +219,15 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
         try {
             return documentLoader.load(file);
         } catch (IOException e) {
-            InvalidPropertyFile error = new InvalidPropertyFile(parent.getUri(), name, e, file);
+            URI uri = parent.getUri();
+            URI contributionUri = parent.getDefinition().getContributionUri();
+            InvalidPropertyFile error = new InvalidPropertyFile(name, e, file, uri, contributionUri);
             change.addError(error);
             return null;
         } catch (SAXException e) {
-            InvalidPropertyFile error = new InvalidPropertyFile(parent.getUri(), name, e, file);
+            URI uri = parent.getUri();
+            URI contributionUri = parent.getDefinition().getContributionUri();
+            InvalidPropertyFile error = new InvalidPropertyFile(name, e, file, uri, contributionUri);
             change.addError(error);
             return null;
         }

@@ -19,26 +19,19 @@ package org.fabric3.fabric.instantiator;
 import java.net.URI;
 
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.spi.model.instance.Bindable;
 
 public class ServiceNotFound extends AssemblyFailure {
     private String message;
-    private Bindable bindable;
-    private URI targetUri;
+    private URI serviceUri;
 
-    public ServiceNotFound(String message, Bindable bindable, URI targetUri) {
-        super(bindable.getParent().getUri());
+    public ServiceNotFound(String message, URI serviceUri, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.message = message;
-        this.bindable = bindable;
-        this.targetUri = targetUri;
+        this.serviceUri = serviceUri;
     }
 
-    public Bindable getBindable() {
-        return bindable;
-    }
-
-    public URI getTargetUri() {
-        return targetUri;
+    public URI getServiceUri() {
+        return serviceUri;
     }
 
     public String getMessage() {

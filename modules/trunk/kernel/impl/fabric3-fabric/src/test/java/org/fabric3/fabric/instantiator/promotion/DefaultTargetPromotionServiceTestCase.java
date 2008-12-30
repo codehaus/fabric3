@@ -25,9 +25,11 @@ import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFound;
+import org.fabric3.fabric.instantiator.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.fabric.instantiator.ServiceNotFound;
-import org.fabric3.fabric.instantiator.PromotionResolutionService;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -36,8 +38,8 @@ import org.fabric3.system.scdl.SystemImplementation;
 
 public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
-    private PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
-    private LogicalCompositeComponent domain = new LogicalCompositeComponent(URI.create("fabric3://runtime"), null, null);
+    private PromotionResolutionService promotionResolutionService;
+    private LogicalCompositeComponent domain;
 
     public void testNoComponentForPromotedService() {
 
@@ -224,4 +226,12 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         promotionResolutionService.resolve(logicalReference, change);
     }
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        promotionResolutionService  = new DefaultPromotionResolutionService();
+        ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>("domain");
+        URI uri = URI.create("fabric3://runtime");
+        domain = new LogicalCompositeComponent(uri, definition, null);
+    }
 }

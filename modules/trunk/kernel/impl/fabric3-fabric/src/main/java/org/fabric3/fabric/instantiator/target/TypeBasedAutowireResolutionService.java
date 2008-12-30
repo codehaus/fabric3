@@ -89,8 +89,12 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
 
         boolean targetted = !logicalReference.getWires().isEmpty();
         if (!targetted && logicalReference.getDefinition().isRequired() && logicalReference.getBindings().isEmpty()) {
-            String uri = logicalReference.getUri().toString();
-            change.addError(new ReferenceNotFound("Unable to resolve reference " + uri, component, uri));
+            String referenceUri = logicalReference.getUri().toString();
+            URI componentUri = component.getUri();
+            URI contributionUri = component.getDefinition().getContributionUri();
+            ReferenceNotFound error =
+                    new ReferenceNotFound("Unable to resolve reference " + referenceUri, referenceUri, componentUri, contributionUri);
+            change.addError(error);
         } else if (targetted) {
             logicalReference.setResolved(true);
         }

@@ -23,8 +23,8 @@ import org.fabric3.host.domain.AssemblyFailure;
 public class AmbiguousWireTargetService extends AssemblyFailure {
     private URI targetUri;
 
-    public AmbiguousWireTargetService(URI compositeUri, URI targetUri) {
-        super(compositeUri);
+    public AmbiguousWireTargetService(URI targetUri, URI compositeUri, URI contributionUri) {
+        super(compositeUri, contributionUri);
         this.targetUri = targetUri;
     }
 

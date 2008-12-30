@@ -19,26 +19,27 @@ package org.fabric3.fabric.instantiator;
 import java.net.URI;
 
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.spi.model.instance.LogicalReference;
 
 public class AmbiguousReference extends AssemblyFailure {
-    private LogicalReference logicalReference;
+    private URI referenceUri;
     private URI promotedComponentUri;
 
     /**
      * Constructor.
      *
-     * @param logicalReference     the logical reference that is invalid
+     * @param referenceUri         the URI of the logical reference that is invalid
+     * @param componentUri         the URI of the component containing the reference
      * @param promotedComponentUri the promoted component URI.
+     * @param contributionUri      the contribution containing the component
      */
-    public AmbiguousReference(LogicalReference logicalReference, URI promotedComponentUri) {
-        super(logicalReference.getParent().getUri());
-        this.logicalReference = logicalReference;
+    public AmbiguousReference(URI referenceUri, URI componentUri, URI promotedComponentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
+        this.referenceUri = referenceUri;
         this.promotedComponentUri = promotedComponentUri;
     }
 
     public String getMessage() {
-        return "The promoted reference " + logicalReference.getUri() + " must explicitly specify the reference it is promoting on component "
+        return "The promoted reference " + referenceUri + " must explicitly specify the reference it is promoting on component "
                 + promotedComponentUri + " as the component has more than one reference";
     }
 }

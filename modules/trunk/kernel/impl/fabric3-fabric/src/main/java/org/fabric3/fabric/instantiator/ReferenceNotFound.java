@@ -16,23 +16,18 @@
  */
 package org.fabric3.fabric.instantiator;
 
+import java.net.URI;
+
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.spi.model.instance.LogicalComponent;
 
 public class ReferenceNotFound extends AssemblyFailure {
     private String message;
-    private LogicalComponent<?> component;
     private String referenceName;
 
-    public ReferenceNotFound(String message, LogicalComponent<?> component, String referenceName) {
-        super(component.getUri());
+    public ReferenceNotFound(String message, String referenceName, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.message = message;
-        this.component = component;
         this.referenceName = referenceName;
-    }
-
-    public LogicalComponent<?> getComponent() {
-        return component;
     }
 
     public String getReferenceName() {

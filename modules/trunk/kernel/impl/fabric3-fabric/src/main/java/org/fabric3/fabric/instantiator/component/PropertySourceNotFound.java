@@ -26,8 +26,8 @@ import org.fabric3.host.domain.AssemblyFailure;
 public class PropertySourceNotFound extends AssemblyFailure {
     private String name;
 
-    public PropertySourceNotFound(URI componentURI, String name) {
-        super(componentURI);
+    public PropertySourceNotFound(String name, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.name = name;
     }
 

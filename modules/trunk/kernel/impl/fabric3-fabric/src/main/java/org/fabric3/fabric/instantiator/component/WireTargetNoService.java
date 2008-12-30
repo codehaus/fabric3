@@ -24,8 +24,8 @@ import org.fabric3.spi.util.UriHelper;
 public class WireTargetNoService extends AssemblyFailure {
     private URI targetUri;
 
-    public WireTargetNoService(URI targetUri, URI compositeUri) {
-        super(compositeUri);
+    public WireTargetNoService(URI targetUri, URI compositeUri, URI contributionUri) {
+        super(compositeUri, contributionUri);
         this.targetUri = targetUri;
     }
 

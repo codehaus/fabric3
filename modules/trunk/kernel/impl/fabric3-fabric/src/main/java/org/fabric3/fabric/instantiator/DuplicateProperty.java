@@ -26,8 +26,8 @@ import org.fabric3.host.domain.AssemblyFailure;
 public class DuplicateProperty extends AssemblyFailure {
     private String propertyName;
 
-    public DuplicateProperty(URI componentUri, String propertyName) {
-        super(componentUri);
+    public DuplicateProperty(String propertyName, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.propertyName = propertyName;
     }
 

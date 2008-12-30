@@ -16,21 +16,16 @@
  */
 package org.fabric3.fabric.instantiator;
 
+import java.net.URI;
+
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.spi.model.instance.Bindable;
 
 public class NoServiceOnComponent extends AssemblyFailure {
     private String message;
-    private Bindable bindable;
 
-    public NoServiceOnComponent(String message, Bindable bindable) {
-        super(bindable.getUri());
+    public NoServiceOnComponent(String message, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.message = message;
-        this.bindable = bindable;
-    }
-
-    public Bindable getBindable() {
-        return bindable;
     }
 
     public String getMessage() {

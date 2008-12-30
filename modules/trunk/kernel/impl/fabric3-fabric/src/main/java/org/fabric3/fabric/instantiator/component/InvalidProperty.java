@@ -29,8 +29,8 @@ public class InvalidProperty extends AssemblyFailure {
     private String name;
     private Throwable cause;
 
-    public InvalidProperty(URI componentURI, String name, Throwable cause) {
-        super(componentURI);
+    public InvalidProperty(String name, Throwable cause, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.name = name;
         this.cause = cause;
     }

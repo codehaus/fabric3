@@ -56,7 +56,11 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         LogicalComponent<?> promotedComponent = composite.getComponent(promotedComponentUri);
 
         if (promotedComponent == null) {
-            PromotedComponentNotFound error = new PromotedComponentNotFound(logicalService, promotedComponentUri);
+            LogicalComponent<?> parent = logicalService.getParent();
+            URI componentUri = parent.getUri();
+            URI serviceUri = logicalService.getUri();
+            URI contributionUri = parent.getDefinition().getContributionUri();
+            PromotedComponentNotFound error = new PromotedComponentNotFound(serviceUri, promotedComponentUri, componentUri, contributionUri);
             change.addError(error);
             return;
         }
@@ -64,24 +68,32 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         if (promotedServiceName == null) {
             Collection<LogicalService> componentServices = promotedComponent.getServices();
             if (componentServices.size() == 0) {
+                LogicalComponent<?> parent = logicalService.getParent();
+                URI componentUri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
                 String msg = "No services available on component: " + promotedComponentUri;
-                NoServiceOnComponent error = new NoServiceOnComponent(msg, logicalService);
+                NoServiceOnComponent error = new NoServiceOnComponent(msg, componentUri, contributionUri);
                 change.addError(error);
                 return;
             } else if (componentServices.size() != 1) {
                 String msg = "The promoted service " + logicalService.getUri() + " must explicitly specify the service it is promoting on component "
                         + promotedComponentUri + " as the component has more than one service";
-                AmbiguousService error = new AmbiguousService(logicalService, msg);
+                LogicalComponent<?> parent = logicalService.getParent();
+                URI componentUri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                AmbiguousService error = new AmbiguousService(msg, componentUri, contributionUri);
                 change.addError(error);
                 return;
             }
             logicalService.setPromotedUri(componentServices.iterator().next().getUri());
         } else {
             if (promotedComponent.getService(promotedServiceName) == null) {
-                String message =
-                        "Service " + promotedServiceName + " promoted from " + logicalService.getUri() + " not found on component " + promotedComponentUri
-                        ;
-                ServiceNotFound error = new ServiceNotFound(message, logicalService, promotedComponentUri);
+                String message = "Service " + promotedServiceName + " promoted from " + logicalService.getUri()
+                        + " not found on component " + promotedComponentUri;
+                URI componentUri = logicalService.getParent().getUri();
+                URI contributionUri = logicalService.getParent().getDefinition().getContributionUri();
+                URI serviceUri = logicalService.getUri();
+                ServiceNotFound error = new ServiceNotFound(message, serviceUri, componentUri, contributionUri);
                 change.addError(error);
             }
         }
@@ -103,7 +115,10 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
             LogicalComponent<?> promotedComponent = parent.getComponent(promotedComponentUri);
 
             if (promotedComponent == null) {
-                PromotedComponentNotFound error = new PromotedComponentNotFound(logicalReference, promotedComponentUri);
+                URI componentUri = parent.getUri();
+                URI referenceUri = logicalReference.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                PromotedComponentNotFound error = new PromotedComponentNotFound(referenceUri, promotedComponentUri, componentUri, contributionUri);
                 change.addError(error);
                 return;
             }
@@ -112,18 +127,24 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                 Collection<LogicalReference> componentReferences = promotedComponent.getReferences();
                 if (componentReferences.size() == 0) {
                     String msg = "Reference " + promotedReferenceName + " not found on component " + promotedComponentUri;
-                    ReferenceNotFound error = new ReferenceNotFound(msg, promotedComponent, promotedReferenceName);
+                    URI componentUri = parent.getUri();
+                    URI contributionUri = parent.getDefinition().getContributionUri();
+                    ReferenceNotFound error = new ReferenceNotFound(msg, promotedReferenceName, componentUri, contributionUri);
                     change.addError(error);
                     return;
                 } else if (componentReferences.size() > 1) {
-                    AmbiguousReference error = new AmbiguousReference(logicalReference, promotedComponentUri);
+                    URI referenceUri = logicalReference.getUri();
+                    URI contributionUri = parent.getDefinition().getContributionUri();
+                    AmbiguousReference error = new AmbiguousReference(referenceUri, parent.getUri(), promotedComponentUri, contributionUri);
                     change.addError(error);
                     return;
                 }
                 logicalReference.setPromotedUri(i, componentReferences.iterator().next().getUri());
             } else if (promotedComponent.getReference(promotedReferenceName) == null) {
                 String msg = "Reference " + promotedReferenceName + " not found on component " + promotedComponentUri;
-                ReferenceNotFound error = new ReferenceNotFound(msg, promotedComponent, promotedReferenceName);
+                URI componentUri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                ReferenceNotFound error = new ReferenceNotFound(msg, promotedReferenceName, componentUri, contributionUri);
                 change.addError(error);
                 return;
             }

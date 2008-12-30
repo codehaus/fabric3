@@ -107,7 +107,10 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
         if (targetComponent == null) {
-            TargetComponentNotFound error = new TargetComponentNotFound(reference, targetComponentUri);
+            URI referenceUri = reference.getUri();
+            URI componentUri = reference.getParent().getUri();
+            URI contributionUri = reference.getParent().getDefinition().getContributionUri();
+            TargetComponentNotFound error = new TargetComponentNotFound(referenceUri, targetComponentUri, componentUri, contributionUri);
             change.addError(error);
             return null;
         }
@@ -120,7 +123,8 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                 URI name = UriHelper.getDefragmentedName(targetUri);
                 URI uri = reference.getUri();
                 String msg = "The service " + serviceName + " targeted from the reference " + uri + " is not found on component " + name;
-                ServiceNotFound error = new ServiceNotFound(msg, reference, targetComponentUri);
+                URI componentUri = reference.getParent().getUri();
+                ServiceNotFound error = new ServiceNotFound(msg, uri, componentUri, targetComponentUri);
                 change.addError(error);
                 return null;
             }
@@ -132,7 +136,10 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                 if (targetService != null) {
                     String msg = "More than one service available on component: " + targetUri
                             + ". Reference must explicitly specify a target service: " + reference.getUri();
-                    AmbiguousService error = new AmbiguousService(reference, msg);
+                    LogicalComponent<?> parent = reference.getParent();
+                    URI componentUri = parent.getUri();
+                    URI contributionUri = parent.getDefinition().getContributionUri();
+                    AmbiguousService error = new AmbiguousService(msg, componentUri, contributionUri);
                     change.addError(error);
                     return null;
                 }
@@ -140,7 +147,10 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             }
             if (targetService == null) {
                 String msg = "The reference " + reference.getUri() + " is wired to component " + targetUri + " but the component has no services";
-                NoServiceOnComponent error = new NoServiceOnComponent(msg, reference);
+                LogicalComponent<?> parent = reference.getParent();
+                URI componentUri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                NoServiceOnComponent error = new NoServiceOnComponent(msg, componentUri, contributionUri);
                 change.addError(error);
                 return null;
             }
@@ -160,7 +170,11 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         ServiceContract<?> referenceContract = contractResolver.determineContract(reference);
         ServiceContract<?> serviceContract = contractResolver.determineContract(service);
         if (!referenceContract.isAssignableFrom(serviceContract)) {
-            IncompatibleContracts error = new IncompatibleContracts(reference.getParent().getUri(), reference.getUri(), service.getUri());
+            URI uri = reference.getParent().getUri();
+            URI referenceUri = reference.getUri();
+            URI serviceUri = service.getUri();
+            URI contributionUri = reference.getParent().getDefinition().getContributionUri();
+            IncompatibleContracts error = new IncompatibleContracts(referenceUri, serviceUri, uri, contributionUri);
             change.addError(error);
         }
     }

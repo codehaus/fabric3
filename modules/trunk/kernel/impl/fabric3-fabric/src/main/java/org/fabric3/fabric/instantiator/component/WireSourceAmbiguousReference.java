@@ -24,8 +24,8 @@ import org.fabric3.spi.util.UriHelper;
 public class WireSourceAmbiguousReference extends AssemblyFailure {
     private URI sourceUri;
 
-    public WireSourceAmbiguousReference(URI sourceUri, URI compositeUri) {
-        super(compositeUri);
+    public WireSourceAmbiguousReference(URI sourceUri, URI compositeUri, URI contributionUri) {
+        super(compositeUri, contributionUri);
         this.sourceUri = sourceUri;
     }
 

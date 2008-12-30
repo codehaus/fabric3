@@ -24,8 +24,8 @@ import org.fabric3.spi.util.UriHelper;
 public class WireSourceNotFound extends AssemblyFailure {
     private URI sourceUri;
 
-    public WireSourceNotFound(URI sourceUri, URI compositeUri) {
-        super(compositeUri);
+    public WireSourceNotFound(URI sourceUri, URI compositeUri, URI contributionUri) {
+        super(compositeUri, contributionUri);
         this.sourceUri = sourceUri;
     }
 

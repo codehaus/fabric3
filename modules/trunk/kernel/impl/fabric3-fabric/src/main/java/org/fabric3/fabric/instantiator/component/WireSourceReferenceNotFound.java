@@ -25,8 +25,8 @@ public class WireSourceReferenceNotFound extends AssemblyFailure {
     private URI sourceUri;
     private String referenceName;
 
-    public WireSourceReferenceNotFound(URI sourceUri, String referenceName, URI compositeUri) {
-        super(compositeUri);
+    public WireSourceReferenceNotFound(URI sourceUri, String referenceName, URI compositeUri, URI contributionUri) {
+        super(compositeUri, contributionUri);
         this.sourceUri = sourceUri;
         this.referenceName = referenceName;
     }

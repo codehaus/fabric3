@@ -19,27 +19,18 @@ package org.fabric3.fabric.instantiator;
 import java.net.URI;
 
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.spi.model.instance.Bindable;
 
 public class PromotedComponentNotFound extends AssemblyFailure {
-    private Bindable bindable;
     private URI promotedComponentUri;
+    private URI bindableUri;
 
-    public PromotedComponentNotFound(Bindable bindable, URI promotedComponentUri) {
-        super(bindable.getParent().getUri());
-        this.bindable = bindable;
+    public PromotedComponentNotFound(URI bindableUri, URI promotedComponentUri, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
+        this.bindableUri = bindableUri;
         this.promotedComponentUri = promotedComponentUri;
     }
 
-    public Bindable getBindable() {
-        return bindable;
-    }
-
-    public URI getPromotedComponentUri() {
-        return promotedComponentUri;
-    }
-
     public String getMessage() {
-        return "The component " + promotedComponentUri + " promoted by " + bindable.getUri() + " was not found";
+        return "The component " + promotedComponentUri + " promoted by " + bindableUri + " was not found";
     }
 }

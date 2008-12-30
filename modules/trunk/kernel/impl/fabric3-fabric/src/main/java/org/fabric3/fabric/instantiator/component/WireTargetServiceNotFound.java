@@ -24,8 +24,8 @@ import org.fabric3.spi.util.UriHelper;
 public class WireTargetServiceNotFound extends AssemblyFailure {
     private URI targetUri;
 
-    public WireTargetServiceNotFound(URI targetUri, URI compositeUri) {
-        super(compositeUri);
+    public WireTargetServiceNotFound(URI targetUri, URI compositeUri, URI contributionUri) {
+        super(compositeUri, contributionUri);
         this.targetUri = targetUri;
     }
 

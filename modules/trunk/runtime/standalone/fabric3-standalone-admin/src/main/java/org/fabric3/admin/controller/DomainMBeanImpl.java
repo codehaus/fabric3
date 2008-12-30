@@ -26,18 +26,18 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.domain.ContributionNotInstalledException;
-import org.fabric3.host.domain.UndeploymentException;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.domain.CompositeAlreadyDeployedException;
+import org.fabric3.host.domain.ContributionNotInstalledException;
 import org.fabric3.host.domain.DeployableNotFoundException;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
+import org.fabric3.host.domain.DomainException;
+import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.management.domain.ContributionNotFoundException;
+import org.fabric3.management.domain.ContributionNotInstalledManagementException;
 import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.management.domain.InvalidDeploymentException;
-import org.fabric3.management.domain.ContributionNotInstalledManagementException;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
 
@@ -76,7 +76,7 @@ public class DomainMBeanImpl implements DomainMBean {
             } catch (AssemblyException e) {
                 List<String> errors = new ArrayList<String>();
                 for (AssemblyFailure error : e.getErrors()) {
-                    errors.add(error.getMessage());
+                    errors.add(error.getMessage() + " (" + error.getContributionUri() + ")");
                 }
                 throw new InvalidDeploymentException("Error deploying " + uri, errors);
             } catch (CompositeAlreadyDeployedException e) {

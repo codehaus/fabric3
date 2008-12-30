@@ -25,20 +25,32 @@ import java.net.URI;
  */
 public abstract class AssemblyFailure {
     private URI componentUri;
+    private URI contributionUri;
 
     /**
      * Constructor.
      *
-     * @param componentUri the URI of the component associated with the failure.
+     * @param componentUri    the URI of the component associated with the failure.
+     * @param contributionUri the URI of the contribution the component is part of.
      */
-    public AssemblyFailure(URI componentUri) {
+    public AssemblyFailure(URI componentUri, URI contributionUri) {
         this.componentUri = componentUri;
+        this.contributionUri = contributionUri;
     }
 
     /**
-     * Returns the URI of the component associated with the failure.
+     * Returns the URI of the contribution where the error occured.
      *
-     * @return the URI of the component associated with the failure.
+     * @return the URI of the contribution where the error occured.
+     */
+    public URI getContributionUri() {
+        return contributionUri;
+    }
+
+    /**
+     * Returns the URI of the component where the error occured.
+     *
+     * @return the URI of the component where the error occured.
      */
     public URI getComponentUri() {
         return componentUri;

@@ -68,7 +68,9 @@ public class WireInstantiatorImpl implements WireInstantiator {
     private LogicalReference resolveLogicalReference(String referenceName, URI sourceUri, LogicalCompositeComponent parent, LogicalChange change) {
         LogicalComponent<?> source = parent.getComponent(sourceUri);
         if (source == null) {
-            WireSourceNotFound error = new WireSourceNotFound(sourceUri, parent.getUri());
+            URI uri = parent.getUri();
+            URI contributionUri = parent.getDefinition().getContributionUri();
+            WireSourceNotFound error = new WireSourceNotFound(sourceUri, uri, contributionUri);
             change.addError(error);
             return null;
         }
@@ -76,11 +78,15 @@ public class WireInstantiatorImpl implements WireInstantiator {
         if (referenceName == null) {
             // a reference was not specified
             if (source.getReferences().size() == 0) {
-                WireSourceNoReference error = new WireSourceNoReference(sourceUri, parent.getUri());
+                URI uri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                WireSourceNoReference error = new WireSourceNoReference(sourceUri, uri, contributionUri);
                 change.addError(error);
                 return null;
             } else if (source.getReferences().size() != 1) {
-                WireSourceAmbiguousReference error = new WireSourceAmbiguousReference(sourceUri, parent.getUri());
+                URI uri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                WireSourceAmbiguousReference error = new WireSourceAmbiguousReference(sourceUri, uri, contributionUri);
                 change.addError(error);
                 return null;
             }
@@ -89,7 +95,9 @@ public class WireInstantiatorImpl implements WireInstantiator {
         } else {
             logicalReference = source.getReference(referenceName);
             if (logicalReference == null) {
-                WireSourceReferenceNotFound error = new WireSourceReferenceNotFound(sourceUri, referenceName, parent.getUri());
+                URI uri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                WireSourceReferenceNotFound error = new WireSourceReferenceNotFound(sourceUri, referenceName, uri, contributionUri);
                 change.addError(error);
                 return null;
             }
@@ -109,7 +117,9 @@ public class WireInstantiatorImpl implements WireInstantiator {
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = parent.getComponent(targetComponentUri);
         if (targetComponent == null) {
-            WireTargetNotFound error = new WireTargetNotFound(targetUri, parent.getUri());
+            URI uri = parent.getUri();
+            URI contributionUri = parent.getDefinition().getContributionUri();
+            WireTargetNotFound error = new WireTargetNotFound(targetUri, uri, contributionUri);
             change.addError(error);
             return null;
         }
@@ -117,7 +127,9 @@ public class WireInstantiatorImpl implements WireInstantiator {
         String serviceName = targetUri.getFragment();
         if (serviceName != null) {
             if (targetComponent.getService(serviceName) == null) {
-                WireTargetServiceNotFound error = new WireTargetServiceNotFound(targetUri, parent.getUri());
+                URI uri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                WireTargetServiceNotFound error = new WireTargetServiceNotFound(targetUri, uri, contributionUri);
                 change.addError(error);
                 return null;
             }
@@ -129,14 +141,18 @@ public class WireInstantiatorImpl implements WireInstantiator {
                     continue;
                 }
                 if (target != null) {
-                    AmbiguousWireTargetService error = new AmbiguousWireTargetService(targetUri, parent.getUri());
+                    URI uri = parent.getUri();
+                    URI contributionUri = parent.getDefinition().getContributionUri();
+                    AmbiguousWireTargetService error = new AmbiguousWireTargetService(uri, targetUri, contributionUri);
                     change.addError(error);
                     return null;
                 }
                 target = service;
             }
             if (target == null) {
-                WireTargetNoService error = new WireTargetNoService(targetUri, parent.getUri());
+                URI uri = parent.getUri();
+                URI contributionUri = parent.getDefinition().getContributionUri();
+                WireTargetNoService error = new WireTargetNoService(targetUri, uri, contributionUri);
                 change.addError(error);
                 return null;
             }

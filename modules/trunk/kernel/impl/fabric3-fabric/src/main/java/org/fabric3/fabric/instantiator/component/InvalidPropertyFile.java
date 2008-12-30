@@ -30,8 +30,8 @@ public class InvalidPropertyFile extends AssemblyFailure {
     private Throwable cause;
     private final URI file;
 
-    public InvalidPropertyFile(URI componentURI, String name, Throwable cause, URI file) {
-        super(componentURI);
+    public InvalidPropertyFile(String name, Throwable cause, URI file, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.name = name;
         this.cause = cause;
         this.file = file;

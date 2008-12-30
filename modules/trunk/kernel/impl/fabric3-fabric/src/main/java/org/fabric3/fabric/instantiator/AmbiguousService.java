@@ -16,27 +16,16 @@
  */
 package org.fabric3.fabric.instantiator;
 
+import java.net.URI;
+
 import org.fabric3.host.domain.AssemblyFailure;
-import org.fabric3.spi.model.instance.Bindable;
 
 public class AmbiguousService extends AssemblyFailure {
-    private Bindable bindable;
     private String message;
 
-    /**
-     * Constructor.
-     *
-     * @param bindable the logical service or reference that is invalid
-     * @param message  the error message
-     */
-    public AmbiguousService(Bindable bindable, String message) {
-        super(bindable.getParent().getUri());
-        this.bindable = bindable;
+    public AmbiguousService(String message, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.message = message;
-    }
-
-    public Bindable getBindable() {
-        return bindable;
     }
 
     public String getMessage() {

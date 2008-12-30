@@ -32,12 +32,13 @@ public class IncompatibleContracts extends AssemblyFailure {
     /**
      * Constructor.
      *
-     * @param componentUri the URI of the component associated with the failure.
-     * @param referenceUri the URI of the reference
-     * @param serviceUri   the URI of the service
+     * @param referenceUri    the URI of the reference
+     * @param serviceUri      the URI of the service
+     * @param componentUri    the URI of the component associated with the failure.
+     * @param contributionUri the contribution containing the component
      */
-    public IncompatibleContracts(URI componentUri, URI referenceUri, URI serviceUri) {
-        super(componentUri);
+    public IncompatibleContracts(URI referenceUri, URI serviceUri, URI componentUri, URI contributionUri) {
+        super(componentUri, contributionUri);
         this.referenceUri = referenceUri;
         this.serviceUri = serviceUri;
     }
