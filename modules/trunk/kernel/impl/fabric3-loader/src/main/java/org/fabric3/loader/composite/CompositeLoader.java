@@ -384,7 +384,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
             String componentName = UriHelper.getDefragmentedNameAsString(promotedUri);
             ComponentDefinition promoted = type.getComponents().get(componentName);
             if (promoted == null) {
-                PromotionNotFound error = new PromotionNotFound("Component not found for service " + service.getName(), reader);
+                PromotionNotFound error =
+                        new PromotionNotFound("Component " + componentName + " referenced by " + service.getName() + " not found", reader);
                 childContext.addError(error);
             } else {
                 String serviceName = promotedUri.getFragment();
@@ -408,7 +409,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
                 String componentName = UriHelper.getDefragmentedNameAsString(promotedUri);
                 ComponentDefinition promoted = type.getComponents().get(componentName);
                 if (promoted == null) {
-                    PromotionNotFound error = new PromotionNotFound("Component not found for reference " + reference.getName(), reader);
+                    PromotionNotFound error =
+                            new PromotionNotFound("Component " + componentName + " referenced by " + reference.getName() + " not found", reader);
                     childContext.addError(error);
                 } else {
                     String referenceName = promotedUri.getFragment();
