@@ -42,8 +42,12 @@ public class ServiceContractResolverImpl implements ServiceContractResolver {
         }
         LogicalCompositeComponent parent = (LogicalCompositeComponent) service.getParent();
         URI promotedUri = service.getPromotedUri();
-        LogicalComponent<?> promoted = parent.getComponent(UriHelper.getDefragmentedName(promotedUri));
-        assert promoted != null;
+        URI name = UriHelper.getDefragmentedName(promotedUri);
+        LogicalComponent<?> promoted = parent.getComponent(name);
+        if (promoted == null) {
+            // This error should be caught by validation before this point
+            throw new AssertionError("Promoted component " + name + " not found in " + parent.getUri());
+        }
         String serviceName = promotedUri.getFragment();
         LogicalService promotedService;
         if (serviceName == null && promoted.getServices().size() == 1) {
@@ -51,13 +55,14 @@ public class ServiceContractResolverImpl implements ServiceContractResolver {
             Collection<LogicalService> services = promoted.getServices();
             promotedService = services.iterator().next();
         } else if (serviceName == null) {
-            // programing error
-            throw new AssertionError("Service must be specified");
+            // This error should be caught by validation before this point
+            throw new AssertionError("Service must be specified for promotion: " + promotedUri);
         } else {
             promotedService = promoted.getService(serviceName);
         }
         if (promotedService == null) {
-            throw new AssertionError("Promoted service was null");
+            // This error should be caught by validation before this point
+            throw new AssertionError("Promoted service not found: " + promotedUri);
         }
         return determineContract(promotedService);
     }
