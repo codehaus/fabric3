@@ -231,13 +231,14 @@ public class CompositeLoader implements TypeLoader<Composite> {
                 validateServicePromotions(type, reader, childContext);
                 validateReferencePromotions(type, reader, childContext);
                 if (childContext.hasErrors() || childContext.hasWarnings()) {
+                    URI uri = introspectionContext.getContributionUri();
                     if (childContext.hasErrors()) {
-                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(compositeName.toString());
+                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(uri, compositeName.toString());
                         artifactFailure.addFailures(childContext.getErrors());
                         introspectionContext.addError(artifactFailure);
                     }
                     if (childContext.hasWarnings()) {
-                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(compositeName.toString());
+                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(uri, compositeName.toString());
                         artifactFailure.addFailures(childContext.getWarnings());
                         introspectionContext.addWarning(artifactFailure);
                     }

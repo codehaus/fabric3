@@ -127,9 +127,9 @@ public final class ValidationUtils {
             }
             if (!errorsOnlyInContainedArtifacts(artifactFailure)) {
                 if (type == TYPE.ERROR) {
-                    writer.write("Errors in " + artifactFailure.getArtifactName() + "\n\n");
+                    writer.write("Errors in " + artifactFailure.getArtifactName() + " (" + artifactFailure.getContributionUri() + ")\n\n");
                 } else {
-                    writer.write("Warnings in " + artifactFailure.getArtifactName() + "\n\n");
+                    writer.write("Warnings in " + artifactFailure.getArtifactName() + " (" + artifactFailure.getContributionUri() + ")\n\n");
                 }
             }
             for (ValidationFailure childFailure : artifactFailure.getFailures()) {

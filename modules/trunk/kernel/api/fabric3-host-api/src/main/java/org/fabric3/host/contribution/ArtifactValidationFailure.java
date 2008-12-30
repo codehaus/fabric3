@@ -34,6 +34,7 @@
  */
 package org.fabric3.host.contribution;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,11 +43,17 @@ import java.util.List;
  */
 public class ArtifactValidationFailure extends ValidationFailure {
     private List<ValidationFailure> failures;
+    private URI contributionUri;
     private String artifactName;
 
-    public ArtifactValidationFailure(String artifactName) {
+    public ArtifactValidationFailure(URI contributionUri, String artifactName) {
+        this.contributionUri = contributionUri;
         this.artifactName = artifactName;
         this.failures = new ArrayList<ValidationFailure>();
+    }
+
+    public URI getContributionUri() {
+        return contributionUri;
     }
 
     public String getArtifactName() {
@@ -66,26 +73,7 @@ public class ArtifactValidationFailure extends ValidationFailure {
     }
 
     public String getMessage() {
-        return "Errors were reported in " + artifactName;
+        return "Errors were reported in " + artifactName + " in contribution " + contributionUri;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ArtifactValidationFailure that = (ArtifactValidationFailure) o;
-
-        return !(artifactName != null ? !artifactName.equals(that.artifactName) : that.artifactName != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = failures != null ? failures.hashCode() : 0;
-        result = 31 * result + (artifactName != null ? artifactName.hashCode() : 0);
-        return result;
-    }
 }

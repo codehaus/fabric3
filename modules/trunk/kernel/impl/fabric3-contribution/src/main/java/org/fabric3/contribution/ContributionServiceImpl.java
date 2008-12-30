@@ -373,11 +373,12 @@ public class ContributionServiceImpl implements ContributionService {
         IntrospectionContext context = new DefaultIntrospectionContext();
         processorRegistry.processManifest(contribution, context);
         if (context.hasErrors()) {
-            ArtifactValidationFailure failure = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
+            URI uri = contribution.getUri();
+            ArtifactValidationFailure failure = new ArtifactValidationFailure(uri, "the contribution manifest (sca-contribution.xml)");
             failure.addFailures(context.getErrors());
             List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
             failures.add(failure);
-            ArtifactValidationFailure warning = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
+            ArtifactValidationFailure warning = new ArtifactValidationFailure(uri, "the contribution manifest (sca-contribution.xml)");
             warning.addFailures(context.getWarnings());
             List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
             warnings.add(warning);
