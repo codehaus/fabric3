@@ -44,17 +44,17 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
+import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.CompositeService;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.model.type.component.ComponentType;
-import org.fabric3.model.type.component.CompositeService;
-import org.fabric3.model.type.component.Implementation;
 
 /**
  * @version $Rev$ $Date$
@@ -75,7 +75,15 @@ public class DuplicateServiceTestCase extends TestCase {
         loader.load(reader, ctx);
         ValidationFailure failure = ctx.getErrors().get(0);
         assertTrue(failure instanceof ArtifactValidationFailure);
-        assertTrue(((ArtifactValidationFailure) failure).getFailures().get(0) instanceof DuplicateService);
+        ArtifactValidationFailure artifactFailure = (ArtifactValidationFailure) failure;
+        boolean found = false;
+        for (ValidationFailure entry : artifactFailure.getFailures()) {
+            if (entry instanceof DuplicateService) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
     }
 
     protected void setUp() throws Exception {
@@ -101,10 +109,10 @@ public class DuplicateServiceTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <T> TypeLoader<CompositeService> createServiceLoader()
+    private TypeLoader<CompositeService> createServiceLoader()
             throws XMLStreamException, LoaderException {
         TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-        CompositeService value = new CompositeService(SERVICE_NAME, null, null);
+        CompositeService value = new CompositeService(SERVICE_NAME, null, URI.create("target"));
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);
@@ -118,7 +126,7 @@ public class DuplicateServiceTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        CompositeService service = new CompositeService(SERVICE_NAME, null, null);
+        CompositeService service = new CompositeService(SERVICE_NAME, null, URI.create("target"));
 
         type.add(service);
         impl.setComponentType(type);
@@ -143,7 +151,7 @@ public class DuplicateServiceTestCase extends TestCase {
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "service"));
-        EasyMock.expect(reader.getLocation()).andReturn(location);
+        EasyMock.expect(reader.getLocation()).andReturn(location).anyTimes();
         EasyMock.expect(reader.next()).andReturn(2);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "composite"));
         EasyMock.replay(reader);

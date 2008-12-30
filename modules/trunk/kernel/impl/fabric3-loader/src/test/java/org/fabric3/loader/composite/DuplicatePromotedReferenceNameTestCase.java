@@ -35,6 +35,8 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
@@ -44,17 +46,17 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.CompositeReference;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.model.type.component.ComponentType;
-import org.fabric3.model.type.component.CompositeReference;
-import org.fabric3.model.type.component.Implementation;
 
 /**
  * @version $Rev$ $Date$
@@ -75,7 +77,15 @@ public class DuplicatePromotedReferenceNameTestCase extends TestCase {
         loader.load(reader, ctx);
         ValidationFailure failure = ctx.getErrors().get(0);
         assertTrue(failure instanceof ArtifactValidationFailure);
-        assertTrue(((ArtifactValidationFailure) failure).getFailures().get(0) instanceof DuplicatePromotedReferenceName);
+        ArtifactValidationFailure artifactFailure = (ArtifactValidationFailure) failure;
+        boolean found = false;
+        for (ValidationFailure entry : artifactFailure.getFailures()) {
+            if (entry instanceof DuplicatePromotedReferenceName) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
 
     }
 
@@ -105,7 +115,9 @@ public class DuplicatePromotedReferenceNameTestCase extends TestCase {
     private <T> TypeLoader<CompositeReference> createReferenceLoader()
             throws XMLStreamException, LoaderException {
         TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-        CompositeReference value = new CompositeReference(REF_NAME, null);
+        List<URI> uris = new ArrayList<URI>();
+        uris.add(URI.create("ref"));
+        CompositeReference value = new CompositeReference(REF_NAME, uris);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);
@@ -119,7 +131,9 @@ public class DuplicatePromotedReferenceNameTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        CompositeReference reference = new CompositeReference(REF_NAME, null);
+        List<URI> uris = new ArrayList<URI>();
+        uris.add(URI.create("ref"));
+        CompositeReference reference = new CompositeReference(REF_NAME, uris);
 
         type.add(reference);
         impl.setComponentType(type);
@@ -144,7 +158,7 @@ public class DuplicatePromotedReferenceNameTestCase extends TestCase {
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "reference"));
-        EasyMock.expect(reader.getLocation()).andReturn(location);
+        EasyMock.expect(reader.getLocation()).andReturn(location).anyTimes();
         EasyMock.expect(reader.next()).andReturn(2);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "composite"));
         EasyMock.replay(reader);

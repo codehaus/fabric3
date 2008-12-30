@@ -34,6 +34,7 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
@@ -51,13 +52,13 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ArtifactValidationFailure;
+import org.fabric3.model.type.ModelObject;
 import org.fabric3.model.type.component.Autowire;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.CompositeReference;
 import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.model.type.component.Include;
-import org.fabric3.model.type.ModelObject;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.WireDefinition;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
@@ -70,6 +71,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -150,13 +152,13 @@ public class CompositeLoader implements TypeLoader<Composite> {
      */
     @Constructor
     public CompositeLoader(@Reference LoaderRegistry registry,
-                           @Reference(name = "include")TypeLoader<Include> includeLoader,
-                           @Reference(name = "property")TypeLoader<Property> propertyLoader,
-                           @Reference(name = "service")TypeLoader<CompositeService> serviceLoader,
-                           @Reference(name = "reference")TypeLoader<CompositeReference> referenceLoader,
-                           @Reference(name = "component")TypeLoader<ComponentDefinition<?>> componentLoader,
-                           @Reference(name = "wire")TypeLoader<WireDefinition> wireLoader,
-                           @Reference(name = "loaderHelper")LoaderHelper loaderHelper) {
+                           @Reference(name = "include") TypeLoader<Include> includeLoader,
+                           @Reference(name = "property") TypeLoader<Property> propertyLoader,
+                           @Reference(name = "service") TypeLoader<CompositeService> serviceLoader,
+                           @Reference(name = "reference") TypeLoader<CompositeReference> referenceLoader,
+                           @Reference(name = "component") TypeLoader<ComponentDefinition<?>> componentLoader,
+                           @Reference(name = "wire") TypeLoader<WireDefinition> wireLoader,
+                           @Reference(name = "loaderHelper") LoaderHelper loaderHelper) {
         this.registry = registry;
         this.loader = registry;
         this.includeLoader = includeLoader;
@@ -226,6 +228,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
                 }
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
+                validateServicePromotions(type, reader, childContext);
+                validateReferencePromotions(type, reader, childContext);
                 if (childContext.hasErrors() || childContext.hasWarnings()) {
                     if (childContext.hasErrors()) {
                         ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(compositeName.toString());
@@ -373,5 +377,55 @@ public class CompositeLoader implements TypeLoader<Composite> {
             }
         }
     }
+
+    private void validateServicePromotions(Composite type, XMLStreamReader reader, IntrospectionContext childContext) {
+        for (CompositeService service : type.getServices().values()) {
+            URI promotedUri = service.getPromote();
+            String componentName = UriHelper.getDefragmentedNameAsString(promotedUri);
+            ComponentDefinition promoted = type.getComponents().get(componentName);
+            if (promoted == null) {
+                PromotionNotFound error = new PromotionNotFound("Component not found for service " + service.getName(), reader);
+                childContext.addError(error);
+            } else {
+                String serviceName = promotedUri.getFragment();
+                if (serviceName == null && promoted.getComponentType().getServices().size() != 1) {
+                    PromotionNotFound error =
+                            new PromotionNotFound("A promoted service must be specified for " + service.getName(), reader);
+                    childContext.addError(error);
+                }
+                if (serviceName != null && !promoted.getComponentType().getServices().containsKey(serviceName)) {
+                    PromotionNotFound error =
+                            new PromotionNotFound("Service " + serviceName + " promoted by " + service.getName() + " not found", reader);
+                    childContext.addError(error);
+                }
+            }
+        }
+    }
+
+    private void validateReferencePromotions(Composite type, XMLStreamReader reader, IntrospectionContext childContext) {
+        for (CompositeReference reference : type.getReferences().values()) {
+            for (URI promotedUri : reference.getPromotedUris()) {
+                String componentName = UriHelper.getDefragmentedNameAsString(promotedUri);
+                ComponentDefinition promoted = type.getComponents().get(componentName);
+                if (promoted == null) {
+                    PromotionNotFound error = new PromotionNotFound("Component not found for reference " + reference.getName(), reader);
+                    childContext.addError(error);
+                } else {
+                    String referenceName = promotedUri.getFragment();
+                    if (referenceName == null && promoted.getComponentType().getReferences().size() != 1) {
+                        PromotionNotFound error =
+                                new PromotionNotFound("A promoted reference must be specified for " + reference.getName(), reader);
+                        childContext.addError(error);
+                    }
+                    if (referenceName != null && !promoted.getComponentType().getReferences().containsKey(referenceName)) {
+                        PromotionNotFound error =
+                                new PromotionNotFound("Reference " + referenceName + " promoted by " + reference.getName() + " not found", reader);
+                        childContext.addError(error);
+                    }
+                }
+            }
+        }
+    }
+
 
 }
