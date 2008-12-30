@@ -20,12 +20,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
-import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.contribution.ArtifactValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
+ * Utility methods for outputting validation errors.
+ *
  * @version $Revision$ $Date$
  */
 public final class ValidationUtils {
@@ -92,8 +95,10 @@ public final class ValidationUtils {
         // sort the errors so that ArtifactValidationFailures are evaluated last. This is done so that nested failures are printed after all
         // failures in the parent artifact.
         Collections.sort(sorted, COMPARATOR);
+        // if a composite is used multiple times, only report errors contained in it once
+        HashSet<String> reported = new HashSet<String>();
         for (ValidationFailure failure : sorted) {
-            count = writerError(failure, writer, count, type);
+            count = writerError(failure, writer, count, type, reported);
         }
         if (count == 1) {
             if (type == TYPE.ERROR) {
@@ -113,9 +118,13 @@ public final class ValidationUtils {
         writer.flush();
     }
 
-    private static int writerError(ValidationFailure failure, PrintWriter writer, int count, TYPE type) {
+    private static int writerError(ValidationFailure failure, PrintWriter writer, int count, TYPE type, HashSet<String> reported) {
         if (failure instanceof ArtifactValidationFailure) {
             ArtifactValidationFailure artifactFailure = (ArtifactValidationFailure) failure;
+            if (reported.contains(artifactFailure.getArtifactName())) {
+                // if the error has already been reported because the artifact is used multiple times, don't print it again
+                return count;
+            }
             if (!errorsOnlyInContainedArtifacts(artifactFailure)) {
                 if (type == TYPE.ERROR) {
                     writer.write("Errors in " + artifactFailure.getArtifactName() + "\n\n");
@@ -124,8 +133,9 @@ public final class ValidationUtils {
                 }
             }
             for (ValidationFailure childFailure : artifactFailure.getFailures()) {
-                count = writerError(childFailure, writer, count, type);
+                count = writerError(childFailure, writer, count, type, reported);
             }
+            reported.add(artifactFailure.getArtifactName());
         } else {
             if (type == TYPE.ERROR) {
                 writer.write("  ERROR: " + failure.getMessage() + "\n\n");

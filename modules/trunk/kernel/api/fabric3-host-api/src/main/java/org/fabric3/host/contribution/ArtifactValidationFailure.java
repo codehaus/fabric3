@@ -66,6 +66,26 @@ public class ArtifactValidationFailure extends ValidationFailure {
     }
 
     public String getMessage() {
-        return "Errors were reported in artifact " + artifactName;
+        return "Errors were reported in " + artifactName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ArtifactValidationFailure that = (ArtifactValidationFailure) o;
+
+        return !(artifactName != null ? !artifactName.equals(that.artifactName) : that.artifactName != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = failures != null ? failures.hashCode() : 0;
+        result = 31 * result + (artifactName != null ? artifactName.hashCode() : 0);
+        return result;
     }
 }
