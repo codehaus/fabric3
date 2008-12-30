@@ -85,7 +85,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
     private final LoaderRegistry registry;
     private final MetaDataStore store;
 
-    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference(required = false)MetaDataStore store) {
+    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference MetaDataStore store) {
         this.loader = loader;
         this.registry = loader;
         this.store = store;
@@ -176,10 +176,6 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             impl.setComponentType(composite);
             return impl;
         } else {
-            if (store == null) {
-                // throw error as this is invalid in a bootstrap environment
-                throw new UnsupportedOperationException("scdlLocation or scdlResource must be supplied as no MetaDataStore is available");
-            }
             if (nameAttr == null || nameAttr.length() == 0) {
                 MissingAttribute failure = new MissingAttribute("Missing name attribute", reader);
                 introspectionContext.addError(failure);
