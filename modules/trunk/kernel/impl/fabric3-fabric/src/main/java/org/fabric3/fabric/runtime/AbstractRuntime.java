@@ -38,15 +38,15 @@ import java.net.URI;
 import javax.management.MBeanServer;
 import javax.xml.namespace.QName;
 
+import org.fabric3.contribution.MetaDataStoreImpl;
+import org.fabric3.contribution.ProcessorRegistryImpl;
+import org.fabric3.fabric.classloader.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
-import org.fabric3.fabric.classloader.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
-import org.fabric3.contribution.MetaDataStoreImpl;
-import org.fabric3.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl;
-import org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore;
+import org.fabric3.fabric.services.lcm.TransientLogicalComponentStore;
 import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.ContextStartException;
@@ -56,19 +56,19 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.model.type.component.Autowire;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.WorkContextTunnel;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
 import org.fabric3.spi.services.lcm.ReadException;
@@ -179,7 +179,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     }
 
     public void initialize() throws InitializationException {
-        LogicalComponentStore store = new NonPersistentLogicalComponentStore(RUNTIME_URI, Autowire.ON);
+        LogicalComponentStore store = new TransientLogicalComponentStore(RUNTIME_URI, Autowire.ON);
         logicalComponentManager = new LogicalComponentManagerImpl(store);
         try {
             logicalComponentManager.initialize();

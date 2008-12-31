@@ -18,35 +18,29 @@ package org.fabric3.fabric.services.lcm;
 
 import java.net.URI;
 
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.component.Autowire;
 import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
 import org.fabric3.spi.services.lcm.ReadException;
 
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.Reference;
-
 /**
- * A non-persistent LogicalComponentStore
+ * A non-persistent LogicalComponentStore.
  *
  * @version $Rev$ $Date$
  */
-public class NonPersistentLogicalComponentStore implements LogicalComponentStore {
+public class TransientLogicalComponentStore implements LogicalComponentStore {
     private URI domainUri;
     private Autowire autowire = Autowire.OFF;
 
-    public NonPersistentLogicalComponentStore(URI domainUri, Autowire autowire) {
+    public TransientLogicalComponentStore(URI domainUri, Autowire autowire) {
         this.domainUri = domainUri;
         this.autowire = autowire;
     }
 
-    @Constructor
-    public NonPersistentLogicalComponentStore(@Reference HostInfo info) {
-        domainUri = info.getDomain();
+    protected TransientLogicalComponentStore() {
     }
 
     public LogicalCompositeComponent read() throws ReadException {
@@ -62,5 +56,13 @@ public class NonPersistentLogicalComponentStore implements LogicalComponentStore
 
     public void store(LogicalCompositeComponent domain) {
         // no op
+    }
+
+    protected void setDomainUri(URI domainUri) {
+        this.domainUri = domainUri;
+    }
+
+    protected void setAutowire(Autowire autowire) {
+        this.autowire = autowire;
     }
 }
