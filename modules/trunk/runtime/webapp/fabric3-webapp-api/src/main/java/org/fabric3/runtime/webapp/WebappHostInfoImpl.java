@@ -38,6 +38,8 @@ import java.io.File;
 import java.net.URI;
 import javax.servlet.ServletContext;
 
+import org.fabric3.host.runtime.RuntimeMode;
+
 /**
  * @version $Rev$ $Date$
  */
@@ -74,6 +76,10 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     public String getProperty(String name, String defaultValue) {
         String val = servletContext.getInitParameter(name);
         return val == null ? defaultValue : val;
+    }
+
+    public RuntimeMode getRuntimeMode() {
+        return RuntimeMode.VM;
     }
 
     public URI getDomain() {

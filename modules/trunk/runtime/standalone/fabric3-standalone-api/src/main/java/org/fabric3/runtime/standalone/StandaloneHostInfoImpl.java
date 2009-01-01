@@ -38,10 +38,13 @@ import java.io.File;
 import java.net.URI;
 import java.util.Properties;
 
+import org.fabric3.host.runtime.RuntimeMode;
+
 /**
  * @version $Rev$ $Date$
  */
 public class StandaloneHostInfoImpl implements StandaloneHostInfo {
+    private final RuntimeMode runtimeMode;
     private final URI domain;
     private final File baseDir;
     private final Properties properties;
@@ -52,6 +55,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
     /**
      * Constructor.
      *
+     * @param runtimeMode   the mode the runtime is started in
      * @param domain        the SCA domain this runtime belongs to
      * @param baseDir       directory containing the standalone installation
      * @param extensionsDir directory containing the standalone extensions
@@ -59,13 +63,23 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
      * @param properties    properties for this runtime
      * @param tempDirectory the directory for writing temporary files
      */
-    public StandaloneHostInfoImpl(URI domain, File baseDir, File extensionsDir, File configDir, Properties properties, File tempDirectory) {
+    public StandaloneHostInfoImpl(RuntimeMode runtimeMode, URI domain,
+                                  File baseDir,
+                                  File extensionsDir,
+                                  File configDir,
+                                  Properties properties,
+                                  File tempDirectory) {
+        this.runtimeMode = runtimeMode;
         this.domain = domain;
         this.baseDir = baseDir;
         this.properties = properties;
         this.extensionsDirectory = extensionsDir;
         this.configDirectory = configDir;
         this.tempDirectory = tempDirectory;
+    }
+
+    public RuntimeMode getRuntimeMode() {
+        return runtimeMode;
     }
 
     public URI getDomain() {

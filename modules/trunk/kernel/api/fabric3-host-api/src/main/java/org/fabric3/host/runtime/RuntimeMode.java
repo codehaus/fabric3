@@ -14,35 +14,15 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.runtime.standalone.server;
-
-import org.fabric3.host.runtime.RuntimeMode;
+package org.fabric3.host.runtime;
 
 /**
- * Management interface for the Fabric3 server.
+ * The different modes a runtime can be started in.
  *
  * @version $Revision$ $Date$
  */
-public interface Fabric3ServerMBean {
-
-    /**
-     * Starts a runtime specified by the bootpath.
-     *
-     * @param mode      the mode to start the runtime in
-     * @param jmxDomain JMX domain the runtime.
-     */
-    public void startRuntime(RuntimeMode mode, String jmxDomain);
-
-    /**
-     * Shuts down a runtime specified by the bootpath.
-     *
-     * @param bootPath Bootpath for the runtime.
-     */
-    public void shutdownRuntime(String bootPath);
-
-    /**
-     * Starts the server.
-     */
-    public void shutdown();
-
+public enum RuntimeMode {
+    CONTROLLER,
+    PARTICIPANT,
+    VM
 }

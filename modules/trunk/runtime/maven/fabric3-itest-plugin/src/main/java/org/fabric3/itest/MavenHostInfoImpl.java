@@ -40,6 +40,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.Set;
 
+import org.fabric3.host.runtime.RuntimeMode;
 import org.fabric3.maven.MavenHostInfo;
 
 /**
@@ -76,6 +77,10 @@ public class MavenHostInfoImpl implements MavenHostInfo {
 
     public boolean supportsClassLoaderIsolation() {
         return true;
+    }
+
+    public RuntimeMode getRuntimeMode() {
+        return RuntimeMode.VM;
     }
 
     public URI getDomain() {

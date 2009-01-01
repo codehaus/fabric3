@@ -47,6 +47,13 @@ import java.net.URI;
 public interface HostInfo {
 
     /**
+     * Returns the mode the runtime is booted in.
+     *
+     * @return the mode the runtime is booted in
+     */
+    RuntimeMode getRuntimeMode();
+
+    /**
      * Returns the SCA domain associated with this runtime. A null domain indicates that this is a standalone runtime with a self-contained domain.
      *
      * @return the SCA domain associated with this runtime; may be null

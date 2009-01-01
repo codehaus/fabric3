@@ -40,24 +40,25 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
 import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.RuntimeMode;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.host.Names;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
@@ -95,11 +96,27 @@ public class Fabric3Server implements Fabric3ServerMBean {
     public static void main(String[] args) throws Exception {
         Fabric3Server server = new Fabric3Server();
 
-
+        RuntimeMode runtimeMode = getRuntimeMode(args);
         String jmxDomain = System.getProperty(JMX_DOMAIN, "standalone");
-        server.startRuntime(jmxDomain);
+        server.startRuntime(runtimeMode, jmxDomain);
         server.shutdownRuntime(jmxDomain);
+
         System.exit(0);
+    }
+
+    private static RuntimeMode getRuntimeMode(String[] args) {
+        RuntimeMode runtimeMode = RuntimeMode.VM;
+        if (args.length > 0) {
+            if ("controller".equals(args[0])) {
+                runtimeMode = RuntimeMode.CONTROLLER;
+            } else if ("participant".equals(args[0])) {
+                runtimeMode = RuntimeMode.PARTICIPANT;
+            } else if (!"vm".equals(args[0])) {
+                throw new IllegalArgumentException("Invalid runtime mode: " + args[0]
+                        + ". Valid modes are 'controller', 'participant' or 'vm' (default).");
+            }
+        }
+        return runtimeMode;
     }
 
     /**
@@ -111,12 +128,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
     }
 
-    /**
-     * Starts a runtime specified by the bootpath.
-     *
-     * @param jmxDomain the domain name for the runtime.
-     */
-    public final void startRuntime(final String jmxDomain) {
+    public final void startRuntime(RuntimeMode runtimeMode, String jmxDomain) {
         final StandaloneHostInfo hostInfo;
         final StandaloneRuntime runtime;
         try {
@@ -158,7 +170,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 
             // create the HostInfo, MonitorFactory, and runtime
-            hostInfo = BootstrapHelper.createHostInfo(installDirectory, configDir, props);
+            hostInfo = BootstrapHelper.createHostInfo(runtimeMode, installDirectory, configDir, props);
             String monitorFactoryName = props.getProperty("fabric3.monitorFactoryClass");
             MonitorFactory monitorFactory;
             if (monitorFactoryName != null) {
@@ -195,7 +207,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             future = coordinator.start();
             future.get();
 
-            monitor.started(jmxDomain);
+            monitor.started(runtimeMode.toString(), jmxDomain);
             agent.start();
             // create the shutdown daemon
             CountDownLatch latch = new CountDownLatch(1);
@@ -253,7 +265,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         exportedPackages.put("org.fabric3.model.*", Names.VERSION);
         exportedPackages.put("org.fabric3.pojo.*", Names.VERSION);
         configuration.setExportedPackages(exportedPackages);
-        
+
         // process extensions
         File extensionsDir = runtime.getHostInfo().getExtensionsDirectory();
         List<ContributionSource> extensions = getExtensionContributions(extensionsDir);
@@ -308,10 +320,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
         void runError(Exception e);
 
         @Info
-        void started(String profile);
+        void started(String mode, String domain);
 
         @Info
-        void stopped(String profile);
+        void stopped(String domain);
 
     }
 
