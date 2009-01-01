@@ -19,6 +19,8 @@ package org.fabric3.host.contribution;
 import java.io.Serializable;
 import javax.xml.namespace.QName;
 
+import org.fabric3.host.runtime.RuntimeMode;
+
 /**
  * Represents a deployable artifact in a contribution
  *
@@ -27,12 +29,18 @@ import javax.xml.namespace.QName;
 @SuppressWarnings({"SerializableHasSerializationMethods"})
 public class Deployable implements Serializable {
     private static final long serialVersionUID = -710863113841788110L;
-    private final QName name;
-    private final QName type;
+    private QName name;
+    private QName type;
+    private RuntimeMode runtimeMode;
 
     public Deployable(QName name, QName type) {
+        this(name, type, RuntimeMode.VM);
+    }
+
+    public Deployable(QName name, QName type, RuntimeMode runtimeMode) {
         this.name = name;
         this.type = type;
+        this.runtimeMode = runtimeMode;
     }
 
     /**
@@ -53,5 +61,12 @@ public class Deployable implements Serializable {
         return type;
     }
 
-
+    /**
+     * Returns the runtime mode the deployable should be activated in.
+     *
+     * @return the runtime mode the deployable should be activated in.
+     */
+    public RuntimeMode getRuntimeMode() {
+        return runtimeMode;
+    }
 }

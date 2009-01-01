@@ -30,12 +30,14 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.runtime.RuntimeMode;
 import org.fabric3.spi.contribution.Constants;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.Export;
 import org.fabric3.spi.contribution.Import;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
+import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
@@ -104,7 +106,21 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                     } else {
                         qName = new QName(null, name);
                     }
-                    Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);
+                    String mode = reader.getAttributeValue(null, "mode");
+                    RuntimeMode runtimeMode;
+                    if (mode == null) {
+                        runtimeMode = RuntimeMode.VM;
+                    } else if ("controller".equals(mode.trim())) {
+                        runtimeMode = RuntimeMode.CONTROLLER;
+                    } else if ("participant".equals(mode.trim())) {
+                        runtimeMode = RuntimeMode.PARTICIPANT;
+                    } else {
+                        runtimeMode = RuntimeMode.VM;
+                        InvalidValue error = new InvalidValue("Invalid mode attrbiute: " + mode, reader);
+                        context.addError(error);
+                    }
+
+                    Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE, runtimeMode);
                     contribution.addDeployable(deployable);
                 } else {
                     Object o;
