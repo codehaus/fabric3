@@ -129,14 +129,15 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     public final void startRuntime(RuntimeMode runtimeMode, String jmxDomain) {
-        final StandaloneHostInfo hostInfo;
-        final StandaloneRuntime runtime;
+        StandaloneHostInfo hostInfo;
+        StandaloneRuntime runtime;
         try {
-
+            //  calculate config directories based on the mode the runtime is booted in
             File configDir = BootstrapHelper.getDirectory(installDirectory, "config");
+            File modeConfigDir = BootstrapHelper.getDirectory(configDir, runtimeMode.toString().toLowerCase());
 
             // load properties for this runtime
-            File propFile = new File(configDir, "runtime.properties");
+            File propFile = new File(modeConfigDir, "runtime.properties");
             Properties props = BootstrapHelper.loadProperties(propFile, System.getProperties());
 
             // load the monitor ports and keys
@@ -170,7 +171,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 
             // create the HostInfo, MonitorFactory, and runtime
-            hostInfo = BootstrapHelper.createHostInfo(runtimeMode, installDirectory, configDir, props);
+            hostInfo = BootstrapHelper.createHostInfo(runtimeMode, installDirectory, configDir, modeConfigDir, props);
             String monitorFactoryName = props.getProperty("fabric3.monitorFactoryClass");
             MonitorFactory monitorFactory;
             if (monitorFactoryName != null) {
@@ -194,7 +195,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             runtime.setJmxSubDomain(jmxDomain);
 
             // boot the runtime
-            coordinator = BootstrapHelper.createCoordinator(hostInfo, bootLoader);
+            coordinator = BootstrapHelper.createCoordinator(bootLoader);
             BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = createBootConfiguration(runtime, bootLoader);
             coordinator.setConfiguration(configuration);
             coordinator.bootPrimordial();
@@ -258,6 +259,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         // create the runtime bootrapper
         configuration.setBootstrapper(bootstrapper);
 
+        // configure the packages exported by the boot contribution
         Map<String, String> exportedPackages = new HashMap<String, String>();
         exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
         exportedPackages.put("org.fabric3.host.*", Names.VERSION);
@@ -267,7 +269,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         configuration.setExportedPackages(exportedPackages);
 
         // process extensions
-        File extensionsDir = runtime.getHostInfo().getExtensionsDirectory();
+        File extensionsDir = hostInfo.getExtensionsDirectory();
         List<ContributionSource> extensions = getExtensionContributions(extensionsDir);
         configuration.setExtensions(extensions);
 
@@ -279,7 +281,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     private ContributionSource getIntentsContribution(File dir) throws InitializationException {
-        //File dir = runtime.getHostInfo().getConfigDirectory();
         try {
             File file = new File(dir, INTENTS_FILE);
             if (!file.exists()) {

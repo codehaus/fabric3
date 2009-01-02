@@ -39,6 +39,8 @@ import java.io.File;
 import org.fabric3.host.runtime.HostInfo;
 
 /**
+ * HostInfo specific to the standalone runtime.
+ *
  * @version $Rev$ $Date$
  */
 public interface StandaloneHostInfo extends HostInfo {
@@ -49,6 +51,13 @@ public interface StandaloneHostInfo extends HostInfo {
      * @return the directory containing this runtime's configuration
      */
     File getConfigDirectory();
+
+    /**
+     * Returns the directory containing this runtime's boot-mode specific configuration.
+     *
+     * @return the directory containing this runtime's boot-mode specific configuration
+     */
+    File getModeConfigDirectory();
 
     /**
      * Returns the runtime extensions directory.

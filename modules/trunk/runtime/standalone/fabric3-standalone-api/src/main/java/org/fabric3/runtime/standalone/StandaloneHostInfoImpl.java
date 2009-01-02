@@ -47,6 +47,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
     private final RuntimeMode runtimeMode;
     private final URI domain;
     private final File baseDir;
+    private File modeConfigDirectory;
     private final Properties properties;
     private final File extensionsDirectory;
     private final File configDirectory;
@@ -60,21 +61,25 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
      * @param baseDir       directory containing the standalone installation
      * @param extensionsDir directory containing the standalone extensions
      * @param configDir     directory containing the standalone configuration
+     * @param modeConfigDir directory containing the standalone boot mode configuration
      * @param properties    properties for this runtime
      * @param tempDirectory the directory for writing temporary files
      */
-    public StandaloneHostInfoImpl(RuntimeMode runtimeMode, URI domain,
+    public StandaloneHostInfoImpl(RuntimeMode runtimeMode,
+                                  URI domain,
                                   File baseDir,
                                   File extensionsDir,
                                   File configDir,
+                                  File modeConfigDir,
                                   Properties properties,
                                   File tempDirectory) {
         this.runtimeMode = runtimeMode;
         this.domain = domain;
         this.baseDir = baseDir;
-        this.properties = properties;
         this.extensionsDirectory = extensionsDir;
         this.configDirectory = configDir;
+        this.modeConfigDirectory = modeConfigDir;
+        this.properties = properties;
         this.tempDirectory = tempDirectory;
     }
 
@@ -108,5 +113,9 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
 
     public File getConfigDirectory() {
         return configDirectory;
+    }
+
+    public File getModeConfigDirectory() {
+        return modeConfigDirectory;
     }
 }

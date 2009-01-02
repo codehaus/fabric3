@@ -67,6 +67,9 @@ public final class BootstrapHelper {
      */
     private static final String INSTALL_DIRECTORY_PROPERTY = "fabric3.installDir";
     private static final String DEFAULT_MONITOR_FACTORY = "org.fabric3.monitor.impl.JavaLoggingMonitorFactory";
+    private static final String BOOTSTRAPPER_CLASS = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
+    private static final String COORDINATOR_CLASS = "org.fabric3.fabric.runtime.DefaultCoordinator";
+    private static final String RUNTIME_CLASS = "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl";
 
     private BootstrapHelper() {
     }
@@ -205,7 +208,7 @@ public final class BootstrapHelper {
         }
     }
 
-    public static StandaloneHostInfo createHostInfo(RuntimeMode runtimeMode, File baseDir, File configDir, Properties props)
+    public static StandaloneHostInfo createHostInfo(RuntimeMode runtimeMode, File baseDir, File configDir, File modeConfigDir, Properties props)
             throws BootstrapException, IOException {
 
         File extensionsDir = getDirectory(baseDir, "extensions");
@@ -222,7 +225,7 @@ public final class BootstrapHelper {
                 throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(runtimeMode, domain, baseDir, extensionsDir, configDir, props, tempDir);
+            return new StandaloneHostInfoImpl(runtimeMode, domain, baseDir, extensionsDir, configDir, modeConfigDir, props, tempDir);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }
@@ -249,18 +252,13 @@ public final class BootstrapHelper {
     public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo,
                                                   ClassLoader hostClassLoader,
                                                   ClassLoader bootClassLoader,
-                                                  MonitorFactory monitorFactory)
-            throws BootstrapException {
-
-        // locate the implementation
-        String className = hostInfo.getProperty("fabric3.runtimeClass", "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
+                                                  MonitorFactory monitorFactory) throws BootstrapException {
         try {
-            Class<?> implClass = Class.forName(className, true, bootClassLoader);
+            Class<?> implClass = Class.forName(RUNTIME_CLASS, true, bootClassLoader);
             Constructor<?> ctor = implClass.getConstructor(MonitorFactory.class);
             StandaloneRuntime runtime = (StandaloneRuntime) ctor.newInstance(monitorFactory);
             runtime.setHostClassLoader(hostClassLoader);
             runtime.setHostInfo(hostInfo);
-
             return runtime;
         } catch (IllegalAccessException e) {
             throw new BootstrapException(e);
@@ -277,19 +275,16 @@ public final class BootstrapHelper {
 
     public static Bootstrapper createBootstrapper(StandaloneHostInfo hostInfo, ClassLoader bootClassLoader) throws BootstrapException {
         try {
-            // locate the system SCDL
-            File configDir = hostInfo.getConfigDirectory();
-            URL configUrl = configDir.toURI().toURL();
-            URL systemSCDL = new URL(configUrl, hostInfo.getProperty("fabric3.systemSCDL", "system.composite"));
-
-            // locate the implementation
-            String className = hostInfo.getProperty("fabric3.bootstrapperClass",
-                                                    "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl");
-            Class<?> implClass = Class.forName(className, true, bootClassLoader);
+            Class<?> implClass = Class.forName(BOOTSTRAPPER_CLASS, true, bootClassLoader);
             ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
+
+            // set the system SCDL location
+            File configDir = hostInfo.getConfigDirectory();
+            URL systemSCDL = new File(configDir, "system.composite").toURI().toURL();
             bootstrapper.setScdlLocation(systemSCDL);
+
             // set the system configuration
-            File systemConfig = new File(hostInfo.getConfigDirectory(), "systemConfig.xml");
+            File systemConfig = new File(hostInfo.getModeConfigDirectory(), "systemConfig.xml");
             if (systemConfig.exists()) {
                 bootstrapper.setSystemConfig(systemConfig.toURI().toURL());
             }
@@ -307,13 +302,10 @@ public final class BootstrapHelper {
     }
 
     @SuppressWarnings({"unchecked"})
-    public static RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> createCoordinator(StandaloneHostInfo hostInfo,
-                                                                                                 ClassLoader bootClassLoader)
+    public static RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> createCoordinator(ClassLoader bootClassLoader)
             throws BootstrapException {
-        String className = hostInfo.getProperty("fabric3.coordinatorClass",
-                                                "org.fabric3.fabric.runtime.DefaultCoordinator");
         try {
-            Class<?> implClass = Class.forName(className, true, bootClassLoader);
+            Class<?> implClass = Class.forName(COORDINATOR_CLASS, true, bootClassLoader);
             return (RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>) implClass.newInstance();
         } catch (ClassNotFoundException e) {
             throw new BootstrapException(e);
