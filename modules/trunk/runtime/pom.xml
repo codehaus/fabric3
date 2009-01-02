@@ -30,7 +30,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>federated</module>
 		<module>maven</module>
 		<module>standalone</module>
 		<module>webapp</module>
