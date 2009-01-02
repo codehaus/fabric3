@@ -37,8 +37,4 @@
     <!-- this wire reinjects the routing service into the application Domain -->
     <wire source="ApplicationDomain/routingService" target="FederatedRoutingService"/>
 
-    <component name="FederatedRoutingService">
-        <f3-impl:implementation.system class="org.fabric3.federation.routing.FederatedRoutingService"/>
-    </component>
-
 </composite>

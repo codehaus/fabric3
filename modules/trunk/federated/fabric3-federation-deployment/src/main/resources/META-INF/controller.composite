@@ -14,12 +14,18 @@
  different terms.  See the separate licenses for those programs included in the
  distribution for the permitted and restricted uses of such software.
 
-    $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
+    $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
-    <import.java package="org.fabric3.spi" version="0.8"/>
-    <export.java package="org.fabric3.federation.command" version="0.8"/>
-    <export.java package="org.fabric3.federation.executor" version="0.8"/>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="FederationControllerDeploymentExtension"
+           autowire="true">
 
-    <deployable composite="ns:FederationControllerDeploymentExtension" modes="controller"/>
-</contribution>
+
+    <component name="FederatedRoutingService">
+        <f3-impl:implementation.system class="org.fabric3.federation.routing.FederatedRoutingService"/>
+    </component>
+
+
+</composite>
