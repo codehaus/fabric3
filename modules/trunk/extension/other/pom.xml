@@ -34,7 +34,6 @@
 		<module>fabric3-container-web-jetty</module>
 		<module>fabric3-container-web-spi</module>
 		<module>fabric3-contribution-scanner</module>
-		<module>fabric3-contribution-scanner-spi</module>
 		<module>fabric3-contribution-scanner-war</module>
 		<module>fabric3-contribution-war</module>
 		<module>fabric3-conversation-propagation</module>
