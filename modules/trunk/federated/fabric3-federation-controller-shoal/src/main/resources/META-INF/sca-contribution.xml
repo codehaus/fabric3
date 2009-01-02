@@ -22,5 +22,5 @@
     <import.java package="org.fabric3.federation.executor" version="0.8"/>
     <import.java package="org.fabric3.federation.routing" version="0.8"/>
     <import.java package="org.fabric3.federation.shoal" version="0.8"/>
-    <deployable composite="ns:ShoalFederationControllerExtension"/>
+    <!--<deployable composite="ns:ShoalFederationControllerExtension"/>-->
 </contribution>

@@ -18,5 +18,5 @@
 -->
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
     <import.java package="org.fabric3.spi" version="0.8"/>
-    <deployable composite="ns:HttpProvisioningExtension"/>
+    <deployable composite="ns:HttpProvisioningExtension" modes="controller participant"/>
 </contribution>
