@@ -75,7 +75,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getName()).andReturn(DEPLOYABLE_ELEMENT);
 
         EasyMock.expect(reader.getAttributeValue((String) EasyMock.isNull(),
-                                                 EasyMock.eq("mode"))).andReturn(null);
+                                                 EasyMock.eq("modes"))).andReturn(null);
 
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(IMPORT_ELEMENT);

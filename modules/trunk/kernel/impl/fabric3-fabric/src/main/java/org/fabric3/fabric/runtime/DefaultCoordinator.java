@@ -43,6 +43,7 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.RuntimeMode;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.model.type.component.Composite;
@@ -222,12 +223,12 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     }
 
     /**
-     * Creates an extension composite by including deployables from contributions identified by the list of URIs
+     * Creates an extension composite by including deployables from contributions identified by the list of URIs. Since the extension composite is
+     * deployed to the runtime domain, including deployables from the list of contributions has the effect of deploying them.
      *
      * @param contributionUris the contributions containing the deployables to include
      * @return the extension composite
-     * @throws org.fabric3.host.runtime.InitializationException
-     *          if an error occurs creating the composite
+     * @throws InitializationException if an error occurs creating the composite
      */
     protected Composite createExtensionComposite(List<URI> contributionUris) throws InitializationException {
         MetaDataStore metaDataStore = runtime.getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
@@ -241,6 +242,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             Contribution contribution = metaDataStore.find(uri);
             assert contribution != null;
 
+            RuntimeMode runtimeMode = runtime.getHostInfo().getRuntimeMode();
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
 
@@ -252,7 +254,16 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
                     QName name = element.getSymbol().getKey();
                     Composite childComposite = element.getValue();
                     for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                        List<RuntimeMode> deployableModes = deployable.getRuntimeModes();
                         if (deployable.getName().equals(name)) {
+                            // Determine whether to include the extension deployable according to the following rules:
+                            // 1. If the deployable is configured to activate in VM mode, always include it
+                            // 2. Otherwise, only include the deployable when the runtime mode matches the deployable mode
+                            if ((runtimeMode == RuntimeMode.VM || !deployableModes.contains(RuntimeMode.VM)) 
+                                    && !deployableModes.contains(runtimeMode)) {
+                                // do not include the extension as the runtime is booted in a different mode than what the extension is configured for
+                                break;
+                            }
                             Include include = new Include();
                             include.setName(name);
                             include.setIncluded(childComposite);

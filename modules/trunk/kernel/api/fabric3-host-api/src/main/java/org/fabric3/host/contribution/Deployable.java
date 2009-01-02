@@ -17,6 +17,8 @@
 package org.fabric3.host.contribution;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.runtime.RuntimeMode;
@@ -29,18 +31,26 @@ import org.fabric3.host.runtime.RuntimeMode;
 @SuppressWarnings({"SerializableHasSerializationMethods"})
 public class Deployable implements Serializable {
     private static final long serialVersionUID = -710863113841788110L;
-    private QName name;
-    private QName type;
-    private RuntimeMode runtimeMode;
+    public static final List<RuntimeMode> DEFAULT_MODES;
 
-    public Deployable(QName name, QName type) {
-        this(name, type, RuntimeMode.VM);
+    static {
+        DEFAULT_MODES = new ArrayList<RuntimeMode>();
+        DEFAULT_MODES.add(RuntimeMode.VM);
     }
 
-    public Deployable(QName name, QName type, RuntimeMode runtimeMode) {
+    private QName name;
+    private QName type;
+    private List<RuntimeMode> runtimeModes;
+
+
+    public Deployable(QName name, QName type) {
+        this(name, type, DEFAULT_MODES);
+    }
+
+    public Deployable(QName name, QName type, List<RuntimeMode> runtimeModes) {
         this.name = name;
         this.type = type;
-        this.runtimeMode = runtimeMode;
+        this.runtimeModes = runtimeModes;
     }
 
     /**
@@ -62,11 +72,11 @@ public class Deployable implements Serializable {
     }
 
     /**
-     * Returns the runtime mode the deployable should be activated in.
+     * Returns the runtime modes the deployable should be activated in.
      *
-     * @return the runtime mode the deployable should be activated in.
+     * @return the runtime modes the deployable should be activated in.
      */
-    public RuntimeMode getRuntimeMode() {
-        return runtimeMode;
+    public List<RuntimeMode> getRuntimeModes() {
+        return runtimeModes;
     }
 }

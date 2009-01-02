@@ -17,6 +17,8 @@
 package org.fabric3.contribution.manifest;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -72,7 +74,6 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
 
 
     public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-        validateAttributes(reader, context);
         ContributionManifest contribution = new ContributionManifest();
         while (true) {
             int event = reader.next();
@@ -82,6 +83,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                 if (CONTRIBUTION.equals(element)) {
                     continue;
                 } else if (DEPLOYABLE.equals(element)) {
+                    validateDeployableAttributes(reader, context);
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
                         MissingMainifestAttribute failure =
@@ -106,21 +108,27 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                     } else {
                         qName = new QName(null, name);
                     }
-                    String mode = reader.getAttributeValue(null, "mode");
-                    RuntimeMode runtimeMode;
-                    if (mode == null) {
-                        runtimeMode = RuntimeMode.VM;
-                    } else if ("controller".equals(mode.trim())) {
-                        runtimeMode = RuntimeMode.CONTROLLER;
-                    } else if ("participant".equals(mode.trim())) {
-                        runtimeMode = RuntimeMode.PARTICIPANT;
+                    String modeAttr = reader.getAttributeValue(null, "modes");
+                    List<RuntimeMode> runtimeModes;
+                    if (modeAttr == null) {
+                        runtimeModes = Deployable.DEFAULT_MODES;
                     } else {
-                        runtimeMode = RuntimeMode.VM;
-                        InvalidValue error = new InvalidValue("Invalid mode attrbiute: " + mode, reader);
-                        context.addError(error);
+                        String[] modes = modeAttr.trim().split(" ");
+                        runtimeModes = new ArrayList<RuntimeMode>();
+                        for (String mode : modes) {
+                            if ("controller".equals(mode)) {
+                                runtimeModes.add(RuntimeMode.CONTROLLER);
+                            } else if ("participant".equals(mode)) {
+                                runtimeModes.add(RuntimeMode.PARTICIPANT);
+                            } else {
+                                runtimeModes = Deployable.DEFAULT_MODES;
+                                InvalidValue error = new InvalidValue("Invalid mode attrbiute: " + modeAttr, reader);
+                                context.addError(error);
+                                break;
+                            }
+                        }
                     }
-
-                    Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE, runtimeMode);
+                    Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE, runtimeModes);
                     contribution.addDeployable(deployable);
                 } else {
                     Object o;
@@ -151,10 +159,10 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
         }
     }
 
-    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+    private void validateDeployableAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"composite".equals(name)) {
+            if (!"composite".equals(name) && !"modes".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
