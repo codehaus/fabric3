@@ -136,8 +136,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
-    <orderEntry type="module" module-name="fabric3-async-loader" exported="" />
-    <orderEntry type="module" module-name="fabric3-async-runtime" exported="" />
     <orderEntry type="module" module-name="fabric3-contribution-scanner" exported="" />
     <orderEntry type="module" module-name="fabric3-conversation-propagation" exported="" />
     <orderEntry type="module" module-name="fabric3-jetty" exported="" />

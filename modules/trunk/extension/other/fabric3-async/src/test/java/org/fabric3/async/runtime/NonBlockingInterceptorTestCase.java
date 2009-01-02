@@ -43,11 +43,11 @@ public class NonBlockingInterceptorTestCase extends TestCase {
     public void testInvoke() throws Exception {
         final Message message = new MessageImpl();
         message.setWorkContext(workContext);
-        workScheduler.scheduleWork(isA(AsyncRequest.class));
-        expectLastCall().andStubAnswer(new IAnswer<Object>() {
+        workScheduler.scheduleWork(EasyMock.isA(AsyncRequest.class));
+        EasyMock.expectLastCall().andStubAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 AsyncRequest request =
-                        (AsyncRequest) getCurrentArguments()[0];
+                        (AsyncRequest) EasyMock.getCurrentArguments()[0];
                 request.run();
                 assertSame(next, request.getNext());
                 assertSame(message, request.getMessage());
@@ -56,7 +56,7 @@ public class NonBlockingInterceptorTestCase extends TestCase {
                 return null;
             }
         });
-        replay(workScheduler);
+        EasyMock.replay(workScheduler);
         assertSame(NonBlockingInterceptor.RESPONSE, interceptor.invoke(message));
 
     }

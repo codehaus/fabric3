@@ -19,11 +19,15 @@
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
-           name="AsyncLoaderExtension"
+           name="AsyncExtension"
            autowire="true">
 
     <component name="NonBlockingGenerator">
         <f3-impl:implementation.system class="org.fabric3.async.control.NonBlockingGenerator"/>
+    </component>
+
+    <component f3-core:key="org.fabric3.async.provision.NonBlockingInterceptorDefinition" name="NonBlockingInterceptorBuilder">
+        <f3-impl:implementation.system class="org.fabric3.async.runtime.NonBlockingInterceptorBuilder"/>
     </component>
 
 </composite>

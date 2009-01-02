@@ -126,9 +126,7 @@
             <includes>
                 <include>org.codehaus.fabric3:fabric3-jdk-proxy</include>
                 <include>org.codehaus.fabric3:fabric3-java</include>
-                <include>org.codehaus.fabric3:fabric3-async-provision</include>
-                <include>org.codehaus.fabric3:fabric3-async-loader</include>
-                <include>org.codehaus.fabric3:fabric3-async-runtime</include>
+                <include>org.codehaus.fabric3:fabric3-async</include>
                 <include>org.codehaus.fabric3:fabric3-conversation-propagation</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>

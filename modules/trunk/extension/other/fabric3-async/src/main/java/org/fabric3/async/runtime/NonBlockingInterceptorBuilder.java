@@ -18,10 +18,10 @@ package org.fabric3.async.runtime;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 
 /**
  * Creates a non-blocking interceptor
