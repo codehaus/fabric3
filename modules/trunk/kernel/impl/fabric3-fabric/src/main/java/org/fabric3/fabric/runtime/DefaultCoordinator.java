@@ -256,11 +256,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
                     for (Deployable deployable : contribution.getManifest().getDeployables()) {
                         List<RuntimeMode> deployableModes = deployable.getRuntimeModes();
                         if (deployable.getName().equals(name)) {
-                            // Determine whether to include the extension deployable according to the following rules:
-                            // 1. If the deployable is configured to activate in VM mode, always include it
-                            // 2. Otherwise, only include the deployable when the runtime mode matches the deployable mode
-                            if ((runtimeMode == RuntimeMode.VM || !deployableModes.contains(RuntimeMode.VM)) 
-                                    && !deployableModes.contains(runtimeMode)) {
+                            if (!deployableModes.contains(runtimeMode)) {
                                 // do not include the extension as the runtime is booted in a different mode than what the extension is configured for
                                 break;
                             }
