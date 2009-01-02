@@ -34,8 +34,6 @@
             <module>fabric3-federation-allocation</module>
             <module>fabric3-federation-deployment</module>
             <module>fabric3-federation-shoal</module>
-            <module>fabric3-federation-controller-shoal</module>
-            <module>fabric3-federation-participant-shoal</module>
             <module>fabric3-http-provisioning</module>
 	</modules>
 </project>
