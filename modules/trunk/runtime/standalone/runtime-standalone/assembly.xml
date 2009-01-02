@@ -137,7 +137,6 @@
                 <include>org.codehaus.fabric3:fabric3-http-provisioning</include>
                 <include>org.codehaus.fabric3:fabric3-federation-allocation</include>
                 <include>org.codehaus.fabric3:fabric3-federation-deployment</include>
-                <include>org.codehaus.fabric3:fabric3-federation-controller-shoal</include>
                 <include>org.codehaus.fabric3:fabric3-federation-shoal</include>
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-admin</include>
             </includes>
