@@ -26,11 +26,11 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.Export;
 import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -49,6 +49,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
     public void testDispatch() throws Exception {
         ContributionManifest manifest = loader.load(reader, null);
         control.verify();
+        assertTrue(manifest.isExtension());
         assertEquals(1, manifest.getDeployables().size());
         assertEquals(DEPLOYABLE, manifest.getDeployables().get(0).getName());
         assertEquals(1, manifest.getExports().size());
@@ -63,10 +64,13 @@ public class ContributionElementLoaderTestCase extends TestCase {
         loader = new ContributionElementLoader(loaderRegistry);
 
         reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0).atLeastOnce();
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(CONTRIBUTION);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
+        EasyMock.expect(reader.getAttributeValue((String) EasyMock.isNull(),
+                                                 EasyMock.eq("extension"))).andReturn("true");
+
         EasyMock.expect(reader.getName()).andReturn(DEPLOYABLE_ELEMENT);
         EasyMock.expect(reader.getAttributeValue((String) EasyMock.isNull(),
                                                  EasyMock.eq("composite"))).andReturn("test");

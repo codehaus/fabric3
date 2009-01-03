@@ -74,13 +74,16 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
 
 
     public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-        ContributionManifest contribution = new ContributionManifest();
+        ContributionManifest manifest = new ContributionManifest();
         while (true) {
             int event = reader.next();
             switch (event) {
             case START_ELEMENT:
                 QName element = reader.getName();
                 if (CONTRIBUTION.equals(element)) {
+                    validateContributionAttributes(reader, context);
+                    boolean extension = Boolean.valueOf(reader.getAttributeValue(null, "extension"));
+                    manifest.setExtension(extension);
                     continue;
                 } else if (DEPLOYABLE.equals(element)) {
                     validateDeployableAttributes(reader, context);
@@ -129,7 +132,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                         }
                     }
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE, runtimeModes);
-                    contribution.addDeployable(deployable);
+                    manifest.addDeployable(deployable);
                 } else {
                     Object o;
                     try {
@@ -140,9 +143,9 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                         return null;
                     }
                     if (o instanceof Export) {
-                        contribution.addExport((Export) o);
+                        manifest.addExport((Export) o);
                     } else if (o instanceof Import) {
-                        contribution.addImport((Import) o);
+                        manifest.addImport((Import) o);
                     } else if (o != null) {
                         UnrecognizedElement failure = new UnrecognizedElement(reader);
                         context.addError(failure);
@@ -152,9 +155,18 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                 break;
             case XMLStreamConstants.END_ELEMENT:
                 if (CONTRIBUTION.equals(reader.getName())) {
-                    return contribution;
+                    return manifest;
                 }
                 break;
+            }
+        }
+    }
+
+    private void validateContributionAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"extension".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
     }
