@@ -74,17 +74,7 @@
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-databinding-jaxb-provision</artifactId>
-                            <version>0.8-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-databinding-jaxb-loader</artifactId>
-                            <version>0.8-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-databinding-jaxb-runtime</artifactId>
+                            <artifactId>fabric3-databinding-jaxb</artifactId>
                             <version>0.8-SNAPSHOT</version>
                         </dependency>
                         <dependency>
