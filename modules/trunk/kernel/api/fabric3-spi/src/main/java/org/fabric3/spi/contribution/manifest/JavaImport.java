@@ -54,6 +54,6 @@ public class JavaImport implements Import {
     }
 
     public String toString() {
-        return "Imported package [" + packageInfo + "]";
+        return "[" + packageInfo + "]";
     }
 }
