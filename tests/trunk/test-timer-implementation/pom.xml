@@ -73,17 +73,7 @@
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-timer-loader</artifactId>
-                            <version>0.8-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-timer-provision</artifactId>
-                            <version>0.8-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-timer-runtime</artifactId>
+                            <artifactId>fabric3-timer</artifactId>
                             <version>0.8-SNAPSHOT</version>
                         </dependency>
                     </extensions>
