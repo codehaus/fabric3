@@ -279,7 +279,7 @@ public final class PackageInfo {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("Package: " + name);
+        StringBuilder builder = new StringBuilder("package: " + name);
         if (minVersion != null) {
             builder.append(" Min: ").append(minVersion);
         }
