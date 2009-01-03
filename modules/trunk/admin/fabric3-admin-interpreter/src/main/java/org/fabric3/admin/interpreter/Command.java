@@ -26,6 +26,10 @@ import java.io.PrintStream;
  */
 public interface Command {
 
+    void setUsername(String username);
+
+    void setPassword(String password);
+
     /**
      * Executes the command.
      *

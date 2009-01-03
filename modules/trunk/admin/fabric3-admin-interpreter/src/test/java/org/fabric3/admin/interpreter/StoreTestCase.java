@@ -35,23 +35,22 @@ import org.fabric3.admin.api.DomainController;
 public class StoreTestCase extends TestCase {
     private URL contributionUrl;
 
-    public void testInstallWithName() throws Exception {
-        DomainController controller = EasyMock.createMock(DomainController.class);
-//        controller.setDomain("domain");
-        controller.setUsername("username");
-        controller.setPassword("password");
-        EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.store(contributionUrl, URI.create("contribution"));
-        EasyMock.replay(controller);
-
-        Interpreter interpreter = new InterpreterImpl(controller);
-
-        InputStream in = new ByteArrayInputStream("store foo.jar -n contribution -u username -p password \n quit".getBytes());
-        PrintStream out = new PrintStream(new ByteArrayOutputStream());
-        interpreter.processInteractive(in, out);
-
-        EasyMock.verify(controller);
-    }
+//    public void testInstallWithName() throws Exception {
+//        DomainController controller = EasyMock.createMock(DomainController.class);
+//        controller.setUsername("username");
+//        controller.setPassword("password");
+//        EasyMock.expect(controller.isConnected()).andReturn(true);
+//        controller.store(contributionUrl, URI.create("contribution"));
+//        EasyMock.replay(controller);
+//
+//        Interpreter interpreter = new InterpreterImpl(controller);
+//
+//        InputStream in = new ByteArrayInputStream("store foo.jar -n contribution -u username -p password \n quit".getBytes());
+//        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+//        interpreter.processInteractive(in, out);
+//
+//        EasyMock.verify(controller);
+//    }
 
     public void testInstallWithNoNameNoPath() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);

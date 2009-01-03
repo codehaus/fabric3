@@ -16,12 +16,7 @@
  */
 package org.fabric3.admin.interpreter.parser;
 
-import java.util.Iterator;
-
-import org.antlr.runtime.Token;
-
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
@@ -37,32 +32,17 @@ public class AuthCommandParser implements CommandParser {
         this.controller = controller;
     }
 
-    public Command parse(Iterator<Token> iterator) throws ParseException {
-        Token token = iterator.next();
-        AuthCommand command = new AuthCommand(controller);
-        while (DomainAdminLexer.PARAMETER == token.getType()) {
-            // proceed past down
-            iterator.next();
-            token = iterator.next();
-            switch (token.getType()) {
-            case DomainAdminLexer.PARAM_USERNAME:
-                command.setUsername(iterator.next().getText());
-                break;
-            case DomainAdminLexer.PARAM_PASSWORD:
-                command.setPassword(iterator.next().getText());
-                break;
-            default:
-                throw new AssertionError("Invalid parameter token type: " + token.getText());
-            }
-            // proceed past up
-            iterator.next();
-            // move to next param
-            token = iterator.next();
-        }
-        // proceed past UP
-        iterator.next();
-        return command;
+    public String getUsage() {
+        return "auth -u username -p password";
     }
 
+    public Command parse(String[] tokens) throws ParseException {
+        if (tokens.length != 4) {
+            throw new ParseException("Illegal number of arguments");
+        }
+        AuthCommand command = new AuthCommand(controller);
+        ParserHelper.parseAuthorization(command, tokens, 0);
+        return command;
+    }
 
 }

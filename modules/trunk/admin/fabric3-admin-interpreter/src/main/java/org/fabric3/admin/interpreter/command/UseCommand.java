@@ -26,11 +26,22 @@ import org.fabric3.admin.interpreter.CommandException;
  * @version $Revision$ $Date$
  */
 public class UseCommand implements Command {
+    String username;
+    String password;
+
     private DomainController controller;
     private String domainAddress;
 
     public UseCommand(DomainController controller) {
         this.controller = controller;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setDomainAddress(String domainAddress) {

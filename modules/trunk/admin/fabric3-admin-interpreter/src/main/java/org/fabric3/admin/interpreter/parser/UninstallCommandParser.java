@@ -17,12 +17,9 @@
 package org.fabric3.admin.interpreter.parser;
 
 import java.net.URI;
-import java.util.Iterator;
-
-import org.antlr.runtime.Token;
+import java.net.URISyntaxException;
 
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
@@ -38,45 +35,24 @@ public class UninstallCommandParser implements CommandParser {
         this.controller = controller;
     }
 
-    public Command parse(Iterator<Token> iterator) throws ParseException {
-        Token token = iterator.next();
+    public String getUsage() {
+        return "uninstall <contribution> [-u username -p password]";
+    }
+
+    public Command parse(String[] tokens) throws ParseException {
+        if (tokens.length != 1 && tokens.length != 5) {
+            throw new ParseException("Illegal number of arguments");
+        }
         UninstallCommand command = new UninstallCommand(controller);
-        while (Token.UP != token.getType()) {
-            switch (token.getType()) {
-            case DomainAdminLexer.PARAMETER:
-                parseParameter(command, iterator);
-                break;
-            case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
-                iterator.next();
-                String text = iterator.next().getText();
-                command.setContributionUri(URI.create(text));
-                iterator.next();
-                break;
-            default:
-                throw new AssertionError("Invalid token: " + token.getText());
-            }
-            token = iterator.next();
+        try {
+            command.setContributionUri(new URI(tokens[0]));
+        } catch (URISyntaxException e) {
+            throw new ParseException("Invalid contribution name", e);
+        }
+        if (tokens.length == 5) {
+            ParserHelper.parseAuthorization(command, tokens, 1);
         }
         return command;
     }
-
-    private void parseParameter(UninstallCommand command, Iterator<Token> iterator) {
-        // proceed past DOWN;
-        iterator.next();
-        Token token = iterator.next();
-        switch (token.getType()) {
-        case DomainAdminLexer.PARAM_USERNAME:
-            command.setUsername(iterator.next().getText());
-            break;
-        case DomainAdminLexer.PARAM_PASSWORD:
-            command.setPassword(iterator.next().getText());
-            break;
-        default:
-            throw new AssertionError("Invalid parameter token type: " + token.getText());
-        }
-        // proceed past UP
-        iterator.next();
-    }
-
 
 }

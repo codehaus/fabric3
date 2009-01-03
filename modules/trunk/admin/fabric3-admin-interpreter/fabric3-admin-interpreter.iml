@@ -27,7 +27,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-admin-grammar" />
     <orderEntry type="module" module-name="fabric3-admin-api" />
     <orderEntry type="module-library">
       <library name="org.antlr:antlr-runtime:3.0.1">

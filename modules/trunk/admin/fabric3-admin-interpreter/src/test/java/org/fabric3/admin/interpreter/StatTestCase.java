@@ -43,7 +43,7 @@ public class StatTestCase extends TestCase {
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("st -username username -password password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("st -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 

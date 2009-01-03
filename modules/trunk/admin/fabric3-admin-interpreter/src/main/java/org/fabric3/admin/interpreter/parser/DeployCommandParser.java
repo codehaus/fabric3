@@ -16,16 +16,12 @@
  */
 package org.fabric3.admin.interpreter.parser;
 
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URI;
-import java.util.Iterator;
-
-import org.antlr.runtime.Token;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
@@ -41,85 +37,41 @@ public class DeployCommandParser implements CommandParser {
         this.controller = controller;
     }
 
-    public Command parse(Iterator<Token> iterator) throws ParseException {
-        Token token = iterator.next();
+    public String getUsage() {
+        return "deploy <contribution> <plan>|-plan <plan file> [-u username -p password]";
+    }
+
+    public Command parse(String[] tokens) throws ParseException {
+        if (tokens.length != 1 && tokens.length != 3 && tokens.length != 5 && tokens.length != 6 && tokens.length != 7) {
+            throw new ParseException("Illegal number of arguments");
+        }
         DeployCommand command = new DeployCommand(controller);
-        while (Token.UP != token.getType()) {
-            switch (token.getType()) {
-            case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
-                parseContributionName(command, iterator);
-                break;
-            case DomainAdminLexer.PARAM_PLAN_FILE:
-                parsePlanFile(command, iterator);
-                break;
-            case DomainAdminLexer.PARAM_PLAN_NAME:
-                parsePlanName(command, iterator);
-                break;
-            case DomainAdminLexer.PARAMETER:
-                parseParameter(command, iterator);
-                break;
-            default:
-                throw new AssertionError("Invalid token: " + token.getText());
+        try {
+            command.setContributionUri(new URI(tokens[0]));
+        } catch (URISyntaxException e) {
+            throw new ParseException("Invalid contribution name", e);
+        }
+        if ("-plan".equals(tokens[1])) {
+            try {
+                URL url = ParserHelper.parseUrl(tokens[2]);
+                command.setPlanFile(url);
+                if (tokens.length == 7) {
+                    ParserHelper.parseAuthorization(command, tokens, 3);
+                }
+            } catch (MalformedURLException e) {
+                throw new ParseException("Invalid plan URL", e);
             }
-            token = iterator.next();
+        } else {
+            if (tokens.length == 5) {
+                ParserHelper.parseAuthorization(command, tokens, 1);
+            } else {
+                command.setPlanName(tokens[1]);
+                if (tokens.length == 6) {
+                    ParserHelper.parseAuthorization(command, tokens, 2);
+                }
+            }
         }
         return command;
-    }
-
-    private void parseParameter(DeployCommand command, Iterator<Token> iterator) {
-        // proceed past DOWN;
-        iterator.next();
-        Token token = iterator.next();
-        switch (token.getType()) {
-        case DomainAdminLexer.PARAM_USERNAME:
-            command.setUsername(iterator.next().getText());
-            break;
-        case DomainAdminLexer.PARAM_PASSWORD:
-            command.setPassword(iterator.next().getText());
-            break;
-        default:
-            throw new AssertionError("Invalid parameter token type: " + token.getText());
-        }
-        // proceed past UP
-        iterator.next();
-    }
-
-    private void parseContributionName(DeployCommand command, Iterator<Token> iterator) throws ParseException {
-        // proceed past DOWN;
-        iterator.next();
-        String text = iterator.next().getText();
-        // proceed past UP
-        iterator.next();
-        command.setContributionUri(URI.create(text));
-    }
-
-    private void parsePlanName(DeployCommand command, Iterator<Token> iterator) throws ParseException {
-        // proceed past DOWN;
-        iterator.next();
-        String text = iterator.next().getText();
-        // proceed past UP
-        iterator.next();
-        command.setPlanName(text);
-    }
-
-    private void parsePlanFile(DeployCommand command, Iterator<Token> iterator) throws ParseException {
-        // proceed past DOWN;
-        iterator.next();
-        String text = iterator.next().getText();
-        // proceed past UP
-        iterator.next();
-        try {
-            URL plan;
-            if (!text.contains(":/")) {
-                // assume it is a file
-                plan = new File(text).toURI().toURL();
-            } else {
-                plan = new URL(text);
-            }
-            command.setPlanFile(plan);
-        } catch (MalformedURLException e) {
-            throw new ParseException("Invalid contribution URL", e);
-        }
     }
 
 }

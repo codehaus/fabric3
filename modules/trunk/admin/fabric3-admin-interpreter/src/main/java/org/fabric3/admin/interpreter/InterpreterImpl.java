@@ -19,20 +19,10 @@ package org.fabric3.admin.interpreter;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
-
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.cli.DomainAdminLexer;
-import org.fabric3.admin.cli.DomainAdminParser;
 import org.fabric3.admin.interpreter.parser.AuthCommandParser;
 import org.fabric3.admin.interpreter.parser.DeployCommandParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
@@ -56,7 +46,7 @@ public class InterpreterImpl implements Interpreter {
     private static final String PROMPT = "\nf3>";
     private DomainController controller;
     private Settings settings;
-    private Map<Integer, CommandParser> parsers;
+    private Map<String, CommandParser> parsers;
 
     public InterpreterImpl(DomainController controller) {
         this(controller, new TransientSettings());
@@ -86,25 +76,24 @@ public class InterpreterImpl implements Interpreter {
 
 
     public void process(String line, PrintStream out) throws InterpreterException {
-        // Run the lexer and token parser on the line.
-        DomainAdminLexer lexer = new DomainAdminLexer(new ANTLRStringStream(line));
-        DomainAdminParser parser = new DomainAdminParser(new CommonTokenStream(lexer));
-
-        DomainAdminParser.command_return ret;
-        try {
-            ret = parser.command();
-        } catch (RecognitionException e) {
-            // TODO interpret the exception
-            throw new InterpreterException(e);
+        // parse the command, strip whitespace and tokenize the command line
+        line = line.trim();
+        String commandString;
+        String tokens[];
+        int index = line.indexOf(" ");
+        if (index == -1) {
+            commandString = line;
+            tokens = new String[0];
+        } else {
+            commandString = line.substring(0, index);
+            String replaced = line.substring(index + 1).replaceAll("\\s{2,}", " ");
+            tokens = replaced.split(" ");
         }
-
-        // construct the AST and walk it
-        CommonTree tree = (CommonTree) ret.getTree();
-        CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
-        Iterator<Token> iterator = new CommonTreeIterator(nodes.iterator());
-
-        Command command = parseCommand(iterator);
-
+        CommandParser parser = parsers.get(commandString);
+        if (parser == null) {
+            throw new InterpreterException("Unrecognized command: " + commandString);
+        }
+        Command command = parser.parse(tokens);
         try {
             command.execute(out);
         } catch (CommandException e) {
@@ -114,40 +103,38 @@ public class InterpreterImpl implements Interpreter {
     }
 
     /**
-     * Parses the command in the AST and returns a corresponding Command object.
-     *
-     * @param iterator the AST iterator
-     * @return the command object
-     * @throws ParseException if an exception parsing the AST occurs
-     */
-    private Command parseCommand(Iterator<Token> iterator) throws ParseException {
-        // advance to the command token
-        Token commandToken = iterator.next();
-        CommandParser cmdParser = parsers.get(commandToken.getType());
-        if (cmdParser == null) {
-            // this would represent an error in the grammar as an unrecognixzed command should throw an error when the parse tree is constructed
-            throw new AssertionError("Command not recognized: " + commandToken.getText());
-        }
-        // advance past the DOWN token after the command token
-        iterator.next();
-        return cmdParser.parse(iterator);
-    }
-
-    /**
      * Initializes the command parsers
      */
     private void createParsers() {
-        parsers = new HashMap<Integer, CommandParser>();
-        parsers.put(DomainAdminLexer.STORE_CMD, new StoreCommandParser(controller));
-        parsers.put(DomainAdminLexer.INSTALL_CMD, new InstallCommandParser(controller));
-        parsers.put(DomainAdminLexer.AUTH_CMD, new AuthCommandParser(controller));
-        parsers.put(DomainAdminLexer.STAT_CMD, new StatCommandParser(controller));
-        parsers.put(DomainAdminLexer.DEPLOY_CMD, new DeployCommandParser(controller));
-        parsers.put(DomainAdminLexer.UNDEPLOY_CMD, new UndeployCommandParser(controller));
-        parsers.put(DomainAdminLexer.UNINSTALL_CMD, new UninstallCommandParser(controller));
-        parsers.put(DomainAdminLexer.REMOVE_CMD, new RemoveCommandParser(controller));
-        parsers.put(DomainAdminLexer.USE_CMD, new UseCommandParser(controller, settings));
-        parsers.put(DomainAdminLexer.PROVISION_CMD, new ProvisionCommandParser(controller));
+        parsers = new HashMap<String, CommandParser>();
+        AuthCommandParser authenticateParser = new AuthCommandParser(controller);
+        parsers.put("au", authenticateParser);
+        parsers.put("authenticate", authenticateParser);
+        StoreCommandParser storeParser = new StoreCommandParser(controller);
+        parsers.put("store", storeParser);
+        parsers.put("sto", storeParser);
+        InstallCommandParser installParser = new InstallCommandParser(controller);
+        parsers.put("install", installParser);
+        parsers.put("ins", installParser);
+        StatCommandParser statusParser = new StatCommandParser(controller);
+        parsers.put("status", statusParser);
+        parsers.put("st", statusParser);
+        DeployCommandParser deployParser = new DeployCommandParser(controller);
+        parsers.put("deploy", deployParser);
+        parsers.put("de", deployParser);
+        UndeployCommandParser undeployParser = new UndeployCommandParser(controller);
+        parsers.put("undeploy", undeployParser);
+        parsers.put("ude", undeployParser);
+        UninstallCommandParser uninstalParser = new UninstallCommandParser(controller);
+        parsers.put("uninstall", uninstalParser);
+        parsers.put("uin", uninstalParser);
+        RemoveCommandParser removeParser = new RemoveCommandParser(controller);
+        parsers.put("remove", removeParser);
+        parsers.put("rm", removeParser);
+        parsers.put("use", new UseCommandParser(controller, settings));
+        ProvisionCommandParser provisionParser = new ProvisionCommandParser(controller);
+        parsers.put("pr", provisionParser);
+        parsers.put("provision", provisionParser);
     }
 
     /**
@@ -160,16 +147,4 @@ public class InterpreterImpl implements Interpreter {
         }
     }
 
-    /**
-     * Dumps the tokens in the AST. Used for testing.
-     *
-     * @param iterator the token iterator to walk
-     */
-    private void dumpTokens(Iterator<Token> iterator) {
-        while (iterator.hasNext()) {
-            Object o = iterator.next();
-            System.out.println("--->" + o + ":" + o.getClass());
-            o.toString();
-        }
-    }
 }

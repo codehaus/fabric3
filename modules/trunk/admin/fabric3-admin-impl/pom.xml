@@ -33,11 +33,6 @@
             <artifactId>fabric3-admin-api</artifactId>
             <version>0.8-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-admin-grammar</artifactId>
-            <version>0.8-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>

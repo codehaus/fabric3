@@ -16,24 +16,14 @@
  */
 package org.fabric3.admin.interpreter;
 
-import java.util.Iterator;
-
-import org.antlr.runtime.Token;
-
 /**
- * Parses command tokens and their children in the AST generated from a set of instructions given to the Interpeter.
  *
  * @version $Revision$ $Date$
  */
 public interface CommandParser {
 
-    /**
-     * Walk the AST starting with the command token this parser handles. When this method returns, the CommandParser must position the token stream on
-     * the UP token after all children have been iterated.
-     *
-     * @param iterator the AST iterator
-     * @return the parsed Command object
-     * @throws ParseException if a parse error is encountered
-     */
-    Command parse(Iterator<Token> iterator) throws ParseException;
+    String getUsage();
+
+    Command parse(String[] tokens) throws ParseException;
+
 }

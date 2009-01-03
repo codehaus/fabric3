@@ -16,12 +16,7 @@
  */
 package org.fabric3.admin.interpreter.parser;
 
-import java.util.Iterator;
-
-import org.antlr.runtime.Token;
-
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
@@ -40,31 +35,22 @@ public class UseCommandParser implements CommandParser {
         this.settings = settings;
     }
 
-    public Command parse(Iterator<Token> iterator) throws ParseException {
-        Token token = iterator.next();
-        UseCommand command = new UseCommand(controller);
-        while (Token.UP != token.getType()) {
-            switch (token.getType()) {
-            case DomainAdminLexer.PARAM_DOMAIN_NAME:
-                // proceed past DOWN;
-                iterator.next();
-                String domain = iterator.next().getText();
-                String address = settings.getDomainAddress(domain);
-                if (address == null) {
-                    throw new UnknownDomainException("The domain has not been configured: " + domain);
-                }
-                command.setDomainAddress(address);
-
-                // proceed past UP
-                iterator.next();
-                break;
-            default:
-                throw new AssertionError("Invalid token: " + token.getText());
-            }
-            token = iterator.next();
-        }
-        return command;
+    public String getUsage() {
+        return "use <domain>";
     }
 
+    public Command parse(String[] tokens) throws ParseException {
+        if (tokens.length != 1) {
+            throw new ParseException("Illegal number of arguments");
+        }
+        UseCommand command = new UseCommand(controller);
+        String domain = tokens[0];
+        String address = settings.getDomainAddress(domain);
+        if (address == null) {
+            throw new UnknownDomainException("The domain has not been configured: " + domain);
+        }
+        command.setDomainAddress(address);
+        return command;
+    }
 
 }
