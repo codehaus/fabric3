@@ -41,7 +41,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-timer-provision" />
     <orderEntry type="module" module-name="fabric3-timer-spi" />
     <orderEntry type="module" module-name="fabric3-java" />
   </component>
