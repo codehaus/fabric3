@@ -21,11 +21,11 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.fabric3.spi.introspection.contract.OperationIntrospector;
 import org.fabric3.jaxb.provision.JAXBConstants;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.contract.OperationIntrospector;
 
 /**
  * Introspects operations for the presence of JAXB types. If a parameter is a JAXB type, the JAXB intent is added to the operation.

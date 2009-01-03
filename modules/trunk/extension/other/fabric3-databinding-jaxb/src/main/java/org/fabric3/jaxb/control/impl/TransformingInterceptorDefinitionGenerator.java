@@ -21,8 +21,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
+import org.w3c.dom.Element;
 
 import org.fabric3.jaxb.control.api.JAXBTransformationService;
 import org.fabric3.jaxb.provision.AbstractTransformingInterceptorDefinition;
@@ -36,11 +41,6 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
-import org.w3c.dom.Element;
 
 /**
  * Generates interceptor definitions for operations marked with the JAXB intent.

@@ -19,11 +19,11 @@ package org.fabric3.jaxb.runtime.impl;
 import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.annotations.EagerInit;
+
 import org.fabric3.jaxb.runtime.spi.DataBindingTransformerFactory;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.transform.PullTransformer;
-
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * DataBindingTransformerFactory for converting between JAXB and XML string representations.

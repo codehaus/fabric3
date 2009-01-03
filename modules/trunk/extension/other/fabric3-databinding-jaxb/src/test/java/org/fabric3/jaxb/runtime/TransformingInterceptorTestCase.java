@@ -20,12 +20,12 @@ import javax.xml.bind.JAXBContext;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.jaxb.runtime.impl.JAXB2XmlTransformer;
 import org.fabric3.jaxb.runtime.impl.TransformingInterceptor;
 import org.fabric3.jaxb.runtime.impl.Xml2JAXBTransformer;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * @version $Revision$ $Date$

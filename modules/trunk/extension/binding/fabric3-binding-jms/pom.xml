@@ -94,7 +94,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-databinding-jaxb-loader</artifactId>
+            <artifactId>fabric3-databinding-jaxb</artifactId>
             <version>0.8-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

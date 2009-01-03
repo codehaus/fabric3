@@ -23,9 +23,9 @@ import javax.xml.bind.Marshaller;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.AbstractPullTransformer;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * Transforms a JAXB object to an XML string representation.
