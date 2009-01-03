@@ -120,7 +120,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-databinding-jaxb-loader" />
+    <orderEntry type="module" module-name="fabric3-databinding-jaxb" />
   </component>
 </module>
 
