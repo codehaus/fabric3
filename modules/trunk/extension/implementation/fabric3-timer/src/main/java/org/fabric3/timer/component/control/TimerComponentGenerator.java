@@ -39,7 +39,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
-import org.fabric3.timer.component.scdl.TimerImplementation;
+import org.fabric3.timer.component.model.TimerImplementation;
 
 /**
  * Generates a TimerComponentDefinition from a ComponentDefinition corresponding to a timer component implementation

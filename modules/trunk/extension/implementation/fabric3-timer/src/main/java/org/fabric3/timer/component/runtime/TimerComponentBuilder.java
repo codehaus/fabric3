@@ -23,6 +23,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.component.Scope;
+import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.component.PojoComponentContext;
@@ -31,19 +33,17 @@ import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.SingletonObjectFactory;
-import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
-import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Revision$ $Date$

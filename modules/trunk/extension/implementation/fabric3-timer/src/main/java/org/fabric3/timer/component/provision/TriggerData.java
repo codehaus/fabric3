@@ -16,8 +16,8 @@
  */
 package org.fabric3.timer.component.provision;
 
-import java.util.concurrent.TimeUnit;
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Encapsulates data for a timer trigger.

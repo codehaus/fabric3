@@ -22,6 +22,14 @@
            targetNamespace="org.codehaus.fabric3"
            autowire="true">
 
+    <component name="TimerImplementationLoader" f3-core:key="f3-impl:implementation.timer">
+        <f3-impl:implementation.system class="org.fabric3.timer.component.introspection.TimerImplementationLoader"/>
+    </component>
+
+    <component name="TimerComponentGenerator">
+        <f3-impl:implementation.system class="org.fabric3.timer.component.control.TimerComponentGenerator"/>
+    </component>
+
 
     <component name="TimerComponentBuilder">
         <f3-impl:implementation.system class="org.fabric3.timer.component.runtime.TimerComponentBuilder"/>

@@ -16,13 +16,13 @@
  */
 package org.fabric3.timer.component.runtime;
 
-import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 
 /**

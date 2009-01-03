@@ -36,7 +36,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.timer.component.provision.TriggerData;
 import static org.fabric3.timer.component.provision.TriggerData.UNSPECIFIED;
 import org.fabric3.timer.component.provision.TriggerType;
-import org.fabric3.timer.component.scdl.TimerImplementation;
+import org.fabric3.timer.component.model.TimerImplementation;
 
 /**
  * Loads <implementation.timer> entries in a composite.
