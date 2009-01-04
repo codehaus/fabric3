@@ -33,7 +33,8 @@ public class AuthCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "auth -u username -p password";
+        return "authenticate (au): Set authentication credentials.\n" +
+                "usage: auth -u username -p password";
     }
 
     public Command parse(String[] tokens) throws ParseException {

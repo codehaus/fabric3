@@ -38,7 +38,8 @@ public class DeployCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "deploy <contribution> [<plan>|-plan <plan file>] [-u username -p password]";
+        return "deploy (de): Deploy an installed contribution.\n" +
+                "usage: deploy <contribution> [<plan>|-plan <plan file>] [-u username -p password]";
     }
 
     public Command parse(String[] tokens) throws ParseException {

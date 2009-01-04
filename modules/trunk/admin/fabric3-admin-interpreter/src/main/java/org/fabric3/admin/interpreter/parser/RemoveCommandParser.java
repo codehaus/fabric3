@@ -36,7 +36,8 @@ public class RemoveCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "remove <contribution file> [-u username -p password]";
+        return "remove (rm): Removes a stored contibution.\n" +
+                "usage: remove <contribution file> [-u username -p password]";
     }
 
     public Command parse(String[] tokens) throws ParseException {

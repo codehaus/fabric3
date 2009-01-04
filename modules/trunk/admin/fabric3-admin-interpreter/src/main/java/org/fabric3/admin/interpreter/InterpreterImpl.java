@@ -52,7 +52,7 @@ public class InterpreterImpl implements Interpreter {
             + "   provision (pr) \n"
             + "   remove (rm) \n"
             + "   status (st) \n"
-            + "   store (stor) \n"
+            + "   store (sto) \n"
             + "   undeploy (ude) \n"
             + "   uninstall (uin) \n"
             + "   use \n";

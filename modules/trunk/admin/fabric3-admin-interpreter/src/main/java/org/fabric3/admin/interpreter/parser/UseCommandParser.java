@@ -36,7 +36,8 @@ public class UseCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "use <domain>";
+        return "use: Sets the working domain.\n" +
+                "usage: use <domain>";
     }
 
     public Command parse(String[] tokens) throws ParseException {

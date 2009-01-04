@@ -33,7 +33,8 @@ public class StatCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "stat -u username -p password";
+        return "status (st): Displays the status of contributions in the domain.\n" +
+                "usage: stat -u username -p password";
     }
 
     public Command parse(String[] tokens) throws ParseException {

@@ -36,7 +36,8 @@ public class UndeployCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "undeploy <contribution> [-u username -p password]";
+        return "undeploy (ude): Undeploys a contribution.\n" +
+                "usage: undeploy <contribution> [-u username -p password]";
     }
 
     public Command parse(String[] tokens) throws ParseException {

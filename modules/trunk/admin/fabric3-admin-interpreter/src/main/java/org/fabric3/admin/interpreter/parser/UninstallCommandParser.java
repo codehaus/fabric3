@@ -36,7 +36,8 @@ public class UninstallCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "uninstall <contribution> [-u username -p password]";
+        return "uninstall (uin): Uninstalls a previously installed contribution.\n" +
+                "usage: uninstall <contribution> [-u username -p password]";
     }
 
     public Command parse(String[] tokens) throws ParseException {

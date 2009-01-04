@@ -36,7 +36,9 @@ public class InstallCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "install <contribution> [-u username -p password]";
+        return "install (ins): Install a stored contribution. Loads the contribution, resolves dependencies, and makes it available " +
+                "for deployment.\n" +
+                "usage: install <contribution> [-u username -p password]";
     }
 
     public Command parse(String[] tokens) throws ParseException {

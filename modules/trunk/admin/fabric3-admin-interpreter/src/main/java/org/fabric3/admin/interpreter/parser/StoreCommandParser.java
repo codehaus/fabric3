@@ -36,7 +36,8 @@ public class StoreCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "store <contribution file> [-u username -p password]";
+        return "store (sto): Uploads a contribution to the domain repository.\n" +
+                "usage: store <contribution file> [-u username -p password]";
     }
 
     public Command parse(String[] tokens) throws ParseException {
