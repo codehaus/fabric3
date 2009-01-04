@@ -26,7 +26,7 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
-    <artifactId>billing-service</artifactId>
+    <artifactId>bookstore-billing-service</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>Billing Service Implementation</name>
