@@ -40,13 +40,16 @@ public class ProvisionCommandParser implements CommandParser {
     }
 
     public Command parse(String[] tokens) throws ParseException {
-        if (tokens.length != 2 && tokens.length != 3 && tokens.length != 5 && tokens.length != 6 && tokens.length != 7) {
+        if (tokens.length != 1 && tokens.length != 2 && tokens.length != 3 && tokens.length != 5 && tokens.length != 6 && tokens.length != 7) {
             throw new ParseException("Illegal number of arguments");
         }
         ProvisionCommand command = new ProvisionCommand(controller);
         try {
             URL contributionUrl = ParserHelper.parseUrl(tokens[0]);
             command.setContribution(contributionUrl);
+            if (tokens.length == 1) {
+                return command;
+            }
         } catch (MalformedURLException e) {
             throw new ParseException("Invalid contribution URL", e);
         }
