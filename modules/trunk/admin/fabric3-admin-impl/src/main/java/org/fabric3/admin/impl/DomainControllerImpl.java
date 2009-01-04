@@ -17,6 +17,9 @@
 package org.fabric3.admin.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.Set;
@@ -27,11 +30,6 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
@@ -82,26 +80,36 @@ public class DomainControllerImpl implements DomainController {
             // find HTTP port and post contents
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
 
-            // store the contribution using an HTTP post to the ContributionService
+            // store the contribution using a chunked HTTP post to the ContributionService
             String address;
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
             address = (String) conn.getAttribute(oName, "ContributionServiceAddress");
 
-            DefaultHttpClient httpclient = new DefaultHttpClient();
-//            String base = null;
-//            int port = -1;
-//            AuthScope scope = new AuthScope(base, port);
-//            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
-//            httpclient.getCredentialsProvider().setCredentials(scope, credentials);
+            URL url = new URL(address + "/" + uri);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setChunkedStreamingMode(4096);
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-type", "binary/octet-stream");
 
-            HttpPost post = new HttpPost(address + "/" + uri);
-            InputStreamEntity entity = new InputStreamEntity(contribution.openStream(), -1);
-            entity.setContentType("binary/octet-stream");
-            entity.setChunked(true);
-            post.setEntity(entity);
+            InputStream is = null;
+            OutputStream os = null;
+            try {
+                os = connection.getOutputStream();
+                is = contribution.openStream();
+                copy(is, os);
+                os.flush();
+            } finally {
+                if (os != null) {
+                    os.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            }
 
-            HttpResponse response = httpclient.execute(post);
-            int code = response.getStatusLine().getStatusCode();
+            int code = connection.getResponseCode();
             if (400 == code) {
                 throw new ContributionManagementException("Error storing contribution");
             } else if (420 == code) {
@@ -278,4 +286,16 @@ public class DomainControllerImpl implements DomainController {
         }
 
     }
+
+    private static int copy(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[4096];
+        int count = 0;
+        int n;
+        while (-1 != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+            count += n;
+        }
+        return count;
+    }
+
 }
