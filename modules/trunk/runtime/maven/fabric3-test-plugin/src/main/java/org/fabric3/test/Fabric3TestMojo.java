@@ -24,6 +24,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.fabric3.test.contribution.MavenContributionScanner;
+import org.fabric3.test.contribution.MavenContributionScannerImpl;
 import org.fabric3.test.contribution.ScanResult;
 
 /**
@@ -45,12 +46,8 @@ public class Fabric3TestMojo extends AbstractMojo {
      */
     protected MavenProject mavenProject;
 
-    /**
-     * @parameter expression="${org.fabric3.test.contribution,MavenContributionScanner}"
-     * @required
-     * @readonly
-     */
-    protected MavenContributionScanner mavenContributionScanner;
+    // Contribution scanner
+    private MavenContributionScanner scanner = new MavenContributionScannerImpl();
 
     /**
      * Contributes scanned contributions and run the tests.
@@ -59,7 +56,7 @@ public class Fabric3TestMojo extends AbstractMojo {
         
         try {
         
-            ScanResult scanResult = mavenContributionScanner.scan(mavenProject);
+            ScanResult scanResult = scanner.scan(mavenProject);
             URL testContribution = scanResult.getTestContribution();
             Set<URL> extensionContributions = scanResult.getExtensionContributions();
             Set<URL> userContributions = scanResult.getUserContributions();

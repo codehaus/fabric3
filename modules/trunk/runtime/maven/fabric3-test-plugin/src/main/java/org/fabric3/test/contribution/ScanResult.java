@@ -57,15 +57,6 @@ public class ScanResult {
     }
     
     /**
-     * Adds a user contribution.
-     * 
-     * @param userContribution User contribution.
-     */
-    public void addUserContribution(URL userContribution) {
-        userContributions.add(userContribution);
-    }
-    
-    /**
      * Gets the extension contributions.
      * 
      * @return Extension contributions.
@@ -75,12 +66,17 @@ public class ScanResult {
     }
     
     /**
-     * Adds an extension contribution.
+     * Adds a  contribution.
      * 
-     * @param extensionContribution Extension contribution.
+     * @param contribution Extension contribution.
+     * @param extension True if the contribution is an extension
      */
-    public void addExtensionContribution(URL extensionContribution) {
-        extensionContributions.add(extensionContribution);
+    public void addContribution(URL contribution, boolean extension) {
+        if (extension) {
+            extensionContributions.add(contribution);
+        } else {
+            userContributions.add(contribution);
+        }
     }
 
 }
