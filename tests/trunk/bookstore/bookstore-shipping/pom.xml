@@ -26,7 +26,7 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
-    <artifactId>bookstore-shipping-service</artifactId>
+    <artifactId>bookstore-shipping</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>Shipping Service Implementation</name>

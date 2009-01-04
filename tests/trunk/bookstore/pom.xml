@@ -32,8 +32,8 @@
     <name>Fabric3 SCA Capability Test</name>
     <description>Fabric3 Tests covering all the SCA capabilities.</description>
     <modules>
-        <module>billing-service</module>
-        <module>shipping-service</module>
-        <module>order-service</module>
+        <module>bookstore-billing</module>
+        <module>bookstore-shipping</module>
+        <module>bookstore-order</module>
     </modules>
 </project>
