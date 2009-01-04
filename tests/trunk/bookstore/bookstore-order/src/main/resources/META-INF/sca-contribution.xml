@@ -16,7 +16,8 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.fabric3.bookstore">
-    <exort.java package="org.fabric3.bookstore.persistence.api" version="0.1-SNAPSHOT"/>
-    <deployable composite="ns:BookstorePersistence"/>
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:bookstore="urn:fabric3.org:bookstore">
+    <import.java package="org.fabric3.bookstore.shipping.api" version="0.1-SNAPSHOT"/>
+    <import.java package="org.fabric3.bookstore.billing.api" version="0.1-SNAPSHOT"/>
+    <deployable composite="bookstore:Order"/>
 </contribution>
