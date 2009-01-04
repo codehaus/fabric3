@@ -15,8 +15,10 @@
  */
 package org.fabric3.test.contribution;
 
-import java.util.Set;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -32,6 +34,6 @@ public interface MavenContributionScanner {
      * @param mavenProject Maven project.
      * @return Returns a set of identified contributions.
      */
-    Set<Contribution> scan(MavenProject mavenProject);
+    ScanResult scan(MavenProject mavenProject) throws MojoExecutionException, IOException;
 
 }

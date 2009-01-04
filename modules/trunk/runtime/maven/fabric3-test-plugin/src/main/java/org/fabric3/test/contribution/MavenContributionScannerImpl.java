@@ -15,8 +15,17 @@
  */
 package org.fabric3.test.contribution;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -31,21 +40,46 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
      * @param mavenProject Maven project.
      * @return Returns a set of identified contributions.
      */
-    public Set<Contribution> scan(MavenProject mavenProject) {
+    public ScanResult scan(MavenProject mavenProject) throws MojoExecutionException, IOException {
         
-        // 1. Get all of projects dependencies
-        // 2. Get all the transitive dependencies for the above
-        // 3. Get the URL for all the above
-        // 4. Get the URL for target/classes
-        // 5. Get the URL for target/test-classes
-        // 6. Create a URL classloader from 4, 5 and 6
-        // 7. Call getResources("META-INF/sca-contribution.xml") on 6
-        // 8. On returned URLs, compute the containing URLs
-        // 9. Read the SCA contribution XML to identify a contribution as extension or not
-        // 10. Check if the URL is test-classes to identify the contribution as test or not
-        // 11. Return the set of contributions
+        URL testContribution = getTestContribution(mavenProject);
         
-        return null;
+        ScanResult scanResult = new ScanResult(testContribution);
+        
+        Set<?> artifacts = mavenProject.getArtifacts();
+        URL classesDir = new File("target/test-classes").toURL();
+        URL[] urls = new URL[artifacts.size() + 1];
+        
+        urls[0] = classesDir;
+        Iterator<?> iterator = artifacts.iterator();
+        for (int i = 1; i < urls.length;i++) {
+            urls[i] = Artifact.class.cast(iterator.next()).getFile().toURL();
+        }
+        
+        URLClassLoader urlClassLoader = new URLClassLoader(urls);
+        Enumeration<URL> scannedManifests = urlClassLoader.getResources("META-INF/sca-contribution.xml");
+        
+        while (scannedManifests.hasMoreElements()) {
+            // 1. On returned URLs, compute the containing URLs relative to META-INF/sca-contribution.xml
+            // 2. Read the SCA contribution XML to identify a contribution as extension or not
+            // 3. Add the user or extension contribution to the scan result
+        }
+        
+        return scanResult;
+        
+    }
+
+    /*
+     * Gets the test contribution. Test contribution is the contents of target/test-classes directory 
+     * with an sca-contribution.xml in the META-INF directory.
+     */
+    private URL getTestContribution(MavenProject mavenProject) throws MojoExecutionException, MalformedURLException {
+        
+        File testManifest = new File(mavenProject.getBasedir(), "target/test-classes/META-INF/sca-contribution.xml");
+        if (!testManifest.exists()) {
+            throw new MojoExecutionException("No sca-contribution.xml in test/resources/META-INF");
+        }
+        return new File(mavenProject.getBasedir(), "target/test-classes").toURL();
         
     }
 

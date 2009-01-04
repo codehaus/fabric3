@@ -15,24 +15,58 @@
  */
 package org.fabric3.test;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Set;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 import org.fabric3.test.contribution.MavenContributionScanner;
+import org.fabric3.test.contribution.ScanResult;
 
 /**
  * Fabric3 Mojo for testing SCA services.
+ * 
+ * @goal test
+ * @phase integration-test
+ * @execute phase="integration-test"
  *
  */
 public class Fabric3TestMojo extends AbstractMojo {
-    
+
+    /**
+     * POM
+     *
+     * @parameter expression="${project}"
+     * @readonly
+     * @required
+     */
+    protected MavenProject mavenProject;
+
+    /**
+     * @parameter expression="${org.fabric3.test.contribution,MavenContributionScanner}"
+     * @required
+     * @readonly
+     */
     protected MavenContributionScanner mavenContributionScanner;
 
     /**
      * Contributes scanned contributions and run the tests.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        // TODO Auto-generated method stub
+        
+        try {
+        
+            ScanResult scanResult = mavenContributionScanner.scan(mavenProject);
+            URL testContribution = scanResult.getTestContribution();
+            Set<URL> extensionContributions = scanResult.getExtensionContributions();
+            Set<URL> userContributions = scanResult.getUserContributions();
+            
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
 
     }
 
