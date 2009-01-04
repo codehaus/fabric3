@@ -26,9 +26,9 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
-    <artifactId>bookstore-persistence-impl</artifactId>
+    <artifactId>order-service</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>Bookstore Persistence Implementation</name>
-    <description>Bookstore Persistence Implementation.</description>
+    <name>Order Service Implementation</name>
+    <description>Order Service Implementation.</description>
 </project>
