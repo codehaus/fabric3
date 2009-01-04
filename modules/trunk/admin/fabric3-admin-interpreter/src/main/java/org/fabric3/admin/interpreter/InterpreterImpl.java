@@ -44,6 +44,19 @@ import org.fabric3.admin.interpreter.parser.UseCommandParser;
  */
 public class InterpreterImpl implements Interpreter {
     private static final String PROMPT = "\nf3>";
+    private static final String HELP = "help";
+    private static final String HELP_TEXT = "Type help <subcommand> for more information: \n\n"
+            + "   authenticate (au) \n"
+            + "   deploy (de) \n"
+            + "   install (ins) \n"
+            + "   provision (pr) \n"
+            + "   remove (rm) \n"
+            + "   status (st) \n"
+            + "   store (stor) \n"
+            + "   undeploy (ude) \n"
+            + "   uninstall (uin) \n"
+            + "   use \n";
+
     private DomainController controller;
     private Settings settings;
     private Map<String, CommandParser> parsers;
@@ -88,6 +101,19 @@ public class InterpreterImpl implements Interpreter {
             commandString = line.substring(0, index);
             String replaced = line.substring(index + 1).replaceAll("\\s{2,}", " ");
             tokens = replaced.split(" ");
+        }
+        if (HELP.equals(commandString)) {
+            if (tokens.length == 0) {
+                out.println(HELP_TEXT);
+            } else {
+                CommandParser parser = parsers.get(tokens[0]);
+                if (parser == null) {
+                    throw new InterpreterException("Unrecognized command: " + commandString);
+                }
+                out.println(parser.getUsage());
+            }
+
+            return;
         }
         CommandParser parser = parsers.get(commandString);
         if (parser == null) {
