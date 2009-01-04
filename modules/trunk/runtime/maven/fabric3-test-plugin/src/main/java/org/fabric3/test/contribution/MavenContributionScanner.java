@@ -16,7 +16,6 @@
 package org.fabric3.test.contribution;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
