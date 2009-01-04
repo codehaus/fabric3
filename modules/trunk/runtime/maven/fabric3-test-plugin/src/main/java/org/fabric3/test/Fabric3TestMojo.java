@@ -15,7 +15,6 @@
  */
 package org.fabric3.test;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
@@ -54,16 +53,10 @@ public class Fabric3TestMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         
-        try {
-        
-            ScanResult scanResult = scanner.scan(mavenProject);
-            URL testContribution = scanResult.getTestContribution();
-            Set<URL> extensionContributions = scanResult.getExtensionContributions();
-            Set<URL> userContributions = scanResult.getUserContributions();
-            
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        }
+        ScanResult scanResult = scanner.scan(mavenProject);
+        URL testContribution = scanResult.getTestContribution();
+        Set<URL> extensionContributions = scanResult.getExtensionContributions();
+        Set<URL> userContributions = scanResult.getUserContributions();
 
     }
 
