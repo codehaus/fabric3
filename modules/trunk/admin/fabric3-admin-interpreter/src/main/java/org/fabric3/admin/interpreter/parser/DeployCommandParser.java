@@ -38,7 +38,7 @@ public class DeployCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "deploy <contribution> <plan>|-plan <plan file> [-u username -p password]";
+        return "deploy <contribution> [<plan>|-plan <plan file>] [-u username -p password]";
     }
 
     public Command parse(String[] tokens) throws ParseException {
@@ -50,6 +50,9 @@ public class DeployCommandParser implements CommandParser {
             command.setContributionUri(new URI(tokens[0]));
         } catch (URISyntaxException e) {
             throw new ParseException("Invalid contribution name", e);
+        }
+        if (tokens.length == 1) {
+            return command;
         }
         if ("-plan".equals(tokens[1])) {
             try {
