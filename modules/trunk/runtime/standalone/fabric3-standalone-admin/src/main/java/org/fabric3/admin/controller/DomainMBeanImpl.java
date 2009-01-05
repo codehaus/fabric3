@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -139,7 +141,11 @@ public class DomainMBeanImpl implements DomainMBean {
             }
         }
         for (LogicalComponent<?> component : currentComponent.getComponents()) {
-            ComponentInfo info = new ComponentInfo(component.getUri(), component.getDeployable(), component.getZone());
+            URI uri = component.getUri();
+            URI contributionUri = component.getDefinition().getContributionUri();
+            QName deployable = component.getDeployable();
+            String zone = component.getZone();
+            ComponentInfo info = new ComponentInfo(uri, contributionUri, deployable, zone);
             infos.add(info);
         }
         return infos;

@@ -18,6 +18,7 @@ package org.fabric3.admin.interpreter.command;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
 import java.util.List;
 
 import org.fabric3.admin.api.CommunicationException;
@@ -78,7 +79,10 @@ public class ListCommand implements Command {
                 }
                 out.println("Deployed comoonents (" + path + "):");
                 for (ComponentInfo info : infos) {
-                    out.println("   " + info.getUri() + " [deployable: " + info.getDeployable() + ", zone: " + info.getZone() + "]");
+                    URI uri = info.getUri();
+                    URI contributionUri = info.getContributionUri();
+                    String zone = info.getZone();
+                    out.println("   " + uri + " [Contribution: " + contributionUri + ", Zone: " + zone + "]");
                 }
                 return true;
             } catch (CommunicationException e) {

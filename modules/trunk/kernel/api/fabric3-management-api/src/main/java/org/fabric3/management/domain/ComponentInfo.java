@@ -28,17 +28,23 @@ import javax.xml.namespace.QName;
 public class ComponentInfo implements Serializable {
     private static final long serialVersionUID = -4847696410167502510L;
     private URI uri;
+    private URI contributionUri;
     private QName deployable;
     private String zone;
 
-    public ComponentInfo(URI uri, QName deployable, String zone) {
+    public ComponentInfo(URI uri, URI contributionUri, QName deployable, String zone) {
         this.uri = uri;
+        this.contributionUri = contributionUri;
         this.deployable = deployable;
         this.zone = zone;
     }
 
     public URI getUri() {
         return uri;
+    }
+
+    public URI getContributionUri() {
+        return contributionUri;
     }
 
     public QName getDeployable() {

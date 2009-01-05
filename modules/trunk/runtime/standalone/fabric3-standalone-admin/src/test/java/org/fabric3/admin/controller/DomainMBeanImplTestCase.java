@@ -26,6 +26,8 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.management.domain.ComponentInfo;
 import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.management.domain.InvalidPathException;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -101,13 +103,17 @@ public class DomainMBeanImplTestCase extends TestCase {
         EasyMock.replay(info);
 
         LogicalCompositeComponent domain = new LogicalCompositeComponent(DOMAIN, null, null);
-        LogicalCompositeComponent child1 = new LogicalCompositeComponent(CHILD1, null, domain);
+        ComponentDefinition<CompositeImplementation> child1Def = new ComponentDefinition<CompositeImplementation>("child1", null);
+        LogicalCompositeComponent child1 = new LogicalCompositeComponent(CHILD1, child1Def, domain);
         domain.addComponent(child1);
-        LogicalCompositeComponent grandChild1 = new LogicalCompositeComponent(GRAND_CHILD1, null, child1);
+        ComponentDefinition<CompositeImplementation> grandChild1Def = new ComponentDefinition<CompositeImplementation>("child1", null);
+        LogicalCompositeComponent grandChild1 = new LogicalCompositeComponent(GRAND_CHILD1, grandChild1Def, child1);
         child1.addComponent(grandChild1);
-        LogicalComponent<?> grandGrandChild1 = new LogicalComponent(GRAND_GRAND_CHILD, null, domain);
+        ComponentDefinition<CompositeImplementation> grandGrandChild1Def = new ComponentDefinition<CompositeImplementation>("child1", null);
+        LogicalComponent<?> grandGrandChild1 = new LogicalComponent(GRAND_GRAND_CHILD, grandGrandChild1Def, domain);
         grandChild1.addComponent(grandGrandChild1);
-        LogicalCompositeComponent child2 = new LogicalCompositeComponent(CHILD2, null, domain);
+        ComponentDefinition<CompositeImplementation> child2Def = new ComponentDefinition<CompositeImplementation>("child1", null);
+        LogicalCompositeComponent child2 = new LogicalCompositeComponent(CHILD2, child2Def, domain);
         domain.addComponent(child2);
 
         LogicalComponentManager lcm = EasyMock.createMock(LogicalComponentManager.class);
