@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.host.runtime.RuntimeMode;
+import org.fabric3.host.RuntimeMode;
 
 /**
  * Represents a deployable artifact in a contribution

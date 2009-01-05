@@ -52,7 +52,7 @@ import java.util.jar.JarFile;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.runtime.RuntimeMode;
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 
 /**

@@ -38,7 +38,7 @@ import java.io.File;
 import java.net.URI;
 import javax.servlet.ServletContext;
 
-import org.fabric3.host.runtime.RuntimeMode;
+import org.fabric3.host.RuntimeMode;
 
 /**
  * @version $Rev$ $Date$

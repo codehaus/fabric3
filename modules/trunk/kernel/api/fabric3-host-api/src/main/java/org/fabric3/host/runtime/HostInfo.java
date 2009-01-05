@@ -37,6 +37,8 @@ package org.fabric3.host.runtime;
 import java.io.File;
 import java.net.URI;
 
+import org.fabric3.host.RuntimeMode;
+
 /**
  * Interface that provides information on the host environment. This allows the runtime to access information about the environment in which it is
  * running. The implementation of this interface is provided to the runtime by the host during initialization. Hosts will generally extend this

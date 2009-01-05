@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.host.runtime;
+package org.fabric3.host;
 
 /**
  * The different modes a runtime can be started in.

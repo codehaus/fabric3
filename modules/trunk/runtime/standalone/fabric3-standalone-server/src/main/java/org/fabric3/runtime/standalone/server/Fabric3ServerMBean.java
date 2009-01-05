@@ -16,7 +16,7 @@
  */
 package org.fabric3.runtime.standalone.server;
 
-import org.fabric3.host.runtime.RuntimeMode;
+import org.fabric3.host.RuntimeMode;
 
 /**
  * Management interface for the Fabric3 server.

@@ -40,7 +40,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.Set;
 
-import org.fabric3.host.runtime.RuntimeMode;
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.maven.MavenHostInfo;
 
 /**
