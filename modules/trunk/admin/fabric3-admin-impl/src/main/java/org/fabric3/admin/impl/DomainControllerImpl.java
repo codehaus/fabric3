@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Set;
 import javax.management.JMException;
 import javax.management.MBeanException;
@@ -41,6 +42,7 @@ import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.ContributionUninstallException;
 import org.fabric3.management.contribution.DuplicateContributionManagementException;
 import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.domain.ComponentInfo;
 import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.InvalidDeploymentException;
 
@@ -256,6 +258,21 @@ public class DomainControllerImpl implements DomainController {
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
             conn.invoke(oName, "remove", new Object[]{name}, new String[]{URI.class.getName()});
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
+    }
+
+    public List<ComponentInfo> getDeployedComponents(String path) throws CommunicationException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(DOMAIN_MBEAN);
+            return (List<ComponentInfo>) conn.invoke(oName, "getDeployedComponents", new Object[]{path}, new String[]{"java.lang.String"});
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {

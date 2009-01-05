@@ -26,6 +26,7 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.parser.AuthCommandParser;
 import org.fabric3.admin.interpreter.parser.DeployCommandParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
+import org.fabric3.admin.interpreter.parser.ListCommandParser;
 import org.fabric3.admin.interpreter.parser.ProvisionCommandParser;
 import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
 import org.fabric3.admin.interpreter.parser.StatCommandParser;
@@ -49,6 +50,7 @@ public class InterpreterImpl implements Interpreter {
             + "   authenticate (au) \n"
             + "   deploy (de) \n"
             + "   install (ins) \n"
+            + "   list (ls) \n"
             + "   provision (pr) \n"
             + "   remove (rm) \n"
             + "   status (st) \n"
@@ -161,6 +163,9 @@ public class InterpreterImpl implements Interpreter {
         ProvisionCommandParser provisionParser = new ProvisionCommandParser(controller);
         parsers.put("pr", provisionParser);
         parsers.put("provision", provisionParser);
+        ListCommandParser listCommandParser = new ListCommandParser(controller);
+        parsers.put("ls", listCommandParser);
+        parsers.put("list", listCommandParser);
     }
 
     /**

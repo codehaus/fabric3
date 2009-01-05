@@ -19,6 +19,7 @@ package org.fabric3.admin.api;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Set;
 
 import org.fabric3.management.contribution.ContributionInfo;
@@ -26,7 +27,9 @@ import org.fabric3.management.contribution.ContributionInstallException;
 import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.ContributionRemoveException;
 import org.fabric3.management.contribution.ContributionUninstallException;
+import org.fabric3.management.domain.ComponentInfo;
 import org.fabric3.management.domain.DeploymentManagementException;
+import org.fabric3.management.domain.InvalidPathException;
 
 /**
  * The interface for performing domain administrative functions.
@@ -155,4 +158,15 @@ public interface DomainController {
      */
     void remove(URI uri) throws CommunicationException, ContributionRemoveException;
 
+
+    /**
+     * Returns a list of ComponentInfo instances representing the components deployed to the given composite path. The path "/" is interpreted as the
+     * domain composite.
+     *
+     * @param path the composite
+     * @return the list of deployed components for the composite
+     * @throws CommunicationException if there is an error communicating with the domain controller
+     * @throws InvalidPathException   if the composite path is invalid
+     */
+    List<ComponentInfo> getDeployedComponents(String path) throws CommunicationException, InvalidPathException;
 }

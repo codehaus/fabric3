@@ -17,6 +17,7 @@
 package org.fabric3.management.domain;
 
 import java.net.URI;
+import java.util.List;
 
 import org.fabric3.api.annotation.Management;
 
@@ -53,5 +54,15 @@ public interface DomainMBean {
      * @throws DeploymentManagementException if an exception undeploying the contribution is encountered
      */
     void undeploy(URI uri) throws DeploymentManagementException;
+
+    /**
+     * Returns a list of ComponentInfo instances representing the components deployed to the given composite path. The path "/" is interpreted as the
+     * domain composite.
+     *
+     * @param path the path
+     * @return the components
+     * @throws InvalidPathException if the path is not found
+     */
+    List<ComponentInfo> getDeployedComponents(String path) throws InvalidPathException;
 
 }

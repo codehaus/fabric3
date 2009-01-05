@@ -33,13 +33,19 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.domain.UndeploymentException;
+import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.management.domain.ComponentInfo;
 import org.fabric3.management.domain.ContributionNotFoundException;
 import org.fabric3.management.domain.ContributionNotInstalledManagementException;
 import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.management.domain.InvalidDeploymentException;
+import org.fabric3.management.domain.InvalidPathException;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
  * @version $Revision$ $Date$
@@ -47,11 +53,19 @@ import org.fabric3.spi.contribution.MetaDataStore;
 public class DomainMBeanImpl implements DomainMBean {
     private Domain domain;
     private MetaDataStore store;
+    private LogicalComponentManager lcm;
     private DomainMBeanMonitor monitor;
+    private String domainUri;
 
-    public DomainMBeanImpl(@Reference(name = "domain") Domain domain, @Reference MetaDataStore store, @Monitor DomainMBeanMonitor monitor) {
+    public DomainMBeanImpl(@Reference(name = "domain") Domain domain,
+                           @Reference MetaDataStore store,
+                           @Reference LogicalComponentManager lcm,
+                           @Reference HostInfo info,
+                           @Monitor DomainMBeanMonitor monitor) {
         this.domain = domain;
         this.store = store;
+        this.lcm = lcm;
+        this.domainUri = info.getDomain().toString();
         this.monitor = monitor;
     }
 
@@ -103,6 +117,32 @@ public class DomainMBeanImpl implements DomainMBean {
             }
 
         }
+    }
+
+    public List<ComponentInfo> getDeployedComponents(String path) throws InvalidPathException {
+        String tokens[] = path.split("/");
+        LogicalCompositeComponent currentComponent = lcm.getRootComponent();
+        List<ComponentInfo> infos = new ArrayList<ComponentInfo>();
+        String currentPath = domainUri;
+        if (tokens.length > 0 && !domainUri.endsWith(tokens[0]) && !tokens[0].equals("/")) {
+            throw new InvalidPathException("Path not found: " + path);
+        }
+        for (int i = 1; i < tokens.length; i++) {
+            currentPath = currentPath + "/" + tokens[i];
+            LogicalComponent<?> component = currentComponent.getComponent(URI.create(currentPath));
+            if (component == null) {
+                throw new InvalidPathException("Deployed composite not exist: " + path);
+            } else if (!(component instanceof LogicalCompositeComponent)) {
+                throw new InvalidPathException("Component is not a composite: " + path);
+            } else {
+                currentComponent = (LogicalCompositeComponent) component;
+            }
+        }
+        for (LogicalComponent<?> component : currentComponent.getComponents()) {
+            ComponentInfo info = new ComponentInfo(component.getUri(), component.getDeployable(), component.getZone());
+            infos.add(info);
+        }
+        return infos;
     }
 
     private void reportError(URI uri, DomainException e) throws DeploymentManagementException {
