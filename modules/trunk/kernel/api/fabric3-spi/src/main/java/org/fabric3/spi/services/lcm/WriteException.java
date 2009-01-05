@@ -24,14 +24,14 @@ import org.fabric3.host.Fabric3Exception;
  *
  * @version $Rev$ $Date$
  */
-public class StoreException extends Fabric3Exception {
+public class WriteException extends Fabric3Exception {
     private static final long serialVersionUID = 652954682135057498L;
 
-    public StoreException(String message, Throwable cause) {
+    public WriteException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public StoreException(String message, String identifier, Throwable cause) {
+    public WriteException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 }

@@ -34,7 +34,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.LogicalComponentManagerMBean;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
 import org.fabric3.spi.services.lcm.ReadException;
-import org.fabric3.spi.services.lcm.StoreException;
+import org.fabric3.spi.services.lcm.WriteException;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -78,7 +78,7 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
         return domain;
     }
 
-    public void replaceRootComponent(LogicalCompositeComponent component) throws StoreException {
+    public void replaceRootComponent(LogicalCompositeComponent component) throws WriteException {
         domain = component;
         logicalComponentStore.store(domain);
     }

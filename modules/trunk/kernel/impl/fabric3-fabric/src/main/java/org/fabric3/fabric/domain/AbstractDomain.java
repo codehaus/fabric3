@@ -63,6 +63,7 @@ import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.WriteException;
 
 /**
  * Base class for a domain.
@@ -215,12 +216,12 @@ public abstract class AbstractDomain implements Domain {
 
         }
         try {
-            // TODO this should happen after nodes have deployed the components and wires
+            // TODO this should happen after nodes have undeployed the components and wires
             logicalComponentManager.replaceRootComponent(domain);
             QNameSymbol deployableSymbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
             contribution.releaseLock(deployable);
-        } catch (org.fabric3.spi.services.lcm.StoreException e) {
+        } catch (WriteException e) {
             throw new UndeploymentException("Error applying undeployment: " + deployable, e);
         }
     }
@@ -360,7 +361,7 @@ public abstract class AbstractDomain implements Domain {
             // TODO this should happen after nodes have deployed the components and wires
             markAsProvisioned(change);
             logicalComponentManager.replaceRootComponent(domain);
-        } catch (org.fabric3.spi.services.lcm.StoreException e) {
+        } catch (WriteException e) {
             throw new DeploymentException("Error applying deployment", e);
         }
     }

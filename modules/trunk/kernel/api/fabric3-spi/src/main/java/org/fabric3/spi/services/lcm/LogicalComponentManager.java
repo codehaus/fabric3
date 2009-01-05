@@ -41,9 +41,9 @@ public interface LogicalComponentManager {
      * model.
      *
      * @param component the replacement
-     * @throws StoreException if an error occurs replacing the root component
+     * @throws WriteException if an error occurs replacing the root component
      */
-    void replaceRootComponent(LogicalCompositeComponent component) throws StoreException;
+    void replaceRootComponent(LogicalCompositeComponent component) throws WriteException;
 
     /**
      * Returns the component uniquely identified by an id.
