@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import javax.xml.namespace.QName;
@@ -43,8 +44,14 @@ import org.fabric3.model.type.component.Include;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.binding.BindingSelectionException;
-import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionState;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.domain.RoutingException;
+import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.CopyUtil;
@@ -56,12 +63,6 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.plan.DeploymentPlan;
-import org.fabric3.spi.contribution.Contribution;
-import org.fabric3.spi.contribution.ContributionState;
-import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.contribution.Resource;
-import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.WriteException;
 
@@ -217,6 +218,7 @@ public abstract class AbstractDomain implements Domain {
         }
         try {
             // TODO this should happen after nodes have undeployed the components and wires
+            removeLogicalComponents(domain);
             logicalComponentManager.replaceRootComponent(domain);
             QNameSymbol deployableSymbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
@@ -226,6 +228,30 @@ public abstract class AbstractDomain implements Domain {
         }
     }
 
+    /**
+     * Removes components marked for deletion from the composite. Note this method does not recurse as removal is only done against the domain level
+     * composite.
+     *
+     * @param composite the root composite
+     */
+    private void removeLogicalComponents(LogicalCompositeComponent composite) {
+        Iterator<LogicalComponent<?>> iter = composite.getComponents().iterator();
+        while (iter.hasNext()) {
+            LogicalComponent<?> component = iter.next();
+            if (LogicalState.MARKED == component.getState()) {
+                iter.remove();
+            }
+        }
+    }
+
+    /**
+     * Includes a composite in the domain composite.
+     *
+     * @param composite     the composite to include
+     * @param plan          the deployment plan to use or null
+     * @param transactional if the inclusion should be performed transactionally
+     * @throws DeploymentException if a deployment error occurs
+     */
     private void include(Composite composite, DeploymentPlan plan, boolean transactional) throws DeploymentException {
         List<DeploymentPlan> plans;
         if (plan != null) {
