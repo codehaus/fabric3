@@ -115,6 +115,9 @@ public class JarClasspathProcessor implements ClasspathProcessor {
                     explodeJar(dir, jarStream, explodedDirectory);
                     classpath.add(explodedDirectory.toURI().toURL());
                 } else {
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
                     File jarFile = File.createTempFile("fabric3", ".jar", dir);
                     OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
                     try {
