@@ -14,21 +14,24 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution.connector;
+package org.fabric3.spi.generator;
 
-import org.fabric3.contribution.ContributionWireConnector;
-import org.fabric3.contribution.wire.LocationContributionWire;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 
 /**
- * Connects an importing contribution classloader to an exporting contribution classloader, with no visibility constraints.
+ * Generates a PhysicalClassLoaderWireDefinition from a ContributionWire. The physical definition is used to build a classloader network based on
+ * contribution wires.
  *
  * @version $Revision$ $Date$
  */
-public class LocationContributionWireConnector implements ContributionWireConnector<LocationContributionWire> {
-    public void connect(LocationContributionWire wire, MultiParentClassLoader importingClassLoader, ClassLoader exportingClassLoader) {
-        if (!importingClassLoader.getParents().contains(exportingClassLoader)) {
-            importingClassLoader.addParent(exportingClassLoader);
-        }
-    }
+public interface ClassLoaderWireGenerator<T extends ContributionWire> {
+
+    /**
+     * Generate the physical definition.
+     *
+     * @param wire the contribution wire to use as input
+     * @return the physical definition
+     */
+    PhysicalClassLoaderWireDefinition generate(T wire);
 }

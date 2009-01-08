@@ -14,18 +14,18 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution.connector;
+package org.fabric3.fabric.builder.classloader;
 
 import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
-public class JavaContributionWireFilterTestCase extends TestCase {
+public class ClassLoaderWireFilterTestCase extends TestCase {
 
     public void testNoFilterPackage() throws Exception {
         String packge = getClass().getPackage().getName();
-        JavaContributionWireFilter filter = new JavaContributionWireFilter(getClass().getClassLoader(), packge);
+        ClassLoaderWireFilter filter = new ClassLoaderWireFilter(getClass().getClassLoader(), packge);
         // verify class can be loaded
         filter.loadClass(getClass().getName());
     }
@@ -33,13 +33,13 @@ public class JavaContributionWireFilterTestCase extends TestCase {
     public void testNoFilterWildCardPackage() throws Exception {
         Package name = getClass().getPackage();
         String packge = name.getName().substring(0, name.getName().lastIndexOf(".")) + ".*";
-        JavaContributionWireFilter filter = new JavaContributionWireFilter(getClass().getClassLoader(), packge);
+        ClassLoaderWireFilter filter = new ClassLoaderWireFilter(getClass().getClassLoader(), packge);
         // verify class can be loaded
         filter.loadClass(getClass().getName());
     }
 
     public void testFilterPackage() {
-        JavaContributionWireFilter filter = new JavaContributionWireFilter(getClass().getClassLoader(), "foo.bar");
+        ClassLoaderWireFilter filter = new ClassLoaderWireFilter(getClass().getClassLoader(), "foo.bar");
         // verify class is not loaded
         try {
             filter.loadClass(getClass().getName());

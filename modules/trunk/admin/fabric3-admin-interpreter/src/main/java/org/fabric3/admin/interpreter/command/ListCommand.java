@@ -77,7 +77,7 @@ public class ListCommand implements Command {
                     out.println("No components found");
                     return true;
                 }
-                out.println("Deployed comoonents (" + path + "):");
+                out.println("Deployed components (" + path + "):");
                 for (ComponentInfo info : infos) {
                     URI uri = info.getUri();
                     URI contributionUri = info.getContributionUri();

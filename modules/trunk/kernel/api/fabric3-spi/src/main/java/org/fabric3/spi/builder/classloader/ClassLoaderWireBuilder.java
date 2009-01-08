@@ -14,26 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution;
+package org.fabric3.spi.builder.classloader;
 
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 
 /**
- * Connects an importing contribution classloader to the classloader of the contribution containing the resolved export as specified by a
- * ContributionWire.
+ * Builds a connection between two classloaders.
  *
  * @version $Revision$ $Date$
  */
-public interface ContributionWireConnector<T extends ContributionWire> {
+public interface ClassLoaderWireBuilder {
 
     /**
-     * Connects the importing contribution classloader to the exporting contribution classloader according to the given ContributionWire.
+     * Build the connection.
      *
-     * @param wire                 the contribution wire
-     * @param importingClassLoader the classloader of the importing contribution
-     * @param exportingClassLoader the classloader of the exporting contribution
+     * @param source         the source classloader.
+     * @param wireDefinition the physical wire definition for the wire
      */
-    void connect(T wire, MultiParentClassLoader importingClassLoader, ClassLoader exportingClassLoader);
-
+    void build(MultiParentClassLoader source, PhysicalClassLoaderWireDefinition wireDefinition);
 }

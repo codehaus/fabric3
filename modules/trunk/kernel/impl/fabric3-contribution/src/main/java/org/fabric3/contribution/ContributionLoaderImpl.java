@@ -31,15 +31,18 @@ import org.fabric3.contribution.manifest.ContributionImport;
 import static org.fabric3.host.Names.HOST_CONTRIBUTION;
 import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ContributionWire;
 import org.fabric3.spi.contribution.Import;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.UnresolvedImportException;
+import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.generator.ClassLoaderWireGenerator;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 
 /**
  * Default implementation of the ContributionLoader. Classloaders corresponding to loaded contributions are registered by name with the system
@@ -53,17 +56,20 @@ public class ContributionLoaderImpl implements ContributionLoader {
     private final MetaDataStore store;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
     private boolean classloaderIsolation;
-    private Map<Class<? extends ContributionWire<?, ?>>, ContributionWireConnector<?>> connectors;
+    private Map<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>> generators;
+    private ClassLoaderWireBuilder builder;
 
     public ContributionLoaderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
                                   @Reference MetaDataStore store,
                                   @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
-                                  @Reference Map<Class<? extends ContributionWire<?, ?>>, ContributionWireConnector<?>> connectors,
+                                  @Reference Map<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>> generators,
+                                  @Reference ClassLoaderWireBuilder builder,
                                   @Reference HostInfo info) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.store = store;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
-        this.connectors = connectors;
+        this.generators = generators;
+        this.builder = builder;
         classloaderIsolation = info.supportsClassLoaderIsolation();
         hostImport = new ContributionImport(HOST_CONTRIBUTION);
     }
@@ -95,12 +101,13 @@ public class ContributionLoaderImpl implements ContributionLoader {
 
         // connect imported contribution classloaders according to their wires
         for (ContributionWire<?, ?> wire : wires) {
-            ContributionWireConnector connector = connectors.get(wire.getClass());
-            assert connector != null;
-            URI uri = wire.getExportContributionUri();
-            // the classloader name is the same as the contribution URI
-            ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(uri);
-            connector.connect(wire, loader, targetClassLoader);
+            ClassLoaderWireGenerator generator = generators.get(wire.getClass());
+            if (generator == null) {
+                // not all contribution wires resolve resources through classloaders, so skip if one is not found
+                continue;
+            }
+            PhysicalClassLoaderWireDefinition wireDefinition = generator.generate(wire);
+            builder.build(loader, wireDefinition);
         }
         // register the classloader
         classLoaderRegistry.register(contributionUri, loader);

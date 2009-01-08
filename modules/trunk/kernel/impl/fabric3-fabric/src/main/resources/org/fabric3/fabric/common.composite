@@ -101,8 +101,16 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
     </component>
 
+    <component name="ClassLoaderWireGenerator" f3-core:key="org.fabric3.contribution.wire.JavaContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.contribution.generator.JavaContributionWireGeneratorImpl"/>
+    </component>
+
     <component name="ClassLoaderBuilder">
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
+    </component>
+
+    <component name="ClassLoaderWireBuilder">
+        <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderWireBuilderImpl"/>
     </component>
 
     <component name="SingletonComponentSynthesizer">

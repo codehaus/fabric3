@@ -43,7 +43,7 @@ public class DeployCommandParser implements CommandParser {
     }
 
     public Command parse(String[] tokens) throws ParseException {
-        if (tokens.length != 1 && tokens.length != 3 && tokens.length != 5 && tokens.length != 6 && tokens.length != 7) {
+        if (tokens.length != 1 && tokens.length != 2 && tokens.length != 3 && tokens.length != 5 && tokens.length != 6 && tokens.length != 7) {
             throw new ParseException("Illegal number of arguments");
         }
         DeployCommand command = new DeployCommand(controller);

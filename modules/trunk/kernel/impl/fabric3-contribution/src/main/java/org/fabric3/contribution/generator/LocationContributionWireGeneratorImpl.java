@@ -14,19 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution.connector;
+package org.fabric3.contribution.generator;
 
-import org.fabric3.contribution.ContributionWireConnector;
-import org.fabric3.contribution.wire.QNameContributionWire;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
+import java.net.URI;
+
+import org.fabric3.contribution.wire.LocationContributionWire;
+import org.fabric3.spi.generator.ClassLoaderWireGenerator;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 
 /**
- * A no-op implementation as QName-based wires are resolved through the MetaDataStore service, not at the classloader level.
+ * Default implementation of ClassLoaderWireGenerator.
  *
  * @version $Revision$ $Date$
  */
-public class QNameContributionWireConnector implements ContributionWireConnector<QNameContributionWire> {
-    public void connect(QNameContributionWire wire, MultiParentClassLoader importingClassLoader, ClassLoader exportingClassLoader) {
-        // do nothing since QNames are not resolved at the classloader level
+public class LocationContributionWireGeneratorImpl implements ClassLoaderWireGenerator<LocationContributionWire> {
+
+    public PhysicalClassLoaderWireDefinition generate(LocationContributionWire wire) {
+        URI uri = wire.getExportContributionUri();
+        return new PhysicalClassLoaderWireDefinition(uri);
     }
 }

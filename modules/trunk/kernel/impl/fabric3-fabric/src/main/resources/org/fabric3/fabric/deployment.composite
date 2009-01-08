@@ -143,18 +143,6 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.LocationContributionWireInstantiator"/>
     </component>
 
-    <component name="JavaContributionWireConnector" f3-core:key="org.fabric3.contribution.wire.JavaContributionWire">
-        <f3-impl:implementation.system class="org.fabric3.contribution.connector.JavaContributionWireConnector"/>
-    </component>
-
-    <component name="QNameContributionWireConnector" f3-core:key="org.fabric3.contribution.wire.QNameContributionWire">
-        <f3-impl:implementation.system class="org.fabric3.contribution.connector.QNameContributionWireConnector"/>
-    </component>
-
-    <component name="LocationContributionWireConnector" f3-core:key="org.fabric3.contribution.wire.LocationContributionWire">
-        <f3-impl:implementation.system class="org.fabric3.contribution.connector.LocationContributionWireConnector"/>
-    </component>
-
     <component name="OSGiManifestHandler">
         <f3-impl:implementation.system class="org.fabric3.contribution.manifest.OSGiManifestHandler"/>
     </component>

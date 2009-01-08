@@ -39,21 +39,23 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.Names;
 import static org.fabric3.host.Names.HOST_CONTRIBUTION;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.component.Component;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.ResolutionException;
-import org.fabric3.spi.component.Component;
+import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 
 /**
  * Default implementation of ClassLoaderBuilder.
@@ -63,17 +65,20 @@ import org.fabric3.spi.component.Component;
 @EagerInit
 public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
+    private ClassLoaderWireBuilder wireBuilder;
     private ClassLoaderRegistry classLoaderRegistry;
     private ContributionUriResolver contributionUriResolver;
     private ClasspathProcessorRegistry classpathProcessorRegistry;
     private ComponentManager componentManager;
     private boolean classLoaderIsolation;
 
-    public ClassLoaderBuilderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
+    public ClassLoaderBuilderImpl(@Reference ClassLoaderWireBuilder wireBuilder,
+                                  @Reference ClassLoaderRegistry classLoaderRegistry,
                                   @Reference ContributionUriResolver contributionUriResolver,
                                   @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
                                   @Reference ComponentManager componentManager,
                                   @Reference HostInfo info) {
+        this.wireBuilder = wireBuilder;
         this.classLoaderRegistry = classLoaderRegistry;
         this.contributionUriResolver = contributionUriResolver;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
@@ -86,7 +91,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
      *
      * @param contributionUriResolver the resolver
      */
-    @Reference(required = false)
+    @Reference
     public void setContributionUriResolver(ContributionUriResolver contributionUriResolver) {
         this.contributionUriResolver = contributionUriResolver;
     }
@@ -118,17 +123,12 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
     private void buildIsolatedClassLoaderEnvironment(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
         URI uri = definition.getUri();
-        URL[] classpath = resolveClasspath(definition.getContributionUris());
+        URL[] classpath = resolveClasspath(definition.getContributionUri());
 
         // build the classloader using the locally cached resources
         MultiParentClassLoader loader = new MultiParentClassLoader(uri, classpath, null);
-        for (URI parentUri : definition.getParentClassLoaders()) {
-            ClassLoader parent = classLoaderRegistry.getClassLoader(parentUri);
-            if (parent == null) {
-                String identifier = parentUri.toString();
-                throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
-            }
-            loader.addParent(parent);
+        for (PhysicalClassLoaderWireDefinition wireDefinition : definition.getWireDefinitions()) {
+            wireBuilder.build(loader, wireDefinition);
         }
         classLoaderRegistry.register(uri, loader);
     }
@@ -147,27 +147,25 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     }
 
     /**
-     * Resolves classpath urls
+     * Resolves classpath urls.
      *
-     * @param uris urls to resolve
+     * @param uri uri to resolve
      * @return the resolved classpath urls
      * @throws ClassLoaderBuilderException if an error occurs resolving a url
      */
-    private URL[] resolveClasspath(Set<URI> uris) throws ClassLoaderBuilderException {
+    private URL[] resolveClasspath(URI uri) throws ClassLoaderBuilderException {
 
         List<URL> classpath = new ArrayList<URL>();
 
-        for (URI uri : uris) {
-            try {
-                // resolve the remote contributions and cache them locally
-                URL resolvedUrl = contributionUriResolver.resolve(uri);
-                // introspect and expand if necessary
-                classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
-            } catch (ResolutionException e) {
-                throw new ClassLoaderBuilderException("Error resolving artifact: " + uri.toString(), e);
-            } catch (IOException e) {
-                throw new ClassLoaderBuilderException("Error processing: " + uri.toString(), e);
-            }
+        try {
+            // resolve the remote contributions and cache them locally
+            URL resolvedUrl = contributionUriResolver.resolve(uri);
+            // introspect and expand if necessary
+            classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
+        } catch (ResolutionException e) {
+            throw new ClassLoaderBuilderException("Error resolving artifact: " + uri.toString(), e);
+        } catch (IOException e) {
+            throw new ClassLoaderBuilderException("Error processing: " + uri.toString(), e);
         }
         return classpath.toArray(new URL[classpath.size()]);
 

@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.contribution.connector;
+package org.fabric3.fabric.builder.classloader;
 
 /**
  * A bridging classloader that filters class and resource loading to a specified set of classes. This is used to enforce the semantics of a
@@ -22,7 +22,7 @@ package org.fabric3.contribution.connector;
  *
  * @version $Revision$ $Date$
  */
-public class JavaContributionWireFilter extends ClassLoader {
+public class ClassLoaderWireFilter extends ClassLoader {
     private String[] importedPackage;
 
     /**
@@ -31,7 +31,7 @@ public class JavaContributionWireFilter extends ClassLoader {
      * @param parent          the parent classloader.
      * @param importedPackage the package the wire imports
      */
-    public JavaContributionWireFilter(ClassLoader parent, String importedPackage) {
+    public ClassLoaderWireFilter(ClassLoader parent, String importedPackage) {
         super(parent);
         this.importedPackage = importedPackage.split("\\.");
     }

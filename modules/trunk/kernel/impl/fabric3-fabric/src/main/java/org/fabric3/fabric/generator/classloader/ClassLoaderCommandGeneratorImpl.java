@@ -28,19 +28,22 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.ProvisionClassloaderCommand;
-import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
 import org.fabric3.contribution.DependencyException;
 import org.fabric3.contribution.DependencyService;
+import org.fabric3.fabric.command.ProvisionClassloaderCommand;
+import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
+import org.fabric3.host.Names;
 import org.fabric3.spi.command.Command;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalState;
-import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.contribution.ContributionWire;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.generator.ClassLoaderWireGenerator;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalState;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 
 /**
  * Fabric3 may be configured to enforce a modular environment where isolation is maintained between user an extension contributions.
@@ -67,11 +70,14 @@ import org.fabric3.spi.contribution.MetaDataStore;
  */
 public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenerator {
     private MetaDataStore store;
+    private Map<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>> generators;
     private ContributionUriEncoder encoder;
     private DependencyService dependencyService;
 
-    public ClassLoaderCommandGeneratorImpl(@Reference MetaDataStore store) {
+    public ClassLoaderCommandGeneratorImpl(@Reference MetaDataStore store,
+                                           @Reference Map<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>> generators) {
         this.store = store;
+        this.generators = generators;
     }
 
     /**
@@ -171,8 +177,9 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             // imported contributions must also be provisioned
             List<ContributionWire<?, ?>> contributionWires = contribution.getWires();
             for (ContributionWire<?, ?> wire : contributionWires) {
-                Contribution imported = store.find(wire.getExportContributionUri());
-                if (!contributions.contains(imported)) {
+                URI importedUri = wire.getExportContributionUri();
+                Contribution imported = store.find(importedUri);
+                if (!contributions.contains(imported) && !Names.HOST_CONTRIBUTION.equals(importedUri)) {
                     contributions.add(imported);
                 }
             }
@@ -198,14 +205,20 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(uri);
                 if (zone == null) {
                     // If the contribution is provisioned to this runtime, its URI should not be encoded
-                    definition.addContributionUri(uri);
+                    definition.setContributionUri(uri);
                 } else {
                     URI encoded = encode(uri);
-                    definition.addContributionUri(encoded);
+                    definition.setContributionUri(encoded);
                 }
                 List<ContributionWire<?, ?>> contributionWires = contribution.getWires();
                 for (ContributionWire<?, ?> wire : contributionWires) {
-                    definition.addParentClassLoader(wire.getExportContributionUri());
+                    ClassLoaderWireGenerator generator = generators.get(wire.getClass());
+                    if (generator == null) {
+                        // not all contribution wires resolve resources through classloaders, so skip if one is not found
+                        continue;
+                    }
+                    PhysicalClassLoaderWireDefinition wireDefinition = generator.generate(wire);
+                    definition.add(wireDefinition);
                 }
                 Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(zone);
                 if (definitions == null) {

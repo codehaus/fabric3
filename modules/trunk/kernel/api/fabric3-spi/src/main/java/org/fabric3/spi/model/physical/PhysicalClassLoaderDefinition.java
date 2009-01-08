@@ -16,12 +16,10 @@
  */
 package org.fabric3.spi.model.physical;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 import java.io.Serializable;
+import java.net.URI;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A definition used to provision classloaders on a runtime.
@@ -32,8 +30,8 @@ public class PhysicalClassLoaderDefinition implements Serializable {
     private static final long serialVersionUID = 1869864181383360066L;
 
     private URI uri;
-    private List<URI> parentClassLoaders = new ArrayList<URI>();
-    private Set<URI> contributionUris = new LinkedHashSet<URI>();
+    private URI contributionUri;
+    private Set<PhysicalClassLoaderWireDefinition> wireDefinitions = new LinkedHashSet<PhysicalClassLoaderWireDefinition>();
 
     public PhysicalClassLoaderDefinition(URI uri) {
         this.uri = uri;
@@ -49,60 +47,60 @@ public class PhysicalClassLoaderDefinition implements Serializable {
     }
 
     /**
-     * Associates the classloader with a contribution. When a classloader is created, a copy of the contribution will be avilable on the classpath.
+     * Adds a PhysicalClassLoaderWireDefinition that describes a wire to another contribution classloader.
+     *
+     * @param definition the PhysicalClassLoaderDefinition
+     */
+    public void add(PhysicalClassLoaderWireDefinition definition) {
+        wireDefinitions.add(definition);
+    }
+
+    /**
+     * Returns a set of PhysicalClassLoaderWireDefinition that describe the wires to other contribution classloaders.
+     *
+     * @return a set of PhysicalClassLoaderWireDefinition that describe the wires to other contribution classloader
+     */
+    public Set<PhysicalClassLoaderWireDefinition> getWireDefinitions() {
+        return wireDefinitions;
+    }
+
+    /**
+     * Sets the contribution asociated with the classloader.
      *
      * @param uri the URI to add
      */
-    public void addContributionUri(URI uri) {
-        contributionUris.add(uri);
+    public void setContributionUri(URI uri) {
+        contributionUri = uri;
     }
 
     /**
-     * Returns the URIs of contributions associated with this classloader as an ordered Set. Order is guaranteed for set iteration.
+     * Returns the URI of the contributions associated with this classloader as an ordered Set. Order is guaranteed for set iteration.
      *
-     * @return the URIs as an ordered Set
+     * @return the URI
      */
-    public Set<URI> getContributionUris() {
-        return contributionUris;
-    }
-
-    /**
-     * Returns the list of parent classloader URIs.
-     *
-     * @return the list of parent classloader URIs
-     */
-    public List<URI> getParentClassLoaders() {
-        return parentClassLoaders;
-    }
-
-    /**
-     * Adds a parent classloader URI.
-     *
-     * @param uri the classloader URI
-     */
-    public void addParentClassLoader(URI uri) {
-        parentClassLoaders.add(uri);
+    public URI getContributionUri() {
+        return contributionUri;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (obj == null || obj.getClass() != PhysicalClassLoaderDefinition.class) {
-            return false;
-        }
+        PhysicalClassLoaderDefinition that = (PhysicalClassLoaderDefinition) o;
 
-        PhysicalClassLoaderDefinition other = (PhysicalClassLoaderDefinition) obj;
+        if (contributionUri != null ? !contributionUri.equals(that.contributionUri) : that.contributionUri != null) return false;
+        if (uri != null ? !uri.equals(that.uri) : that.uri != null) return false;
+        if (wireDefinitions != null ? !wireDefinitions.equals(that.wireDefinitions) : that.wireDefinitions != null) return false;
 
-        return parentClassLoaders.equals(other.parentClassLoaders)
-                && contributionUris.equals(other.contributionUris)
-                && uri.equals(other.uri);
+        return true;
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = (uri != null ? uri.hashCode() : 0);
-        result = 31 * result + (parentClassLoaders != null ? parentClassLoaders.hashCode() : 0);
-        result = 31 * result + (contributionUris != null ? contributionUris.hashCode() : 0);
+        int result = uri != null ? uri.hashCode() : 0;
+        result = 31 * result + (contributionUri != null ? contributionUri.hashCode() : 0);
+        result = 31 * result + (wireDefinitions != null ? wireDefinitions.hashCode() : 0);
         return result;
     }
 }
