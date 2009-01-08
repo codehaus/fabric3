@@ -15,9 +15,14 @@
  */
 package org.fabric3.test.contribution;
 
+import java.io.File;
+import java.net.URI;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.FileContributionSource;
 
 /**
  * Result of a contribution scan.
@@ -25,17 +30,18 @@ import java.util.Set;
  */
 public class ScanResult {
     
-    private URL testContribution;
-    private Set<URL> userContributions = new HashSet<URL>();
-    private Set<URL> extensionContributions = new HashSet<URL>();
+    private ContributionSource testContribution;
+    private List<ContributionSource> userContributions = new LinkedList<ContributionSource>();
+    private List<ContributionSource> extensionContributions = new LinkedList<ContributionSource>();
 
     /**
      * Initializes the test contribution.
      * 
-     * @param testContribution Test contribution.
+     * @param testContributionUrl Test contribution URL.
      */
-    public ScanResult(URL testContribution) {
-        this.testContribution = testContribution;
+    public ScanResult(URL testContributionUrl) {
+        URI uri = URI.create(new File(testContributionUrl.getFile()).getName());
+        testContribution = new FileContributionSource(uri, testContributionUrl, -1, null);
     }
     
     /**
@@ -43,7 +49,7 @@ public class ScanResult {
      * 
      * @return Test contribution.
      */
-    public URL getTestContribution() {
+    public ContributionSource getTestContribution() {
         return testContribution;
     }
     
@@ -52,7 +58,7 @@ public class ScanResult {
      * 
      * @return User contributions.
      */
-    public Set<URL> getUserContributions() {
+    public List<ContributionSource> getUserContributions() {
         return userContributions;
     }
     
@@ -61,21 +67,23 @@ public class ScanResult {
      * 
      * @return Extension contributions.
      */
-    public Set<URL> getExtensionContributions() {
+    public List<ContributionSource> getExtensionContributions() {
         return extensionContributions;
     }
     
     /**
      * Adds a  contribution.
      * 
-     * @param contribution Extension contribution.
+     * @param contributionUrl Contribution URL.
      * @param extension True if the contribution is an extension
      */
-    public void addContribution(URL contribution, boolean extension) {
+    public void addContribution(URL contributionUrl, boolean extension) {
+        URI uri = URI.create(new File(contributionUrl.getFile()).getName());
+        ContributionSource contributionSource = new FileContributionSource(uri, contributionUrl, -1, null);
         if (extension) {
-            extensionContributions.add(contribution);
+            extensionContributions.add(contributionSource);
         } else {
-            userContributions.add(contribution);
+            userContributions.add(contributionSource);
         }
     }
 

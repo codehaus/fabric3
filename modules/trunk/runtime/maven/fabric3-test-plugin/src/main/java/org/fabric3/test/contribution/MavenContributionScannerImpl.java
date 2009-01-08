@@ -32,6 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.fabric3.spi.Namespaces;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -111,13 +112,15 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
     private boolean isExtension(URL manifestUrl) throws ParserConfigurationException, IOException, SAXException {
         
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
         DocumentBuilder db = dbf.newDocumentBuilder();
         
         InputStream stream = manifestUrl.openStream();
         Document document = db.parse(stream);
         stream.close();
         
-        return document.getDocumentElement().getAttribute("extension") != null;
+        String extension = document.getDocumentElement().getAttributeNS(Namespaces.CORE, "extension");
+        return extension != null && !"".equals(extension.trim());
         
     }
     
