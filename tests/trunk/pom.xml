@@ -54,9 +54,9 @@
                 <module>test-rs</module>
                 <module>test-timer-quartz</module>
                 <module>test-timer-implementation</module>
-                <!--module>test-xquery-exist</module-->
                 <module>test-binding-metro</module>
                 <module>test-jpa-implementation</module>
+                <module>bookstore</module>
             </modules>
         </profile>
     </profiles>
