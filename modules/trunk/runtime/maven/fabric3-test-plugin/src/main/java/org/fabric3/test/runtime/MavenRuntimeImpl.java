@@ -34,31 +34,11 @@
  */
 package org.fabric3.test.runtime;
 
-import java.util.List;
-
-import org.fabric3.fabric.runtime.AbstractRuntime;
-import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.test.host.MavenHostInfo;
 
 /**
  * Default implementation of the maven runtime.
  *
  */
-public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenRuntime {
-
-    /**
-     * Initialises the host info type.
-     */
-    public MavenRuntimeImpl() {
-        super(MavenHostInfo.class);
-    }
-    
-    /**
-     * Deploys a list contributions.
-     * 
-     * @param contributions List of contributions.
-     */
-    public void deploy(List<ContributionSource> contributions) {
-    }
+public abstract class MavenRuntimeImpl implements MavenRuntime {
 
 }

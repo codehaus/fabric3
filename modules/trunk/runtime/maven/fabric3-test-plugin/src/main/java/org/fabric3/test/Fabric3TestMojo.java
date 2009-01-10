@@ -33,8 +33,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
-import org.fabric3.fabric.runtime.DefaultCoordinator;
-import org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl;
 import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
@@ -44,8 +42,6 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.test.artifact.ArtifactHelper;
 import org.fabric3.test.contribution.MavenContributionScanner;
 import org.fabric3.test.contribution.MavenContributionScannerImpl;
@@ -94,11 +90,39 @@ public class Fabric3TestMojo extends AbstractMojo {
     protected MavenProject mavenProject;
 
     /**
+     * The version of the runtime to use.
+     *
+     * @parameter expression="0.8-SNAPSHOT"
+     */
+    public String runtimeVersion;
+
+    /**
      * Properties passed to the runtime throught the HostInfo interface.
      *
      * @parameter
      */
     public Properties properties;
+    
+    private ClassLoader createHostClassLoader() throws MojoExecutionException {
+        
+        Set<URL> hostClasspath = artifactHelper.resolve("org.codehaus.fabric3", "fabric3-api", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar");
+        hostClasspath.addAll(artifactHelper.resolve("org.codehaus.fabric3", "fabric3-host-api", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar"));
+        hostClasspath.addAll(artifactHelper.resolve("javax.servlet", "servlet-api", "2.4", Artifact.SCOPE_RUNTIME, "jar"));
+        
+        return new URLClassLoader(hostClasspath.toArray(new URL[] {}));
+        
+    }
+    
+    private ClassLoader createBootClassLoader(ClassLoader hostClassLoader) throws MojoExecutionException {
+        
+        Set<URL> hostClasspath = artifactHelper.resolve("org.codehaus.fabric3", "fabric3-fabric", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar");
+        hostClasspath.addAll(artifactHelper.resolve("org.codehaus.fabric3", "fabric3-policy", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar"));
+        hostClasspath.addAll(artifactHelper.resolve("org.codehaus.fabric3", "fabric3-jmx-agent", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar"));
+        hostClasspath.addAll(artifactHelper.resolve("org.codehaus.fabric3", "fabric3-thread-pool", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar"));
+        
+        return new URLClassLoader(hostClasspath.toArray(new URL[] {}), hostClassLoader);
+        
+    }
 
     /**
      * Contributes scanned contributions and run the tests.
@@ -107,13 +131,6 @@ public class Fabric3TestMojo extends AbstractMojo {
         
         artifactHelper.setRepositories(localRepository, mavenProject.getRemoteArtifactRepositories());
         
-        Set<URL> hostClasspath = artifactHelper.resolve("org.codehaus.fabric3", "fabric3-api", "0.8-SNAPSHOT", Artifact.SCOPE_RUNTIME, "jar");
-        hostClasspath.addAll(artifactHelper.resolve("org.codehaus.fabric3", "fabric3-host-api", "0.8-SNAPSHOT", Artifact.SCOPE_RUNTIME, "jar"));
-        hostClasspath.addAll(artifactHelper.resolve("javax.servlet", "servlet-api", "2.4", Artifact.SCOPE_RUNTIME, "jar"));
-        
-        ClassLoader hostClassLoader = new URLClassLoader(hostClasspath.toArray(new URL[] {}));
-        System.err.println(hostClasspath);
-        
         // Boot classloader is the plugin classloader
         ClassLoader bootClassLoader = getClass().getClassLoader();
         
@@ -121,19 +138,20 @@ public class Fabric3TestMojo extends AbstractMojo {
         ScanResult scanResult = scanner.scan(mavenProject);        
         logContributions(scanResult);
         
-        MavenRuntime runtime = new MavenRuntimeImpl();
+        MavenRuntime runtime = null;
         MonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
         runtime.setMonitorFactory(monitorFactory);
-        runtime.setHostClassLoader(hostClassLoader);
+        runtime.setHostClassLoader(null);
         
         MavenHostInfo mavenHostInfo = new MavenHostInfoImpl(DOMAIN_URI, properties);
         runtime.setHostInfo(mavenHostInfo);
 
         // TODO Add better host JMX support from the next release
-        Agent agent = new DefaultAgent();
-        runtime.setMBeanServer(agent.getMBeanServer());
+        //Agent agent = new DefaultAgent();
+        //runtime.setMBeanServer(agent.getMBeanServer());
         
-        BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration = new BootConfiguration<MavenRuntime, ScdlBootstrapper>();
+        //BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration = new BootConfiguration<MavenRuntime, ScdlBootstrapper>();
+        BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration = null;
         bootConfiguration.setExtensions(scanResult.getExtensionContributions());
         bootConfiguration.setRuntime(runtime);
         bootConfiguration.setBootClassLoader(bootClassLoader);
@@ -152,12 +170,14 @@ public class Fabric3TestMojo extends AbstractMojo {
         exportedPackages.put("org.fabric3.maven", Names.VERSION);
         bootConfiguration.setExportedPackages(exportedPackages);
         
-        ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
+        //ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
+        ScdlBootstrapper bootstrapper = null;
         URL systemScdl = getClass().getClassLoader().getResource("META-INF/fabric3/embeddedMaven.composite");
         bootstrapper.setScdlLocation(systemScdl);
         bootConfiguration.setBootstrapper(bootstrapper);
         
-        RuntimeLifecycleCoordinator<MavenRuntime, ScdlBootstrapper> coordinator = new DefaultCoordinator<MavenRuntime, ScdlBootstrapper>();
+        //RuntimeLifecycleCoordinator<MavenRuntime, ScdlBootstrapper> coordinator = new DefaultCoordinator<MavenRuntime, ScdlBootstrapper>();
+        RuntimeLifecycleCoordinator<MavenRuntime, ScdlBootstrapper> coordinator = null;
         coordinator.setConfiguration(bootConfiguration);
         
         boot(coordinator);
