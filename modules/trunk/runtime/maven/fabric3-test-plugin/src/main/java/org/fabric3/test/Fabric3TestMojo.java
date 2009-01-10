@@ -165,13 +165,10 @@ public class Fabric3TestMojo extends AbstractMojo {
             runtime.setMBeanServer(MBeanServerFactory.createMBeanServer());
             
             return runtime;
-        } catch (ClassNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (InstantiationException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+        
     }
 
 }
