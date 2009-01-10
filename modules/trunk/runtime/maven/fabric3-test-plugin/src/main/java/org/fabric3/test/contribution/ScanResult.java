@@ -30,28 +30,8 @@ import org.fabric3.host.contribution.FileContributionSource;
  */
 public class ScanResult {
     
-    private ContributionSource testContribution;
     private List<ContributionSource> userContributions = new LinkedList<ContributionSource>();
     private List<ContributionSource> extensionContributions = new LinkedList<ContributionSource>();
-
-    /**
-     * Initializes the test contribution.
-     * 
-     * @param testContributionUrl Test contribution URL.
-     */
-    public ScanResult(URL testContributionUrl) {
-        URI uri = URI.create(new File(testContributionUrl.getFile()).getName());
-        testContribution = new FileContributionSource(uri, testContributionUrl, -1, null);
-    }
-    
-    /**
-     * Gets the test contribution.
-     * 
-     * @return Test contribution.
-     */
-    public ContributionSource getTestContribution() {
-        return testContribution;
-    }
     
     /**
      * Gets the user contributions.

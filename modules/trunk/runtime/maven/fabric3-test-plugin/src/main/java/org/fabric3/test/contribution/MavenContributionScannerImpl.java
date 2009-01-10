@@ -54,18 +54,19 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
         
         try {
             
-            URL testContribution = getTestContribution(mavenProject);
-            ScanResult scanResult = new ScanResult(testContribution);
+            ScanResult scanResult = new ScanResult();
             
             Set<?> artifacts = mavenProject.getArtifacts();
             
             URL classesDir = new File("target/classes").toURL();
-            URL[] urls = new URL[artifacts.size() + 1];
+            URL testClassesDir = new File("target/test-classes").toURL();
+            URL[] urls = new URL[artifacts.size() + 2];
             
             urls[0] = classesDir;
+            urls[1] = testClassesDir;
             Iterator<?> iterator = artifacts.iterator();
             
-            for (int i = 1;i < urls.length;i++) {
+            for (int i = 2;i < urls.length;i++) {
                 URL artifactUrl = Artifact.class.cast(iterator.next()).getFile().toURL();
                 urls[i] = artifactUrl;
             }
@@ -89,20 +90,6 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
         } catch (SAXException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
-    }
-
-    /*
-     * Gets the test contribution. Test contribution is the contents of target/test-classes directory 
-     * with an sca-contribution.xml in the META-INF directory.
-     */
-    private URL getTestContribution(MavenProject mavenProject) throws MojoExecutionException, MalformedURLException {
-        
-        File testManifest = new File(mavenProject.getBasedir(), "target/test-classes/META-INF/sca-contribution.xml");
-        if (!testManifest.exists()) {
-            throw new MojoExecutionException("No sca-contribution.xml in test/resources/META-INF");
-        }
-        return new File(mavenProject.getBasedir(), "target/test-classes").toURL();
         
     }
     

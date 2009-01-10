@@ -15,33 +15,46 @@
  */
 package org.fabric3.test;
 
-import java.io.Reader;
-import java.io.StringReader;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+
 import org.fabric3.fabric.runtime.DefaultCoordinator;
 import org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl;
+import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.maven.MavenEmbeddedRuntime;
-import org.fabric3.maven.MavenHostInfo;
-import org.fabric3.maven.runtime.MavenEmbeddedRuntimeImpl;
+import org.fabric3.jmx.agent.Agent;
+import org.fabric3.jmx.agent.DefaultAgent;
+import org.fabric3.test.artifact.ArtifactHelper;
 import org.fabric3.test.contribution.MavenContributionScanner;
 import org.fabric3.test.contribution.MavenContributionScannerImpl;
 import org.fabric3.test.contribution.ScanResult;
+import org.fabric3.test.host.MavenHostInfo;
+import org.fabric3.test.host.MavenHostInfoImpl;
 import org.fabric3.test.monitor.MavenMonitorFactory;
-import org.xml.sax.InputSource;
+import org.fabric3.test.runtime.MavenRuntime;
+import org.fabric3.test.runtime.MavenRuntimeImpl;
 
 /**
  * Fabric3 Mojo for testing SCA services.
@@ -52,6 +65,24 @@ import org.xml.sax.InputSource;
  *
  */
 public class Fabric3TestMojo extends AbstractMojo {
+    
+    private static final URI DOMAIN_URI = URI.create("fabric3://domain");
+
+    /**
+     * @parameter expression="${component.org.fabric3.test.artifact.ArtifactHelper}"
+     * @required
+     * @readonly
+     */
+    public ArtifactHelper artifactHelper;
+
+    /**
+     * Location of the local repository.
+     *
+     * @parameter expression="${localRepository}"
+     * @readonly
+     * @required
+     */
+    public ArtifactRepository localRepository;
 
     /**
      * POM
@@ -63,32 +94,76 @@ public class Fabric3TestMojo extends AbstractMojo {
     protected MavenProject mavenProject;
 
     /**
+     * Properties passed to the runtime throught the HostInfo interface.
+     *
+     * @parameter
+     */
+    public Properties properties;
+
+    /**
      * Contributes scanned contributions and run the tests.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
+        
+        artifactHelper.setRepositories(localRepository, mavenProject.getRemoteArtifactRepositories());
+        
+        Set<URL> hostClasspath = artifactHelper.resolve("org.codehaus.fabric3", "fabric3-api", "0.8-SNAPSHOT", Artifact.SCOPE_RUNTIME, "jar");
+        hostClasspath.addAll(artifactHelper.resolve("org.codehaus.fabric3", "fabric3-host-api", "0.8-SNAPSHOT", Artifact.SCOPE_RUNTIME, "jar"));
+        hostClasspath.addAll(artifactHelper.resolve("javax.servlet", "servlet-api", "2.4", Artifact.SCOPE_RUNTIME, "jar"));
+        
+        ClassLoader hostClassLoader = new URLClassLoader(hostClasspath.toArray(new URL[] {}));
+        System.err.println(hostClasspath);
+        
+        // Boot classloader is the plugin classloader
+        ClassLoader bootClassLoader = getClass().getClassLoader();
         
         MavenContributionScanner scanner = new MavenContributionScannerImpl();
         ScanResult scanResult = scanner.scan(mavenProject);        
         logContributions(scanResult);
         
-        MavenEmbeddedRuntime runtime = new MavenEmbeddedRuntimeImpl();
+        MavenRuntime runtime = new MavenRuntimeImpl();
         MonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
         runtime.setMonitorFactory(monitorFactory);
+        runtime.setHostClassLoader(hostClassLoader);
         
-        BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> bootConfiguration = new BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper>();
+        MavenHostInfo mavenHostInfo = new MavenHostInfoImpl(DOMAIN_URI, properties);
+        runtime.setHostInfo(mavenHostInfo);
+
+        // TODO Add better host JMX support from the next release
+        Agent agent = new DefaultAgent();
+        runtime.setMBeanServer(agent.getMBeanServer());
+        
+        BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration = new BootConfiguration<MavenRuntime, ScdlBootstrapper>();
         bootConfiguration.setExtensions(scanResult.getExtensionContributions());
         bootConfiguration.setRuntime(runtime);
+        bootConfiguration.setBootClassLoader(bootClassLoader);
+        
+        URL intentsLocation = getClass().getClassLoader().getResource("/META-INF/fabric3/intents.xml");
+        ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
+        bootConfiguration.setIntents(source);
+        
+        Map<String, String> exportedPackages = new HashMap<String, String>();
+        exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.host.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.management.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.model.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.pojo.*", Names.VERSION);
+        exportedPackages.put("org.fabric3.test.spi", Names.VERSION);
+        exportedPackages.put("org.fabric3.maven", Names.VERSION);
+        bootConfiguration.setExportedPackages(exportedPackages);
         
         ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
         URL systemScdl = getClass().getClassLoader().getResource("META-INF/fabric3/embeddedMaven.composite");
         bootstrapper.setScdlLocation(systemScdl);
         bootConfiguration.setBootstrapper(bootstrapper);
         
-        RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, ScdlBootstrapper> coordinator = new DefaultCoordinator<MavenEmbeddedRuntime, ScdlBootstrapper>();
+        RuntimeLifecycleCoordinator<MavenRuntime, ScdlBootstrapper> coordinator = new DefaultCoordinator<MavenRuntime, ScdlBootstrapper>();
         coordinator.setConfiguration(bootConfiguration);
         
         boot(coordinator);
         getLog().info("Fabric3 test runtime booted");
+        
+        runtime.deploy(scanResult.getUserContributions());
 
     }
 
@@ -123,7 +198,6 @@ public class Fabric3TestMojo extends AbstractMojo {
      */
     private void logContributions(ScanResult scanResult) {
         
-        getLog().info("Test contribution:" + scanResult.getTestContribution().getLocation());
         getLog().info("Number of extension contributions: " + scanResult.getExtensionContributions().size());
         for (ContributionSource extensionContribution : scanResult.getExtensionContributions()) {
             getLog().info(extensionContribution.getLocation().toExternalForm());
