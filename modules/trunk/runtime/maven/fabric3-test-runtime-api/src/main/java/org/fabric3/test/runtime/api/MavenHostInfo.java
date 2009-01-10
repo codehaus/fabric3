@@ -32,25 +32,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.runtime;
+package org.fabric3.test.runtime.api;
 
-import java.util.List;
-
-import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.runtime.Fabric3Runtime;
-import org.fabric3.test.host.MavenHostInfo;
+import org.fabric3.host.runtime.HostInfo;
 
 /**
- * Represents a maven embedded runtime.
+ * Maven host info.
  *
  */
-public interface MavenRuntime extends Fabric3Runtime<MavenHostInfo> {
-    
-    /**
-     * Deploys a list contributions.
-     * 
-     * @param contributions List of contributions.
-     */
-    void deploy(List<ContributionSource> contributions);
+public interface MavenHostInfo extends HostInfo {
 
 }

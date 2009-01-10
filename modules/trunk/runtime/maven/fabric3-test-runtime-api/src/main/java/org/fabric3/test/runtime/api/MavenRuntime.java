@@ -32,14 +32,34 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.host;
+package org.fabric3.test.runtime.api;
 
-import org.fabric3.host.runtime.HostInfo;
+import java.util.List;
+import java.util.Properties;
+
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.runtime.Fabric3Runtime;
 
 /**
- * Represents the Maven host info.
+ * Fabric3 maven runtime.
  *
  */
-public interface MavenHostInfo extends HostInfo {
+public interface MavenRuntime extends Fabric3Runtime<MavenHostInfo> {
+    
+    /**
+     * Deploys a list contributions.
+     * 
+     * @param contributions List of contributions.
+     */
+    void deploy(List<ContributionSource> contributions);
+    
+    /**
+     * Starts the runtime.
+     * 
+     * @param hostProperties Host properties.
+     * @param extensions Extensions to activate on the runtime.
+     * @throws StartException If unable to start the runtime.
+     */
+    void start(Properties hostProperties, List<ContributionSource> extensions) throws StartException;
 
 }

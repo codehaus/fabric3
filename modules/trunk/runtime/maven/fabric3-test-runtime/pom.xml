@@ -69,7 +69,6 @@
             <artifactId>fabric3-jmx-agent</artifactId>
             <version>0.8-SNAPSHOT</version>
         </dependency>
-
     </dependencies>
 
     <scm>

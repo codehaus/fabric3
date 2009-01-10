@@ -32,13 +32,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.runtime;
+package org.fabric3.test.runtime.api;
 
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * Default implementation of the maven runtime.
+ * Exception thrown when runtime failed to boot.
  *
  */
-public abstract class MavenRuntimeImpl implements MavenRuntime {
+public class StartException extends Fabric3RuntimeException {
+
+    /**
+     * Initializes the message and cause.
+     * 
+     * @param message Exception message.
+     * @param cause Exception cause.
+     */
+    public StartException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

@@ -32,29 +32,28 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.host;
+package org.fabric3.test.runtime;
 
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;
 
 import org.fabric3.host.RuntimeMode;
+import org.fabric3.test.runtime.api.MavenHostInfo;
 
 public class MavenHostInfoImpl implements MavenHostInfo {
     
-    private final URI domainUri;
+    private final URI domainUri = URI.create("fabric3://domain");
     private final File tempDir;
     private final Properties hostProperties;
     
     /**
      * Initializes the domain uri and temp directory.
      * 
-     * @param domainUri Domain URI.
      * @param hostProperties Host properties.
      */
-    public MavenHostInfoImpl(URI domainUri, Properties hostProperties) {
-        
-        this.domainUri = domainUri;
+    public MavenHostInfoImpl(Properties hostProperties) {
+
         this.hostProperties = hostProperties;
         
         tempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");

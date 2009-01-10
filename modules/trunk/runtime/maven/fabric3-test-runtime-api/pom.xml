@@ -42,6 +42,14 @@
     <artifactId>fabric3-test-runtime-api</artifactId>
     <name>Fabric3 Maven Test Runtime API</name>
     <description>Fabric3 Test Runtime API.</description>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-test-runtime-api</connection>
