@@ -97,6 +97,8 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
         try {
             coordinator.bootPrimordial();
             coordinator.initialize();
+            coordinator.recover();
+            coordinator.joinDomain(-1);
             coordinator.start();
         } catch (Exception e) {
             throw new StartException(e.getMessage(), e);
