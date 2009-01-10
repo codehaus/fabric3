@@ -46,7 +46,7 @@ public class FilteringMultiparentClassLoader extends MultiParentClassLoader {
     }
 
     protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        Class clazz = findLoadedClass(name);
+        Class<?> clazz = findLoadedClass(name);
         if (clazz == null) {
             boolean found = false;
             for (Pattern pattern : patterns) {

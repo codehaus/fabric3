@@ -57,7 +57,6 @@ public class MultiParentClassLoader extends URLClassLoader {
     private static final URL[] NOURLS = {};
 
     private final URI name;
-    private final ClassLoader parent;
     private final List<ClassLoader> parents = new CopyOnWriteArrayList<ClassLoader>();
 
     /**
@@ -80,7 +79,6 @@ public class MultiParentClassLoader extends URLClassLoader {
     public MultiParentClassLoader(URI name, URL[] urls, ClassLoader parent) {
         super(urls, parent);
         this.name = name;
-        this.parent = parent;
     }
 
 
@@ -134,8 +132,8 @@ public class MultiParentClassLoader extends URLClassLoader {
             sm.checkPermission(SecurityConstants.GET_CLASSLOADER_PERMISSION);
         }
         List<ClassLoader> list = new ArrayList<ClassLoader>();
-        if (parent != null) {
-            list.add(parent);
+        if (getParent() != null) {
+            list.add(getParent());
         }
         list.addAll(parents);
         return list;
@@ -143,12 +141,12 @@ public class MultiParentClassLoader extends URLClassLoader {
 
     protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // look for already loaded classes
-        Class clazz = findLoadedClass(name);
+        Class<?> clazz = findLoadedClass(name);
         if (clazz == null) {
             try {
                 // look in the primary parent
                 try {
-                    clazz = Class.forName(name, resolve, parent);
+                    clazz = Class.forName(name, resolve, getParent());
                 } catch (ClassNotFoundException e) {
                     // continue
                 }

@@ -131,7 +131,6 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     private void setIntents(BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration) {
         
         URL intentsLocation = getClass().getClassLoader().getResource("/META-INF/fabric3/intents.xml");
-        System.err.println("************* " + intentsLocation);
         ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
         bootConfiguration.setIntents(source);
         
