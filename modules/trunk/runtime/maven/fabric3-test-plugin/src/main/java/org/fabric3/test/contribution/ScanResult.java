@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.fabric3.host.Constants;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 
@@ -58,8 +59,11 @@ public class ScanResult {
      * @param extension True if the contribution is an extension
      */
     public void addContribution(URL contributionUrl, boolean extension) {
+        
+        String contentType = contributionUrl.toExternalForm().endsWith(".jar") ? Constants.ZIP_CONTENT_TYPE : Constants.FOLDER_CONTENT_TYPE;
+        
         URI uri = URI.create(new File(contributionUrl.getFile()).getName());
-        ContributionSource contributionSource = new FileContributionSource(uri, contributionUrl, -1, null);
+        ContributionSource contributionSource = new FileContributionSource(uri, contributionUrl, -1, null, contentType);
         if (extension) {
             extensionContributions.add(contributionSource);
         } else {

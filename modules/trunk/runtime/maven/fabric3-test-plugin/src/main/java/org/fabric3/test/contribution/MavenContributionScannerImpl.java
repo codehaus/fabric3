@@ -32,6 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.fabric3.host.Namespaces;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -105,7 +106,7 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
         Document document = db.parse(stream);
         stream.close();
         
-        String extension = document.getDocumentElement().getAttributeNS("urn:fabric3.org:core", "extension");
+        String extension = document.getDocumentElement().getAttributeNS(Namespaces.CORE, "extension");
         return extension != null && !"".equals(extension.trim());
         
     }
