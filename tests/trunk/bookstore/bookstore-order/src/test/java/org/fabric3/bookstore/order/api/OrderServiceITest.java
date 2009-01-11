@@ -45,7 +45,7 @@ public class OrderServiceITest extends TestCase {
     @Reference protected OrderService orderService;
 
     public void testOrder() {
-        orderService.order("Meeraj Kunnumpurath", "88 Shelly Road", "123456", new Date());
+        orderService.order("Meeraj Kunnumpurath", "88 Shelly Road", "123456", "12345678", new Date());
     }
 
 }

@@ -27,9 +27,9 @@ public class OrderServiceImpl implements OrderService {
     @Reference protected BillingService billingService;
     @Reference protected ShippingService shippingService;
 
-    public void order(String name, String address, String isbn, Date expiry) {
-        // TODO Auto-generated method stub
-
+    public void order(String name, String address, String isbn, String ccNo, Date expiry) {
+        billingService.bill(123, ccNo, address, expiry, name);
+        shippingService.ship(name, address, isbn);
     }
 
 }

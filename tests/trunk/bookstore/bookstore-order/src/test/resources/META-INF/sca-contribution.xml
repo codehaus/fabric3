@@ -16,7 +16,8 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:order-test="urn:fabric3.org:bookstore:order:test">
     <import.java package="org.fabric3.bookstore.order.api" version="0.1"/>
     <import namespace="urn:fabric3.org:bookstore:order" />
+    <deployable composite="order-test:OrderTest"/>
 </contribution>
