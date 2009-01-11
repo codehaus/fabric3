@@ -58,8 +58,8 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
             
             Set<?> artifacts = mavenProject.getArtifacts();
             
-            URL classesDir = new File("target/classes").toURL();
-            URL testClassesDir = new File("target/test-classes").toURL();
+            URL classesDir = new File(mavenProject.getBasedir(), "target/classes").toURL();
+            URL testClassesDir = new File(mavenProject.getBasedir(), "target/test-classes").toURL();
             URL[] urls = new URL[artifacts.size() + 2];
             
             urls[0] = classesDir;
