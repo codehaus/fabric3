@@ -17,9 +17,15 @@ package org.fabric3.bookstore.order.impl;
 
 import java.util.Date;
 
+import org.fabric3.bookstore.billing.api.BillingService;
 import org.fabric3.bookstore.order.api.OrderService;
+import org.fabric3.bookstore.shipping.api.ShippingService;
+import org.osoa.sca.annotations.Reference;
 
 public class OrderServiceImpl implements OrderService {
+    
+    @Reference protected BillingService billingService;
+    @Reference protected ShippingService shippingService;
 
     public void order(String name, String address, String isbn, Date expiry) {
         // TODO Auto-generated method stub

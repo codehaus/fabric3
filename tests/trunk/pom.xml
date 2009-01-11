@@ -56,7 +56,7 @@
                 <module>test-timer-implementation</module>
                 <module>test-binding-metro</module>
                 <module>test-jpa-implementation</module>
-                <module>bookstore</module>
+                <!-- module>bookstore</module -->
             </modules>
         </profile>
     </profiles>
