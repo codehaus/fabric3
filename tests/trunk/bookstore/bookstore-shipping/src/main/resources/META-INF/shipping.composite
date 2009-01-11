@@ -18,7 +18,7 @@
            targetNamespace="urn:fabric3.org:bookstore"
            name="Shipping">
            
-    <service name="shippingService" promote="SHippingComponent" />
+    <service name="shippingService" promote="ShippingComponent" />
 
     <component name="ShippingComponent">
         <implementation.java class="org.fabric3.bookstore.shipping.impl.ShippingServiceImpl"/>

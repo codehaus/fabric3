@@ -16,14 +16,23 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            targetNamespace="urn:fabric3.org:bookstore"
+           xmlns:bs="urn:fabric3.org:bookstore"
            name="Order">
            
-    <service name="billingService" promote="OrderComponent" />
-    <reference name="billingService" promote="OrderComponent/billingService" />
-    <service name="shippingService" promote="OrderComponent/shippingService" />
+    <service name="orderService" promote="OrderComponent" />
 
     <component name="OrderComponent">
         <implementation.java class="org.fabric3.bookstore.order.impl.OrderServiceImpl"/>
+        <reference name="billingService" target="BillingComponent"/>
+        <reference name="shippingService" target="ShippingComponent"/>
+    </component>
+    
+    <component name="BillingComponent">
+        <implementation.composite name="bs:Billing" />
+    </component>
+    
+    <component name="ShippingComponent">
+        <implementation.composite name="bs:Shipping" />
     </component>
     
 </composite>
