@@ -34,41 +34,22 @@
  */
 package org.fabric3.test.runtime.api;
 
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.maven.surefire.suite.SurefireTestSuite;
-import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.runtime.Fabric3Runtime;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * Fabric3 maven runtime.
+ * Exception thrown when there is a deployment error.
  *
  */
-public interface MavenRuntime extends Fabric3Runtime<MavenHostInfo> {
-    
+public class DeployException extends Fabric3RuntimeException {
+
     /**
-     * Deploys a list contributions.
+     * Initializes the message and cause.
      * 
-     * @param contributions List of contributions.
-     * @throws DeployException If unable to deploy the contributions.
+     * @param message Exception message.
+     * @param cause Exception cause.
      */
-    void deploy(List<ContributionSource> contributions) throws DeployException;
-    
-    /**
-     * Starts the runtime.
-     * 
-     * @param hostProperties Host properties.
-     * @param extensions Extensions to activate on the runtime.
-     * @throws StartException If unable to start the runtime.
-     */
-    void start(Properties hostProperties, List<ContributionSource> extensions) throws StartException;
-    
-    /**
-     * Gets the test suite from the SCA contribution.
-     * 
-     * @return SCA test suite.
-     */
-    SurefireTestSuite getTestSuite();
+    public DeployException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

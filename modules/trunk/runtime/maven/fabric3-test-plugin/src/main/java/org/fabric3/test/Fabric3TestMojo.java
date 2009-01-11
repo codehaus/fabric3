@@ -15,8 +15,11 @@
  */
 package org.fabric3.test;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -28,6 +31,14 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.surefire.report.BriefConsoleReporter;
+import org.apache.maven.surefire.report.BriefFileReporter;
+import org.apache.maven.surefire.report.Reporter;
+import org.apache.maven.surefire.report.ReporterException;
+import org.apache.maven.surefire.report.ReporterManager;
+import org.apache.maven.surefire.report.XMLReporter;
+import org.apache.maven.surefire.suite.SurefireTestSuite;
+import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.test.artifact.ArtifactHelper;
@@ -48,6 +59,8 @@ import org.fabric3.test.runtime.api.MavenRuntime;
 public class Fabric3TestMojo extends AbstractMojo {
 
     /**
+     * Artifact helper for resolving dependencies.
+     * 
      * @parameter expression="${component.org.fabric3.test.artifact.ArtifactHelper}"
      * @required
      * @readonly
@@ -64,7 +77,7 @@ public class Fabric3TestMojo extends AbstractMojo {
     public ArtifactRepository localRepository;
 
     /**
-     * POM
+     * Maven project.
      *
      * @parameter expression="${project}"
      * @readonly
@@ -87,9 +100,34 @@ public class Fabric3TestMojo extends AbstractMojo {
     public Properties properties;
 
     /**
+     * Do not run if this is set to true. This usage is consistent with the surefire plugin.
+     *
+     * @parameter expression="${maven.test.skip}"
+     */
+    public boolean skip;
+
+    /**
+     * The directory where reports will be written.
+     *
+     * @parameter expression="${project.build.directory}/surefire-reports"
+     */
+    public File reportsDirectory;
+
+    /**
+     * Whether to trim the stack trace in the reports to just the lines within the test, or show the full trace.
+     *
+     * @parameter expression="${trimStackTrace}" default-value="true"
+     */
+    public boolean trimStackTrace;
+
+    /**
      * Contributes scanned contributions and run the tests.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
+        
+        if (skip) {
+            return;
+        }
         
         artifactHelper.setRepositories(localRepository, mavenProject.getRemoteArtifactRepositories());
         
@@ -101,11 +139,19 @@ public class Fabric3TestMojo extends AbstractMojo {
         logContributions(scanResult);
         
         MavenRuntime runtime = createRuntime(bootClassLoader, hostClassLoader);
-        
+
+        getLog().info("Booting test runtime");
         runtime.start(properties, scanResult.getExtensionContributions());
         getLog().info("Fabric3 test runtime booted");
-        
+
+        getLog().info("Deloying user contributions");
         runtime.deploy(scanResult.getUserContributions());
+        getLog().info("User contributions deployed");
+        
+        SurefireTestSuite surefireTestSuite = runtime.getTestSuite();
+        getLog().info("Executing integration tests");
+        runTests(surefireTestSuite);
+        getLog().info("Executed integration tests");
 
     }
 
@@ -166,6 +212,44 @@ public class Fabric3TestMojo extends AbstractMojo {
             
             return runtime;
         } catch (Exception e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+        
+    }
+
+    /*
+     * Runs the surefire tests.
+     */
+    private boolean runTests(SurefireTestSuite suite) throws MojoExecutionException {
+        
+        try {
+
+            Properties status = new Properties();
+            int totalTests = suite.getNumTests();
+
+            List<Reporter> reports = new ArrayList<Reporter>();
+            reports.add(new XMLReporter(reportsDirectory, trimStackTrace));
+            reports.add(new BriefFileReporter(reportsDirectory, trimStackTrace));
+            reports.add(new BriefConsoleReporter(trimStackTrace));
+            ReporterManager reporterManager = new ReporterManager(reports);
+            reporterManager.initResultsFromProperties(status);
+
+            reporterManager.runStarting(totalTests);
+
+            if (totalTests == 0) {
+                reporterManager.writeMessage("There are no tests to run.");
+            } else {
+                suite.execute(reporterManager, null);
+            }
+
+            reporterManager.runCompleted();
+            reporterManager.updateResultsProperties(status);
+            
+            return reporterManager.getNumErrors() == 0 && reporterManager.getNumFailures() == 0;
+            
+        } catch (ReporterException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (TestSetFailedException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
         

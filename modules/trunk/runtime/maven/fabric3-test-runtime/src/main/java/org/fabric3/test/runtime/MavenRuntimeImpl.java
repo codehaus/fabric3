@@ -34,24 +34,36 @@
  */
 package org.fabric3.test.runtime;
 
+import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
+import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
+
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.DefaultCoordinator;
 import org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl;
 import org.fabric3.host.Names;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.spi.wire.Wire;
+import org.fabric3.test.runtime.api.DeployException;
 import org.fabric3.test.runtime.api.MavenHostInfo;
 import org.fabric3.test.runtime.api.MavenRuntime;
 import org.fabric3.test.runtime.api.StartException;
+import org.fabric3.test.spi.TestWireHolder;
 
 /**
  * Maven runtime implementation.
@@ -66,6 +78,13 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
         super(MavenHostInfo.class);
     }
     
+    /**
+     * Starts the runtime.
+     * 
+     * @param hostProperties Host properties.
+     * @param extensions Extensions to activate on the runtime.
+     * @throws StartException If unable to start the runtime.
+     */
     public void start(Properties hostProperties, List<ContributionSource> extensions) throws StartException {
         
         BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration = getBootConfiguration(extensions);
@@ -86,6 +105,37 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
      * @param contributions List of contributions.
      */
     public void deploy(List<ContributionSource> contributions) {
+        
+        try {
+            
+            ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+            Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+            
+            List<URI> uris = contributionService.contribute(contributions);
+            domain.include(uris, false);
+            
+        } catch (DeploymentException e) {
+            throw new DeployException(e.getMessage(), e);
+        } catch (ContributionException e) {
+            throw new DeployException(e.getMessage(), e);
+        }
+        
+    }
+    
+    /**
+     * Gets the test suite from the SCA contribution.
+     * 
+     * @return SCA test suite.
+     */
+    public SurefireTestSuite getTestSuite() {
+        
+        TestWireHolder testWireHolder = getSystemComponent(TestWireHolder.class, TestWireHolder.COMPONENT_URI);
+        SCATestSuite suite = new SCATestSuite();
+        for (Map.Entry<String, Wire> entry : testWireHolder.getWires().entrySet()) {
+            SCATestSet testSet = new SCATestSet(entry.getKey(), entry.getValue());
+            suite.add(testSet);
+        }
+        return suite;
         
     }
 

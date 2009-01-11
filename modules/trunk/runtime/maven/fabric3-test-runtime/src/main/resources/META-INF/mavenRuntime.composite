@@ -30,36 +30,19 @@
  KIND, either express or implied.  See the License for the
  specific language governing permissions and limitations
  under the License.
+
+    $Rev: 5971 $ $Date: 2008-11-16 10:47:20 -0800 (Sun, 16 Nov 2008) $
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric3-runtime-maven-parent-pom</artifactId>
-        <version>0.8-SNAPSHOT</version>
-    </parent>
-    <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-test-runtime-api</artifactId>
-    <name>Fabric3 Maven Test Runtime API</name>
-    <description>Fabric3 Test Runtime API.</description>
-    
-    <dependencies>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-host-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit</artifactId>
-            <version>2.0</version>
-        </dependency>
-    </dependencies>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="MavenRuntimeComposite"
+           autowire="true">
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-test-runtime-api</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-test-runtime-api</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-test-runtime-api</url>
-    </scm>
+    <component name="TestWireHolder">
+        <f3-impl:implementation.system class="org.fabric3.test.runtime.WireHolderImpl"/>
+    </component>
 
-</project>
+
+</composite>

@@ -14,37 +14,27 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.test.spi;
+package org.fabric3.test.runtime;
 
-import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.fabric3.host.Names;
+import org.fabric3.test.spi.TestWireHolder;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Provides wires to test components used by a integration test runtime for test dispatching.
+ * TestWireHolder implementation for the Maven runtime.
  *
  * @version $Revision$ $Date$
  */
-public interface TestWireHolder {
-    
-    URI COMPONENT_URI = URI.create(Names.RUNTIME_NAME + "/TestWireHolder");
+public class WireHolderImpl implements TestWireHolder {
+    Map<String, Wire> wires = new LinkedHashMap<String, Wire>();
 
-    /**
-     * Adds a wire to a test component keyed by test name.
-     *
-     * @param testName the test name
-     * @param wire     the wire
-     */
-    void add(String testName, Wire wire);
+    public Map<String, Wire> getWires() {
+        return wires;
+    }
 
-
-    /**
-     * The wires to test components keyed by test name.
-     *
-     * @return wires to test components keyed by test name
-     */
-    Map<String, Wire> getWires();
-
+    public void add(String testName, Wire wire) {
+        wires.put(testName, wire);
+    }
 }

@@ -40,6 +40,9 @@
            name="MavenRuntimeComposite"
            autowire="true">
 
+    <!-- include the maven runtime -->
+    <include name="MavenRuntime" scdlResource="META-INF/mavenRuntime.composite"/>
+
     <!-- include the thread pool -->
     <include name="ThreadPool" scdlResource="META-INF/threadPool.composite"/>
 
