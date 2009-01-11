@@ -15,7 +15,7 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           targetNamespace="urn:fabric3.org:bookstore"
+           targetNamespace="urn:fabric3.org:bookstore:shipping"
            name="Shipping">
            
     <service name="shippingService" promote="ShippingComponent" />

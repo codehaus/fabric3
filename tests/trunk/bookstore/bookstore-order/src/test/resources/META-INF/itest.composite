@@ -15,8 +15,8 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           targetNamespace="urn:fabric3.org:bookstore"
-           xmlns:bs="urn:fabric3.org:bookstore"
+           targetNamespace="urn:fabric3.org:bookstore:order:test"
+           xmlns:order="urn:fabric3.org:bookstore:order"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="OrderTest">
 
@@ -26,7 +26,7 @@
     </component>
     
     <component name="OrderComponent">
-        <implementation.composite name="bs:Order" />
+        <implementation.composite name="order:Order" />
     </component>
     
 </composite>

@@ -15,8 +15,9 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           targetNamespace="urn:fabric3.org:bookstore"
-           xmlns:bs="urn:fabric3.org:bookstore"
+           targetNamespace="urn:fabric3.org:bookstore:order"
+           xmlns:billing="urn:fabric3.org:bookstore:billing"
+           xmlns:shipping="urn:fabric3.org:bookstore:shipping"
            name="Order">
            
     <service name="orderService" promote="OrderComponent" />
@@ -27,12 +28,12 @@
         <reference name="shippingService" target="ShippingComponent"/>
     </component>
     
-    <component name="BillingComponent">
-        <implementation.composite name="bs:Billing" />
+    <component name="ShippingComponent">
+        <implementation.composite name="shipping:Shipping" />
     </component>
     
-    <component name="ShippingComponent">
-        <implementation.composite name="bs:Shipping" />
+    <component name="BillingComponent">
+        <implementation.composite name="billing:Billing" />
     </component>
     
 </composite>

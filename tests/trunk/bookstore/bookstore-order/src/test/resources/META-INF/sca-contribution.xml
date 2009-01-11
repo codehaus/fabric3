@@ -16,6 +16,7 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:bookstore="urn:fabric3.org:bookstore">
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
     <import.java package="org.fabric3.bookstore.order.api" version="0.1"/>
+    <import namespace="urn:fabric3.org:bookstore:order" />
 </contribution>

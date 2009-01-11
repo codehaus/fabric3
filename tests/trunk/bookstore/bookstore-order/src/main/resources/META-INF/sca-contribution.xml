@@ -16,9 +16,12 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:bookstore="urn:fabric3.org:bookstore">
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:order="urn:fabric3.org:bookstore:order">
     <import.java package="org.fabric3.bookstore.shipping.api" version="0.1"/>
     <import.java package="org.fabric3.bookstore.billing.api" version="0.1"/>
     <export.java package="org.fabric3.bookstore.order.api" version="0.1"/>
-    <deployable composite="bookstore:Order"/>
+    <export namespace="urn:fabric3.org:bookstore:order" />
+    <import namespace="urn:fabric3.org:bookstore:billing" />
+    <import namespace="urn:fabric3.org:bookstore:shipping" />
+    <deployable composite="order:Order"/>
 </contribution>
