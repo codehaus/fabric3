@@ -18,7 +18,7 @@ package org.fabric3.spi.contribution.manifest;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Namespaces;
+import org.fabric3.host.Namespaces;
 import org.fabric3.spi.contribution.Export;
 import org.fabric3.spi.contribution.Import;
 

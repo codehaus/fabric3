@@ -18,7 +18,7 @@ package org.fabric3.federation.shoal;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Namespaces;
+import org.fabric3.host.Namespaces;
 
 /**
  * Constants for federation extension classes.

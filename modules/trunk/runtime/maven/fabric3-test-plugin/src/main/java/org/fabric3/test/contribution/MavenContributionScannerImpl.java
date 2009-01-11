@@ -124,7 +124,7 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
             // Strip the jar protocol
             url = url.substring(4);
         } else {
-            url = externalForm.substring(0, externalForm.indexOf("/" + MANIFEST_PATH));
+            url = externalForm.substring(0, externalForm.indexOf(MANIFEST_PATH));
         }
         return new URL(url);
         

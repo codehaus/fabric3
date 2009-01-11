@@ -29,9 +29,9 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition;
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;

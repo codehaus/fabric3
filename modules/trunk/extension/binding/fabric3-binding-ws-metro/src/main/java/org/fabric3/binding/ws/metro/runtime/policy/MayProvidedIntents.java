@@ -36,7 +36,7 @@ package org.fabric3.binding.ws.metro.runtime.policy;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Namespaces;
+import org.fabric3.host.Namespaces;
 
 /**
  * List of may provided intents.

@@ -18,8 +18,8 @@ package org.fabric3.timer.component.model;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.host.Namespaces;
 import org.fabric3.java.control.JavaImplementation;
-import org.fabric3.spi.Namespaces;
 import org.fabric3.timer.component.provision.TriggerData;
 
 /**

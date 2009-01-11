@@ -33,8 +33,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.Namespaces;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionServiceListener;
 import org.fabric3.spi.xml.XMLFactory;

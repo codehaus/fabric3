@@ -29,13 +29,13 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 import org.w3c.dom.Element;
 
+import org.fabric3.host.Namespaces;
 import org.fabric3.jaxb.control.api.JAXBTransformationService;
 import org.fabric3.jaxb.provision.AbstractTransformingInterceptorDefinition;
 import org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition;
 import org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;

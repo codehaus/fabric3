@@ -37,8 +37,8 @@ package org.fabric3.system.scdl;
 import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.spi.Namespaces;
 
 /**
  * Represents the system composite implementation

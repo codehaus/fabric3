@@ -18,7 +18,7 @@ package org.fabric3.loader.plan;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Namespaces;
+import org.fabric3.host.Namespaces;
 
 /**
  * @version $Revision$ $Date$

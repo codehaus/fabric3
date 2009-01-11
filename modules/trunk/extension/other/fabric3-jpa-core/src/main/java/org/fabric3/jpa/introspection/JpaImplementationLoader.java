@@ -28,13 +28,13 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.jpa.ConversationalDaoImpl;
+import org.fabric3.host.Namespaces;
 import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.java.control.JavaImplementationProcessor;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;

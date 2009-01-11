@@ -18,7 +18,7 @@ package org.fabric3.jaxb.provision;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Namespaces;
+import org.fabric3.host.Namespaces;
 
 /**
  * @version $Revision$ $Date$

@@ -21,8 +21,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.ResourceDefinition;
-import org.fabric3.spi.Namespaces;
 
 /**
  * Represents a resource in the logical model.

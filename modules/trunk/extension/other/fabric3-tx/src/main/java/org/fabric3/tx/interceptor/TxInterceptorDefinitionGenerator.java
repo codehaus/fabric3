@@ -18,8 +18,8 @@ package org.fabric3.tx.interceptor;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;

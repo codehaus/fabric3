@@ -37,8 +37,8 @@ package org.fabric3.system.singleton;
 import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Rev$ $Date$

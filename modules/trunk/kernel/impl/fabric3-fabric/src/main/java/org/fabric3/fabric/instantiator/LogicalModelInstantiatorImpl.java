@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.Autowire;
 import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
@@ -36,7 +37,6 @@ import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Include;
 import org.fabric3.model.type.component.Property;
-import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;

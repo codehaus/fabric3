@@ -19,7 +19,7 @@ package org.fabric3.contribution.manifest;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Namespaces;
+import org.fabric3.host.Namespaces;
 import org.fabric3.spi.contribution.Import;
 
 /**

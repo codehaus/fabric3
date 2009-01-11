@@ -18,7 +18,7 @@ package org.fabric3.jaxb.control.api;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Namespaces;
+import org.fabric3.host.Namespaces;
 
 /**
  * Bindings register with this service to enable JAXB transformation support.

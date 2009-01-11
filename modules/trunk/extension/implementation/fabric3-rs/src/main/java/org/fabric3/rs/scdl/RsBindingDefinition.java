@@ -18,8 +18,9 @@ package org.fabric3.rs.scdl;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
+
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Rev$ $Date$

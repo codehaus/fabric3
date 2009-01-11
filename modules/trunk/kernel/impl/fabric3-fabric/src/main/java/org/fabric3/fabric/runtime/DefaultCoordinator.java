@@ -32,6 +32,8 @@ import static org.fabric3.fabric.runtime.FabricNames.METADATA_STORE_URI;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
+import static org.fabric3.host.Namespaces.IMPLEMENTATION;
+
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
@@ -48,7 +50,6 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
-import static org.fabric3.spi.Namespaces.IMPLEMENTATION;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.Resource;
