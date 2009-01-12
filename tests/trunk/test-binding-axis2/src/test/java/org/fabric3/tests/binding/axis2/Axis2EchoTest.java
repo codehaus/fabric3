@@ -160,7 +160,7 @@ public class Axis2EchoTest extends TestCase {
 
         OMElement message = factory.createOMElement("data", null);
         OMText text = factory.createOMText(dataHandler, true);
-        text.setOptimize(true);
+        assertTrue(text.isOptimized());
         message.addChild(text);
 
         return message;
