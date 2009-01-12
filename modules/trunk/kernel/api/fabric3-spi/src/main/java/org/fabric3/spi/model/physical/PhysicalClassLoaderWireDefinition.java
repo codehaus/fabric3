@@ -17,13 +17,15 @@
 package org.fabric3.spi.model.physical;
 
 import java.net.URI;
+import java.io.Serializable;
 
 /**
  * Represents a "wire" between two classloaders that defines visibility constraints.
  *
  * @version $Revision$ $Date$
  */
-public class PhysicalClassLoaderWireDefinition {
+public class PhysicalClassLoaderWireDefinition implements Serializable {
+    private static final long serialVersionUID = 4080221327918467451L;
     private URI targetClassLoader;
     private String packageName;
 
