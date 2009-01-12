@@ -105,6 +105,10 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.generator.JavaContributionWireGeneratorImpl"/>
     </component>
 
+    <component name="LocationContributionWireGenerator" f3-core:key="org.fabric3.contribution.wire.LocationContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.contribution.generator.LocationContributionWireGeneratorImpl"/>
+    </component>
+
     <component name="ClassLoaderBuilder">
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
     </component>
