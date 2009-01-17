@@ -28,7 +28,7 @@
         <reference name="service">
             <binding.ws uri="http://localhost:8900/axis2/echoService"/>
             <operation name="echoWsUsernameToken" requires="sca:authentication.message"/>
-            <operation name="echoWsX509Token" requires="sca:authentication.message"/>
+            <!-- operation name="echoWsX509Token" requires="sca:authentication.message"/-->
         </reference>
         <reference name="faultService">
             <binding.ws uri="http://localhost:8900/axis2/faultService">
@@ -44,7 +44,7 @@
         <service name="Axis2EchoService">
             <binding.ws uri="echoService"/>
             <operation name="echoWsUsernameToken" requires="sca:authentication.message"/>
-            <operation name="echoWsX509Token" requires="sca:authentication.message"/>
+            <!-- operation name="echoWsX509Token" requires="sca:authentication.message"/-->
         </service>
     </component>
 
