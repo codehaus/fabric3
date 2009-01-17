@@ -16,7 +16,7 @@
 
     $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3">
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <import.java package="org.fabric3.spi" version="0.8"/>
     <import.java package="org.fabric3.ftp.spi" version="0.8"/>
     <deployable composite="ns:FtpBindingExtension"/>

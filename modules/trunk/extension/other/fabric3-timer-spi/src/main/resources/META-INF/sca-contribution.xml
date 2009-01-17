@@ -16,6 +16,6 @@
 
     $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <export.java package="org.fabric3.timer.spi" version="0.8"/>
 </contribution>
