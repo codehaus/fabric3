@@ -17,12 +17,15 @@
 package org.fabric3.binding.ws.axis2.runtime;
 
 import java.net.ConnectException;
+import java.security.Principal;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
+import javax.security.auth.Subject;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
@@ -103,6 +106,12 @@ public class Axis2TargetInterceptor implements Interceptor {
         options.setTo(new EndpointReference(endpointUri));
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
         options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+
+        Subject subject = msg.getWorkContext().getSubject();
+        if (subject != null && !subject.getPrincipals().isEmpty()) {
+            Principal primaryPrincipal = subject.getPrincipals().iterator().next();
+            options.setUserName(primaryPrincipal.getName());
+        }
 
         applyOperationInfo(options);
         applyConfig(options);
