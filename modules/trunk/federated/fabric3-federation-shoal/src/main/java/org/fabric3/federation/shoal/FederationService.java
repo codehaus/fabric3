@@ -22,24 +22,61 @@ import com.sun.enterprise.ee.cms.core.GroupManagementService;
  * Responsible for managing communications between runtimes in a domain.
  * <p/>
  * Federated communications are segmented between domain-wide communications and 1 to N zones. This service handles both domain-wide communication as
- * well communication for a particular zone.
+ * well communication within a particular zone.
  *
  * @version $Revision$ $Date$
  */
 public interface FederationService {
 
+    /**
+     * Returns the domain name.
+     *
+     * @return the domain name
+     */
     String getDomainName();
 
+    /**
+     * Returns the name of the zone the runtime is a member of.
+     *
+     * @return the name of the zone the runtime is a member of
+     */
     String getZoneName();
 
+    /**
+     * Returns the runtime name.
+     *
+     * @return the runtime name
+     */
     String getRuntimeName();
 
+    /**
+     * Returns the underlying Shoal GMS for the domain.
+     *
+     * @return the underlying Shoal GMS for the domain
+     */
     GroupManagementService getDomainGMS();
 
+    /**
+     * Returns the underlying Shoal GMS for the zone the runtime is a member of.
+     *
+     * @return the underlying Shoal GMS for the zone the runtime is a member of
+     */
     GroupManagementService getZoneGMS();
 
+    /**
+     * Registers a callback for domain messages destined to the given service.
+     *
+     * @param serviceName the service name
+     * @param callback    the callback.
+     */
     void registerDomainCallback(String serviceName, FederationCallback callback);
 
+    /**
+     * Registers a callback for zone messages destined to the given service.
+     *
+     * @param serviceName the service name
+     * @param callback    the callback.
+     */
     void registerZoneCallback(String serviceName, FederationCallback callback);
 
 }

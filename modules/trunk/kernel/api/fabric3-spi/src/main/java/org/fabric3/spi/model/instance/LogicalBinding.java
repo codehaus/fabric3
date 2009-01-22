@@ -54,10 +54,6 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     private final BD definition;
     private LogicalState state = LogicalState.NEW;
 
-    /**
-     * @param definition
-     * @param parent
-     */
     public LogicalBinding(BD definition, Bindable parent) {
         super(null, parent, TYPE);
         this.definition = definition;

@@ -22,6 +22,8 @@ import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.command.Command;
 
 /**
+ * Aggregates a set of commands for deploying components to a zone.
+ *
  * @version $Revision$ $Date$
  */
 public class ZoneDeploymentCommand extends AbstractCommand {
@@ -29,19 +31,71 @@ public class ZoneDeploymentCommand extends AbstractCommand {
 
     private String id;
     private Set<Command> commands;
+    private String correlationId;
+    private boolean synchronization;
 
+    /**
+     * Constructor.
+     *
+     * @param id              the unique command id
+     * @param commands        the set of commands used to deploy components
+     * @param correlationId   the correlation id used to associate the deployment command with an originating request
+     * @param synchronization true if this command was in response to a runtime request to synchronize with the domain
+     */
+    public ZoneDeploymentCommand(String id, Set<Command> commands, String correlationId, boolean synchronization) {
+        super(0);
+        this.id = id;
+        this.commands = commands;
+        this.correlationId = correlationId;
+        this.synchronization = synchronization;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param id       the unique command id
+     * @param commands the set of commands used to deploy components
+     */
     public ZoneDeploymentCommand(String id, Set<Command> commands) {
         super(0);
         this.id = id;
         this.commands = commands;
     }
 
-    public Set<Command> getCommands() {
-        return commands;
-    }
-
+    /**
+     * The unique command id.
+     *
+     * @return the unique command id
+     */
     public String getId() {
         return id;
+    }
+
+    /**
+     * The correlation id used to associate the deployment command with an originating request.
+     *
+     * @return the id or null if the command is not correlated with a request
+     */
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    /**
+     * Returns true if this command was in response to a runtime request to synchronize with the domain.
+     *
+     * @return true if this command was in response to a runtime request to synchronize with the domain
+     */
+    public boolean isSynchronization() {
+        return synchronization;
+    }
+
+    /**
+     * Returns the set of commands used to deploy components.
+     *
+     * @return the set of commands used to deploy components
+     */
+    public Set<Command> getCommands() {
+        return commands;
     }
 
 }

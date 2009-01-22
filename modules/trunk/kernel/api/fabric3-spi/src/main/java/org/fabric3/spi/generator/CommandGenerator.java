@@ -38,7 +38,7 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Generates a Command that must be applied to a runtime based on changes to a logical component.
+ * Generates a Command that must be applied to a zone based on changes to a logical component.
  *
  * @version $Rev$ $Date$
  */
@@ -55,9 +55,11 @@ public interface CommandGenerator {
      * Generates a command based on the contents of a logical component
      *
      * @param logicalComponent the logical component to generate the command from
+     * @param incremental      true if generation should be incremental, i.e. commands are only generated for new components as opposed to existing
+     *                         ones
      * @return the generated command or null if no changes were detected
      * @throws GenerationException if an error occurs during generation
      */
-    Command generate(LogicalComponent<?> logicalComponent) throws GenerationException;
+    Command generate(LogicalComponent<?> logicalComponent, boolean incremental) throws GenerationException;
 
 }

@@ -24,6 +24,13 @@ import java.util.List;
 public interface ZoneManager {
 
     /**
+     * Returns true if the runtime is acting as a zone mamager.
+     *
+     * @return true if the runtime is acting as a zone mamager
+     */
+    public boolean isZoneManager();
+
+    /**
      * Returns a list of active RuntimeInstances in the zone.
      *
      * @return the RuntimeInstances  active in the zone.

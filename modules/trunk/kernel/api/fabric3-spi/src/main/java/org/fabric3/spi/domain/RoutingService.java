@@ -46,10 +46,9 @@ public interface RoutingService {
     /**
      * Routes a set of commands to zones in a domain
      *
-     * @param id         the command set id used for correlation
-     * @param commandMap the command map to route @throws RoutingException if an exception occurs during routing
-     * @throws RoutingException if an exception occurs routing the command set
+     * @param commandMap the command map to route
+     * @throws RoutingException if an exception occurs routing the command map
      */
-    void route(String id, CommandMap commandMap) throws RoutingException;
+    void route(CommandMap commandMap) throws RoutingException;
 
 }

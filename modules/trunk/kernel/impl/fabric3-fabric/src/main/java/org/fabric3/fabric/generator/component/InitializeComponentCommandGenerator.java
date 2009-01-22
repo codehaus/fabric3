@@ -61,8 +61,8 @@ public class InitializeComponentCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public InitializeComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component.getState() == LogicalState.NEW && component.isEagerInit()) {
+    public InitializeComponentCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+        if ((component.getState() == LogicalState.NEW || !incremental) && component.isEagerInit()) {
             return new InitializeComponentCommand(order, component.getUri());
         }
         return null;

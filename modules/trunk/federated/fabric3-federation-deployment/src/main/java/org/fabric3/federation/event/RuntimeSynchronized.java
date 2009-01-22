@@ -14,21 +14,14 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.executor;
+package org.fabric3.federation.event;
 
-import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.spi.services.event.Fabric3Event;
 
 /**
+ * Denotes when a runtime is synchronized with the domain.
+ *
  * @version $Revision$ $Date$
  */
-public interface RuntimeDeploymentCommandExecutorMonitor {
-
-    /**
-     * Callback when a deployment command is received.
-     *
-     * @param id the deployment command id.
-     */
-    @Info
-    void receivedDeploymentCommand(String id);
-
+public class RuntimeSynchronized implements Fabric3Event {
 }

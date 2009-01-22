@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.binding.BindingSelector;
@@ -44,16 +44,20 @@ import org.fabric3.model.type.component.Include;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.binding.BindingSelectionException;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionState;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.domain.DomainListener;
 import org.fabric3.spi.domain.RoutingException;
 import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -84,6 +88,7 @@ public abstract class AbstractDomain implements Domain {
 
     // The service for allocating to remote zones. Domain subtypes may optionally inject this service if they support distributed domains.
     protected Allocator allocator;
+    protected List<DomainListener> listeners;
 
     /**
      * Constructor.
@@ -110,6 +115,7 @@ public abstract class AbstractDomain implements Domain {
         this.bindingSelector = bindingSelector;
         this.routingService = routingService;
         this.collector = collector;
+        listeners = Collections.emptyList();
     }
 
     public void include(QName deployable) throws DeploymentException {
@@ -139,11 +145,17 @@ public abstract class AbstractDomain implements Domain {
             DeploymentPlan deploymentPlan = resolvePlan(plan);
             include(wrapper, deploymentPlan, transactional);
         }
+        for (DomainListener listener : listeners) {
+            listener.onInclude(deployable, plan);
+        }
 
     }
 
     public void include(Composite composite) throws DeploymentException {
         include(composite, null, false);
+        for (DomainListener listener : listeners) {
+            listener.onInclude(composite.getName(), null);
+        }
     }
 
     public void include(List<URI> uris, boolean transactional) throws DeploymentException {
@@ -181,6 +193,19 @@ public abstract class AbstractDomain implements Domain {
             }
 
             allocateAndDeploy(domain, plans, change);
+
+            // notify listeners
+            for (int i = 0; i < deployables.size(); i++) {
+                Composite deployable = deployables.get(i);
+                String planName = null;
+                if (!plans.isEmpty()) {
+                    // deployment plans are not used in single-VM runtimes
+                    planName = plans.get(i).getName();
+                }
+                for (DomainListener listener : listeners) {
+                    listener.onInclude(deployable.getName(), planName);
+                }
+            }
         } catch (DeploymentException e) {
             // release the contribution locks if there was an error
             for (Contribution contribution : contributions) {
@@ -207,9 +232,8 @@ public abstract class AbstractDomain implements Domain {
         }
         collector.mark(deployable, domain);
         try {
-            CommandMap commandMap = physicalModelGenerator.generate(domain.getComponents());
-            String id = UUID.randomUUID().toString();
-            routingService.route(id, commandMap);
+            CommandMap commandMap = physicalModelGenerator.generate(domain.getComponents(), true);
+            routingService.route(commandMap);
         } catch (GenerationException e) {
             throw new UndeploymentException("Error undeploying: " + deployable, e);
         } catch (RoutingException e) {
@@ -223,10 +247,98 @@ public abstract class AbstractDomain implements Domain {
             QNameSymbol deployableSymbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
             contribution.releaseLock(deployable);
+            for (DomainListener listener : listeners) {
+                listener.onUndeploy(deployable);
+            }
         } catch (WriteException e) {
             throw new UndeploymentException("Error applying undeployment: " + deployable, e);
         }
     }
+
+    public void recover(List<QName> deployables, List<String> planNames) throws DeploymentException {
+        List<Contribution> contributions = new ArrayList<Contribution>();
+        List<Composite> composites = new ArrayList<Composite>();
+        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
+        for (QName deployable : deployables) {
+            QNameSymbol symbol = new QNameSymbol(deployable);
+            Contribution contribution = metadataStore.resolveContainingContribution(symbol);
+            if (contribution == null) {
+                // this should not happen
+                throw new DeploymentException("Contribution for deployable not found: " + deployable);
+            }
+            contributions.add(contribution);
+            try {
+                IntrospectionContext context = new DefaultIntrospectionContext();
+                ResourceElement<QNameSymbol, Composite> element = metadataStore.resolve(contribution.getUri(), Composite.class, symbol, context);
+                composites.add(element.getValue());
+            } catch (StoreException e) {
+                throw new DeploymentException(e);
+            }
+
+        }
+        for (String planName : planNames) {
+            if (planName == null) {
+                plans.add(null);
+                continue;
+            }
+            DeploymentPlan plan = resolvePlan(planName);
+            if (plan == null) {
+                // this should not happen
+                throw new DeploymentException("Deployment plan not found: " + planName);
+            }
+            plans.add(plan);
+        }
+        // lock the contributions
+        for (int i = 0; i < contributions.size(); i++) {
+            Contribution contribution = contributions.get(i);
+            QName deployable = deployables.get(i);
+            contribution.acquireLock(deployable);
+        }
+        try {
+            LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+
+            LogicalChange change = logicalModelInstantiator.include(domain, composites);
+            if (change.hasErrors()) {
+                throw new AssemblyException(change.getErrors());
+            }
+            Collection<LogicalComponent<?>> components = domain.getComponents();
+            // Allocate the components to runtime nodes
+            allocate(components, plans);
+
+            // Select bindings
+            selectBinding(components);
+            markAsProvisioned(change);
+            logicalComponentManager.replaceRootComponent(domain);
+
+        } catch (AllocationException e) {
+            throw new DeploymentException("Error deploying composite", e);
+        } catch (WriteException e) {
+            throw new DeploymentException("Error applying deployment", e);
+        } finally {
+            for (int i = 0; i < contributions.size(); i++) {
+                Contribution contribution = contributions.get(i);
+                QName deployable = deployables.get(i);
+                contribution.releaseLock(deployable);
+            }
+        }
+    }
+
+    public void regenerate(String zoneId, String correlationId) throws DeploymentException {
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+        Collection<LogicalComponent<?>> components = domain.getComponents();
+        try {
+            CommandMap commandMap = physicalModelGenerator.generate(components, false);
+            Set<Command> commands = commandMap.getCommandsForZone(zoneId);
+            CommandMap filtered = new CommandMap(commandMap.getId(), correlationId, true);
+            filtered.addCommands(zoneId, commands);
+            routingService.route(filtered);
+        } catch (GenerationException e) {
+            throw new DeploymentException(e);
+        } catch (RoutingException e) {
+            throw new DeploymentException(e);
+        }
+    }
+
 
     /**
      * Removes components marked for deletion from the composite. Note this method does not recurse as removal is only done against the domain level
@@ -361,7 +473,8 @@ public abstract class AbstractDomain implements Domain {
      * @param change the logical change
      * @throws DeploymentException if an error is encountered during deployment
      */
-    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans, LogicalChange change) throws DeploymentException {
+    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans, LogicalChange change)
+            throws DeploymentException {
         Collection<LogicalComponent<?>> components = domain.getComponents();
         // Allocate the components to runtime nodes
         try {
@@ -374,9 +487,8 @@ public abstract class AbstractDomain implements Domain {
         selectBinding(components);
         try {
             // generate and provision any new components and new wires
-            CommandMap commandMap = physicalModelGenerator.generate(components);
-            String id = UUID.randomUUID().toString();
-            routingService.route(id, commandMap);
+            CommandMap commandMap = physicalModelGenerator.generate(components, true);
+            routingService.route(commandMap);
         } catch (GenerationException e) {
             throw new DeploymentException("Error deploying components", e);
         } catch (RoutingException e) {

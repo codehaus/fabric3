@@ -35,6 +35,10 @@
         <f3-impl:implementation.system class="org.fabric3.federation.shoal.ShoalRuntimeManager"/>
     </component>
 
+    <component name="DomainSyncTimer">
+        <f3-impl:implementation.system class="org.fabric3.federation.shoal.DomainSynchronizer"/>
+    </component>
+
     <component name="FederationService">
         <f3-impl:implementation.system class="org.fabric3.federation.shoal.FederationServiceImpl"/>
         <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>

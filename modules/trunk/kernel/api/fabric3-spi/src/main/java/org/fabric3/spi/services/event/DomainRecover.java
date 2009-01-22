@@ -14,21 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.executor;
-
-import org.fabric3.api.annotation.logging.Info;
+package org.fabric3.spi.services.event;
 
 /**
+ * Signals when a domain enters the recover phase.
+ *
  * @version $Revision$ $Date$
  */
-public interface RuntimeDeploymentCommandExecutorMonitor {
-
-    /**
-     * Callback when a deployment command is received.
-     *
-     * @param id the deployment command id.
-     */
-    @Info
-    void receivedDeploymentCommand(String id);
-
+public class DomainRecover implements Fabric3Event {
 }

@@ -17,6 +17,7 @@
 package org.fabric3.federation.shoal;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -33,16 +34,19 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.federation.command.PaticipantSyncCommand;
+import org.fabric3.federation.command.ZoneSyncCommand;
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_MANAGER;
 import static org.fabric3.federation.shoal.FederationConstants.ZONE_TRANSPORT_INFO;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.ZoneManager;
-import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 
 /**
  * Manages communications between a zone and the DomainManager. As communications are segmented between domain-wide messages and zone-specific
@@ -92,6 +96,9 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         this.zoneManager = zoneManager;
     }
 
+    public boolean isZoneManager() {
+        return zoneManager;
+    }
 
     /**
      * Property to set the transport metadata. This may contain information such as the cluster HTTP address.
@@ -147,7 +154,26 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     private void handleZoneSignal(Signal signal) throws FederationCallbackException {
-
+        if (signal instanceof MessageSignal) {
+            MessageSignal messageSignal = (MessageSignal) signal;
+            Object deserialized = deserialize(messageSignal);
+            if (deserialized instanceof PaticipantSyncCommand) {
+                PaticipantSyncCommand paticipantSyncCommand = (PaticipantSyncCommand) deserialized;
+                String runtimeName = federationService.getRuntimeName();
+                String correlationId = paticipantSyncCommand.getRuntimeId();
+                ZoneSyncCommand command = new ZoneSyncCommand(runtimeName, correlationId);
+                monitor.receivedSyncRequest(runtimeName);
+                // reroute to the domain controller
+                try {
+                    byte[] bytes = serialize(command);
+                    federationService.getDomainGMS().getGroupHandle().sendMessage(FederationConstants.DOMAIN_MANAGER, bytes);
+                } catch (GMSException e) {
+                    throw new FederationCallbackException(e);
+                } catch (IOException e) {
+                    throw new FederationCallbackException(e);
+                }
+            }
+        }
     }
 
     private void handleDomainSignal(Signal signal) throws FederationCallbackException {
@@ -157,6 +183,17 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     private void handleMessage(MessageSignal signal) throws FederationCallbackException {
+        Object deserialized = deserialize(signal);
+        if (deserialized instanceof Command) {
+            try {
+                executorRegistry.execute((Command) deserialized);
+            } catch (ExecutionException e) {
+                throw new FederationCallbackException(e);
+            }
+        }
+    }
+
+    private Object deserialize(MessageSignal signal) throws FederationCallbackException {
         MultiClassLoaderObjectInputStream ois = null;
         try {
             byte[] payload = signal.getMessage();
@@ -164,12 +201,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
             // Deserialize the command set. As command set classes may be loaded in an extension classloader, use a MultiClassLoaderObjectInputStream
             // to deserialize classes in the appropriate classloader.
             ois = new MultiClassLoaderObjectInputStream(stream, classLoaderRegistry);
-            Object deserialized = ois.readObject();
-            if (deserialized instanceof Command) {
-                executorRegistry.execute((Command) deserialized);
-            }
-        } catch (ExecutionException e) {
-            throw new FederationCallbackException(e);
+            return ois.readObject();
         } catch (IOException e) {
             throw new FederationCallbackException(e);
         } catch (ClassNotFoundException e) {
@@ -183,6 +215,16 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
                 // ignore;
             }
         }
+
+    }
+
+    private byte[] serialize(Command command) throws IOException {
+        ByteArrayOutputStream bas = new ByteArrayOutputStream();
+        MultiClassLoaderObjectOutputStream stream;
+        stream = new MultiClassLoaderObjectOutputStream(bas);
+        stream.writeObject(command);
+        stream.close();
+        return bas.toByteArray();
     }
 
     private void updateZoneMetaData() throws FederationCallbackException {

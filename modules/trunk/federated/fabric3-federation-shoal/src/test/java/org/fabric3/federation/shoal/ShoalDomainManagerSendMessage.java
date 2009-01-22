@@ -22,10 +22,10 @@ import java.net.URI;
 import org.easymock.EasyMock;
 
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.topology.Zone;
-import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 
 /**
  * @version $Revision$ $Date$
@@ -73,7 +73,7 @@ public class ShoalDomainManagerSendMessage {
         DomainManagerMonitor domainMonitor = EasyMock.createNiceMock(DomainManagerMonitor.class);
         EasyMock.replay(domainMonitor);
 
-        domainManager = new ShoalDomainManager(federationService, domainMonitor);
+        domainManager = new ShoalDomainManager(federationService, null, null, domainMonitor);
         domainManager.init();
 
         federationService.onJoinDomain();

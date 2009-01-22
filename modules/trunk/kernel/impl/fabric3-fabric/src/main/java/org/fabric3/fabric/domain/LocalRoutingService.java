@@ -42,11 +42,11 @@ import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.domain.RoutingException;
 import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.spi.domain.RoutingException;
 
 /**
  * A routing service implementation that routes commands to the local runtime instance.
@@ -63,7 +63,7 @@ public class LocalRoutingService implements RoutingService {
         this.scopeRegistry = scopeRegistry;
     }
 
-    public void route(String id, CommandMap commandMap) throws RoutingException {
+    public void route(CommandMap commandMap) throws RoutingException {
 
         Set<Command> commands = commandMap.getCommandsForZone(null);
         for (Command command : commands) {

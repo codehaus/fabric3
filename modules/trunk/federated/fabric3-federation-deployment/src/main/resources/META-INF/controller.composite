@@ -27,5 +27,10 @@
         <f3-impl:implementation.system class="org.fabric3.federation.routing.FederatedRoutingService"/>
     </component>
 
+    <component name="RegenerateCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.federation.executor.ZoneSyncCommandExecutor"/>
+        <reference name="domain" target="ApplicationDomain"/>
+    </component>
+
 
 </composite>

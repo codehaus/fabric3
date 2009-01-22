@@ -27,12 +27,12 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_MANAGER;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.topology.RuntimeManager;
-import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 
 /**
  * Handles communications between a zone participant and the ZoneManager. Specifically, executes commands received from the ZoneManager and updates
@@ -42,7 +42,6 @@ import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
  */
 @EagerInit
 public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
-//    private Map<QName, Serializable> runtimeMetdata = new HashMap<QName, Serializable>();
     private FederationService federationService;
     private CommandExecutorRegistry executorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;

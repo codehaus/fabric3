@@ -25,4 +25,7 @@ public interface ZoneManagerMonitor {
 
     @Info
     void enabled(String zoneName);
+
+    @Info
+    void receivedSyncRequest(String runtimeName);
 }

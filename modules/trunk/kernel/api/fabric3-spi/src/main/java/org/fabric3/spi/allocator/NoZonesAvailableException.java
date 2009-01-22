@@ -14,21 +14,15 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.executor;
-
-import org.fabric3.api.annotation.logging.Info;
+package org.fabric3.spi.allocator;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface RuntimeDeploymentCommandExecutorMonitor {
+public class NoZonesAvailableException extends AllocationException {
+    private static final long serialVersionUID = -2916042483754585243L;
 
-    /**
-     * Callback when a deployment command is received.
-     *
-     * @param id the deployment command id.
-     */
-    @Info
-    void receivedDeploymentCommand(String id);
-
+    public NoZonesAvailableException(String message) {
+        super(message);
+    }
 }

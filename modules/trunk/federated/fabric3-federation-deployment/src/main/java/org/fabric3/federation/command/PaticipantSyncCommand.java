@@ -14,21 +14,25 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.executor;
+package org.fabric3.federation.command;
 
-import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.spi.command.AbstractCommand;
 
 /**
+ * A command issued by a participant to synchronize with the domain.
+ *
  * @version $Revision$ $Date$
  */
-public interface RuntimeDeploymentCommandExecutorMonitor {
+public class PaticipantSyncCommand extends AbstractCommand {
+    private static final long serialVersionUID = -6969171512764646396L;
+    private String runtimeId;
 
-    /**
-     * Callback when a deployment command is received.
-     *
-     * @param id the deployment command id.
-     */
-    @Info
-    void receivedDeploymentCommand(String id);
+    public PaticipantSyncCommand(String runtimeId) {
+        super(0);
+        this.runtimeId = runtimeId;
+    }
 
+    public String getRuntimeId() {
+        return runtimeId;
+    }
 }

@@ -47,7 +47,33 @@ import org.fabric3.spi.command.Command;
  * @version $Revision$ $Date$
  */
 public class CommandMap {
+    private String id;
+    private String correlationId;
+    private boolean synchornization;
+
     private Map<String, Set<Command>> commands = new HashMap<String, Set<Command>>();
+
+    public CommandMap(String id) {
+        this.id = id;
+    }
+
+    public CommandMap(String id, String correlationId, boolean synchornization) {
+        this.id = id;
+        this.correlationId = correlationId;
+        this.synchornization = synchornization;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public boolean isSynchornization() {
+        return synchornization;
+    }
 
     public void addCommand(String zone, Command command) {
         Set<Command> cmds = getCommandsForRuntimeInternal(zone);

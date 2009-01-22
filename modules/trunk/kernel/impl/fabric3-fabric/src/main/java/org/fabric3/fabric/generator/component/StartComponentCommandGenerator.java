@@ -51,7 +51,7 @@ import org.fabric3.spi.model.instance.LogicalState;
 public class StartComponentCommandGenerator implements CommandGenerator {
     private final int order;
 
-    public StartComponentCommandGenerator(@Property(name = "order")int order) {
+    public StartComponentCommandGenerator(@Property(name = "order") int order) {
         this.order = order;
     }
 
@@ -60,9 +60,9 @@ public class StartComponentCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public StartComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public StartComponentCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         // start a component if it is atomic and not provisioned
-        if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.NEW) {
+        if (!(component instanceof LogicalCompositeComponent) && (component.getState() == LogicalState.NEW || !incremental)) {
             return new StartComponentCommand(order, component.getUri());
         }
         return null;

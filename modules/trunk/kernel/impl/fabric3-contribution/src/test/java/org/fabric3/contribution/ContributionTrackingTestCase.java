@@ -31,7 +31,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionState;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.services.event.Recover;
+import org.fabric3.spi.services.event.RuntimeRecover;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.xml.XMLFactoryInstantiationException;
 
@@ -65,7 +65,7 @@ public class ContributionTrackingTestCase extends TestCase {
         contribution1.setState(ContributionState.INSTALLED);
         tracker.onInstall(contribution1);
 
-        replayer.onEvent(new Recover());
+        replayer.onEvent(new RuntimeRecover());
 
         // verify the replayer stored both contributions and installed the first
         EasyMock.verify(store);

@@ -38,19 +38,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.federation.command.ZoneDeploymentCommand;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 import org.fabric3.spi.command.Command;
-import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.domain.RoutingException;
 import org.fabric3.spi.domain.RoutingMonitor;
 import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.topology.DomainManager;
 import org.fabric3.spi.topology.MessageException;
-import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 
 /**
  * A routing service implementation that routes commands to a zone.
@@ -67,13 +67,15 @@ public class FederatedRoutingService implements RoutingService {
         this.monitor = monitor;
     }
 
-    public void route(String id, CommandMap commandMap) throws RoutingException {
-
+    public void route(CommandMap commandMap) throws RoutingException {
+        String id = commandMap.getId();
         for (String zone : commandMap.getZones()) {
             try {
                 Set<Command> commands = commandMap.getCommandsForZone(zone);
                 monitor.routeCommands(zone);
-                Command command = new ZoneDeploymentCommand(id, commands);
+                String correlationId = commandMap.getCorrelationId();
+                boolean synchronization = commandMap.isSynchornization();
+                Command command = new ZoneDeploymentCommand(id, commands, correlationId, synchronization);
                 ByteArrayOutputStream bas = new ByteArrayOutputStream();
                 MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
                 stream.writeObject(command);

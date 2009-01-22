@@ -14,21 +14,19 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.executor;
+package org.fabric3.federation.shoal;
 
 import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface RuntimeDeploymentCommandExecutorMonitor {
+public interface DomainSynchronizerMonitor {
 
-    /**
-     * Callback when a deployment command is received.
-     *
-     * @param id the deployment command id.
-     */
     @Info
-    void receivedDeploymentCommand(String id);
+    void synchronizing();
 
+    @Severe
+    void error(Throwable e);
 }

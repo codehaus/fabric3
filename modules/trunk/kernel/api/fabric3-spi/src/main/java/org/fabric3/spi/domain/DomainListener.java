@@ -14,21 +14,29 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.executor;
+package org.fabric3.spi.domain;
 
-import org.fabric3.api.annotation.logging.Info;
+import javax.xml.namespace.QName;
 
 /**
+ * Implementations receive callbacks for domain events.
+ *
  * @version $Revision$ $Date$
  */
-public interface RuntimeDeploymentCommandExecutorMonitor {
+public interface DomainListener {
 
     /**
-     * Callback when a deployment command is received.
+     * Called when a composite is included in the domain.
      *
-     * @param id the deployment command id.
+     * @param deployable the composite qualified name
+     * @param plan       the deployment plan or null if none is specified
      */
-    @Info
-    void receivedDeploymentCommand(String id);
+    void onInclude(QName deployable, String plan);
 
+    /**
+     * Called when a composite is undeployed from the domain.
+     *
+     * @param undeployed the composite qualified name
+     */
+    void onUndeploy(QName undeployed);
 }

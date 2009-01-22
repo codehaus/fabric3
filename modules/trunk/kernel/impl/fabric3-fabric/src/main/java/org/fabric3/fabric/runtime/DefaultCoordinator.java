@@ -33,7 +33,7 @@ import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
 import static org.fabric3.host.Namespaces.IMPLEMENTATION;
-
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
@@ -45,7 +45,6 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.model.type.component.Composite;
@@ -57,9 +56,10 @@ import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
+import org.fabric3.spi.services.event.DomainRecover;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.JoinDomain;
-import org.fabric3.spi.services.event.Recover;
+import org.fabric3.spi.services.event.RuntimeRecover;
 import org.fabric3.spi.services.event.RuntimeStart;
 
 /**
@@ -143,7 +143,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
 
         }
         EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
-        eventService.publish(new Recover());
+        eventService.publish(new RuntimeRecover());
         state = State.RECOVERED;
         return new SyncFuture();
     }
@@ -154,6 +154,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         }
         EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
         eventService.publish(new JoinDomain());
+        eventService.publish(new DomainRecover());
         state = State.DOMAIN_JOINED;
         // no domain to join
         return new SyncFuture();

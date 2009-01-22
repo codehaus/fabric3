@@ -101,9 +101,14 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         this.dependencyService = dependencyService;
     }
 
-    public Map<String, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException {
+    public Map<String, Set<Command>> generate(List<LogicalComponent<?>> components, boolean incremental) throws GenerationException {
         // commands mapped to zone
-        Map<String, Set<Contribution>> collated = collateContributions(components, LogicalState.NEW);
+        Map<String, Set<Contribution>> collated;
+        if (incremental) {
+            collated = collateContributions(components, LogicalState.NEW);
+        } else {
+            collated = collateContributions(components, null);
+        }
 
         // Create the classloader definitions for contributions required to run the components being deployed.
         // These are created first since they must be instantitated on a runtime prior to component classloaders
@@ -156,14 +161,15 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
      * required set of contributions keyed by zone where the components are to be deployed to or undeployed from.
      *
      * @param components the set of components
-     * @param state      the logical state. Either LogicalState#NEW or LogicalState#MARKED representing deploy and undeploy respectively
+     * @param state      the logical state. This can be LogicalState#NEW or LogicalState#MARKED representing deploy and undeploy respectively, or null
+     *                   if a non-incremental generation is performed
      * @return the set of required contributions grouped by zone
      */
     private Map<String, Set<Contribution>> collateContributions(List<LogicalComponent<?>> components, LogicalState state) {
         // collate all contributions that must be provisioned as part of the change set
         Map<String, Set<Contribution>> contributionsPerZone = new HashMap<String, Set<Contribution>>();
         for (LogicalComponent<?> component : components) {
-            if (state != component.getState()) {
+            if (state != null && state != component.getState()) {
                 continue;
             }
             URI contributionUri = component.getDefinition().getContributionUri();

@@ -47,18 +47,11 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
+    public AttachWireCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+        if (component instanceof LogicalCompositeComponent || (component.getState() != LogicalState.NEW && incremental)) {
             return null;
         }
-        return generatePhysicalWires(component);
-    }
-
-    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
         AttachWireCommand command = new AttachWireCommand(order);
-        if (component.getState() != LogicalState.NEW) {
-            return null;
-        }
         for (LogicalResource<?> resource : component.getResources()) {
             PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
             command.addPhysicalWireDefinition(pwd);

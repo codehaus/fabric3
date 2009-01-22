@@ -256,15 +256,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     }
 
     /**
-     * Gets the component type.
-     *
-     * @return Component type.
-     */
-    public AbstractComponentType<?, ?, ?, ?> getComponentType() {
-        return getDefinition().getComponentType();
-    }
-
-    /**
      * Checks whether this component needs to be eager inited.
      *
      * @return True if the component needs to be eager inited.

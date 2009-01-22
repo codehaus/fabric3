@@ -41,20 +41,21 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Interface that abstracts the concerns of a generating commands to provision a set of componets to runtimes in a domain.
+ * Generates commands to provision a set of componets to zones in a domain.
  *
  * @version $Revision$ $Date$
  */
 public interface PhysicalModelGenerator {
 
     /**
-     * Generate commands to provision a set of components and their wires to runtimes in the domain based on the given set of logical components.
+     * Generate commands to provision a set of newly instantiated components and wires to zones.
      *
-     * @param components the logical component set.
+     * @param components  the logical components in the domain.
+     * @param incremental true if generation should be incremental, i.e. commands are only generated for new components and wires as opposed to
+     *                    existing ones
      * @return the command map containing the generated commands
      * @throws GenerationException If unable to generate the command map.
      */
-    CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException;
-
+    CommandMap generate(Collection<LogicalComponent<?>> components, boolean incremental) throws GenerationException;
 
 }

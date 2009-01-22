@@ -43,8 +43,7 @@ public class StopComponentCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public StopComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
-        // start a component if it is atomic and not provisioned
+    public StopComponentCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.MARKED) {
             return new StopComponentCommand(order, component.getUri());
         }

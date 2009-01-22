@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.domain;
 
+import java.util.List;
+
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.binding.BindingSelector;
@@ -25,6 +27,7 @@ import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.spi.domain.DomainListener;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
@@ -64,5 +67,17 @@ public class DistributedDomain extends AbstractDomain implements Domain {
     public void setRoutingService(RoutingService routingService) {
         this.routingService = routingService;
     }
+
+    /**
+     * Used to optionally inject an DomainListeners.
+     *
+     * @param listeners the listeners
+     */
+    @Reference(required = false)
+    public void setListeners(List<DomainListener> listeners) {
+        this.listeners = listeners;
+    }
+
+
 
 }

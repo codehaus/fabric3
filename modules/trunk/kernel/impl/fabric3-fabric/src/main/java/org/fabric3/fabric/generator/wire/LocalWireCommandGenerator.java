@@ -83,19 +83,19 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         this.order = order;
     }
 
-    public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public AttachWireCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        return generatePhysicalWires(component);
+        return generatePhysicalWires(component, incremental);
     }
 
-    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
+    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         AttachWireCommand command = new AttachWireCommand(order);
 
         for (LogicalReference logicalReference : component.getReferences()) {
             if (logicalReference.getBindings().isEmpty()) {
-                generateUnboundReferenceWires(logicalReference, command);
+                generateUnboundReferenceWires(logicalReference, command, incremental);
             }
         }
         if (command.getPhysicalWireDefinitions().isEmpty()) {
@@ -104,13 +104,14 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         return command;
     }
 
-    private void generateUnboundReferenceWires(LogicalReference logicalReference, AttachWireCommand command) throws GenerationException {
+    private void generateUnboundReferenceWires(LogicalReference logicalReference, AttachWireCommand command, boolean incremental)
+            throws GenerationException {
 
         LogicalComponent<?> component = logicalReference.getParent();
 
         for (LogicalWire logicalWire : logicalReference.getWires()) {
 
-            if (logicalWire.getState() != LogicalState.NEW) {
+            if (logicalWire.getState() != LogicalState.NEW && incremental) {
                 continue;
             }
 

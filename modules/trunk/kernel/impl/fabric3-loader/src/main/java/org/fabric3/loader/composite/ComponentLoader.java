@@ -126,7 +126,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             reader.nextTag();
             QName elementName = reader.getName();
             if (COMPONENT.equals(elementName)) {
-                // the reader has hit the end of the component definition without an implementation being specified
+                // the read er has hit the end of the component definition without an implementation being specified
                 MissingComponentImplementation error =
                         new MissingComponentImplementation("The component " + name + " must specify an implementation", reader);
                 context.addError(error);

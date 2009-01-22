@@ -168,7 +168,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
 
     private <I> AtomicComponent<I> createPhysicalComponent(LogicalComponent<?> logicalComponent, I instance) {
         URI uri = logicalComponent.getUri();
-        PojoComponentType type = (PojoComponentType) logicalComponent.getComponentType();
+        PojoComponentType type = (PojoComponentType) logicalComponent.getDefinition().getComponentType();
         type.getInjectionSites();
         SingletonComponent<I> component = new SingletonComponent<I>(uri, instance, type.getInjectionSites());
         component.setClassLoaderId(BOOT_CONTRIBUTION);

@@ -29,11 +29,13 @@ public class RuntimeDeploymentCommand extends AbstractCommand {
 
     private String id;
     private Set<Command> commands;
+    private boolean synchronization;
 
-    public RuntimeDeploymentCommand(String id, Set<Command> commands) {
+    public RuntimeDeploymentCommand(String id, Set<Command> commands, boolean synchronization) {
         super(0);
         this.id = id;
         this.commands = commands;
+        this.synchronization = synchronization;
     }
 
     public Set<Command> getCommands() {
@@ -42,5 +44,9 @@ public class RuntimeDeploymentCommand extends AbstractCommand {
 
     public String getId() {
         return id;
+    }
+
+    public boolean isSynchronization() {
+        return synchronization;
     }
 }

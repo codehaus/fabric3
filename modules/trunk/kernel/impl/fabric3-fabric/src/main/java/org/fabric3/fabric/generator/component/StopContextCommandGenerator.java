@@ -22,7 +22,6 @@ import org.fabric3.fabric.command.StopContextCommand;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 
 /**
@@ -43,7 +42,7 @@ public class StopContextCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public StopContextCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public StopContextCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component.getState() == LogicalState.MARKED) {
             return new StopContextCommand(order, component.getDeployable());
         }

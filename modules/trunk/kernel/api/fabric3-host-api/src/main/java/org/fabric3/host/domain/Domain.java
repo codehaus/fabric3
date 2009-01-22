@@ -67,8 +67,9 @@ public interface Domain {
      */
     void include(QName deployable, String plan, boolean transactional) throws DeploymentException;
 
+
     /**
-     * Include a Composite in the domain.
+     * Include a composite in the domain.
      *
      * @param composite the composite to include
      * @throws DeploymentException if an error is encountered during inclusion
@@ -104,5 +105,23 @@ public interface Domain {
      * @throws UndeploymentException if an error is encountered during undeployment
      */
     void undeploy(QName deployable, boolean transactional) throws UndeploymentException;
+
+    /**
+     * Initiates a recovery operation using the set of deployables and plans.
+     *
+     * @param deployables the deployable composites to recover
+     * @param plans       the deployment plans associated with the deployable composites. For single-VM operation, the plans can be an empty list
+     * @throws DeploymentException if an error is encountered during recovery
+     */
+    void recover(List<QName> deployables, List<String> plans) throws DeploymentException;
+
+    /**
+     * Regenerates and routes deployment commands for the current state of the given zone.
+     *
+     * @param zoneId        the zone
+     * @param correlationId an id for correlating the deployment commands with a request
+     * @throws DeploymentException if an error is encountered during regeneration
+     */
+    void regenerate(String zoneId, String correlationId) throws DeploymentException;
 
 }

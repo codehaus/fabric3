@@ -74,26 +74,26 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    public Command generate(LogicalComponent<?> component) throws GenerationException {
+    public Command generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
         WireCommand command;
-        if (LogicalState.NEW == component.getState()) {
+        if (LogicalState.NEW == component.getState() || (!incremental && LogicalState.MARKED != component.getState())) {
             command = new AttachWireCommand(order);
         } else if (LogicalState.MARKED == component.getState()) {
             command = new DetachWireCommand(order);
         } else {
             return null;
         }
-        generatePhysicalWires(component, command);
+        generatePhysicalWires(component, command, incremental);
         if (command.getPhysicalWireDefinitions().isEmpty()) {
             return null;
         }
         return command;
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command) throws GenerationException {
+    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command, boolean incremental) throws GenerationException {
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
             if (bindings.isEmpty()) {
@@ -115,13 +115,13 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
             }
 
             for (LogicalBinding<?> binding : service.getBindings()) {
-                if (binding.getState() == LogicalState.NEW) {
+                if (binding.getState() == LogicalState.NEW || !incremental) {
                     PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri);
                     command.addPhysicalWireDefinition(pwd);
                 }
             }
             // generate the callback command set
-            if (callbackBinding != null && callbackBinding.getState() == LogicalState.NEW) {
+            if (callbackBinding != null && callbackBinding.getState() == LogicalState.NEW || !incremental) {
                 PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackServiceWire(component, service, callbackBinding);
                 command.addPhysicalWireDefinition(callbackPwd);
             }

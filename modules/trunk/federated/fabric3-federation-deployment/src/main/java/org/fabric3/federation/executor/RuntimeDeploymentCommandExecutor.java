@@ -22,24 +22,31 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.federation.command.RuntimeDeploymentCommand;
+import org.fabric3.federation.event.RuntimeSynchronized;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
+import org.fabric3.spi.services.event.EventService;
 
 /**
- * Executes a RuntimeDeploymentCommand on a runtime.
+ * A CommandExecutor that processes deployment commands on a participant node.
  *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class RuntimeDeploymentCommandExecutor implements CommandExecutor<RuntimeDeploymentCommand> {
     private CommandExecutorRegistry executorRegistry;
+    private EventService eventService;
     private RuntimeDeploymentCommandExecutorMonitor monitor;
+    // indicates whether the runtime has been synchronized with the domain
+    private boolean domainSynchronized;
 
     public RuntimeDeploymentCommandExecutor(@Reference CommandExecutorRegistry executorRegistry,
+                                            @Reference EventService eventService,
                                             @Monitor RuntimeDeploymentCommandExecutorMonitor monitor) {
         this.executorRegistry = executorRegistry;
+        this.eventService = eventService;
         this.monitor = monitor;
     }
 
@@ -49,11 +56,18 @@ public class RuntimeDeploymentCommandExecutor implements CommandExecutor<Runtime
     }
 
     public void execute(RuntimeDeploymentCommand command) throws ExecutionException {
+        if (domainSynchronized && command.isSynchronization()) {
+            // When a participant boots, it periodiclly issues synchronization requests to the zone manager until the first deployment command is
+            // received. Since communications are asynchronous, it is possible multiple requests may be issued if a response is not received during
+            // the elapsed time period. If this happens, only the first deployment command should be processed.
+            return;
+        }
         String id = command.getId();
         monitor.receivedDeploymentCommand(id);
         for (Command cmd : command.getCommands()) {
             executorRegistry.execute(cmd);
         }
-        monitor.receivedDeploymentCommand(id);
+        eventService.publish(new RuntimeSynchronized());
+        domainSynchronized = true;
     }
 }

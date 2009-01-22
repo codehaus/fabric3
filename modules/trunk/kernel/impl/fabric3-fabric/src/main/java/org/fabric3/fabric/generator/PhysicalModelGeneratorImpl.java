@@ -41,6 +41,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -79,11 +80,11 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         this.commandGenerators = sort(commandGenerators);
     }
 
-    public CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException {
+    public CommandMap generate(Collection<LogicalComponent<?>> components, boolean incremental) throws GenerationException {
         List<LogicalComponent<?>> sorted = topologicalSort(components);
-        // provision required classloaders first
-        CommandMap commandMap = new CommandMap();
-        Map<String, Set<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted);
+        String id = UUID.randomUUID().toString();
+        CommandMap commandMap = new CommandMap(id);
+        Map<String, Set<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted, incremental);
         for (Map.Entry<String, Set<Command>> entry : commandsPerZone.entrySet()) {
             for (Command command : entry.getValue()) {
                 commandMap.addCommand(entry.getKey(), command);
@@ -93,7 +94,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         // provision components
         for (CommandGenerator generator : commandGenerators) {
             for (LogicalComponent<?> component : sorted) {
-                Command command = generator.generate(component);
+                Command command = generator.generate(component, incremental);
                 if (command != null) {
                     commandMap.addCommand(component.getZone(), command);
                 }

@@ -14,12 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.event;
+package org.fabric3.fabric.domain;
 
-/**
- * Signals when a runtime enters the recover phase of its bootstrap process.
- *
- * @version $Revision$ $Date$
- */
-public class Recover implements Fabric3Event {
+import org.fabric3.api.annotation.logging.Severe;
+
+public interface FSDomainTrackerMonitor {
+
+    @Severe
+    void error(Throwable e);
 }

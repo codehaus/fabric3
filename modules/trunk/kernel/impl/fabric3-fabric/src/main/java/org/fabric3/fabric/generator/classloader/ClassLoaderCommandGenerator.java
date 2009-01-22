@@ -34,11 +34,12 @@ public interface ClassLoaderCommandGenerator {
     /**
      * Generates classloader provisioning commands for a set of components being deployed.
      *
-     * @param components the components being deployed
+     * @param components  the components being deployed
+     * @param incremental true if generation should be incremental, i.e. commands are only generated for new components opposed to existing ones
      * @return the classloader provisioning commands grouped by zone where they are to be provisioned
      * @throws GenerationException if an error occurs during generation
      */
-    Map<String, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException;
+    Map<String, Set<Command>> generate(List<LogicalComponent<?>> components, boolean incremental) throws GenerationException;
 
     /**
      * Generates classloader release commands for a set of components being undeployed.

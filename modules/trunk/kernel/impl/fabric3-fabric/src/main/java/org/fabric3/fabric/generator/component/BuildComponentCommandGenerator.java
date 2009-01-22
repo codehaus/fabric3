@@ -72,9 +72,9 @@ public class BuildComponentCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public BuildComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public BuildComponentCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.NEW) {
+        if (!(component instanceof LogicalCompositeComponent) && (component.getState() == LogicalState.NEW || !incremental)) {
             Class<? extends Implementation> type = implementation.getClass();
             ComponentGenerator generator = generatorRegistry.getComponentGenerator(type);
             if (generator == null) {

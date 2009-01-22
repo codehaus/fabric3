@@ -50,7 +50,7 @@ import org.fabric3.spi.contribution.ContributionState;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3EventListener;
-import org.fabric3.spi.services.event.Recover;
+import org.fabric3.spi.services.event.RuntimeRecover;
 
 /**
  * Used when a runtime is initialized to restore the state of contributions recorded by the ContributionTracker.
@@ -58,7 +58,7 @@ import org.fabric3.spi.services.event.Recover;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class ContributionReplayer implements Fabric3EventListener<Recover> {
+public class ContributionReplayer implements Fabric3EventListener<RuntimeRecover> {
     private static final QName CONTRIBUTION = new QName(Namespaces.CORE, "contribution");
     private ContributionService contributionService;
     private MetaDataStore store;
@@ -84,10 +84,10 @@ public class ContributionReplayer implements Fabric3EventListener<Recover> {
 
     @Init
     public void init() {
-        eventService.subscribe(Recover.class, this);
+        eventService.subscribe(RuntimeRecover.class, this);
     }
 
-    public void onEvent(Recover event) {
+    public void onEvent(RuntimeRecover event) {
         if (!repositoryIndex.exists()) {
             return;
         }

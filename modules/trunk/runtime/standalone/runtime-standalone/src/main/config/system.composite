@@ -96,4 +96,13 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.ContributionTracker"/>
     </component>
 
+    <component name="FSDomainTracker">
+        <f3-impl:implementation.system class="org.fabric3.fabric.domain.FSDomainTracker"/>
+    </component>
+
+    <component name="FSDomainReplayer">
+        <f3-impl:implementation.system class="org.fabric3.fabric.domain.FSDomainReplayer"/>
+        <reference name="domain" target="ApplicationDomain"/>
+    </component>
+
 </composite>

@@ -52,7 +52,7 @@ import org.fabric3.spi.model.instance.LogicalState;
 public class StartContextCommandGenerator implements CommandGenerator {
     private final int order;
 
-    public StartContextCommandGenerator(@Property(name = "order")int order) {
+    public StartContextCommandGenerator(@Property(name = "order") int order) {
         this.order = order;
     }
 
@@ -61,8 +61,8 @@ public class StartContextCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public StartContextCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component.getState() == LogicalState.NEW) {
+    public StartContextCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+        if (component.getState() == LogicalState.NEW || !incremental) {
             return new StartContextCommand(order, component.getDeployable());
         }
         return null;

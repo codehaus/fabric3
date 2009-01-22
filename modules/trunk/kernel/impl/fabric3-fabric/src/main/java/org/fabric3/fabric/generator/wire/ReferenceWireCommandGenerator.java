@@ -55,12 +55,12 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public Command generate(LogicalComponent<?> component) throws GenerationException {
+    public Command generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
         WireCommand command;
-        if (LogicalState.NEW == component.getState()) {
+        if (LogicalState.NEW == component.getState() || (!incremental && LogicalState.MARKED != component.getState())) {
             command = new AttachWireCommand(order);
         } else if (LogicalState.MARKED == component.getState()) {
             command = new DetachWireCommand(order);
@@ -68,19 +68,19 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
             return null;
         }
 
-        generatePhysicalWires(component, command);
+        generatePhysicalWires(component, command, incremental);
         if (command.getPhysicalWireDefinitions().isEmpty()) {
             return null;
         }
         return command;
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command) throws GenerationException {
+    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command, boolean incremental) throws GenerationException {
 
         for (LogicalReference logicalReference : component.getReferences()) {
             // FIXME the check for component state should be done individually for each binding, not on the component since bindings may be
             // dynamically added
-            if (logicalReference.getBindings().isEmpty() || LogicalState.NEW != component.getState()) {
+            if (logicalReference.getBindings().isEmpty() || (LogicalState.NEW != component.getState() && incremental)) {
                 continue;
             }
 
