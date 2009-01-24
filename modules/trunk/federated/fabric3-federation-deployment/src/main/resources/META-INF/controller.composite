@@ -27,6 +27,9 @@
         <f3-impl:implementation.system class="org.fabric3.federation.routing.FederatedRoutingService"/>
     </component>
 
+    <!-- this wire reinjects the routing service into the application Domain -->
+    <wire source="ApplicationDomain/routingService" target="FederatedRoutingService"/>
+
     <component name="RegenerateCommandExecutor">
         <f3-impl:implementation.system class="org.fabric3.federation.executor.ZoneSyncCommandExecutor"/>
         <reference name="domain" target="ApplicationDomain"/>

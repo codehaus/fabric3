@@ -23,5 +23,4 @@ public interface RuntimeService {
 
     String getRuntimeName();
 
-    boolean isComponentHost();
 }

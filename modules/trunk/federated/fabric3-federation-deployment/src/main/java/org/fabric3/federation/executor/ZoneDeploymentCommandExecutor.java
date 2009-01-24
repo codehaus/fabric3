@@ -88,7 +88,7 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
         String runtimeName = runtimeService.getRuntimeName();
         // route the command to a specific runtime
         if (correlationId.equals(runtimeName)) {
-            if ((domainSynchronized && command.isSynchronization()) || !runtimeService.isComponentHost()) {
+            if ((domainSynchronized && command.isSynchronization())) {
                 // the zone is already synchronized, ignore as this may be a duplicate
                 return;
             }
@@ -122,12 +122,9 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
     private void routeToZone(ZoneDeploymentCommand command) throws ExecutionException {
         String runtimeName = runtimeService.getRuntimeName();
         // route the command to all runtimes in the zone
-        if (zoneManager.getRuntimes().size() == 1 && !runtimeService.isComponentHost()) {
-            throw new NoTargetRuntimeException("No deployment runtime found. Note the zone manager is configured not to host components.");
-        }
         for (RuntimeInstance runtime : zoneManager.getRuntimes()) {
             String target = runtime.getName();
-            if (runtimeName.equals(target) && runtimeService.isComponentHost()) {
+            if (runtimeName.equals(target)) {
                 routeLocally(command);
             } else {
                 try {

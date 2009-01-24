@@ -19,40 +19,27 @@ package org.fabric3.federation.shoal;
 import com.sun.enterprise.ee.cms.core.GroupManagementService;
 
 /**
- * Responsible for managing communications between runtimes in a domain. Federated communications are segmented between domain-wide communications and
- * 1 to N zones. Implementations handle domain-wide communication as well communication within a particular zone.
- *
  * @version $Revision$ $Date$
  */
-public interface FederationService {
+public interface ParticipantFederationService extends FederationService {
 
     /**
-     * Returns the domain name.
+     * Returns the name of the zone the runtime is a member of.
      *
-     * @return the domain name
+     * @return the name of the zone the runtime is a member of
      */
-    String getDomainName();
+    String getZoneName();
 
     /**
-     * Returns the runtime name.
+     * Returns the underlying Shoal GMS for the zone the runtime is a member of.
      *
-     * @return the runtime name
+     * @return the underlying Shoal GMS for the zone the runtime is a member of
      */
-    String getRuntimeName();
+    GroupManagementService getZoneGMS();
 
     /**
-     * Returns the underlying Shoal GMS for the domain.
-     *
-     * @return the underlying Shoal GMS for the domain
+     * Enables communications with the domain GMS. Used when a participant is elected a zone manager.
      */
-    GroupManagementService getDomainGMS();
-
-    /**
-     * Registers a callback for messages destined to the given service.
-     *
-     * @param serviceName the service name
-     * @param callback    the callback.
-     */
-    void registerCallback(String serviceName, FederationCallback callback);
+    void enableDomainCommunications();
 
 }

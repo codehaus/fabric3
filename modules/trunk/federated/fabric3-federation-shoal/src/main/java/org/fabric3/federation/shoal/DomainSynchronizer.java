@@ -41,21 +41,22 @@ import org.fabric3.spi.topology.RuntimeService;
 import org.fabric3.spi.topology.ZoneManager;
 
 /**
- * Responsible for synchronizing a participant or zone manager with the domain. If the node is a participant, a synchronization request will be sent
- * to the zone manager. If the node is a zone manager, the synchronization will be sent directly to the domain controller.
+ * Responsible for synchronizing a participant with the domain. If the node is a participant, a synchronization request will be sent to the
+ * participant that is the zone manager. If the node is elected as a zone manager, the synchronization will be sent directly to the domain
+ * controller.
  *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class DomainSynchronizer implements Runnable, Fabric3EventListener {
-    private FederationService federationService;
+    private ParticipantFederationService federationService;
     private ZoneManager zoneManager;
     private EventService eventService;
     private RuntimeService runtimeService;
     private DomainSynchronizerMonitor monitor;
     private ScheduledExecutorService executor;
 
-    public DomainSynchronizer(@Reference FederationService federationService,
+    public DomainSynchronizer(@Reference ParticipantFederationService federationService,
                               @Reference ZoneManager zoneManager,
                               @Reference EventService eventService,
                               @Reference RuntimeService runtimeService,
@@ -80,18 +81,15 @@ public class DomainSynchronizer implements Runnable, Fabric3EventListener {
     }
 
     public void run() {
-        if (zoneManager.isZoneManager() && !runtimeService.isComponentHost()) {
-            // the zone manager does not host components, do not send out a sync request
-            return;
-        }
         monitor.synchronizing();
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         MultiClassLoaderObjectOutputStream stream;
         try {
             stream = new MultiClassLoaderObjectOutputStream(bas);
             String name = federationService.getRuntimeName();
+            String zoneName = federationService.getZoneName();
             if (zoneManager.isZoneManager()) {
-                ZoneSyncCommand command = new ZoneSyncCommand(name, name);
+                ZoneSyncCommand command = new ZoneSyncCommand(zoneName, name);
                 stream.writeObject(command);
                 stream.close();
                 // XCV FIXME avoid sending to all runtimes in the zone

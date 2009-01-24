@@ -23,18 +23,13 @@
            name="ShoalFederationControllerExtension"
            autowire="true">
 
+    <component name="FederationService">
+        <f3-impl:implementation.system class="org.fabric3.federation.shoal.ControllerFederationService"/>
+        <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
+    </component>
 
     <component name="DomainManager">
         <f3-impl:implementation.system class="org.fabric3.federation.shoal.ShoalDomainManager"/>
     </component>
-
-    <component name="FederationService">
-        <f3-impl:implementation.system class="org.fabric3.federation.shoal.FederationServiceImpl"/>
-        <property name="enableDomain">true</property>
-        <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
-    </component>
-
-    <!-- this wire reinjects the routing service into the application Domain -->
-    <wire source="ApplicationDomain/routingService" target="FederatedRoutingService"/>
 
 </composite>

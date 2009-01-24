@@ -24,10 +24,15 @@
            autowire="true">
 
 
+    <component name="FederationService">
+        <f3-impl:implementation.system class="org.fabric3.federation.shoal.ParticipantFederationServiceImpl"/>
+        <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
+        <property name="zoneName" source="$systemConfig//federation/zoneName"/>
+    </component>
+
     <component name="ZoneManager">
         <f3-impl:implementation.system class="org.fabric3.federation.shoal.ShoalZoneManager"/>
         <!-- System configuration. If set to true, the runtime will operate as a zone manager  -->
-        <property name="zoneManager" source="$systemConfig//federation/@zoneManager"/>
         <property name="transportMetadata" source="$systemConfig//federation/transport//*"/>
     </component>
 
@@ -37,16 +42,6 @@
 
     <component name="DomainSyncTimer">
         <f3-impl:implementation.system class="org.fabric3.federation.shoal.DomainSynchronizer"/>
-    </component>
-
-    <component name="FederationService">
-        <f3-impl:implementation.system class="org.fabric3.federation.shoal.FederationServiceImpl"/>
-        <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
-        <!-- if the runtime is a zone manager, activate domain communications -->
-        <property name="enableDomain" source="$systemConfig//federation/@zoneManager"/>
-        <property name="componentHost" source="$systemConfig//federation/@componentHost"/>
-        <property name="zoneName" source="$systemConfig//federation/zoneName"/>
-        <property name="enableZone">true</property>
     </component>
 
     <component name="ZoneDeploymentCommandExecutor">

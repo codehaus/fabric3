@@ -73,8 +73,7 @@ public class ShoalDomainManager implements DomainManager, FederationCallback {
 
     @Init
     public void init() {
-        federationService.registerDomainCallback(DOMAIN_MANAGER, this);
-        federationService.registerZoneCallback(DOMAIN_MANAGER, this);
+        federationService.registerCallback(DOMAIN_MANAGER, this);
         monitor.enabled(federationService.getDomainName());
     }
 

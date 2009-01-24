@@ -2,8 +2,7 @@
     <web.server>
         <http port="8181"/>
     </web.server>
-    <federation zoneManager="true" componentHost="true">
-        <runtimeName>ZoneManager</runtimeName>
+    <federation>
         <transport>
             <http>localhost:8181</http>
         </transport>

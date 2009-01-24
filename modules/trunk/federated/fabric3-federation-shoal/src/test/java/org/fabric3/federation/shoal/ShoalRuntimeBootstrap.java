@@ -30,51 +30,51 @@ import org.fabric3.spi.services.event.EventService;
  * @version $Revision$ $Date$
  */
 public class ShoalRuntimeBootstrap {
-    private ShoalRuntimeManager runtimeManager;
-
-    public static void main(String[] args) throws Exception {
-        ShoalRuntimeBootstrap client = new ShoalRuntimeBootstrap();
-        client.init();
-        while (true) {
-            System.out.println("Press 'x' to exit...");
-            int key = System.in.read();
-            if (key == 88 || key == 120) {
-                System.exit(0);
-            }
-        }
-    }
-
-    protected void init() throws Exception {
-        EventService eventService = EasyMock.createNiceMock(EventService.class);
-
-        FederationServiceMonitor monitor = new MockMonitor();
-
-        HostInfo info = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://domain"));
-        EasyMock.replay(info);
-
-        FederationServiceImpl federationService = new FederationServiceImpl(eventService, info, monitor);
-        federationService.setRuntimeName("Runtime");
-        federationService.init();
-
-        CommandExecutorRegistry executorRegistry = EasyMock.createNiceMock(CommandExecutorRegistry.class);
-        executorRegistry.execute(EasyMock.isA(Command.class));
-        EasyMock.expectLastCall().andStubAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                System.out.println("Received command: " + EasyMock.getCurrentArguments()[0]);
-                return null;
-            }
-        });
-        EasyMock.replay(executorRegistry);
-
-        ClassLoaderRegistry classLoaderRegistry = EasyMock.createNiceMock(ClassLoaderRegistry.class);
-        EasyMock.replay(classLoaderRegistry);
-
-        runtimeManager = new ShoalRuntimeManager(federationService, executorRegistry, classLoaderRegistry);
-//        runtimeManager.addTransportMetadata(new QName(Constants.FABRIC3_NS, "http"), "Http information");
-        runtimeManager.init();
-
-        federationService.onJoinDomain();
-    }
+//    private ShoalRuntimeManager runtimeManager;
+//
+//    public static void main(String[] args) throws Exception {
+//        ShoalRuntimeBootstrap client = new ShoalRuntimeBootstrap();
+//        client.init();
+//        while (true) {
+//            System.out.println("Press 'x' to exit...");
+//            int key = System.in.read();
+//            if (key == 88 || key == 120) {
+//                System.exit(0);
+//            }
+//        }
+//    }
+//
+//    protected void init() throws Exception {
+//        EventService eventService = EasyMock.createNiceMock(EventService.class);
+//
+//        FederationServiceMonitor monitor = new MockMonitor();
+//
+//        HostInfo info = EasyMock.createMock(HostInfo.class);
+//        EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://domain"));
+//        EasyMock.replay(info);
+//
+//        FederationServiceImpl federationService = new FederationServiceImpl(eventService, info, monitor);
+//        federationService.setRuntimeName("Runtime");
+//        federationService.init();
+//
+//        CommandExecutorRegistry executorRegistry = EasyMock.createNiceMock(CommandExecutorRegistry.class);
+//        executorRegistry.execute(EasyMock.isA(Command.class));
+//        EasyMock.expectLastCall().andStubAnswer(new IAnswer<Object>() {
+//            public Object answer() throws Throwable {
+//                System.out.println("Received command: " + EasyMock.getCurrentArguments()[0]);
+//                return null;
+//            }
+//        });
+//        EasyMock.replay(executorRegistry);
+//
+//        ClassLoaderRegistry classLoaderRegistry = EasyMock.createNiceMock(ClassLoaderRegistry.class);
+//        EasyMock.replay(classLoaderRegistry);
+//
+//        runtimeManager = new ShoalRuntimeManager(federationService, executorRegistry, classLoaderRegistry);
+////        runtimeManager.addTransportMetadata(new QName(Constants.FABRIC3_NS, "http"), "Http information");
+//        runtimeManager.init();
+//
+//        federationService.onJoinDomain();
+//    }
 }
 

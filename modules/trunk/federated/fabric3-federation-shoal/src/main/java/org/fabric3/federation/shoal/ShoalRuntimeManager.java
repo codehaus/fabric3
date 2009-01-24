@@ -63,7 +63,7 @@ public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
 
     @Init
     public void init() {
-        federationService.registerZoneCallback(RUNTIME_MANAGER, this);
+        federationService.registerCallback(RUNTIME_MANAGER, this);
     }
 
     public void afterJoin() throws FederationCallbackException {

@@ -60,11 +60,10 @@ import org.fabric3.spi.topology.ZoneManager;
  */
 @EagerInit
 public class ShoalZoneManager implements ZoneManager, FederationCallback {
-    private FederationService federationService;
+    private ParticipantFederationService federationService;
     private CommandExecutorRegistry executorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
     private ZoneManagerMonitor monitor;
-    private boolean zoneManager;
     private Map<String, String> transportMetadata;
 
     /**
@@ -76,7 +75,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
      *                            runtime extension classloaders.
      * @param monitor             the monitor to report runtime events to
      */
-    public ShoalZoneManager(@Reference FederationService federationService,
+    public ShoalZoneManager(@Reference ParticipantFederationService federationService,
                             @Reference CommandExecutorRegistry executorRegistry,
                             @Reference ClassLoaderRegistry classLoaderRegistry,
                             @Monitor ZoneManagerMonitor monitor) {
@@ -86,18 +85,8 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         this.monitor = monitor;
     }
 
-    /**
-     * Property indicating if the current runtime is a zone manager. The default is false.
-     *
-     * @param zoneManager if the current runtime is a zone manager
-     */
-    @Property
-    public void setZoneManager(boolean zoneManager) {
-        this.zoneManager = zoneManager;
-    }
-
     public boolean isZoneManager() {
-        return zoneManager;
+        return federationService.getZoneGMS().getGroupHandle().isGroupLeader();
     }
 
     /**
@@ -112,12 +101,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
 
     @Init
     public void init() {
-        if (!zoneManager) {
-            // the runtime is not a zone manager, don't initialize zone manager
-            return;
-        }
-        federationService.registerZoneCallback(FederationConstants.ZONE_MANAGER, this);
-        federationService.registerDomainCallback(FederationConstants.ZONE_MANAGER, this);
+        federationService.registerCallback(FederationConstants.ZONE_MANAGER, this);
         monitor.enabled(federationService.getZoneName());
     }
 
@@ -131,7 +115,9 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     public void afterJoin() throws FederationCallbackException {
-        updateZoneMetaData();
+        if (isZoneManager()) {
+            updateZoneMetaData();
+        }
     }
 
     public void onLeave() throws FederationCallbackException {
@@ -154,15 +140,18 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     private void handleZoneSignal(Signal signal) throws FederationCallbackException {
+        if (federationService.getDomainGMS() == null && isZoneManager()) {
+            federationService.enableDomainCommunications();
+        }
         if (signal instanceof MessageSignal) {
             MessageSignal messageSignal = (MessageSignal) signal;
             Object deserialized = deserialize(messageSignal);
             if (deserialized instanceof PaticipantSyncCommand) {
                 PaticipantSyncCommand paticipantSyncCommand = (PaticipantSyncCommand) deserialized;
-                String runtimeName = federationService.getRuntimeName();
+                String zoneName = federationService.getZoneName();
                 String correlationId = paticipantSyncCommand.getRuntimeId();
-                ZoneSyncCommand command = new ZoneSyncCommand(runtimeName, correlationId);
-                monitor.receivedSyncRequest(runtimeName);
+                ZoneSyncCommand command = new ZoneSyncCommand(zoneName, correlationId);
+                monitor.receivedSyncRequest(correlationId);
                 // reroute to the domain controller
                 try {
                     byte[] bytes = serialize(command);
@@ -215,7 +204,6 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
                 // ignore;
             }
         }
-
     }
 
     private byte[] serialize(Command command) throws IOException {
