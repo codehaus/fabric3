@@ -18,6 +18,7 @@ package org.fabric3.runtime.standalone.server;
 
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,18 +33,28 @@ public class ShutdownDaemon extends Thread {
     private ServerSocket serverSocket;
     private String key;
     private CountDownLatch latch;
+    private int port;
 
-    ShutdownDaemon(int port, String key, CountDownLatch latch) {
+    ShutdownDaemon(int minPort, int maxPort, String key, CountDownLatch latch) {
         this.key = key;
         this.latch = latch;
         try {
-            if (port < 0)
+            if (minPort < 0) {
                 return;
+            }
             setDaemon(true);
             setName("StopMonitor");
-            serverSocket = new ServerSocket(port, 1, InetAddress.getByName("127.0.0.1"));
-            if (port == 0) {
-                port = serverSocket.getLocalPort();
+            while (true) {
+                try {
+                    serverSocket = new ServerSocket(minPort, 1, InetAddress.getByName("127.0.0.1"));
+                    port = minPort;
+                    break;
+                } catch (BindException e) {
+                    ++minPort;
+                    if (minPort > maxPort) {
+                        System.err.println("Unable to bind shutdown listener to a port");
+                    }
+                }
             }
         }
         catch (Exception e) {
@@ -52,8 +63,12 @@ public class ShutdownDaemon extends Thread {
         if (serverSocket != null) {
             this.start();
         } else {
-            System.err.println("Eror initiating monitor listener on port: " + port);
+            System.err.println("Error initiating monitor listener on port: " + minPort);
         }
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public void run() {

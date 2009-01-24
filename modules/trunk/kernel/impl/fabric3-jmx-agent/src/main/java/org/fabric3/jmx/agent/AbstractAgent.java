@@ -37,7 +37,8 @@ public abstract class AbstractAgent implements Agent {
     private MBeanServer mBeanServer;
     private AtomicBoolean started = new AtomicBoolean();
     private JMXConnectorServer connectorServer;
-    protected int port = 1099;
+    protected int minPort;
+    private int maxPort;
 
     /**
      * Constructor using the default RMI port (1099).
@@ -45,17 +46,19 @@ public abstract class AbstractAgent implements Agent {
      * @throws ManagementException If unable to start the agent.
      */
     public AbstractAgent() throws ManagementException {
-        this(1099);
+        this(1099, -1);
     }
 
     /**
-     * Constructor using the given port.
+     * Constructor using the given port range.
      *
-     * @param port the given port
+     * @param minPort the minimum port number
+     * @param maxPort the maximum port number
      * @throws ManagementException If unable to start the agent.
      */
-    protected AbstractAgent(int port) {
-        this.port = port;
+    protected AbstractAgent(int minPort, int maxPort) {
+        this.minPort = minPort;
+        this.maxPort = maxPort;
         mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);
     }
 
@@ -131,8 +134,12 @@ public abstract class AbstractAgent implements Agent {
 
     }
 
-    public int getPort() {
-        return port;
+    public int getMinPort() {
+        return minPort;
+    }
+
+    public int getMaxPort() {
+        return maxPort;
     }
 
     /**

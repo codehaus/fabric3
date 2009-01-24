@@ -19,10 +19,12 @@
 package org.fabric3.jmx.agent.rmi;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import javax.management.remote.JMXServiceURL;
 
@@ -37,9 +39,14 @@ import org.fabric3.jmx.agent.ManagementException;
 public class RmiAgent extends AbstractAgent {
 
     private Registry registry;
+    private int assignedPort;
 
     public RmiAgent(int port) throws ManagementException {
-        super(port);
+        super(port, -1);
+    }
+
+    public RmiAgent(int minPort, int maxPort) throws ManagementException {
+        super(minPort, maxPort);
     }
 
     /**
@@ -51,7 +58,7 @@ public class RmiAgent extends AbstractAgent {
     protected JMXServiceURL getAdaptorUrl() throws ManagementException {
 
         try {
-            return new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + getPort() + "/server");
+            return new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + assignedPort + "/server");
             // service:jmx:rmi:///jndi/rmi://localhost:1099/server
         } catch (MalformedURLException ex) {
             throw new ManagementException(ex);
@@ -61,13 +68,36 @@ public class RmiAgent extends AbstractAgent {
 
     @Override
     public void preStart() throws ManagementException {
-
-        try {
-            registry = LocateRegistry.createRegistry(getPort());
-        } catch (RemoteException ex) {
-            throw new ManagementException(ex);
+        int port = getMinPort();
+        if (getMaxPort() == -1) {
+            try {
+                registry = LocateRegistry.createRegistry(minPort);
+                assignedPort = minPort;
+            } catch (RemoteException ex) {
+                throw new ManagementException(ex);
+            }
+        } else {
+            assignedPort = minPort;
+            while (port <= getMaxPort()) {
+                try {
+                    registry = LocateRegistry.createRegistry(assignedPort);
+                    return;
+                } catch (ExportException ex) {
+                    if (ex.getCause() instanceof BindException) {
+                        ++assignedPort;
+                        continue;
+                    }
+                    throw new ManagementException(ex);
+                } catch (RemoteException ex) {
+                    throw new ManagementException(ex);
+                }
+            }
         }
 
+    }
+
+    public int getAssignedPort() {
+        return assignedPort;
     }
 
     @Override

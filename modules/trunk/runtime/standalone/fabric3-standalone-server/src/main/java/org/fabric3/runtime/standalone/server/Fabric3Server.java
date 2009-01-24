@@ -143,15 +143,20 @@ public class Fabric3Server implements Fabric3ServerMBean {
             // load the monitor ports and keys
             String monitorKey = props.getProperty(MONITOR_KEY_PARAM, "f3");
             String portVal = props.getProperty(MONITOR_PORT_PARAM, "8083");
-            int monitorPort;
-            try {
-                monitorPort = Integer.parseInt(portVal);
-                if (monitorPort < 0) {
-                    throw new IllegalArgumentException("Invalid monitor port number:" + monitorPort);
-                }
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid monitor port", e);
+
+            int minMonitorPort;
+            int maxMonitorPort = -1;
+            String[] monitorTokens = portVal.split("-");
+            if (monitorTokens.length == 1) {
+                minMonitorPort = parsePortNumber(portVal, "monitor");
+            } else if (monitorTokens.length == 2) {
+                // port range specified
+                minMonitorPort = parsePortNumber(monitorTokens[0], "monitor");
+                maxMonitorPort = parsePortNumber(monitorTokens[1], "monitor");
+            } else {
+                throw new IllegalArgumentException("Invalid monitor port range in runtime.properties");
             }
+
 
             // load the join timeout
             int joinTimeout;
@@ -188,9 +193,20 @@ public class Fabric3Server implements Fabric3ServerMBean {
             monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
 
             // boot the JMX agent
-
-            int jmxPort = Integer.parseInt(props.getProperty(JMX_PORT, "1099"));
-            agent = new RmiAgent(jmxPort);
+            String jmxString = props.getProperty(JMX_PORT, "1099");
+            String[] tokens = jmxString.split("-");
+            if (tokens.length == 1) {
+                // port specified
+                int jmxPort = parsePortNumber(jmxString, "JMX");
+                agent = new RmiAgent(jmxPort);
+            } else if (tokens.length == 2) {
+                // port range specified
+                int minPort = parsePortNumber(tokens[0], "JMX");
+                int maxPort = parsePortNumber(tokens[1], "JMX");
+                agent = new RmiAgent(minPort, maxPort);
+            } else {
+                throw new IllegalArgumentException("Invalid JMX port specified in runtime.properties");
+            }
             runtime.setMBeanServer(agent.getMBeanServer());
             runtime.setJmxSubDomain(jmxDomain);
 
@@ -208,11 +224,11 @@ public class Fabric3Server implements Fabric3ServerMBean {
             future = coordinator.start();
             future.get();
 
-            monitor.started(runtimeMode.toString(), jmxDomain);
             agent.start();
             // create the shutdown daemon
             CountDownLatch latch = new CountDownLatch(1);
-            new ShutdownDaemon(monitorPort, monitorKey, latch);
+            ShutdownDaemon daemon = new ShutdownDaemon(minMonitorPort, maxMonitorPort, monitorKey, latch);
+            monitor.started(runtimeMode.toString(), jmxDomain, agent.getAssignedPort(), daemon.getPort());
             try {
                 latch.await();
             } catch (InterruptedException e) {
@@ -226,6 +242,19 @@ public class Fabric3Server implements Fabric3ServerMBean {
             }
             throw new Fabric3ServerException(ex);
         }
+    }
+
+    private int parsePortNumber(String portVal, String portType) {
+        int minMonitorPort;
+        try {
+            minMonitorPort = Integer.parseInt(portVal);
+            if (minMonitorPort < 0) {
+                throw new IllegalArgumentException("Invalid " + portType + " port number specified in runtime.properties:" + minMonitorPort);
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid " + portType + " port", e);
+        }
+        return minMonitorPort;
     }
 
     public final void shutdownRuntime(String bootPath) {
@@ -321,7 +350,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         void runError(Exception e);
 
         @Info
-        void started(String mode, String domain);
+        void started(String mode, String domain, int jmxPort, int monitorPort);
 
         @Info
         void stopped(String domain);
