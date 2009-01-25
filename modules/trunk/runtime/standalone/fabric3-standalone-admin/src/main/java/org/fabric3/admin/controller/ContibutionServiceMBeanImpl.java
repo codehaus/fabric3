@@ -31,25 +31,25 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionInUseException;
+import org.fabric3.host.contribution.ContributionLockedException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.contribution.ValidationFailure;
-import org.fabric3.host.contribution.ContributionLockedException;
-import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.jetty.JettyService;
+import org.fabric3.management.contribution.ArtifactErrorInfo;
 import org.fabric3.management.contribution.ContributionInUseManagementException;
 import org.fabric3.management.contribution.ContributionInfo;
 import org.fabric3.management.contribution.ContributionInstallException;
+import org.fabric3.management.contribution.ContributionLockedManagementException;
 import org.fabric3.management.contribution.ContributionRemoveException;
 import org.fabric3.management.contribution.ContributionServiceMBean;
 import org.fabric3.management.contribution.ContributionUninstallException;
-import org.fabric3.management.contribution.InvalidContributionException;
-import org.fabric3.management.contribution.ContributionLockedManagementException;
 import org.fabric3.management.contribution.ErrorInfo;
-import org.fabric3.management.contribution.ArtifactErrorInfo;
+import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
 
@@ -64,7 +64,6 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
     private ContributionService contributionService;
     private MetaDataStore metaDataStore;
     private ContributionServiceMBeanMonitor monitor;
-    private int httpPort = 8080;
     private String hostName;
     private String address;
 
@@ -76,16 +75,6 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         this.contributionService = contributionService;
         this.metaDataStore = metaDataStore;
         this.monitor = monitor;
-    }
-
-    /**
-     * Optionally sets the port for uploading contributions.
-     *
-     * @param httpPort the port
-     */
-    @Property
-    public void setHttpPort(String httpPort) {
-        this.httpPort = Integer.parseInt(httpPort);
     }
 
     /**
@@ -217,7 +206,7 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         } else {
             baseAddress = InetAddress.getByName(hostName).getHostAddress();
         }
-        address = "http://" + baseAddress + ":" + httpPort + REPOSITORY;
+        address = "http://" + baseAddress + ":" + jettyService.getHttpPort() + REPOSITORY;
     }
 
     private String getErrorMessage(ContributionException e) {

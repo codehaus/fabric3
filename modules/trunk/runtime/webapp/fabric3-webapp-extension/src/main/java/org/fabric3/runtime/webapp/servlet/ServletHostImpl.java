@@ -49,9 +49,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.host.ServletHost;
 import org.fabric3.runtime.webapp.ServletRequestInjector;
 import org.fabric3.runtime.webapp.WebappHostInfo;
+import org.fabric3.spi.host.ServletHost;
 
 /**
  * A <code>ServletHost</code> implementation that forwards requests to registered servlets
@@ -67,6 +67,10 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
     public ServletHostImpl(@Reference WebappHostInfo info) {
         this.info = info;
         servlets = new HashMap<String, Servlet>();
+    }
+
+    public int getHttpPort() {
+        return -1;
     }
 
     public ServletContext getServletContext() {

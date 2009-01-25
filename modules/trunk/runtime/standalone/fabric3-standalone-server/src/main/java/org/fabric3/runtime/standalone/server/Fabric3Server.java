@@ -245,16 +245,16 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     private int parsePortNumber(String portVal, String portType) {
-        int minMonitorPort;
+        int port;
         try {
-            minMonitorPort = Integer.parseInt(portVal);
-            if (minMonitorPort < 0) {
-                throw new IllegalArgumentException("Invalid " + portType + " port number specified in runtime.properties:" + minMonitorPort);
+            port = Integer.parseInt(portVal);
+            if (port < 0) {
+                throw new IllegalArgumentException("Invalid " + portType + " port number specified in runtime.properties:" + port);
             }
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid " + portType + " port", e);
         }
-        return minMonitorPort;
+        return port;
     }
 
     public final void shutdownRuntime(String bootPath) {

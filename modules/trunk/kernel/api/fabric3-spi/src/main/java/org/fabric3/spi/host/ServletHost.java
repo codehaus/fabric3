@@ -47,6 +47,13 @@ import javax.servlet.ServletContext;
 public interface ServletHost {
 
     /**
+     * Returns the HTTP port the service is running on.
+     *
+     * @return the HTTP port the service is running on
+     */
+    int getHttpPort();
+
+    /**
      * Returns the default servlet context associated with the host.
      *
      * @return the default servlet context associated with the host

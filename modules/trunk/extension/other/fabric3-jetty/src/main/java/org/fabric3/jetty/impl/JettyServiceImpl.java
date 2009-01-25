@@ -34,6 +34,9 @@
  */
 package org.fabric3.jetty.impl;
 
+import java.io.IOException;
+import java.net.BindException;
+import java.net.ServerSocket;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
@@ -82,7 +85,9 @@ public class JettyServiceImpl implements JettyService {
 
     private final Object joinLock = new Object();
     private int state = UNINITIALIZED;
-    private int httpPort = 8080;
+    private int minHttpPort = 8080;
+    private int maxHttpPort = -1;
+    private int selectedHttp = -1;
     private int httpsPort = 8484;
     private String keystore;
     private String certPassword;
@@ -125,7 +130,18 @@ public class JettyServiceImpl implements JettyService {
 
     @Property
     public void setHttpPort(String httpPort) {
-        this.httpPort = Integer.parseInt(httpPort);
+        String[] tokens = httpPort.split("-");
+        if (tokens.length == 1) {
+            // port specified
+            minHttpPort = parsePortNumber(tokens[0], "HTTP");
+
+        } else if (tokens.length == 2) {
+            // port range specified
+            minHttpPort = parsePortNumber(tokens[0], "HTTP");
+            maxHttpPort = parsePortNumber(tokens[1], "HTTP");
+        } else {
+            throw new IllegalArgumentException("Invalid HTTP port specified in system configuration");
+        }
     }
 
     @Property
@@ -174,7 +190,7 @@ public class JettyServiceImpl implements JettyService {
             server.setStopAtShutdown(true);
             server.setSendServerVersion(sendServerVersion);
             monitor.extensionStarted();
-            monitor.startHttpListener(httpPort);
+            monitor.startHttpListener(selectedHttp);
             if (isHttps) {
                 monitor.startHttpsListener(httpsPort);
             }
@@ -195,6 +211,10 @@ public class JettyServiceImpl implements JettyService {
         server.stop();
         state = STOPPED;
         monitor.extensionStopped();
+    }
+
+    public int getHttpPort() {
+        return selectedHttp;
     }
 
     public ServletContext getServletContext() {
@@ -226,15 +246,12 @@ public class JettyServiceImpl implements JettyService {
         rootHandler.addHandler(handler);
     }
 
-    public int getHttpPort() {
-        return httpPort;
-    }
-
-    private void initializeConnector() {
+    private void initializeConnector() throws IOException, JettyInitializationException {
+        selectHttpPort();
         if (connector == null) {
             if (isHttps) {
                 Connector httpConnector = new SelectChannelConnector();
-                httpConnector.setPort(httpPort);
+                httpConnector.setPort(selectedHttp);
                 SslSocketConnector sslConnector = new SslSocketConnector();
                 sslConnector.setPort(httpsPort);
                 sslConnector.setKeystore(keystore);
@@ -243,16 +260,39 @@ public class JettyServiceImpl implements JettyService {
                 server.setConnectors(new Connector[]{httpConnector, sslConnector});
             } else {
                 SelectChannelConnector selectConnector = new SelectChannelConnector();
-                selectConnector.setPort(httpPort);
+                selectConnector.setPort(selectedHttp);
                 selectConnector.setSoLingerTime(-1);
                 server.setConnectors(new Connector[]{selectConnector});
             }
         } else {
-            connector.setPort(httpPort);
+            connector.setPort(selectedHttp);
             connector.setMaxIdleTime(-1);
             connector.setLowResourceMaxIdleTime(-1);
             server.setConnectors(new Connector[]{connector});
         }
+    }
+
+    private void selectHttpPort() throws IOException, JettyInitializationException {
+        if (maxHttpPort == -1) {
+            selectedHttp = minHttpPort;
+            return;
+        }
+        // A bit of a hack to select the port. Normally, we should select the Jetty Connector and look for a bind exception. However, Jetty does not
+        // attempt to bind to the port until the server is started. Creating a disposable socket avoids having to start the Jetty server to determine
+        // if the address is taken
+        selectedHttp = minHttpPort;
+        while (selectedHttp <= maxHttpPort) {
+            try {
+                ServerSocket socket = new ServerSocket(selectedHttp);
+                socket.close();
+                return;
+            } catch (BindException e) {
+                selectedHttp++;
+            }
+        }
+        selectedHttp = -1;
+        throw new JettyInitializationException(
+                "Unable to find an available HTTP port. Check to ensure the system configuration specifies an open HTTP port or port range.");
     }
 
     private void initializeThreadPool() {
@@ -274,6 +314,20 @@ public class JettyServiceImpl implements JettyService {
         servletHandler = new ServletHandler();
         sessionHandler.addHandler(servletHandler);
         contextHandler.addHandler(sessionHandler);
+    }
+
+
+    private int parsePortNumber(String portVal, String portType) {
+        int port;
+        try {
+            port = Integer.parseInt(portVal);
+            if (port < 0) {
+                throw new IllegalArgumentException("Invalid " + portType + " port number specified in the system configuration" + port);
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid " + portType + " port number specified in the system configuration", e);
+        }
+        return port;
     }
 
     /**

@@ -39,7 +39,6 @@
 
     <component name="ContibutionServiceMBean">
         <f3-impl:implementation.system class="org.fabric3.admin.controller.ContibutionServiceMBeanImpl"/>
-        <property name="httpPort" source="$systemConfig//web.server/http/@port"/>
         <property name="hostName" source="$systemConfig//host.name"/>
     </component>
 

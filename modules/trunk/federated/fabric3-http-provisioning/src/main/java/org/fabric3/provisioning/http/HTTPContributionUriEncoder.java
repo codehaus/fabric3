@@ -25,9 +25,9 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.host.ServletHost;
 
 /**
  * Encodes a contribution URI so it can be dereferenced in a domain via HTTP. The encoding maps from the contribution URI to an HTTP-based URI.
@@ -38,7 +38,6 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     private ServletHost host;
     private MetaDataStore store;
     private String address;
-    private int port;
     private String mappingPath = HttpProvisionConstants.REPOSITORY;
 
     public HTTPContributionUriEncoder(@Reference ServletHost host, @Reference MetaDataStore store) {
@@ -49,11 +48,6 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     @Property
     public void setMappingPath(String path) {
         mappingPath = path;
-    }
-
-    @Property
-    public void setHttpPort(String port) {
-        this.port = Integer.parseInt(port);
     }
 
     @Property
@@ -71,6 +65,6 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
 
     public URI encode(URI uri) throws URISyntaxException {
         String path = "/" + mappingPath + "/" + uri.getPath();
-        return new URI("http", null, address, port, path, null, null);
+        return new URI("http", null, address, host.getHttpPort(), path, null, null);
     }
 }
