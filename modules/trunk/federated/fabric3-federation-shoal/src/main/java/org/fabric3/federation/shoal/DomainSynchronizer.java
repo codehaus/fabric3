@@ -98,8 +98,8 @@ public class DomainSynchronizer implements Runnable, Fabric3EventListener {
                 PaticipantSyncCommand command = new PaticipantSyncCommand(name);
                 stream.writeObject(command);
                 stream.close();
-                // XCV FIXME avoid sending to all runtimes in the zone
-                federationService.getZoneGMS().getGroupHandle().sendMessage(FederationConstants.ZONE_MANAGER, bas.toByteArray());
+                String leader = federationService.getZoneGMS().getGroupHandle().getGroupLeader();
+                federationService.getZoneGMS().getGroupHandle().sendMessage(leader, FederationConstants.ZONE_MANAGER, bas.toByteArray());
             }
         } catch (IOException e) {
             monitor.error(e);
