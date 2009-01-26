@@ -142,6 +142,8 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     private void handleZoneSignal(Signal signal) throws FederationCallbackException {
         if (federationService.getDomainGMS() == null && isZoneManager()) {
             federationService.enableDomainCommunications();
+        } else if (!isZoneManager()) {
+            return;
         }
         if (signal instanceof MessageSignal) {
             MessageSignal messageSignal = (MessageSignal) signal;
