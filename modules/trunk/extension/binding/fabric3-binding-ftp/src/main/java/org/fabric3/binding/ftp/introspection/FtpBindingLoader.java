@@ -75,6 +75,11 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
             // encode the URI since there may be expressions (e.g. "${..}") contained in it
             URI endpointUri = new URI(URLEncoder.encode(uri, "UTF-8"));
             bd = new FtpBindingDefinition(endpointUri, tMode, loaderHelper.loadKey(reader));
+            
+            String tmpFileSuffix = reader.getAttributeValue(null, "tmpFileSuffix");
+            if(tmpFileSuffix != null) {
+                bd.setTmpFileSuffix(tmpFileSuffix);
+            }
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
             while (true) {
@@ -137,7 +142,8 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"uri".equals(name) && !"requires".equals(name) && !"policySets".equals(name) && !"mode".equals(name)) {
+            if (!"uri".equals(name) && !"requires".equals(name) && !"policySets".equals(name) && !"mode".equals(name) && 
+                !"tmpFileSuffix".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

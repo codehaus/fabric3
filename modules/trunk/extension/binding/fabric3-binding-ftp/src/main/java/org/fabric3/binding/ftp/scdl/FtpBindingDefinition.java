@@ -35,6 +35,7 @@ public class FtpBindingDefinition extends BindingDefinition {
 
     private final TransferMode transferMode;
     private List<String> commands = new ArrayList<String>();
+    private String tmpFileSuffix;
 
     /**
      * Initializes the binding type.
@@ -60,7 +61,7 @@ public class FtpBindingDefinition extends BindingDefinition {
     /**
      * Gets the list of commands to execute before a STOR operation, i.e. a service invocation.
      *
-     * @return the list of commands to execture before a STOR
+     * @return the list of commands to execute before a STOR
      */
     public List<String> getSTORCommands() {
         return commands;
@@ -74,5 +75,23 @@ public class FtpBindingDefinition extends BindingDefinition {
      */
     public void addSTORCommand(String command) {
         commands.add(command);
+    }
+
+    /**
+     * Gets the temporary file suffix to be used while file in transmission (i.e. during STOR operation).
+     * 
+     * @return temporary file suffix
+     */
+    public String getTmpFileSuffix() {
+        return tmpFileSuffix;
+    }
+
+    /**
+     * Sets the temporary file suffix to be used while file in transmission (i.e. during STOR operation).
+     * 
+     * @param tmpFileSuffix temporary file suffix
+     */
+    public void setTmpFileSuffix(String tmpFileSuffix) {
+        this.tmpFileSuffix = tmpFileSuffix;
     }
 }

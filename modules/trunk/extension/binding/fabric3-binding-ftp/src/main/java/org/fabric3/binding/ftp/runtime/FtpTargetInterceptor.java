@@ -41,6 +41,8 @@ public class FtpTargetInterceptor implements Interceptor {
     private Interceptor next;
     private final int port;
     private final InetAddress hostAddress;
+    private String remotePath;
+    private String tmpFileSuffix;
     private final int timeout;
     private SocketFactory factory;
     private List<String> commands;
@@ -104,6 +106,7 @@ public class FtpTargetInterceptor implements Interceptor {
 
             Object[] args = (Object[]) msg.getBody();
             String fileName = (String) args[0];
+            String remoteFileLocation = fileName;
             InputStream data = (InputStream) args[1];
 
             if (active) {
@@ -122,11 +125,27 @@ public class FtpTargetInterceptor implements Interceptor {
                     monitor.onResponse(ftpClient.getReplyString());
                 }
             }
-            monitor.onCommand("STOR " + fileName);
-            if (!ftpClient.storeFile(fileName, data)) {
-                throw new ServiceUnavailableException("Unable to upload data. Response sent from server: " + ftpClient.getReplyString());
+            
+            if(remotePath != null && remotePath.length() > 0) {
+                remoteFileLocation = remotePath.endsWith("/") ? remotePath + fileName : remotePath + "/" + fileName;
+            }
+            
+            String remoteTmpFileLocation = remoteFileLocation;
+            if(tmpFileSuffix != null && tmpFileSuffix.length() > 0) {
+                remoteTmpFileLocation += tmpFileSuffix;
+            }
+            
+            monitor.onCommand("STOR " + remoteFileLocation);
+            if (!ftpClient.storeFile(remoteTmpFileLocation, data)) {
+                throw new ServiceUnavailableException("Unable to upload data. Response sent from server: " + ftpClient.getReplyString() +
+                                                      " ,remoteFileLocation:" + remoteFileLocation);
             }
             monitor.onResponse(ftpClient.getReplyString());
+            
+            //Rename file back to original name if temporary file suffix was used while transmission.
+            if(!remoteTmpFileLocation.equals(remoteFileLocation)) {
+                ftpClient.rename(remoteTmpFileLocation, remoteFileLocation);
+            }
         } catch (IOException e) {
             throw new ServiceUnavailableException(e);
         }
@@ -136,6 +155,24 @@ public class FtpTargetInterceptor implements Interceptor {
 
     public void setNext(Interceptor next) {
         this.next = next;
+    }
+
+    /**
+     * Sets remote path for the STOR operation.
+     * 
+     * @param remotePath remote path for the STOR operation
+     */
+    public void setRemotePath(String remotePath) {
+        this.remotePath = remotePath;
+    }
+
+    /**
+     * Sets temporary file suffix to be used while file being transmitted.
+     * 
+     * @param tmpFileSuffix temporary file suffix to be used for file in transmission
+     */
+    public void setTmpFileSuffix(String tmpFileSuffix) {
+        this.tmpFileSuffix = tmpFileSuffix;
     }
 
 }

@@ -33,6 +33,7 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
     private int connectTimeout;
     private int socketTimeout;
     private List<String> commands;
+    private String tmpFileSuffix;
 
     /**
      * Initializes the classloader id, transfer mode, and timeout.
@@ -131,4 +132,23 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
     public void setSTORCommands(List<String> commands) {
         this.commands = commands;
     }
+
+    /**
+     * Gets the temporary file suffix to be used while file in transmission (i.e. during STOR operation).
+     * 
+     * @return temporary file suffix
+     */
+    public String getTmpFileSuffix() {
+        return tmpFileSuffix;
+    }
+
+    /**
+     * Sets the temporary file suffix to be used while file in transmission (i.e. during STOR operation).
+     * 
+     * @param tmpFileSuffix temporary file suffix
+     */
+    public void setTmpFileSuffix(String tmpFileSuffix) {
+        this.tmpFileSuffix = tmpFileSuffix;
+    }
+    
 }

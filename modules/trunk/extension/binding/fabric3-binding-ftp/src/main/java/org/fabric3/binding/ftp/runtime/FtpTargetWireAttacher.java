@@ -58,8 +58,11 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
             String host = uri.getHost();
             int port = uri.getPort() == -1 ? 23 : uri.getPort();
             InetAddress hostAddress = "localhost".equals(host) ? InetAddress.getLocalHost() : InetAddress.getByName(host);
+            
+            String remotePath = uri.getPath();
+            String tmpFileSuffix = target.getTmpFileSuffix();
 
-            FtpSecurity security = target.getSecurity();
+            FtpSecurity security = expandFtpSecurity(target.getSecurity());            
             boolean active = target.isActive();
             int connectTimeout = target.getConectTimeout();
             SocketFactory factory = new ExpiringSocketFactory(connectTimeout);
@@ -67,6 +70,9 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
             List<String> cmds = target.getSTORCommands();
             FtpTargetInterceptor targetInterceptor =
                     new FtpTargetInterceptor(hostAddress, port, security, active, socketTimeout, factory, cmds, monitor);
+            targetInterceptor.setTmpFileSuffix(tmpFileSuffix);
+            targetInterceptor.setRemotePath(remotePath);
+            
             invocationChain.addInterceptor(targetInterceptor);
         } catch (UnknownHostException e) {
             throw new WiringException(e);
@@ -95,6 +101,21 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
             return URI.create(expander.expand(decoded));
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError(e);
+        } catch (ExpressionExpansionException e) {
+            throw new WiringException(e);
+        }
+    }
+    
+    /**
+     * Expands the FTP security if it contains an expression of the form ${..}.
+     * 
+     * @param ftpSecurity FTP security which contains FTP authentication details
+     * @return the expanded ftp security
+     * @throws WiringException if there is an error expanding an expression
+     */
+    private FtpSecurity expandFtpSecurity(FtpSecurity ftpSecurity) throws WiringException {
+        try {
+            return new FtpSecurity(expander.expand(ftpSecurity.getUser()), expander.expand(ftpSecurity.getPassword()));
         } catch (ExpressionExpansionException e) {
             throw new WiringException(e);
         }

@@ -105,6 +105,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         if (!definition.getSTORCommands().isEmpty()) {
             hwtd.setSTORCommands(definition.getSTORCommands());
         }
+        hwtd.setTmpFileSuffix(binding.getDefinition().getTmpFileSuffix());
         return hwtd;
 
     }
