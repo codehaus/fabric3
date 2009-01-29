@@ -41,41 +41,44 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Map;
-
 import javax.jms.ConnectionFactory;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
+import org.fabric3.binding.jms.provider.ProviderRegistry;
 
 /**
  * The connection factory is never looked up, it is always created.
- * 
- * @version $Revision$ $Date$
  *
+ * @version $Revision$ $Date$
  */
 public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrategy {
+    private ProviderRegistry registry;
 
-    /**
-     * @see org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.common.ConnectionFactoryDefinition, java.util.Hashtable)
-     */
+    public AlwaysConnectionFactoryStrategy(@Reference ProviderRegistry registry) {
+        this.registry = registry;
+    }
+
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
-        
-        try {            
-            
-            ConnectionFactory cf =  (ConnectionFactory) Class.forName(definition.getName()).newInstance(); 
+
+        try {
+
+            ConnectionFactory cf = (ConnectionFactory) registry.loadClass(definition.getName()).newInstance();
             Map<String, String> props = definition.getProperties();
             // TODO We may need to factor this into provider specific classes rather than making the general assumption on bean style props
-            for(PropertyDescriptor pd : Introspector.getBeanInfo(cf.getClass()).getPropertyDescriptors()) {
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(cf.getClass()).getPropertyDescriptors()) {
                 String propName = pd.getName();
                 String propValue = props.get(propName);
                 Method writeMethod = pd.getWriteMethod();
-                if(propValue != null && writeMethod != null) {
+                if (propValue != null && writeMethod != null) {
                     writeMethod.invoke(cf, propValue);
                 }
             }
-            
+
             return cf;
-            
+
         } catch (InstantiationException ex) {
             throw new Fabric3JmsException("Unable to create connection factory", ex);
         } catch (IllegalAccessException ex) {
@@ -87,7 +90,7 @@ public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrateg
         } catch (InvocationTargetException ex) {
             throw new Fabric3JmsException("Unable to create connection factory", ex);
         }
-        
+
     }
 
 }

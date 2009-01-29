@@ -19,5 +19,8 @@
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <import.java package="org.fabric3.spi" version="0.8"/>
     <import.java package="org.fabric3.jaxb.control.api" version="0.8"/>
+    <export.java package="org.fabric3.binding.jms.common" version="0.8"/>
+    <export.java package="org.fabric3.binding.jms.scdl" version="0.8"/>
+    <export.java package="org.fabric3.binding.jms.provider" version="0.8"/>
     <deployable composite="ns:JMSBindingExtension"/>
 </contribution>
