@@ -79,7 +79,18 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
             return null;
         }
         WireCommand command;
-        if (LogicalState.NEW == component.getState() || (!incremental && LogicalState.MARKED != component.getState())) {
+
+        // determine if a new binding has been added to a provisioned component. If so, an AttachWireCommand must be generated.
+        boolean newBinding = false;
+        for (LogicalService service : component.getServices()) {
+            for (LogicalBinding<?> binding : service.getBindings()) {
+                if (binding.getState() == LogicalState.NEW) {
+                    newBinding = true;
+                    break;
+                }
+            }
+        }
+        if (newBinding || LogicalState.NEW == component.getState() || (!incremental && LogicalState.MARKED != component.getState())) {
             command = new AttachWireCommand(order);
         } else if (LogicalState.MARKED == component.getState()) {
             command = new DetachWireCommand(order);
@@ -99,7 +110,6 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
             if (bindings.isEmpty()) {
                 continue;
             }
-
             ServiceContract<?> callbackContract = service.getDefinition().getServiceContract().getCallbackContract();
             LogicalBinding<?> callbackBinding = null;
             URI callbackUri = null;
