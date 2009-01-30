@@ -23,16 +23,16 @@ import org.osoa.sca.annotations.OneWay;
  */
 public interface CalculatorService {
 
-//    @OneWay
+    @OneWay
     void add(double n1, double n2);
 
-//    @OneWay
+    @OneWay
     void subtract(double n1, double n2);
 
-//    @OneWay
+    @OneWay
     void multiply(double n1, double n2);
 
-//    @OneWay
+    @OneWay
     void divide(double n1, double n2);
 
 }
