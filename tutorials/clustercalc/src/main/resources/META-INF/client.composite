@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           name="ClientComposite"
+           targetNamespace="org.codehaus.fabric3">
+
+    <component name="ClientService">
+        <implementation.java class="org.fabric3.tutorials.clustercalc.client.ClientServiceImpl"/>
+        <reference name="calculator" target="CalculatorService"/>
+    </component>
+
+</composite>
