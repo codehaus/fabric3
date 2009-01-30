@@ -52,7 +52,7 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.SCABindingDefinition;
+import org.fabric3.spi.model.type.LocalBindingDefinition;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
@@ -120,8 +120,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
 
-        LogicalBinding<SCABindingDefinition> sourceBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference);
-        LogicalBinding<SCABindingDefinition> targetBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service);
+        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
+        LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, service);
 
         PolicyResult policyResult = resolvePolicies(serviceContract, sourceBinding, targetBinding, source, target);
         Policy sourcePolicy = policyResult.getSourcePolicy();
@@ -164,8 +164,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         ServiceContract<?> contract = reference.getDefinition().getServiceContract().getCallbackContract();
         LogicalService callbackService = target.getService(contract.getInterfaceName());
         assert callbackService != null;
-        LogicalBinding<SCABindingDefinition> sourceBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, callbackService);
-        LogicalBinding<SCABindingDefinition> targetBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference);
+        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, callbackService);
+        LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
         ComponentGenerator<S> sourceGenerator = getGenerator(source);
         ComponentGenerator<T> targetGenerator = getGenerator(target);
         PolicyResult policyResult = resolvePolicies(contract, sourceBinding, targetBinding, source, target);
@@ -205,7 +205,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             contract = service.getDefinition().getServiceContract();
         }
 
-        LogicalBinding<SCABindingDefinition> targetBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service);
+        LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, service);
 
         PolicyResult policyResult = resolvePolicies(contract, binding, targetBinding, null, component);
         Policy sourcePolicy = policyResult.getSourcePolicy();
@@ -248,7 +248,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
-        LogicalBinding<SCABindingDefinition> sourceBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference);
+        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
 
         PolicyResult policyResult = resolvePolicies(contract, sourceBinding, binding, component, null);
         Policy sourcePolicy = policyResult.getSourcePolicy();
@@ -289,7 +289,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         ServiceDefinition serviceDefinition = callbackService.getDefinition();
 
-        LogicalBinding<SCABindingDefinition> sourceBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference);
+        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
 
         PolicyResult policyResult = resolvePolicies(contract, sourceBinding, binding, component, null);
         Policy sourcePolicy = policyResult.getSourcePolicy();
@@ -325,7 +325,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         ServiceContract<?> callbackContract = contract.getCallbackContract();
 
         // TODO policies are not correctly calculated
-        LogicalBinding<SCABindingDefinition> targetBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service);
+        LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, service);
         PolicyResult policyResult = resolvePolicies(callbackContract, binding, targetBinding, null, component);
         Policy targetPolicy = policyResult.getSourcePolicy();
         Policy sourcePolicy = policyResult.getTargetPolicy();

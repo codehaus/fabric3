@@ -18,22 +18,23 @@ package org.fabric3.spi.model.type;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.component.BindingDefinition;
 import org.osoa.sca.Constants;
 
+import org.fabric3.model.type.component.BindingDefinition;
+
 /**
- * Represents the SCA binding
+ * Represents a wire between collocated components.
  *
  * @version $Rev$ $Date$
  */
-public final class SCABindingDefinition extends BindingDefinition {
+public final class LocalBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 8531584350454081265L;
 
-    public static final SCABindingDefinition INSTANCE = new SCABindingDefinition();
+    public static final LocalBindingDefinition INSTANCE = new LocalBindingDefinition();
 
-    private SCABindingDefinition() {
-        super(null, new QName(Constants.SCA_NS, "binding.sca"), null);
+    private LocalBindingDefinition() {
+        super(null, new QName(Constants.SCA_NS, "binding.local"), null);
     }
-    
-    
+
+
 }
