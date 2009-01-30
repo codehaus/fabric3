@@ -31,6 +31,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.fabric3.spi.model.type.SCABindingDefinition;
 
 /**
  * Creates {@link NonBlockingInterceptorDefinition}s for one-way operations.
@@ -56,6 +57,11 @@ public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
     public PhysicalInterceptorDefinition generate(Element policyDefinition,
                                                   Operation<?> operation,
                                                   LogicalBinding<?> logicalBinding) throws GenerationException {
+        if (!logicalBinding.getDefinition().equals(SCABindingDefinition.INSTANCE)) {
+            // if a binding is assigned other than a local one, do not add the interceptor as non-blocking behavior is provided by the
+            // binding infrastructure
+            return null;
+        }
         return new NonBlockingInterceptorDefinition();
     }
 }
