@@ -147,9 +147,8 @@ public interface PhysicalWireGenerator {
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    public <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundCallbackServiceWire(C component,
-                                                                                                   LogicalService service,
-                                                                                                   LogicalBinding<?> binding)
-            throws GenerationException;
+    <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundCallbackServiceWire(C component,
+                                                                                            LogicalService service,
+                                                                                            LogicalBinding<?> binding) throws GenerationException;
 
 }

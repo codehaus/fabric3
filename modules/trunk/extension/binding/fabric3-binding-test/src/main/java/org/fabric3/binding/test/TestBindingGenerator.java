@@ -18,8 +18,8 @@ package org.fabric3.binding.test;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -44,8 +44,7 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingSourceD
 
     public TestBindingTargetDefinition generateWireTarget(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Policy policy,
-                                                          ReferenceDefinition referenceDefinition)
-            throws GenerationException {
+                                                          ServiceContract<?> contract) throws GenerationException {
 
         TestBindingTargetDefinition definition = new TestBindingTargetDefinition();
         definition.setUri(logicalBinding.getDefinition().getTargetUri());

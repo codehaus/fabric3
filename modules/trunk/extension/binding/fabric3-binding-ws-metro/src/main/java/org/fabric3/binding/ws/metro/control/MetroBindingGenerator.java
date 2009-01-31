@@ -30,8 +30,8 @@ import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.host.Names;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -76,15 +76,14 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
      */
     public MetroWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         Policy policy,
-                                                        ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                        ServiceContract<?> contract) throws GenerationException {
         
         WsBindingDefinition definition = binding.getDefinition();
         URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation());
         WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
-        
-        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, referenceDefinition.getServiceContract());
+        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, contract);
         URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
-        String interfaze = referenceDefinition.getServiceContract().getQualifiedInterfaceName();
+        String interfaze = contract.getQualifiedInterfaceName();
         
         List<QName> requestedIntents = policy.getProvidedIntents();
         

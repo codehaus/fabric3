@@ -53,7 +53,6 @@ import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
@@ -98,16 +97,14 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
 
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Policy policy,
-                                                      ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                      ServiceContract<?> contract) throws GenerationException {
 
-        ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
-
-        TransactionType transactionType = getTransactionType(policy, serviceContract);
-        Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
+        TransactionType transactionType = getTransactionType(policy, contract);
+        Set<String> oneWayOperations = getOneWayOperations(policy, contract);
 
         URI uri = logicalBinding.getDefinition().getTargetUri();
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
-        Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
+        Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
         return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations);
     }
 

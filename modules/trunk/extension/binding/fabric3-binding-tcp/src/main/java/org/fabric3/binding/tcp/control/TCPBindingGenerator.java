@@ -21,9 +21,8 @@ import java.net.URI;
 import org.fabric3.binding.tcp.provision.TCPWireSourceDefinition;
 import org.fabric3.binding.tcp.provision.TCPWireTargetDefinition;
 import org.fabric3.binding.tcp.scdl.TCPBindingDefinition;
-import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -60,11 +59,9 @@ public class TCPBindingGenerator implements
      * {@inheritDoc}
      */
     public TCPWireTargetDefinition generateWireTarget(LogicalBinding<TCPBindingDefinition> binding, Policy policy,
-                                                      ReferenceDefinition referenceDefinition)
-            throws GenerationException {
+                                                      ServiceContract<?> contract) throws GenerationException {
 
-        ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
-        if (serviceContract.getOperations().size() != 1) {
+        if (contract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");
         }
 

@@ -18,8 +18,11 @@ package org.fabric3.binding.ws.axis2.control;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import org.fabric3.binding.ws.axis2.provision.Axis2PolicyAware;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition;
@@ -28,19 +31,15 @@ import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.host.Namespaces;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * @version $Revision$ $Date$
@@ -70,7 +69,7 @@ public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceD
 
     public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         Policy policy,
-                                                        ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                        ServiceContract<?> contract) throws GenerationException {
 
         Axis2WireTargetDefinition hwtd = new Axis2WireTargetDefinition();        
         WsdlElement wsdlElement = parseWsdlElement(binding.getDefinition().getWsdlElement());
@@ -79,7 +78,6 @@ public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceD
         
         hwtd.setUri(binding.getDefinition().getTargetUri());
         
-        ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
         
         //Set Axis2 operation parameters

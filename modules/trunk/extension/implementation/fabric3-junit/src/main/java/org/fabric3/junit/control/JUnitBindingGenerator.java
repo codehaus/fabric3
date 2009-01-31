@@ -21,8 +21,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.junit.provision.JUnitWireSourceDefinition;
 import org.fabric3.junit.scdl.JUnitBindingDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -47,7 +47,7 @@ public class JUnitBindingGenerator implements BindingGenerator<JUnitWireSourceDe
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JUnitBindingDefinition> bindingDefinition,
                                                            Policy policy,
-                                                           ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                           ServiceContract<?> contract) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 }

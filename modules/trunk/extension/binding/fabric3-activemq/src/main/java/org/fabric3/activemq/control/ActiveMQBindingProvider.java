@@ -16,6 +16,8 @@
  */
 package org.fabric3.activemq.control;
 
+import java.net.URI;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
@@ -29,6 +31,7 @@ import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.spi.binding.BindingProvider;
 import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -54,12 +57,38 @@ public class ActiveMQBindingProvider implements BindingProvider {
     }
 
     public void bind(LogicalReference source, LogicalService target) throws BindingSelectionException {
+        // setup forward bindings
+        // derive the forward queue name from the service name
+        String forwardQueue = target.getUri().toString();
+        JmsBindingDefinition definition = createBindingDefinition(forwardQueue);
+        LogicalBinding<JmsBindingDefinition> referenceBinding = new LogicalBinding<JmsBindingDefinition>(definition, source);
+        source.addBinding(referenceBinding);
+        LogicalBinding<JmsBindingDefinition> serviceBinding = new LogicalBinding<JmsBindingDefinition>(definition, target);
+        target.addBinding(serviceBinding);
+
+        // check of the interface is bidirectional
+        if (target.getDefinition().getServiceContract().getCallbackContract() != null) {
+            // setup callback bindings
+            // derive the callback queue name from the reference name since multiple clients can connect to a service
+            String callbackQueue = source.getUri().toString();
+            JmsBindingDefinition callbackDefinition = createBindingDefinition(callbackQueue);
+            LogicalBinding<JmsBindingDefinition> callbackReferenceBinding = new LogicalBinding<JmsBindingDefinition>(callbackDefinition, source);
+            source.addCallbackBinding(callbackReferenceBinding);
+            LogicalBinding<JmsBindingDefinition> callbackServiceBinding = new LogicalBinding<JmsBindingDefinition>(callbackDefinition, target);
+            target.addCallbackBinding(callbackServiceBinding);
+//            URI uri = logicalBinding.getDefinition().getTargetUri();
+
+            callbackDefinition.setGeneratedTargetUri(createCallbackUri(source));
+        }
+    }
+
+    private JmsBindingDefinition createBindingDefinition(String queueName) {
         JmsBindingMetadata metadata = new JmsBindingMetadata();
 
         DestinationDefinition destinationDefinition = new DestinationDefinition();
         destinationDefinition.setDestinationType(DestinationType.queue);
         destinationDefinition.setCreate(CreateOption.always);
-        destinationDefinition.setName(target.getUri().toString());
+        destinationDefinition.setName(queueName);
         metadata.setDestination(destinationDefinition);
 
         ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
@@ -70,13 +99,14 @@ public class ActiveMQBindingProvider implements BindingProvider {
 
         JmsBindingDefinition definition = new JmsBindingDefinition(metadata, null);
         definition.setMetadata(metadata);
+        return definition;
+    }
 
-        LogicalBinding<JmsBindingDefinition> referenceBinding = new LogicalBinding<JmsBindingDefinition>(definition, source);
-        source.addBinding(referenceBinding);
 
-        LogicalBinding<JmsBindingDefinition> serviceBinding = new LogicalBinding<JmsBindingDefinition>(definition, target);
-        target.addBinding(serviceBinding);
-
+    public URI createCallbackUri(LogicalReference source) {
+        LogicalComponent<?> component = source.getParent();
+        String name = source.getDefinition().getServiceContract().getCallbackContract().getInterfaceName();
+        return URI.create(component.getUri() + "#" + name);
     }
 
 

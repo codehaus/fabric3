@@ -42,7 +42,7 @@ import org.w3c.dom.Document;
 import org.fabric3.model.type.java.InjectableAttribute;
 
 /**
- * Represents a physical wire source definition.
+ * Represents the source side of a wire.
  *
  * @version $Revision$ $Date$
  */

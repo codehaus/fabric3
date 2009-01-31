@@ -22,8 +22,8 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.jmx.provision.JMXWireSourceDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.Bindable;
@@ -52,7 +52,7 @@ public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefini
         return definition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding, Policy policy, ReferenceDefinition referenceDefinition)
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding, Policy policy, ServiceContract<?> contract)
             throws GenerationException {
         // TODO we might need this for notifications but leave it out for now
         throw new UnsupportedOperationException();

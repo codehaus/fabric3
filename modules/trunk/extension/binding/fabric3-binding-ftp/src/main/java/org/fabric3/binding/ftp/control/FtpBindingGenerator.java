@@ -29,11 +29,10 @@ import org.fabric3.binding.ftp.provision.FtpWireSourceDefinition;
 import org.fabric3.binding.ftp.provision.FtpWireTargetDefinition;
 import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
 import org.fabric3.binding.ftp.scdl.TransferMode;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -87,10 +86,9 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
 
     public FtpWireTargetDefinition generateWireTarget(LogicalBinding<FtpBindingDefinition> binding,
                                                       Policy policy,
-                                                      ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                      ServiceContract<?> contract) throws GenerationException {
 
-        ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
-        if (serviceContract.getOperations().size() != 1) {
+        if (contract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");
         }
 
@@ -98,7 +96,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         FtpBindingDefinition definition = binding.getDefinition();
         boolean active = definition.getTransferMode() == TransferMode.ACTIVE;
 
-        FtpSecurity security = processPolicies(policy, serviceContract.getOperations().iterator().next());
+        FtpSecurity security = processPolicies(policy, contract.getOperations().iterator().next());
 
         FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security, connectTimeout, socketTimeout);
         hwtd.setUri(definition.getTargetUri());

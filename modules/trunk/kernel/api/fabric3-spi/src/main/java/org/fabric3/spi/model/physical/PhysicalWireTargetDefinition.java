@@ -40,7 +40,7 @@ import java.io.Serializable;
 import org.w3c.dom.Document;
 
 /**
- * Represents the target set of a physical wire.
+ * Represents the target side of a physical wire.
  *
  * @version $Revision$ $Date$
  */

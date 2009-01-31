@@ -255,7 +255,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Policy targetPolicy = policyResult.getTargetPolicy();
 
         BindingGenerator targetGenerator = getGenerator(binding);
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, targetPolicy, reference.getDefinition());
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, targetPolicy, contract);
         ServiceContract<?> callbackContract = contract.getCallbackContract();
         if (callbackContract != null) {
             // if there is a callback wire associated with this forward wire, calculate its URI
@@ -291,7 +291,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
 
-        PolicyResult policyResult = resolvePolicies(contract, sourceBinding, binding, component, null);
+        PolicyResult policyResult = resolvePolicies(callbackContract, sourceBinding, binding, component, null);
         Policy sourcePolicy = policyResult.getSourcePolicy();
         Policy targetPolicy = policyResult.getTargetPolicy();
         BindingGenerator bindingGenerator = getGenerator(binding);
@@ -336,7 +336,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         BindingGenerator bindingGenerator = getGenerator(binding);
         // xcv FIXME refactor null param to use ServiceContract
-        PhysicalWireTargetDefinition targetDefinition = bindingGenerator.generateWireTarget(binding, targetPolicy, null);
+        PhysicalWireTargetDefinition targetDefinition = bindingGenerator.generateWireTarget(binding, targetPolicy, callbackContract);
         targetDefinition.setClassLoaderId(binding.getParent().getParent().getDefinition().getContributionUri());
 
         Set<PhysicalOperationDefinition> operations = generateOperations(callbackContract, policyResult, binding);

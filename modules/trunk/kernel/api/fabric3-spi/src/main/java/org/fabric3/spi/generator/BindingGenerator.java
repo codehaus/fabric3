@@ -35,8 +35,8 @@
 package org.fabric3.spi.generator;
 
 import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -52,23 +52,23 @@ public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition, PWT
     /**
      * Generates a physical wire source definition from a logical binding.
      *
-     * @param binding Logical binding.
-     * @param intentsToBeProvided Intents to be provided explictly by the binding.
+     * @param binding           Logical binding.
+     * @param policy            the policy metadata associated with the wire
      * @param serviceDefinition Service definition for the target.
      * @return Physical wire source definition.
-     * @throws GenerationException
+     * @throws GenerationException if an error is raised during generation
      */
     PWSD generateWireSource(LogicalBinding<BD> binding, Policy policy, ServiceDefinition serviceDefinition) throws GenerationException;
 
     /**
      * Generates a physical wire target definition from a logical binding.
      *
-     * @param binding Logical binding.
-     * @param intentsToBeProvided Intents to be provided explictly by the binding.
-     * @param referenceDefinition Reference definition for the target.
+     * @param binding  Logical binding.
+     * @param policy   the policy metadata associated with the wire
+     * @param contract the service contract of the wire
      * @return Physical wire target definition.
-     * @throws GenerationException
+     * @throws GenerationException if an error is raised during generation
      */
-    PWTD generateWireTarget(LogicalBinding<BD> binding, Policy policy, ReferenceDefinition referenceDefinition) throws GenerationException;
+    PWTD generateWireTarget(LogicalBinding<BD> binding, Policy policy, ServiceContract<?> contract) throws GenerationException;
 
 }

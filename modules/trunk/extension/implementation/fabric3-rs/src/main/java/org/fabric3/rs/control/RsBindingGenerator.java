@@ -16,16 +16,17 @@
  */
 package org.fabric3.rs.control;
 
-import org.fabric3.rs.scdl.RsBindingDefinition;
+import org.osoa.sca.annotations.EagerInit;
+
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.rs.provision.RsWireSourceDefinition;
 import org.fabric3.rs.provision.RsWireTargetDefinition;
-import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.rs.scdl.RsBindingDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the REST binding generator.
@@ -36,8 +37,8 @@ import org.osoa.sca.annotations.EagerInit;
 public class RsBindingGenerator implements BindingGenerator<RsWireSourceDefinition, RsWireTargetDefinition, RsBindingDefinition> {
 
     public RsWireSourceDefinition generateWireSource(LogicalBinding<RsBindingDefinition> logicalBinding,
-            Policy policy,
-            ServiceDefinition serviceDefinition)
+                                                     Policy policy,
+                                                     ServiceDefinition serviceDefinition)
             throws GenerationException {
 
         RsWireSourceDefinition rwsd = new RsWireSourceDefinition();
@@ -52,9 +53,8 @@ public class RsBindingGenerator implements BindingGenerator<RsWireSourceDefiniti
     }
 
     public RsWireTargetDefinition generateWireTarget(LogicalBinding<RsBindingDefinition> logicalBinding,
-            Policy policy,
-            ReferenceDefinition referenceDefinition)
-            throws GenerationException {
+                                                     Policy policy,
+                                                     ServiceContract<?> contract) throws GenerationException {
         throw new GenerationException("Not supported");
 
     }

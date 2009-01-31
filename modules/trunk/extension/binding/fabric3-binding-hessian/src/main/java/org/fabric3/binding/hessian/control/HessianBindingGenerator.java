@@ -41,8 +41,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.binding.hessian.provision.HessianWireSourceDefinition;
 import org.fabric3.binding.hessian.provision.HessianWireTargetDefinition;
 import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -58,8 +58,7 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
 
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Policy policy,
-                                                          ServiceDefinition serviceDefinition)
-            throws GenerationException {
+                                                          ServiceDefinition serviceDefinition) throws GenerationException {
 
         HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition();
         URI targetUri = logicalBinding.getDefinition().getTargetUri();
@@ -71,8 +70,7 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
 
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Policy policy,
-                                                          ReferenceDefinition referenceDefinition)
-            throws GenerationException {
+                                                          ServiceContract<?> contract) throws GenerationException {
         HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition();
         hwtd.setUri(logicalBinding.getDefinition().getTargetUri());
 

@@ -41,8 +41,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.binding.burlap.provision.BurlapWireSourceDefinition;
 import org.fabric3.binding.burlap.provision.BurlapWireTargetDefinition;
 import org.fabric3.binding.burlap.scdl.BurlapBindingDefinition;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -69,7 +69,7 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
 
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Policy policy,
-                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                         ServiceContract<?> contract) throws GenerationException {
 
         // TODO Pass the contract information to the physical
         BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition();
