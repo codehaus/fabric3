@@ -23,14 +23,12 @@ import javax.xml.stream.XMLOutputFactory;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.spi.xml.XMLFactoryInstantiationException;
 import org.fabric3.spi.xml.XMLFactory;
+import org.fabric3.spi.xml.XMLFactoryInstantiationException;
 
 /**
- * An implementation of XMLFactory that uses WoodStox stax parser for input &
- * output factories.
- * Alternately the runtime can be configured to use a different input and ouput factories
- * as properties in the scdl file
+ * An implementation of XMLFactory that uses WoodStox StAX parser for input & output factories. Alternately the runtime can be configured to use a
+ * different input and ouput factories as properties in the scdl file. This implementation sets the TCCL during stAX implementation discovery.
  */
 public final class XMLFactoryImpl implements XMLFactory {
 
@@ -43,15 +41,15 @@ public final class XMLFactoryImpl implements XMLFactory {
     }
 
     @Constructor
-    public XMLFactoryImpl(@Property(name = "input")String inputFactoryName,
-                          @Property(name = "output")String outputFactoryName) {
+    public XMLFactoryImpl(@Property(name = "input") String inputFactoryName, @Property(name = "output") String outputFactoryName) {
         this.inputFactoryName = inputFactoryName;
         this.outputFactoryName = outputFactoryName;
     }
 
     /**
-     * see XMLFactory
-     * @return
+     * Creates a new XMLInputFactory instance.
+     *
+     * @return the XMLInputFactory instance
      * @throws FactoryConfigurationError
      */
     public XMLInputFactory newInputFactoryInstance() throws FactoryConfigurationError {
@@ -65,8 +63,9 @@ public final class XMLFactoryImpl implements XMLFactory {
     }
 
     /**
-     * see XMLFactory
-     * @return
+     * Creates a new XMLOutputFactory instance.
+     *
+     * @return the XMLOutputFactory instance
      * @throws FactoryConfigurationError
      */
     public XMLOutputFactory newOutputFactoryInstance() throws FactoryConfigurationError {
