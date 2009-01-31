@@ -47,7 +47,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * Implementations are responsible for generating command metadata used to provision components to service nodes.
+ * Implementations are responsible for generating command metadata used to provision components to runtimes.
  *
  * @version $Rev$ $Date$
  */
