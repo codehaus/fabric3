@@ -38,6 +38,9 @@ import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.RuntimeService;
 import org.fabric3.spi.topology.ZoneManager;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.model.type.component.Scope;
 
 /**
  * Processes a ZoneDeploymentCommand. This may result in routing the command locally, to an individual runtime, or to  all runtimes in a zone
@@ -50,6 +53,7 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
     private ZoneManager zoneManager;
     private CommandExecutorRegistry executorRegistry;
     private RuntimeService runtimeService;
+    private ScopeRegistry scopeRegistry;
     private EventService eventService;
     private ZoneDeploymentCommandExecutorMonitor monitor;
     private boolean domainSynchronized;
@@ -57,11 +61,13 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
     public ZoneDeploymentCommandExecutor(@Reference ZoneManager zoneManager,
                                          @Reference CommandExecutorRegistry executorRegistry,
                                          @Reference RuntimeService runtimeService,
+                                         @Reference ScopeRegistry scopeRegistry,
                                          @Reference EventService eventService,
                                          @Monitor ZoneDeploymentCommandExecutorMonitor monitor) {
         this.zoneManager = zoneManager;
         this.executorRegistry = executorRegistry;
         this.runtimeService = runtimeService;
+        this.scopeRegistry = scopeRegistry;
         this.eventService = eventService;
         this.monitor = monitor;
     }
@@ -151,6 +157,11 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
         monitor.routed(runtimeName, id);
         for (Command cmd : commands) {
             executorRegistry.execute(cmd);
+        }
+        try {
+            scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
+        } catch (InstanceLifecycleException e) {
+            throw new ExecutionException(e);
         }
         eventService.publish(new RuntimeSynchronized());
     }

@@ -22,22 +22,22 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaWireSourceDefinition;
-import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.pojo.builder.PojoSourceWireAttacher;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.pojo.builder.ProxyService;
-import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.util.UriHelper;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * Attaches wires to and from components implemented using the Java programming model.
@@ -81,7 +81,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
             if (factory == null) {
                 factory = proxyService.createCallbackObjectFactory(type, container, callbackUri, wire);
             } else {
-                factory = proxyService.updateCallbackObjectFactory(factory, callbackUri, wire);
+                factory = proxyService.updateCallbackObjectFactory(factory, type, container, callbackUri, wire);
             }
             source.setObjectFactory(injectableAttribute, factory);
         } else {

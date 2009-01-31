@@ -48,14 +48,14 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
+import org.fabric3.pojo.builder.ProxyCreationException;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.pojo.builder.ProxyCreationException;
-import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -92,14 +92,16 @@ public class JDKProxyService implements ProxyService {
         return new CallbackWireObjectFactory<T>(interfaze, container, this, mappings);
     }
 
-    public ObjectFactory<?> updateCallbackObjectFactory(ObjectFactory<?> factory, URI callbackUri, Wire wire) throws ProxyCreationException {
+    public <T> ObjectFactory<?> updateCallbackObjectFactory(ObjectFactory<?> factory,
+                                                            Class<T> interfaze,
+                                                            ScopeContainer container,
+                                                            URI callbackUri,
+                                                            Wire wire) throws ProxyCreationException {
         if (!(factory instanceof CallbackWireObjectFactory)) {
-            String name = factory.getClass().getName();
-            // programming name
-            throw new IllegalArgumentException("ObjectFactory must be an instance of " + CallbackWireObjectFactory.class.getName() + ": " + name);
+            // a placeholder object factory (i.e. created when the callback is not wired) needs to be replaced 
+            return createCallbackObjectFactory(interfaze, container, callbackUri, wire);
         }
         CallbackWireObjectFactory<?> callbackFactory = (CallbackWireObjectFactory) factory;
-        final Class<?> interfaze = callbackFactory.getInterfaze();
         Map<Method, InvocationChain> operationMappings = createInterfaceToWireMapping(interfaze, wire);
         callbackFactory.updateMappings(callbackUri.toString(), operationMappings);
         return callbackFactory;

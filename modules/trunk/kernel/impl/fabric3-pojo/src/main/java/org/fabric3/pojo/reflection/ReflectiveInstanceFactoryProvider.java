@@ -45,19 +45,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
-import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
-import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.spi.ObjectFactory;
+import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
+import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
+import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -238,8 +238,8 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             InjectableAttribute attribute = entry.getValue();
             InjectableAttributeType attributeType = attribute.getValueType();
             ObjectFactory<?> factory = factories.get(attribute);
-            if (factory == null && attributeType == InjectableAttributeType.REFERENCE) {
-                // The reference is not configured, i.e. wired. Set an empty, updateable ObjectFactory as it may be wired later.
+            if (factory == null && (attributeType == InjectableAttributeType.REFERENCE || attributeType == InjectableAttributeType.CALLBACK)) {
+                // The reference or callback is not configured, i.e. wired. Set an empty, updateable ObjectFactory as it may be wired later.
                 factory = createObjectFactory(site.getType());
                 factories.put(attribute, factory);
             }

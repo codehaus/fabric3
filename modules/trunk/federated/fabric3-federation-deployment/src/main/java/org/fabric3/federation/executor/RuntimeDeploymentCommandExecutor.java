@@ -23,7 +23,10 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.federation.command.RuntimeDeploymentCommand;
 import org.fabric3.federation.event.RuntimeSynchronized;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.command.Command;
+import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
@@ -38,15 +41,18 @@ import org.fabric3.spi.services.event.EventService;
 public class RuntimeDeploymentCommandExecutor implements CommandExecutor<RuntimeDeploymentCommand> {
     private CommandExecutorRegistry executorRegistry;
     private EventService eventService;
+    private ScopeRegistry scopeRegistry;
     private RuntimeDeploymentCommandExecutorMonitor monitor;
     // indicates whether the runtime has been synchronized with the domain
     private boolean domainSynchronized;
 
     public RuntimeDeploymentCommandExecutor(@Reference CommandExecutorRegistry executorRegistry,
                                             @Reference EventService eventService,
+                                            @Reference ScopeRegistry scopeRegistry,
                                             @Monitor RuntimeDeploymentCommandExecutorMonitor monitor) {
         this.executorRegistry = executorRegistry;
         this.eventService = eventService;
+        this.scopeRegistry = scopeRegistry;
         this.monitor = monitor;
     }
 
@@ -67,6 +73,12 @@ public class RuntimeDeploymentCommandExecutor implements CommandExecutor<Runtime
         for (Command cmd : command.getCommands()) {
             executorRegistry.execute(cmd);
         }
+        try {
+            scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
+        } catch (InstanceLifecycleException e) {
+            throw new ExecutionException(e);
+        }
+
         eventService.publish(new RuntimeSynchronized());
         domainSynchronized = true;
     }
