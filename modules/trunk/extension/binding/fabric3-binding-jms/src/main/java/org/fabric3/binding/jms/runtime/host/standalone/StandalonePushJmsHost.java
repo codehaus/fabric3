@@ -37,9 +37,13 @@ package org.fabric3.binding.jms.runtime.host.standalone;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.jms.Connection;
 import javax.jms.JMSException;
+
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
@@ -50,9 +54,6 @@ import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Service handler for JMS.
@@ -65,10 +66,11 @@ public class StandalonePushJmsHost implements JmsHost {
     private Connection connection;
     private JMSRuntimeMonitor monitor;
     private int receiverCount = 3;
-    private Map<URI,JMSMessageListenerInvoker> jmsMessageListenerInvokers = new HashMap<URI,JMSMessageListenerInvoker>();
+    private Map<URI, JMSMessageListenerInvoker> jmsMessageListenerInvokers = new HashMap<URI, JMSMessageListenerInvoker>();
 
     /**
      * Injects the monitor.
+     *
      * @param monitor Monitor to be injected.
      */
     public StandalonePushJmsHost(@Monitor JMSRuntimeMonitor monitor) {
@@ -76,7 +78,8 @@ public class StandalonePushJmsHost implements JmsHost {
     }
 
     /**
-     * Injects the work scheduler.     *
+     * Injects the work scheduler.
+     *
      * @param workScheduler Work scheduler to be used.
      */
     @Reference
@@ -86,6 +89,7 @@ public class StandalonePushJmsHost implements JmsHost {
 
     /**
      * Configurable property for default receiver count.
+     *
      * @param receiverCount Default receiver count.
      */
     @Property
@@ -94,8 +98,17 @@ public class StandalonePushJmsHost implements JmsHost {
     }
 
     /**
+     * Initializes the host.
+     */
+    @Init
+    public void init() {
+        monitor.start();
+    }
+
+    /**
      * Stops the receiver threads.
-     * @throws JMSException
+     *
+     * @throws JMSException if an error stoping the JMSMessageListenerInvokers is raised.
      */
     @Destroy
     public void stop() throws JMSException {
@@ -104,12 +117,12 @@ public class StandalonePushJmsHost implements JmsHost {
         }
         JmsHelper.closeQuietly(connection);
         jmsMessageListenerInvokers.clear();
-        monitor.jmsRuntimeStop();
+        monitor.stop();
     }
 
-    public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory, 
+    public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
                                          JMSObjectFactory responseJMSObjectFactory,
-                                         ResponseMessageListener messageListener, 
+                                         ResponseMessageListener messageListener,
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl,
@@ -117,13 +130,13 @@ public class StandalonePushJmsHost implements JmsHost {
         JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(
                 requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, workScheduler);
         invoker.start(receiverCount);
-        jmsMessageListenerInvokers.put(serviceUri,invoker);
+        jmsMessageListenerInvokers.put(serviceUri, invoker);
 
     }
-    
-    public void unregisterListener(URI serviceUri){
-    	JMSMessageListenerInvoker invoker = jmsMessageListenerInvokers.remove(serviceUri);
-    	invoker.stop();  	
+
+    public void unregisterListener(URI serviceUri) {
+        JMSMessageListenerInvoker invoker = jmsMessageListenerInvokers.remove(serviceUri);
+        invoker.stop();
     }
 
 }

@@ -37,7 +37,6 @@ package org.fabric3.binding.jms.runtime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -45,6 +44,7 @@ import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -59,14 +59,20 @@ import org.fabric3.spi.wire.InvocationChain;
 public class OneWayMessageListenerImpl implements ResponseMessageListener {
 
     private Map<String, ChainHolder> operations;
+    private String callbackUri;
 
 
     /**
-     * @param chains            map of operations to interceptor chains.
-     * @param messageTypes      the JMS message type used to enqueue service invocations keyed by operation name
+     * @param chains       map of operations to interceptor chains.
+     * @param messageTypes the JMS message type used to enqueue service invocations keyed by operation name
+     * @param callbackUri  the callback URI of the client wired to the service this listener is created for. If the service is not bidirectional, the
+     *                     URI will be null.
      */
-    public OneWayMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,Map<String, PayloadType> messageTypes) {
-    	
+    public OneWayMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
+                                     Map<String, PayloadType> messageTypes,
+                                     String callbackUri) {
+        this.callbackUri = callbackUri;
+
         this.operations = new HashMap<String, ChainHolder>();
         for (Entry<PhysicalOperationDefinition, InvocationChain> entry : chains.entrySet()) {
             String name = entry.getKey().getName();
@@ -77,10 +83,7 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
             this.operations.put(name, new ChainHolder(type, entry.getValue()));
         }
     }
-    
-    /*
-     * Handle the message
-     */
+
     public void onMessage(Message request, Session responseSession, Destination responseDestination) {
 
         try {
@@ -93,10 +96,12 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
             if (payloadType != PayloadType.OBJECT) {
                 payload = new Object[]{payload};
             }
-            WorkContext workContext = new WorkContext();
+
+            WorkContext workContext = JmsHelper.createWorkContext(request, callbackUri);
+
             org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
-            if(outMessage.isFault()){
+            if (outMessage.isFault()) {
                 throw new Fabric3JmsException("Error with in the UnderlyingService " + outMessage);
             }
 
@@ -107,8 +112,8 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
     }
 
     /*
-     * Finds the matching interceptor holder.
-     */
+    * Finds the matching interceptor holder.
+    */
     private ChainHolder getInterceptorHolder(String opName) {
 
         if (operations.size() == 1) {

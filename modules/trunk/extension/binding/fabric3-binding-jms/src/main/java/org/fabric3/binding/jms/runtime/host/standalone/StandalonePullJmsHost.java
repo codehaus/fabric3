@@ -39,9 +39,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.jms.Connection;
 import javax.jms.JMSException;
+
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
@@ -53,9 +57,6 @@ import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Service handler for JMS.
@@ -74,6 +75,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     /**
      * Injects the monitor.
+     *
      * @param monitor Monitor used for logging.
      */
     public StandalonePullJmsHost(@Monitor JMSRuntimeMonitor monitor) {
@@ -82,6 +84,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     /**
      * Configurable property for default receiver count.
+     *
      * @param receiverCount Default receiver count.
      */
     @Property
@@ -91,6 +94,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     /**
      * Sets the read timeout.
+     *
      * @param readTimeout Read timeout for blocking receive.
      */
     @Property
@@ -100,6 +104,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     /**
      * Injects the work scheduler.
+     *
      * @param workScheduler Work scheduler to be used.
      */
     @Reference
@@ -108,13 +113,21 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     }
 
     /**
+     * Initializes the host.
+     */
+    @Init
+    public void init() {
+        monitor.start();
+    }
+
+    /**
      * Stops the receiver threads.
      *
-     * @throws JMSException
+     * @throws JMSException if an error stopping the ConsumerWorkers is raised
      */
     @Destroy
     public void stop() throws JMSException {
-        
+
         for (List<ConsumerWorker> consumerWorkers : consumerWorkerMap.values()) {
             for (ConsumerWorker worker : consumerWorkers) {
                 worker.stop();
@@ -123,19 +136,19 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         for (Connection connection : connectionMap.values()) {
             JmsHelper.closeQuietly(connection);
         }
-        monitor.jmsRuntimeStop();
-        
+        monitor.stop();
+
     }
-    
-    public void unregisterListener(URI serviceUri){
-    	List<ConsumerWorker> workers = consumerWorkerMap.remove(serviceUri);
-    	for (ConsumerWorker consumerWorker : workers) {
-    		consumerWorker.stop();
-		}
-    	JmsHelper.closeQuietly(connectionMap.remove(serviceUri));
-    	templateMap.remove(serviceUri);
+
+    public void unregisterListener(URI serviceUri) {
+        List<ConsumerWorker> workers = consumerWorkerMap.remove(serviceUri);
+        for (ConsumerWorker consumerWorker : workers) {
+            consumerWorker.stop();
+        }
+        JmsHelper.closeQuietly(connectionMap.remove(serviceUri));
+        templateMap.remove(serviceUri);
     }
-    
+
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
                                          JMSObjectFactory responseJMSObjectFactory,
                                          ResponseMessageListener messageListener,
@@ -143,12 +156,12 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl,
                                          URI serviceUri) {
-        
+
         try {
-            
+
             Connection connection = requestJMSObjectFactory.getConnection();
             List<ConsumerWorker> consumerWorkers = new ArrayList<ConsumerWorker>();
-            
+
             ConsumerWorkerTemplate template = new ConsumerWorkerTemplate(transactionHandler,
                                                                          transactionType,
                                                                          messageListener,
@@ -158,74 +171,74 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
                                                                          cl,
                                                                          monitor);
             templateMap.put(serviceUri, template);
-            
+
             for (int i = 0; i < receiverCount; i++) {
                 ConsumerWorker work = new ConsumerWorker(template);
                 workScheduler.scheduleWork(work);
                 consumerWorkers.add(work);
             }
-            
+
             connection.start();
             connectionMap.put(serviceUri, connection);
             consumerWorkerMap.put(serviceUri, consumerWorkers);
-            
+
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to activate service", ex);
         }
-        
-        monitor.registerListener(requestJMSObjectFactory.getDestination());
-        
+
+        monitor.registerListener(serviceUri);
+
     }
-    
+
     // ---------------------------------- Start of management operations -------------------
 
     public int getReceiverCount(String service) {
-        
+
         URI serviceUri = URI.create(service);
         List<ConsumerWorker> consumerWorkers = consumerWorkerMap.get(serviceUri);
         if (consumerWorkers == null) {
             throw new IllegalArgumentException("Unknown service:" + service);
         }
         return consumerWorkers.size();
-        
+
     }
 
     public void setReceiverCount(String service, int receiverCount) {
-        
+
         URI serviceUri = URI.create(service);
         List<ConsumerWorker> consumerWorkers = consumerWorkerMap.get(serviceUri);
         if (consumerWorkers == null) {
             throw new IllegalArgumentException("Unknown service:" + service);
         }
-        
-        if (receiverCount == consumerWorkers.size()) { 
+
+        if (receiverCount == consumerWorkers.size()) {
             return;
         }
-        
+
         ConsumerWorkerTemplate template = templateMap.get(serviceUri);
         for (ConsumerWorker consumerWorker : consumerWorkers) {
             consumerWorker.stop();
         }
         consumerWorkers.clear();
-        
-        for (int i = 0;i < receiverCount;i++) {
+
+        for (int i = 0; i < receiverCount; i++) {
             ConsumerWorker consumerWorker = new ConsumerWorker(template);
             workScheduler.scheduleWork(consumerWorker);
             consumerWorkers.add(consumerWorker);
         }
-        
+
     }
 
     public List<String> getReceivers() {
-        
+
         List<String> receivers = new ArrayList<String>();
         for (URI destination : connectionMap.keySet()) {
             receivers.add(destination.toString());
         }
         return receivers;
-        
+
     }
-    
+
     // ---------------------------------- End of management operations -------------------
 
 }

@@ -56,9 +56,9 @@ import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactor
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
@@ -129,7 +129,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
     public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
 
-        JMSObjectFactory responseJMSObjectFactory = null; 
+        JMSObjectFactory responseJMSObjectFactory = null;
         URI serviceUri = target.getUri();
 
         ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
@@ -142,11 +142,11 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         ConnectionFactoryDefinition connectionFactory = metadata.getConnectionFactory();
         DestinationDefinition destination = metadata.getDestination();
         JMSObjectFactory requestJMSObjectFactory = buildObjectFactory(connectionFactory, destination, env);
-        
-        if(!metadata.noResponse()){
-          ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
-          DestinationDefinition responseDestination = metadata.getResponseDestination();
-          responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
+
+        if (!metadata.noResponse()) {
+            ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
+            DestinationDefinition responseDestination = metadata.getResponseDestination();
+            responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
         }
 
         String callbackUri = null;
@@ -158,11 +158,12 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         Map<PhysicalOperationDefinition, InvocationChain> operations = wire.getInvocationChains();
 
         ResponseMessageListener messageListener;
-         if(metadata.noResponse()){
-             messageListener = new OneWayMessageListenerImpl(operations, messageTypes);
-         }else {
-              messageListener =  new ResponseMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
-         }
+
+        if (metadata.noResponse()) {
+            messageListener = new OneWayMessageListenerImpl(operations, messageTypes, callbackUri);
+        } else {
+            messageListener = new ResponseMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+        }
         jmsHost.registerResponseListener(requestJMSObjectFactory,
                                          responseJMSObjectFactory,
                                          messageListener,

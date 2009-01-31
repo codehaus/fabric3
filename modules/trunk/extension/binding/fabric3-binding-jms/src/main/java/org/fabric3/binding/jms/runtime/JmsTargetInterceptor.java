@@ -34,6 +34,10 @@
  */
 package org.fabric3.binding.jms.runtime;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.List;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -45,9 +49,11 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.util.Base64;
 
 /**
  * Dispatches a service invocation to a JMS queue.
@@ -118,9 +124,9 @@ public class JmsTargetInterceptor implements Interceptor {
     }
 
     public Message invoke(Message message) {
-        
+
         Message response = new MessageImpl();
-        
+
         Connection connection = null;
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
@@ -130,22 +136,9 @@ public class JmsTargetInterceptor implements Interceptor {
 
             MessageProducer producer = session.createProducer(destination);
             Object[] payload = (Object[]) message.getBody();
-//            payload = attachFramesToTail(payload, message.getWorkContext().getCallFrameStack());
 
-            javax.jms.Message jmsMessage = createMessage(session, payload);
-            jmsMessage.setObjectProperty("scaOperationName", methodName);
+            javax.jms.Message jmsMessage = createMessage(message, session, payload);
 
-//            CallFrame previous = message.getWorkContext().peekCallFrame();
-//            if( previous.getConversation()!=null){
-//                Object conversationID = previous.getConversation().getConversationID();
-//                if(conversationID != null){
-//                    jmsMessage.setStringProperty("scaConversationId", String.valueOf(conversationID));
-//                }
-//                ConversationContext conversationContext = previous.getConversationContext();
-//                if(ConversationContext.NEW.equals(conversationContext)){
-//                    jmsMessage.setStringProperty("scaConversationStart", String.valueOf(conversationID));
-//                }
-//            }
             producer.send(jmsMessage);
 
             String correlationId = null;
@@ -157,16 +150,18 @@ public class JmsTargetInterceptor implements Interceptor {
                 correlationId = jmsMessage.getJMSMessageID();
             }
             session.commit();
-            if(messageReceiver != null) {
-               javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
-               Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);        
-               response.setBody(responseMessage);
-            }   
-            
+            if (messageReceiver != null) {
+                javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
+                Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
+                response.setBody(responseMessage);
+            }
+
             return response;
 
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to receive response", ex);
+        } catch (IOException ex) {
+            throw new Fabric3JmsException("Error serializing callframe", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
             Thread.currentThread().setContextClassLoader(oldCl);
@@ -181,23 +176,39 @@ public class JmsTargetInterceptor implements Interceptor {
         this.next = next;
     }
 
-    private javax.jms.Message createMessage(Session session, Object[] payload) throws JMSException {
+    private javax.jms.Message createMessage(Message message, Session session, Object[] payload) throws JMSException, IOException {
+        javax.jms.Message jmsMessage;
         switch (payloadType) {
         case OBJECT:
-            return session.createObjectMessage(payload);
+            jmsMessage = session.createObjectMessage(payload);
+            break;
         case STREAM:
             throw new UnsupportedOperationException("Not yet implemented");
         case TEXT:
             if (payload.length != 1) {
                 throw new UnsupportedOperationException("Only single parameter operations are supported");
             }
-            return session.createTextMessage((String) payload[0]);
+            jmsMessage = session.createTextMessage((String) payload[0]);
+            break;
         default:
             if (payload.length != 1) {
                 throw new AssertionError("Bytes messages must have a single parameter");
             }
-            return MessageHelper.createBytesMessage(session, payload[0], payloadType);
+            jmsMessage = MessageHelper.createBytesMessage(session, payload[0], payloadType);
         }
+        // add the operation name being invoked
+        jmsMessage.setObjectProperty("scaOperationName", methodName);
+
+        // serialize the callframes
+        List<CallFrame> stack = message.getWorkContext().getCallFrameStack();
+        ByteArrayOutputStream bas = new ByteArrayOutputStream();
+        ObjectOutputStream stream = new ObjectOutputStream(bas);
+        stream.writeObject(stack);
+        stream.close();
+        String encoded = Base64.encode(bas.toByteArray());
+        jmsMessage.setStringProperty("f3Context", encoded);
+
+        return jmsMessage;
     }
 
 }

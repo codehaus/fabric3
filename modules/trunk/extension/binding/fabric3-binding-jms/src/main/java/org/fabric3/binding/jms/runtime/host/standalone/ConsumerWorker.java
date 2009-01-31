@@ -51,7 +51,7 @@ import org.fabric3.host.work.DefaultPausableWork;
 
 /**
  * A thread pull message from destination and invoke Message listener.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class ConsumerWorker extends DefaultPausableWork {
@@ -68,11 +68,9 @@ public class ConsumerWorker extends DefaultPausableWork {
     private JMSRuntimeMonitor monitor;
 
     /**
-     * @param session Session used to receive messages.
-     * @param transactionHandler Transaction handler.
-     * @param consumer Message consumer.
-     * @param listener Delegate message listener.
-     * @param readTimeout Read timeout.
+     * Constructor.
+     *
+     * @param template the ConsumerWorkerTemplate  to use with this worker.
      */
     public ConsumerWorker(ConsumerWorkerTemplate template) {
 
@@ -97,9 +95,6 @@ public class ConsumerWorker extends DefaultPausableWork {
 
     }
 
-    /**
-     * @see java.lang.Runnable#run()
-     */
     public void execute() {
         Session responseSession = null;
         Destination responseDestination = null;
@@ -136,9 +131,9 @@ public class ConsumerWorker extends DefaultPausableWork {
                     try {
                         session.rollback();
                     } catch (JMSException ne) {
-                        reportException(ne);
+                        monitor.jmsListenerError(e);
                     }
-                    reportException(e);
+                    monitor.jmsListenerError(e);
                 }
             }
         } catch (JMSException ex) {
@@ -151,13 +146,5 @@ public class ConsumerWorker extends DefaultPausableWork {
 
     }
 
-    /**
-     * Report an exception.
-     */
-    private void reportException(Exception e) {
-        if (monitor != null) {
-            monitor.jmsListenerError(e);
-        }
-    }
 
 }

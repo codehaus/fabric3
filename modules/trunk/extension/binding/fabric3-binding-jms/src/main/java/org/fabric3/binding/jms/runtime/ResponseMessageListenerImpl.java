@@ -48,6 +48,7 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -65,11 +66,7 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
     private final CorrelationScheme correlationScheme;
     private final TransactionType transactionType;
 
-    /*
-     * Will be removed once callback are working
-     */
-    @SuppressWarnings("unused")
-    private final String callBackURI;
+    private final String callbackUri;
 
     /**
      * @param chains            map of operations to interceptor chains.
@@ -94,9 +91,10 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
         }
         this.correlationScheme = correlationScheme;
         this.transactionType = transactionType;
-        this.callBackURI = callbackUri;
+        this.callbackUri = callbackUri;
     }
 
+    @SuppressWarnings({"unchecked"})
     public void onMessage(Message request, Session responseSession, Destination responseDestination) {
 
         try {
@@ -109,21 +107,9 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
             if (payloadType != PayloadType.OBJECT) {
                 payload = new Object[]{payload};
             }
-            WorkContext workContext = new WorkContext();
-//            List<CallFrame> callFrames = (List<CallFrame>) payload[payload.length-1];
-//
-//            CallFrame previous = workContext.peekCallFrame();
-            // Copy correlation and conversation information from incoming frame to new frame
-            // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
-            // bidirectional service
-//            Object id = previous.getCorrelationId(Object.class);
-//            ConversationContext context = previous.getConversationContext();
-//            Conversation conversation = previous.getConversation();
-//            CallFrame frame = new CallFrame(callBackURI, id, conversation, context);
-//            callFrames.add(frame);
-//            workContext.addCallFrames(callFrames);
-//            Object[] netPayload = new Object[payload.length-1];
-//            System.arraycopy(payload, 0, netPayload, 0, payload.length-1);
+
+            WorkContext workContext = JmsHelper.createWorkContext(request, callbackUri);
+
             org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
 
@@ -142,8 +128,8 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
             }
             MessageProducer producer = responseSession.createProducer(responseDestination);
             producer.send(response);
-            
-            if (transactionType == TransactionType.LOCAL){
+
+            if (transactionType == TransactionType.LOCAL) {
                 responseSession.commit();
             }
 

@@ -34,17 +34,30 @@
  */
 package org.fabric3.binding.jms.runtime.helper;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.List;
 import javax.jms.Connection;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+
+import org.osoa.sca.Conversation;
+
+import org.fabric3.binding.jms.common.Fabric3JmsException;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.ConversationContext;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.util.Base64;
 
 /**
  * Helper class for JMS ops.
  */
 public class JmsHelper {
-    
+
     /**
      * Utility class constructor.
      */
@@ -52,55 +65,101 @@ public class JmsHelper {
     }
 
     /**
+     * Creates a WorkContext for the request by deserializing the callframe stack
+     *
+     * @param request     the message received from the JMS transport
+     * @param callbackUri if the destination service for the message is bidirectional, the callback URI is the URI of the callback service for the
+     *                    client that is wired to it. Otherwise, it is null.
+     * @return the work context
+     * @throws Fabric3JmsException if an error is encountered deserializing the callframe
+     */
+    @SuppressWarnings({"unchecked"})
+    public static WorkContext createWorkContext(Message request, String callbackUri) throws Fabric3JmsException {
+        try {
+            WorkContext workContext = new WorkContext();
+            String encoded = request.getStringProperty("f3Context");
+            if (encoded == null) {
+                // no callframe found, use a blank one
+                return workContext;
+            }
+            ByteArrayInputStream bas = new ByteArrayInputStream(Base64.decode(encoded));
+            ObjectInputStream stream = new ObjectInputStream(bas);
+            List<CallFrame> stack = (List<CallFrame>) stream.readObject();
+            workContext.addCallFrames(stack);
+            stream.close();
+            CallFrame previous = workContext.peekCallFrame();
+            // Copy correlation and conversation information from incoming frame to new frame
+            // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
+            // bidirectional service
+            Object id = previous.getCorrelationId(Object.class);
+            ConversationContext context = previous.getConversationContext();
+            Conversation conversation = previous.getConversation();
+            CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
+            stack.add(frame);
+            return workContext;
+        } catch (JMSException ex) {
+            throw new Fabric3JmsException("Error deserializing callframe", ex);
+        } catch (IOException ex) {
+            throw new Fabric3JmsException("Error deserializing callframe", ex);
+        } catch (ClassNotFoundException ex) {
+            throw new Fabric3JmsException("Error deserializing callframe", ex);
+        }
+    }
+
+    /**
      * Closes connections quietly.
+     *
      * @param connection Connection to be closed.
      */
-    public static void closeQuietly(Connection connection) {                
-        try {            
-            if(connection != null) {
+    public static void closeQuietly(Connection connection) {
+        try {
+            if (connection != null) {
                 connection.close();
-            }            
-        } catch(JMSException ignore) {
-        }        
+            }
+        } catch (JMSException ignore) {
+        }
     }
 
     /**
      * Closes sessions quietly.
+     *
      * @param session Connection to be closed.
      */
-    public static void closeQuietly(Session session) {                
-        try {            
-            if(session != null) {
+    public static void closeQuietly(Session session) {
+        try {
+            if (session != null) {
                 session.close();
-            }            
-        } catch(JMSException ignore) {
-        }        
+            }
+        } catch (JMSException ignore) {
+        }
     }
 
     /**
      * Closes message producer quietly.
+     *
      * @param producer Message producer to be closed.
      */
-    public static void closeQuietly(MessageProducer producer) {                
-        try {            
-            if(producer != null) {
+    public static void closeQuietly(MessageProducer producer) {
+        try {
+            if (producer != null) {
                 producer.close();
-            }            
-        } catch(JMSException ignore) {
-        }        
+            }
+        } catch (JMSException ignore) {
+        }
     }
 
     /**
      * Closes message consumer quietly.
-     * @param producer Message consumer to be closed.
+     *
+     * @param consumer Message consumer to be closed.
      */
-    public static void closeQuietly(MessageConsumer consumer) {                
-        try {            
-            if(consumer != null) {
+    public static void closeQuietly(MessageConsumer consumer) {
+        try {
+            if (consumer != null) {
                 consumer.close();
-            }            
-        } catch(JMSException ignore) {
-        }        
+            }
+        } catch (JMSException ignore) {
+        }
     }
 
 }
