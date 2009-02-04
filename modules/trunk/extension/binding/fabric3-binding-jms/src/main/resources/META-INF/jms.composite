@@ -102,8 +102,4 @@
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy"/>
     </component>
 
-    <component name="ProviderRegistry">
-        <f3-impl:implementation.system class="org.fabric3.binding.jms.provider.impl.ProviderRegistryImpl"/>
-    </component>
-
 </composite>

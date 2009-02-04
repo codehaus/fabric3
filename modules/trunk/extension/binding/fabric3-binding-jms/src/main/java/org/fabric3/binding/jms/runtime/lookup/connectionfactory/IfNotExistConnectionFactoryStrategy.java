@@ -38,10 +38,7 @@ import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 import javax.naming.NameNotFoundException;
 
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.provider.ProviderRegistry;
 import org.fabric3.binding.jms.runtime.helper.JndiHelper;
 
 /**
@@ -54,8 +51,8 @@ public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStr
      */
     private ConnectionFactoryStrategy always;
 
-    public IfNotExistConnectionFactoryStrategy(@Reference ProviderRegistry registry) {
-        this.always = new AlwaysConnectionFactoryStrategy(registry);
+    public IfNotExistConnectionFactoryStrategy() {
+        this.always = new AlwaysConnectionFactoryStrategy();
     }
 
 

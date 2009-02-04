@@ -43,11 +43,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import javax.jms.ConnectionFactory;
 
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
-import org.fabric3.binding.jms.provider.ProviderRegistry;
 
 /**
  * The connection factory is never looked up, it is always created.
@@ -55,17 +52,12 @@ import org.fabric3.binding.jms.provider.ProviderRegistry;
  * @version $Revision$ $Date$
  */
 public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrategy {
-    private ProviderRegistry registry;
-
-    public AlwaysConnectionFactoryStrategy(@Reference ProviderRegistry registry) {
-        this.registry = registry;
-    }
 
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
 
         try {
 
-            ConnectionFactory cf = (ConnectionFactory) registry.loadClass(definition.getName()).newInstance();
+            ConnectionFactory cf = (ConnectionFactory) Class.forName(definition.getName()).newInstance();
             Map<String, String> props = definition.getProperties();
             // TODO We may need to factor this into provider specific classes rather than making the general assumption on bean style props
             for (PropertyDescriptor pd : Introspector.getBeanInfo(cf.getClass()).getPropertyDescriptors()) {

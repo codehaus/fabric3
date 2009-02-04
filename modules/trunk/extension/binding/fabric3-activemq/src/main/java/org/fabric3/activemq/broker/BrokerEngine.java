@@ -30,7 +30,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.jms.provider.ProviderRegistry;
 import org.fabric3.host.runtime.HostInfo;
 
 /**
@@ -46,13 +45,11 @@ public class BrokerEngine {
     private int selectedPort = 61616;
     private String port;
     private String hostAddress = "localhost";
-    private ProviderRegistry registry;
     private int maxPort = 71717;
     private int minPort = 61616;
     private File dataDir;
 
-    public BrokerEngine(@Reference HostInfo info, @Reference ProviderRegistry registry) {
-        this.registry = registry;
+    public BrokerEngine(@Reference HostInfo info) {
         tempDir = new File(info.getTempDir(), "activemq");
         // sets the directory where persistent messages are written
         dataDir = new File(info.getBaseDir(), "activemq.data");
@@ -88,10 +85,6 @@ public class BrokerEngine {
         connector.setDiscoveryUri(URI.create("multicast://default"));
         broker.addNetworkConnector("multicast://default");
         broker.start();
-
-        // Make the ActiveMQ classes available to the JMS extension.
-        // This allows the JMX extension to create connection factories using Class.forName().
-        registry.registerProviderClassLoader(getClass().getClassLoader());
     }
 
     @Destroy
