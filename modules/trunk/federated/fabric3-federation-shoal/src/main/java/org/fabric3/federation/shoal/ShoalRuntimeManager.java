@@ -32,7 +32,6 @@ import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.topology.RuntimeManager;
 
 /**
  * Handles communications between a zone participant and the ZoneManager. Specifically, executes commands received from the ZoneManager and updates
@@ -41,7 +40,7 @@ import org.fabric3.spi.topology.RuntimeManager;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
+public class ShoalRuntimeManager implements FederationCallback {
     private FederationService federationService;
     private CommandExecutorRegistry executorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
