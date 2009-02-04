@@ -30,6 +30,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.contribution.DependencyException;
 import org.fabric3.contribution.DependencyService;
+import org.fabric3.fabric.command.AttachExtensionCommand;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
 import org.fabric3.host.Names;
@@ -113,7 +114,9 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         // Create the classloader definitions for contributions required to run the components being deployed.
         // These are created first since they must be instantitated on a runtime prior to component classloaders
         Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone = createContributionDefinitions(collated);
-        return createProvisionCommands(definitionsPerZone);
+        Map<String, Set<Command>> commands = createProvisionCommands(definitionsPerZone);
+        createExtensionCommands(commands, collated);
+        return commands;
     }
 
     public Map<String, Set<Command>> release(List<LogicalComponent<?>> components) throws GenerationException {
@@ -239,7 +242,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
     }
 
     /**
-     * Creates classloader provision commands for a set of classloader definitions
+     * Creates classloader provision commands for a set of classloader definitions.
      *
      * @param definitionsPerZone the classloader definitions keyed by zone
      * @return the set of commands keyed by zone
@@ -255,6 +258,26 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             }
         }
         return commandsPerZone;
+    }
+
+    /**
+     * Creates classloader extension attachment commands. Extensions are used to allow contributions to dynamically load classes via reflection from
+     * other contribution classloaders without declaring a dependcy on them.
+     *
+     * @param commands the commands being provisioned
+     * @param collated the set of contributions being provisioned collated by zone
+     */
+    private void createExtensionCommands(Map<String, Set<Command>> commands, Map<String, Set<Contribution>> collated) {
+        for (Map.Entry<String, Set<Contribution>> entry : collated.entrySet()) {
+            String zone = entry.getKey();
+            for (Contribution contribution : entry.getValue()) {
+                URI contributionUri = contribution.getUri();
+                for (URI providerUri : contribution.getResolvedExtensionProviders()) {
+                    AttachExtensionCommand command = new AttachExtensionCommand(1, contributionUri, providerUri);
+                    commands.get(zone).add(command);
+                }
+            }
+        }
     }
 
     /**

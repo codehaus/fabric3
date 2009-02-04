@@ -44,6 +44,7 @@ public class Contribution implements Serializable {
     private ContributionManifest manifest = new ContributionManifest();
     private List<Resource> resources = new ArrayList<Resource>();
     private List<ContributionWire<?, ?>> wires = new ArrayList<ContributionWire<?, ?>>();
+    private List<URI> resolvedExtensionProviders = new ArrayList<URI>();
 
     private Set<QName> lockOwners = new HashSet<QName>();
 
@@ -212,6 +213,24 @@ public class Contribution implements Serializable {
      */
     public List<ContributionWire<?, ?>> getWires() {
         return wires;
+    }
+
+    /**
+     * Adds the URI of the resolved extension provider.
+     *
+     * @param uri the URI of the resolved extension provider.
+     */
+    public void addResolvedExtensionProvider(URI uri) {
+        resolvedExtensionProviders.add(uri);
+    }
+
+    /**
+     * Gets the URIs of the resolved extension providers.
+     *
+     * @return the URIs of the resolved extension providers
+     */
+    public List<URI> getResolvedExtensionProviders() {
+        return resolvedExtensionProviders;
     }
 
     /**

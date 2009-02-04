@@ -49,7 +49,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import sun.security.util.SecurityConstants;
 
 /**
- * A classloader implementation that supports a multi-parent hierarchy. Each classloader has a name that can be used to reference it in the runtime.
+ * A classloader implementation that supports a multi-parent hierarchy and extension resolution mechanism. Class resolution is performed in the
+ * following order:
+ * <pre>
+ * <ul>
+ *   <li>Parents are searched. Parents will delegate to their classloader hierarchy.
+ *   <li>If a resource is not found, the current classloader is searched.
+ *   <li>If a resource is not found, extension classloaders are searched. Extension classloaders will not delegate to their classloader hierarchy.
+ * </ul>
+ * </pre>
+ * The extension mechanism allows classes to be dyamically loaded via Class.forName() and ClassLoader.loadClass(). This is used to accomodate
+ * contributions and libraries that rely on Java reflection to add additional capabilities provided by another contribution. Since reslution is
+ * performed dynamically, cycles between classloaders are supported where one classloader is a parent of the other and the former is an extension of
+ * the latter.
+ * <p/>
+ * Each classloader has a name that can be used to reference it in the runtime.
  *
  * @version $Rev$ $Date$
  */
@@ -58,6 +72,7 @@ public class MultiParentClassLoader extends URLClassLoader {
 
     private final URI name;
     private final List<ClassLoader> parents = new CopyOnWriteArrayList<ClassLoader>();
+    private final List<MultiParentClassLoader> extensions = new CopyOnWriteArrayList<MultiParentClassLoader>();
 
     /**
      * Constructs a classloader with a name and a single parent.
@@ -139,6 +154,26 @@ public class MultiParentClassLoader extends URLClassLoader {
         return list;
     }
 
+    /**
+     * Adds a classloader as an extension of this classloader.
+     *
+     * @param classloader the extension classloader.
+     */
+    public void addExtensionClassLoader(MultiParentClassLoader classloader) {
+        extensions.add(classloader);
+    }
+
+    /**
+     * Resolves a resource only in this classloader. Note this method does not delegate to parent classloaders.
+     *
+     * @param name the resource name
+     * @return the resource URL or null if not found
+     */
+    public URL findExtensionResource(String name) {
+        // look in our classpath
+        return super.findResource(name);
+    }
+
     protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // look for already loaded classes
         Class<?> clazz = findLoadedClass(name);
@@ -163,7 +198,20 @@ public class MultiParentClassLoader extends URLClassLoader {
                 }
                 // look in our classpath
                 if (clazz == null) {
-                    clazz = findClass(name);
+                    try {
+                        clazz = findClass(name);
+                    } catch (ClassNotFoundException e) {
+                        // look in extensions
+                        for (MultiParentClassLoader extension : extensions) {
+                            clazz = extension.findClass(name);
+                            if (clazz != null) {
+                                break;
+                            }
+                        }
+                        if (clazz == null) {
+                            throw e;
+                        }
+                    }
                 }
             } catch (NoClassDefFoundError e) {
                 throw e;
@@ -176,7 +224,6 @@ public class MultiParentClassLoader extends URLClassLoader {
         }
         return clazz;
     }
-
 
     protected Class<?> findClass(String string) throws ClassNotFoundException {
         return super.findClass(string);
@@ -191,7 +238,17 @@ public class MultiParentClassLoader extends URLClassLoader {
             }
         }
         // look in our classpath
-        return super.findResource(name);
+        URL resource = super.findResource(name);
+        if (resource == null) {
+            // look in extensions
+            for (MultiParentClassLoader extension : extensions) {
+                resource = extension.findExtensionResource(name);
+                if (resource != null) {
+                    return resource;
+                }
+            }
+        }
+        return resource;
     }
 
     public Enumeration<URL> findResources(String name) throws IOException {

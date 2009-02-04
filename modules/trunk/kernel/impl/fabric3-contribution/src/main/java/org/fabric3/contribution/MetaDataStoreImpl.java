@@ -18,6 +18,7 @@ package org.fabric3.contribution;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -224,6 +225,32 @@ public class MetaDataStoreImpl implements MetaDataStore {
             }
         }
         return dependents;
+    }
+
+    public List<Contribution> resolveExtensionProviders(String name) {
+        List<Contribution> providers = new ArrayList<Contribution>();
+        for (Contribution contribution : cache.values()) {
+            for (String extend : contribution.getManifest().getExtends()) {
+                if (extend.equals(name)) {
+                    providers.add(contribution);
+                    break;
+                }
+            }
+        }
+        return providers;
+    }
+
+    public List<Contribution> resolveExtensionPoints(String name) {
+        List<Contribution> extensionPoints = new ArrayList<Contribution>();
+        for (Contribution contribution : cache.values()) {
+            for (String extensionPoint : contribution.getManifest().getExtensionPoints()) {
+                if (extensionPoint.equals(name)) {
+                    extensionPoints.add(contribution);
+                    break;
+                }
+            }
+        }
+        return extensionPoints;
     }
 
     @SuppressWarnings({"unchecked"})

@@ -34,6 +34,8 @@ public class ContributionManifest implements Serializable {
     private List<Export> exports = new ArrayList<Export>();
     private List<Import> imports = new ArrayList<Import>();
     private List<Deployable> deployables = new ArrayList<Deployable>();
+    private List<String> extensionPoints = new ArrayList<String>();
+    private List<String> extend = new ArrayList<String>();
 
     /**
      * Rturns true if the contribution is an extension.
@@ -87,6 +89,42 @@ public class ContributionManifest implements Serializable {
      */
     public void addImport(Import imprt) {
         imports.add(imprt);
+    }
+
+    /**
+     * Returns the list of extension points provided by this contribution.
+     *
+     * @return the list of extension points provided by this contribution
+     */
+    public List<String> getExtensionPoints() {
+        return extensionPoints;
+    }
+
+    /**
+     * Adds an extension point provided by this contribution.
+     *
+     * @param name the extension point  name
+     */
+    public void addExtensionPoint(String name) {
+        extensionPoints.add(name);
+    }
+
+    /**
+     * Returns the extension points this contribution extends.
+     *
+     * @return the extension points this contribution extends
+     */
+    public List<String> getExtends() {
+        return extend;
+    }
+
+    /**
+     * Adds the name of an extension point this contribution extends.
+     *
+     * @param name the extension point  name
+     */
+    public void addExtend(String name) {
+        extend.add(name);
     }
 
     /**

@@ -18,6 +18,7 @@ package org.fabric3.spi.contribution;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 import org.fabric3.host.contribution.StoreException;
@@ -89,7 +90,10 @@ public interface MetaDataStore {
      * @throws org.fabric3.host.contribution.StoreException
      *          if an error occurs during resolution
      */
-    <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, IntrospectionContext context)
+    <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri,
+                                                                             Class<V> type,
+                                                                             S symbol,
+                                                                             IntrospectionContext context)
             throws StoreException;
 
     /**
@@ -108,7 +112,7 @@ public interface MetaDataStore {
      * @return the ContributionWire
      * @throws UnresolvedImportException if the import cannot be resolved
      */
-    ContributionWire<?,?> resolve(URI uri, Import imprt) throws UnresolvedImportException;
+    ContributionWire<?, ?> resolve(URI uri, Import imprt) throws UnresolvedImportException;
 
     /**
      * Resolves contributions that import the contribution represented by the given URI.
@@ -125,4 +129,21 @@ public interface MetaDataStore {
      * @return the contribution or null
      */
     Contribution resolveContainingContribution(Symbol symbol);
+
+    /**
+     * Resolves the contributions that extend an extension point.
+     *
+     * @param name the extension point name
+     * @return the contributions that extend and extension point
+     */
+    List<Contribution> resolveExtensionProviders(String name);
+
+    /**
+     * Resolves are contribution that provides an extension point. Multiple contributions can provide the same extension point, e.g. contributions
+     * that represent different versions of a set of services.
+     *
+     * @param name the extension point name
+     * @return the URIs of the contibutions that provide the extension points
+     */
+    List<Contribution> resolveExtensionPoints(String name);
 }

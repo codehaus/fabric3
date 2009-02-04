@@ -31,9 +31,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.Constants;
 import org.fabric3.host.RuntimeMode;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.Export;
 import org.fabric3.spi.contribution.Import;
@@ -146,6 +146,12 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                         manifest.addExport((Export) o);
                     } else if (o instanceof Import) {
                         manifest.addImport((Import) o);
+                    } else if (o instanceof ExtendsDeclaration) {
+                        ExtendsDeclaration declaration = (ExtendsDeclaration) o;
+                        manifest.addExtend(declaration.getName());
+                    } else if (o instanceof ProvidesDeclaration) {
+                        ProvidesDeclaration declaration = (ProvidesDeclaration) o;
+                        manifest.addExtensionPoint(declaration.getName());
                     } else if (o != null) {
                         UnrecognizedElement failure = new UnrecognizedElement(reader);
                         context.addError(failure);

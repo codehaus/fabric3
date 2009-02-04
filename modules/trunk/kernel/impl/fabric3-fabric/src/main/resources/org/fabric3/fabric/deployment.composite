@@ -125,6 +125,14 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.manifest.JavaImportLoader"/>
     </component>
 
+    <component name="ProvidesLoader" f3-core:key="f3-core:provides">
+        <f3-impl:implementation.system class="org.fabric3.contribution.manifest.ProvidesLoader"/>
+    </component>
+
+    <component name="ExtendsLoader" f3-core:key="f3-core:extends">
+        <f3-impl:implementation.system class="org.fabric3.contribution.manifest.ExtendsLoader"/>
+    </component>
+
     <component name="ContributionWireInstantiatorRegistry">
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.ContributionWireInstantiatorRegistryImpl"/>
     </component>

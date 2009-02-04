@@ -109,6 +109,32 @@ public class ContributionLoaderImpl implements ContributionLoader {
             PhysicalClassLoaderWireDefinition wireDefinition = generator.generate(wire);
             builder.build(loader, wireDefinition);
         }
+
+        // add contributions that extend extension points provided by this contribution
+        List<URI> extenders = resolveExtensionProviders(contribution);
+        for (URI uri : extenders) {
+            ClassLoader cl = classLoaderRegistry.getClassLoader(uri);
+            if (cl == null) {
+                throw new AssertionError("Extension point provider classloader not registered: " + uri);
+            }
+            if (!(cl instanceof MultiParentClassLoader)) {
+                throw new AssertionError("Extension point provider classloader must be a " + MultiParentClassLoader.class.getName());
+            }
+            loader.addExtensionClassLoader((MultiParentClassLoader) cl);
+        }
+        // add this contribution to extension points it extends
+        List<URI> extensionPoints = resolveExtensionPoints(contribution);
+        for (URI uri : extensionPoints) {
+            ClassLoader cl = classLoaderRegistry.getClassLoader(uri);
+            if (cl == null) {
+                throw new AssertionError("Extension point classloader not registered: " + uri);
+            }
+            if (!(cl instanceof MultiParentClassLoader)) {
+                throw new AssertionError("Extension point classloader must be a " + MultiParentClassLoader.class.getName());
+            }
+            ((MultiParentClassLoader) cl).addExtensionClassLoader(loader);
+        }
+
         // register the classloader
         classLoaderRegistry.register(contributionUri, loader);
         return loader;
@@ -141,5 +167,29 @@ public class ContributionLoaderImpl implements ContributionLoader {
         return resolved;
     }
 
+    private List<URI> resolveExtensionProviders(Contribution contribution) {
+        List<URI> uris = new ArrayList<URI>();
+        ContributionManifest manifest = contribution.getManifest();
+        for (String extensionPoint : manifest.getExtensionPoints()) {
+            List<Contribution> providers = store.resolveExtensionProviders(extensionPoint);
+            for (Contribution provider : providers) {
+                uris.add(provider.getUri());
+                contribution.addResolvedExtensionProvider(provider.getUri());
+            }
+        }
+        return uris;
+    }
 
+    private List<URI> resolveExtensionPoints(Contribution contribution) {
+        List<URI> uris = new ArrayList<URI>();
+        ContributionManifest manifest = contribution.getManifest();
+        for (String extend : manifest.getExtends()) {
+            List<Contribution> extensionPoints = store.resolveExtensionPoints(extend);
+            for (Contribution extensionPoint : extensionPoints) {
+                uris.add(extensionPoint.getUri());
+                extensionPoint.addResolvedExtensionProvider(contribution.getUri());
+            }
+        }
+        return uris;
+    }
 }
