@@ -26,7 +26,7 @@
     <artifactId>fabric3-xapool</artifactId>
     <name>Fabric3 XA Pool DB Extension</name>
     <description>Fabric3 XA Pool DB Extension.</description>
-    <packaging>jar</packaging>
+    <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
 
@@ -70,6 +70,15 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+            </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-xapool</connection>

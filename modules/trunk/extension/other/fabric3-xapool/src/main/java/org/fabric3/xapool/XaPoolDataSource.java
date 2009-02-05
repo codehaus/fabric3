@@ -19,10 +19,10 @@ package org.fabric3.xapool;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import javax.sql.DataSource;
 import javax.sql.XAConnection;
 import javax.transaction.RollbackException;
@@ -32,11 +32,12 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.enhydra.jdbc.standard.StandardXADataSource;
-import org.fabric3.spi.resource.DataSourceRegistry;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.spi.resource.DataSourceRegistry;
 
 /**
  * @version $Revision$ $Date$
@@ -48,7 +49,7 @@ public class XaPoolDataSource implements DataSource {
     private String password;
     private String url;
     private String driver;
-    private List<String> dataSourceKeys;
+    private List<String> dataSourceKeys = new ArrayList<String>();
     private int minSize = 10;
     private int maxSize = 10;
 
@@ -109,7 +110,7 @@ public class XaPoolDataSource implements DataSource {
         delegate.setLogWriter(out);
     }
 
-    @Property(required = true)
+    @Property
     public void setDataSourceKeys(List<String> dataSourceKeys) {
         this.dataSourceKeys = dataSourceKeys;
     }
