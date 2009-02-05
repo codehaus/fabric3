@@ -21,10 +21,8 @@ import loanapp.api.message.Address;
 import loanapp.api.message.LoanRequest;
 import loanapp.api.message.LoanStatus;
 import loanapp.api.request.RequestCoordinator;
-import loanapp.validation.ValidationService;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.Context;
-import org.osoa.sca.annotations.Reference;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -41,9 +39,6 @@ public class LoanApplicationFormHandler extends HttpServlet {
 
     @Context
     protected ComponentContext context;
-
-    @Reference
-    protected ValidationService validationService;
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);

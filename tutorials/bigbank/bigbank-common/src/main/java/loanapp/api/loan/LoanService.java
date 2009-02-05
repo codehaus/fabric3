@@ -16,9 +16,8 @@
  */
 package loanapp.api.loan;
 
-import org.osoa.sca.annotations.Remotable;
-
 import loanapp.api.message.LoanRequest;
+import org.osoa.sca.annotations.Remotable;
 
 /**
  * Implementations process a loan application.

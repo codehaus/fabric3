@@ -22,8 +22,6 @@ import loanapp.api.loan.LoanService;
 import loanapp.api.loan.OptionSelection;
 import loanapp.api.message.LoanRequest;
 import loanapp.api.request.RequestCoordinator;
-import loanapp.validation.ValidationResult;
-import loanapp.validation.ValidationService;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -33,32 +31,22 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class LoanComponent implements LoanService {
-    private ValidationService validationService;
     private RequestCoordinator requestCoordinator;
     private AcceptanceCoordinator acceptanceCoordinator;
 
     /**
      * Creates a new instance.
      *
-     * @param validationService     the service to  validate incoming requests
      * @param requestCoordinator    coordinator that handles new request processing
      * @param acceptanceCoordinator coordinator that handles acceptance and rejection processing
      */
-    public LoanComponent(@Reference(name = "validationService")ValidationService validationService,
-                         @Reference(name = "requestCoordinator") RequestCoordinator requestCoordinator,
+    public LoanComponent(@Reference(name = "requestCoordinator") RequestCoordinator requestCoordinator,
                          @Reference(name = "acceptanceCoordinator") AcceptanceCoordinator acceptanceCoordinator) {
-        this.validationService = validationService;
         this.requestCoordinator = requestCoordinator;
         this.acceptanceCoordinator = acceptanceCoordinator;
     }
 
     public long apply(LoanRequest request) throws LoanException {
-        // validate the loan request
-        ValidationResult result = validationService.validateRequest(request);
-        if (!result.isValid()) {
-            // todo report errors
-            throw new InvalidLoanData("Data was invalid");
-        }
         return requestCoordinator.start(request);
     }
 

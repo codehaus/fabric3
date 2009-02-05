@@ -11,7 +11,6 @@
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/tutorials/fabric3-tutorial-bigbank-common/0.5ALPHA2/fabric3-tutorial-bigbank-common-0.5ALPHA2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/tutorials/fabric3-tutorial-bigbank-validation/0.5ALPHA2/fabric3-tutorial-bigbank-validation-0.5ALPHA2.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1.jar" sourcepath="M2_REPO/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.2/junit-3.8.2.jar" sourcepath="M2_REPO/junit/junit/3.8.2/junit-3.8.2-sources.jar">
     <attributes>

@@ -30,7 +30,6 @@
 
     <component name="LoanComponent">
         <implementation.java class="loanapp.loan.LoanComponent"/>
-        <reference name="validationService" target="ValidationComponent/ValidationService"/>
         <reference name="requestCoordinator" target="RequestCoordinator/RequestCoordinator"/>
         <reference name="acceptanceCoordinator" target="AcceptanceCoordinator/AcceptanceCoordinator"/>
     </component>
@@ -49,11 +48,6 @@
         <reference name="appraisalService" target="AppraisalComponent"/>
         <reference name="notificationService" target="NotificationComponent"/>
         <reference name="storeService" target="StoreComponent"/>
-    </component>
-
-    <component name="ValidationComponent">
-        <implementation.composite name="tutorials:ValidationComposite"
-                                  scdlResource="loanapp/validation/impl/validation.composite"/>
     </component>
 
     <component name="CreditComponent">

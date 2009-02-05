@@ -315,7 +315,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bigbank/fabric3-bigbank.iml" filepath="$PROJECT_DIR$/bigbank/fabric3-bigbank.iml" />
       <module fileurl="file://$PROJECT_DIR$/bigbank-common/fabric3-bigbank-common.iml" filepath="$PROJECT_DIR$/bigbank-common/fabric3-bigbank-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bigbank-validation/fabric3-bigbank-validation.iml" filepath="$PROJECT_DIR$/bigbank-validation/fabric3-bigbank-validation.iml" />
       <module fileurl="file://$PROJECT_DIR$/bigbank-webclient/fabric3-bigbank-webclient.iml" filepath="$PROJECT_DIR$/bigbank-webclient/fabric3-bigbank-webclient.iml" />
     </modules>
   </component>

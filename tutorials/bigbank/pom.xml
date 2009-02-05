@@ -33,8 +33,7 @@
     <modules>
       <module>bigbank</module>  
       <module>bigbank-common</module>  
-      <module>bigbank-validation</module>  
-      <module>bigbank-webclient</module>  
+      <module>bigbank-webclient</module>
     </modules>
 	
 </project>

@@ -51,11 +51,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.fabric3.tutorials</groupId>
-            <artifactId>fabric3-tutorial-bigbank-validation</artifactId>
-            <version>0.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.2.1</version>
