@@ -105,4 +105,12 @@
         <reference name="domain" target="ApplicationDomain"/>
     </component>
 
+    <component name="SyntheticDirectoryContributionProcessor">
+        <f3-impl:implementation.system class="org.fabric3.contribution.archive.SyntheticDirectoryContributionProcessor"/>
+    </component>
+
+    <component name="SyntheticDirectoryClasspathProcessor">
+        <f3-impl:implementation.system class="org.fabric3.contribution.archive.SyntheticDirectoryClasspathProcessor"/>
+    </component>
+    
 </composite>

@@ -64,6 +64,7 @@ import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
+import org.fabric3.runtime.standalone.SyntheticContributionSource;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. The class boots a Fabric3 runtime and launches a daemon
@@ -339,7 +340,20 @@ public class Fabric3Server implements Fabric3ServerMBean {
             } catch (MalformedURLException e) {
                 throw new InitializationException("Error loading extension", file.getName(), e);
             }
+        }
 
+        // create synthetic contributions from directories contained in /extensions
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
+                try {
+                    URI uri = URI.create("f3-" + file.getName());
+                    URL location = file.toURI().toURL();
+                    ContributionSource source = new SyntheticContributionSource(uri, location);
+                    sources.add(source);
+                } catch (MalformedURLException e) {
+                    throw new InitializationException(e);
+                }
+            }
         }
         return sources;
     }

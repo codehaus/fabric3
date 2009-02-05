@@ -36,8 +36,7 @@ public interface ContributionSource {
     boolean persist();
 
     /**
-     * Returns the identifier for this contribution or null if one has not been assigned (i.e. it is a new contribution
-     * and not an update).
+     * Returns the identifier for this contribution or null if one has not been assigned (i.e. it is a new contribution and not an update).
      *
      * @return the identifier for this contribution
      */
@@ -73,9 +72,10 @@ public interface ContributionSource {
     byte[] getChecksum();
 
 
-  /**
-   * Returns the content type of the source 
-   * @return
-   */
+    /**
+     * Returns the content type of the source.
+     *
+     * @return the content type of the source
+     */
     String getContentType();
 }
