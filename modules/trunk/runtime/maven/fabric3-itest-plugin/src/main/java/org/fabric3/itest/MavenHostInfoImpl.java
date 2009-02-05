@@ -67,8 +67,13 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         return tempDir;
     }
 
-    public boolean isOnline() {
-        throw new UnsupportedOperationException();
+    public File getDataDir() {
+        // use the temp directory as the data dir
+        return tempDir;
+    }
+
+    public Properties getHostProperties() {
+        return hostProperties;
     }
 
     public String getProperty(String name, String defaultValue) {

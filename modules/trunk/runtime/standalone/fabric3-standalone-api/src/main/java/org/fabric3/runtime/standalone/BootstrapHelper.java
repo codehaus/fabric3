@@ -213,6 +213,7 @@ public final class BootstrapHelper {
 
         File extensionsDir = getDirectory(baseDir, "extensions");
         File tempDir = getDirectory(baseDir, "tmp");
+        File dataDir = getDirectory(baseDir, "data");
 
         try {
 
@@ -225,7 +226,7 @@ public final class BootstrapHelper {
                 throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(runtimeMode, domain, baseDir, extensionsDir, configDir, modeConfigDir, props, tempDir);
+            return new StandaloneHostInfoImpl(runtimeMode, domain, baseDir, extensionsDir, configDir, modeConfigDir, props, tempDir, dataDir);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }

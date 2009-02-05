@@ -29,7 +29,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -48,22 +47,13 @@ import org.fabric3.spi.xml.XMLFactory;
 public class ContributionTracker implements ContributionServiceListener {
     private Map<URI, Contribution> contributions = new ConcurrentHashMap<URI, Contribution>();
     private XMLOutputFactory outputFactory;
-    private File repository;
     private File repositoryIndex;
     private ContributionTrackerMonitor monitor;
 
     public ContributionTracker(@Reference XMLFactory factory, @Reference HostInfo hostInfo, @Monitor ContributionTrackerMonitor monitor) {
         this.outputFactory = factory.newOutputFactoryInstance();
         this.monitor = monitor;
-        repository = new File(hostInfo.getBaseDir(), "repository");
-    }
-
-    @Init
-    public void init() throws IOException {
-        if (!repository.exists() || !repository.isDirectory() || !repository.canRead()) {
-            throw new IOException("The repository location is not a directory: " + repository);
-        }
-        repositoryIndex = new File(repository, "f3.xml");
+        repositoryIndex = new File(hostInfo.getDataDir(), "repository.xml");
     }
 
     public void onStore(Contribution contribution) {

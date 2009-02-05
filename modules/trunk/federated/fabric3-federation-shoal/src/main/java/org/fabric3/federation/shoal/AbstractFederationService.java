@@ -16,6 +16,7 @@
  */
 package org.fabric3.federation.shoal;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -127,6 +128,9 @@ public abstract class AbstractFederationService implements RuntimeService, Feder
         this.eventService = eventService;
         this.monitor = monitor;
         domainName = info.getDomain().getAuthority();
+        File outputDir = new File(info.getTempDir(), "shoal");
+        // set output to the tmp dir
+        System.setProperty("JXTA_HOME", outputDir.getPath());
     }
 
     @Init

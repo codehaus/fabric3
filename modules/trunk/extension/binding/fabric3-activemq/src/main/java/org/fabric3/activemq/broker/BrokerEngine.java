@@ -52,7 +52,8 @@ public class BrokerEngine {
     public BrokerEngine(@Reference HostInfo info) {
         tempDir = new File(info.getTempDir(), "activemq");
         // sets the directory where persistent messages are written
-        dataDir = new File(info.getBaseDir(), "activemq.data");
+        File baseDataDir = info.getDataDir();
+        dataDir = new File(baseDataDir, "activemq.data");
     }
 
     @Property(required = false)

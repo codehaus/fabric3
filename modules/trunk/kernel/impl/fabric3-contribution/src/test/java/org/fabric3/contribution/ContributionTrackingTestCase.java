@@ -39,7 +39,7 @@ import org.fabric3.spi.xml.XMLFactoryInstantiationException;
  * @version $Revision$ $Date$
  */
 public class ContributionTrackingTestCase extends TestCase {
-    private File repository;
+    private File data;
     private ContributionTracker tracker;
     private ContributionReplayer replayer;
     private ContributionService contributionService;
@@ -87,17 +87,16 @@ public class ContributionTrackingTestCase extends TestCase {
         };
         HostInfo info = EasyMock.createMock(HostInfo.class);
         File baseDir = new File(".");
-        repository = new File(baseDir, "repository");
-        repository.mkdir();
+        data = new File(baseDir, "data");
+        data.mkdir();
 
-        EasyMock.expect(info.getBaseDir()).andReturn(baseDir).atLeastOnce();
+        EasyMock.expect(info.getDataDir()).andReturn(baseDir).atLeastOnce();
         EasyMock.replay(info);
 
         // Setup and initialize the ContributionTracker
         ContributionTrackerMonitor trackerMonitor = EasyMock.createMock(ContributionTrackerMonitor.class);
         EasyMock.replay(trackerMonitor);
         tracker = new ContributionTracker(factory, info, trackerMonitor);
-        tracker.init();
 
         // Setup the MetaDataStore. The store operation should be called twice
         store = EasyMock.createMock(MetaDataStore.class);
@@ -121,7 +120,7 @@ public class ContributionTrackingTestCase extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        new File(repository, "f3.xml").delete();
-        repository.delete();
+        new File(data, "f3.xml").delete();
+        data.delete();
     }
 }

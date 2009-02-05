@@ -29,7 +29,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -46,7 +45,6 @@ import org.fabric3.spi.xml.XMLFactory;
 @EagerInit
 public class FSDomainTracker implements DomainListener {
     private static final String NO_PLAN = "";
-    private File repository;
     private File domainLog;
     private XMLOutputFactory outputFactory;
     private FSDomainTrackerMonitor monitor;
@@ -55,18 +53,9 @@ public class FSDomainTracker implements DomainListener {
     public FSDomainTracker(@Reference XMLFactory factory, @Reference HostInfo info, @Monitor FSDomainTrackerMonitor monitor) {
         this.monitor = monitor;
         this.outputFactory = factory.newOutputFactoryInstance();
-        this.repository = new File(info.getBaseDir(), "repository");
         this.deployables = new HashMap<QName, String>();
+        domainLog = new File(info.getDataDir(), "domain.xml");
     }
-
-    @Init
-    public void init() throws IOException {
-        if (!repository.exists() || !repository.isDirectory() || !repository.canRead()) {
-            throw new IOException("The journal location is not a directory: " + repository);
-        }
-        domainLog = new File(repository, "domain.xml");
-    }
-
 
     public void onInclude(QName included, String plan) {
         if (plan == null) {

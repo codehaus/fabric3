@@ -52,6 +52,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
     private final File extensionsDirectory;
     private final File configDirectory;
     private final File tempDirectory;
+    private File dataDirectory;
 
     /**
      * Constructor.
@@ -64,6 +65,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
      * @param modeConfigDir directory containing the standalone boot mode configuration
      * @param properties    properties for this runtime
      * @param tempDirectory the directory for writing temporary files
+     * @param dataDirectory the directory for writing persistent data that survives restarts
      */
     public StandaloneHostInfoImpl(RuntimeMode runtimeMode,
                                   URI domain,
@@ -72,7 +74,8 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
                                   File configDir,
                                   File modeConfigDir,
                                   Properties properties,
-                                  File tempDirectory) {
+                                  File tempDirectory,
+                                  File dataDirectory) {
         this.runtimeMode = runtimeMode;
         this.domain = domain;
         this.baseDir = baseDir;
@@ -81,6 +84,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
         this.modeConfigDirectory = modeConfigDir;
         this.properties = properties;
         this.tempDirectory = tempDirectory;
+        this.dataDirectory = dataDirectory;
     }
 
     public RuntimeMode getRuntimeMode() {
@@ -97,6 +101,10 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
 
     public File getTempDir() {
         return tempDirectory;
+    }
+
+    public File getDataDir() {
+        return dataDirectory;
     }
 
     public String getProperty(String name, String defaultValue) {

@@ -48,7 +48,7 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     private final ServletContext servletContext;
     private final URI domain;
     private final File baseDir;
-    private File tempDirectory;
+    private final File tempDirectory;
 
     public WebappHostInfoImpl(ServletContext servletContext, URI domain, File baseDir, File tempDirectory) {
         this.servletContext = servletContext;
@@ -66,6 +66,11 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     }
 
     public File getTempDir() {
+        return tempDirectory;
+    }
+
+    public File getDataDir() {
+        // use the temp directory
         return tempDirectory;
     }
 

@@ -78,8 +78,7 @@ public class ContributionReplayer implements Fabric3EventListener<RuntimeRecover
         this.eventService = eventService;
         this.monitor = monitor;
         this.inputFactory = xmlFactory.newInputFactoryInstance();
-        File repository = new File(hostInfo.getBaseDir(), "repository");
-        repositoryIndex = new File(repository, "f3.xml");
+        repositoryIndex = new File(hostInfo.getDataDir(), "repository.xml");
     }
 
     @Init

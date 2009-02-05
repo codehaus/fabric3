@@ -70,6 +70,11 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         return null;
     }
 
+    public File getDataDir() {
+        // use the temp directory
+        return tempDir;
+    }
+
     /**
      * Gets the URI of the domain.
      */

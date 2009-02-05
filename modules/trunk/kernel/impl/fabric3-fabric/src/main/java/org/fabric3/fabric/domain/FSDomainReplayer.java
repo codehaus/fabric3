@@ -75,8 +75,7 @@ public class FSDomainReplayer implements Fabric3EventListener<DomainRecover> {
         this.monitor = monitor;
         this.inputFactory = xmlFactory.newInputFactoryInstance();
         this.federated = hostInfo.getRuntimeMode() == RuntimeMode.CONTROLLER;
-        File repository = new File(hostInfo.getBaseDir(), "repository");
-        domainLog = new File(repository, "domain.xml");
+        domainLog = new File(hostInfo.getDataDir(), "domain.xml");
     }
 
     @Init

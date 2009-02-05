@@ -65,9 +65,16 @@ public interface HostInfo {
     /**
      * Gets the base directory for the runtime.
      *
-     * @return The base directory for the runtime or null if the runtime does not support persistent capabilities.
+     * @return The base directory for the runtime or null if the runtime does not support persistent capabilities
      */
     File getBaseDir();
+
+    /**
+     * Returns the directory where persistent data can be written.
+     *
+     * @return the directory where persistent data can be written or null if the runtime does not support persistent capabilities
+     */
+    File getDataDir();
 
     /**
      * Returns the temporary directory.
