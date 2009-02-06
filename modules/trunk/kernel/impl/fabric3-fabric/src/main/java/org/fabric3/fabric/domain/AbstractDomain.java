@@ -394,9 +394,9 @@ public abstract class AbstractDomain implements Domain {
             if (transactional) {
                 domain = CopyUtil.copy(domain);
             }
-            InstantiationContext change = logicalModelInstantiator.include(domain, composite);
-            if (change.hasErrors()) {
-                throw new AssemblyException(change.getErrors());
+            InstantiationContext context = logicalModelInstantiator.include(domain, composite);
+            if (context.hasErrors()) {
+                throw new AssemblyException(context.getErrors());
             }
             allocateAndDeploy(domain, plans);
         } catch (DeploymentException e) {
@@ -504,7 +504,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     /**
-     * Marks all components, wires, and bindings that are part of a change as provisioned.
+     * Marks all components, wires, and bindings that are part of a context as provisioned.
      *
      * @param composite the root composite to traverse
      */
