@@ -61,7 +61,6 @@ public class WireInstantiatorImpl implements WireInstantiator {
             // create the wire
             LogicalWire wire = new LogicalWire(parent, logicalReference, targetUri);
             parent.addWire(logicalReference, wire);
-            change.addWire(wire);
         }
     }
 

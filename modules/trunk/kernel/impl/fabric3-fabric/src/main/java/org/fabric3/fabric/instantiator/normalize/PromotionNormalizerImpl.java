@@ -22,7 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.PromotionNormalizer;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.spi.model.instance.Bindable;
@@ -41,9 +40,9 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class PromotionNormalizerImpl implements PromotionNormalizer {
 
-    public void normalize(LogicalComponent<?> component, LogicalChange change) {
+    public void normalize(LogicalComponent<?> component) {
         normalizeServiceBindings(component);
-        normalizeReferenceBindings(component, change);
+        normalizeReferenceBindings(component);
     }
 
     private void normalizeServiceBindings(LogicalComponent<?> component) {
@@ -109,7 +108,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
         return bindings;
     }
 
-    private void normalizeReferenceBindings(LogicalComponent<?> component, LogicalChange change) {
+    private void normalizeReferenceBindings(LogicalComponent<?> component) {
         LogicalComponent<CompositeImplementation> parent = component.getParent();
         for (LogicalReference reference : component.getReferences()) {
             URI referenceUri = reference.getUri();
@@ -134,7 +133,6 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             if (!targets.isEmpty()) {
                 for (URI targetUri : targets) {
                     LogicalWire wire = new LogicalWire(parent, reference, targetUri);
-                    change.addWire(wire);
                     wires.add(wire);
                 }
                 ((LogicalCompositeComponent) parent).overrideWires(reference, wires);

@@ -67,7 +67,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
 
             Autowire autowire = calculateAutowire(compositeComponent, component);
             if (autowire == Autowire.ON) {
-                resolveByType(compositeComponent, component, logicalReference, requiredContract, change);
+                resolveByType(compositeComponent, component, logicalReference, requiredContract);
             }
 
         } else {
@@ -80,9 +80,9 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
             if (componentReference.isAutowire()) {
                 ReferenceDefinition referenceDefinition = logicalReference.getDefinition();
                 ServiceContract<?> requiredContract = referenceDefinition.getServiceContract();
-                boolean resolved = resolveByType(component.getParent(), component, logicalReference, requiredContract, change);
+                boolean resolved = resolveByType(component.getParent(), component, logicalReference, requiredContract);
                 if (!resolved) {
-                    resolveByType(compositeComponent, component, logicalReference, requiredContract, change);
+                    resolveByType(compositeComponent, component, logicalReference, requiredContract);
                 }
             }
         }
@@ -158,14 +158,12 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
      * @param component        the component containing the reference
      * @param logicalReference the logical reference
      * @param contract         the contract to match against
-     * @param change           the chnage set
      * @return true if the reference has been resolved.
      */
     private boolean resolveByType(LogicalCompositeComponent composite,
                                   LogicalComponent<?> component,
                                   LogicalReference logicalReference,
-                                  ServiceContract<?> contract,
-                                  LogicalChange change) {
+                                  ServiceContract<?> contract) {
 
         List<URI> candidates = new ArrayList<URI>();
         Multiplicity refMultiplicity = logicalReference.getDefinition().getMultiplicity();
@@ -203,8 +201,6 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
             } else {
                 ((LogicalCompositeComponent) parent).addWire(logicalReference, wire);
             }
-            // end remove
-            change.addWire(wire);
 
         }
 

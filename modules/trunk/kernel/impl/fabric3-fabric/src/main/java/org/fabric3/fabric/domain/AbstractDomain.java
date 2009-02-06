@@ -192,7 +192,7 @@ public abstract class AbstractDomain implements Domain {
                 throw new AssemblyException(change.getErrors());
             }
 
-            allocateAndDeploy(domain, plans, change);
+            allocateAndDeploy(domain, plans);
 
             // notify listeners
             for (int i = 0; i < deployables.size(); i++) {
@@ -307,7 +307,7 @@ public abstract class AbstractDomain implements Domain {
 
             // Select bindings
             selectBinding(components);
-            markAsProvisioned(change);
+            markAsProvisioned(domain);
             logicalComponentManager.replaceRootComponent(domain);
 
         } catch (AllocationException e) {
@@ -398,7 +398,7 @@ public abstract class AbstractDomain implements Domain {
             if (change.hasErrors()) {
                 throw new AssemblyException(change.getErrors());
             }
-            allocateAndDeploy(domain, plans, change);
+            allocateAndDeploy(domain, plans);
         } catch (DeploymentException e) {
             // release the contribution lock if there was an error
             if (contribution != null && contribution.getLockOwners().contains(name)) {
@@ -470,10 +470,9 @@ public abstract class AbstractDomain implements Domain {
      *
      * @param domain the domain component
      * @param plans  the deployment plans to use for deployment
-     * @param change the logical change
      * @throws DeploymentException if an error is encountered during deployment
      */
-    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans, LogicalChange change)
+    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans)
             throws DeploymentException {
         Collection<LogicalComponent<?>> components = domain.getComponents();
         // Allocate the components to runtime nodes
@@ -497,7 +496,7 @@ public abstract class AbstractDomain implements Domain {
 
         try {
             // TODO this should happen after nodes have deployed the components and wires
-            markAsProvisioned(change);
+            markAsProvisioned(domain);
             logicalComponentManager.replaceRootComponent(domain);
         } catch (WriteException e) {
             throw new DeploymentException("Error applying deployment", e);
@@ -507,30 +506,35 @@ public abstract class AbstractDomain implements Domain {
     /**
      * Marks all components, wires, and bindings that are part of a change as provisioned.
      *
-     * @param change the logical change
+     * @param composite the root composite to traverse
      */
-    private void markAsProvisioned(LogicalChange change) {
-        for (LogicalComponent<?> component : change.getAddedComponents()) {
-            component.setState(LogicalState.PROVISIONED);
-        }
-        for (LogicalReference reference : change.getAddedReferences()) {
-            for (LogicalBinding<?> binding : reference.getBindings()) {
-                binding.setState(LogicalState.PROVISIONED);
-            }
-            for (LogicalBinding<?> binding : reference.getCallbackBindings()) {
-                binding.setState(LogicalState.PROVISIONED);
+    private void markAsProvisioned(LogicalCompositeComponent composite) {
+        for (LogicalComponent<?> component : composite.getComponents()) {
+            if (LogicalState.NEW == component.getState()) {
+                if (component instanceof LogicalCompositeComponent) {
+                    markAsProvisioned((LogicalCompositeComponent) component);
+                }
+                component.setState(LogicalState.PROVISIONED);
             }
         }
-        for (LogicalWire wire : change.getAddedWires()) {
-            wire.setState(LogicalState.PROVISIONED);
-        }
-
-        for (LogicalService service : change.getAddedServices()) {
+        for (LogicalService service : composite.getServices()) {
             for (LogicalBinding<?> binding : service.getBindings()) {
-                binding.setState(LogicalState.PROVISIONED);
+                if (LogicalState.NEW == binding.getState()) {
+                    binding.setState(LogicalState.PROVISIONED);
+                }
             }
-            for (LogicalBinding<?> binding : service.getCallbackBindings()) {
-                binding.setState(LogicalState.PROVISIONED);
+        }
+        for (LogicalReference reference : composite.getReferences()) {
+            for (LogicalBinding<?> binding : reference.getBindings()) {
+                if (LogicalState.NEW == binding.getState()) {
+                    binding.setState(LogicalState.PROVISIONED);
+                }
+            }
+            for (LogicalWire wire : composite.getWires(reference)) {
+                if (LogicalState.NEW == wire.getState()) {
+                    wire.setState(LogicalState.PROVISIONED);
+                }
+
             }
         }
     }

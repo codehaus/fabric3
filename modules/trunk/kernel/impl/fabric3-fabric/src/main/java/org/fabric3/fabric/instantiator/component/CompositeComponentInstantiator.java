@@ -86,7 +86,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         initializeProperties(component, definition, change);
         instantiateChildComponents(component, properties, composite, change);
         instantiateCompositeServices(component, composite);
-        instantiateCompositeReferences(parent, component, composite, change);
+        instantiateCompositeReferences(parent, component, composite);
         wireInstantiator.instantiateWires(composite, component, change);
         return component;
 
@@ -154,8 +154,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
     private void instantiateCompositeReferences(LogicalCompositeComponent parent,
                                                 LogicalCompositeComponent component,
-                                                Composite composite,
-                                                LogicalChange change) {
+                                                Composite composite) {
 
         ComponentDefinition<CompositeImplementation> definition = component.getDefinition();
         String uriBase = component.getUri().toString() + "/";
@@ -208,14 +207,12 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                     if (null != grandParent) {
                         for (URI targetUri : targets) {
                             LogicalWire wire = new LogicalWire(grandParent, logicalReference, targetUri);
-                            change.addWire(wire);
                             wires.add(wire);
                         }
                         grandParent.overrideWires(logicalReference, wires);
                     } else {
                         for (URI targetUri : targets) {
                             LogicalWire wire = new LogicalWire(parent, logicalReference, targetUri);
-                            change.addWire(wire);
                             wires.add(wire);
                         }
                         parent.overrideWires(logicalReference, wires);

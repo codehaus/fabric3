@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
@@ -33,10 +32,15 @@ import org.fabric3.spi.model.instance.LogicalState;
  */
 public class CollectorImpl implements Collector {
 
-    public LogicalChange mark(QName deployable, LogicalCompositeComponent composite) {
-        LogicalChange change = new LogicalChange(composite);
-        mark(deployable, composite, change);
-        return change;
+    public void mark(QName deployable, LogicalCompositeComponent composite) {
+        for (LogicalComponent<?> component : composite.getComponents()) {
+            if (deployable.equals(component.getDeployable())) {
+                if (component instanceof LogicalCompositeComponent) {
+                    mark(deployable, (LogicalCompositeComponent) component);
+                }
+                component.setState(LogicalState.MARKED);
+            }
+        }
     }
 
     public void collect(LogicalCompositeComponent composite) {
@@ -50,26 +54,6 @@ public class CollectorImpl implements Collector {
         for (URI uri : remove) {
             composite.removeComponent(uri);
         }
-    }
-
-    /**
-     * Iterates through the components and their children belonging to the deployable and marks them for removal.
-     *
-     * @param deployable the deployable being undeployed
-     * @param composite  the root composite, typically the domain component
-     * @param change     the change set to update
-     */
-    private void mark(QName deployable, LogicalCompositeComponent composite, LogicalChange change) {
-        for (LogicalComponent<?> component : composite.getComponents()) {
-            if (deployable.equals(component.getDeployable())) {
-                if (component instanceof LogicalCompositeComponent) {
-                    mark(deployable, (LogicalCompositeComponent) component, change);
-                }
-                component.setState(LogicalState.MARKED);
-                change.removeComponent(component);
-            }
-        }
-
     }
 
 }

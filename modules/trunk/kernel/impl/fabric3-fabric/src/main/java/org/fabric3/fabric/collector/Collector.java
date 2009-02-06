@@ -18,7 +18,6 @@ package org.fabric3.fabric.collector;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
@@ -33,9 +32,8 @@ public interface Collector {
      *
      * @param deployable the deployable being undeployed
      * @param composite  the composite containing components to be undeployed
-     * @return the LogicalChange representing chnages to the demain effected by the undeployment operation
      */
-    LogicalChange mark(QName deployable, LogicalCompositeComponent composite);
+    void mark(QName deployable, LogicalCompositeComponent composite);
 
     /**
      * Recursively collects marked components by removing from the given composite.

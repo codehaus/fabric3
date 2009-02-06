@@ -86,14 +86,12 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         if (null != grandParent) {
             for (URI targetUri : targets) {
                 LogicalWire wire = new LogicalWire(grandParent, logicalReference, targetUri);
-                change.addWire(wire);
                 wires.add(wire);
             }
             grandParent.overrideWires(logicalReference, wires);
         } else {
             for (URI targetUri : targets) {
                 LogicalWire wire = new LogicalWire(parent, logicalReference, targetUri);
-                change.addWire(wire);
                 wires.add(wire);
             }
             ((LogicalCompositeComponent) parent).overrideWires(logicalReference, wires);

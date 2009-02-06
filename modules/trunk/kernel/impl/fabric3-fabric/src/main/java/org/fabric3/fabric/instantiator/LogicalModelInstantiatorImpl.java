@@ -105,7 +105,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
         // normalize bindings for each new component
         for (LogicalComponent<?> component : newComponents) {
-            normalize(component, change);
+            normalize(component);
         }
         return change;
     }
@@ -119,7 +119,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
                 DuplicateProperty error = new DuplicateProperty(name, parent.getUri(), parent.getDefinition().getContributionUri());
                 change.addError(error);
             } else {
-                change.addProperty(name, property.getDefaultValue());
                 parent.setPropertyValue(name, property.getDefaultValue());
             }
         }
@@ -139,7 +138,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             setDeployable(logicalComponent, composite.getName());
             newComponents.add(logicalComponent);
             parent.addComponent(logicalComponent);
-            change.addComponent(logicalComponent);
         }
         for (Include include : composite.getIncludes().values()) {
             // xcv FIXME need to recurse down included hierarchy
@@ -156,7 +154,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
                 }
                 newComponents.add(logicalComponent);
                 parent.addComponent(logicalComponent);
-                change.addComponent(logicalComponent);
             }
         }
         return newComponents;
@@ -197,7 +194,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             }
             services.add(logicalService);
             parent.addService(logicalService);
-            change.addService(logicalService);
         }
         return services;
 
@@ -223,7 +219,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             }
             references.add(logicalReference);
             parent.addReference(logicalReference);
-            change.addReference(logicalReference);
         }
         return references;
 
@@ -256,16 +251,15 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
      * Normalizes the component and any children
      *
      * @param component the component to normalize
-     * @param change    the logical change associated with the normalize operation
      */
-    private void normalize(LogicalComponent<?> component, LogicalChange change) {
+    private void normalize(LogicalComponent<?> component) {
         if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : composite.getComponents()) {
-                normalize(child, change);
+                normalize(child);
             }
         } else {
-            promotionNormalizer.normalize(component, change);
+            promotionNormalizer.normalize(component);
         }
 
     }

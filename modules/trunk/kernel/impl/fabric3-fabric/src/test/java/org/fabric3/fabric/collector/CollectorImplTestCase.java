@@ -21,7 +21,6 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -61,14 +60,12 @@ public class CollectorImplTestCase extends TestCase {
         domain.addComponent(child2);
         domain.addComponent(childComposite);
 
-        LogicalChange change = collector.mark(DEPLOYABLE, domain);
+        collector.mark(DEPLOYABLE, domain);
 
         assertEquals(LogicalState.MARKED, childComposite.getState());
         assertEquals(LogicalState.MARKED, child1.getState());
         assertEquals(LogicalState.MARKED, child3.getState());
         assertEquals(LogicalState.PROVISIONED, child2.getState());
-
-        assertEquals(3, change.getDeletedComponents().size());
 
         collector.collect(domain);
 

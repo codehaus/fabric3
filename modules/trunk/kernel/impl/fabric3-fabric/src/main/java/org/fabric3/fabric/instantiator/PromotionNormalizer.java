@@ -30,8 +30,7 @@ public interface PromotionNormalizer {
      * will be walked to determine the set of promoted services and references.
      *
      * @param component the leaf component
-     * @param change    the logical change to update
      */
-    void normalize(LogicalComponent<?> component, LogicalChange change);
+    void normalize(LogicalComponent<?> component);
 
 }
