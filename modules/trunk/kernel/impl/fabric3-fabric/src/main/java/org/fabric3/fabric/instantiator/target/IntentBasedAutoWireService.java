@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.instantiator.target;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -28,7 +28,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
  */
 public class IntentBasedAutoWireService implements TargetResolutionService {
 
-    public void resolve(LogicalReference reference, LogicalCompositeComponent component, LogicalChange change) {
+    public void resolve(LogicalReference reference, LogicalCompositeComponent component, InstantiationContext context) {
     }
 
 }

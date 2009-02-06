@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Implementation;
@@ -127,7 +127,7 @@ public class AssemblyPropertyTestCase extends TestCase {
             public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                                  Map<String, Document> properties,
                                                                                  ComponentDefinition<I> definition,
-                                                                                 LogicalChange change) {
+                                                                                 InstantiationContext context) {
                 return null;
             }
         };

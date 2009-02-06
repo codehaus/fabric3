@@ -76,48 +76,48 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     @SuppressWarnings("unchecked")
-    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) {
+    public InstantiationContext include(LogicalCompositeComponent targetComposite, Composite composite) {
         return include(targetComposite, composite, false);
     }
 
-    public LogicalChange include(LogicalCompositeComponent targetComposite, List<Composite> composites) {
+    public InstantiationContext include(LogicalCompositeComponent targetComposite, List<Composite> composites) {
         Composite composite = synthesizeComposite(composites);
         return include(targetComposite, composite, true);
     }
 
-    private LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite, boolean synthetic) {
+    private InstantiationContext include(LogicalCompositeComponent targetComposite, Composite composite, boolean synthetic) {
 
-        LogicalChange change = new LogicalChange(targetComposite);
+        InstantiationContext context = new InstantiationContext(targetComposite);
 
         // merge the property values into the parent
-        Map<String, Document> properties = includeProperties(composite, change);
+        Map<String, Document> properties = includeProperties(composite, context);
 
         // instantiate all the components in the composite and add them to the parent
-        List<LogicalComponent<?>> newComponents = instantiateComponents(properties, composite, change, synthetic);
-        List<LogicalService> services = instantiateServices(composite, change);
-        List<LogicalReference> references = instantiateReferences(composite, change);
+        List<LogicalComponent<?>> newComponents = instantiateComponents(properties, composite, synthetic, context);
+        List<LogicalService> services = instantiateServices(composite, context);
+        List<LogicalReference> references = instantiateReferences(composite, context);
 
         // explicit wires must be instantiated after the services have been merged
-        wireInstantiator.instantiateWires(composite, change.getParent(), change);
+        wireInstantiator.instantiateWires(composite, context.getParent(), context);
 
         // resolve services and references
-        resolve(targetComposite.getComponents(), services, references, change);
+        resolve(targetComposite.getComponents(), services, references, context);
 
         // normalize bindings for each new component
         for (LogicalComponent<?> component : newComponents) {
             normalize(component);
         }
-        return change;
+        return context;
     }
 
 
-    private Map<String, Document> includeProperties(Composite composite, LogicalChange change) {
-        LogicalCompositeComponent parent = change.getParent();
+    private Map<String, Document> includeProperties(Composite composite, InstantiationContext context) {
+        LogicalCompositeComponent parent = context.getParent();
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
                 DuplicateProperty error = new DuplicateProperty(name, parent.getUri(), parent.getDefinition().getContributionUri());
-                change.addError(error);
+                context.addError(error);
             } else {
                 parent.setPropertyValue(name, property.getDefaultValue());
             }
@@ -127,13 +127,13 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     private List<LogicalComponent<?>> instantiateComponents(Map<String, Document> properties,
                                                             Composite composite,
-                                                            LogicalChange change,
-                                                            boolean synthetic) {
-        LogicalCompositeComponent parent = change.getParent();
+                                                            boolean synthetic,
+                                                            InstantiationContext context) {
+        LogicalCompositeComponent parent = context.getParent();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getDeclaredComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
-            LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition, change);
+            LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition, context);
             setAutowire(composite, definition, logicalComponent);
             setDeployable(logicalComponent, composite.getName());
             newComponents.add(logicalComponent);
@@ -142,7 +142,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         for (Include include : composite.getIncludes().values()) {
             // xcv FIXME need to recurse down included hierarchy
             for (ComponentDefinition<? extends Implementation<?>> definition : include.getIncluded().getComponents().values()) {
-                LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition, change);
+                LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition, context);
                 setAutowire(composite, definition, logicalComponent);
                 if (synthetic) {
                     // If it is a synthetic composite, included composites are the deployables.
@@ -163,19 +163,19 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private LogicalComponent<?> instantiate(LogicalCompositeComponent parent,
                                             Map<String, Document> properties,
                                             ComponentDefinition<?> definition,
-                                            LogicalChange change) {
+                                            InstantiationContext context) {
 
         if (definition.getImplementation().isComposite()) {
             ComponentDefinition<CompositeImplementation> componentDefinition = (ComponentDefinition<CompositeImplementation>) definition;
-            return compositeComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
+            return compositeComponentInstantiator.instantiate(parent, properties, componentDefinition, context);
         } else {
             ComponentDefinition<Implementation<?>> componentDefinition = (ComponentDefinition<Implementation<?>>) definition;
-            return atomicComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
+            return atomicComponentInstantiator.instantiate(parent, properties, componentDefinition, context);
         }
     }
 
-    private List<LogicalService> instantiateServices(Composite composite, LogicalChange change) {
-        LogicalCompositeComponent parent = change.getParent();
+    private List<LogicalService> instantiateServices(Composite composite, InstantiationContext context) {
+        LogicalCompositeComponent parent = context.getParent();
         String base = parent.getUri().toString();
         List<LogicalService> services = new ArrayList<LogicalService>();
         // merge the composite service declarations into the parent
@@ -199,8 +199,8 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
-    private List<LogicalReference> instantiateReferences(Composite composite, LogicalChange change) {
-        LogicalCompositeComponent parent = change.getParent();
+    private List<LogicalReference> instantiateReferences(Composite composite, InstantiationContext context) {
+        LogicalCompositeComponent parent = context.getParent();
         String base = parent.getUri().toString();
         // merge the composite reference definitions into the parent
         List<LogicalReference> references = new ArrayList<LogicalReference>(composite.getReferences().size());
@@ -228,21 +228,21 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private void resolve(Collection<LogicalComponent<?>> components,
                          List<LogicalService> services,
                          List<LogicalReference> references,
-                         LogicalChange change) {
+                         InstantiationContext context) {
 
         // resolve composite services merged into the domain
         for (LogicalService service : services) {
-            resolutionService.resolve(service, change);
+            resolutionService.resolve(service, context);
         }
 
         // resove composite references merged into the domain
         for (LogicalReference reference : references) {
-            resolutionService.resolve(reference, logicalComponentManager.getRootComponent(), change);
+            resolutionService.resolve(reference, logicalComponentManager.getRootComponent(), context);
         }
 
         // resolve wires for each new component
         for (LogicalComponent<?> component : components) {
-            resolutionService.resolve(component, change);
+            resolutionService.resolve(component, context);
         }
 
     }

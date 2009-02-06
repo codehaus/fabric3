@@ -36,10 +36,9 @@ public interface PromotionResolutionService {
      * the promoted service.
      *
      * @param logicalService Logical service whose promotion is handled.
-     * @param change         the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
-     *                       warnings should be reported here.
+     * @param context        the instantiation context. Recoverable errors and warnings should be reported here.
      */
-    void resolve(LogicalService logicalService, LogicalChange change);
+    void resolve(LogicalService logicalService, InstantiationContext context);
 
     /**
      * Handles all promotions on the specified logical reference.
@@ -50,9 +49,8 @@ public interface PromotionResolutionService {
      * set to the URI of the promoted reference.
      *
      * @param logicalReference Logical reference whose promotion is handled.
-     * @param change           the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
-     *                         warnings should be reported here.
+     * @param context          the instantiation context. Recoverable errors and warnings should be reported here.
      */
-    void resolve(LogicalReference logicalReference, LogicalChange change);
+    void resolve(LogicalReference logicalReference, InstantiationContext context);
 
 }

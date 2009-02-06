@@ -18,7 +18,7 @@ package org.fabric3.fabric.instantiator.component;
 
 import java.net.URI;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.WireInstantiator;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.WireDefinition;
@@ -36,7 +36,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class WireInstantiatorImpl implements WireInstantiator {
 
-    public void instantiateWires(Composite composite, LogicalCompositeComponent parent, LogicalChange change) {
+    public void instantiateWires(Composite composite, LogicalCompositeComponent parent, InstantiationContext context) {
         String baseUri = parent.getUri().toString();
         // instantiate wires held directly in the composite and in included composites
         for (WireDefinition definition : composite.getWires()) {
@@ -44,7 +44,7 @@ public class WireInstantiatorImpl implements WireInstantiator {
             // source URI is relative to the parent composite the include is targeted to
             URI sourceUri = URI.create(baseUri + "/" + UriHelper.getDefragmentedName(definition.getSource()));
             String referenceName = definition.getSource().getFragment();
-            LogicalReference logicalReference = resolveLogicalReference(referenceName, sourceUri, parent, change);
+            LogicalReference logicalReference = resolveLogicalReference(referenceName, sourceUri, parent, context);
             if (logicalReference == null) {
                 // error resolving, continue
                 continue;
@@ -52,7 +52,7 @@ public class WireInstantiatorImpl implements WireInstantiator {
 
             // resolve the target service
             URI targetUri = URI.create(baseUri + "/" + definition.getTarget());
-            targetUri = resolveTargetUri(targetUri, parent, change);
+            targetUri = resolveTargetUri(targetUri, parent, context);
             if (targetUri == null) {
                 // error resolving
                 continue;
@@ -64,13 +64,16 @@ public class WireInstantiatorImpl implements WireInstantiator {
         }
     }
 
-    private LogicalReference resolveLogicalReference(String referenceName, URI sourceUri, LogicalCompositeComponent parent, LogicalChange change) {
+    private LogicalReference resolveLogicalReference(String referenceName,
+                                                     URI sourceUri,
+                                                     LogicalCompositeComponent parent,
+                                                     InstantiationContext context) {
         LogicalComponent<?> source = parent.getComponent(sourceUri);
         if (source == null) {
             URI uri = parent.getUri();
             URI contributionUri = parent.getDefinition().getContributionUri();
             WireSourceNotFound error = new WireSourceNotFound(sourceUri, uri, contributionUri);
-            change.addError(error);
+            context.addError(error);
             return null;
         }
         LogicalReference logicalReference;
@@ -80,13 +83,13 @@ public class WireInstantiatorImpl implements WireInstantiator {
                 URI uri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 WireSourceNoReference error = new WireSourceNoReference(sourceUri, uri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return null;
             } else if (source.getReferences().size() != 1) {
                 URI uri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 WireSourceAmbiguousReference error = new WireSourceAmbiguousReference(sourceUri, uri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return null;
             }
             // default to the only reference
@@ -97,7 +100,7 @@ public class WireInstantiatorImpl implements WireInstantiator {
                 URI uri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 WireSourceReferenceNotFound error = new WireSourceReferenceNotFound(sourceUri, referenceName, uri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return null;
             }
         }
@@ -109,17 +112,17 @@ public class WireInstantiatorImpl implements WireInstantiator {
      *
      * @param targetUri the atrget URI to resolve.
      * @param parent    the parent composite to resolve against
-     * @param change    the logical change to report errors against
+     * @param context   the logical context to report errors against
      * @return the fully resolved wire target URI
      */
-    private URI resolveTargetUri(URI targetUri, LogicalCompositeComponent parent, LogicalChange change) {
+    private URI resolveTargetUri(URI targetUri, LogicalCompositeComponent parent, InstantiationContext context) {
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = parent.getComponent(targetComponentUri);
         if (targetComponent == null) {
             URI uri = parent.getUri();
             URI contributionUri = parent.getDefinition().getContributionUri();
             WireTargetNotFound error = new WireTargetNotFound(targetUri, uri, contributionUri);
-            change.addError(error);
+            context.addError(error);
             return null;
         }
 
@@ -129,7 +132,7 @@ public class WireInstantiatorImpl implements WireInstantiator {
                 URI uri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 WireTargetServiceNotFound error = new WireTargetServiceNotFound(targetUri, uri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return null;
             }
             return targetUri;
@@ -143,7 +146,7 @@ public class WireInstantiatorImpl implements WireInstantiator {
                     URI uri = parent.getUri();
                     URI contributionUri = parent.getDefinition().getContributionUri();
                     AmbiguousWireTargetService error = new AmbiguousWireTargetService(uri, targetUri, contributionUri);
-                    change.addError(error);
+                    context.addError(error);
                     return null;
                 }
                 target = service;
@@ -152,7 +155,7 @@ public class WireInstantiatorImpl implements WireInstantiator {
                 URI uri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 WireTargetNoService error = new WireTargetNoService(targetUri, uri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return null;
             }
             return target.getUri();

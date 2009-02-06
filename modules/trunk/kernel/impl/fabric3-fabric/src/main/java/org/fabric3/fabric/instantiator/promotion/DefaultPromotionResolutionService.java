@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.fabric3.fabric.instantiator.AmbiguousReference;
 import org.fabric3.fabric.instantiator.AmbiguousService;
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFound;
 import org.fabric3.fabric.instantiator.PromotionResolutionService;
@@ -41,7 +41,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class DefaultPromotionResolutionService implements PromotionResolutionService {
 
-    public void resolve(LogicalService logicalService, LogicalChange change) {
+    public void resolve(LogicalService logicalService, InstantiationContext context) {
 
         URI promotedUri = logicalService.getPromotedUri();
 
@@ -61,7 +61,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
             URI serviceUri = logicalService.getUri();
             URI contributionUri = parent.getDefinition().getContributionUri();
             PromotedComponentNotFound error = new PromotedComponentNotFound(serviceUri, promotedComponentUri, componentUri, contributionUri);
-            change.addError(error);
+            context.addError(error);
             return;
         }
 
@@ -73,7 +73,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 String msg = "No services available on component: " + promotedComponentUri;
                 NoServiceOnComponent error = new NoServiceOnComponent(msg, componentUri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return;
             } else if (componentServices.size() != 1) {
                 String msg = "The promoted service " + logicalService.getUri() + " must explicitly specify the service it is promoting on component "
@@ -82,7 +82,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                 URI componentUri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 AmbiguousService error = new AmbiguousService(msg, componentUri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return;
             }
             logicalService.setPromotedUri(componentServices.iterator().next().getUri());
@@ -94,13 +94,13 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                 URI contributionUri = logicalService.getParent().getDefinition().getContributionUri();
                 URI serviceUri = logicalService.getUri();
                 ServiceNotFound error = new ServiceNotFound(message, serviceUri, componentUri, contributionUri);
-                change.addError(error);
+                context.addError(error);
             }
         }
 
     }
 
-    public void resolve(LogicalReference logicalReference, LogicalChange change) {
+    public void resolve(LogicalReference logicalReference, InstantiationContext context) {
 
         List<URI> promotedUris = logicalReference.getPromotedUris();
 
@@ -119,7 +119,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                 URI referenceUri = logicalReference.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 PromotedComponentNotFound error = new PromotedComponentNotFound(referenceUri, promotedComponentUri, componentUri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return;
             }
 
@@ -130,13 +130,13 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                     URI componentUri = parent.getUri();
                     URI contributionUri = parent.getDefinition().getContributionUri();
                     ReferenceNotFound error = new ReferenceNotFound(msg, promotedReferenceName, componentUri, contributionUri);
-                    change.addError(error);
+                    context.addError(error);
                     return;
                 } else if (componentReferences.size() > 1) {
                     URI referenceUri = logicalReference.getUri();
                     URI contributionUri = parent.getDefinition().getContributionUri();
                     AmbiguousReference error = new AmbiguousReference(referenceUri, parent.getUri(), promotedComponentUri, contributionUri);
-                    change.addError(error);
+                    context.addError(error);
                     return;
                 }
                 logicalReference.setPromotedUri(i, componentReferences.iterator().next().getUri());
@@ -145,7 +145,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                 URI componentUri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 ReferenceNotFound error = new ReferenceNotFound(msg, promotedReferenceName, componentUri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return;
             }
 

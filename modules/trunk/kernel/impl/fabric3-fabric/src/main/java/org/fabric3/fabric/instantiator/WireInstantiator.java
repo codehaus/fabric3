@@ -31,8 +31,8 @@ public interface WireInstantiator {
      *
      * @param composite the composite
      * @param parent    the logical composite where the wires will be added
-     * @param change    the current logical change set.
+     * @param context   the instantiation context. Recoverable errors and warnings should be reported here.
      */
-    void instantiateWires(Composite composite, LogicalCompositeComponent parent, LogicalChange change);
+    void instantiateWires(Composite composite, LogicalCompositeComponent parent, InstantiationContext context);
 
 }

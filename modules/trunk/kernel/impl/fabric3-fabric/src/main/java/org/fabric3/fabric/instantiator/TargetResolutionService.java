@@ -32,8 +32,8 @@ public interface TargetResolutionService {
      *
      * @param reference Logical reference whose target needs to be resolved.
      * @param component Composite component within which the targets are resolved.
-     * @param change    the logical change the resolution is performed for. Errors and warnings are reported here.
+     * @param context   the instantiation context. Recoverable errors and warnings should be reported here.
      */
-    void resolve(LogicalReference reference, LogicalCompositeComponent component, LogicalChange change);
+    void resolve(LogicalReference reference, LogicalCompositeComponent component, InstantiationContext context);
 
 }

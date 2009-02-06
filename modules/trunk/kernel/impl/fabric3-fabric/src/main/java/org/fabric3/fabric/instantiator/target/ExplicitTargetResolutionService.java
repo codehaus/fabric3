@@ -25,7 +25,7 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.AmbiguousService;
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.fabric.instantiator.TargetResolutionService;
@@ -50,7 +50,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         this.contractResolver = contractResolver;
     }
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent component, LogicalChange change) {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent component, InstantiationContext context) {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
@@ -71,7 +71,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         List<URI> targets = new ArrayList<URI>();
         for (URI requestedTarget : requestedTargets) {
             URI resolved = parentUri.resolve(componentUri).resolve(requestedTarget);
-            URI targetURI = resolveByUri(logicalReference, resolved, component, change);
+            URI targetURI = resolveByUri(logicalReference, resolved, component, context);
             if (targetURI == null) {
                 return;
             }
@@ -100,7 +100,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         logicalReference.setResolved(true);
     }
 
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, LogicalChange change) {
+    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, InstantiationContext context) {
 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
@@ -109,7 +109,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             URI componentUri = reference.getParent().getUri();
             URI contributionUri = reference.getParent().getDefinition().getContributionUri();
             TargetComponentNotFound error = new TargetComponentNotFound(referenceUri, targetComponentUri, componentUri, contributionUri);
-            change.addError(error);
+            context.addError(error);
             return null;
         }
 
@@ -123,7 +123,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                 String msg = "The service " + serviceName + " targeted from the reference " + uri + " is not found on component " + name;
                 URI componentUri = reference.getParent().getUri();
                 ServiceNotFound error = new ServiceNotFound(msg, uri, componentUri, targetComponentUri);
-                change.addError(error);
+                context.addError(error);
                 return null;
             }
         } else {
@@ -138,7 +138,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                     URI componentUri = parent.getUri();
                     URI contributionUri = parent.getDefinition().getContributionUri();
                     AmbiguousService error = new AmbiguousService(msg, componentUri, contributionUri);
-                    change.addError(error);
+                    context.addError(error);
                     return null;
                 }
                 targetService = service;
@@ -149,11 +149,11 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                 URI componentUri = parent.getUri();
                 URI contributionUri = parent.getDefinition().getContributionUri();
                 NoServiceOnComponent error = new NoServiceOnComponent(msg, componentUri, contributionUri);
-                change.addError(error);
+                context.addError(error);
                 return null;
             }
         }
-        validateContracts(reference, targetService, change);
+        validateContracts(reference, targetService, context);
         return targetService.getUri();
     }
 
@@ -162,9 +162,9 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
      *
      * @param reference the reference
      * @param service   the service
-     * @param change    the logical change
+     * @param context    the logical context
      */
-    private void validateContracts(LogicalReference reference, LogicalService service, LogicalChange change) {
+    private void validateContracts(LogicalReference reference, LogicalService service, InstantiationContext context) {
         ServiceContract<?> referenceContract = contractResolver.determineContract(reference);
         ServiceContract<?> serviceContract = contractResolver.determineContract(service);
         if (!referenceContract.isAssignableFrom(serviceContract)) {
@@ -173,7 +173,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             URI serviceUri = service.getUri();
             URI contributionUri = reference.getParent().getDefinition().getContributionUri();
             IncompatibleContracts error = new IncompatibleContracts(referenceUri, serviceUri, uri, contributionUri);
-            change.addError(error);
+            context.addError(error);
         }
     }
 

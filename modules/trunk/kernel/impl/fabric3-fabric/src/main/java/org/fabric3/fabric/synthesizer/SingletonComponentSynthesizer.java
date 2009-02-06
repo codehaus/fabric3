@@ -21,16 +21,16 @@ import java.net.URI;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import static org.fabric3.host.Names.BOOT_CONTRIBUTION;
 import org.fabric3.host.domain.AssemblyException;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -111,10 +111,10 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             throws InvalidServiceContractException, AssemblyException {
         LogicalCompositeComponent domain = lcm.getRootComponent();
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance, introspect);
-        LogicalChange change = new LogicalChange(domain);
-        LogicalComponent<Implementation<?>> logical = instantiator.instantiate(domain, domain.getPropertyValues(), definition, change);
-        if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors());
+        InstantiationContext context = new InstantiationContext(domain);
+        LogicalComponent<Implementation<?>> logical = instantiator.instantiate(domain, domain.getPropertyValues(), definition, context);
+        if (context.hasErrors()) {
+            throw new AssemblyException(context.getErrors());
         }
         // mark singleton components as provisioned since instances are not created
         logical.setState(LogicalState.PROVISIONED);

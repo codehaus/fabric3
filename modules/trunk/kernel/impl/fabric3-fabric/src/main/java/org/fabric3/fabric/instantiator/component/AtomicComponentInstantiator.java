@@ -22,7 +22,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.BindingDefinition;
@@ -52,14 +52,14 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                          Map<String, Document> properties,
                                                                          ComponentDefinition<I> definition,
-                                                                         LogicalChange change) {
+                                                                         InstantiationContext context) {
 
         I impl = definition.getImplementation();
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
 
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         LogicalComponent<I> component = new LogicalComponent<I>(uri, definition, parent);
-        initializeProperties(component, definition, change);
+        initializeProperties(component, definition, context);
         createServices(definition, component, componentType);
         createReferences(definition, component, componentType);
         createResources(component, componentType);

@@ -24,24 +24,22 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
-import org.fabric3.fabric.instantiator.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
-import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
-import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.ComponentReference;
-import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -60,33 +58,33 @@ public class ResolutionServiceImplTestCase extends TestCase {
 
     public void testAutowireAtomicToAtomic() throws Exception {
         LogicalCompositeComponent composite = createWiredComposite(domain, Foo.class, Foo.class);
-        LogicalChange change = new LogicalChange(domain);
-        resolutionService.resolve(composite, change);
+        InstantiationContext context = new InstantiationContext(domain);
+        resolutionService.resolve(composite, context);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSuperInterface() throws Exception {
         LogicalCompositeComponent composite = createWiredComposite(domain, SuperFoo.class, Foo.class);
-        LogicalChange change = new LogicalChange(domain);
-        resolutionService.resolve(composite, change);
+        InstantiationContext context = new InstantiationContext(domain);
+        resolutionService.resolve(composite, context);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
-        resolutionService.resolve(composite, change);
+        resolutionService.resolve(composite, context);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSubInterface() throws Exception {
         LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, SuperFoo.class);
-        LogicalChange change = new LogicalChange(domain);
-        resolutionService.resolve(composite, change);
-        assertTrue(change.getErrors().get(0) instanceof ReferenceNotFound);
+        InstantiationContext context = new InstantiationContext(domain);
+        resolutionService.resolve(composite, context);
+        assertTrue(context.getErrors().get(0) instanceof ReferenceNotFound);
     }
 
     public void testAutowireAtomicToAtomicIncompatibleInterfaces() throws Exception {
         LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, String.class);
-        LogicalChange change = new LogicalChange(domain);
-        resolutionService.resolve(composite, change);
-        assertTrue(change.getErrors().get(0) instanceof ReferenceNotFound);
+        InstantiationContext context = new InstantiationContext(domain);
+        resolutionService.resolve(composite, context);
+        assertTrue(context.getErrors().get(0) instanceof ReferenceNotFound);
     }
 
     public void testNestedAutowireAtomicToAtomic() throws Exception {
@@ -94,8 +92,8 @@ public class ResolutionServiceImplTestCase extends TestCase {
         LogicalCompositeComponent parent = createComposite("parent", composite);
         parent.addComponent(composite);
         parent.getDefinition().getImplementation().getComponentType().add(composite.getDefinition());
-        LogicalChange change = new LogicalChange(domain);
-        resolutionService.resolve(parent, change);
+        InstantiationContext context = new InstantiationContext(domain);
+        resolutionService.resolve(parent, context);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
@@ -106,8 +104,8 @@ public class ResolutionServiceImplTestCase extends TestCase {
         composite.addComponent(source);
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         composite.addComponent(target);
-        LogicalChange change = new LogicalChange(domain);
-        resolutionService.resolve(source, change);
+        InstantiationContext context = new InstantiationContext(domain);
+        resolutionService.resolve(source, context);
     }
 
     public void testAutowireToSiblingIncludeInComposite() throws Exception {
@@ -118,8 +116,8 @@ public class ResolutionServiceImplTestCase extends TestCase {
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         parent.addComponent(composite);
         composite.addComponent(target);
-        LogicalChange change = new LogicalChange(domain);
-        resolutionService.resolve(composite, change);
+        InstantiationContext context = new InstantiationContext(domain);
+        resolutionService.resolve(composite, context);
     }
 
 

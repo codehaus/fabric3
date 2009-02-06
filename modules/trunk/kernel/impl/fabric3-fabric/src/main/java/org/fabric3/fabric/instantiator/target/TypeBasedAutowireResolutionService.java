@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.model.type.component.AbstractComponentType;
@@ -52,7 +52,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
         this.contractResolver = contractResolver;
     }
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent, LogicalChange change) {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent, InstantiationContext context) {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         LogicalComponent<?> component = logicalReference.getParent();
@@ -94,7 +94,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
             URI contributionUri = component.getDefinition().getContributionUri();
             ReferenceNotFound error =
                     new ReferenceNotFound("Unable to resolve reference " + referenceUri, referenceUri, componentUri, contributionUri);
-            change.addError(error);
+            context.addError(error);
         } else if (targetted) {
             logicalReference.setResolved(true);
         }

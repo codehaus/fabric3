@@ -36,12 +36,12 @@ public interface ComponentInstantiator {
      * @param parent     the parent logical component
      * @param properties the collection of properties associated with the component
      * @param definition the component definition to instantiate from @return the instantiated logical component
-     * @param change     the logical change the instantiation should mutate
+     * @param context    the instantiation context
      * @return an instantiated logical component
      */
     <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                   Map<String, Document> properties,
                                                                   ComponentDefinition<I> definition,
-                                                                  LogicalChange change);
+                                                                  InstantiationContext context);
 
 }

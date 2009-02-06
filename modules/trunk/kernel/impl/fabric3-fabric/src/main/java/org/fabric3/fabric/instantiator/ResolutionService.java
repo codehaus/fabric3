@@ -34,27 +34,24 @@ public interface ResolutionService {
      * will be resolved.
      *
      * @param logicalComponent logical component to be resolved.
-     * @param change           the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
-     *                         warnings should be reported here.
+     * @param context          the instantiation context. Recoverable errors and warnings should be reported here.
      */
-    void resolve(LogicalComponent<?> logicalComponent, LogicalChange change);
+    void resolve(LogicalComponent<?> logicalComponent, InstantiationContext context);
 
     /**
      * Resolves the promotion on the specified logical service.
      *
      * @param logicalService Logical service whose promotion is to be resolved.
-     * @param change         the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
-     *                       warnings should be reported here.
+     * @param context        the instantiation context. Recoverable errors and warnings should be reported here.
      */
-    void resolve(LogicalService logicalService, LogicalChange change);
+    void resolve(LogicalService logicalService, InstantiationContext context);
 
     /**
      * Resolves the logical reference against the given composite.
      *
      * @param logicalReference Logical reference to be resolved.
      * @param composite        Composite component against which the targets are resolved.
-     * @param change           the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
-     *                         warnings should be reported here.
+     * @param context          the instantiation context. Recoverable errors and warnings should be reported here.
      */
-    void resolve(LogicalReference logicalReference, LogicalCompositeComponent composite, LogicalChange change);
+    void resolve(LogicalReference logicalReference, LogicalCompositeComponent composite, InstantiationContext context);
 }

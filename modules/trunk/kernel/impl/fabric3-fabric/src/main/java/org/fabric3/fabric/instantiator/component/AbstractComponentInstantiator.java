@@ -37,7 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.ComponentDefinition;
@@ -96,11 +96,11 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
      *
      * @param component  the component to initialize
      * @param definition the definition of the component
-     * @param change     the logical change
+     * @param context    the instantiation conte
      */
     protected <I extends Implementation<?>> void initializeProperties(LogicalComponent<I> component,
                                                                       ComponentDefinition<I> definition,
-                                                                      LogicalChange change) {
+                                                                      InstantiationContext context) {
 
         Map<String, PropertyValue> propertyValues = definition.getPropertyValues();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getComponentType();
@@ -118,7 +118,7 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                 // the spec defines the following sequence
                 if (propertyValue.getFile() != null) {
                     // load the value from an external resource
-                    value = loadValueFromFile(component, property.getName(), propertyValue.getFile(), change);
+                    value = loadValueFromFile(component, property.getName(), propertyValue.getFile(), context);
                 } else if (propertyValue.getSource() != null) {
                     // get the value by evaluating an XPath against the composite properties
                     try {
@@ -127,7 +127,7 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                         URI uri = component.getUri();
                         URI contributionUri = component.getDefinition().getContributionUri();
                         InvalidProperty error = new InvalidProperty(name, e, uri, contributionUri);
-                        change.addError(error);
+                        context.addError(error);
                         return;
                     }
                 } else {
@@ -141,7 +141,7 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                 URI uri = component.getUri();
                 URI contributionUri = component.getDefinition().getContributionUri();
                 PropertySourceNotFound error = new PropertySourceNotFound(name, uri, contributionUri);
-                change.addError(error);
+                context.addError(error);
             } else if (!property.isRequired() && value == null) {
                 // The XPath expression returned an empty value. Since the property is optional, ignore it
                 continue;
@@ -215,20 +215,20 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
 
     }
 
-    private Document loadValueFromFile(LogicalComponent<?> parent, String name, URI file, LogicalChange change) {
+    private Document loadValueFromFile(LogicalComponent<?> parent, String name, URI file, InstantiationContext context) {
         try {
             return documentLoader.load(file);
         } catch (IOException e) {
             URI uri = parent.getUri();
             URI contributionUri = parent.getDefinition().getContributionUri();
             InvalidPropertyFile error = new InvalidPropertyFile(name, e, file, uri, contributionUri);
-            change.addError(error);
+            context.addError(error);
             return null;
         } catch (SAXException e) {
             URI uri = parent.getUri();
             URI contributionUri = parent.getDefinition().getContributionUri();
             InvalidPropertyFile error = new InvalidPropertyFile(name, e, file, uri, contributionUri);
-            change.addError(error);
+            context.addError(error);
             return null;
         }
     }

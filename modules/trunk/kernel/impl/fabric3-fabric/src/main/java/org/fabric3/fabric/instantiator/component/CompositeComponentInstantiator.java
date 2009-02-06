@@ -27,7 +27,7 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.WireInstantiator;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.model.type.component.BindingDefinition;
@@ -69,25 +69,25 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                          Map<String, Document> properties,
                                                                          ComponentDefinition<I> definition,
-                                                                         LogicalChange change) {
+                                                                         InstantiationContext context) {
         ComponentDefinition<CompositeImplementation> def = (ComponentDefinition<CompositeImplementation>) definition;
-        return LogicalComponent.class.cast(instantiateComposite(parent, properties, def, change));
+        return LogicalComponent.class.cast(instantiateComposite(parent, properties, def, context));
     }
 
     private LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent,
                                                            Map<String, Document> properties,
                                                            ComponentDefinition<CompositeImplementation> definition,
-                                                           LogicalChange change) {
+                                                           InstantiationContext context) {
 
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         Composite composite = definition.getImplementation().getComponentType();
 
         LogicalCompositeComponent component = new LogicalCompositeComponent(uri, definition, parent);
-        initializeProperties(component, definition, change);
-        instantiateChildComponents(component, properties, composite, change);
+        initializeProperties(component, definition, context);
+        instantiateChildComponents(component, properties, composite, context);
         instantiateCompositeServices(component, composite);
         instantiateCompositeReferences(parent, component, composite);
-        wireInstantiator.instantiateWires(composite, component, change);
+        wireInstantiator.instantiateWires(composite, component, context);
         return component;
 
     }
@@ -95,16 +95,16 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     private void instantiateChildComponents(LogicalCompositeComponent parent,
                                             Map<String, Document> properties,
                                             Composite composite,
-                                            LogicalChange change) {
+                                            InstantiationContext context) {
 
         // create the child components
         for (ComponentDefinition<? extends Implementation<?>> child : composite.getDeclaredComponents().values()) {
 
             LogicalComponent<?> childComponent;
             if (child.getImplementation().isComposite()) {
-                childComponent = instantiate(parent, properties, child, change);
+                childComponent = instantiate(parent, properties, child, context);
             } else {
-                childComponent = atomicComponentInstantiator.instantiate(parent, properties, child, change);
+                childComponent = atomicComponentInstantiator.instantiate(parent, properties, child, context);
             }
             parent.addComponent(childComponent);
         }

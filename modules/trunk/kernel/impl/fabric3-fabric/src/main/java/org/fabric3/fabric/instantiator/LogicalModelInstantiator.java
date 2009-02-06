@@ -33,17 +33,17 @@ public interface LogicalModelInstantiator {
      *
      * @param targetComposite the target composite in which the composite is to be included.
      * @param composite       the composite to be included.
-     * @return the change that results from this include operation
+     * @return the instantiation context that results from this include operation
      */
-    LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite);
+    InstantiationContext include(LogicalCompositeComponent targetComposite, Composite composite);
 
     /**
      * Includes a set of composites in another composite.
      *
      * @param targetComposite the target composite in which the composite is to be included.
      * @param composites      the composites to be included.
-     * @return the change that results from this include operation
+     * @return the instantiation context that results from this include operation
      */
-    LogicalChange include(LogicalCompositeComponent targetComposite, List<Composite> composites);
+    InstantiationContext include(LogicalCompositeComponent targetComposite, List<Composite> composites);
 
 }

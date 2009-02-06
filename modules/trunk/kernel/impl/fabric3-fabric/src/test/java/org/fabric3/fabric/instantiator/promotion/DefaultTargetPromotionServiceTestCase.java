@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 
 import org.fabric3.fabric.instantiator.AmbiguousReference;
 import org.fabric3.fabric.instantiator.AmbiguousService;
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFound;
 import org.fabric3.fabric.instantiator.PromotionResolutionService;
@@ -46,7 +46,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         LogicalService logicalService = new LogicalService(URI.create("service"), null, domain);
         logicalService.setPromotedUri(URI.create("component#service"));
 
-        LogicalChange change = new LogicalChange(domain);
+        InstantiationContext change = new InstantiationContext(domain);
         promotionResolutionService.resolve(logicalService, change);
         assertTrue(change.getErrors().get(0) instanceof PromotedComponentNotFound);
     }
@@ -63,7 +63,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalComponent.addService(new LogicalService(URI.create("component#service2"), null, domain));
 
         domain.addComponent(logicalComponent);
-        LogicalChange change = new LogicalChange(domain);
+        InstantiationContext change = new InstantiationContext(domain);
         promotionResolutionService.resolve(logicalService, change);
         assertTrue(change.getErrors().get(0) instanceof AmbiguousService);
     }
@@ -78,7 +78,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
                                                                                                              domain);
 
         domain.addComponent(logicalComponent);
-        LogicalChange change = new LogicalChange(domain);
+        InstantiationContext change = new InstantiationContext(domain);
         promotionResolutionService.resolve(logicalService, change);
         assertTrue(change.getErrors().get(0) instanceof NoServiceOnComponent);
     }
@@ -94,7 +94,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         domain.addComponent(logicalComponent);
 
-        LogicalChange change = new LogicalChange(domain);
+        InstantiationContext change = new InstantiationContext(domain);
         promotionResolutionService.resolve(logicalService, change);
         assertTrue(change.getErrors().get(0) instanceof ServiceNotFound);
     }
@@ -110,7 +110,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
         domain.addComponent(logicalComponent);
 
-        LogicalChange change = new LogicalChange(domain);
+        InstantiationContext change = new InstantiationContext(domain);
         promotionResolutionService.resolve(logicalService, change);
         assertEquals(URI.create("component#service1"), logicalService.getPromotedUri());
 
@@ -126,7 +126,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
                                                                                                              domain);
         logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
         domain.addComponent(logicalComponent);
-        LogicalChange change = new LogicalChange(domain);
+        InstantiationContext change = new InstantiationContext(domain);
         promotionResolutionService.resolve(logicalService, change);
     }
 
@@ -135,7 +135,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         LogicalReference logicalReference = new LogicalReference(URI.create("reference"), null, domain);
         logicalReference.addPromotedUri(URI.create("component#service"));
 
-        LogicalChange change = new LogicalChange(domain);
+        InstantiationContext change = new InstantiationContext(domain);
         promotionResolutionService.resolve(logicalReference, change);
         assertTrue(change.getErrors().get(0) instanceof PromotedComponentNotFound);
 
@@ -154,9 +154,9 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         domain.addComponent(logicalComponent);
 
-        LogicalChange change = new LogicalChange(domain);
-        promotionResolutionService.resolve(logicalReference, change);
-        assertTrue(change.getErrors().get(0) instanceof AmbiguousReference);
+        InstantiationContext context = new InstantiationContext(domain);
+        promotionResolutionService.resolve(logicalReference, context);
+        assertTrue(context.getErrors().get(0) instanceof AmbiguousReference);
 
     }
 
@@ -172,9 +172,9 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         domain.addComponent(logicalComponent);
 
-        LogicalChange change = new LogicalChange(domain);
-        promotionResolutionService.resolve(logicalReference, change);
-        assert (change.getErrors().get(0) instanceof ReferenceNotFound);
+        InstantiationContext context = new InstantiationContext(domain);
+        promotionResolutionService.resolve(logicalReference, context);
+        assert (context.getErrors().get(0) instanceof ReferenceNotFound);
     }
 
     public void testNoReferenceWithReferenceFragment() {
@@ -189,9 +189,9 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         domain.addComponent(logicalComponent);
 
-        LogicalChange change = new LogicalChange(domain);
-        promotionResolutionService.resolve(logicalReference, change);
-        assertTrue(change.getErrors().get(0) instanceof ReferenceNotFound);
+        InstantiationContext context = new InstantiationContext(domain);
+        promotionResolutionService.resolve(logicalReference, context);
+        assertTrue(context.getErrors().get(0) instanceof ReferenceNotFound);
     }
 
     public void testNoReferenceFragment() {
@@ -205,8 +205,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalComponent.addReference(new LogicalReference(URI.create("component#reference1"), null, domain));
         domain.addComponent(logicalComponent);
 
-        LogicalChange change = new LogicalChange(domain);
-        promotionResolutionService.resolve(logicalReference, change);
+        InstantiationContext context = new InstantiationContext(domain);
+        promotionResolutionService.resolve(logicalReference, context);
         assertEquals(URI.create("component#reference1"), logicalReference.getPromotedUris().iterator().next());
 
     }
@@ -222,14 +222,14 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalComponent.addReference(new LogicalReference(URI.create("component#reference1"), null, domain));
         domain.addComponent(logicalComponent);
 
-        LogicalChange change = new LogicalChange(domain);
-        promotionResolutionService.resolve(logicalReference, change);
+        InstantiationContext context = new InstantiationContext(domain);
+        promotionResolutionService.resolve(logicalReference, context);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        promotionResolutionService  = new DefaultPromotionResolutionService();
+        promotionResolutionService = new DefaultPromotionResolutionService();
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>("domain");
         URI uri = URI.create("fabric3://runtime");
         domain = new LogicalCompositeComponent(uri, definition, null);

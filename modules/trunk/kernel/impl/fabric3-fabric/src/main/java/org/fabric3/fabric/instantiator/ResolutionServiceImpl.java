@@ -49,33 +49,33 @@ public class ResolutionServiceImpl implements ResolutionService {
         this.targetResolutionServices = targetResolutionServices;
     }
 
-    public void resolve(LogicalComponent<?> logicalComponent, LogicalChange change) {
+    public void resolve(LogicalComponent<?> logicalComponent, InstantiationContext context) {
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                resolve(child, change);
+                resolve(child, context);
             }
         }
 
-        resolveReferences(logicalComponent, change);
-        resolveServices(logicalComponent, change);
+        resolveReferences(logicalComponent, context);
+        resolveServices(logicalComponent, context);
     }
 
-    public void resolve(LogicalService logicalService, LogicalChange change) {
-        promotionResolutionService.resolve(logicalService, change);
+    public void resolve(LogicalService logicalService, InstantiationContext context) {
+        promotionResolutionService.resolve(logicalService, context);
     }
 
-    public void resolve(LogicalReference reference, LogicalCompositeComponent component, LogicalChange change) {
-        promotionResolutionService.resolve(reference, change);
+    public void resolve(LogicalReference reference, LogicalCompositeComponent component, InstantiationContext context) {
+        promotionResolutionService.resolve(reference, context);
         for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-            targetResolutionService.resolve(reference, component, change);
+            targetResolutionService.resolve(reference, component, context);
         }
     }
 
     /*
      * Handles promotions and target resolution on references.
      */
-    private void resolveReferences(LogicalComponent<?> logicalComponent, LogicalChange change) {
+    private void resolveReferences(LogicalComponent<?> logicalComponent, InstantiationContext context) {
         LogicalCompositeComponent parent = logicalComponent.getParent();
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
             Multiplicity multiplicityValue = logicalReference.getDefinition().getMultiplicity();
@@ -84,9 +84,9 @@ public class ResolutionServiceImpl implements ResolutionService {
                 // Only resolve references that have not been resolved or ones that are multiplicities since the latter may be reinjected.
                 // Explicitly set the reference to unresolved, since if it was a multiplicity it may have been previously resolved.
                 logicalReference.setResolved(false);
-                promotionResolutionService.resolve(logicalReference, change);
+                promotionResolutionService.resolve(logicalReference, context);
                 for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-                    targetResolutionService.resolve(logicalReference, parent, change);
+                    targetResolutionService.resolve(logicalReference, parent, context);
                     if (logicalReference.isResolved()) {
                         // the reference has been resolved
                         break;
@@ -99,9 +99,9 @@ public class ResolutionServiceImpl implements ResolutionService {
     /*
      * Handles promotions on services.
      */
-    private void resolveServices(LogicalComponent<?> logicalComponent, LogicalChange change) {
+    private void resolveServices(LogicalComponent<?> logicalComponent, InstantiationContext context) {
         for (LogicalService logicalService : logicalComponent.getServices()) {
-            promotionResolutionService.resolve(logicalService, change);
+            promotionResolutionService.resolve(logicalService, context);
         }
     }
 

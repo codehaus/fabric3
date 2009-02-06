@@ -28,7 +28,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
-import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.StoreException;
@@ -187,7 +187,7 @@ public abstract class AbstractDomain implements Domain {
             if (transactional) {
                 domain = CopyUtil.copy(domain);
             }
-            LogicalChange change = logicalModelInstantiator.include(domain, deployables);
+            InstantiationContext change = logicalModelInstantiator.include(domain, deployables);
             if (change.hasErrors()) {
                 throw new AssemblyException(change.getErrors());
             }
@@ -297,7 +297,7 @@ public abstract class AbstractDomain implements Domain {
         try {
             LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
-            LogicalChange change = logicalModelInstantiator.include(domain, composites);
+            InstantiationContext change = logicalModelInstantiator.include(domain, composites);
             if (change.hasErrors()) {
                 throw new AssemblyException(change.getErrors());
             }
@@ -394,7 +394,7 @@ public abstract class AbstractDomain implements Domain {
             if (transactional) {
                 domain = CopyUtil.copy(domain);
             }
-            LogicalChange change = logicalModelInstantiator.include(domain, composite);
+            InstantiationContext change = logicalModelInstantiator.include(domain, composite);
             if (change.hasErrors()) {
                 throw new AssemblyException(change.getErrors());
             }
