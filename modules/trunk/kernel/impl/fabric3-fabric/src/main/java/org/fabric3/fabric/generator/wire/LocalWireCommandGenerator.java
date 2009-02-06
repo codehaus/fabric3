@@ -84,7 +84,7 @@ public class LocalWireCommandGenerator implements CommandGenerator {
     }
 
     public AttachWireCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent) {
+        if (component instanceof LogicalCompositeComponent || LogicalState.MARKED == component.getState()) {
             return null;
         }
         return generatePhysicalWires(component, incremental);
