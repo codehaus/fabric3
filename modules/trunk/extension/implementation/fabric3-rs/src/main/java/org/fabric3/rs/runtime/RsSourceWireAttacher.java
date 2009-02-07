@@ -25,14 +25,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.rs.provision.RsWireSourceDefinition;
 import org.fabric3.rs.runtime.rs.RsWebApplication;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -42,8 +47,6 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -52,18 +55,29 @@ import org.osoa.sca.annotations.Reference;
 public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefinition> {
 
     private final ClassLoaderRegistry classLoaderRegistry;
+    private RsWireAttacherMonitor monitor;
     private final ServletHost servletHost;
     private final Map<URI, RsWebApplication> webApplications = new ConcurrentHashMap<URI, RsWebApplication>();
 
-    public RsSourceWireAttacher(@Reference ServletHost servletHost, @Reference ClassLoaderRegistry classLoaderRegistry) {
+    public RsSourceWireAttacher(@Reference ServletHost servletHost, @Reference ClassLoaderRegistry registry, @Monitor RsWireAttacherMonitor monitor) {
         this.servletHost = servletHost;
-        this.classLoaderRegistry = classLoaderRegistry;
+        this.classLoaderRegistry = registry;
+        this.monitor = monitor;
     }
 
-    public void attachToSource(RsWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WireAttachException {
-        
+    @Init
+    public void init() {
+        monitor.extensionStarted();
+    }
+
+    @Destroy
+    public void destroy() {
+        monitor.extensionStopped();
+    }
+
+    public void attachToSource(RsWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+            throws WireAttachException {
+
         URI sourceUri = sourceDefinition.getUri();
 
         RsWebApplication application = webApplications.get(sourceUri);
@@ -79,18 +93,21 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
 
         try {
             provision(sourceDefinition, wire, application);
+            monitor.provisionedEndpoint(sourceUri);
         } catch (ClassNotFoundException e) {
             String name = sourceDefinition.getInterfaceName();
             throw new WireAttachException("Unable to load interface class [" + name + "]", sourceUri, null, e);
         }
-        
+
     }
 
     public void detachFromSource(RsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        monitor.removedEndpoint(source.getUri());
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(RsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) throws WiringException {
+    public void attachObjectFactory(RsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+            throws WiringException {
         throw new AssertionError();
     }
 
@@ -99,9 +116,9 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
     }
 
     private class RsMethodInterceptor implements MethodInterceptor {
-        
+
         private Map<String, InvocationChain> invocationChains;
-        
+
         private RsMethodInterceptor(Map<String, InvocationChain> invocationChains) {
             this.invocationChains = invocationChains;
         }
@@ -121,28 +138,26 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
                 return null;
             }
         }
-        
+
     }
 
-    private void provision(RsWireSourceDefinition sourceDefinition, Wire wire, RsWebApplication application)
-            throws ClassNotFoundException {
-        
+    private void provision(RsWireSourceDefinition sourceDefinition, Wire wire, RsWebApplication application) throws ClassNotFoundException {
+
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
 
         Map<String, InvocationChain> invocationChains = new HashMap<String, InvocationChain>();
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             invocationChains.put(entry.getKey().getName(), entry.getValue());
         }
-        
+
         MethodInterceptor methodInterceptor = new RsMethodInterceptor(invocationChains);
-        
+
         Class<?> interfaze = classLoader.loadClass(sourceDefinition.getInterfaceName());
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(interfaze);
         enhancer.setCallback(methodInterceptor);
         Object instance = enhancer.create();
-        
+
         application.addServiceHandler(interfaze, instance);
-        
     }
 }

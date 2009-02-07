@@ -23,7 +23,7 @@ import org.fabric3.api.annotation.logging.Info;
 /**
  * @version $Rev$ $Date$
  */
-public interface RsBindingWireAttacherMonitor {
+public interface RsWireAttacherMonitor {
 
     /**
      * Callback when a service has been provisioned as a REST endpoint
@@ -31,7 +31,7 @@ public interface RsBindingWireAttacherMonitor {
      * @param address the endpoint address
      */
     @Info
-    void provisionedEndpoint(String className, String type, URI address);
+    void provisionedEndpoint(URI address);
 
     /**
      * Callback when a service endpoint has been de-provisioned
@@ -39,7 +39,7 @@ public interface RsBindingWireAttacherMonitor {
      * @param address the endpoint address
      */
     @Info
-    void removedEndpoint(String className, String type, URI address);
+    void removedEndpoint(URI address);
 
     /**
      * Callback indicating the extension has been initialized.
