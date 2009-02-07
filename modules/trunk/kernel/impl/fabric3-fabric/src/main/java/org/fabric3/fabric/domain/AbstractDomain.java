@@ -30,6 +30,7 @@ import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.domain.AssemblyException;
@@ -39,6 +40,7 @@ import org.fabric3.host.domain.DeployableNotFoundException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.domain.UndeploymentException;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
 import org.fabric3.spi.allocator.AllocationException;
@@ -85,6 +87,7 @@ public abstract class AbstractDomain implements Domain {
     protected RoutingService routingService;
     protected PhysicalModelGenerator physicalModelGenerator;
     protected Collector collector;
+    private HostInfo info;
 
     // The service for allocating to remote zones. Domain subtypes may optionally inject this service if they support distributed domains.
     protected Allocator allocator;
@@ -100,6 +103,7 @@ public abstract class AbstractDomain implements Domain {
      * @param bindingSelector          the selector for binding.sca
      * @param routingService           the service for routing deployment commands
      * @param collector                the collector for undeploying componentsco
+     * @param info                     the host info
      */
     public AbstractDomain(MetaDataStore metadataStore,
                           LogicalComponentManager logicalComponentManager,
@@ -107,7 +111,8 @@ public abstract class AbstractDomain implements Domain {
                           LogicalModelInstantiator logicalModelInstantiator,
                           BindingSelector bindingSelector,
                           RoutingService routingService,
-                          Collector collector) {
+                          Collector collector,
+                          HostInfo info) {
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelInstantiator = logicalModelInstantiator;
@@ -115,6 +120,7 @@ public abstract class AbstractDomain implements Domain {
         this.bindingSelector = bindingSelector;
         this.routingService = routingService;
         this.collector = collector;
+        this.info = info;
         listeners = Collections.emptyList();
     }
 
@@ -302,8 +308,14 @@ public abstract class AbstractDomain implements Domain {
                 throw new AssemblyException(change.getErrors());
             }
             Collection<LogicalComponent<?>> components = domain.getComponents();
-            // Allocate the components to runtime nodes
-            allocate(components, plans);
+
+            if (RuntimeMode.VM == info.getRuntimeMode()) {
+                // allocate and deploy components
+                allocateAndDeploy(domain, plans);
+            } else {
+                // only allocate the components to runtime nodes
+                allocate(components, plans);
+            }
 
             // Select bindings
             selectBinding(components);

@@ -25,10 +25,11 @@ import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.Domain;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.allocator.Allocator;
-import org.fabric3.spi.domain.RoutingService;
-import org.fabric3.spi.domain.DomainListener;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.domain.DomainListener;
+import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -44,8 +45,16 @@ public class DistributedDomain extends AbstractDomain implements Domain {
                              @Reference LogicalModelInstantiator logicalModelInstantiator,
                              @Reference BindingSelector bindingSelector,
                              @Reference RoutingService routingService,
-                             @Reference Collector collector) {
-        super(metaDataStore, logicalComponentManager, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService, collector);
+                             @Reference Collector collector,
+                             @Reference HostInfo info) {
+        super(metaDataStore,
+              logicalComponentManager,
+              physicalModelGenerator,
+              logicalModelInstantiator,
+              bindingSelector,
+              routingService,
+              collector,
+              info);
     }
 
     /**
@@ -77,7 +86,6 @@ public class DistributedDomain extends AbstractDomain implements Domain {
     public void setListeners(List<DomainListener> listeners) {
         this.listeners = listeners;
     }
-
 
 
 }

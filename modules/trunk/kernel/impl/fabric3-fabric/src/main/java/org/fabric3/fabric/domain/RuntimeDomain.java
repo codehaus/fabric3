@@ -22,8 +22,9 @@ import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -41,8 +42,16 @@ public class RuntimeDomain extends AbstractDomain {
                          @Reference LogicalComponentManager logicalComponentManager,
                          @Reference BindingSelector bindingSelector,
                          @Reference RoutingService routingService,
-                         @Reference Collector collector) {
-        super(metadataStore, logicalComponentManager, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService, collector);
+                         @Reference Collector collector,
+                         @Reference HostInfo info) {
+        super(metadataStore,
+              logicalComponentManager,
+              physicalModelGenerator,
+              logicalModelInstantiator,
+              bindingSelector,
+              routingService,
+              collector,
+              info);
     }
 
     /**

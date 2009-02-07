@@ -103,6 +103,9 @@ public class FSDomainReplayer implements Fabric3EventListener<DomainRecover> {
             } else {
                 // the runtime is running in single-VM mode, skip deployment plans
                 plans = Collections.emptyList();
+                for (Entry entry : entries) {
+                    deployables.add(entry.getDeployable());
+                }
             }
             int i = 0;
             while (i < 11) {

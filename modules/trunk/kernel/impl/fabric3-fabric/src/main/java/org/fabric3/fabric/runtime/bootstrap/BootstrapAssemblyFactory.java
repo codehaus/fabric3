@@ -25,10 +25,11 @@ import javax.management.MBeanServer;
 
 import org.fabric3.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.contribution.LocalContributionUriResolver;
-import org.fabric3.contribution.generator.JavaContributionWireGeneratorImpl;
 import org.fabric3.contribution.archive.JarClasspathProcessor;
-import org.fabric3.contribution.wire.LocationContributionWire;
+import org.fabric3.contribution.generator.JavaContributionWireGeneratorImpl;
+import org.fabric3.contribution.generator.LocationContributionWireGeneratorImpl;
 import org.fabric3.contribution.wire.JavaContributionWire;
+import org.fabric3.contribution.wire.LocationContributionWire;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.binding.BindingSelectorImpl;
 import org.fabric3.fabric.builder.ConnectorImpl;
@@ -58,7 +59,6 @@ import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl;
-import org.fabric3.contribution.generator.LocationContributionWireGeneratorImpl;
 import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
@@ -186,7 +186,8 @@ public class BootstrapAssemblyFactory {
                                  logicalComponentManager,
                                  bindingSelector,
                                  routingService,
-                                 collector);
+                                 collector,
+                                 info);
     }
 
     private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
