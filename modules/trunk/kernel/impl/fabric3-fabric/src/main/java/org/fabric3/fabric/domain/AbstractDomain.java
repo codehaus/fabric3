@@ -527,21 +527,23 @@ public abstract class AbstractDomain implements Domain {
                     markAsProvisioned((LogicalCompositeComponent) component);
                 }
                 component.setState(LogicalState.PROVISIONED);
-            }
-        }
-        for (LogicalService service : composite.getServices()) {
-            for (LogicalBinding<?> binding : service.getBindings()) {
-                if (LogicalState.NEW == binding.getState()) {
-                    binding.setState(LogicalState.PROVISIONED);
+                for (LogicalService service : component.getServices()) {
+                    for (LogicalBinding<?> binding : service.getBindings()) {
+                        if (LogicalState.NEW == binding.getState()) {
+                            binding.setState(LogicalState.PROVISIONED);
+                        }
+                    }
+                }
+                for (LogicalReference reference : component.getReferences()) {
+                    for (LogicalBinding<?> binding : reference.getBindings()) {
+                        if (LogicalState.NEW == binding.getState()) {
+                            binding.setState(LogicalState.PROVISIONED);
+                        }
+                    }
                 }
             }
         }
         for (LogicalReference reference : composite.getReferences()) {
-            for (LogicalBinding<?> binding : reference.getBindings()) {
-                if (LogicalState.NEW == binding.getState()) {
-                    binding.setState(LogicalState.PROVISIONED);
-                }
-            }
             for (LogicalWire wire : composite.getWires(reference)) {
                 if (LogicalState.NEW == wire.getState()) {
                     wire.setState(LogicalState.PROVISIONED);
