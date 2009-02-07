@@ -38,6 +38,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -137,9 +138,21 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(interfaze);
         enhancer.setCallback(methodInterceptor);
-        Object instance = enhancer.create();
 
-        application.addServiceHandler(interfaze, instance);
+        // CGLib requires a classloader with access to the application classloader and this extension classloader
+        MultiParentClassLoader rsClassLoader = new MultiParentClassLoader(URI.create("RESTclassloader"), getClass().getClassLoader());
+        rsClassLoader.addParent(classLoader);
+        enhancer.setClassLoader(rsClassLoader);
+
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            // set the TCCL as Jeresy uses it to dynmically load classes
+            Thread.currentThread().setContextClassLoader(rsClassLoader);
+            Object instance = enhancer.create();
+            application.addServiceHandler(interfaze, instance);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
     private class RsMethodInterceptor implements MethodInterceptor {
