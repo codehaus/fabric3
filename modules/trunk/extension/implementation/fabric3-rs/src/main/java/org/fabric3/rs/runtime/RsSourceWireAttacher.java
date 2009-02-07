@@ -84,11 +84,8 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
         if (application == null) {
             application = new RsWebApplication(getClass().getClassLoader());
             webApplications.put(sourceUri, application);
-            String servletMapping = sourceUri.getPath();
-            if (!servletMapping.endsWith("/*")) {
-                servletMapping = servletMapping + "/*";
-            }
-            servletHost.registerMapping(servletMapping, application);
+            String mapping = creatingMappingUri(sourceUri);
+            servletHost.registerMapping(mapping, application);
         }
 
         try {
@@ -96,14 +93,16 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
             monitor.provisionedEndpoint(sourceUri);
         } catch (ClassNotFoundException e) {
             String name = sourceDefinition.getInterfaceName();
-            throw new WireAttachException("Unable to load interface class [" + name + "]", sourceUri, null, e);
+            throw new WireAttachException("Unable to load interface class " + name, sourceUri, null, e);
         }
 
     }
 
     public void detachFromSource(RsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        URI uri = source.getUri();
+        String mapping = creatingMappingUri(uri);
+        servletHost.unregisterMapping(mapping);
         monitor.removedEndpoint(source.getUri());
-        throw new AssertionError();
     }
 
     public void attachObjectFactory(RsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
@@ -113,6 +112,34 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
 
     public void detachObjectFactory(RsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
+    }
+
+    private String creatingMappingUri(URI sourceUri) {
+        String servletMapping = sourceUri.getPath();
+        if (!servletMapping.endsWith("/*")) {
+            servletMapping = servletMapping + "/*";
+        }
+        return servletMapping;
+    }
+
+    private void provision(RsWireSourceDefinition sourceDefinition, Wire wire, RsWebApplication application) throws ClassNotFoundException {
+
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
+
+        Map<String, InvocationChain> invocationChains = new HashMap<String, InvocationChain>();
+        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+            invocationChains.put(entry.getKey().getName(), entry.getValue());
+        }
+
+        MethodInterceptor methodInterceptor = new RsMethodInterceptor(invocationChains);
+
+        Class<?> interfaze = classLoader.loadClass(sourceDefinition.getInterfaceName());
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(interfaze);
+        enhancer.setCallback(methodInterceptor);
+        Object instance = enhancer.create();
+
+        application.addServiceHandler(interfaze, instance);
     }
 
     private class RsMethodInterceptor implements MethodInterceptor {
@@ -141,23 +168,4 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
 
     }
 
-    private void provision(RsWireSourceDefinition sourceDefinition, Wire wire, RsWebApplication application) throws ClassNotFoundException {
-
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
-
-        Map<String, InvocationChain> invocationChains = new HashMap<String, InvocationChain>();
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            invocationChains.put(entry.getKey().getName(), entry.getValue());
-        }
-
-        MethodInterceptor methodInterceptor = new RsMethodInterceptor(invocationChains);
-
-        Class<?> interfaze = classLoader.loadClass(sourceDefinition.getInterfaceName());
-        Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(interfaze);
-        enhancer.setCallback(methodInterceptor);
-        Object instance = enhancer.create();
-
-        application.addServiceHandler(interfaze, instance);
-    }
 }
