@@ -40,12 +40,14 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.domain.Domain;
+import org.fabric3.host.domain.UndeploymentException;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scanner.spi.FileSystemResource;
 import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
@@ -231,7 +233,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     errorCache.put(name, cached);
                     monitor.error(e);
                 }
-                monitor.update(artifactUri.toString());
+                monitor.updated(artifactUri.toString());
             }
             // TODO undeploy and redeploy
         }
@@ -266,7 +268,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     String name = uri.toString();
                     // URI is the file name
                     processed.put(name, uri);
-                    monitor.add(name);
+                    monitor.deployed(name);
                 }
             } catch (ValidationException e) {
                 // print out the validation errors
@@ -322,12 +324,18 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 try {
                     // check that the resurce was not deleted by another process
                     if (contributionService.exists(uri)) {
-                        // TODO get Deployables and remove from assembly
+                        List<Deployable> deployables = contributionService.getDeployables(uri);
+                        for (Deployable deployable : deployables) {
+                            domain.undeploy(deployable.getName());
+                        }
+                        contributionService.uninstall(uri);
                         contributionService.remove(uri);
                     }
                     removed.add(filename);
-                    monitor.remove(filename);
+                    monitor.removed(filename);
                 } catch (ContributionException e) {
+                    monitor.removalError(filename, e);
+                } catch (UndeploymentException e) {
                     monitor.removalError(filename, e);
                 }
             }

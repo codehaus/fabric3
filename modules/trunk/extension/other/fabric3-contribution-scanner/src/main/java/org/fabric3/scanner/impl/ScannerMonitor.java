@@ -16,7 +16,6 @@
  */
 package org.fabric3.scanner.impl;
 
-import org.fabric3.api.annotation.logging.Fine;
 import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
 
@@ -28,31 +27,31 @@ import org.fabric3.api.annotation.logging.Severe;
 public interface ScannerMonitor {
 
     /**                
-     * Called when a destination is notified of a new resource
+     * Called when a contribution is deployed.
      *
-     * @param name the name of the resource
+     * @param name the name of the contribution
      */
     @Info
-    void add(String name);
+    void deployed(String name);
 
     /**
-     * Called when a destination is notified of a resource removal
+     * Called when a contribution is removed
      *
-     * @param name the name of the resource
+     * @param name the name of the contribution
      */
-    @Fine
-    void remove(String name);
+    @Info
+    void removed(String name);
 
     /**
-     * Called when a destination is notified of a resource update
+     * Called when a contribution is updated
      *
-     * @param name the name of the resource
+     * @param name the name of the contribution
      */
-    @Fine
-    void update(String name);
+    @Info
+    void updated(String name);
 
     /**
-     * Called when a general error is encountered processing an entry
+     * Called when a general error is encountered processing a contribution
      *
      * @param e the error
      */
@@ -60,15 +59,7 @@ public interface ScannerMonitor {
     void error(Throwable e);
 
     /**
-     * Called when an error is encountered during recovery
-     *
-     * @param e the error
-     */
-    @Severe
-    void recoveryError(Throwable e);
-
-    /**
-     * Called when an error is encountered removing an entry
+     * Called when an error is encountered removing a contribution
      *
      * @param filename the file being removed
      * @param e        the error
