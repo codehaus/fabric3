@@ -34,9 +34,9 @@
     $Rev: 881 $ $Date: 2007-08-27 13:12:34 -0700 (Mon, 27 Aug 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="ContributionStoreBootComposite"
+           name="ArchiveStoreBootComposite"
            autowire="true">
-    <component name="ContributionStore">
+    <component name="ArchiveStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.archive.ArchiveStoreImpl"/>
     </component>
 
