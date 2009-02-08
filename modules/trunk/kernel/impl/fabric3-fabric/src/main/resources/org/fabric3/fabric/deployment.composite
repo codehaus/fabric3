@@ -155,6 +155,4 @@
         <f3-impl:implementation.system class="org.fabric3.contribution.manifest.OSGiManifestHandler"/>
     </component>
 
-    <include name="xmlContributionLoaderComposite" scdlLocation="xmlContributionLoader.composite"/>
-
 </composite>
