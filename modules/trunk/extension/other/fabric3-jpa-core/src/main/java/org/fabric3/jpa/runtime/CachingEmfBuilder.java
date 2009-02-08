@@ -19,16 +19,15 @@ package org.fabric3.jpa.runtime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
-
-import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
-import org.fabric3.jpa.spi.EmfBuilderException;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
+
+import org.fabric3.jpa.spi.EmfBuilderException;
+import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
 
 /**
  * Creates entity manager factories using the JPA provider SPI. Creation of entity manager factories are expensive operations and hence created
@@ -100,7 +99,13 @@ public class CachingEmfBuilder implements EmfBuilder, EmfCache {
         String providerClass = info.getPersistenceProviderClassName();
         String dataSourceName = info.getDataSourceName();
 
-        EmfBuilderDelegate delegate = delegates.get(providerClass);
+        EmfBuilderDelegate delegate = null;
+        if (providerClass != null) {
+            delegate = delegates.get(providerClass);
+        } else if (!delegates.isEmpty()) {
+            // no provider specified, get the first one
+            delegate = delegates.values().iterator().next();
+        }
         if (delegate != null) {
             return delegate.build(info, classLoader, dataSourceName);
         }

@@ -16,6 +16,25 @@
  */
 package org.fabric3.jpa.runtime;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.MessageFormat;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+import javax.persistence.spi.ClassTransformer;
+import javax.persistence.spi.PersistenceUnitInfo;
+import javax.persistence.spi.PersistenceUnitTransactionType;
+import javax.sql.DataSource;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import static org.fabric3.jpa.runtime.JpaConstants.CLASS;
 import static org.fabric3.jpa.runtime.JpaConstants.EXCLUDE_UNLISTED_CLASSES;
 import static org.fabric3.jpa.runtime.JpaConstants.JAR_FILE;
@@ -27,28 +46,6 @@ import static org.fabric3.jpa.runtime.JpaConstants.PROPERTY_NAME;
 import static org.fabric3.jpa.runtime.JpaConstants.PROPERTY_VALUE;
 import static org.fabric3.jpa.runtime.JpaConstants.PROVIDER;
 import static org.fabric3.jpa.runtime.JpaConstants.TRANSACTION_TYPE;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.persistence.spi.ClassTransformer;
-import javax.persistence.spi.PersistenceUnitInfo;
-import javax.persistence.spi.PersistenceUnitTransactionType;
-import javax.sql.DataSource;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.fabric3.jpa.runtime.Fabric3JpaRuntimeException;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Encpasulates the information in the persistence.xml file.
@@ -109,29 +106,17 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         this.unitName = unitName;        
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#addTransformer(javax.persistence.spi.ClassTransformer)
-     */
     public void addTransformer(ClassTransformer classTransformer) {
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#excludeUnlistedClasses()
-     */
-    public boolean excludeUnlistedClasses() {    	
+    public boolean excludeUnlistedClasses() {
         return getBooleanValue(persistenceDom, EXCLUDE_UNLISTED_CLASSES);
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getClassLoader()
-     */
     public ClassLoader getClassLoader() {
         return classLoader;
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getJarFileUrls()
-     */
     public List<URL> getJarFileUrls() {
 
         List<String> jarFiles = getMultipleValues(persistenceDom, JAR_FILE);
@@ -148,72 +133,42 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
 
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getJtaDataSource()
-     */
     public DataSource getJtaDataSource() {
         return null;
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getManagedClassNames()
-     */
     public List<String> getManagedClassNames() {
         return getMultipleValues(persistenceDom, CLASS);
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getMappingFileNames()
-     */
     public List<String> getMappingFileNames() {
         return getMultipleValues(persistenceDom, MAPPING_FILE);
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getNewTempClassLoader()
-     */
     public ClassLoader getNewTempClassLoader() {
         return null;
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getNonJtaDataSource()
-     */
     public DataSource getNonJtaDataSource() {
         return null;
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getPersistenceProviderClassName()
-     */
     public String getPersistenceProviderClassName() {
         return getSingleValue(persistenceDom, PROVIDER);
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getPersistenceUnitName()
-     */
     public String getPersistenceUnitName() {
         return unitName;
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getPersistenceUnitRootUrl()
-     */
     public URL getPersistenceUnitRootUrl() {
         return rootUrl;
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getProperties()
-     */
     public Properties getProperties() {
         return getProperties(persistenceDom);
     }
 
-    /**
-     * @see javax.persistence.spi.PersistenceUnitInfo#getTransactionType()
-     */
     public PersistenceUnitTransactionType getTransactionType() {
 
         String transactionType = getSingleValue(persistenceDom, TRANSACTION_TYPE);

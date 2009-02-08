@@ -23,13 +23,10 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.fabric3.jpa.runtime.Fabric3JpaRuntimeException;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -44,9 +41,6 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 
     private Map<String, PersistenceUnitInfo> persistenceUnitInfos = new HashMap<String, PersistenceUnitInfo>();
 
-    /**
-     * @see org.fabric3.jpa.runtime.PersistenceUnitScanner#getPersistenceUnitInfo(java.lang.String, java.lang.ClassLoader)
-     */
     public PersistenceUnitInfo getPersistenceUnitInfo(String unitName, ClassLoader classLoader) {
 
         synchronized (persistenceUnitInfos) {
