@@ -39,8 +39,17 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="AnnotationProcessorsComposite" targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
+           targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
+           name="IntrospectionProcessorsComposite"
            autowire="true">
+
+    <component name="DefaultIntrospectionHelper">
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultIntrospectionHelper"/>
+    </component>
+
+    <component name="DefaultContractProcessor">
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.contract.DefaultContractProcessor"/>
+    </component>
 
     <component name="ClassWalker">
         <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
