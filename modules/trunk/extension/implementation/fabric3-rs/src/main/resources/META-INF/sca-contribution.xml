@@ -21,5 +21,8 @@
     <import.java package="org.fabric3.pojo" version="0.8"/>
     <import.java package="org.fabric3.java.control" version="0.8"/>
     <import.java package="org.fabric3.java.provision" version="0.8"/>
+    <import.java package="javax.xml.bind.*" version="0.8"/>
+    <!-- provides required for JAXB support. Jersey loads JAXB implementation classes using Class.forName() -->
+    <f3-core:provides name="jaxb"/>
     <deployable composite="ns:RsExtension"/>
 </contribution>

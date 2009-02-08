@@ -18,4 +18,5 @@
 -->
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <export.java package="javax.xml.bind.*" version="0.8"/>
+    <f3-core:extends name="jaxb"/>
 </contribution>
