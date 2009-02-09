@@ -203,7 +203,11 @@ public class MultiParentClassLoader extends URLClassLoader {
                     } catch (ClassNotFoundException e) {
                         // look in extensions
                         for (MultiParentClassLoader extension : extensions) {
-                            clazz = extension.findClass(name);
+                            // check first to see if class is already loaded
+                            clazz = extension.findLoadedClass(name);
+                            if (clazz == null) {
+                                clazz = extension.findClass(name);
+                            }
                             if (clazz != null) {
                                 break;
                             }
