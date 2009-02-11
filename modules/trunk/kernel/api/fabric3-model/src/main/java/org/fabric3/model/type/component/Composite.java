@@ -226,7 +226,6 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
     }
 
 
-
     /**
      * Returns a collection of potential target services that match the supplied contract.
      * <p/>
@@ -313,8 +312,16 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
     }
 
 
+    public void addIntent(QName intent) {
+        intents.add(intent);
+    }
+
     public Set<QName> getIntents() {
         return intents;
+    }
+
+    public void addPolicySet(QName policySet) {
+        policySets.add(policySet);
     }
 
     public void setIntents(Set<QName> intents) {

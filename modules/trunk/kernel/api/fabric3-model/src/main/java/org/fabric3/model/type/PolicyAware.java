@@ -43,12 +43,27 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public interface PolicyAware {
+
+    /**
+     * Add an intent to the definition.
+     *
+     * @param intent the intent
+     */
+    public void addIntent(QName intent);
+
     /**
      * Returns the intents this definition references.
      *
      * @return the intents this definition references
      */
     Set<QName> getIntents();
+
+    /**
+     * Add a policy set to the definition.
+     *
+     * @param policySet the policy set
+     */
+    public void addPolicySet(QName policySet);
 
     /**
      * Returns the policySets this definition references.
