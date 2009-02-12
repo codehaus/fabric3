@@ -36,7 +36,7 @@
         <f3-policy:transaction action="SUSPEND"/>
     </policySet>
 
-    <policySet name="oasisSuspendsTransactionPolicy" provides="sca:suspendsTransaction" f3-policy:phase="INTERCEPTION">
+    <policySet name="oasisSuspendsTransactionPolicy" provides="oasis:suspendsTransaction" f3-policy:phase="INTERCEPTION">
         <f3-policy:transaction action="SUSPEND"/>
     </policySet>
 
@@ -45,7 +45,7 @@
         <f3-policy:transaction action="PROPOGATE"/>
     </policySet>
 
-    <policySet name="oasisPropagatesTransactionPolicy" provides="sca:propagatesTransaction" f3-policy:phase="INTERCEPTION">
+    <policySet name="oasisPropagatesTransactionPolicy" provides="oasis:propagatesTransaction" f3-policy:phase="INTERCEPTION">
         <f3-policy:transaction action="PROPOGATE"/>
     </policySet>
 
