@@ -94,7 +94,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.osoa.sca,org.osoa.sca.annotations</Export-Package>
+                        <Export-Package>org.osoa.sca,org.osoa.sca.annotations, org.oasisopen.sca, org.oasisopen.sca.annotation</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
