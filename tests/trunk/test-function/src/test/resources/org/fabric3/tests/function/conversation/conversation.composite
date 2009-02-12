@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -49,13 +49,13 @@
         <implementation.java class="org.fabric3.tests.function.conversation.CompositeServiceImpl"/>
     </component>
 
-    <component name="ClientToIntermediary" requires="f3-policy:propagatesConversation">
+    <component name="ClientToIntermediary">
         <implementation.java class="org.fabric3.tests.function.conversation.ClientToIntermediaryImpl"/>
         <reference name="service1" target="IntermediaryService1"/>
         <reference name="service2" target="IntermediaryService2"/>
     </component>
     
-    <component name="IntermediaryService1" requires="f3-policy:propagatesConversation">
+    <component name="IntermediaryService1">
         <implementation.java class="org.fabric3.tests.function.conversation.IntermediaryServiceImpl"/>
         <reference name="conversationalService" target="ConversationalServiceImpl"/>
     </component>

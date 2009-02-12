@@ -19,15 +19,19 @@ package org.fabric3.tests.function.conversation;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 
+import org.fabric3.api.annotation.PropagatesConversation;
+
 /**
  * @version $Revision$ $Date$
  */
 @Scope("CONVERSATION")
 public class ClientToIntermediaryImpl implements ClientToIntermediary {
     @Reference
+    @PropagatesConversation
     protected IntermediaryService service1;
 
     @Reference
+    @PropagatesConversation
     protected IntermediaryService service2;
 
 

@@ -18,11 +18,14 @@ package org.fabric3.tests.function.conversation;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.PropagatesConversation;
+
 /**
  * @version $Revision$ $Date$
  */
 public class IntermediaryServiceImpl implements IntermediaryService {
     @Reference
+    @PropagatesConversation
     protected ConversationalService conversationalService;
 
     public void setValue(String value) {
