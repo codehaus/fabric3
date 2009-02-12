@@ -34,27 +34,29 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.java.ConstructorInjectionSite;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -62,6 +64,7 @@ import org.fabric3.model.type.service.ServiceContract;
 public class ReferenceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Reference, I> {
     private final ContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
+    private PolicyAnnotationProcessor policyProcessor;
 
     public ReferenceProcessor(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
         super(Reference.class);
@@ -69,12 +72,18 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         this.helper = helper;
     }
 
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
+    }
+
     public void visitField(Reference annotation, Field field, I implementation, IntrospectionContext context) {
         validate(annotation, field, context);
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping(), context);
+        Annotation[] annotations = field.getAnnotations();
+        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, annotations, context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -84,7 +93,8 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping(), context);
+        Annotation[] annotations = method.getAnnotations();
+        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, annotations, context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -130,15 +140,24 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping(), context);
+        Annotation[] annotations = constructor.getParameterAnnotations()[index];
+        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, annotations, context);
         implementation.getComponentType().add(definition, site);
     }
 
-    ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping, IntrospectionContext context) {
+    @SuppressWarnings({"unchecked"})
+    ReferenceDefinition createDefinition(String name, boolean required, Type type, Annotation[] annotations, IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping();
         Type baseType = helper.getBaseType(type, typeMapping);
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, baseType, context);
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);
-        return new ReferenceDefinition(name, contract, multiplicity);
+        ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
+        if (policyProcessor != null) {
+            for (Annotation annotation : annotations) {
+                policyProcessor.process(annotation, definition, context);
+            }
+        }
+        return definition;
     }
 
     /**

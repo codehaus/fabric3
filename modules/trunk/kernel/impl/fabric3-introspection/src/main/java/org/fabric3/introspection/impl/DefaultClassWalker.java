@@ -42,11 +42,12 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.java.AnnotationProcessor;
-import org.fabric3.spi.introspection.java.ClassWalker;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AnnotationProcessor;
+import org.fabric3.spi.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -54,20 +55,20 @@ import org.fabric3.model.type.java.InjectingComponentType;
 public class DefaultClassWalker<I extends Implementation<? extends InjectingComponentType>> implements ClassWalker<I> {
 
     private Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors;
+    private PolicyAnnotationProcessor policyProcessor;
 
     /**
      * Constructor used from the bootstrapper.
      *
-     * @param processors
+     * @param processors the generic annotation processors
      */
     public DefaultClassWalker(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
         this.processors = processors;
     }
 
     /**
-     * Constructor used from the system SCDL.
+     * Constructor.
      * <p/>
-     * TODO This needs to be working once the re-injection is working properly.
      */
     @org.osoa.sca.annotations.Constructor
     public DefaultClassWalker() {
@@ -76,6 +77,11 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
     @Reference
     public void setProcessors(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
         this.processors = processors;
+    }
+
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
     }
 
     public void walk(I implementation, Class<?> clazz, IntrospectionContext context) {
@@ -165,6 +171,11 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
         AnnotationProcessor<A, I> processor = getProcessor(annotation);
         if (processor != null) {
             processor.visitType(annotation, clazz, implementation, context);
+        } else {
+            // check if the annotation is a policy set or intent
+            if (policyProcessor != null) {
+                policyProcessor.process(annotation, implementation, context);
+            }
         }
     }
 
@@ -211,4 +222,5 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
     private <A extends Annotation> AnnotationProcessor<A, I> getProcessor(A annotation) {
         return (AnnotationProcessor<A, I>) processors.get(annotation.annotationType());
     }
+
 }

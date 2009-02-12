@@ -16,6 +16,7 @@
  */
 package org.fabric3.junit.introspection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,27 +26,28 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.NoConstructorFound;
-import org.fabric3.spi.introspection.java.UnknownInjectionType;
-import org.fabric3.spi.introspection.java.AmbiguousConstructor;
 import org.fabric3.junit.scdl.JUnitImplementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.component.Multiplicity;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.model.type.component.Multiplicity;
-import org.fabric3.model.type.component.Property;
-import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.java.Signature;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AmbiguousConstructor;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.NoConstructorFound;
+import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
+import org.fabric3.spi.introspection.java.UnknownInjectionType;
 
 /**
  * @version $Rev$ $Date$
@@ -56,13 +58,19 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     private final ContractProcessor contractProcessor;
 
     private final HeuristicProcessor<JUnitImplementation> serviceHeuristic;
+    private PolicyAnnotationProcessor policyProcessor;
 
     public JUnitHeuristic(@Reference IntrospectionHelper helper,
                           @Reference ContractProcessor contractProcessor,
-                          @Reference(name = "service")HeuristicProcessor<JUnitImplementation> serviceHeuristic) {
+                          @Reference(name = "service") HeuristicProcessor<JUnitImplementation> serviceHeuristic) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
         this.serviceHeuristic = serviceHeuristic;
+    }
+
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
     }
 
     public void applyHeuristics(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
@@ -153,7 +161,8 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
 
             Type parameterType = parameterTypes[i];
             String name = helper.getSiteName(constructor, i, null);
-            processSite(componentType, typeMapping, name, parameterType, site, context);
+            Annotation[] annotations = constructor.getParameterAnnotations()[i];
+            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
         }
     }
 
@@ -172,7 +181,8 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
 
             String name = helper.getSiteName(setter, null);
             Type parameterType = setter.getGenericParameterTypes()[0];
-            processSite(componentType, typeMapping, name, parameterType, site, context);
+            Annotation[] annotations = setter.getAnnotations();
+            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
         }
     }
 
@@ -191,7 +201,8 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
 
             String name = helper.getSiteName(field, null);
             Type parameterType = field.getGenericType();
-            processSite(componentType, typeMapping, name, parameterType, site, context);
+            Annotation[] annotations = field.getAnnotations();
+            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
         }
     }
 
@@ -201,6 +212,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
                              String name,
                              Type parameterType,
                              InjectionSite site,
+                             Annotation[] annotations,
                              IntrospectionContext context) {
         InjectableAttributeType type = helper.inferType(parameterType, typeMapping);
         switch (type) {
@@ -208,7 +220,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
             addProperty(componentType, typeMapping, name, parameterType, site);
             break;
         case REFERENCE:
-            addReference(componentType, typeMapping, name, parameterType, site, context);
+            addReference(componentType, typeMapping, name, parameterType, site, annotations, context);
             break;
         case CALLBACK:
             // ignore
@@ -230,10 +242,16 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
                               String name,
                               Type parameterType,
                               InjectionSite site,
+                              Annotation[] annotations,
                               IntrospectionContext context) {
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, parameterType, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
+        if (policyProcessor != null) {
+            for (Annotation annotation : annotations) {
+                policyProcessor.process(annotation, reference, context);
+            }
+        }
         componentType.add(reference, site);
     }
 }

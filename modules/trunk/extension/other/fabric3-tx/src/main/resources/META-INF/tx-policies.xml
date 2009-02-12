@@ -18,6 +18,7 @@
 <definitions
         xmlns="http://www.osoa.org/xmlns/sca/1.0"
         xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200712"
         targetNamespace="urn:fabric3.org:policy"
         xmlns:f3-policy="urn:fabric3.org:policy">
 
@@ -26,13 +27,25 @@
         <f3-policy:transaction action="BEGIN"/>
     </policySet>
 
+    <policySet name="oasisManagedTransactionPolicy" provides="oasis:managedTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="BEGIN"/>
+    </policySet>
+
     <!-- Suspends the transaction if one already in progress and resumes it -->
     <policySet name="suspendsTransactionPolicy" provides="sca:suspendsTransaction" f3-policy:phase="INTERCEPTION">
         <f3-policy:transaction action="SUSPEND"/>
     </policySet>
 
+    <policySet name="oasisSuspendsTransactionPolicy" provides="sca:suspendsTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="SUSPEND"/>
+    </policySet>
+
     <!-- No op -->
     <policySet name="propagatesTransactionPolicy" provides="sca:propagatesTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="PROPOGATE"/>
+    </policySet>
+
+    <policySet name="oasisPropagatesTransactionPolicy" provides="sca:propagatesTransaction" f3-policy:phase="INTERCEPTION">
         <f3-policy:transaction action="PROPOGATE"/>
     </policySet>
 

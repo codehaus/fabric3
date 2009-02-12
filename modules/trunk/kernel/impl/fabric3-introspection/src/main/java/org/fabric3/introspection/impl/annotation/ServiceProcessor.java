@@ -34,30 +34,37 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ServiceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Service, I> {
-
     private final ContractProcessor contractProcessor;
+    private PolicyAnnotationProcessor policyProcessor;
 
     public ServiceProcessor(@Reference ContractProcessor contractProcessor) {
         super(Service.class);
         this.contractProcessor = contractProcessor;
+    }
+
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
     }
 
     public void visitType(Service annotation, Class<?> type, I implementation, IntrospectionContext context) {
@@ -76,8 +83,16 @@ public class ServiceProcessor<I extends Implementation<? extends InjectingCompon
         }
     }
 
+    @SuppressWarnings({"unchecked"})
     private ServiceDefinition createDefinition(Class<?> service, TypeMapping typeMapping, IntrospectionContext context) {
         ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, service, context);
-        return new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
+        ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
+        Annotation[] annotations = service.getAnnotations();
+        if (policyProcessor != null) {
+            for (Annotation annotation : annotations) {
+                policyProcessor.process(annotation, definition, context);
+            }
+        }
+        return definition;
     }
 }

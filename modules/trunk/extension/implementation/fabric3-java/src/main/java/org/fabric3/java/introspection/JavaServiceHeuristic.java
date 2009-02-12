@@ -16,33 +16,40 @@
  */
 package org.fabric3.java.introspection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.java.control.JavaImplementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementation> {
-
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;
+    private PolicyAnnotationProcessor policyProcessor;
 
     public JavaServiceHeuristic(@Reference IntrospectionHelper helper,
                                 @Reference ContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
+    }
+
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
     }
 
     public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
@@ -66,8 +73,17 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
         }
     }
 
+    @SuppressWarnings({"unchecked"})
     ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
-        return new ServiceDefinition(contract.getInterfaceName(), contract);
+
+        ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
+        Annotation[] annotations = serviceInterface.getAnnotations();
+        if (policyProcessor != null) {
+            for (Annotation annotation : annotations) {
+                policyProcessor.process(annotation, definition, context);
+            }
+        }
+        return definition;
     }
 }

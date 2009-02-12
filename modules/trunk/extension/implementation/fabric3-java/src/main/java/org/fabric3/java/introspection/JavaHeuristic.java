@@ -16,6 +16,7 @@
  */
 package org.fabric3.java.introspection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,27 +26,28 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.UnknownInjectionType;
-import org.fabric3.spi.introspection.java.NoConstructorFound;
 import org.fabric3.java.control.JavaImplementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.component.Multiplicity;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.model.type.component.Multiplicity;
-import org.fabric3.model.type.component.Property;
-import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.java.Signature;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.AmbiguousConstructor;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.NoConstructorFound;
+import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
+import org.fabric3.spi.introspection.java.UnknownInjectionType;
 
 /**
  * @version $Rev$ $Date$
@@ -57,15 +59,21 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
 
     private final HeuristicProcessor<JavaImplementation> serviceHeuristic;
     private final HeuristicProcessor<JavaImplementation> dataTypeHeuristic;
+    private PolicyAnnotationProcessor policyProcessor;
 
     public JavaHeuristic(@Reference IntrospectionHelper helper,
                          @Reference ContractProcessor contractProcessor,
-                         @Reference(name = "service")HeuristicProcessor<JavaImplementation> serviceHeuristic,
-                         @Reference(name = "dataType")HeuristicProcessor<JavaImplementation> dataTypeHeuristic) {
+                         @Reference(name = "service") HeuristicProcessor<JavaImplementation> serviceHeuristic,
+                         @Reference(name = "dataType") HeuristicProcessor<JavaImplementation> dataTypeHeuristic) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
         this.serviceHeuristic = serviceHeuristic;
         this.dataTypeHeuristic = dataTypeHeuristic;
+    }
+
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
     }
 
     public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
@@ -90,7 +98,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
         dataTypeHeuristic.applyHeuristics(implementation, implClass, context);
     }
 
-    Signature findConstructor(Class<?> implClass, IntrospectionContext context) {
+    private Signature findConstructor(Class<?> implClass, IntrospectionContext context) {
         Constructor<?>[] constructors = implClass.getDeclaredConstructors();
         Constructor<?> selected = null;
         if (constructors.length == 1) {
@@ -113,7 +121,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
         return new Signature(selected);
     }
 
-    void evaluateConstructor(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
+    private void evaluateConstructor(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         Constructor<?> constructor;
@@ -142,11 +150,12 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
 
             Type parameterType = parameterTypes[i];
             String name = helper.getSiteName(constructor, i, null);
-            processSite(componentType, typeMapping, name, parameterType, site, context);
+            Annotation[] annotations = constructor.getParameterAnnotations()[i];
+            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
         }
     }
 
-    void evaluateSetters(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
+    private void evaluateSetters(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
@@ -161,11 +170,12 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
 
             String name = helper.getSiteName(setter, null);
             Type parameterType = setter.getGenericParameterTypes()[0];
-            processSite(componentType, typeMapping, name, parameterType, site, context);
+            Annotation[] annotations = setter.getAnnotations();
+            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
         }
     }
 
-    void evaluateFields(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
+    private void evaluateFields(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
@@ -180,7 +190,8 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
 
             String name = helper.getSiteName(field, null);
             Type parameterType = field.getGenericType();
-            processSite(componentType, typeMapping, name, parameterType, site, context);
+            Annotation[] annotations = field.getAnnotations();
+            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
         }
     }
 
@@ -190,6 +201,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
                              String name,
                              Type parameterType,
                              InjectionSite site,
+                             Annotation[] annotations,
                              IntrospectionContext context) {
         InjectableAttributeType type = helper.inferType(parameterType, typeMapping);
         switch (type) {
@@ -197,7 +209,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             addProperty(componentType, typeMapping, name, parameterType, site);
             break;
         case REFERENCE:
-            addReference(componentType, typeMapping, name, parameterType, site, context);
+            addReference(componentType, typeMapping, name, parameterType, site, annotations, context);
             break;
         case CALLBACK:
             context.addError(new UnknownInjectionType(site, type, componentType.getImplClass()));
@@ -213,15 +225,22 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
         componentType.add(property, site);
     }
 
+    @SuppressWarnings({"unchecked"})
     private void addReference(PojoComponentType componentType,
                               TypeMapping typeMapping,
                               String name,
                               Type parameterType,
                               InjectionSite site,
+                              Annotation[] annotations,
                               IntrospectionContext context) {
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, parameterType, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
+        if (policyProcessor != null) {
+            for (Annotation annotation : annotations) {
+                policyProcessor.process(annotation, reference, context);
+            }
+        }
         componentType.add(reference, site);
     }
 }

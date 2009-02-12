@@ -54,7 +54,7 @@
     <component name="ClassWalker">
         <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
-    
+
     <!-- OSOA Specification Annotations -->
 
     <component name="CallbackProcessor" f3-core:key="org.osoa.sca.annotations.Callback">
@@ -117,6 +117,10 @@
 
     <component name="StatelessProcessor" f3-core:key="org.fabric3.api.annotation.scope.Stateless">
         <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.StatelessProcessor"/>
+    </component>
+
+    <component name="PolicyAnnotationProcessor">
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.PolicyAnnotationProcessorImpl"/>
     </component>
 
 </composite>

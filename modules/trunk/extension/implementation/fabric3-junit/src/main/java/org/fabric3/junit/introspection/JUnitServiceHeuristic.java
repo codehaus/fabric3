@@ -16,6 +16,7 @@
  */
 package org.fabric3.junit.introspection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -26,31 +27,48 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.junit.scdl.JUnitImplementation;
+import org.fabric3.junit.scdl.JUnitServiceContract;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.junit.scdl.JUnitImplementation;
-import org.fabric3.junit.scdl.JUnitServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementation> {
     private static final String TEST_SERVICE_NAME = "testService";
+    private static final DataType<List<DataType<Type>>> INPUT_TYPE;
+    private static final DataType<Type> OUTPUT_TYPE;
+    private static final List<DataType<Type>> FAULT_TYPE;
+
+    static {
+        List<DataType<Type>> paramDataTypes = Collections.emptyList();
+        INPUT_TYPE = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
+        OUTPUT_TYPE = new DataType<Type>(void.class, void.class);
+        FAULT_TYPE = Collections.emptyList();
+    }
 
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;
+    private PolicyAnnotationProcessor policyProcessor;
 
     public JUnitServiceHeuristic(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
+    }
+
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
     }
 
     public void applyHeuristics(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
@@ -73,23 +91,20 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
         }
     }
 
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
+    @SuppressWarnings({"unchecked"})
+    private ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
-        return new ServiceDefinition(contract.getInterfaceName(), contract);
+        ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
+        Annotation[] annotations = serviceInterface.getAnnotations();
+        if (policyProcessor != null) {
+            for (Annotation annotation : annotations) {
+                policyProcessor.process(annotation, definition, context);
+            }
+        }
+        return definition;
     }
 
-    private static final DataType<List<DataType<Type>>> INPUT_TYPE;
-    private static final DataType<Type> OUTPUT_TYPE;
-    private static final List<DataType<Type>> FAULT_TYPE;
-
-    static {
-        List<DataType<Type>> paramDataTypes = Collections.emptyList();
-        INPUT_TYPE = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
-        OUTPUT_TYPE = new DataType<Type>(void.class, void.class);
-        FAULT_TYPE = Collections.emptyList();
-    }
-
-    JUnitServiceContract generateTestContract(Class<?> implClass) {
+    private JUnitServiceContract generateTestContract(Class<?> implClass) {
         List<Operation<Type>> operations = new ArrayList<Operation<Type>>();
         for (Method method : implClass.getMethods()) {
             // see if this is a test method

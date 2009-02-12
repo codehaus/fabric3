@@ -16,9 +16,16 @@
 -->
 <definitions
         xmlns="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200712"
         targetNamespace="http://www.osoa.org/xmlns/sca/1.0">
 
     <intent name="managedTransaction" constrains="implementation">
+        <description>
+            Used to indicate a component runs in a managed transaction.
+        </description>
+    </intent>
+
+    <intent name="oasis:managedTransaction" constrains="implementation">
         <description>
             Used to indicate a component runs in a managed transaction.
         </description>
@@ -30,7 +37,19 @@
         </description>
     </intent>
 
+    <intent name="oasis:propagatesTransaction" constrains="binding">
+        <description>
+            Used to indicate a service or reference propogates the transaction
+        </description>
+    </intent>
+
     <intent name="suspendsTransaction" constrains="binding">
+        <description>
+            Used to indicate a service or reference suspends the transaction
+        </description>
+    </intent>
+
+    <intent name="oasis:suspendsTransaction" constrains="binding">
         <description>
             Used to indicate a service or reference suspends the transaction
         </description>
@@ -43,7 +62,20 @@
         </description>
     </intent>
 
+    <intent name="oasis:transactedOneWay" constrains="binding">
+        <description>
+            Indicates the reference will include one way invocation in the
+            transaction or include message receipt on a service in a transaction.
+        </description>
+    </intent>
+
     <intent name="transactedOneWay.global" constrains="binding">
+        <description>
+            Qualifies transactedOneWay to use global transactions.
+        </description>
+    </intent>
+
+    <intent name="oasis:transactedOneWay.global" constrains="binding">
         <description>
             Qualifies transactedOneWay to use global transactions.
         </description>
@@ -55,7 +87,19 @@
         </description>
     </intent>
 
+    <intent name="oasis:transactedOneWay.local" constrains="binding">
+        <description>
+            Qualifies transactedOneWay to use local transactions.
+        </description>
+    </intent>
+
     <intent name="authentication" constrains="binding">
+        <description>
+            Inidicates the client needs to authenticate before interaction.
+        </description>
+    </intent>
+
+    <intent name="oasis:authentication" constrains="binding">
         <description>
             Inidicates the client needs to authenticate before interaction.
         </description>
@@ -67,7 +111,19 @@
         </description>
     </intent>
 
+    <intent name="oasis:confidentiality" constrains="binding">
+        <description>
+            Inidicates the interaction needs confidentiality.
+        </description>
+    </intent>
+
     <intent name="integrity" constrains="binding">
+        <description>
+            Inidicates the interaction needs integrity.
+        </description>
+    </intent>
+
+    <intent name="oasis:integrity" constrains="binding">
         <description>
             Inidicates the interaction needs integrity.
         </description>
@@ -79,7 +135,19 @@
         </description>
     </intent>
 
+    <intent name="oasis:authentication.message" constrains="binding">
+        <description>
+            Inidicates the client needs to message level authenticate before interaction.
+        </description>
+    </intent>
+
     <intent name="confidentiality.message" constrains="binding">
+        <description>
+            Inidicates the interaction needs message level confidentiality.
+        </description>
+    </intent>
+
+    <intent name="oasis:confidentiality.message" constrains="binding">
         <description>
             Inidicates the interaction needs message level confidentiality.
         </description>
@@ -91,7 +159,19 @@
         </description>
     </intent>
 
+    <intent name="oasis:integrity.message" constrains="binding">
+        <description>
+            Inidicates the interaction needs message level integrity.
+        </description>
+    </intent>
+
     <intent name="authentication.transport" constrains="binding">
+        <description>
+            Inidicates the client needs to transport level authenticate before interaction.
+        </description>
+    </intent>
+
+    <intent name="oasis:authentication.transport" constrains="binding">
         <description>
             Inidicates the client needs to transport level authenticate before interaction.
         </description>
@@ -103,7 +183,19 @@
         </description>
     </intent>
 
+    <intent name="oasis:confidentiality.transport" constrains="binding">
+        <description>
+            Inidicates the interaction needs transport level confidentiality.
+        </description>
+    </intent>
+
     <intent name="integrity.transport" constrains="binding">
+        <description>
+            Inidicates the interaction needs transport level integrity.
+        </description>
+    </intent>
+
+    <intent name="oasis:integrity.transport" constrains="binding">
         <description>
             Inidicates the interaction needs transport level integrity.
         </description>
