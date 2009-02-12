@@ -16,25 +16,23 @@
  */
 package org.fabric3.policy;
 
-import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import javax.transaction.Status;
+import javax.transaction.TransactionManager;
+import javax.transaction.Transaction;
+
+import org.fabric3.api.annotation.Resource;
 
 /**
  * @version $Revision$ $Date$
  */
-public class TransactionalServiceTest extends TestCase {
+public class SuspendedTransactionService implements TransactionalService {
+    @Resource(mappedName = "TransactionManager")
+    protected TransactionManager tm;
 
-    @Reference
-    protected TransactionalService transactionalService;
-
-    @Reference
-    protected TransactionalService managedTransactionService;
-
-    public void testIsInTransaction() throws Exception {
-        transactionalService.call();
-    }
-
-    public void testManagedTransactionAnnotation() throws Exception {
-        managedTransactionService.call();
+    public void call() throws Exception {
+        Transaction transaction = tm.getTransaction();
+        if (transaction != null && Status.STATUS_NO_TRANSACTION != transaction.getStatus()) {
+            throw new AssertionError("Transaction is not suspended");
+        }
     }
 }

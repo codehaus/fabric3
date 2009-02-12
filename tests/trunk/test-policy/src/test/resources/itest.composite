@@ -25,17 +25,30 @@
     <component name="TransactionalServiceTest">
         <f3-impl:junit class="org.fabric3.policy.TransactionalServiceTest"/>
         <reference name="transactionalService" target="TransactionalService1"/>
+        <reference name="managedTransactionService" target="AnnotatedManagedTransactionService"/>
     </component>
 
-    <!-- Transactional Service Impl -->
     <component name="TransactionalService1">
         <implementation.java class="org.fabric3.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
         <reference name="childService" target="TransactionalService2" requires="sca:suspendsTransaction"/>
     </component>
 
-    <!-- Transactional Service Impl -->
     <component name="TransactionalService2">
         <implementation.java class="org.fabric3.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
+    </component>
+
+    <component name="AnnotatedManagedTransactionService">
+        <implementation.java class="org.fabric3.policy.AnnotatedManagedTransactionService"/>
+        <reference name="suspendedTransactionService" target="SuspendedTransactionService"/>
+        <reference name="propagatesTransactionService" target="PropagatesTransactionService"/>
+    </component>
+
+    <component name="SuspendedTransactionService">
+        <implementation.java class="org.fabric3.policy.SuspendedTransactionService"/>
+    </component>
+
+    <component name="PropagatesTransactionService">
+        <implementation.java class="org.fabric3.policy.PropagatesTransactionService"/>
     </component>
 
 </composite>
