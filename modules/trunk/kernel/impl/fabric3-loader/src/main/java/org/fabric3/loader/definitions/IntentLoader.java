@@ -35,6 +35,7 @@ import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
 
 /**
  * Loader for definitions.
@@ -52,7 +53,7 @@ public class IntentLoader implements TypeLoader<Intent> {
     public Intent load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
-        QName qName = new QName(context.getTargetNamespace(), name);
+        QName qName = LoaderUtil.getQName(name, context.getTargetNamespace(), reader.getNamespaceContext());
 
         String constrainsVal = reader.getAttributeValue(null, "constrains");
         QName constrains = null;
