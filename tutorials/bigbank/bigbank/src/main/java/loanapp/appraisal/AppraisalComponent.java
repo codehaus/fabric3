@@ -19,11 +19,12 @@
 package loanapp.appraisal;
 
 import loanapp.api.message.Address;
-import org.osoa.sca.annotations.Callback;
-import org.osoa.sca.annotations.OneWay;
-import org.osoa.sca.annotations.Scope;
 
 import java.util.Date;
+
+import org.oasisopen.sca.annotation.Scope;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.OneWay;
 
 /**
  * @version $Revision$ $Date$

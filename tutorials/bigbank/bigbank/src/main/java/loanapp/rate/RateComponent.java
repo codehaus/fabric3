@@ -16,7 +16,7 @@
  */
 package loanapp.rate;
 
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Rev: 1366 $ $Date: 2007-09-20 21:46:05 -0700 (Thu, 20 Sep 2007) $

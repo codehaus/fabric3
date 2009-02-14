@@ -78,9 +78,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2">
+      <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.3-SNPASHOT">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2/sca-api-r1.0-0.2.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.3-SNAPSHOT/sca-api-r1.0-0.3-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2/sca-api-r1.0-0.2-javadoc.jar!/" />

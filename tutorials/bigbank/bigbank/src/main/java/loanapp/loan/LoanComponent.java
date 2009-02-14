@@ -22,7 +22,7 @@ import loanapp.api.loan.LoanService;
 import loanapp.api.loan.OptionSelection;
 import loanapp.api.message.LoanRequest;
 import loanapp.api.request.RequestCoordinator;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * Default implementation of the LoanService. This implementation performs basic validation and delegates to a series

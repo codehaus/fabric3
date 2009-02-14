@@ -17,24 +17,23 @@
 package org.fabric3.tutorials.clustercalc.client;
 
 import org.fabric3.tutorials.clustercalc.calculator.CalculatorService;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Scope;
+import org.fabric3.tutorials.clustercalc.calculator.CalculatorServiceCallback;
+import org.oasisopen.sca.annotation.EagerInit;
+import org.oasisopen.sca.annotation.Init;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Scope;
+import org.oasisopen.sca.annotation.Service;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
 @Scope("COMPOSITE")
-public class ClientServiceImpl implements ClientService {
+@Service(CalculatorServiceCallback.class)
+public class ClientServiceImpl implements ClientService, CalculatorServiceCallback {
     private CalculatorService calculator;
-    private ScheduledExecutorService executor;
 
     public ClientServiceImpl(@Reference(name = "calculator") CalculatorService calculator) {
         this.calculator = calculator;
@@ -43,25 +42,24 @@ public class ClientServiceImpl implements ClientService {
     @Init
     public void init() {
         System.out.println("Deployed calculator client");
-        executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleWithFixedDelay(new Invoker(), 0, 2, TimeUnit.SECONDS);
-    }
-
-    @Destroy
-    public void destroy() {
-        executor.shutdownNow();
-    }
-
-    private class Invoker implements Runnable {
-
-        public void run() {
-            System.out.println("Executing....");
-            try {
-                calculator.add(1, 1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        try {
+            String id = UUID.randomUUID().toString();
+            calculator.add(id, 1, 1);
+            id = UUID.randomUUID().toString();
+            calculator.add(id, 1, 1);
+            calculator.add(id, 1, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onResult(String id, double result) {
+        System.out.println("Result: " + result);
     }
 
 }

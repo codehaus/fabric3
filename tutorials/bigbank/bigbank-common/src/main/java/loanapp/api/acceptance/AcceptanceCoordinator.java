@@ -18,9 +18,9 @@
  */
 package loanapp.api.acceptance;
 
-import org.osoa.sca.annotations.Conversational;
 import loanapp.api.loan.LoanException;
 import loanapp.api.message.LoanOptions;
+import org.osoa.sca.annotations.Conversational;
 
 /**
  * Coordinator that handles processing for loan terms that have been accepted by applicants. If a loan is accepted, an

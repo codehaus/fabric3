@@ -21,11 +21,12 @@ import loanapp.message.Term;
 import loanapp.rate.Rate;
 import loanapp.rate.RateResults;
 import loanapp.rate.RateService;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.oasisopen.sca.annotation.Scope;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * Default implementation of the PricingService that uses a RateService to compile up-to-date loan options.

@@ -16,11 +16,10 @@
  */
 package loanapp.risk;
 
-import org.osoa.sca.annotations.Remotable;
-import org.osoa.sca.annotations.OneWay;
-import org.osoa.sca.annotations.Callback;
-
 import loanapp.message.LoanApplication;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.OneWay;
+import org.oasisopen.sca.annotation.Remotable;
 
 /**
  * Performs risk assessment against a loan application.

@@ -19,8 +19,8 @@
 package loanapp.appraisal;
 
 import loanapp.api.message.Address;
-import org.osoa.sca.annotations.OneWay;
-import org.osoa.sca.annotations.Callback;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.OneWay;
 
 /**
  * Schedules appraisals for a property.

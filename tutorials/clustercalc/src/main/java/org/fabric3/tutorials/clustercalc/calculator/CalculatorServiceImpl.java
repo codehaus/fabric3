@@ -16,10 +16,11 @@
  */
 package org.fabric3.tutorials.clustercalc.calculator;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.EagerInit;
+import org.oasisopen.sca.annotation.Scope;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.Init;
+import org.oasisopen.sca.annotation.Destroy;
 
 /**
  * @version $Revision$ $Date$
@@ -27,6 +28,8 @@ import org.osoa.sca.annotations.Scope;
 @EagerInit
 @Scope("COMPOSITE")
 public class CalculatorServiceImpl implements CalculatorService {
+    @Callback
+    protected CalculatorServiceCallback callback;
 
     @Init
     public void init() {
@@ -38,19 +41,23 @@ public class CalculatorServiceImpl implements CalculatorService {
         System.out.println("Undeploying calculator");
     }
 
-    public void add(double n1, double n2) {
+    public void add(String id, double n1, double n2) {
         System.out.println("adding");
+        callback.onResult(id, n1 + n2);
     }
 
-    public void subtract(double n1, double n2) {
+    public void subtract(String id, double n1, double n2) {
         System.out.println("subtracting");
+        callback.onResult(id, n1 - n2);
     }
 
-    public void multiply(double n1, double n2) {
+    public void multiply(String id, double n1, double n2) {
         System.out.println("multiplying");
+        callback.onResult(id, n1 * n2);
     }
 
-    public void divide(double n1, double n2) {
+    public void divide(String id, double n1, double n2) {
         System.out.println("dividing");
+        callback.onResult(id, n1 / n2);
     }
 }

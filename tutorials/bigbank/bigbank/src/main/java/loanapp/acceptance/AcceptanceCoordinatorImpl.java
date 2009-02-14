@@ -33,13 +33,14 @@ import loanapp.store.StoreService;
 import loanapp.api.acceptance.AcceptanceCoordinator;
 import loanapp.api.acceptance.LoanNotApprovedException;
 import loanapp.api.acceptance.LoanNotFoundException;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Scope;
-import org.osoa.sca.annotations.Service;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.oasisopen.sca.annotation.Scope;
+import org.oasisopen.sca.annotation.Service;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * Default implementation of the AcceptanceCoordinator.

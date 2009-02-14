@@ -18,7 +18,7 @@
  */
 package loanapp.credit;
 
-import org.osoa.sca.annotations.OneWay;
+import org.oasisopen.sca.annotation.OneWay;
 
 /**
  * Interface to receive callbacks for credit score requests

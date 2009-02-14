@@ -16,23 +16,26 @@
  */
 package org.fabric3.tutorials.clustercalc.calculator;
 
-import org.osoa.sca.annotations.OneWay;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.OneWay;
+
 
 /**
  * The Calculator service interface.
  */
+@Callback(CalculatorServiceCallback.class)
 public interface CalculatorService {
 
     @OneWay
-    void add(double n1, double n2);
+    void add(String id, double n1, double n2);
 
     @OneWay
-    void subtract(double n1, double n2);
+    void subtract(String id, double n1, double n2);
 
     @OneWay
-    void multiply(double n1, double n2);
+    void multiply(String id, double n1, double n2);
 
     @OneWay
-    void divide(double n1, double n2);
+    void divide(String id, double n1, double n2);
 
 }

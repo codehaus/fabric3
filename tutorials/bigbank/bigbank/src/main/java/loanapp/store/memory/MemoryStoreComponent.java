@@ -21,10 +21,11 @@ package loanapp.store.memory;
 import loanapp.domain.LoanRecord;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
-import org.osoa.sca.annotations.Scope;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * Simple in-memory StoreService that uses a Map for persistence.

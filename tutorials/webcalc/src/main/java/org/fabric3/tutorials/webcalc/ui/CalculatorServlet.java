@@ -18,8 +18,8 @@
  */
 package org.fabric3.tutorials.webcalc.ui;
 
-import org.osoa.sca.annotations.Reference;
 import org.fabric3.tutorials.webcalc.calculator.CalculatorService;
+import org.oasisopen.sca.annotation.Reference;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +34,7 @@ import java.io.Writer;
  * @version $Revision$ $Date$
  */
 public class CalculatorServlet extends HttpServlet {
+    private static final long serialVersionUID = -2731185078362675240L;
 
     @Reference
     protected CalculatorService calculatorService;

@@ -20,8 +20,8 @@ import loanapp.api.acceptance.AcceptanceCoordinator;
 import loanapp.api.acceptance.LoanNotApprovedException;
 import loanapp.api.acceptance.LoanNotFoundException;
 import loanapp.api.loan.LoanException;
-import org.osoa.sca.ComponentContext;
-import org.osoa.sca.annotations.Context;
+import org.oasisopen.sca.ComponentContext;
+import org.oasisopen.sca.annotation.Context;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

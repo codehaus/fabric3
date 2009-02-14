@@ -33,6 +33,7 @@
     <modules>
         <module>bigbank</module>
         <module>webcalc</module>
+        <module>clustercalc</module>
     </modules>
 	
 </project>

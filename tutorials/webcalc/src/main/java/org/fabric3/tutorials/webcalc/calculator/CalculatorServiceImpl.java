@@ -1,6 +1,7 @@
 package org.fabric3.tutorials.webcalc.calculator;
 
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
+
 
 /**
  * @version $Revision$ $Date$
@@ -19,10 +20,10 @@ public class CalculatorServiceImpl implements CalculatorService {
      * @param multiplyService the service for performing multiplication
      * @param divideService   the service for performing division
      */
-    public CalculatorServiceImpl(@Reference(name = "addService")AddService addService,
-                                 @Reference(name = "subtractService")SubtractService subtractService,
-                                 @Reference(name = "multiplyService")MultiplyService multiplyService,
-                                 @Reference(name = "divideService")DivideService divideService) {
+    public CalculatorServiceImpl(@Reference(name = "addService") AddService addService,
+                                 @Reference(name = "subtractService") SubtractService subtractService,
+                                 @Reference(name = "multiplyService") MultiplyService multiplyService,
+                                 @Reference(name = "divideService") DivideService divideService) {
         this.addService = addService;
         this.subtractService = subtractService;
         this.multiplyService = multiplyService;

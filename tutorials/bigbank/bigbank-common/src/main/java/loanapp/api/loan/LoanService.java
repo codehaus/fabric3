@@ -17,7 +17,7 @@
 package loanapp.api.loan;
 
 import loanapp.api.message.LoanRequest;
-import org.osoa.sca.annotations.Remotable;
+import org.oasisopen.sca.annotation.Remotable;
 
 /**
  * Implementations process a loan application.

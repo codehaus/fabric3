@@ -19,8 +19,8 @@ package loanapp.bigbrother;
 import loanapp.credit.CreditScore;
 import loanapp.credit.CreditService;
 import loanapp.credit.CreditServiceCallback;
-import org.osoa.sca.annotations.Callback;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Callback;
 
 /**
  * Implementation of a CreditService that returns a credit score from the fictitious BigBrother credit bureau.

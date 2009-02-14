@@ -1,7 +1,7 @@
 package loanapp.bigbrother;
 
 import loanapp.credit.CreditScore;
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * Audits credit scoring operations for compliance reasons.

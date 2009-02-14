@@ -19,12 +19,13 @@ package loanapp.risk;
 import loanapp.message.LoanApplication;
 import loanapp.message.RiskAssessment;
 import loanapp.message.RiskReason;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Scope;
-import org.osoa.sca.annotations.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.oasisopen.sca.annotation.Scope;
+import org.oasisopen.sca.annotation.Property;
+import org.oasisopen.sca.annotation.Callback;
 
 /**
  * Implementation that performs risk assesment based on an applicant's credit score and loan amount.

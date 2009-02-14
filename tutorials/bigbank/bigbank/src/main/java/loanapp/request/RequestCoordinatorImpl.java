@@ -18,15 +18,15 @@
  */
 package loanapp.request;
 
+import loanapp.api.loan.LoanException;
+import loanapp.api.message.LoanRequest;
+import loanapp.api.message.LoanStatus;
+import loanapp.api.request.RequestCoordinator;
 import loanapp.credit.CreditScore;
 import loanapp.credit.CreditService;
 import loanapp.credit.CreditServiceCallback;
 import loanapp.domain.LoanRecord;
-import loanapp.api.loan.LoanException;
 import loanapp.message.LoanApplication;
-import loanapp.api.message.LoanRequest;
-import loanapp.api.message.LoanStatus;
-import loanapp.api.request.RequestCoordinator;
 import loanapp.message.RiskAssessment;
 import loanapp.message.Term;
 import loanapp.notification.NotificationService;
@@ -36,10 +36,10 @@ import loanapp.risk.RiskAssessmentService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
 import org.fabric3.api.annotation.Monitor;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Scope;
+import org.oasisopen.sca.annotation.Service;
 import org.osoa.sca.annotations.ConversationAttributes;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Scope;
-import org.osoa.sca.annotations.Service;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -72,11 +72,11 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
      * @param storeService        stores an application after it has been processed
      * @param monitor             the monitor for recording errors
      */
-    public RequestCoordinatorImpl(@Reference(name = "creditService")CreditService creditService,
-                                  @Reference(name = "riskService")RiskAssessmentService riskService,
-                                  @Reference(name = "pricingService")PricingService pricingService,
-                                  @Reference(name = "notificationService")NotificationService notificationService,
-                                  @Reference(name = "storeService")StoreService storeService,
+    public RequestCoordinatorImpl(@Reference(name = "creditService") CreditService creditService,
+                                  @Reference(name = "riskService") RiskAssessmentService riskService,
+                                  @Reference(name = "pricingService") PricingService pricingService,
+                                  @Reference(name = "notificationService") NotificationService notificationService,
+                                  @Reference(name = "storeService") StoreService storeService,
                                   @Monitor RequestCoordinatorMonitor monitor) {
         this.creditService = creditService;
         this.riskService = riskService;

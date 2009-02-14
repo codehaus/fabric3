@@ -18,7 +18,7 @@ package loanapp.pricing;
 
 import loanapp.message.LoanApplication;
 import loanapp.message.Term;
-import org.osoa.sca.annotations.Remotable;
+import org.oasisopen.sca.annotation.Remotable;
 
 /**
  * Implementations compile a set of different loan options that fit the characteristics of an applicant and loan

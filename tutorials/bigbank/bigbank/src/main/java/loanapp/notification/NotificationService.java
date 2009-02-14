@@ -18,7 +18,7 @@
  */
 package loanapp.notification;
 
-import org.osoa.sca.annotations.OneWay;
+import org.oasisopen.sca.annotation.OneWay;
 
 import java.util.Date;
 

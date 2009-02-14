@@ -21,8 +21,6 @@ import loanapp.api.message.Address;
 import loanapp.api.message.LoanRequest;
 import loanapp.api.message.LoanStatus;
 import loanapp.api.request.RequestCoordinator;
-import org.osoa.sca.ComponentContext;
-import org.osoa.sca.annotations.Context;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -30,6 +28,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import org.oasisopen.sca.annotation.Context;
+import org.oasisopen.sca.ComponentContext;
+
 
 /**
  * @version $Rev$ $Date$
