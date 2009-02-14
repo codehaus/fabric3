@@ -92,6 +92,11 @@ public final class Constants {
     public static final String CONTEXT_ATTRIBUTE = "org.osoa.sca.ComponentContext";
 
     /**
+     * Name of the context attribute that contains the ComponentContext.
+     */
+    public static final String OASIS_CONTEXT_ATTRIBUTE = "org.oasisopen.sca.ComponentContext";
+
+    /**
      * Name of the parameter that defines whether the work scheduler should pause on start.
      */
     public static final String PAUSE_ON_START_PARAM = "fabric3.work.scheduler.pauseOnStart";
