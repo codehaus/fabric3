@@ -6,32 +6,36 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.
+ * under the License.    
  */
 package org.oasisopen.sca;
 
 /**
- * OASIS defined constant values for SCA.
+ * A ServiceReference represents a client's perspective of a reference to another service.
  *
- * @version $Revision$ $Date$
+ * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
+ * @param <B> the Java interface associated with this reference
  */
-public interface Constants {
+public interface ServiceReference<B> extends java.io.Serializable {
+    /**
+     * Returns a typed reference to the target of this reference.
+     *
+     * @return a typed reference to the target of this reference.
+     */
+    B getService();
 
     /**
-     * The default SCA namespace.
+     * Returns the interface type associated with this reference.
+     *
+     * @return the the interface type associated with this reference
      */
-    String SCA_NS = "http://docs.oasis-open.org/ns/opencsa/sca/200712";
-
-    /**
-     * The default SCA namespace as a qualified name prefix.
-     */
-    String SCA_PREFIX = "{" + SCA_NS + "}";
+    Class<B> getBusinessInterface();
 }

@@ -16,22 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.oasisopen.sca;
+package org.oasisopen.sca.annotation;
+
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
 
 /**
- * OASIS defined constant values for SCA.
+ * Annotation used to indicate an instance should be eagerly initialized.
  *
- * @version $Revision$ $Date$
+ * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
-public interface Constants {
+@Target({TYPE})
+@Retention(RUNTIME)
+public @interface EagerInit {
 
-    /**
-     * The default SCA namespace.
-     */
-    String SCA_NS = "http://docs.oasis-open.org/ns/opencsa/sca/200712";
-
-    /**
-     * The default SCA namespace as a qualified name prefix.
-     */
-    String SCA_PREFIX = "{" + SCA_NS + "}";
 }

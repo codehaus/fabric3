@@ -6,32 +6,30 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.
+ * under the License.    
  */
-package org.oasisopen.sca;
+package org.oasisopen.sca.annotation;
+
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
 
 /**
- * OASIS defined constant values for SCA.
+ * Annotation used to indicate a Java interface as remotable. Remotable interfaces use pass-by-value semantics, can be published as remote services
+ * and used for external references.
  *
- * @version $Revision$ $Date$
+ * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
-public interface Constants {
-
-    /**
-     * The default SCA namespace.
-     */
-    String SCA_NS = "http://docs.oasis-open.org/ns/opencsa/sca/200712";
-
-    /**
-     * The default SCA namespace as a qualified name prefix.
-     */
-    String SCA_PREFIX = "{" + SCA_NS + "}";
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface Remotable {
 }

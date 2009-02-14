@@ -6,54 +6,44 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.
+ * under the License.    
  */
 package org.oasisopen.sca.annotation;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
-import org.osoa.sca.annotations.Intent;
-
 /**
- * Annotation that allows the attachment of any intent to a Java Class or interface or to members of that
- * class such as methods, fields or constructor parameters.
- * <p/>
- * Intents are specified as XML QNames in the representation defined by
- * {@link javax.xml.namespace.QName#toString() QName#toString()}. Intents may be qualified with one or more
- * suffixes separated by a "." such as:
- * <ul>
- * <li>{http://docs.oasis-open.org/ns/opencsa/sca/200712}confidentiality</li>
- * <li>{http://docs.oasis-open.org/ns/opencsa/sca/200712}confidentiality.message</li>
- * </ul>
- * This annotation supports general purpose intents specified as strings.  Users may also define
- * specific intents using the {@link Intent} annotation.
+ * Annotation used to indicate a constructor parameter, field or method that is used to inject a reference.
  *
- * @version $Rev: 875 $ $Date: 2007-08-27 09:23:01 -0700 (Mon, 27 Aug 2007) $
+ * @version $Rev: 792 $ $Date: 2007-08-21 09:10:17 -0700 (Tue, 21 Aug 2007) $
  */
-@Target({TYPE, METHOD, FIELD, PARAMETER})
+@Target({METHOD, FIELD, PARAMETER})
 @Retention(RUNTIME)
-@Inherited
-public @interface Requires {
+public @interface Reference {
+    /**
+     * The name of the reference. If not specified then the name will be derived from the annotated field or method.
+     *
+     * @return the name of the reference
+     */
+    public abstract String name() default "";
 
     /**
-     * Returns the attached intents.
+     * Indicates if a reference must be specified.
      *
-     * @return the attached intents
+     * @return true if a reference must be specified
      */
-    String[] value() default "";
+    public abstract boolean required() default true;
 }
