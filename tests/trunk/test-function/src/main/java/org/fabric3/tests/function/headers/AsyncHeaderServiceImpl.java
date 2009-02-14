@@ -16,9 +16,9 @@
  */
 package org.fabric3.tests.function.headers;
 
-import org.osoa.sca.annotations.Context;
+import org.oasisopen.sca.annotation.Context;
 
-import org.fabric3.api.F3RequestContext;
+import org.fabric3.api.Fabric3RequestContext;
 
 /**
  * @version $Revision$ $Date$
@@ -26,7 +26,7 @@ import org.fabric3.api.F3RequestContext;
 public class AsyncHeaderServiceImpl implements AsyncHeaderService {
 
     @Context
-    protected F3RequestContext context;
+    protected Fabric3RequestContext context;
 
     public void invokeTestHeader(HeaderFuture future) {
         String header = context.getHeader(String.class, "header");

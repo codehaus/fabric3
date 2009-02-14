@@ -18,12 +18,11 @@ package org.fabric3.tests.function.properties;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -32,9 +31,9 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public interface PropertyTypes {
-	
-	Foo getFoo();
-	
+
+    Foo getFoo();
+
     boolean getBooleanPrimitive();
 
     byte getBytePrimitive();
@@ -80,9 +79,9 @@ public interface PropertyTypes {
     Map<String, String> getMapValue();
 
     Properties getPropertiesValue();
-    
+
     List<String> getListValue();
-    
+
     Map<QName, Class<?>> getMapOfQNameToClassValue();
-    
+
 }

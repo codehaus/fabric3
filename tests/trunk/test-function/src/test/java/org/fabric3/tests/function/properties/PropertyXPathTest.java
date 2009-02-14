@@ -17,7 +17,7 @@
 package org.fabric3.tests.function.properties;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Property;
+import org.oasisopen.sca.annotation.Property;
 
 /**
  * @version $Rev$ $Date$
@@ -27,8 +27,8 @@ public class PropertyXPathTest extends TestCase {
     public String simple;
     @Property
     public String complex;
-    @Property
-    public String complexWithNamespace;
+//    @Property
+//    public String complexWithNamespace;
 
     public void testSimpleXPath() {
         assertEquals("Hello World", simple);

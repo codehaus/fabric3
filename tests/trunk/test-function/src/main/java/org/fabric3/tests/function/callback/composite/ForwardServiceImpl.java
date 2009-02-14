@@ -16,9 +16,9 @@
  */
 package org.fabric3.tests.function.callback.composite;
 
-import org.osoa.sca.annotations.Callback;
-import org.osoa.sca.annotations.OneWay;
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.OneWay;
+import org.oasisopen.sca.annotation.Scope;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 
@@ -33,6 +33,6 @@ public class ForwardServiceImpl implements ForwardService {
 
     @OneWay
     public void invoke(CallbackData data) {
-      callbackService.onCallback(data);  
+        callbackService.onCallback(data);
     }
 }

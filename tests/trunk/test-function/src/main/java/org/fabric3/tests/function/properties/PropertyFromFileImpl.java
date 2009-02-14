@@ -16,7 +16,7 @@
  */
 package org.fabric3.tests.function.properties;
 
-import org.osoa.sca.annotations.Property;
+import org.oasisopen.sca.annotation.Property;
 
 /**
  * @version $Rev$ $Date$

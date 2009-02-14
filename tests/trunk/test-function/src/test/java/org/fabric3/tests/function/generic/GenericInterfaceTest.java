@@ -19,7 +19,7 @@ package org.fabric3.tests.function.generic;
 import java.util.List;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -28,7 +28,7 @@ public class GenericInterfaceTest extends TestCase {
 
     private final List<GenericInterface<String>> service;
 
-    public GenericInterfaceTest(@Reference(name="service") List<GenericInterface<String>> service) {
+    public GenericInterfaceTest(@Reference(name = "service") List<GenericInterface<String>> service) {
         this.service = service;
     }
 

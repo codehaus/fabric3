@@ -16,9 +16,9 @@
  */
 package org.fabric3.tests.function.lifecycle;
 
-import org.osoa.sca.annotations.Scope;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
+import org.oasisopen.sca.annotation.EagerInit;
+import org.oasisopen.sca.annotation.Init;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Rev$ $Date$

@@ -16,7 +16,7 @@
  */
 package org.fabric3.tests.function.common;
 
-import org.osoa.sca.annotations.Property;
+import org.oasisopen.sca.annotation.Property;
 
 /**
  * @version $Rev$ $Date$
@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Property;
 public class IdentityServiceImpl implements IdentityService {
     private final String identity;
 
-    public IdentityServiceImpl(@Property(name = "id")String identity) {
+    public IdentityServiceImpl(@Property(name = "id") String identity) {
         this.identity = identity;
     }
 

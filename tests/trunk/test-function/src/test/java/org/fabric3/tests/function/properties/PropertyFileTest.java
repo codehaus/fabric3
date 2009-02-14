@@ -17,8 +17,8 @@
 package org.fabric3.tests.function.properties;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Property;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Rev$ $Date$

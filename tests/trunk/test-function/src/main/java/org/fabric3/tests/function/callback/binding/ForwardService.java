@@ -16,11 +16,11 @@
  */
 package org.fabric3.tests.function.callback.binding;
 
-import org.osoa.sca.annotations.Callback;
+import org.oasisopen.sca.annotation.Callback;
 
 /**
  * @version $Revision$ $Date$
  */
 @Callback(CallbackService.class)
-public interface ForwardService extends ClientService{
+public interface ForwardService extends ClientService {
 }

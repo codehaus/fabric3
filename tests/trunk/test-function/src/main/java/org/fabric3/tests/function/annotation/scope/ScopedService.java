@@ -17,13 +17,12 @@
 package org.fabric3.tests.function.annotation.scope;
 
 /**
- * Interface to support tracking of implementing components'
- * scope by examining the effect that incrementing
- * a value has on subsequent reads of the same value
+ * Interface to support tracking of implementing components' scope by examining the effect that incrementing a value has on subsequent reads of the
+ * same value
  */
 public interface ScopedService {
-    
+
     int getValue();
-    
+
     void incrementValue();
 }

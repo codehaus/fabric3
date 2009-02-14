@@ -19,7 +19,7 @@ package org.fabric3.tests.function.references;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 import org.fabric3.tests.function.common.IdentityService;
 
@@ -34,7 +34,7 @@ public class MapTest extends TestCase {
     private final Map<String, IdentityService> constructor;
     private Map<String, IdentityService> setter;
 
-    public MapTest(@Reference(name="constructor") Map<String, IdentityService> constructor) {
+    public MapTest(@Reference(name = "constructor") Map<String, IdentityService> constructor) {
         this.constructor = constructor;
     }
 

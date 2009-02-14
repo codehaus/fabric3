@@ -23,17 +23,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Property;
+import org.oasisopen.sca.annotation.Property;
 
 /**
  * @version $Rev$ $Date$
  */
 public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
-	
-	private final Foo foo;
+
+    private final Foo foo;
     private final boolean booleanPrimitive;
     private final byte bytePrimitive;
     private final short shortPrimitive;
@@ -63,27 +62,27 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     private final List<String> listValue;
     private final Map<QName, Class<?>> mapOfQNameToClassValue;
 
-    public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive")boolean booleanPrimitive,
-                                              @Property(name = "bytePrimitive")byte bytePrimitive,
-                                              @Property(name = "shortPrimitive")short shortPrimitive,
-                                              @Property(name = "intPrimitive")int intPrimitive,
-                                              @Property(name = "longPrimitive")long longPrimitive,
-                                              @Property(name = "floatPrimitive")float floatPrimitive,
-                                              @Property(name = "doublePrimitive")double doublePrimitive,
-                                              @Property(name = "booleanValue")Boolean booleanValue,
-                                              @Property(name = "byteValue")Byte byteValue,
-                                              @Property(name = "shortValue")Short shortValue,
-                                              @Property(name = "integerValue")Integer integerValue,
-                                              @Property(name = "longValue")Long longValue,
-                                              @Property(name = "floatValue")Float floatValue,
-                                              @Property(name = "doubleValue")Double doubleValue,
-                                              @Property(name = "classValue")Class<?> classValue,
-                                              @Property(name = "string")String string,
-                                              @Property(name = "uriValue")URI uriValue,
-                                              @Property(name = "urlValue")URL urlValue,
-                                              @Property(name = "dateValue")Date dateValue,
-                                              @Property(name = "calendarValue")Calendar calendarValue,
-                                              @Property(name = "intArray") int[] intArray,
+    public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive") boolean booleanPrimitive,
+                                              @Property(name = "bytePrimitive") byte bytePrimitive,
+                                              @Property(name = "shortPrimitive") short shortPrimitive,
+                                              @Property(name = "intPrimitive") int intPrimitive,
+                                              @Property(name = "longPrimitive") long longPrimitive,
+                                              @Property(name = "floatPrimitive") float floatPrimitive,
+                                              @Property(name = "doublePrimitive") double doublePrimitive,
+                                              @Property(name = "booleanValue") Boolean booleanValue,
+                                              @Property(name = "byteValue") Byte byteValue,
+                                              @Property(name = "shortValue") Short shortValue,
+                                              @Property(name = "integerValue") Integer integerValue,
+                                              @Property(name = "longValue") Long longValue,
+                                              @Property(name = "floatValue") Float floatValue,
+                                              @Property(name = "doubleValue") Double doubleValue,
+                                              @Property(name = "classValue") Class<?> classValue,
+                                              @Property(name = "string") String string,
+                                              @Property(name = "uriValue") URI uriValue,
+                                              @Property(name = "urlValue") URL urlValue,
+                                              @Property(name = "dateValue") Date dateValue,
+                                              @Property(name = "calendarValue") Calendar calendarValue,
+                                              @Property(name = "intArray", required = false) int[] intArray,
                                               @Property(name = "mapValue") Map<String, String> mapValue,
                                               @Property(name = "propertiesValue") Properties propertiesValue,
                                               @Property(name = "listValue") List<String> listValue,
@@ -118,7 +117,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     }
 
     public Foo getFoo() {
-    	return foo;
+        return foo;
     }
 
     public boolean getBooleanPrimitive() {
@@ -212,11 +211,11 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     public Properties getPropertiesValue() {
         return propertiesValue;
     }
-    
+
     public List<String> getListValue() {
         return listValue;
     }
-    
+
     public Map<QName, Class<?>> getMapOfQNameToClassValue() {
         return mapOfQNameToClassValue;
     }

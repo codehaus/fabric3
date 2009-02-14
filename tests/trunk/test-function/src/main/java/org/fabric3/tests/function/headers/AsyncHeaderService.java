@@ -16,7 +16,7 @@
  */
 package org.fabric3.tests.function.headers;
 
-import org.osoa.sca.annotations.OneWay;
+import org.oasisopen.sca.annotation.OneWay;
 
 /**
  * @version $Revision$ $Date$

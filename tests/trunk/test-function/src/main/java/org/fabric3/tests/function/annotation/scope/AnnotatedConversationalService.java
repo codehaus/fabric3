@@ -22,13 +22,13 @@ import org.fabric3.api.annotation.scope.Conversation;
 public class AnnotatedConversationalService implements ConversationalService {
 
     private int value;
-    
+
     public int getValue() {
         return value;
     }
 
     public void incrementValue() {
-        value++;        
+        value++;
     }
 
 }

@@ -16,11 +16,11 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
-import org.osoa.sca.ComponentContext;
-import org.osoa.sca.annotations.Context;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Service;
+import org.oasisopen.sca.ComponentContext;
+import org.oasisopen.sca.annotation.Context;
+import org.oasisopen.sca.annotation.Property;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Service;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 
@@ -29,7 +29,7 @@ import org.fabric3.tests.function.callback.common.CallbackData;
  */
 @Service(interfaces = {ForwardService.class, ClientService.class, CallbackService.class})
 public class CallbackClient implements ForwardService, CallbackService, ClientService {
-    @Property
+    @Property(required = false)
     protected boolean fail;
 
     @Reference

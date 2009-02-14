@@ -16,8 +16,8 @@
  */
 package org.fabric3.tests.function.callback.conversation;
 
+import org.oasisopen.sca.annotation.OneWay;
 import org.osoa.sca.annotations.Conversational;
-import org.osoa.sca.annotations.OneWay;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 

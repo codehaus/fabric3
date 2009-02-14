@@ -16,9 +16,9 @@
  */
 package org.fabric3.tests.function.callback.composite;
 
-import org.osoa.sca.annotations.OneWay;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
+import org.oasisopen.sca.annotation.OneWay;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Service;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 

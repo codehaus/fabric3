@@ -23,14 +23,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.Map;
 import java.util.Properties;
-
+import java.util.TimeZone;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -38,9 +37,9 @@ import org.osoa.sca.annotations.Reference;
 public class PropertyTypeTest extends TestCase {
     @Reference
     public PropertyTypes service;
-    
+
     public void testFoo() {
-    	assertEquals("Bar", service.getFoo().bar);
+        assertEquals("Bar", service.getFoo().bar);
     }
 
     public void testBoolean() {
@@ -48,11 +47,11 @@ public class PropertyTypeTest extends TestCase {
     }
 
     public void testByte() {
-        assertEquals((byte)12, service.getBytePrimitive());
+        assertEquals((byte) 12, service.getBytePrimitive());
     }
 
     public void testShort() {
-        assertEquals((short)1234, service.getShortPrimitive());
+        assertEquals((short) 1234, service.getShortPrimitive());
     }
 
     public void testInteger() {
@@ -80,11 +79,11 @@ public class PropertyTypeTest extends TestCase {
     }
 
     public void testByteValue() {
-        assertEquals(Byte.valueOf((byte)12), service.getByteValue());
+        assertEquals(Byte.valueOf((byte) 12), service.getByteValue());
     }
 
     public void testShortValue() {
-        assertEquals(Short.valueOf((short)1234), service.getShortValue());
+        assertEquals(Short.valueOf((short) 1234), service.getShortValue());
     }
 
     public void testIntegerValue() {
@@ -128,7 +127,7 @@ public class PropertyTypeTest extends TestCase {
         calendar.clear();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         calendar.set(2007, Calendar.OCTOBER, 31, 1, 0, 0);
-        
+
         assertEquals(calendar.getTime(), service.getCalendarValue().getTime());
     }
 
@@ -149,13 +148,13 @@ public class PropertyTypeTest extends TestCase {
         assertEquals("value1", properties.getProperty("prop1"));
         assertEquals("value2", properties.getProperty("prop2"));
     }
-    
+
     public void testList() {
         List<String> list = service.getListValue();
         assertEquals("value1", list.get(0));
         assertEquals("value2", list.get(1));
     }
-    
+
     public void testMapOfQNameToClass() {
         Map<QName, Class<?>> map = service.getMapOfQNameToClassValue();
         assertEquals(map.get(new QName("urn:foo", "one")), String.class);

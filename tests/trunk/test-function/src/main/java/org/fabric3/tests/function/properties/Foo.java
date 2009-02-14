@@ -39,10 +39,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "foo")
 public class Foo {
-	
-	@XmlElement(name = "bar")
-	public String bar;
-	
-	
+
+    @XmlElement(name = "bar")
+    public String bar;
+
 
 }

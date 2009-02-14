@@ -22,5 +22,5 @@ package org.fabric3.tests.function.common;
 public interface Client {
 
     void invoke();
-    
+
 }

@@ -16,7 +16,7 @@
  */
 package org.fabric3.tests.function.common;
 
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 public class SourceImpl implements Source {
     private Target target;
 
-    public SourceImpl(@Reference(name = "target")Target target) {
+    public SourceImpl(@Reference(name = "target") Target target) {
         this.target = target;
     }
 

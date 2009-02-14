@@ -16,7 +16,7 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
-import org.osoa.sca.annotations.Callback;
+import org.oasisopen.sca.annotation.Callback;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 

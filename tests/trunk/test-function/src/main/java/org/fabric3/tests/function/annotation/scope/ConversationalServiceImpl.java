@@ -16,20 +16,22 @@
  */
 package org.fabric3.tests.function.annotation.scope;
 
+import org.oasisopen.sca.annotation.Scope;
+
 import org.fabric3.api.annotation.scope.Scopes;
-import org.osoa.sca.annotations.Scope;
+
 
 @Scope(Scopes.CONVERSATION)
 public class ConversationalServiceImpl implements ConversationalService {
 
     private int value;
-    
+
     public int getValue() {
         return value;
     }
 
     public void incrementValue() {
-        value++;        
+        value++;
     }
 
 }

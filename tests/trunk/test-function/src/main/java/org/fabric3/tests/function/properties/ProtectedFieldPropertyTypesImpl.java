@@ -23,49 +23,74 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Property;
+import org.oasisopen.sca.annotation.Property;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ProtectedFieldPropertyTypesImpl implements PropertyTypes {
-	
-	@Property protected Foo foo;
-	
-    @Property protected boolean booleanPrimitive;
-    @Property protected byte bytePrimitive;
-    @Property protected short shortPrimitive;
-    @Property protected int intPrimitive;
-    @Property protected long longPrimitive;
-    @Property protected float floatPrimitive;
-    @Property protected double doublePrimitive;
 
-    @Property protected Boolean booleanValue;
-    @Property protected Byte byteValue;
-    @Property protected Short shortValue;
-    @Property protected Integer integerValue;
-    @Property protected Long longValue;
-    @Property protected Float floatValue;
-    @Property protected Double doubleValue;
-    @Property protected Class<?> classValue;
+    @Property
+    protected Foo foo;
 
-    @Property protected String string;
-    @Property protected URI uriValue;
-    @Property protected URL urlValue;
-    @Property protected Date dateValue;
-    @Property protected Calendar calendarValue;
+    @Property
+    protected boolean booleanPrimitive;
+    @Property
+    protected byte bytePrimitive;
+    @Property
+    protected short shortPrimitive;
+    @Property
+    protected int intPrimitive;
+    @Property
+    protected long longPrimitive;
+    @Property
+    protected float floatPrimitive;
+    @Property
+    protected double doublePrimitive;
 
-    @Property protected int[] intArray;
-    @Property protected Map<String, String> mapValue;
-    @Property protected Properties propertiesValue;
-    @Property protected List<String> listValue;
-    @Property protected Map<QName, Class<?>> mapOfQNameToClassValue;
+    @Property
+    protected Boolean booleanValue;
+    @Property
+    protected Byte byteValue;
+    @Property
+    protected Short shortValue;
+    @Property
+    protected Integer integerValue;
+    @Property
+    protected Long longValue;
+    @Property
+    protected Float floatValue;
+    @Property
+    protected Double doubleValue;
+    @Property
+    protected Class<?> classValue;
+
+    @Property
+    protected String string;
+    @Property
+    protected URI uriValue;
+    @Property
+    protected URL urlValue;
+    @Property
+    protected Date dateValue;
+    @Property
+    protected Calendar calendarValue;
+
+    @Property (required = false)
+    protected int[] intArray;
+    @Property
+    protected Map<String, String> mapValue;
+    @Property
+    protected Properties propertiesValue;
+    @Property
+    protected List<String> listValue;
+    @Property
+    protected Map<QName, Class<?>> mapOfQNameToClassValue;
 
     public Foo getFoo() {
-    	return foo;
+        return foo;
     }
 
     public boolean getBooleanPrimitive() {
@@ -159,11 +184,11 @@ public class ProtectedFieldPropertyTypesImpl implements PropertyTypes {
     public Properties getPropertiesValue() {
         return propertiesValue;
     }
-    
+
     public List<String> getListValue() {
         return listValue;
     }
-    
+
     public Map<QName, Class<?>> getMapOfQNameToClassValue() {
         return mapOfQNameToClassValue;
     }

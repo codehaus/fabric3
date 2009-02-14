@@ -16,9 +16,9 @@
  */
 package org.fabric3.tests.function.conversation;
 
-import org.osoa.sca.annotations.Scope;
-import org.osoa.sca.annotations.EndsConversation;
+import org.oasisopen.sca.annotation.Scope;
 import org.osoa.sca.annotations.ConversationID;
+import org.osoa.sca.annotations.EndsConversation;
 
 /**
  * @version $Rev$ $Date$

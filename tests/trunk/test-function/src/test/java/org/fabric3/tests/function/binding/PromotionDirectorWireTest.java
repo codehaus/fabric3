@@ -17,13 +17,13 @@
 package org.fabric3.tests.function.binding;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 import org.fabric3.tests.function.common.HelloService;
 
 /**
- * Verifies a local wire to a service on a component will use the binding as configured on the component and not the
- * binding specified when the service is promoted at the composite level.
+ * Verifies a local wire to a service on a component will use the binding as configured on the component and not the binding specified when the
+ * service is promoted at the composite level.
  *
  * @version $Rev$ $Date$
  */

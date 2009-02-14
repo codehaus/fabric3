@@ -22,13 +22,13 @@ import org.fabric3.api.annotation.scope.Stateless;
 public class AnnotatedStatelessService implements StatelessService {
 
     private int value;
-    
+
     public int getValue() {
         return value;
     }
 
     public void incrementValue() {
-        value++;        
+        value++;
     }
 
 }

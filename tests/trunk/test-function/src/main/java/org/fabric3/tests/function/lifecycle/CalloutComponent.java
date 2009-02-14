@@ -16,9 +16,10 @@
  */
 package org.fabric3.tests.function.lifecycle;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Destroy;
+import org.oasisopen.sca.annotation.Init;
+import org.oasisopen.sca.annotation.Reference;
+
 
 /**
  * Used to verify invocations during @Init and @Destroy. Best practice dictates services should not be invoked during @Destroy but this serves to

@@ -16,7 +16,7 @@
  */
 package org.fabric3.tests.function.wiring;
 
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 import org.fabric3.tests.function.common.HelloService;
 
@@ -31,7 +31,7 @@ public class TestComponent implements TestService {
     private HelloService optionalNonSetReference;
     private HelloService wireElementReference;
 
-    public TestComponent(@Reference(name = "targetConstructor")HelloService constructorHelloService) {
+    public TestComponent(@Reference(name = "targetConstructor") HelloService constructorHelloService) {
         this.constructorService = constructorHelloService;
     }
 
@@ -56,7 +56,7 @@ public class TestComponent implements TestService {
     }
 
     @Reference
-     public void setWireElementReference(HelloService wireElementReference) {
+    public void setWireElementReference(HelloService wireElementReference) {
         this.wireElementReference = wireElementReference;
     }
 

@@ -23,48 +23,73 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Property;
+import org.oasisopen.sca.annotation.Property;
 
 /**
  * @version $Rev$ $Date$
  */
 public class PublicFieldPropertyTypesImpl implements PropertyTypes {
-	
-	@Property public Foo foo;
-    @Property public boolean booleanPrimitive;
-    @Property public byte bytePrimitive;
-    @Property public short shortPrimitive;
-    @Property public int intPrimitive;
-    @Property public long longPrimitive;
-    @Property public float floatPrimitive;
-    @Property public double doublePrimitive;
 
-    @Property public Boolean booleanValue;
-    @Property public Byte byteValue;
-    @Property public Short shortValue;
-    @Property public Integer integerValue;
-    @Property public Long longValue;
-    @Property public Float floatValue;
-    @Property public Double doubleValue;
-    @Property public Class<?> classValue;
+    @Property
+    public Foo foo;
+    @Property
+    public boolean booleanPrimitive;
+    @Property
+    public byte bytePrimitive;
+    @Property
+    public short shortPrimitive;
+    @Property
+    public int intPrimitive;
+    @Property
+    public long longPrimitive;
+    @Property
+    public float floatPrimitive;
+    @Property
+    public double doublePrimitive;
 
-    @Property public String string;
-    @Property public URI uriValue;
-    @Property public URL urlValue;
-    @Property public Date dateValue;
-    @Property public Calendar calendarValue;
+    @Property
+    public Boolean booleanValue;
+    @Property
+    public Byte byteValue;
+    @Property
+    public Short shortValue;
+    @Property
+    public Integer integerValue;
+    @Property
+    public Long longValue;
+    @Property
+    public Float floatValue;
+    @Property
+    public Double doubleValue;
+    @Property
+    public Class<?> classValue;
 
-    @Property public int[] intArray;
-    @Property public Map<String, String> mapValue;
-    @Property public Properties propertiesValue;
-    @Property public List<String> listValue;
-    @Property public Map<QName, Class<?>> mapOfQNameToClassValue;
+    @Property
+    public String string;
+    @Property
+    public URI uriValue;
+    @Property
+    public URL urlValue;
+    @Property
+    public Date dateValue;
+    @Property
+    public Calendar calendarValue;
+
+    @Property (required = false)
+    public int[] intArray;
+    @Property
+    public Map<String, String> mapValue;
+    @Property
+    public Properties propertiesValue;
+    @Property
+    public List<String> listValue;
+    @Property
+    public Map<QName, Class<?>> mapOfQNameToClassValue;
 
     public Foo getFoo() {
-    	return foo;
+        return foo;
     }
 
     public boolean getBooleanPrimitive() {
@@ -158,11 +183,11 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
     public Properties getPropertiesValue() {
         return propertiesValue;
     }
-    
+
     public List<String> getListValue() {
         return listValue;
     }
-    
+
     public Map<QName, Class<?>> getMapOfQNameToClassValue() {
         return mapOfQNameToClassValue;
     }

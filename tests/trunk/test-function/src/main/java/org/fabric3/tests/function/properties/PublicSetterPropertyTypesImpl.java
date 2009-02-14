@@ -23,18 +23,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Property;
+import org.oasisopen.sca.annotation.Property;
 
 /**
  * @version $Rev$ $Date$
  */
 public class PublicSetterPropertyTypesImpl implements PropertyTypes {
-	
-	private Foo foo;
-	
+
+    private Foo foo;
+
     private boolean booleanPrimitive;
     private byte bytePrimitive;
     private short shortPrimitive;
@@ -65,12 +64,12 @@ public class PublicSetterPropertyTypesImpl implements PropertyTypes {
     private Map<QName, Class<?>> mapOfQNameToClassValue;
 
     public Foo getFoo() {
-    	return foo;
+        return foo;
     }
-    
+
     @Property
     public void setFoo(Foo foo) {
-    	this.foo = foo;
+        this.foo = foo;
     }
 
     public boolean getBooleanPrimitive() {
@@ -257,7 +256,7 @@ public class PublicSetterPropertyTypesImpl implements PropertyTypes {
         return intArray;
     }
 
-    @Property
+    @Property (required = false)
     public void setIntArray(int[] intArray) {
         this.intArray = intArray;
     }
@@ -279,21 +278,21 @@ public class PublicSetterPropertyTypesImpl implements PropertyTypes {
     public void setPropertiesValue(Properties propertiesValue) {
         this.propertiesValue = propertiesValue;
     }
-    
+
     @Property
     public void setListValue(List<String> listValue) {
         this.listValue = listValue;
     }
-    
+
     public List<String> getListValue() {
         return listValue;
     }
-    
+
     @Property
     public void setMapOfQNameToClassValue(Map<QName, Class<?>> mapOfQNameToClassValue) {
         this.mapOfQNameToClassValue = mapOfQNameToClassValue;
     }
-    
+
     public Map<QName, Class<?>> getMapOfQNameToClassValue() {
         return mapOfQNameToClassValue;
     }

@@ -17,10 +17,10 @@
 package org.fabric3.tests.function.headers;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Context;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Context;
+import org.oasisopen.sca.annotation.Reference;
 
-import org.fabric3.api.F3RequestContext;
+import org.fabric3.api.Fabric3RequestContext;
 
 /**
  * @version $Revision$ $Date$
@@ -28,7 +28,7 @@ import org.fabric3.api.F3RequestContext;
 public class HeaderTest extends TestCase {
 
     @Context
-    protected F3RequestContext context;
+    protected Fabric3RequestContext context;
 
     @Reference
     protected HeaderService headerService;

@@ -16,7 +16,7 @@
  */
 package org.fabric3.tests.function.callback.composite;
 
-import org.osoa.sca.annotations.OneWay;
+import org.oasisopen.sca.annotation.OneWay;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 
@@ -26,5 +26,5 @@ import org.fabric3.tests.function.callback.common.CallbackData;
 public interface ClientService {
     @OneWay
     void invoke(CallbackData data);
-    
+
 }

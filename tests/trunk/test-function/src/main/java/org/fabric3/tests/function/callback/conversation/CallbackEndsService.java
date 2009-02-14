@@ -16,8 +16,8 @@
  */
 package org.fabric3.tests.function.callback.conversation;
 
-import org.osoa.sca.annotations.EndsConversation;
 import org.osoa.sca.annotations.Conversational;
+import org.osoa.sca.annotations.EndsConversation;
 
 /**
  * @version $Revision$ $Date$

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 import org.fabric3.tests.function.common.IdentityService;
 
@@ -33,20 +33,20 @@ public class MultiplicityTest extends TestCase {
 
     @Reference
     public List<IdentityService> listField;
-    
+
     private List<IdentityService> listSetter;
-    
+
     private List<IdentityService> listCdi1;
-    
+
     private List<IdentityService> listCdi2;
 
     @Reference
     public void setListSetter(List<IdentityService> listSetter) {
         this.listSetter = listSetter;
     }
-    
-    public MultiplicityTest(@Reference(name="listCdi1") List<IdentityService> listCdi1,
-                            @Reference(name="listCdi2") List<IdentityService> listCdi2) {
+
+    public MultiplicityTest(@Reference(name = "listCdi1") List<IdentityService> listCdi1,
+                            @Reference(name = "listCdi2") List<IdentityService> listCdi2) {
         this.listCdi1 = listCdi1;
         this.listCdi2 = listCdi2;
     }

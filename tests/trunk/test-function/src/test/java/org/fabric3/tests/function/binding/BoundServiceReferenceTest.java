@@ -20,21 +20,23 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 import org.fabric3.tests.function.common.HelloService;
 
 /**
- * Verifies a service and reference explictly bound in respective component definitions (as opposed to through
- * promotion)are handled properly.
+ * Verifies a service and reference explictly bound in respective component definitions (as opposed to through promotion)are handled properly.
  *
  * @version $Rev$ $Date$
  */
 public class BoundServiceReferenceTest extends TestCase {
-	
-    @Reference protected HelloService helloService;
-    @Reference protected List<HelloService> listOfReferences;
-    @Reference protected Map<String, HelloService> mapOfReferences;
+
+    @Reference
+    protected HelloService helloService;
+    @Reference
+    protected List<HelloService> listOfReferences;
+    @Reference
+    protected Map<String, HelloService> mapOfReferences;
 
     public void testReferenceIsBound() {
         assertEquals("hello", helloService.send("hello"));

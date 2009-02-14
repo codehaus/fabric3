@@ -16,90 +16,89 @@
  */
 package org.fabric3.tests.function.annotation.scope;
 
-import org.osoa.sca.annotations.Reference;
-
 import junit.framework.TestCase;
+import org.oasisopen.sca.annotation.Reference;
 
 public class ScopeTest extends TestCase {
-    
+
     private ConversationalService annotatedConversationalService;
     private ConversationalService conversationalService;
-    
+
     private StatelessService annotatedStatelessService;
-    private StatelessService statelessService;    
-    
+    private StatelessService statelessService;
+
     private CompositeService compositeServiceOne;
     private CompositeService compositeServiceTwo;
-    
+
     private CompositeService annotatedCompositeServiceOne;
     private CompositeService annotatedCompositeServiceTwo;
 
-    
+
     public void testAnnotatedCompositeScope() throws Exception {
         assertEquals("Unexpected initial value", 0, annotatedCompositeServiceOne.getValue());
         assertEquals("Unexpected initial value", 0, annotatedCompositeServiceTwo.getValue());
-        
+
         annotatedCompositeServiceOne.incrementValue();
         assertEquals("Unexpected value", 1, annotatedCompositeServiceOne.getValue());
-        assertEquals("Unexpected value", 1, annotatedCompositeServiceTwo.getValue());        
-        
+        assertEquals("Unexpected value", 1, annotatedCompositeServiceTwo.getValue());
+
         annotatedCompositeServiceOne.incrementValue();
-        assertEquals("Unexpected value", 2, annotatedCompositeServiceOne.getValue());          
-        assertEquals("Unexpected value", 2, annotatedCompositeServiceTwo.getValue());        
+        assertEquals("Unexpected value", 2, annotatedCompositeServiceOne.getValue());
+        assertEquals("Unexpected value", 2, annotatedCompositeServiceTwo.getValue());
     }
-    
+
     public void testCompositeScope() throws Exception {
         assertEquals("Unexpected initial value", 0, compositeServiceOne.getValue());
         assertEquals("Unexpected initial value", 0, compositeServiceTwo.getValue());
-        
+
         compositeServiceOne.incrementValue();
         assertEquals("Unexpected value", 1, compositeServiceOne.getValue());
-        assertEquals("Unexpected value", 1, compositeServiceTwo.getValue());        
-        
+        assertEquals("Unexpected value", 1, compositeServiceTwo.getValue());
+
         compositeServiceOne.incrementValue();
-        assertEquals("Unexpected value", 2, compositeServiceOne.getValue());          
-        assertEquals("Unexpected value", 2, compositeServiceTwo.getValue());        
-    }    
-    
+        assertEquals("Unexpected value", 2, compositeServiceOne.getValue());
+        assertEquals("Unexpected value", 2, compositeServiceTwo.getValue());
+    }
+
     public void testAnnotatedStatelessScope() throws Exception {
         assertEquals("Unexpected initial value", 0, annotatedStatelessService.getValue());
-        
+
         annotatedStatelessService.incrementValue();
         assertEquals("Unexpected value", 0, annotatedStatelessService.getValue());
-        
+
         annotatedStatelessService.incrementValue();
-        assertEquals("Unexpected value", 0, annotatedStatelessService.getValue());        
+        assertEquals("Unexpected value", 0, annotatedStatelessService.getValue());
     }
-    
+
     public void testStatelessScope() throws Exception {
         assertEquals("Unexpected initial value", 0, statelessService.getValue());
-        
+
         statelessService.incrementValue();
         assertEquals("Unexpected value", 0, statelessService.getValue());
-        
+
         statelessService.incrementValue();
-        assertEquals("Unexpected value", 0, statelessService.getValue());        
-    }            
-    
+        assertEquals("Unexpected value", 0, statelessService.getValue());
+    }
+
     public void testAnnotatedConversationalScope() throws Exception {
         assertEquals("Unexpected initial value", 0, annotatedConversationalService.getValue());
-        
+
         annotatedConversationalService.incrementValue();
         assertEquals("Unexpected value", 1, annotatedConversationalService.getValue());
-        
+
         annotatedConversationalService.incrementValue();
         assertEquals("Unexpected value", 2, annotatedConversationalService.getValue());
     }
-    
+
     public void testConversationalScope() throws Exception {
         assertEquals("Unexpected initial value", 0, conversationalService.getValue());
-        
+
         conversationalService.incrementValue();
         assertEquals("Unexpected value", 1, conversationalService.getValue());
-        
+
         conversationalService.incrementValue();
-        assertEquals("Unexpected value", 2, conversationalService.getValue());        
-    }    
+        assertEquals("Unexpected value", 2, conversationalService.getValue());
+    }
 
     @Reference
     public void setAnnotatedConversationalService(ConversationalService annotatedConversationalService) {
@@ -140,8 +139,6 @@ public class ScopeTest extends TestCase {
     public void setAnnotatedCompositeServiceTwo(CompositeService annotatedCompositeServiceTwo) {
         this.annotatedCompositeServiceTwo = annotatedCompositeServiceTwo;
     }
-    
-    
-    
-    
+
+
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -284,6 +284,6 @@ prop2=value2
         <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyXPathTest"/>
         <property name="simple" source="$simple"/>
         <property name="complex" source="$complex/a"/>
-        <property name="complexWithNamespace" xmlns:foo="urn:foo" source="$complex/foo:a"/>
+        <!--<property name="complexWithNamespace" xmlns:foo="urn:foo" source="$complex/foo:a"/>-->
     </component>
 </composite>
