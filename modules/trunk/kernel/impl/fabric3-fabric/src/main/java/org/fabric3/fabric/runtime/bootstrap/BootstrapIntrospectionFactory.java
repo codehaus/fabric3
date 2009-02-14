@@ -27,12 +27,17 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.fabric.monitor.MonitorProcessor;
 import org.fabric3.introspection.impl.DefaultClassWalker;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.annotation.DestroyProcessor;
 import org.fabric3.introspection.impl.annotation.EagerInitProcessor;
 import org.fabric3.introspection.impl.annotation.InitProcessor;
-import org.fabric3.fabric.monitor.MonitorProcessor;
+import org.fabric3.introspection.impl.annotation.OASISDestroyProcessor;
+import org.fabric3.introspection.impl.annotation.OASISEagerInitProcessor;
+import org.fabric3.introspection.impl.annotation.OASISInitProcessor;
+import org.fabric3.introspection.impl.annotation.OASISPropertyProcessor;
+import org.fabric3.introspection.impl.annotation.OASISReferenceProcessor;
 import org.fabric3.introspection.impl.annotation.PropertyProcessor;
 import org.fabric3.introspection.impl.annotation.ReferenceProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
@@ -41,12 +46,12 @@ import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.AnnotationProcessor;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
-import org.fabric3.system.scdl.SystemImplementation;
-import org.fabric3.system.introspection.SystemServiceHeuristic;
 import org.fabric3.system.introspection.SystemConstructorHeuristic;
-import org.fabric3.system.introspection.SystemUnannotatedHeuristic;
 import org.fabric3.system.introspection.SystemHeuristic;
 import org.fabric3.system.introspection.SystemImplementationProcessorImpl;
+import org.fabric3.system.introspection.SystemServiceHeuristic;
+import org.fabric3.system.introspection.SystemUnannotatedHeuristic;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * Instantiates an ImplementationProcessor for introspecting system components. System components are composite-scoped and support the standard SCA
@@ -68,12 +73,22 @@ public class BootstrapIntrospectionFactory {
         Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>> processors =
                 new HashMap<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>>();
 
+        // OSOA annotations
         // no constructor processor is needed as that is handled by heuristics
         processors.put(Property.class, new PropertyProcessor<SystemImplementation>(helper));
         processors.put(Reference.class, new ReferenceProcessor<SystemImplementation>(contractProcessor, helper));
         processors.put(EagerInit.class, new EagerInitProcessor<SystemImplementation>());
         processors.put(Init.class, new InitProcessor<SystemImplementation>());
         processors.put(Destroy.class, new DestroyProcessor<SystemImplementation>());
+
+        // OASIS annotations
+        processors.put(org.oasisopen.sca.annotation.Property.class, new OASISPropertyProcessor<SystemImplementation>(helper));
+        processors.put(org.oasisopen.sca.annotation.Reference.class, new OASISReferenceProcessor<SystemImplementation>(contractProcessor, helper));
+        processors.put(org.oasisopen.sca.annotation.EagerInit.class, new OASISEagerInitProcessor<SystemImplementation>());
+        processors.put(org.oasisopen.sca.annotation.Init.class, new OASISInitProcessor<SystemImplementation>());
+        processors.put(org.oasisopen.sca.annotation.Destroy.class, new OASISDestroyProcessor<SystemImplementation>());
+
+        // F3 annotations
         processors.put(Monitor.class, new MonitorProcessor<SystemImplementation>(helper, contractProcessor));
 
         ClassWalker<SystemImplementation> classWalker = new DefaultClassWalker<SystemImplementation>(processors);
