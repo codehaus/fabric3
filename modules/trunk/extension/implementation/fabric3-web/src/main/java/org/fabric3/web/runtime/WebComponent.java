@@ -23,17 +23,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.CallableReference;
+import org.oasisopen.sca.ServiceReference;
 import org.osoa.sca.ComponentContext;
-import org.osoa.sca.ServiceReference;
 
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
 import static org.fabric3.container.web.spi.WebApplicationActivator.CONTEXT_ATTRIBUTE;
-import org.fabric3.pojo.reflection.Injector;
-import org.fabric3.pojo.builder.ProxyService;
-import org.fabric3.model.type.java.InjectionSite;
+import static org.fabric3.container.web.spi.WebApplicationActivator.OASIS_CONTEXT_ATTRIBUTE;
 import org.fabric3.model.type.component.PropertyValue;
+import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.pojo.builder.ProxyService;
+import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -64,6 +64,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     private final Map<String, ObjectFactory<?>> referenceFactories;
     private final URI archiveUri;
     private ComponentContext context;
+    private OASISWebComponentContext oasisContext;
     private String contextUrl;
 
     public WebComponent(URI uri,
@@ -107,9 +108,15 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
             injectorFactory.createInjectorMappings(injectors, siteMappings, referenceFactories, classLoader);
             injectorFactory.createInjectorMappings(injectors, siteMappings, propertyFactories, classLoader);
             context = new WebComponentContext(this);
+            oasisContext = new OASISWebComponentContext(this);
             Map<String, ObjectFactory<?>> contextFactories = new HashMap<String, ObjectFactory<?>>();
             SingletonObjectFactory<ComponentContext> componentContextFactory = new SingletonObjectFactory<ComponentContext>(context);
             contextFactories.put(CONTEXT_ATTRIBUTE, componentContextFactory);
+
+            SingletonObjectFactory<org.oasisopen.sca.ComponentContext> oasisComponentContextFactory =
+                    new SingletonObjectFactory<org.oasisopen.sca.ComponentContext>(oasisContext);
+            contextFactories.put(OASIS_CONTEXT_ATTRIBUTE, oasisComponentContextFactory);
+
             injectorFactory.createInjectorMappings(injectors, siteMappings, contextFactories, classLoader);
             // activate the web application
             activator.activate(contextUrl, archiveUri, classLoaderId, injectors, context);
@@ -206,7 +213,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     }
 
     @SuppressWarnings({"unchecked"})
-    public <B, R extends CallableReference<B>> R cast(B target) {
+    public <B, R extends ServiceReference<B>> R cast(B target) {
         return (R) proxyService.cast(target);
     }
 

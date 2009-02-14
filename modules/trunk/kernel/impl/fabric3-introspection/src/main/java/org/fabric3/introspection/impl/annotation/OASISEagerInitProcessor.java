@@ -34,34 +34,47 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
-import org.osoa.sca.annotations.Scope;
+import javax.xml.namespace.QName;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
+import org.oasisopen.sca.annotation.EagerInit;
+import org.oasisopen.sca.annotation.Scope;
+
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import static org.fabric3.model.type.component.Scope.COMPOSITE;
-import static org.fabric3.model.type.component.Scope.CONVERSATION;
-import static org.fabric3.model.type.component.Scope.STATELESS;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ScopeProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Scope, I> {
+public class OASISEagerInitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<EagerInit, I> {
 
-    public ScopeProcessor() {
-        super(Scope.class);
+	public static final QName IMPLEMENTATION_SYSTEM = new QName("urn:fabric3.org:implementation", "implementation.system");
+
+    public OASISEagerInitProcessor() {
+        super(EagerInit.class);
     }
 
-    public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        String scopeName = annotation.value();
-        if (!COMPOSITE.getScope().equals(scopeName)
-                && !CONVERSATION.getScope().equals(scopeName)
-                && !STATELESS.getScope().equals(scopeName)) {
-            InvalidScope failure = new InvalidScope(type, scopeName);
-            context.addError(failure);
+    public void visitType(EagerInit annotation, Class<?> type, I implementation, IntrospectionContext context) {
+        if (!validateScope(type, implementation, context)) {
             return;
         }
-        implementation.getComponentType().setScope(scopeName);
+        InjectingComponentType componentType = implementation.getComponentType();
+        componentType.setInitLevel(50);
     }
+
+    private boolean validateScope(Class<?> type, I implementation, IntrospectionContext context) {
+        if (IMPLEMENTATION_SYSTEM.equals(implementation.getType())) {
+            // system implementations are composite scoped by default
+            return true;
+        }
+        Scope scope = type.getAnnotation(Scope.class);
+        if (scope == null || !org.fabric3.model.type.component.Scope.COMPOSITE.getScope().equals(scope.value())) {
+            EagerInitNotSupported warning = new EagerInitNotSupported(type);
+            context.addWarning(warning);
+            return false;
+        }
+        return true;
+    }
+
 }

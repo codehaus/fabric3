@@ -44,8 +44,11 @@ import org.fabric3.model.type.ModelObject;
 public class InjectableAttribute extends ModelObject {
     private static final long serialVersionUID = -3313258224983902890L;
     public static final InjectableAttribute COMPONENT_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "ComponentContext");
-    public static final InjectableAttribute REQUEST_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "RequestContext");
+    public static final InjectableAttribute REQUEST_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "OASISRequestContext");
     public static final InjectableAttribute CONVERSATION_ID = new InjectableAttribute(InjectableAttributeType.CONTEXT, "ConversationId");
+    public static final InjectableAttribute OASIS_COMPONENT_CONTEXT =
+            new InjectableAttribute(InjectableAttributeType.CONTEXT, "OASISComponentContext");
+    public static final InjectableAttribute OASIS_REQUEST_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "RequestContext");
 
     private InjectableAttributeType valueType;
 

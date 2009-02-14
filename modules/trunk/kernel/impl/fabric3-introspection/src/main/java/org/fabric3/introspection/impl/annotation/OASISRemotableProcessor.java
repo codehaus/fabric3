@@ -34,34 +34,34 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
-import org.osoa.sca.annotations.Scope;
+import java.lang.reflect.Type;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
+import org.oasisopen.sca.annotation.Remotable;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
-import static org.fabric3.model.type.component.Scope.COMPOSITE;
-import static org.fabric3.model.type.component.Scope.CONVERSATION;
-import static org.fabric3.model.type.component.Scope.STATELESS;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ScopeProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Scope, I> {
+public class OASISRemotableProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Remotable, I> {
 
-    public ScopeProcessor() {
-        super(Scope.class);
+    private final ContractProcessor contractProcessor;
+
+    public OASISRemotableProcessor(@Reference ContractProcessor contractProcessor) {
+        super(Remotable.class);
+        this.contractProcessor = contractProcessor;
     }
 
-    public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        String scopeName = annotation.value();
-        if (!COMPOSITE.getScope().equals(scopeName)
-                && !CONVERSATION.getScope().equals(scopeName)
-                && !STATELESS.getScope().equals(scopeName)) {
-            InvalidScope failure = new InvalidScope(type, scopeName);
-            context.addError(failure);
-            return;
-        }
-        implementation.getComponentType().setScope(scopeName);
+    public void visitType(Remotable annotation, Class<?> type, I implementation, IntrospectionContext context) {
+        ServiceContract<Type> serviceContract = contractProcessor.introspect(context.getTypeMapping(), type, context);
+        ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
+        implementation.getComponentType().add(definition);
     }
 }

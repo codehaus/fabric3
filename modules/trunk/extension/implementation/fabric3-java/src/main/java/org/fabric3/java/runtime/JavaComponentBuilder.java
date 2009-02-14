@@ -17,7 +17,6 @@
 package org.fabric3.java.runtime;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -25,23 +24,25 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
+import org.fabric3.model.type.component.Scope;
+import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.builder.ProxyService;
+import org.fabric3.pojo.component.OASISPojoComponentContext;
+import org.fabric3.pojo.component.OASISPojoRequestContext;
 import org.fabric3.pojo.component.PojoComponentContext;
 import org.fabric3.pojo.component.PojoRequestContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.SingletonObjectFactory;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
@@ -99,10 +100,17 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));
-
         PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
         provider.setObjectFactory(InjectableAttribute.COMPONENT_CONTEXT, new SingletonObjectFactory<PojoComponentContext>(componentContext));
         provider.setObjectFactory(InjectableAttribute.CONVERSATION_ID, new ConversationIDObjectFactory());
+
+        OASISPojoRequestContext oasisRequestContext = new OASISPojoRequestContext();
+        provider.setObjectFactory(InjectableAttribute.OASIS_REQUEST_CONTEXT,
+                                  new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext));
+        OASISPojoComponentContext oasisComponentContext = new OASISPojoComponentContext(component, oasisRequestContext);
+        provider.setObjectFactory(InjectableAttribute.OASIS_COMPONENT_CONTEXT,
+                                  new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext));
+
 
         return component;
 

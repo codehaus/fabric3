@@ -16,10 +16,10 @@
  */
 package org.fabric3.api;
 
-import org.osoa.sca.RequestContext;
+import org.oasisopen.sca.RequestContext;
 
 /**
- * A Fabric3 extension to the OSOA SCA RequestContext API. Components may reference this interface when for fields or setters marked with @Context
+ * A Fabric3 extension to the OASIS SCA RequestContext API. Components may reference this interface when for fields or setters marked with @Context
  * instead of the SCA RequestContext variant. For example:
  * <pre>
  * public class SomeComponnent implements SomeService {
@@ -32,7 +32,7 @@ import org.osoa.sca.RequestContext;
  *
  * @version $Revision$ $Date$
  */
-public interface F3RequestContext extends RequestContext {
+public interface Fabric3RequestContext extends RequestContext {
 
     /**
      * Returns the header value corresponding to a name for the current request message.

@@ -29,6 +29,8 @@ import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.component.PojoComponentContext;
 import org.fabric3.pojo.component.PojoRequestContext;
+import org.fabric3.pojo.component.OASISPojoRequestContext;
+import org.fabric3.pojo.component.OASISPojoComponentContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
@@ -111,10 +113,16 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
 
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));
-
         PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
         provider.setObjectFactory(InjectableAttribute.COMPONENT_CONTEXT, new SingletonObjectFactory<PojoComponentContext>(componentContext));
         provider.setObjectFactory(InjectableAttribute.CONVERSATION_ID, new ConversationIDObjectFactory());
+
+        OASISPojoRequestContext oasisRequestContext = new OASISPojoRequestContext();
+        provider.setObjectFactory(InjectableAttribute.OASIS_REQUEST_CONTEXT,
+                                  new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext));
+        OASISPojoComponentContext oasisComponentContext = new OASISPojoComponentContext(component, oasisRequestContext);
+        provider.setObjectFactory(InjectableAttribute.OASIS_COMPONENT_CONTEXT,
+                                  new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext));
 
         return component;
 

@@ -36,30 +36,28 @@ package org.fabric3.introspection.impl.annotation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Callback;
+import org.oasisopen.sca.annotation.Property;
 
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
 
 @SuppressWarnings("unchecked")
-public class CallbackProcessorTestCase extends TestCase {
-    private CallbackProcessor<Implementation<? extends InjectingComponentType>> processor;
+public class OASISPropertyProcessorTestCase extends TestCase {
+    private OASISPropertyProcessor<Implementation<? extends InjectingComponentType>> processor;
+
 
     public void testInvalidMethodAccessor() throws Exception {
-        Method method = TestPrivateClass.class.getDeclaredMethod("setCallback", TestPrivateClass.class);
-        Callback annotation = method.getAnnotation(Callback.class);
+        Method method = TestPrivateClass.class.getDeclaredMethod("setRequiredProperty", String.class);
+        Property annotation = method.getAnnotation(Property.class);
         TypeMapping mapping = new TypeMapping();
         IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
 
@@ -69,8 +67,8 @@ public class CallbackProcessorTestCase extends TestCase {
     }
 
     public void testInvalidFieldAccessor() throws Exception {
-        Field field = TestPrivateClass.class.getDeclaredField("callbackField");
-        Callback annotation = field.getAnnotation(Callback.class);
+        Field field = TestPrivateClass.class.getDeclaredField("requiredProperty");
+        Property annotation = field.getAnnotation(Property.class);
         TypeMapping mapping = new TypeMapping();
         IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
 
@@ -79,16 +77,22 @@ public class CallbackProcessorTestCase extends TestCase {
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }
 
-
     public static class TestPrivateClass {
-        @Callback
-        private void setCallback(TestPrivateClass clazz) {
+        @Property
+        private void setProperty(String clazz) {
 
         }
 
-        @Callback
-        private TestPrivateClass callbackField;
+        @Property(required = true)
+        private void setRequiredProperty(String clazz) {
 
+        }
+
+        @Property
+        private String property;
+
+        @Property(required = true)
+        private String requiredProperty;
     }
 
     public static class TestImplementation extends Implementation {
@@ -106,25 +110,8 @@ public class CallbackProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        final ServiceContract<Type> contract = new ServiceContract<Type>() {
-            private static final long serialVersionUID = -1453983556738324512L;
+        processor = new OASISPropertyProcessor<Implementation<? extends InjectingComponentType>>(helper);
 
-            public boolean isAssignableFrom(ServiceContract serviceContract) {
-                return false;
-            }
-
-            public String getQualifiedInterfaceName() {
-                return null;
-            }
-        };
-
-        ContractProcessor contractProcessor = new ContractProcessor() {
-
-            public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
-                return contract;
-            }
-        };
-        processor = new CallbackProcessor<Implementation<? extends InjectingComponentType>>(contractProcessor, helper);
 
     }
 }

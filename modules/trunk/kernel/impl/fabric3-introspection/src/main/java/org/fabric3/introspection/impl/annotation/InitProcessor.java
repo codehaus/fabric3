@@ -36,21 +36,19 @@ package org.fabric3.introspection.impl.annotation;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Init;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.Signature;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class InitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Init, I> {
-    public static final QName IMPLEMENTATION_SYSTEM = new QName("urn:fabric3.org:implementation", "implementation.system");
 
     public InitProcessor() {
         super(Init.class);

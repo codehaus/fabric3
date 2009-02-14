@@ -19,13 +19,12 @@ package org.fabric3.java.runtime;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.CallableReference;
-import org.osoa.sca.ServiceReference;
+import org.oasisopen.sca.ServiceReference;
 
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.pojo.builder.ProxyService;
 
 /**
  * The runtime instantiation of a Java component implementation.
@@ -60,16 +59,8 @@ public class JavaComponent<T> extends PojoComponent<T> {
         this.proxyService = proxyService;
     }
 
-    public <B> B getService(Class<B> businessInterface, String referenceName) {
-        throw new UnsupportedOperationException();
-    }
-
-    public <B> ServiceReference<B> getServiceReference(Class<B> businessInterface, String referenceName) {
-        throw new UnsupportedOperationException();
-    }
-
     @SuppressWarnings("unchecked")
-    public <B, R extends CallableReference<B>> R cast(B target) {
+    public <B, R extends ServiceReference<B>> R cast(B target) {
         return (R) proxyService.cast(target);
     }
 

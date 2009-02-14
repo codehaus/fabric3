@@ -32,18 +32,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.component;
+package org.fabric3.introspection.impl.annotation;
 
-import org.fabric3.spi.ObjectFactory;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * Default implementation of a callback reference.
- * 
- * @version $Rev$ $Date$
- * @param <CB> the type of the business interface
+ * Denotes an invalid method annotated with an SCA annotation
+ * @version $Revision$ $Date$
  */
-public class CallbackReferenceImpl<CB> extends CallableReferenceImpl<CB> {
-    public CallbackReferenceImpl(Class<CB> businessInterface, ObjectFactory<CB> factory) {
-        super(businessInterface, factory);
+public class InvalidMethod extends ValidationFailure {
+    private String message;
+
+    public InvalidMethod(String message) {
+        super();
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

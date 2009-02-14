@@ -34,34 +34,38 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
-import org.osoa.sca.annotations.Scope;
+import java.lang.reflect.Method;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
+import org.oasisopen.sca.annotation.Init;
+
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import static org.fabric3.model.type.component.Scope.COMPOSITE;
-import static org.fabric3.model.type.component.Scope.CONVERSATION;
-import static org.fabric3.model.type.component.Scope.STATELESS;
+import org.fabric3.model.type.java.Signature;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ScopeProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Scope, I> {
+public class OASISInitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Init, I> {
 
-    public ScopeProcessor() {
-        super(Scope.class);
+    public OASISInitProcessor() {
+        super(Init.class);
     }
 
-    public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        String scopeName = annotation.value();
-        if (!COMPOSITE.getScope().equals(scopeName)
-                && !CONVERSATION.getScope().equals(scopeName)
-                && !STATELESS.getScope().equals(scopeName)) {
-            InvalidScope failure = new InvalidScope(type, scopeName);
-            context.addError(failure);
+    public void visitMethod(Init annotation, Method method, I implementation, IntrospectionContext context) {
+        if (!validate(method, context)) {
             return;
         }
-        implementation.getComponentType().setScope(scopeName);
+        implementation.getComponentType().setInitMethod(new Signature(method));
+    }
+
+    private boolean validate(Method method, IntrospectionContext context) {
+        if (!"void".equals(method.getReturnType().getName())) {
+            InvalidMethod error = new InvalidMethod("Method marked with @Init must return void: " + method);
+            context.addError(error);
+            return false;
+        }
+        return true;
     }
 }

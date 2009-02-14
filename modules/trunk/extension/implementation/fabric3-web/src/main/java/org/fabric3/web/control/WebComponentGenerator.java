@@ -27,13 +27,15 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import static org.fabric3.container.web.spi.WebApplicationActivator.CONTEXT_ATTRIBUTE;
+import static org.fabric3.container.web.spi.WebApplicationActivator.OASIS_CONTEXT_ATTRIBUTE;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -46,7 +48,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.introspection.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
@@ -177,6 +178,24 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
     }
 
     private void generateContextInjectionMapping(WebComponentType type, Map<String, Map<String, InjectionSite>> mappings) {
+        // OASIS API
+        Map<String, InjectionSite> oasisMapping = mappings.get(OASIS_CONTEXT_ATTRIBUTE);
+        if (oasisMapping == null) {
+            oasisMapping = new HashMap<String, InjectionSite>();
+            WebContextInjectionSite site =
+                    new WebContextInjectionSite(ComponentContext.class.getName(), SESSION_CONTEXT);
+            oasisMapping.put(SESSION_CONTEXT_SITE, site);
+            mappings.put(OASIS_CONTEXT_ATTRIBUTE, oasisMapping);
+        }
+        for (Map.Entry<String, Map<InjectionSite, InjectableAttribute>> entry : type.getInjectionSites().entrySet()) {
+            for (Map.Entry<InjectionSite, InjectableAttribute> siteMap : entry.getValue().entrySet()) {
+                if (siteMap.getValue().equals(InjectableAttribute.OASIS_COMPONENT_CONTEXT)) {
+                    oasisMapping.put(entry.getKey(), siteMap.getKey());
+                }
+            }
+        }
+
+        //OSOA API
         Map<String, InjectionSite> mapping = mappings.get(CONTEXT_ATTRIBUTE);
         if (mapping == null) {
             mapping = new HashMap<String, InjectionSite>();
@@ -192,6 +211,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
                 }
             }
         }
+
 
     }
 

@@ -52,21 +52,21 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
 
-import org.osoa.sca.ComponentContext;
-import org.osoa.sca.RequestContext;
+import org.oasisopen.sca.ComponentContext;
+import org.oasisopen.sca.RequestContext;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.Remotable;
+import org.oasisopen.sca.annotation.Service;
 import org.osoa.sca.ServiceReference;
-import org.osoa.sca.annotations.Callback;
-import org.osoa.sca.annotations.Remotable;
-import org.osoa.sca.annotations.Service;
 
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Signature;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.java.Signature;
 
 /**
  * @version $Rev$ $Date$
@@ -83,6 +83,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         WRAPPERS.add(Set.class);
         WRAPPERS.add(SortedSet.class);
         WRAPPERS.add(ServiceReference.class);
+        WRAPPERS.add(org.oasisopen.sca.ServiceReference.class);
     }
 
     public Class<?> loadClass(String name, ClassLoader cl) throws ImplementationNotFoundException {
@@ -126,6 +127,13 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             return override;
         }
 
+        org.oasisopen.sca.annotation.Constructor oasisAnnotation = constructor.getAnnotation(org.oasisopen.sca.annotation.Constructor.class);
+        if (oasisAnnotation != null) {
+            String[] names = oasisAnnotation.value();
+            if (names.length != 1 || names[0].length() != 0) {
+                return names[index];
+            }
+        }
         org.osoa.sca.annotations.Constructor annotation = constructor.getAnnotation(org.osoa.sca.annotations.Constructor.class);
         if (annotation != null) {
             String[] names = annotation.value();
@@ -197,17 +205,23 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         }
 
         // it it's a context interfaces, it must be a context
-        if (ComponentContext.class.isAssignableFrom(rawType) || RequestContext.class.isAssignableFrom(rawType)) {
+        if (ComponentContext.class.isAssignableFrom(rawType)
+                || org.osoa.sca.ComponentContext.class.isAssignableFrom(rawType)
+                || RequestContext.class.isAssignableFrom(rawType)
+                || org.osoa.sca.RequestContext.class.isAssignableFrom(rawType)) {
             return InjectableAttributeType.CONTEXT;
         }
 
         // if it's Remotable or a local Service, it must be a reference
-        if (isAnnotationPresent(rawType, Remotable.class) || isAnnotationPresent(rawType, Service.class)) {
+        if (isAnnotationPresent(rawType, Remotable.class)
+                || isAnnotationPresent(rawType, org.osoa.sca.annotations.Remotable.class)
+                || isAnnotationPresent(rawType, Service.class)
+                || isAnnotationPresent(rawType, org.osoa.sca.annotations.Service.class)) {
             return InjectableAttributeType.REFERENCE;
         }
 
         // if it has a Callback anotation, it's a calback
-        if (isAnnotationPresent(rawType, Callback.class)) {
+        if (isAnnotationPresent(rawType, Callback.class) || isAnnotationPresent(rawType, org.osoa.sca.annotations.Callback.class)) {
             return InjectableAttributeType.CALLBACK;
         }
 

@@ -32,51 +32,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.component;
+package org.fabric3.introspection.impl.annotation;
 
-import org.osoa.sca.CallableReference;
-import org.osoa.sca.Conversation;
-import org.osoa.sca.ServiceRuntimeException;
+import java.lang.reflect.Method;
 
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.ObjectCreationException;
+import org.oasisopen.sca.annotation.Destroy;
+
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.Signature;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
- * Base class for implementations of service and callback references.
- * 
  * @version $Rev$ $Date$
- * @param <B> the type of the business interface
  */
-public abstract class CallableReferenceImpl<B> implements CallableReference<B> {
-    private final Class<B> businessInterface;
-    private final ObjectFactory<B> factory;
+public class OASISDestroyProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Destroy, I> {
 
-    protected CallableReferenceImpl(Class<B> businessInterface, ObjectFactory<B> factory) {
-        this.businessInterface = businessInterface;
-        this.factory = factory;
+    public OASISDestroyProcessor() {
+        super(Destroy.class);
     }
 
-    public B getService() {
-        try {
-            return factory.getInstance();
-        } catch (ObjectCreationException e) {
-            throw new ServiceRuntimeException(e.getMessage(), e);
+    public void visitMethod(Destroy annotation, Method method, I implementation, IntrospectionContext context) {
+        if (!validate(method, context)) {
+            return;
         }
+        implementation.getComponentType().setDestroyMethod(new Signature(method));
     }
 
-    public Class<B> getBusinessInterface() {
-        return businessInterface;
+    private boolean validate(Method method, IntrospectionContext context) {
+        if (!"void".equals(method.getReturnType().getName())) {
+            InvalidMethod error = new InvalidMethod("Method marked with @Destroy must return void: " + method);
+            context.addError(error);
+            return false;
+        }
+        return true;
     }
 
-    public boolean isConversational() {
-        return false;
-    }
-
-    public Conversation getConversation() {
-        return null;
-    }
-
-    public Object getCallbackID() {
-        return null;
-    }
 }

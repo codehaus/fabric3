@@ -34,34 +34,42 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
-import org.osoa.sca.annotations.Scope;
+import java.net.URI;
+import javax.xml.namespace.QName;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
+import junit.framework.TestCase;
+import org.oasisopen.sca.annotation.Scope;
+
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import static org.fabric3.model.type.component.Scope.COMPOSITE;
-import static org.fabric3.model.type.component.Scope.CONVERSATION;
-import static org.fabric3.model.type.component.Scope.STATELESS;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
-/**
- * @version $Rev$ $Date$
- */
-public class ScopeProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Scope, I> {
+@SuppressWarnings("unchecked")
+public class OASISScopeProcessorTestCase extends TestCase {
 
-    public ScopeProcessor() {
-        super(Scope.class);
+    public void testInvalidScope() throws Exception {
+
+        ScopeAnnotated componentToProcess = new ScopeAnnotated();
+        Scope annotation = componentToProcess.getClass().getAnnotation(Scope.class);
+        OASISScopeProcessor<Implementation<? extends InjectingComponentType>> processor =
+                new OASISScopeProcessor<Implementation<? extends InjectingComponentType>>();
+        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        processor.visitType(annotation, ScopeAnnotated.class, new TestImplementation(), context);
+        assertTrue(context.getErrors().get(0) instanceof InvalidScope);
     }
 
-    public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        String scopeName = annotation.value();
-        if (!COMPOSITE.getScope().equals(scopeName)
-                && !CONVERSATION.getScope().equals(scopeName)
-                && !STATELESS.getScope().equals(scopeName)) {
-            InvalidScope failure = new InvalidScope(type, scopeName);
-            context.addError(failure);
-            return;
+    @Scope("ILLEGAL")
+    public static class ScopeAnnotated {
+    }
+
+
+    public static class TestImplementation extends Implementation {
+        private static final long serialVersionUID = 2759280710238779821L;
+
+        public QName getType() {
+            return null;
         }
-        implementation.getComponentType().setScope(scopeName);
     }
+
 }

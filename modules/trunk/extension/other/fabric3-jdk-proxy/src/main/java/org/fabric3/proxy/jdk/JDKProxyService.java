@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.osoa.sca.CallableReference;
+import org.oasisopen.sca.ServiceReference;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
@@ -134,7 +134,7 @@ public class JDKProxyService implements ProxyService {
     }
 
     @SuppressWarnings("unchecked")
-    public <B, R extends CallableReference<B>> R cast(B target) throws IllegalArgumentException {
+    public <B, R extends ServiceReference<B>> R cast(B target) throws IllegalArgumentException {
         InvocationHandler handler = Proxy.getInvocationHandler(target);
         if (handler instanceof JDKInvocationHandler) {
             JDKInvocationHandler<B> jdkHandler = (JDKInvocationHandler<B>) handler;

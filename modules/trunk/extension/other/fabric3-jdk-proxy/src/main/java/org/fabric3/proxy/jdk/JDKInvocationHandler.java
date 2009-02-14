@@ -40,12 +40,11 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.UUID;
 
+import org.oasisopen.sca.ServiceReference;
 import org.osoa.sca.Conversation;
-import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.pojo.component.ConversationImpl;
-import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.component.ScopeContainer;
@@ -54,6 +53,7 @@ import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
@@ -65,6 +65,7 @@ import org.fabric3.spi.wire.InvocationChain;
  * @version $Rev: 3021 $ $Date: 2008-03-03 19:28:04 -0800 (Mon, 03 Mar 2008) $
  */
 public final class JDKInvocationHandler<B> implements ConversationExpirationCallback, InvocationHandler, ServiceReference<B> {
+    private static final long serialVersionUID = -5841336280391145583L;
     private final Class<B> businessInterface;
     private final B proxy;
     private final InteractionType type;
@@ -72,7 +73,6 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
     private final ScopeContainer<Conversation> scopeContainer;
 
     private Conversation conversation;
-    private Object userConversationId;
     private String callbackUri;
 
     /**
@@ -83,8 +83,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
      * @param mapping     the method to invocation chain mappings for the wire
      * @throws NoMethodForOperationException if an error occurs creating the proxy
      */
-    public JDKInvocationHandler(Class<B> interfaze, String callbackUri, Map<Method, InvocationChain> mapping)
-            throws NoMethodForOperationException {
+    public JDKInvocationHandler(Class<B> interfaze, String callbackUri, Map<Method, InvocationChain> mapping) throws NoMethodForOperationException {
         this(interfaze, InteractionType.STATELESS, callbackUri, mapping, null);
     }
 
@@ -122,47 +121,8 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
         return proxy;
     }
 
-    public ServiceReference<B> getServiceReference() {
-        return this;
-    }
-
-    public boolean isConversational() {
-        return type != InteractionType.STATELESS;
-    }
-
     public Class<B> getBusinessInterface() {
         return businessInterface;
-    }
-
-    public Conversation getConversation() {
-        return conversation;
-    }
-
-    public Object getConversationID() {
-        return userConversationId;
-    }
-
-    public void setConversationID(Object conversationId) throws IllegalStateException {
-        if (conversation != null) {
-            throw new IllegalStateException("A conversation is already active");
-        }
-        userConversationId = conversationId;
-    }
-
-    public Object getCallbackID() {
-        throw new UnsupportedOperationException();
-    }
-
-    public void setCallbackID(Object callbackID) {
-        throw new UnsupportedOperationException();
-    }
-
-    public Object getCallback() {
-        throw new UnsupportedOperationException();
-    }
-
-    public void setCallback(Object callback) {
-        throw new UnsupportedOperationException();
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -214,6 +174,10 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
 
     }
 
+    public ServiceReference<B> getServiceReference() {
+        return this;
+    }
+
     /**
      * Initializes and returns a CallFrame for the invocation if it is required. A CallFrame is required if the wire is targeted to a conversational
      * service or is bidrectional (i.e. there is a callback). It is not required if the wire is targeted to a unidirectional, non-conversational
@@ -252,11 +216,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
      * @return the conversational id
      */
     private Object createConversationID() {
-        if (userConversationId != null) {
-            return userConversationId;
-        } else {
-            return UUID.randomUUID().toString();
-        }
+        return UUID.randomUUID().toString();
     }
 
     private Object handleProxyMethod(Method method) throws InstanceInvocationException {

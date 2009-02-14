@@ -32,37 +32,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.component;
+package org.fabric3.introspection.impl.annotation;
 
-import org.osoa.sca.ServiceReference;
+import org.oasisopen.sca.annotation.Scope;
 
-import org.fabric3.spi.ObjectFactory;
+import org.fabric3.model.type.component.Implementation;
+import static org.fabric3.model.type.component.Scope.COMPOSITE;
+import static org.fabric3.model.type.component.Scope.CONVERSATION;
+import static org.fabric3.model.type.component.Scope.STATELESS;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
- * Default implementation of a ServiceReference.
- *
  * @version $Rev$ $Date$
- * @param <B> the type of the business interface
  */
-public class ServiceReferenceImpl<B> extends CallableReferenceImpl<B> implements ServiceReference<B> {
-    public ServiceReferenceImpl(Class<B> businessInterface, ObjectFactory<B> factory) {
-        super(businessInterface, factory);
+public class OASISScopeProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Scope, I> {
+
+    public OASISScopeProcessor() {
+        super(Scope.class);
     }
 
-    public Object getConversationID() {
-        return null;
-    }
-
-    public void setConversationID(Object conversationId) throws IllegalStateException {
-    }
-
-    public void setCallbackID(Object callbackID) {
-    }
-
-    public Object getCallback() {
-        return null;
-    }
-
-    public void setCallback(Object callback) {
+    public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) {
+        String scopeName = annotation.value();
+        if (!COMPOSITE.getScope().equals(scopeName)
+                && !CONVERSATION.getScope().equals(scopeName)
+                && !STATELESS.getScope().equals(scopeName)) {
+            InvalidScope failure = new InvalidScope(type, scopeName);
+            context.addError(failure);
+            return;
+        }
+        implementation.getComponentType().setScope(scopeName);
     }
 }

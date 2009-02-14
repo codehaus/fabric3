@@ -104,14 +104,28 @@ public class DefaultContractProcessor implements ContractProcessor {
         Callback callback = interfaze.getAnnotation(Callback.class);
         if (callback != null) {
             Class<?> callbackClass = callback.value();
-            if (Void.class.equals(callbackClass)) {
-                context.addError(new MissingCallback(interfaze));
-                return contract;
+            processCallback(typeMapping, interfaze, callbackClass, context, contract);
+        } else {
+            org.oasisopen.sca.annotation.Callback oasisCallback = interfaze.getAnnotation(org.oasisopen.sca.annotation.Callback.class);
+            if (oasisCallback != null) {
+                Class<?> callbackClass = oasisCallback.value();
+                processCallback(typeMapping, interfaze, callbackClass, context, contract);
             }
-            JavaServiceContract callbackContract = introspectInterface(typeMapping, callbackClass, context);
-            contract.setCallbackContract(callbackContract);
         }
         return contract;
+    }
+
+    private void processCallback(TypeMapping typeMapping,
+                                 Class<?> interfaze,
+                                 Class<?> callbackClass,
+                                 IntrospectionContext context,
+                                 JavaServiceContract contract) {
+        if (Void.class.equals(callbackClass)) {
+            context.addError(new MissingCallback(interfaze));
+            return;
+        }
+        JavaServiceContract callbackContract = introspectInterface(typeMapping, callbackClass, context);
+        contract.setCallbackContract(callbackContract);
     }
 
     /**
@@ -193,7 +207,7 @@ public class DefaultContractProcessor implements ContractProcessor {
             DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
             Operation<Type> operation = new Operation<Type>(name, inputType, returnDataType, faultDataTypes, conversationSequence);
 
-            if (method.isAnnotationPresent(OneWay.class)) {
+            if (method.isAnnotationPresent(org.oasisopen.sca.annotation.OneWay.class) || method.isAnnotationPresent(OneWay.class)) {
                 operation.addIntent(ONEWAY_INTENT);
             }
             for (OperationIntrospector introspector : operationIntrospectors) {
