@@ -25,11 +25,11 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.oasisopen.sca.ServiceRuntimeException;
 import org.osoa.sca.Conversation;
-import org.osoa.sca.ServiceRuntimeException;
 
-import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 
 /**
  * An EntityManager proxy that delegates to a backing instance. This proxy is injected on composite-scoped components where more than one thread may

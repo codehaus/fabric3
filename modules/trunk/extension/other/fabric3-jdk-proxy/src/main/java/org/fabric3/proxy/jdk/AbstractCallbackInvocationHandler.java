@@ -19,7 +19,7 @@ package org.fabric3.proxy.jdk;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import org.osoa.sca.ServiceUnavailableException;
+import org.oasisopen.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.invocation.CallFrame;

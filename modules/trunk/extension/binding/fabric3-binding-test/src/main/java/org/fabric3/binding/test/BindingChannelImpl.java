@@ -20,17 +20,17 @@ import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osoa.sca.ServiceRuntimeException;
-import org.osoa.sca.ServiceUnavailableException;
+import org.oasisopen.sca.ServiceRuntimeException;
+import org.oasisopen.sca.ServiceUnavailableException;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.ConversationContext;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.wire.Wire;
 
 /**

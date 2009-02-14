@@ -34,7 +34,7 @@
  */
 package org.fabric3.spi.wire;
 
-import org.osoa.sca.ServiceRuntimeException;
+import org.oasisopen.sca.ServiceRuntimeException;
 
 /**
  * Denotes a runtime exception thrown during an invocation over a wire
@@ -42,10 +42,6 @@ import org.osoa.sca.ServiceRuntimeException;
  * @version $Rev$ $Date$
  */
 public class InvocationRuntimeException extends ServiceRuntimeException {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -5262124031513496306L;
 
     public InvocationRuntimeException() {

@@ -44,11 +44,11 @@ import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.HessianServiceException;
 import com.caucho.hessian.io.SerializerFactory;
-import org.osoa.sca.ServiceUnavailableException;
+import org.oasisopen.sca.ServiceUnavailableException;
 
-import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * @version $Revision$ $Date$

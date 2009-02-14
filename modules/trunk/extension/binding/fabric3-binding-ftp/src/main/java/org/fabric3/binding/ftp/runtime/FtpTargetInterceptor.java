@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.commons.net.SocketFactory;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.osoa.sca.ServiceUnavailableException;
+import org.oasisopen.sca.ServiceUnavailableException;
 
 import org.fabric3.api.ftp.FtpConstants;
 import org.fabric3.binding.ftp.provision.FtpSecurity;

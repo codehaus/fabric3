@@ -41,8 +41,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.oasisopen.sca.ServiceReference;
+import org.oasisopen.sca.ServiceUnavailableException;
 import org.osoa.sca.Conversation;
-import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.pojo.component.ConversationImpl;
 import org.fabric3.spi.component.ConversationExpirationCallback;

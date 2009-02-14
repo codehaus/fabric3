@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
 import javax.security.auth.Subject;
 
 import org.apache.axiom.om.OMElement;
@@ -41,6 +40,8 @@ import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.OutInAxisOperation;
 import org.apache.axis2.description.WSDL2Constants;
+import org.oasisopen.sca.ServiceUnavailableException;
+
 import org.fabric3.binding.ws.axis2.common.Constant;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
@@ -49,7 +50,6 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
-import org.osoa.sca.ServiceUnavailableException;
 
 /**
  * @version $Revision$ $Date$

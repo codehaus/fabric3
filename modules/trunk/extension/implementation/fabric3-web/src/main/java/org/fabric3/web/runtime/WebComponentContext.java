@@ -16,14 +16,14 @@
  */
 package org.fabric3.web.runtime;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.oasisopen.sca.ServiceRuntimeException;
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
 import org.osoa.sca.ServiceReference;
-import org.osoa.sca.ServiceRuntimeException;
 
 import org.fabric3.container.web.spi.WebRequestTunnel;
 import org.fabric3.host.Fabric3RuntimeException;
