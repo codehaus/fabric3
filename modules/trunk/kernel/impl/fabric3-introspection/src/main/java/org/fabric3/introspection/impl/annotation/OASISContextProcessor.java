@@ -47,6 +47,7 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -67,40 +68,26 @@ public class OASISContextProcessor<I extends Implementation<? extends InjectingC
 
 
     public void visitField(Context annotation, Field field, I implementation, IntrospectionContext context) {
-
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        InjectableAttribute attribute = null;
-        if (type instanceof Class) {
-            attribute = getContext((Class) type);
-
-        }
-        if (attribute != null) {
-            implementation.getComponentType().addInjectionSite(attribute, site);
-        }
+        visit(type, implementation, site, context);
     }
 
     public void visitMethod(Context annotation, Method method, I implementation, IntrospectionContext context) {
-
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        InjectableAttribute attribute = null;
-        if (type instanceof Class) {
-            attribute = getContext((Class) type);
-
-        }
-        if (attribute != null) {
-            implementation.getComponentType().addInjectionSite(attribute, site);
-        }
+        visit(type, implementation, site, context);
     }
 
-    InjectableAttribute getContext(Class<?> type) {
-        if (RequestContext.class.isAssignableFrom(type)) {
-            return InjectableAttribute.OASIS_REQUEST_CONTEXT;
-        } else if (ComponentContext.class.isAssignableFrom(type)) {
-            return InjectableAttribute.OASIS_COMPONENT_CONTEXT;
+    private void visit(Type type, I implementation, InjectionSite site, IntrospectionContext context) {
+        if (!(type instanceof Class)) {
+            context.addError(new InvalidContextType("Context type is not supported: " + type));
+        } else if (RequestContext.class.isAssignableFrom((Class<?>) type)) {
+            implementation.getComponentType().addInjectionSite(InjectableAttribute.OASIS_REQUEST_CONTEXT, site);
+        } else if (ComponentContext.class.isAssignableFrom((Class<?>) type)) {
+            implementation.getComponentType().addInjectionSite(InjectableAttribute.OASIS_COMPONENT_CONTEXT, site);
         } else {
-            return null;
+            context.addError(new InvalidContextType("Context type is not supported: " + type));
         }
     }
 }

@@ -65,13 +65,13 @@ public class OASISReferenceProcessor<I extends Implementation<? extends Injectin
     private final IntrospectionHelper helper;
     private PolicyAnnotationProcessor policyProcessor;
 
-    public OASISReferenceProcessor(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
+    public OASISReferenceProcessor(@org.osoa.sca.annotations.Reference ContractProcessor contractProcessor, @org.osoa.sca.annotations.Reference IntrospectionHelper helper) {
         super(Reference.class);
         this.contractProcessor = contractProcessor;
         this.helper = helper;
     }
 
-    @Reference
+    @org.osoa.sca.annotations.Reference
     public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
         this.policyProcessor = processor;
     }

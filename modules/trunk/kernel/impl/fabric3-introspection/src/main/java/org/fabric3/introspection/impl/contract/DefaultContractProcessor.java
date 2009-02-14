@@ -140,7 +140,8 @@ public class DefaultContractProcessor implements ContractProcessor {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
         contract.setInterfaceName(interfaze.getSimpleName());
 
-        boolean remotable = interfaze.isAnnotationPresent(Remotable.class);
+        boolean remotable =
+                interfaze.isAnnotationPresent(org.oasisopen.sca.annotation.Remotable.class) || interfaze.isAnnotationPresent(Remotable.class);
         contract.setRemotable(remotable);
 
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
