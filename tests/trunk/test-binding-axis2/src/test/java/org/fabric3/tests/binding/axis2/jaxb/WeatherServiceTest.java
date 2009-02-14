@@ -17,9 +17,9 @@
 package org.fabric3.tests.binding.axis2.jaxb;
 
 import java.util.Date;
-import org.osoa.sca.annotations.Reference;
 
 import junit.framework.TestCase;
+import org.oasisopen.sca.annotation.Reference;
 
 public class WeatherServiceTest extends TestCase {
     

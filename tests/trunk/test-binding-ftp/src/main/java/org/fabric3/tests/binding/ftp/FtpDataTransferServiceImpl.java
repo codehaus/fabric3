@@ -28,10 +28,10 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMText;
-import org.osoa.sca.annotations.Context;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Context;
+import org.oasisopen.sca.annotation.Reference;
 
-import org.fabric3.api.F3RequestContext;
+import org.fabric3.api.Fabric3RequestContext;
 
 /**
  * @version $Revision$ $Date$
@@ -39,7 +39,7 @@ import org.fabric3.api.F3RequestContext;
 public class FtpDataTransferServiceImpl implements FtpDataTransferService {
 
     @Context
-    protected F3RequestContext context;
+    protected Fabric3RequestContext context;
 
     @Reference
     protected WsDataTransferService wsDataTransferService;

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.osoa.sca.ComponentContext;
+import org.oasisopen.sca.ComponentContext;
 
 /**
  * @version $Rev$ $Date$
@@ -49,7 +49,7 @@ public class TestServlet extends HttpServlet {
         }
         // verify the component context was bound to the session
         HttpSession session = request.getSession();
-        ComponentContext context = (ComponentContext) session.getAttribute("org.osoa.sca.ComponentContext");
+        ComponentContext context = (ComponentContext) session.getAttribute("org.oasisopen.sca.ComponentContext");
         TestService test = context.getService(TestService.class, testName);
         if (test == null) {
             response.sendError(500, "Unknown test: " + testName);

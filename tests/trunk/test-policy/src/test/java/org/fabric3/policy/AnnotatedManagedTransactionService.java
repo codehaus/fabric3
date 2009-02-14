@@ -19,12 +19,12 @@ package org.fabric3.policy;
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 import org.fabric3.api.annotation.Resource;
 import org.fabric3.api.annotation.transaction.ManagedTransaction;
-import org.fabric3.api.annotation.transaction.SuspendsTransaction;
 import org.fabric3.api.annotation.transaction.PropagatesTransaction;
+import org.fabric3.api.annotation.transaction.SuspendsTransaction;
 
 /**
  * @version $Revision$ $Date$

@@ -19,7 +19,7 @@ package org.fabric3.binding.jms.test.async;
 import java.util.concurrent.CountDownLatch;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Revision$ $Date$

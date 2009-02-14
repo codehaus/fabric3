@@ -30,8 +30,8 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMText;
+import org.oasisopen.sca.annotation.Reference;
 import org.osoa.sca.ServiceUnavailableException;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$

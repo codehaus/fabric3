@@ -15,9 +15,9 @@
  *
  */
 package tests.groovy
-import org.osoa.sca.annotations.Property
-import org.osoa.sca.annotations.Reference
-import org.osoa.sca.annotations.Service
+import org.oasisopen.sca.annotation.Property
+import org.oasisopen.sca.annotation.Reference
+import org.oasisopen.sca.annotation.Service
 
 @Service(EchoService.class)
 class EchoImpl implements EchoService {

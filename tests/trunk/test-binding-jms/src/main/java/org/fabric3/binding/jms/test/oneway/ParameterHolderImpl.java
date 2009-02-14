@@ -16,7 +16,7 @@
  */
 package org.fabric3.binding.jms.test.oneway;
 
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Scope;
 
 @Scope("COMPOSITE")
 public class ParameterHolderImpl implements ParameterHolder {

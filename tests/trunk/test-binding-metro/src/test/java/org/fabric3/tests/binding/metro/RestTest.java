@@ -34,14 +34,15 @@
  */
 package org.fabric3.tests.binding.metro;
 
-import org.fabric3.tests.binding.metro.bookstore.SearchService;
-import org.osoa.sca.annotations.Reference;
-
 import junit.framework.TestCase;
+import org.oasisopen.sca.annotation.Reference;
+
+import org.fabric3.tests.binding.metro.bookstore.SearchService;
 
 public class RestTest extends TestCase {
     
-    @Reference protected SearchService searchService;
+    @Reference
+    protected SearchService searchService;
     
     public void testSearch() throws Exception {
         searchService.search("William Shakespear");

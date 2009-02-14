@@ -19,36 +19,36 @@ package org.fabric3.jpa.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.jpa.model.Employee;
-
-import org.osoa.sca.annotations.Reference;
-
 import junit.framework.TestCase;
+import org.oasisopen.sca.annotation.Reference;
+
+import org.fabric3.jpa.model.Employee;
 
 /**
  * @version $Revision$ $Date$
  */
 public class EmployeeServiceImplTest extends TestCase {
-    
-    @Reference protected EmployeeService employeeService;
-    
+
+    @Reference
+    protected EmployeeService employeeService;
+
     public void testCreation() {
 
         for (Employee employee : employeeService.findAll()) {
             employeeService.remove(employee);
         }
-        
+
         List<Employee> employees = new ArrayList<Employee>();
         employees.add(new Employee(1L, "Meeraj Kunnumpurath"));
         employees.add(new Employee(2L, "Jeremy Boynes"));
         employees.add(new Employee(3L, "Jim Marino"));
-        
+
         employeeService.createEmployees(employees);
-        
+
         employees = employeeService.findAll();
         assertEquals(3, employees.size());
-        
+
     }
-    
-    
+
+
 }

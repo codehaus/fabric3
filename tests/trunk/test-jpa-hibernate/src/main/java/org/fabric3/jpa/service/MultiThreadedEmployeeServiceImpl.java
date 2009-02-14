@@ -20,7 +20,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Scope;
 
 import org.fabric3.jpa.model.Employee;
 import org.fabric3.jpa.model.ExEmployee;
@@ -69,7 +69,7 @@ public class MultiThreadedEmployeeServiceImpl implements EmployeeService {
     public void fire(Long id) {
         Employee employee = employeeEM.find(Employee.class, id);
         employeeEM.remove(employee);
-        ExEmployee exEmployee = new ExEmployee(employee.getId(),employee.getName());
+        ExEmployee exEmployee = new ExEmployee(employee.getId(), employee.getName());
         exEmployeeEM.persist(exEmployee);
     }
 

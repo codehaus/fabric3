@@ -16,7 +16,7 @@
  */
 package org.fabric3.runtime.webapp.smoketest;
 
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Revision$ $Date$

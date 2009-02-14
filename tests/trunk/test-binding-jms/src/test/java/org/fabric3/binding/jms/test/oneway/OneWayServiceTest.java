@@ -17,8 +17,7 @@
 package org.fabric3.binding.jms.test.oneway;
 
 import junit.framework.TestCase;
-
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Revision$ $Date$

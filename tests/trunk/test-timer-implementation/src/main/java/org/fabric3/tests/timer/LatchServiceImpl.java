@@ -18,8 +18,8 @@ package org.fabric3.tests.timer;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Property;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Revision$ $Date$

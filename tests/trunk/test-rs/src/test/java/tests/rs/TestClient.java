@@ -18,45 +18,44 @@ package tests.rs;
 
 import javax.ws.rs.core.UriBuilder;
 
-import junit.framework.TestCase;
-
-import org.osoa.sca.annotations.Property;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import junit.framework.TestCase;
+import org.osoa.sca.annotations.Property;
 
 /**
  * @version $Rev$ $Date$
  */
 public class TestClient extends TestCase {
-    
-    @Property protected String hostURI;
+
+    @Property
+    protected String hostURI;
 
     public TestClient() {
     }
 
     public void testEcho() {
-        UriBuilder uri =UriBuilder.fromUri(hostURI).path("echo");
+        UriBuilder uri = UriBuilder.fromUri(hostURI).path("echo");
         WebResource resource = Client.create().resource(uri.path("Hello").build());
-        assertEquals("Hello World", resource.post(String.class,"World"));
+        assertEquals("Hello World", resource.post(String.class, "World"));
     }
-    
-     public void testEntity() {
-        UriBuilder uri =UriBuilder.fromUri(hostURI).path("echo");
-        Entity entity= new Entity();
+
+    public void testEntity() {
+        UriBuilder uri = UriBuilder.fromUri(hostURI).path("echo");
+        Entity entity = new Entity();
         entity.setValue("World");
         ClientConfig cc = new DefaultClientConfig();
         cc.getClasses().add(EntityProvider.class);
         Client c = Client.create(cc);
-        WebResource resource =c.resource(uri.path("Hello").build());
-        ClientResponse response =resource.accept("application/entity").type("application/entity").post(ClientResponse.class,entity);
+        WebResource resource = c.resource(uri.path("Hello").build());
+        ClientResponse response = resource.accept("application/entity").type("application/entity").post(ClientResponse.class, entity);
         assertNotNull(response);
-        entity=response.getEntity(Entity.class);
+        entity = response.getEntity(Entity.class);
         assertNotNull(entity);
-        assertEquals("Hello World",entity.getValue() );
+        assertEquals("Hello World", entity.getValue());
     }
-   
+
 }

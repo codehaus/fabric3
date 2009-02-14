@@ -18,10 +18,10 @@ package org.fabric3.runtime.webapp.smoketest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.ServletContext;
 
 import org.osoa.sca.ComponentContext;
 
@@ -35,11 +35,23 @@ public class ContextTest implements TestService {
         ComponentContext componentContext = (ComponentContext) request.getSession().getAttribute(Constants.CONTEXT_ATTRIBUTE);
         if (componentContext == null) {
             response.sendError(500, "Context was not bound");
+            return;
         } else if (!"fabric3://domain/smoketest".equals(componentContext.getURI())) {
             response.sendError(500, "Context was not bound");
-        } else {
-            PrintWriter out = response.getWriter();
-            out.print("OK");
+            return;
         }
+
+        org.oasisopen.sca.ComponentContext oasisContext =
+                (org.oasisopen.sca.ComponentContext) request.getSession().getAttribute(Constants.OASIS_CONTEXT_ATTRIBUTE);
+        if (oasisContext == null) {
+            response.sendError(500, "OASIS Context was not bound");
+            return;
+        } else if (!"fabric3://domain/smoketest".equals(oasisContext.getURI())) {
+            response.sendError(500, "OASIS Context was not bound");
+            return;
+        }
+
+        PrintWriter out = response.getWriter();
+        out.print("OK");
     }
 }

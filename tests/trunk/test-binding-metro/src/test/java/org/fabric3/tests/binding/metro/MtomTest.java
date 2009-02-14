@@ -37,13 +37,14 @@ package org.fabric3.tests.binding.metro;
 import javax.activation.DataHandler;
 
 import junit.framework.TestCase;
+import org.oasisopen.sca.annotation.Reference;
 
 import org.fabric3.tests.binding.metro.upload.UploadPortType;
-import org.osoa.sca.annotations.Reference;
 
 public class MtomTest extends TestCase {
     
-    @Reference protected UploadPortType uploadPortType;
+    @Reference
+    protected UploadPortType uploadPortType;
     
     public void testUpload() throws Exception {
         

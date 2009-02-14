@@ -16,14 +16,14 @@
  */
 package tests.rs;
 
-import javax.ws.rs.POST;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
-
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Service;
+import org.osoa.sca.annotations.Property;
 
 /**
  * @version $Rev$ $Date$
@@ -32,10 +32,10 @@ import javax.ws.rs.Path;
 @Path("/Hello")
 public class EchoResource implements EchoService {
 
-    public 
+    public
     @Reference
     EchoService service;
-    public 
+    public
     @Property
     String message;
 

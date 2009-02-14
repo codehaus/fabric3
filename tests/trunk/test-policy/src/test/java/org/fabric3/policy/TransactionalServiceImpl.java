@@ -16,8 +16,8 @@
  */
 package org.fabric3.policy;
 
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Revision$ $Date$

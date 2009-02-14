@@ -16,7 +16,7 @@
  */
 package org.fabric3.binding.jms.test.async;
 
-import org.osoa.sca.annotations.OneWay;
+import org.oasisopen.sca.annotation.OneWay;
 
 /**
  * @version $Revision$ $Date$

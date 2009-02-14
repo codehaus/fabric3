@@ -21,8 +21,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
+import org.oasisopen.sca.annotation.Scope;
 import org.osoa.sca.annotations.EndsConversation;
-import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.jpa.model.Employee;
 import org.fabric3.jpa.model.ExEmployee;

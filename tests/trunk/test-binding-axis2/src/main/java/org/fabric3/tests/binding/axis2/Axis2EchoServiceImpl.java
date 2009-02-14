@@ -17,7 +17,7 @@
 package org.fabric3.tests.binding.axis2;
 
 import org.apache.axiom.om.OMElement;
-import org.osoa.sca.annotations.Scope;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Rev$ $Date$

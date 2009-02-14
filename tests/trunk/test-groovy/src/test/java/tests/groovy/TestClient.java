@@ -17,13 +17,15 @@
 package tests.groovy;
 
 import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Rev$ $Date$
  */
 public class TestClient extends TestCase {
-    public @Reference EchoService service;
+    public
+    @Reference
+    EchoService service;
 
     public TestClient() {
         System.out.println("Hello");
