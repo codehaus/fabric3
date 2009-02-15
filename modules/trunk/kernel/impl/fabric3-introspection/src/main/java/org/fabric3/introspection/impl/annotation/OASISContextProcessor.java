@@ -66,22 +66,21 @@ public class OASISContextProcessor<I extends Implementation<? extends InjectingC
         this.helper = helper;
     }
 
-
     public void visitField(Context annotation, Field field, I implementation, IntrospectionContext context) {
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        visit(type, implementation, site, context);
+        visit(type, implementation, site, field.getDeclaringClass(), context);
     }
 
     public void visitMethod(Context annotation, Method method, I implementation, IntrospectionContext context) {
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        visit(type, implementation, site, context);
+        visit(type, implementation, site, method.getDeclaringClass(), context);
     }
 
-    private void visit(Type type, I implementation, InjectionSite site, IntrospectionContext context) {
+    private void visit(Type type, I implementation, InjectionSite site, Class<?> clazz, IntrospectionContext context) {
         if (!(type instanceof Class)) {
-            context.addError(new InvalidContextType("Context type is not supported: " + type));
+            context.addError(new InvalidContextType("Context type " + type + " is not supported in " + clazz.getName()));
         } else if (RequestContext.class.isAssignableFrom((Class<?>) type)) {
             implementation.getComponentType().addInjectionSite(InjectableAttribute.OASIS_REQUEST_CONTEXT, site);
         } else if (ComponentContext.class.isAssignableFrom((Class<?>) type)) {
