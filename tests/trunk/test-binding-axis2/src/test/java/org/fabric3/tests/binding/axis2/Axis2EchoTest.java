@@ -30,8 +30,8 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMText;
+import org.oasisopen.sca.ServiceUnavailableException;
 import org.oasisopen.sca.annotation.Reference;
-import org.osoa.sca.ServiceUnavailableException;
 
 /**
  * @version $Rev$ $Date$
@@ -48,7 +48,6 @@ public class Axis2EchoTest extends TestCase {
 
     /**
      * Test for simple WS call without Security
-     * 
      */
     public void testEchoTextNoSecurity() {
         OMElement message = getInputText();
@@ -58,17 +57,15 @@ public class Axis2EchoTest extends TestCase {
 
     /**
      * Test for simple WS call with UsernameToken Security
-     * 
      */
     public void testEchoTextWs() {
         OMElement message = getInputText();
         OMElement response = service.echoWsUsernameToken(message);
         verifyOutputText(response);
     }
-    
+
     /**
      * Test for simple WS call with X509Token Security
-     * 
      */
     public void testEchoTextWsWithX509() {
         OMElement message = getInputText();
@@ -78,7 +75,7 @@ public class Axis2EchoTest extends TestCase {
 
     /**
      * Test for MTOM WS call with UsernameToken Security
-     * 
+     *
      * @throws IOException thrown if error occurred in unmarshalling MTOM
      */
     public void testEchoDataWsWithMTOM() throws IOException {
@@ -86,10 +83,10 @@ public class Axis2EchoTest extends TestCase {
         OMElement response = service.echoWsUsernameToken(message);
         verifyOutputMtom(response);
     }
-    
+
     /**
      * Test for MTOM WS call with X509Token Security
-     * 
+     *
      * @throws IOException thrown if error occurred in unmarshalling MTOM
      */
     public void testEchoDataWsWithX509MTOM() throws IOException {
@@ -100,7 +97,7 @@ public class Axis2EchoTest extends TestCase {
 
     /**
      * Test for MTOM WS call without Security.
-     * 
+     *
      * @throws IOException thrown if error occurred in unmarshalling MTOM
      */
     public void testEchoDataWithMTOMNoSecurity() throws IOException {
@@ -111,7 +108,6 @@ public class Axis2EchoTest extends TestCase {
 
     /**
      * Test for WS call generating runtime fault
-     * 
      */
     public void testRuntimeFault() {
         try {
