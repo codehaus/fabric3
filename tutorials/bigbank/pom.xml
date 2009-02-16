@@ -31,8 +31,8 @@
     <packaging>pom</packaging>
 
     <modules>
+      <module>bigbank-api</module>  
       <module>bigbank</module>  
-      <module>bigbank-common</module>  
       <module>bigbank-webclient</module>
     </modules>
 	

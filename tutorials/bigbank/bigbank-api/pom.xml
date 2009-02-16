@@ -23,10 +23,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>fabric3-tutorial-bigbank-common</artifactId>
+    <artifactId>fabric3-tutorial-bigbank-api</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Fabric3 BigBank Common Classes</name>
-    <description>Fabric3 BigBank Common Classes.</description>
+    <name>Fabric3 BigBank API Classes</name>
+    <description>Fabric3 BigBank API Classes.</description>
 
     <repositories>
         <repository>

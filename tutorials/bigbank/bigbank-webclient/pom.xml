@@ -46,7 +46,7 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
-            <artifactId>fabric3-tutorial-bigbank-common</artifactId>
+            <artifactId>fabric3-tutorial-bigbank-api</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
