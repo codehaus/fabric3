@@ -19,11 +19,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3.tutorials</groupId>
-        <artifactId>fabric3-tutorials-bigbank-parent-pom</artifactId>
+        <artifactId>bigbank-parent-pom</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>fabric3-tutorial-bigbank-api</artifactId>
+    <artifactId>bigbank-api</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Fabric3 BigBank API Classes</name>
     <description>Fabric3 BigBank API Classes.</description>

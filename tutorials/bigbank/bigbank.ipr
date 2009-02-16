@@ -313,7 +313,7 @@
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bigbank/fabric3-bigbank.iml" filepath="$PROJECT_DIR$/bigbank/fabric3-bigbank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bigbank/fabric3-bigbank.iml" filepath="$PROJECT_DIR$/bigbank/fabric3-bigbank-services.iml" />
       <module fileurl="file://$PROJECT_DIR$/bigbank-api/fabric3-bigbank-api.iml" filepath="$PROJECT_DIR$/bigbank-api/fabric3-bigbank-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/bigbank-webclient/fabric3-bigbank-webclient.iml" filepath="$PROJECT_DIR$/bigbank-webclient/fabric3-bigbank-webclient.iml" />
     </modules>
