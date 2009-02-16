@@ -24,10 +24,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>bigbank-services</artifactId>
+    <artifactId>bigbank-loan</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Fabric3 BigBank Services Module</name>
-    <description>Contains the BigBank back-end services.</description>
+    <name>Fabric3 BigBank Loan Service Module</name>
+    <description>Contains the BigBank Loan Service.</description>
     <packaging>jar</packaging>
 
     <repositories>
