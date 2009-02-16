@@ -37,9 +37,29 @@
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
+        
+        <!-- JPA support -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-jpa</artifactId>
+            <version>0.8-SNAPSHOT</version>
+            <classifier>bin</classifier>
+            <type>zip</type>
+        </dependency>
+
+        <!-- Messaging support -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>profile-jms</artifactId>
+            <version>0.8-SNAPSHOT</version>
+            <classifier>bin</classifier>
+            <type>zip</type>
+        </dependency>
+
+        <!-- Web application support -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>profile-web</artifactId>
             <version>0.8-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
