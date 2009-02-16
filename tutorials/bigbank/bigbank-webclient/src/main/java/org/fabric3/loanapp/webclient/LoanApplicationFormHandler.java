@@ -17,10 +17,11 @@
 package org.fabric3.loanapp.webclient;
 
 import loanapp.api.loan.LoanException;
+import loanapp.api.loan.LoanService;
 import loanapp.api.message.Address;
 import loanapp.api.message.LoanRequest;
-import loanapp.api.message.LoanStatus;
-import loanapp.api.request.RequestCoordinator;
+import org.oasisopen.sca.ComponentContext;
+import org.oasisopen.sca.annotation.Context;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -28,9 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import org.oasisopen.sca.annotation.Context;
-import org.oasisopen.sca.ComponentContext;
 
 
 /**
@@ -48,23 +46,16 @@ public class LoanApplicationFormHandler extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // process the application
-        RequestCoordinator coordinator = context.getService(RequestCoordinator.class, "requestCoordinator");
-        Long id = (Long) req.getSession().getAttribute("loanId");
-        String page;
-        if (id != null && LoanStatus.NOT_SUBMITTED != coordinator.getStatus(id)) {
-            req.setAttribute("loanError", "A loan application has already been submitted");
-            page = "/error.jsp";
-        } else {
-            try {
-                LoanRequest request = populateLoanRequest(req);
-                id = coordinator.start(request);
-                req.getSession().setAttribute("loanId", id);
-                page = "/requestSubmitted.jsp";
-            } catch (LoanException e) {
-                throw new ServletException(e);
-            }
+        LoanService service = context.getService(LoanService.class, "loanService");
+        try {
+            LoanRequest request = populateLoanRequest(req);
+            long id = service.apply(request);
+            req.getSession().setAttribute("loanId", id);
+            String page = "/requestSubmitted.jsp";
+            getServletContext().getRequestDispatcher(page).forward(req, resp);
+        } catch (LoanException e) {
+            throw new ServletException(e);
         }
-        getServletContext().getRequestDispatcher(page).forward(req, resp);
     }
 
     private LoanRequest populateLoanRequest(HttpServletRequest req) {

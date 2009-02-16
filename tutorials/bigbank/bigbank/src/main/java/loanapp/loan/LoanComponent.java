@@ -16,12 +16,14 @@
  */
 package loanapp.loan;
 
-import loanapp.api.acceptance.AcceptanceCoordinator;
+import loanapp.acceptance.AcceptanceCoordinator;
+import loanapp.api.loan.LoanNotFoundException;
 import loanapp.api.loan.LoanException;
 import loanapp.api.loan.LoanService;
 import loanapp.api.loan.OptionSelection;
 import loanapp.api.message.LoanRequest;
-import loanapp.api.request.RequestCoordinator;
+import loanapp.api.message.LoanData;
+import loanapp.request.RequestCoordinator;
 import org.oasisopen.sca.annotation.Reference;
 
 /**
@@ -48,6 +50,10 @@ public class LoanComponent implements LoanService {
 
     public long apply(LoanRequest request) throws LoanException {
         return requestCoordinator.start(request);
+    }
+
+    public LoanData review(long id) throws LoanNotFoundException {
+        return null;
     }
 
     public void decline(long id) throws LoanException {

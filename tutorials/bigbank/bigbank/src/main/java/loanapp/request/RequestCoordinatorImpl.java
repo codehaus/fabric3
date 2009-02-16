@@ -21,7 +21,7 @@ package loanapp.request;
 import loanapp.api.loan.LoanException;
 import loanapp.api.message.LoanRequest;
 import loanapp.api.message.LoanStatus;
-import loanapp.api.request.RequestCoordinator;
+import loanapp.request.RequestCoordinator;
 import loanapp.credit.CreditScore;
 import loanapp.credit.CreditService;
 import loanapp.credit.CreditServiceCallback;

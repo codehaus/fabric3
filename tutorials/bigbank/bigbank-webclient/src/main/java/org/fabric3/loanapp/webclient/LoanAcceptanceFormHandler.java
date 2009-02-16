@@ -16,10 +16,7 @@
  */
 package org.fabric3.loanapp.webclient;
 
-import loanapp.api.acceptance.AcceptanceCoordinator;
-import loanapp.api.acceptance.LoanNotApprovedException;
-import loanapp.api.acceptance.LoanNotFoundException;
-import loanapp.api.loan.LoanException;
+import loanapp.api.loan.LoanService;
 import org.oasisopen.sca.ComponentContext;
 import org.oasisopen.sca.annotation.Context;
 
@@ -45,29 +42,29 @@ public class LoanAcceptanceFormHandler extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // process the application
-        AcceptanceCoordinator coordinator = context.getService(AcceptanceCoordinator.class, "acceptanceCoordinator");
+        LoanService service = context.getService(LoanService.class, "loanService");
         String option = req.getParameter("acceptLoan");
         assert option != null;
-        String page;
-        try {
-            if ("decline".equalsIgnoreCase(option)) {
-                coordinator.decline();
-                page = "/declined.jsp";
-            } else {
-                coordinator.accept(option);
-                page = "/accepted.jsp";
-
-            }
-        } catch (LoanNotApprovedException e) {
-            req.setAttribute("loanError", e.getMessage());
-            page = "/error.jsp";
-        } catch (LoanNotFoundException e) {
-            req.setAttribute("loanError", e.getMessage());
-            page = "/error.jsp";
-        } catch (LoanException e) {
-            throw new ServletException(e);
-        }
-        getServletContext().getRequestDispatcher(page).forward(req, resp);
+//        String page;
+//        try {
+//            if ("decline".equalsIgnoreCase(option)) {
+        // service.decline();
+//                page = "/declined.jsp";
+//            } else {
+        //service.accept(option);
+//                page = "/accepted.jsp";
+//
+//            }
+//        } catch (LoanNotApprovedException e) {
+//            req.setAttribute("loanError", e.getMessage());
+//            page = "/error.jsp";
+//        } catch (LoanNotFoundException e) {
+//            req.setAttribute("loanError", e.getMessage());
+//            page = "/error.jsp";
+//        } catch (LoanException e) {
+//            throw new ServletException(e);
+//        }
+//        getServletContext().getRequestDispatcher(page).forward(req, resp);
 
     }
 

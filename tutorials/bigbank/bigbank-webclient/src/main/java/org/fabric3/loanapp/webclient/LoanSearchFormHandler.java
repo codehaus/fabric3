@@ -16,11 +16,12 @@
  */
 package org.fabric3.loanapp.webclient;
 
-import loanapp.api.acceptance.AcceptanceCoordinator;
-import loanapp.api.acceptance.LoanNotApprovedException;
-import loanapp.api.acceptance.LoanNotFoundException;
+import loanapp.api.loan.LoanNotFoundException;
 import loanapp.api.loan.LoanException;
-import loanapp.api.message.LoanOptions;
+import loanapp.api.loan.LoanService;
+import loanapp.api.message.LoanData;
+import org.oasisopen.sca.ComponentContext;
+import org.oasisopen.sca.annotation.Context;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -28,9 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import org.oasisopen.sca.annotation.Context;
-import org.oasisopen.sca.ComponentContext;
 
 /**
  * @version $Rev$ $Date$
@@ -47,17 +45,14 @@ public class LoanSearchFormHandler extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // process the application
-        AcceptanceCoordinator coordinator = context.getService(AcceptanceCoordinator.class, "acceptanceCoordinator");
+        LoanService service = context.getService(LoanService.class, "loanService");
         String page;
         try {
             long id = Long.parseLong(req.getParameter("loanId"));
             try {
-                LoanOptions options = coordinator.review(id);
+                LoanData options = service.review(id);
                 req.setAttribute("loanTerms", options);
                 page = "/reviewForm.jsp";
-            } catch (LoanNotApprovedException e) {
-                req.setAttribute("loanError", e.getMessage());
-                page = "/error.jsp";
             } catch (LoanNotFoundException e) {
                 req.setAttribute("loanError", e.getMessage());
                 page = "/error.jsp";

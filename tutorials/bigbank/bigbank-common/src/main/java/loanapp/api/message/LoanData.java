@@ -7,10 +7,10 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 6163 $ $Date: 2008-12-03 19:55:22 -0800 (Wed, 03 Dec 2008) $
  */
 @XmlRootElement
-public class LoanOptions implements Serializable {
+public class LoanData implements Serializable {
     private static final long serialVersionUID = 8045590944866727036L;
     private List<LoanOption> options = new ArrayList<LoanOption>();
 

@@ -16,40 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.api.request;
+package loanapp.api.loan;
 
 import loanapp.api.loan.LoanException;
-import loanapp.api.message.LoanRequest;
-import org.osoa.sca.annotations.Conversational;
 
 /**
- * Coordinator that proccesses new loan requests.
- *
  * @version $Revision$ $Date$
  */
-@Conversational
-public interface RequestCoordinator {
+public class LoanNotApprovedException extends LoanException {
+    private static final long serialVersionUID = -4321376630328676084L;
 
-    /**
-     * Apply for a loan
-     *
-     * @param request the loan application data
-     * @return the loan request id
-     * @throws LoanException thrown if an error with the loan application is found
-     */
-    long start(LoanRequest request) throws LoanException;
-
-    /**
-     * Returns the status for a loan application
-     *
-     * @param id the loan id
-     * @return the status
-     */
-    int getStatus(long id);
-
-    /**
-     * Cancel an in-process loan application
-     */
-    void cancel();
-
+    public LoanNotApprovedException(String message) {
+        super(message);
+    }
 }

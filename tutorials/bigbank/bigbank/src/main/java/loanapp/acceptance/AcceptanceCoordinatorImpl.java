@@ -25,14 +25,14 @@ import loanapp.domain.LoanRecord;
 import loanapp.domain.TermInfo;
 import loanapp.api.loan.LoanException;
 import loanapp.api.message.LoanOption;
-import loanapp.api.message.LoanOptions;
+import loanapp.api.message.LoanData;
 import loanapp.api.message.LoanStatus;
 import loanapp.notification.NotificationService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
-import loanapp.api.acceptance.AcceptanceCoordinator;
-import loanapp.api.acceptance.LoanNotApprovedException;
-import loanapp.api.acceptance.LoanNotFoundException;
+import loanapp.acceptance.AcceptanceCoordinator;
+import loanapp.api.loan.LoanNotApprovedException;
+import loanapp.api.loan.LoanNotFoundException;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -64,9 +64,9 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     }
 
 
-    public LoanOptions review(long loanId) throws LoanException {
+    public LoanData review(long loanId) throws LoanException {
         findRecord(loanId);
-        LoanOptions options = new LoanOptions();
+        LoanData options = new LoanData();
         for (TermInfo term : application.getTerms()) {
             options.addOption(new LoanOption(term.getType(), term.getRate(), term.getApr()));
         }

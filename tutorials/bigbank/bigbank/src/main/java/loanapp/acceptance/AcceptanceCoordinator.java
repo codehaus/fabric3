@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.api.acceptance;
+package loanapp.acceptance;
 
 import loanapp.api.loan.LoanException;
-import loanapp.api.message.LoanOptions;
+import loanapp.api.message.LoanData;
 import org.osoa.sca.annotations.Conversational;
 
 /**
@@ -38,7 +38,7 @@ public interface AcceptanceCoordinator {
      * @throws LoanException if an exception during acceptance was encountered. Subtypes including
      *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
-    LoanOptions review(long loanId) throws LoanException;
+    LoanData review(long loanId) throws LoanException;
 
     /**
      * Accepts the terms of a loan.
