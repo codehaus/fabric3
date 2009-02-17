@@ -14,13 +14,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.pricing;
+package loanapp.pricing.impl;
 
 import loanapp.message.PricingRequest;
 import loanapp.message.PricingResponse;
 import loanapp.rate.Rate;
 import loanapp.rate.RateResults;
 import loanapp.rate.RateService;
+import loanapp.pricing.PricingService;
 import org.oasisopen.sca.annotation.Reference;
 import org.oasisopen.sca.annotation.Scope;
 

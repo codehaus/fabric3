@@ -14,9 +14,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.rate;
+package loanapp.rate.impl;
 
 import org.oasisopen.sca.annotation.Scope;
+import loanapp.rate.RateService;
+import loanapp.rate.RateResults;
+import loanapp.rate.Rate;
 
 /**
  * @version $Rev: 1366 $ $Date: 2007-09-20 21:46:05 -0700 (Thu, 20 Sep 2007) $

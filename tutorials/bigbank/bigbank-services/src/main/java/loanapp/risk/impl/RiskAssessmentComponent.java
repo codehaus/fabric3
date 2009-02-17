@@ -14,11 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.risk;
+package loanapp.risk.impl;
 
 import loanapp.message.RiskResponse;
 import loanapp.message.RiskReason;
 import loanapp.message.RiskRequest;
+import loanapp.risk.RiskAssessmentService;
+import loanapp.risk.RiskAssessmentCallback;
 
 import java.util.ArrayList;
 import java.util.List;

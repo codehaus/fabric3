@@ -16,13 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.appraisal;
+package loanapp.appraisal.impl;
 
 import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.OneWay;
 import org.oasisopen.sca.annotation.Scope;
 
 import java.util.Date;
+
+import loanapp.appraisal.AppraisalService;
+import loanapp.appraisal.AppraisalCallback;
+import loanapp.appraisal.AppraisalRequest;
+import loanapp.appraisal.AppraisalSchedule;
+import loanapp.appraisal.AppraisalResult;
 
 /**
  * @version $Revision$ $Date$
