@@ -19,8 +19,7 @@
 package loanapp.acceptance;
 
 import loanapp.api.loan.LoanException;
-import loanapp.api.message.LoanData;
-import org.osoa.sca.annotations.Conversational;
+import loanapp.api.message.LoanApplication;
 
 /**
  * Coordinator that handles processing for loan terms that have been accepted by applicants. If a loan is accepted, an
@@ -28,17 +27,16 @@ import org.osoa.sca.annotations.Conversational;
  *
  * @version $Revision$ $Date$
  */
-@Conversational
 public interface AcceptanceCoordinator {
     /**
      * Returns the terms of a loan.
      *
-     * @param loanId the loan id
+     * @param id the loan id
      * @return the loan terms
      * @throws LoanException if an exception during acceptance was encountered. Subtypes including
      *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
-    LoanData review(long loanId) throws LoanException;
+    LoanApplication review(long id) throws LoanException;
 
     /**
      * Accepts the terms of a loan.
@@ -46,7 +44,7 @@ public interface AcceptanceCoordinator {
      * @param type the type of option selected
      * @throws LoanException if an exception during acceptance was encountered.
      */
-    void accept(String type) throws LoanException;
+    void accept(long id, String type) throws LoanException;
 
     /**
      * Declines the terms of a loan.
@@ -54,5 +52,5 @@ public interface AcceptanceCoordinator {
      * @throws LoanException if an exception during acceptance was encountered. Subtypes including
      *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
-    void decline() throws LoanException;
+    void decline(long id) throws LoanException;
 }

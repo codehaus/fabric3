@@ -59,4 +59,6 @@ public interface StoreService {
      * @throws StoreException if an exception retrieving the application is encountered
      */
     LoanRecord find(long id) throws StoreException;
+
+    LoanRecord findBySSN(String ssn) throws StoreException;
 }

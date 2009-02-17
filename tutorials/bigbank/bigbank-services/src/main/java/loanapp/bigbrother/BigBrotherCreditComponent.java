@@ -19,8 +19,8 @@ package loanapp.bigbrother;
 import loanapp.credit.CreditScore;
 import loanapp.credit.CreditService;
 import loanapp.credit.CreditServiceCallback;
-import org.oasisopen.sca.annotation.Reference;
 import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * Implementation of a CreditService that returns a credit score from the fictitious BigBrother credit bureau.
@@ -32,7 +32,7 @@ public class BigBrotherCreditComponent implements CreditService {
     private AuditService auditService;
     private CreditServiceCallback callbackService;
 
-    public BigBrotherCreditComponent(@Reference(name = "auditService")AuditService auditService) {
+    public BigBrotherCreditComponent(@Reference(name = "auditService") AuditService auditService) {
         this.auditService = auditService;
     }
 
@@ -45,11 +45,11 @@ public class BigBrotherCreditComponent implements CreditService {
         auditService.recordCheck(ssn);
         CreditScore score;
         if (ssn.startsWith("11")) {
-            score = new CreditScore(300);
+            score = new CreditScore(ssn, 300);
         } else if (ssn.startsWith("22")) {
-            score = new CreditScore(700);
+            score = new CreditScore(ssn, 700);
         } else {
-            score = new CreditScore(760);
+            score = new CreditScore(ssn, 760);
         }
         auditService.recordResult(ssn, score);
         callbackService.onCreditScore(score);

@@ -19,7 +19,7 @@ package org.fabric3.loanapp.webclient;
 import loanapp.api.loan.LoanNotFoundException;
 import loanapp.api.loan.LoanException;
 import loanapp.api.loan.LoanService;
-import loanapp.api.message.LoanData;
+import loanapp.api.message.LoanApplication;
 import org.oasisopen.sca.ComponentContext;
 import org.oasisopen.sca.annotation.Context;
 
@@ -50,7 +50,7 @@ public class LoanSearchFormHandler extends HttpServlet {
         try {
             long id = Long.parseLong(req.getParameter("loanId"));
             try {
-                LoanData options = service.review(id);
+                LoanApplication options = service.review(id);
                 req.setAttribute("loanTerms", options);
                 page = "/reviewForm.jsp";
             } catch (LoanNotFoundException e) {

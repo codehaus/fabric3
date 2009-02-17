@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="ASCII"?>
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
               xmlns:tutorials="urn:fabric3.org:tutorials">
-    <deployable composite="tutorials:LoanAppComposite"/>
-    <import.java package="loanapp.api.acceptance"/>
+    <deployable composite="tutorials:LoanComposite"/>
     <import.java package="loanapp.api.loan"/>
     <import.java package="loanapp.api.message"/>
-    <import.java package="loanapp.api.request"/>
+    <import.java package="loanapp.message"/>
 </contribution>
 
 

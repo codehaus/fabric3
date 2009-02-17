@@ -19,7 +19,7 @@
 package loanapp.store.persistent;
 
 import loanapp.domain.LoanRecord;
-import loanapp.message.LoanApplication;
+import loanapp.message.Loan;
 import loanapp.store.ApplicationNotFoundException;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
@@ -61,7 +61,7 @@ public class JPAStoreComponent implements StoreService {
     }
 
     public void remove(long id) throws StoreException {
-        LoanApplication application = em.find(LoanApplication.class, id);
+        Loan application = em.find(Loan.class, id);
         if (application == null) {
             throw new ApplicationNotFoundException("Loan application not found: " + id);
         }
@@ -76,6 +76,16 @@ public class JPAStoreComponent implements StoreService {
         try {
             Query query = em.createQuery("SELECT r FROM LoanRecord r WHERE r.loanNumber = :number");
             query.setParameter("number", id);
+            return (LoanRecord) query.getSingleResult();
+        } catch (PersistenceException e) {
+            throw new StoreException(e);
+        }
+    }
+
+    public LoanRecord findBySSN(String ssn) throws StoreException {
+        try {
+            Query query = em.createQuery("SELECT r FROM LoanRecord r WHERE r.ssn = :ssn");
+            query.setParameter("ssn", ssn);
             return (LoanRecord) query.getSingleResult();
         } catch (PersistenceException e) {
             throw new StoreException(e);

@@ -25,10 +25,10 @@ import java.io.Serializable;
  * Encapsulates loan application data. Contained data is built up as the application progresses through the loan
  * process.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 6562 $ $Date: 2009-02-16 13:51:11 -0800 (Mon, 16 Feb 2009) $
  */
 @XmlRootElement
-public class LoanApplication implements Serializable {
+public class Loan implements Serializable {
     private static final long serialVersionUID = -1205831596861744741L;
     private long number;
     private long expiration;
@@ -38,8 +38,8 @@ public class LoanApplication implements Serializable {
     private double amount;
     private double downPayment;
     private Address propertyAddress;
-    private RiskAssessment riskAssessment;
-    private Term[] terms;
+    private RiskResponse riskResponse;
+    private PricingResponse[] pricingResponses;
     private int creditScore;
 
     public long getNumber() {
@@ -152,17 +152,17 @@ public class LoanApplication implements Serializable {
      *
      * @return the applicant's risk assesment
      */
-    public RiskAssessment getRiskAssessment() {
-        return riskAssessment;
+    public RiskResponse getRiskAssessment() {
+        return riskResponse;
     }
 
     /**
      * Sets the applicant's risk assesment.
      *
-     * @param assessment the applicant's risk assesment
+     * @param response the applicant's risk assesment
      */
-    public void setRiskAssessment(RiskAssessment assessment) {
-        this.riskAssessment = assessment;
+    public void setRiskAssessment(RiskResponse response) {
+        this.riskResponse = response;
     }
 
 
@@ -174,12 +174,12 @@ public class LoanApplication implements Serializable {
         this.expiration = expiration;
     }
 
-    public void setTerms(Term[] terms) {
-        this.terms = terms;
+    public void setTerms(PricingResponse[] pricingResponses) {
+        this.pricingResponses = pricingResponses;
     }
 
-    public Term[] getTerms() {
-        return terms;
+    public PricingResponse[] getTerms() {
+        return pricingResponses;
     }
 
 }

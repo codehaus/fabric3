@@ -20,7 +20,7 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:tutorials="urn:fabric3.org:tutorials"
            targetNamespace="urn:fabric3.org:tutorials"
-           name="LoanAppComposite">
+           name="LoanComposite">
     <service name="LoanService" promote="LoanComponent">
         <!--<binding.ws uri="/loanService"/>-->
         <!--<binding.rmi serviceName="loanService"/>-->
@@ -50,27 +50,6 @@
         <reference name="storeService" target="StoreComponent"/>
     </component>
 
-    <component name="CreditComponent">
-        <implementation.composite name="tutorials:CreditComposite"/>
-    </component>
-
-    <component name="PricingComponent">
-        <implementation.composite name="tutorials:PricingComposite"/>
-        <reference name="rateService" target="RateComponent"/>
-    </component>
-
-    <component name="RiskAssessmentComponent">
-        <implementation.java class="loanapp.risk.RiskAssessmentComponent"/>
-        <property name="ratioMinimum">.10</property>
-    </component>
-
-    <component name="RateComponent">
-        <implementation.java class="loanapp.rate.RateComponent"/>
-    </component>
-
-    <component name="AppraisalComponent">
-        <implementation.java class="loanapp.appraisal.AppraisalComponent"/>
-    </component>
 
     <component name="NotificationComponent">
         <implementation.java class="loanapp.notification.NotificationComponent"/>

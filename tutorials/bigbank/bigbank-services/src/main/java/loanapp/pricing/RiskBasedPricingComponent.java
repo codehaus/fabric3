@@ -16,17 +16,16 @@
  */
 package loanapp.pricing;
 
-import loanapp.message.LoanApplication;
-import loanapp.message.Term;
+import loanapp.message.PricingRequest;
+import loanapp.message.PricingResponse;
 import loanapp.rate.Rate;
 import loanapp.rate.RateResults;
 import loanapp.rate.RateService;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.oasisopen.sca.annotation.Scope;
-import org.oasisopen.sca.annotation.Reference;
 
 /**
  * Default implementation of the PricingService that uses a RateService to compile up-to-date loan options.
@@ -37,16 +36,16 @@ import org.oasisopen.sca.annotation.Reference;
 public class RiskBasedPricingComponent implements PricingService {
     private RateService rateService;
 
-    public RiskBasedPricingComponent(@Reference(name = "rateService")RateService rateService) {
+    public RiskBasedPricingComponent(@Reference(name = "rateService") RateService rateService) {
         this.rateService = rateService;
     }
 
-    public Term[] calculateOptions(LoanApplication application) {
-        List<Term> terms = new ArrayList<Term>();
-        RateResults rateResults = rateService.calculateRates(application.getRiskAssessment().getRiskFactor());
+    public PricingResponse[] calculateOptions(PricingRequest request) {
+        List<PricingResponse> pricingResponses = new ArrayList<PricingResponse>();
+        RateResults rateResults = rateService.calculateRates(request.getRiskFactor());
         for (Rate rate : rateResults.getRates()) {
-            terms.add(new Term(rate.getType(), rate.getRate(), rate.getApr()));
+            pricingResponses.add(new PricingResponse(rate.getType(), rate.getRate(), rate.getApr()));
         }
-        return terms.toArray(new Term[terms.size()]);
+        return pricingResponses.toArray(new PricingResponse[pricingResponses.size()]);
     }
 }

@@ -27,12 +27,14 @@ import java.io.Serializable;
 @XmlRootElement
 public class CreditScore implements Serializable {
     private static final long serialVersionUID = -452032042185332788L;
+    private String ssn;
     private int score;
 
     public CreditScore() {
     }
 
-    public CreditScore(int score) {
+    public CreditScore(String ssn, int score) {
+        this.ssn = ssn;
         this.score = score;
     }
 
@@ -44,4 +46,11 @@ public class CreditScore implements Serializable {
         this.score = score;
     }
 
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
+    }
 }

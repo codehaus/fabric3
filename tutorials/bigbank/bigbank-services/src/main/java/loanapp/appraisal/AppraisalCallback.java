@@ -30,9 +30,8 @@ public interface AppraisalCallback {
     /**
      * Notification when an appraisal has been scheduled
      *
-     * @param date the scheduled time
      */
-    void dateSchedule(Date date);
+    void schedule(AppraisalSchedule schedule);
 
     /**
      * Notification when an appraisal has been completed.

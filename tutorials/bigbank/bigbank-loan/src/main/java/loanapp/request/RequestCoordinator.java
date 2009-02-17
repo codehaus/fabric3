@@ -27,7 +27,6 @@ import org.osoa.sca.annotations.Conversational;
  *
  * @version $Revision$ $Date$
  */
-@Conversational
 public interface RequestCoordinator {
 
     /**
@@ -38,14 +37,6 @@ public interface RequestCoordinator {
      * @throws LoanException thrown if an error with the loan application is found
      */
     long start(LoanRequest request) throws LoanException;
-
-    /**
-     * Returns the status for a loan application
-     *
-     * @param id the loan id
-     * @return the status
-     */
-    int getStatus(long id);
 
     /**
      * Cancel an in-process loan application

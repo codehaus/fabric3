@@ -16,9 +16,9 @@
  */
 package loanapp.risk;
 
-import loanapp.message.LoanApplication;
-import loanapp.message.RiskAssessment;
+import loanapp.message.RiskResponse;
 import loanapp.message.RiskReason;
+import loanapp.message.RiskRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +46,8 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
         this.callback = callback;
     }
 
-    public void assessRisk(LoanApplication application) {
-        int score = application.getCreditScore();
+    public void assessRisk(RiskRequest request) {
+        int score = request.getCreditScore();
         int factor = 0;
         int decision;
         List<RiskReason> reasons = new ArrayList<RiskReason>();
@@ -55,7 +55,7 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
             factor += 10;
             reasons.add(new RiskReason("Poor credit history"));
         }
-        double ratio = application.getDownPayment() / application.getAmount();
+        double ratio = request.getDownPayment() / request.getAmount();
         if (ratio < ratioMinimum) {
             // less than a minimum percentage down, so assign it the highest risk
             factor += 15;
@@ -63,11 +63,12 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
             reasons.add(new RiskReason("Suspect credit history"));
         }
         if (factor > 24) {
-            decision = RiskAssessment.REJECT;
+            decision = RiskResponse.REJECT;
         } else {
-            decision = RiskAssessment.APPROVE;
+            decision = RiskResponse.APPROVE;
         }
-        RiskAssessment result = new RiskAssessment(decision, factor, reasons.toArray(new RiskReason[reasons.size()]));
+        RiskResponse result = new RiskResponse(request.getId(), decision, factor, reasons.toArray(new RiskReason[reasons.size()]));
+        
         callback.onAssessment(result);
     }
 }

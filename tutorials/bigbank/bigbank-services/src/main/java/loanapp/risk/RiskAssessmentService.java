@@ -16,7 +16,7 @@
  */
 package loanapp.risk;
 
-import loanapp.message.LoanApplication;
+import loanapp.message.RiskRequest;
 import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.OneWay;
 import org.oasisopen.sca.annotation.Remotable;
@@ -33,8 +33,8 @@ public interface RiskAssessmentService {
     /**
      * Perform the risk assessment.
      *
-     * @param application the application to assess
+     * @param request
      */
     @OneWay
-    void assessRisk(LoanApplication application);
+    void assessRisk(RiskRequest request);
 }

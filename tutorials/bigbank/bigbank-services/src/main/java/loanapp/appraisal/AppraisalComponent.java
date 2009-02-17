@@ -18,13 +18,11 @@
  */
 package loanapp.appraisal;
 
-import loanapp.api.message.Address;
-
-import java.util.Date;
-
-import org.oasisopen.sca.annotation.Scope;
 import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.OneWay;
+import org.oasisopen.sca.annotation.Scope;
+
+import java.util.Date;
 
 /**
  * @version $Revision$ $Date$
@@ -39,10 +37,11 @@ public class AppraisalComponent implements AppraisalService {
     }
 
     @OneWay
-    public void appraise(Address address) {
-        Date date = new Date(System.currentTimeMillis()+ 1000);
-        callback.dateSchedule(date);
-        AppraisalResult result = new AppraisalResult(AppraisalResult.APPROVED, new String[0]);
+    public void appraise(AppraisalRequest request) {
+        Date date = new Date(System.currentTimeMillis() + 1000);
+        AppraisalSchedule schedule = new AppraisalSchedule(request.getId(), date);
+        callback.schedule(schedule);
+        AppraisalResult result = new AppraisalResult(request.getId(), AppraisalResult.APPROVED, new String[0]);
         callback.appraisalCompleted(result);
     }
 }

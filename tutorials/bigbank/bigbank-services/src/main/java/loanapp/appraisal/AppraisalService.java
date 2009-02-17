@@ -31,6 +31,6 @@ import org.oasisopen.sca.annotation.OneWay;
 public interface AppraisalService {
 
     @OneWay
-    void appraise(Address address);
+    void appraise(AppraisalRequest request);
 
 }

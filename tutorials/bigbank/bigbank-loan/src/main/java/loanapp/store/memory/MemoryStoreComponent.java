@@ -21,11 +21,10 @@ package loanapp.store.memory;
 import loanapp.domain.LoanRecord;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
+import org.oasisopen.sca.annotation.Scope;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.oasisopen.sca.annotation.Scope;
 
 /**
  * Simple in-memory StoreService that uses a Map for persistence.
@@ -36,22 +35,31 @@ import org.oasisopen.sca.annotation.Scope;
 public class MemoryStoreComponent implements StoreService {
     private long counter;
     private Map<Long, LoanRecord> cache = new ConcurrentHashMap<Long, LoanRecord>();
+    private Map<String, LoanRecord> ssnCache = new ConcurrentHashMap<String, LoanRecord>();
 
     public void save(LoanRecord record) throws StoreException {
         long id = ++counter;
         record.setId(id);
         cache.put(record.getId(), record);
+        ssnCache.put(record.getSsn(), record);
     }
 
     public void update(LoanRecord record) throws StoreException {
-        cache.put(record.getId(), record);
     }
 
     public void remove(long id) throws StoreException {
-        cache.remove(id);
+        LoanRecord record = cache.remove(id);
+        if (record != null) {
+            ssnCache.remove(record.getSsn());
+        }
     }
 
     public LoanRecord find(long id) throws StoreException {
         return cache.get(id);
     }
+
+    public LoanRecord findBySSN(String ssn) throws StoreException {
+        return ssnCache.get(ssn);
+    }
+
 }

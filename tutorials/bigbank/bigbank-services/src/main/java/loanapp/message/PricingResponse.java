@@ -16,15 +16,47 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.store;
+package loanapp.message;
+
+import java.io.Serializable;
 
 /**
  * @version $Revision$ $Date$
  */
-public class ApplicationNotFoundException extends StoreException {
-    private static final long serialVersionUID = 4416685817482438364L;
+public class PricingResponse implements Serializable {
+    private static final long serialVersionUID = -3157707604835927354L;
+    private String type;
+    private float rate;
+    private float apr;
 
-    public ApplicationNotFoundException(String message) {
-        super(message);
+    public PricingResponse(String type, float rate, float apr) {
+        this.type = type;
+        this.rate = rate;
+        this.apr = apr;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public float getRate() {
+        return rate;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
+
+    public float getApr() {
+        return apr;
+    }
+
+    public void setApr(float apr) {
+        this.apr = apr;
+    }
+
 }

@@ -25,22 +25,28 @@ import java.io.Serializable;
  *
  * @version $Revision$ $Date$
  */
-public class RiskAssessment implements Serializable {
+public class RiskResponse implements Serializable {
     private static final long serialVersionUID = 1427555176373119897L;
     public static final RiskReason[] EMPTY = new RiskReason[0];
     public static final int APPROVE = 1;
     public static final int REJECT = -1;
+    private long id;
     private int decision;
     private int factor;
     private RiskReason[] reasons = EMPTY;
 
-    public RiskAssessment(int decision, int factor, RiskReason[] reasons) {
+    public RiskResponse(long id, int decision, int factor, RiskReason[] reasons) {
+        this.id = id;
         this.decision = decision;
         this.factor = factor;
         this.reasons = reasons;
     }
 
-    public RiskAssessment() {
+    public RiskResponse() {
+    }
+
+    public long getId() {
+        return id;
     }
 
     public int getRiskFactor() {

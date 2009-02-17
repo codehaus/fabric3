@@ -16,8 +16,9 @@
  */
 package loanapp.pricing;
 
-import loanapp.message.LoanApplication;
-import loanapp.message.Term;
+import loanapp.message.Loan;
+import loanapp.message.PricingResponse;
+import loanapp.message.PricingRequest;
 import org.oasisopen.sca.annotation.Remotable;
 
 /**
@@ -32,8 +33,7 @@ public interface PricingService {
     /**
      * Compiles the set of loan options for an application
      *
-     * @param application the loan application data
      * @return a set of loan options
      */
-    Term[] calculateOptions(LoanApplication application);
+    PricingResponse[] calculateOptions(PricingRequest request);
 }

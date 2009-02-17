@@ -16,9 +16,8 @@
  */
 package loanapp.api.loan;
 
+import loanapp.api.message.LoanApplication;
 import loanapp.api.message.LoanRequest;
-import loanapp.api.message.LoanData;
-import loanapp.api.loan.LoanNotFoundException;
 import org.oasisopen.sca.annotation.Remotable;
 
 /**
@@ -38,7 +37,7 @@ public interface LoanService {
      */
     long apply(LoanRequest request) throws LoanException;
 
-    LoanData review(long id) throws LoanNotFoundException;
+    LoanApplication review(long id) throws LoanException;
 
     void decline(long id) throws LoanException;
 

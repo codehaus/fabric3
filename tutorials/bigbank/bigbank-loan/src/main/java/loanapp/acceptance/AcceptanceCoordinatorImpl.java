@@ -18,29 +18,27 @@
  */
 package loanapp.acceptance;
 
+import loanapp.api.loan.LoanException;
+import loanapp.api.loan.LoanNotFoundException;
+import loanapp.api.message.LoanApplication;
+import loanapp.api.message.LoanOption;
+import loanapp.api.message.LoanStatus;
 import loanapp.appraisal.AppraisalCallback;
+import loanapp.appraisal.AppraisalRequest;
 import loanapp.appraisal.AppraisalResult;
+import loanapp.appraisal.AppraisalSchedule;
 import loanapp.appraisal.AppraisalService;
 import loanapp.domain.LoanRecord;
 import loanapp.domain.TermInfo;
-import loanapp.api.loan.LoanException;
-import loanapp.api.message.LoanOption;
-import loanapp.api.message.LoanData;
-import loanapp.api.message.LoanStatus;
 import loanapp.notification.NotificationService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
-import loanapp.acceptance.AcceptanceCoordinator;
-import loanapp.api.loan.LoanNotApprovedException;
-import loanapp.api.loan.LoanNotFoundException;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import org.oasisopen.sca.annotation.Reference;
 import org.oasisopen.sca.annotation.Scope;
 import org.oasisopen.sca.annotation.Service;
-import org.oasisopen.sca.annotation.Reference;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Default implementation of the AcceptanceCoordinator.
@@ -53,28 +51,32 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     private AppraisalService appraisalService;
     private NotificationService notificationService;
     private StoreService storeService;
-    private LoanRecord application;
 
-    public AcceptanceCoordinatorImpl(@Reference(name = "appraisalService")AppraisalService appraisalService,
-                                     @Reference(name = "notificationService")NotificationService notificationService,
-                                     @Reference(name = "storeService")StoreService storeService) {
+    public AcceptanceCoordinatorImpl(@Reference(name = "appraisalService") AppraisalService appraisalService,
+                                     @Reference(name = "notificationService") NotificationService notificationService,
+                                     @Reference(name = "storeService") StoreService storeService) {
         this.appraisalService = appraisalService;
         this.notificationService = notificationService;
         this.storeService = storeService;
     }
 
 
-    public LoanData review(long loanId) throws LoanException {
-        findRecord(loanId);
-        LoanData options = new LoanData();
-        for (TermInfo term : application.getTerms()) {
-            options.addOption(new LoanOption(term.getType(), term.getRate(), term.getApr()));
+    public LoanApplication review(long loanId) throws LoanException {
+        LoanRecord record = findRecord(loanId);
+        LoanApplication application = new LoanApplication();
+        LoanOption[] options = new LoanOption[record.getTerms().size()];
+        for (int i = 0; i < record.getTerms().size(); i++) {
+            TermInfo term = record.getTerms().get(i);
+            LoanOption loanOption = new LoanOption(term.getType(), term.getRate(), term.getApr());
+            options[i] = loanOption;
         }
-        return options;
+        application.setOptions(options);
+        return application;
     }
 
-    public void accept(String type) throws LoanException {
-        List<TermInfo> terms = application.getTerms();
+    public void accept(long id, String type) throws LoanException {
+        LoanRecord record = findRecord(id);
+        List<TermInfo> terms = record.getTerms();
         boolean found = false;
         for (TermInfo term : terms) {
             if (term.getType().equals(type)) {
@@ -83,30 +85,32 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
             }
         }
         if (!found) {
-            throw new InvalidLoanOptionException("Invalid loan option selected for loan " + application.getId());
+            throw new InvalidLoanOptionException("Invalid loan option selected for loan " + id);
         }
-        application.setTypeSelected(type);
-        application.setStatus(LoanStatus.AWAITING_APPRAISAL);
+        record.setTypeSelected(type);
+        record.setStatus(LoanStatus.AWAITING_APPRAISAL);
         try {
-            storeService.update(application);
+            storeService.update(record);
         } catch (StoreException e) {
             throw new LoanException(e);
         }
-        // TODO lock loan
-        appraisalService.appraise(application.getPropertyInfo().getAddress());
+        AppraisalRequest request = new AppraisalRequest(id, record.getPropertyInfo().getAddress());
+        appraisalService.appraise(request);
     }
 
-    public void decline() throws LoanException {
-        application.setStatus(LoanStatus.DECLINED);
+    public void decline(long id) throws LoanException {
+        LoanRecord record = findRecord(id);
+        record.setStatus(LoanStatus.DECLINED);
         try {
-            storeService.update(application);
+            storeService.update(record);
         } catch (StoreException e) {
             throw new LoanException(e);
         }
     }
 
-    public void dateSchedule(Date time) {
-        notificationService.appraisalScheduled(application.getEmail(), application.getId(), time);
+    public void schedule(AppraisalSchedule schedule) {
+        // TODO add notification
+        //notificationService.appraisalScheduled();
     }
 
     public void appraisalCompleted(AppraisalResult result) {
@@ -115,24 +119,28 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
             // TODO notify
             return;
         }
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, 1);
-        notificationService.fundingDateScheduled(application.getEmail(), application.getId(), calendar.getTime());
+        try {
+            LoanRecord record = findRecord(result.getId());
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, 1);
+            notificationService.fundingDateScheduled(record.getEmail(), record.getId(), calendar.getTime());
+        } catch (LoanException e) {
+            // TODO log exception
+        }
         // TODO send to closing system
     }
 
-    private void findRecord(long id) throws LoanException {
+    private LoanRecord findRecord(long id) throws LoanException {
+        LoanRecord record;
         try {
-            application = storeService.find(id);
+            record = storeService.find(id);
         } catch (StoreException e) {
             throw new LoanException(e);
         }
-        if (application == null) {
+        if (record == null) {
             throw new LoanNotFoundException("No loan application on file with id " + id);
         }
-        if (LoanStatus.AWAITING_ACCEPTANCE != application.getStatus()) {
-            throw new LoanNotApprovedException("Loan was not approved");
-        }
+        return record;
     }
 
 

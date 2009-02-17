@@ -18,7 +18,7 @@
  */
 package loanapp.risk;
 
-import loanapp.message.RiskAssessment;
+import loanapp.message.RiskResponse;
 import org.oasisopen.sca.annotation.OneWay;
 
 /**
@@ -34,7 +34,7 @@ public interface RiskAssessmentCallback {
      * @param result the assessment result
      */
     @OneWay
-    void onAssessment(RiskAssessment result);
+    void onAssessment(RiskResponse result);
 
     /**
      * Notificaiton when a error was encountered during risk assessment.
