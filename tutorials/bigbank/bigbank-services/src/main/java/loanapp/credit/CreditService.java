@@ -16,9 +16,9 @@
  */
 package loanapp.credit;
 
-import org.oasisopen.sca.annotation.Remotable;
 import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.OneWay;
+import org.oasisopen.sca.annotation.Remotable;
 
 /**
  * Implementations perform a credit check for a loan applicant against a third-party credit bureau.

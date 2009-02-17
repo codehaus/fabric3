@@ -18,8 +18,6 @@
  */
 package loanapp.appraisal;
 
-import java.util.Date;
-
 /**
  * Interface for receiving appraisal callbacks.
  *
@@ -29,7 +27,6 @@ public interface AppraisalCallback {
 
     /**
      * Notification when an appraisal has been scheduled
-     *
      */
     void schedule(AppraisalSchedule schedule);
 

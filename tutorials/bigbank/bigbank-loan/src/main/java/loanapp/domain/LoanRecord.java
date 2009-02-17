@@ -18,11 +18,6 @@
  */
 package loanapp.domain;
 
-import loanapp.message.Loan;
-import loanapp.message.RiskResponse;
-import loanapp.message.RiskReason;
-import loanapp.message.PricingResponse;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +27,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,28 +51,6 @@ public class LoanRecord implements Serializable {
     private int creditScore;
 
     public LoanRecord() {
-    }
-
-    public LoanRecord(Loan application) {
-        loanNumber = application.getNumber();
-        expiration = application.getExpiration();
-        status = application.getStatus();
-        ssn = application.getSsn();
-        email = application.getEmail();
-        amount = application.getAmount();
-        downPayment = application.getDownPayment();
-        propertyInfo = new PropertyInfo(application.getPropertyAddress());
-        RiskResponse response = application.getRiskAssessment();
-        List<RiskReasonInfo> reasons = new ArrayList<RiskReasonInfo>();
-        for (RiskReason reason : response.getReasons()) {
-            reasons.add(new RiskReasonInfo(reason.getDescription()));
-        }
-        riskInfo = new RiskInfo(response.getDecision(), response.getRiskFactor(), reasons);
-        terms = new ArrayList<TermInfo>();
-        for (PricingResponse pricingResponse : application.getTerms()) {
-            terms.add(new TermInfo(pricingResponse.getType(), pricingResponse.getRate(), pricingResponse.getApr()));
-        }
-        creditScore = application.getCreditScore();
     }
 
     @Id

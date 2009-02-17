@@ -39,21 +39,20 @@ import loanapp.risk.RiskAssessmentService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.api.annotation.transaction.ManagedTransaction;
 import org.oasisopen.sca.annotation.Reference;
 import org.oasisopen.sca.annotation.Service;
-import org.osoa.sca.annotations.ConversationAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Default implementation of the RequestCoordinator service.
  *
  * @version $Revision$ $Date$
  */
-@ConversationAttributes(maxIdleTime = "2 hours")
 @Service(interfaces = {RequestCoordinator.class, CreditServiceCallback.class, RiskAssessmentCallback.class})
+@ManagedTransaction
 public class RequestCoordinatorImpl implements RequestCoordinator, CreditServiceCallback, RiskAssessmentCallback {
     // simple counter
     private CreditService creditService;
@@ -126,6 +125,11 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             return;
         }
         record.setCreditScore(result.getScore());
+        try {
+            storeService.update(record);
+        } catch (StoreException e) {
+           // TODO record error
+        }
         RiskRequest request = new RiskRequest(record.getId(), record.getCreditScore(), record.getAmount(), record.getDownPayment());
         riskService.assessRisk(request);
     }
@@ -157,7 +161,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             record.setTerms(termImfos);
             try {
                 record.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
-                storeService.save(record);
+                storeService.update(record);
                 // notify the client
                 notificationService.approved(record.getEmail(), record.getId());
             } catch (StoreException e) {

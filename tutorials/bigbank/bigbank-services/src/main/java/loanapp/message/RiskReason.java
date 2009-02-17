@@ -1,6 +1,5 @@
 package loanapp.message;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 /**

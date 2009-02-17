@@ -18,7 +18,6 @@
  */
 package loanapp.appraisal;
 
-import loanapp.api.message.Address;
 import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.OneWay;
 

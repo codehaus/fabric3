@@ -16,9 +16,8 @@
  */
 package loanapp.pricing;
 
-import loanapp.message.Loan;
-import loanapp.message.PricingResponse;
 import loanapp.message.PricingRequest;
+import loanapp.message.PricingResponse;
 import org.oasisopen.sca.annotation.Remotable;
 
 /**

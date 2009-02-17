@@ -25,6 +25,7 @@ public class AppraisalResult {
     public long getId() {
         return id;
     }
+
     public int getResult() {
         return result;
     }

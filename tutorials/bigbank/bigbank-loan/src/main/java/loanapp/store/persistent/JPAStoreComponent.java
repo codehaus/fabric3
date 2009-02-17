@@ -19,7 +19,6 @@
 package loanapp.store.persistent;
 
 import loanapp.domain.LoanRecord;
-import loanapp.message.Loan;
 import loanapp.store.ApplicationNotFoundException;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
@@ -61,7 +60,7 @@ public class JPAStoreComponent implements StoreService {
     }
 
     public void remove(long id) throws StoreException {
-        Loan application = em.find(Loan.class, id);
+        LoanRecord application = em.find(LoanRecord.class, id);
         if (application == null) {
             throw new ApplicationNotFoundException("Loan application not found: " + id);
         }
