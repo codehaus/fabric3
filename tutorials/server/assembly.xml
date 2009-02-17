@@ -59,6 +59,12 @@
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
         </fileSet>
+        <fileSet>
+            <directory>src/main/datasource</directory>
+            <outputDirectory>/controller/extensions/datasource</outputDirectory>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
         <!-- setup zone1 -->
         <fileSet>
             <directory>target/image</directory>
