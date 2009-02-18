@@ -18,8 +18,6 @@
  */
 package org.oasisopen.sca;
 
-import org.osoa.sca.ServiceRuntimeException;
-
 /**
  * Exception used to indicate that a runtime exception occurred during the invocation of and external service.
  *
