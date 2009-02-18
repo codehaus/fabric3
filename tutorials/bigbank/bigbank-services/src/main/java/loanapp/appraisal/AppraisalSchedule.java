@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * @version $Revision$ $Date$
  */
-@XmlRootElement
+//@XmlRootElement
 public class AppraisalSchedule {
     private long id;
     private Date date;

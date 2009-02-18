@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @version $Revision$ $Date$
  */
-@XmlRootElement
+//@XmlRootElement
 public class AppraisalRequest {
     private long id;
     private Address address;

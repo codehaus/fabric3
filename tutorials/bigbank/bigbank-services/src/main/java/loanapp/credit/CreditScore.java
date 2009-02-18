@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * @version $Revision$ $Date$
  */
-@XmlRootElement
+//@XmlRootElement
 public class CreditScore implements Serializable {
     private static final long serialVersionUID = -452032042185332788L;
     private String ssn;

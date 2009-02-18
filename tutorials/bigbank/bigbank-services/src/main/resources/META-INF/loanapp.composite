@@ -22,14 +22,28 @@
            targetNamespace="urn:fabric3.org:tutorials"
            name="LoanAppComposite">
 
+    <!--<component name="CreditComponent">-->
+        <!--<implementation.composite name="tutorials:CreditComposite"/>-->
+    <!--</component>-->
+
     <component name="CreditComponent">
-        <implementation.composite name="tutorials:CreditComposite"/>
+        <implementation.java class="loanapp.bigbrother.BigBrotherCreditComponent"/>
+        <reference name="auditService" target="AuditComponent"/>
     </component>
 
+    <component name="AuditComponent">
+        <implementation.java class="loanapp.bigbrother.AuditServiceImpl"/>
+    </component>
+    
     <component name="PricingComponent">
-        <implementation.composite name="tutorials:PricingComposite"/>
+        <implementation.java class="loanapp.pricing.impl.RiskBasedPricingComponent"/>
         <reference name="rateService" target="RateComponent"/>
     </component>
+
+    <!--<component name="PricingComponent">-->
+        <!--<implementation.composite name="tutorials:PricingComposite"/>-->
+        <!--<reference name="rateService" target="RateComponent"/>-->
+    <!--</component>-->
 
     <component name="RiskAssessmentComponent">
         <implementation.java class="loanapp.risk.impl.RiskAssessmentComponent"/>

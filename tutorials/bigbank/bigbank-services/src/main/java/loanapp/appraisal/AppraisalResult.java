@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @version $Revision$ $Date$
  */
-@XmlRootElement
+//@XmlRootElement
 public class AppraisalResult {
     public static int APPROVED = 1;
     public static int DECLINED = -1;

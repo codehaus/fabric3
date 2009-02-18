@@ -34,7 +34,7 @@ public interface CreditService {
      *
      * @param ssn the applicant's social security number
      */
-//    @OneWay
+    @OneWay
     void score(String ssn);
 
 }
