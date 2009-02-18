@@ -2,8 +2,8 @@
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
               xmlns:tutorials="urn:fabric3.org:tutorials">
     <deployable composite="tutorials:LoanWebAppComposite"/>
-    <import.java package="loanapp.api.acceptance"/>
     <import.java package="loanapp.api.loan"/>
     <import.java package="loanapp.api.message"/>
-    <import.java package="loanapp.api.request"/>
+    <import.java package="loanapp.acceptance"/>
+    <import.java package="loanapp.request"/>
 </contribution>

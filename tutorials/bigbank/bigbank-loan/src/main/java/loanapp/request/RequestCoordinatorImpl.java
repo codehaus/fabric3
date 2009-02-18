@@ -130,7 +130,6 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         } catch (StoreException e) {
             // TODO record error
         }
-        System.out.println("------on credit score");
         RiskRequest request = new RiskRequest(record.getId(), record.getCreditScore(), record.getAmount(), record.getDownPayment());
         riskService.assessRisk(request);
     }
@@ -140,7 +139,6 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     }
 
     public void onAssessment(RiskResponse response) {
-        System.out.println("------on assessment");
         LoanRecord record;
         try {
             record = findRecord(response.getId());

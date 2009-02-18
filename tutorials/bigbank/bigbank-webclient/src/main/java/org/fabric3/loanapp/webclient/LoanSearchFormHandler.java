@@ -52,6 +52,7 @@ public class LoanSearchFormHandler extends HttpServlet {
             try {
                 LoanApplication options = service.review(id);
                 req.setAttribute("loanTerms", options);
+                req.setAttribute("loanId", id);
                 page = "/reviewForm.jsp";
             } catch (LoanNotFoundException e) {
                 req.setAttribute("loanError", e.getMessage());

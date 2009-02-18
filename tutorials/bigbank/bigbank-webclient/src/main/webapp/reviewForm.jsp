@@ -38,6 +38,7 @@ Please select a loan option:
                 <td><input type="radio" name="acceptLoan" value="${option.type}" title="${option.type}">${option.type}
                     at ${option.rate}% and ${option.apr} APR
                 </td>
+				<input type="hidden" name="loanId" value="${loanId}"/>
             </tr>
         </c:forEach>
         <tr>
