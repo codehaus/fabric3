@@ -19,10 +19,4 @@
     <reference name="loanService">
         <interface.java interface="loanapp.api.loan.LoanService"/>
     </reference>
-    <reference name="requestCoordinator">
-        <interface.java interface="loanapp.request.RequestCoordinator"/>
-    </reference>
-    <reference name="acceptanceCoordinator">
-        <interface.java interface="loanapp.acceptance.AcceptanceCoordinator"/>
-    </reference>
 </componentType>

@@ -10,8 +10,6 @@
     <import.java package="loanapp.rate"/>
     <import.java package="loanapp.risk"/>
     <import.java package="loanapp.appraisal"/>
-    <export.java package="loanapp.acceptance"/>
-    <export.java package="loanapp.request"/>
 </contribution>
 
 

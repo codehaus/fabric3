@@ -24,8 +24,6 @@
     <component name="lending">
         <implementation.web/>
         <reference name="loanService" target="LoanComponent"/>
-        <reference name="requestCoordinator" target="RequestCoordinator/RequestCoordinator"/>
-        <reference name="acceptanceCoordinator" target="AcceptanceCoordinator/AcceptanceCoordinator"/>
     </component>
 
 </composite>
