@@ -18,10 +18,11 @@ package loanapp.api.loan;
 
 import loanapp.api.message.LoanApplication;
 import loanapp.api.message.LoanRequest;
+import loanapp.api.message.OptionSelection;
 import org.oasisopen.sca.annotation.Remotable;
 
 /**
- * Implementations process a loan application.
+ * Service responsible for processing a loan application.
  *
  * @version $Rev$ $Date$
  */
@@ -29,18 +30,37 @@ import org.oasisopen.sca.annotation.Remotable;
 public interface LoanService {
 
     /**
-     * Interface to the loan application process.
+     * Initiates a loan application.
      *
-     * @param request the loan request data
+     * @param request the loan data
      * @return the loan tracking number
-     * @throws LoanException
+     * @throws LoanException if an error initiating the application occurs
      */
     long apply(LoanRequest request) throws LoanException;
 
-    LoanApplication review(long id) throws LoanException;
+    /**
+     * Returns an in-process loan application.
+     *
+     * @param id the loan tracking number
+     * @return the loan application
+     * @throws LoanException if an exception during acceptance was encountered. For example, LoanNotFoundException.
+     */
+    LoanApplication retrieve(long id) throws LoanException;
 
+    /**
+     * Declines the terms of a loan application.
+     *
+     * @param id the loan tracking number
+     * @throws LoanException if an error declining the loan occurs
+     */
     void decline(long id) throws LoanException;
 
+    /**
+     * Accepts the terms of a loan application.
+     *
+     * @param selection contains the loan tracking number and selected terms
+     * @throws LoanException if an error accepting the loan occurs
+     */
     void accept(OptionSelection selection) throws LoanException;
 
 }

@@ -3,6 +3,6 @@
       xmlns:tutorials="urn:fabric3.org:tutorials"
       name="IntegrationPlan">
     <mappings>
-        <mapping deployable="tutorials:LoanAppComposite" zone="zone2"/>
+        <mapping deployable="tutorials:ServicesComposite" zone="zone2"/>
     </mappings>
 </plan>

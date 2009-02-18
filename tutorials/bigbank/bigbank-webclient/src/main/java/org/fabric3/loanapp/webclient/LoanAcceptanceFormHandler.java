@@ -20,7 +20,7 @@ import loanapp.api.loan.LoanException;
 import loanapp.api.loan.LoanNotApprovedException;
 import loanapp.api.loan.LoanNotFoundException;
 import loanapp.api.loan.LoanService;
-import loanapp.api.loan.OptionSelection;
+import loanapp.api.message.OptionSelection;
 import org.oasisopen.sca.ComponentContext;
 import org.oasisopen.sca.annotation.Context;
 

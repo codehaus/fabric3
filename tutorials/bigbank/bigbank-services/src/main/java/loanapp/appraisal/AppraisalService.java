@@ -29,6 +29,11 @@ import org.oasisopen.sca.annotation.OneWay;
 @Callback(AppraisalCallback.class)
 public interface AppraisalService {
 
+    /**
+     * Schedule an appraisal.
+     *
+     * @param request contains property information for the appraisal
+     */
     @OneWay
     void appraise(AppraisalRequest request);
 

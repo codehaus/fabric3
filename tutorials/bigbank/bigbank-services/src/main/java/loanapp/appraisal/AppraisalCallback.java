@@ -27,6 +27,8 @@ public interface AppraisalCallback {
 
     /**
      * Notification when an appraisal has been scheduled
+     *
+     * @param schedule information pertaining to when the appraisal is scheduled
      */
     void schedule(AppraisalSchedule schedule);
 

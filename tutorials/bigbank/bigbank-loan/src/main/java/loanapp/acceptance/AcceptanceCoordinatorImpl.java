@@ -34,11 +34,11 @@ import loanapp.notification.NotificationService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
 import org.oasisopen.sca.annotation.Reference;
-import org.oasisopen.sca.annotation.Scope;
 import org.oasisopen.sca.annotation.Service;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Default implementation of the AcceptanceCoordinator.
@@ -60,7 +60,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     }
 
 
-    public LoanApplication review(long loanId) throws LoanException {
+    public LoanApplication retrieve(long loanId) throws LoanException {
         LoanRecord record = findRecord(loanId);
         LoanApplication application = new LoanApplication();
         LoanOption[] options = new LoanOption[record.getTerms().size()];
@@ -108,12 +108,18 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     }
 
     public void schedule(AppraisalSchedule schedule) {
-        // TODO add notification
-        //notificationService.appraisalScheduled();
+        try {
+            long id = schedule.getId();
+            LoanRecord record = findRecord(id);
+            String email = record.getEmail();
+            Date date = schedule.getDate();
+            notificationService.appraisalScheduled(email, id, date);
+        } catch (LoanException e) {
+            // TODO log exception
+        }
     }
 
     public void appraisalCompleted(AppraisalResult result) {
-        // TODO add appraisal result
         if (AppraisalResult.DECLINED == result.getResult()) {
             // TODO notify
             return;
@@ -126,7 +132,6 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
         } catch (LoanException e) {
             // TODO log exception
         }
-        // TODO send to closing system
     }
 
     private LoanRecord findRecord(long id) throws LoanException {

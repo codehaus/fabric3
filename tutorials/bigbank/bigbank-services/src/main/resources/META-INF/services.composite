@@ -20,7 +20,7 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:tutorials="urn:fabric3.org:tutorials"
            targetNamespace="urn:fabric3.org:tutorials"
-           name="LoanAppComposite">
+           name="ServicesComposite">
 
     <!--<component name="CreditComponent">-->
         <!--<implementation.composite name="tutorials:CreditComposite"/>-->

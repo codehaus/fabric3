@@ -50,7 +50,7 @@ public class LoanSearchFormHandler extends HttpServlet {
         try {
             long id = Long.parseLong(req.getParameter("loanId"));
             try {
-                LoanApplication options = service.review(id);
+                LoanApplication options = service.retrieve(id);
                 req.setAttribute("loanTerms", options);
                 req.setAttribute("loanId", id);
                 page = "/reviewForm.jsp";

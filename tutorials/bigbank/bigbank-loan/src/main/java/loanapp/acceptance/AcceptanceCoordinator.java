@@ -32,11 +32,11 @@ public interface AcceptanceCoordinator {
      * Returns the terms of a loan.
      *
      * @param id the loan id
-     * @return the loan terms
+     * @return the loan application
      * @throws LoanException if an exception during acceptance was encountered. Subtypes including
      *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
-    LoanApplication review(long id) throws LoanException;
+    LoanApplication retrieve(long id) throws LoanException;
 
     /**
      * Accepts the terms of a loan.
