@@ -45,7 +45,6 @@ import java.util.List;
  *
  * @version $Revision$ $Date$
  */
-@Scope("CONVERSATION")
 @Service(interfaces = {AcceptanceCoordinator.class, AppraisalCallback.class})
 public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, AppraisalCallback {
     private AppraisalService appraisalService;

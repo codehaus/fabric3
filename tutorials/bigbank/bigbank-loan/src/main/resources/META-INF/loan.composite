@@ -55,7 +55,7 @@
         <implementation.java class="loanapp.notification.NotificationComponent"/>
     </component>
 
-    <component name="StoreComponent" requires="sca:managedTransaction">
+    <component name="StoreComponent">
         <implementation.java class="loanapp.store.persistent.JPAStoreComponent"/>
     </component>
 

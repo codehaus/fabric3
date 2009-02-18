@@ -20,10 +20,15 @@ import loanapp.acceptance.AcceptanceCoordinator;
 import loanapp.api.loan.LoanException;
 import loanapp.api.loan.LoanService;
 import loanapp.api.loan.OptionSelection;
+import loanapp.api.message.Address;
 import loanapp.api.message.LoanApplication;
+import loanapp.api.message.LoanOption;
 import loanapp.api.message.LoanRequest;
 import loanapp.request.RequestCoordinator;
+import org.oasisopen.sca.annotation.EagerInit;
+import org.oasisopen.sca.annotation.Init;
 import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * Default implementation of the LoanService. This implementation performs basic validation and delegates to a series

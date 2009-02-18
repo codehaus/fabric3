@@ -42,6 +42,7 @@ public class BigBrotherCreditComponent implements CreditService {
     }
 
     public void score(String ssn) {
+        System.out.println("Scoring-------------------");
         auditService.recordCheck(ssn);
         CreditScore score;
         if (ssn.startsWith("11")) {

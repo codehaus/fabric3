@@ -28,6 +28,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.fabric3.api.annotation.transaction.ManagedTransaction;
+
 /**
  * Demonstrates using JPA persistence. By default, the persistence context is transaction-scoped. As this component
  * implementation requires managed transactions, operations will be invoked in the context of a transaction resulting
@@ -35,6 +37,7 @@ import javax.persistence.Query;
  *
  * @version $Revision$ $Date$
  */
+@ManagedTransaction
 public class JPAStoreComponent implements StoreService {
     private EntityManager em;
 
@@ -73,7 +76,7 @@ public class JPAStoreComponent implements StoreService {
 
     public LoanRecord find(long id) throws StoreException {
         try {
-            Query query = em.createQuery("SELECT r FROM LoanRecord r WHERE r.loanNumber = :number");
+            Query query = em.createQuery("SELECT r FROM LoanRecord r WHERE r.id = :number");
             query.setParameter("number", id);
             return (LoanRecord) query.getSingleResult();
         } catch (PersistenceException e) {
