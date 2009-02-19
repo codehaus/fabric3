@@ -17,8 +17,7 @@
 package org.fabric3.loanapp.webclient;
 
 import loanapp.api.loan.LoanException;
-import loanapp.api.loan.LoanNotApprovedException;
-import loanapp.api.loan.LoanNotFoundException;
+import loanapp.api.loan.LoanApplicationNotFoundException;
 import loanapp.api.loan.LoanService;
 import loanapp.api.message.OptionSelection;
 import org.oasisopen.sca.ComponentContext;
@@ -62,10 +61,7 @@ public class LoanAcceptanceFormHandler extends HttpServlet {
                 page = "/accepted.jsp";
 
             }
-        } catch (LoanNotApprovedException e) {
-            req.setAttribute("loanError", e.getMessage());
-            page = "/error.jsp";
-        } catch (LoanNotFoundException e) {
+        } catch (LoanApplicationNotFoundException e) {
             req.setAttribute("loanError", e.getMessage());
             page = "/error.jsp";
         } catch (LoanException e) {

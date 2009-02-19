@@ -16,29 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.bigbrother;
+package loanapp.credit.impl;
 
 import loanapp.credit.CreditScore;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
- * Implementations record credit checking operations for compliance.
+ * Audits credit scoring operations for compliance reasons.
  *
  * @version $Revision$ $Date$
  */
-public interface AuditService {
+@Scope("COMPOSITE")
+public class AuditServiceImpl implements AuditService {
 
-    /**
-     * Record a credit score request
-     *
-     * @param ssn the loan applicant's SSN
-     */
-    void recordCheck(String ssn);
+    public void recordCheck(String ssn) {
+        System.out.println("AuditService: Credit check for " + ssn);
+    }
 
-    /**
-     * Record the result of a credit score request
-     *
-     * @param ssn   the loan applicant's SSN
-     * @param score the credit score result
-     */
-    void recordResult(String ssn, CreditScore score);
+    public void recordResult(String ssn, CreditScore score) {
+        System.out.println("AuditService: Credit result received for " + ssn + ". Score was "
+                + score.getScore() + ".");
+    }
 }

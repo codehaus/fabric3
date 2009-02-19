@@ -19,7 +19,7 @@ package loanapp.rate;
 import java.io.Serializable;
 
 /**
- * Contains rate information for a given loan type
+ * Contains rate information for a given loan type.
  *
  * @version $Rev$ $Date$
  */

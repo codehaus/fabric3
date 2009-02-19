@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.bigbrother;
+package loanapp.credit.impl;
 
 import loanapp.credit.CreditScore;
 import loanapp.credit.CreditService;
@@ -23,16 +23,16 @@ import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.Reference;
 
 /**
- * Implementation of a CreditService that returns a credit score from the fictitious BigBrother credit bureau.
+ * Implementation of a CreditService that returns a credit score from the fictitious credit bureau.
  * This implementation records all credit score operations with the AuditService.
  *
  * @version $Rev: 1366 $ $Date: 2007-09-20 21:46:05 -0700 (Thu, 20 Sep 2007) $
  */
-public class BigBrotherCreditComponent implements CreditService {
+public class CreditComponent implements CreditService {
     private AuditService auditService;
     private CreditServiceCallback callbackService;
 
-    public BigBrotherCreditComponent(@Reference(name = "auditService") AuditService auditService) {
+    public CreditComponent(@Reference(name = "auditService") AuditService auditService) {
         this.auditService = auditService;
     }
 
@@ -42,6 +42,7 @@ public class BigBrotherCreditComponent implements CreditService {
     }
 
     public void score(String ssn) {
+        System.out.println("CreditService: Calculating credit score");
         auditService.recordCheck(ssn);
         CreditScore score;
         if (ssn.startsWith("11")) {

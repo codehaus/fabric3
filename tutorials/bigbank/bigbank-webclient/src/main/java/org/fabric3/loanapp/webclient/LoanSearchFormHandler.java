@@ -16,7 +16,7 @@
  */
 package org.fabric3.loanapp.webclient;
 
-import loanapp.api.loan.LoanNotFoundException;
+import loanapp.api.loan.LoanApplicationNotFoundException;
 import loanapp.api.loan.LoanException;
 import loanapp.api.loan.LoanService;
 import loanapp.api.message.LoanApplication;
@@ -54,7 +54,7 @@ public class LoanSearchFormHandler extends HttpServlet {
                 req.setAttribute("loanTerms", options);
                 req.setAttribute("loanId", id);
                 page = "/reviewForm.jsp";
-            } catch (LoanNotFoundException e) {
+            } catch (LoanApplicationNotFoundException e) {
                 req.setAttribute("loanError", e.getMessage());
                 page = "/error.jsp";
             } catch (LoanException e) {

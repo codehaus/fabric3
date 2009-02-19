@@ -14,37 +14,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.api.message;
+package loanapp.risk;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
- * Represents a loan application submitted by a borrower.
- *
- * @version $Rev: 6163 $ $Date: 2008-12-03 19:55:22 -0800 (Wed, 03 Dec 2008) $
+ * @version $Revision$ $Date$
  */
-@XmlRootElement
-public class LoanApplication implements Serializable {
-    private static final long serialVersionUID = 8045590944866727036L;
-    private int status;
+public class RiskRequest implements Serializable {
+    private static final long serialVersionUID = -5185791927524383209L;
+    private long id;
+    private int creditScore;
+    private double downPayment;
+    private double amount;
 
-    private LoanOption[] options;
-
-    public int getStatus() {
-        return status;
+    public RiskRequest(long id, int creditScore, double amount, double downPayment) {
+        this.id = id;
+        this.creditScore = creditScore;
+        this.amount = amount;
+        this.downPayment = downPayment;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public long getId() {
+        return id;
     }
 
-    public LoanOption[] getOptions() {
-        return options;
+    public int getCreditScore() {
+        return creditScore;
     }
 
-    public void setOptions(LoanOption[] options) {
-        this.options = options;
+    public double getAmount() {
+        return amount;
     }
 
+    public double getDownPayment() {
+        return downPayment;
+    }
 }

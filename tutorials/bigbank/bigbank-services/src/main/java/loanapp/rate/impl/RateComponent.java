@@ -16,10 +16,10 @@
  */
 package loanapp.rate.impl;
 
-import org.oasisopen.sca.annotation.Scope;
-import loanapp.rate.RateService;
-import loanapp.rate.RateResults;
 import loanapp.rate.Rate;
+import loanapp.rate.RateResults;
+import loanapp.rate.RateService;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Rev: 1366 $ $Date: 2007-09-20 21:46:05 -0700 (Thu, 20 Sep 2007) $
@@ -27,24 +27,25 @@ import loanapp.rate.Rate;
 @Scope("COMPOSITE")
 public class RateComponent implements RateService {
 
-    public RateResults calculateRates(int risk) {
+    public RateResults calculateRates(int score) {
+        System.out.println("RateService: Returning rates");
         RateResults results = new RateResults();
-        if (risk <= 1) {             
+        if (score <= 1) {
             Rate fixed30 = new Rate("30 Year FIXED", 5.5f, 1f);
             Rate arm30 = new Rate("30 Year ARM", 5.0f, 0f);
             results.addRate(fixed30);
             results.addRate(arm30);
-        } else if (risk > 1 && risk <= 10) {
+        } else if (score > 1 && score <= 10) {
             Rate fixed30 = new Rate("30 Year FIXED", 5.3f, 2f);
             Rate arm30 = new Rate("30 Year ARM", 5.1f, 1f);
             results.addRate(fixed30);
             results.addRate(arm30);
-        } else if (risk > 10 && risk <= 30) {
+        } else if (score > 10 && score <= 30) {
             Rate fixed30 = new Rate("30 Year FIXED", 5.5f, 3f);
             Rate arm30 = new Rate("30 Year ARM", 5.2f, 2f);
             results.addRate(fixed30);
             results.addRate(arm30);
-        } else if (risk > 30 && risk < 50) {
+        } else if (score > 30 && score < 50) {
             Rate fixed30 = new Rate("30 Year FIXED", 6.0f, 4f);
             results.addRate(fixed30);
         }

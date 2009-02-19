@@ -19,7 +19,7 @@
 package loanapp.acceptance;
 
 import loanapp.api.loan.LoanException;
-import loanapp.api.loan.LoanNotFoundException;
+import loanapp.api.loan.LoanApplicationNotFoundException;
 import loanapp.api.message.LoanApplication;
 import loanapp.api.message.LoanOption;
 import loanapp.api.message.LoanStatus;
@@ -142,7 +142,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
             throw new LoanException(e);
         }
         if (record == null) {
-            throw new LoanNotFoundException("No loan application on file with id " + id);
+            throw new LoanApplicationNotFoundException("No loan application on file with id " + id);
         }
         return record;
     }

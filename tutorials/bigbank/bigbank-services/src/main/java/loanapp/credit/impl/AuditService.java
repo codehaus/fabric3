@@ -16,15 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.api.loan;
+package loanapp.credit.impl;
+
+import loanapp.credit.CreditScore;
 
 /**
+ * Implementations record credit checking operations for compliance.
+ *
  * @version $Revision$ $Date$
  */
-public class LoanNotFoundException extends LoanException {
-    private static final long serialVersionUID = -3162753331156928115L;
+public interface AuditService {
 
-    public LoanNotFoundException(String message) {
-        super(message);
-    }
+    /**
+     * Record a credit score request
+     *
+     * @param ssn the loan applicant's SSN
+     */
+    void recordCheck(String ssn);
+
+    /**
+     * Record the result of a credit score request
+     *
+     * @param ssn   the loan applicant's SSN
+     * @param score the credit score result
+     */
+    void recordResult(String ssn, CreditScore score);
 }

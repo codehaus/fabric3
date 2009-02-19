@@ -21,6 +21,8 @@ package loanapp.api.message;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Represents a loan option selected by a borrower.
+ *
  * @version $Revision$ $Date$
  */
 @XmlRootElement

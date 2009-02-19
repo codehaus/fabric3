@@ -16,8 +16,8 @@
  */
 package loanapp.pricing;
 
-import loanapp.message.PricingRequest;
-import loanapp.message.PricingResponse;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.OneWay;
 import org.oasisopen.sca.annotation.Remotable;
 
 /**
@@ -27,12 +27,14 @@ import org.oasisopen.sca.annotation.Remotable;
  * @version $Rev$ $Date$
  */
 @Remotable
+@Callback(PricingServiceCallback.class)
 public interface PricingService {
 
     /**
-     * Compiles the set of loan options for an application
+     * Prices a loan application.
      *
-     * @return a set of loan options
+     * @param request the data required to price a loan application
      */
-    PricingResponse[] calculateOptions(PricingRequest request);
+    @OneWay
+    void price(PricingRequest request);
 }

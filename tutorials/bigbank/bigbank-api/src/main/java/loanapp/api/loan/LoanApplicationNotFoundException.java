@@ -16,32 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.risk;
-
-import loanapp.risk.RiskResponse;
-import org.oasisopen.sca.annotation.OneWay;
+package loanapp.api.loan;
 
 /**
- * Interface to receive risk assessment callbacks.
+ * Raised when an attempt is made to access a non-existant loan application.
  *
  * @version $Revision$ $Date$
  */
-public interface RiskAssessmentCallback {
+public class LoanApplicationNotFoundException extends LoanException {
+    private static final long serialVersionUID = -3162753331156928115L;
 
-    /**
-     * Notification when a risk assessment result has been received.
-     *
-     * @param result the assessment result
-     */
-    @OneWay
-    void onAssessment(RiskResponse result);
-
-    /**
-     * Notificaiton when a error was encountered during risk assessment.
-     *
-     * @param exception the error
-     */
-    @OneWay
-    void riskAssessmentError(Exception exception);
-
+    public LoanApplicationNotFoundException(String message) {
+        super(message);
+    }
 }

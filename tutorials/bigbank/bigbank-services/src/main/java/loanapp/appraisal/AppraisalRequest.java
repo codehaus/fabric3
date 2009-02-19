@@ -15,15 +15,18 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */package loanapp.appraisal;
+ */
+package loanapp.appraisal;
 
 import loanapp.api.message.Address;
+
+import java.io.Serializable;
 
 /**
  * @version $Revision$ $Date$
  */
-//@XmlRootElement
-public class AppraisalRequest {
+public class AppraisalRequest implements Serializable{
+    private static final long serialVersionUID = 2668698694695992759L;
     private long id;
     private Address address;
 

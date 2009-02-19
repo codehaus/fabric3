@@ -1,12 +1,12 @@
 package loanapp.appraisal;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 /**
  * @version $Revision$ $Date$
  */
-//@XmlRootElement
-public class AppraisalResult {
+public class AppraisalResult implements Serializable {
+    private static final long serialVersionUID = 1094048646709453908L;
     public static int APPROVED = 1;
     public static int DECLINED = -1;
     private long id;

@@ -16,20 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.message;
+package loanapp.pricing;
 
 import java.io.Serializable;
 
 /**
  * @version $Revision$ $Date$
  */
-public class PricingResponse implements Serializable {
+public class PricingOption implements Serializable {
     private static final long serialVersionUID = -3157707604835927354L;
     private String type;
     private float rate;
     private float apr;
 
-    public PricingResponse(String type, float rate, float apr) {
+    public PricingOption(String type, float rate, float apr) {
         this.type = type;
         this.rate = rate;
         this.apr = apr;

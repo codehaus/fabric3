@@ -43,7 +43,7 @@ public interface LoanService {
      *
      * @param id the loan tracking number
      * @return the loan application
-     * @throws LoanException if an exception during acceptance was encountered. For example, LoanNotFoundException.
+     * @throws LoanException if a retrieval exception was encountered. For example, LoanApplicationNotFoundException.
      */
     LoanApplication retrieve(long id) throws LoanException;
 

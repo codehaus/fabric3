@@ -1,13 +1,13 @@
 package loanapp.appraisal;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @version $Revision$ $Date$
  */
-//@XmlRootElement
-public class AppraisalSchedule {
+public class AppraisalSchedule implements Serializable {
+    private static final long serialVersionUID = -1913119919081097742L;
     private long id;
     private Date date;
 

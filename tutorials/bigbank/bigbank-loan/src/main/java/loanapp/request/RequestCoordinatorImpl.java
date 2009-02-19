@@ -18,8 +18,8 @@
  */
 package loanapp.request;
 
+import loanapp.api.loan.LoanApplicationNotFoundException;
 import loanapp.api.loan.LoanException;
-import loanapp.api.loan.LoanNotFoundException;
 import loanapp.api.message.LoanRequest;
 import loanapp.api.message.LoanStatus;
 import loanapp.credit.CreditScore;
@@ -28,14 +28,16 @@ import loanapp.credit.CreditServiceCallback;
 import loanapp.domain.LoanRecord;
 import loanapp.domain.PropertyInfo;
 import loanapp.domain.TermInfo;
-import loanapp.message.PricingRequest;
-import loanapp.message.PricingResponse;
-import loanapp.message.RiskRequest;
-import loanapp.message.RiskResponse;
 import loanapp.notification.NotificationService;
+import loanapp.pricing.PriceResponse;
+import loanapp.pricing.PricingOption;
+import loanapp.pricing.PricingRequest;
 import loanapp.pricing.PricingService;
+import loanapp.pricing.PricingServiceCallback;
 import loanapp.risk.RiskAssessmentCallback;
 import loanapp.risk.RiskAssessmentService;
+import loanapp.risk.RiskRequest;
+import loanapp.risk.RiskResponse;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
 import org.fabric3.api.annotation.Monitor;
@@ -51,9 +53,13 @@ import java.util.List;
  *
  * @version $Revision$ $Date$
  */
-@Service(interfaces = {RequestCoordinator.class, CreditServiceCallback.class, RiskAssessmentCallback.class})
+@Service(interfaces = {RequestCoordinator.class,
+        CreditServiceCallback.class,
+        RiskAssessmentCallback.class,
+        PricingServiceCallback.class})
 @ManagedTransaction
-public class RequestCoordinatorImpl implements RequestCoordinator, CreditServiceCallback, RiskAssessmentCallback {
+public class RequestCoordinatorImpl
+        implements RequestCoordinator, CreditServiceCallback, RiskAssessmentCallback, PricingServiceCallback {
     // simple counter
     private CreditService creditService;
     private RiskAssessmentService riskService;
@@ -112,6 +118,8 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
 
     public void onCreditScore(CreditScore result) {
         // assess the loan risk
+        System.out.println("CreditServiceCallback: Received credit score");
+
         String ssn = result.getSsn();
         LoanRecord record;
         try {
@@ -139,34 +147,19 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     }
 
     public void onAssessment(RiskResponse response) {
+        System.out.println("RiskAssessmentCallback: received risk assessment");
         LoanRecord record;
+        long id = response.getId();
         try {
-            record = findRecord(response.getId());
+            record = findRecord(id);
         } catch (LoanException e) {
             // TODO record
             return;
         }
-        PricingRequest pricingRequest = new PricingRequest(response.getRiskFactor());
+        PricingRequest pricingRequest = new PricingRequest(id, response.getRiskFactor());
         if (RiskResponse.APPROVE == response.getDecision()) {
             // calculate the terms
-            PricingResponse[] pricingResponses = pricingService.calculateOptions(pricingRequest);
-            List<TermInfo> termImfos = new ArrayList<TermInfo>(pricingResponses.length);
-            for (PricingResponse pricingResponse : pricingResponses) {
-                TermInfo termInfo = new TermInfo();
-                termInfo.setApr(pricingResponse.getApr());
-                termInfo.setRate(pricingResponse.getRate());
-                termInfo.setType(pricingResponse.getType());
-                termImfos.add(termInfo);
-            }
-            record.setTerms(termImfos);
-            try {
-                record.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
-                storeService.update(record);
-                // notify the client
-                notificationService.approved(record.getEmail(), record.getId());
-            } catch (StoreException e) {
-                monitor.error(e);
-            }
+            pricingService.price(pricingRequest);
         } else {
             // declined
             try {
@@ -179,6 +172,35 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             }
 
         }
+    }
+
+    public void onPrice(PriceResponse response) {
+        System.out.println("PricingServiceCallback: received pricing response");
+        LoanRecord record;
+        try {
+            record = findRecord(response.getId());
+        } catch (LoanException e) {
+            // TODO record
+            return;
+        }
+        List<TermInfo> termImfos = new ArrayList<TermInfo>();
+        for (PricingOption pricingOption : response.getOptions()) {
+            TermInfo termInfo = new TermInfo();
+            termInfo.setApr(pricingOption.getApr());
+            termInfo.setRate(pricingOption.getRate());
+            termInfo.setType(pricingOption.getType());
+            termImfos.add(termInfo);
+        }
+        record.setTerms(termImfos);
+        try {
+            record.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
+            storeService.update(record);
+            // notify the client
+            notificationService.approved(record.getEmail(), record.getId());
+        } catch (StoreException e) {
+            monitor.error(e);
+        }
+
     }
 
     public void riskAssessmentError(Exception exception) {
@@ -194,7 +216,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             throw new LoanException(e);
         }
         if (record == null) {
-            throw new LoanNotFoundException("No loan application on file with id " + id);
+            throw new LoanApplicationNotFoundException("No loan application on file with id " + id);
         }
         return record;
     }

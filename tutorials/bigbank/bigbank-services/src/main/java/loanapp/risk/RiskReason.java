@@ -16,24 +16,27 @@
  */
 package loanapp.risk;
 
-import org.oasisopen.sca.annotation.Callback;
-import org.oasisopen.sca.annotation.OneWay;
-import org.oasisopen.sca.annotation.Remotable;
+import java.io.Serializable;
 
 /**
- * Performs risk assessment against a loan application.
- *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-@Remotable
-@Callback(RiskAssessmentCallback.class)
-public interface RiskAssessmentService {
+public class RiskReason implements Serializable {
+    private static final long serialVersionUID = -1781028701570454727L;
+    private String description;
 
-    /**
-     * Perform the risk assessment.
-     *
-     * @param request the request data
-     */
-    @OneWay
-    void assessRisk(RiskRequest request);
+    public RiskReason() {
+    }
+
+    public RiskReason(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

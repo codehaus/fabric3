@@ -27,12 +27,12 @@
     <!--</component>-->
 
     <component name="CreditComponent">
-        <implementation.java class="loanapp.bigbrother.BigBrotherCreditComponent"/>
+        <implementation.java class="loanapp.credit.impl.CreditComponent"/>
         <reference name="auditService" target="AuditComponent"/>
     </component>
 
     <component name="AuditComponent">
-        <implementation.java class="loanapp.bigbrother.AuditServiceImpl"/>
+        <implementation.java class="loanapp.credit.impl.AuditServiceImpl"/>
     </component>
     
     <component name="PricingComponent">

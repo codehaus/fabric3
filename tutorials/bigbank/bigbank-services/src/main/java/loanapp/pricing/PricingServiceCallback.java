@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,15 +14,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.api.loan;
+package loanapp.pricing;
+
+import org.oasisopen.sca.annotation.OneWay;
 
 /**
+ * Callback for receiving pricing responses.
+ *
  * @version $Revision$ $Date$
  */
-public class LoanNotApprovedException extends LoanException {
-    private static final long serialVersionUID = -4321376630328676084L;
+public interface PricingServiceCallback {
 
-    public LoanNotApprovedException(String message) {
-        super(message);
-    }
+    /**
+     * Notification for pricing responses.
+     *
+     * @param response the pricing response
+     */
+    @OneWay
+    void onPrice(PriceResponse response);
+
 }

@@ -16,18 +16,17 @@
  */
 package loanapp.risk.impl;
 
-import loanapp.message.RiskResponse;
-import loanapp.message.RiskReason;
-import loanapp.message.RiskRequest;
-import loanapp.risk.RiskAssessmentService;
 import loanapp.risk.RiskAssessmentCallback;
+import loanapp.risk.RiskAssessmentService;
+import loanapp.risk.RiskReason;
+import loanapp.risk.RiskRequest;
+import loanapp.risk.RiskResponse;
+import org.oasisopen.sca.annotation.Callback;
+import org.oasisopen.sca.annotation.Property;
+import org.oasisopen.sca.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.oasisopen.sca.annotation.Scope;
-import org.oasisopen.sca.annotation.Property;
-import org.oasisopen.sca.annotation.Callback;
 
 /**
  * Implementation that performs risk assesment based on an applicant's credit score and loan amount.
@@ -39,7 +38,7 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
     private RiskAssessmentCallback callback;
     private double ratioMinimum;
 
-    public RiskAssessmentComponent(@Property(name = "ratioMinimum", required = true)Double ratioMinimum) {
+    public RiskAssessmentComponent(@Property(name = "ratioMinimum", required = true) Double ratioMinimum) {
         this.ratioMinimum = ratioMinimum;
     }
 
@@ -49,6 +48,7 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
     }
 
     public void assessRisk(RiskRequest request) {
+        System.out.println("RiskAssessmentService: Calculating risk");
         int score = request.getCreditScore();
         int factor = 0;
         int decision;
@@ -70,7 +70,7 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
             decision = RiskResponse.APPROVE;
         }
         RiskResponse result = new RiskResponse(request.getId(), decision, factor, reasons.toArray(new RiskReason[reasons.size()]));
-        
+
         callback.onAssessment(result);
     }
 }

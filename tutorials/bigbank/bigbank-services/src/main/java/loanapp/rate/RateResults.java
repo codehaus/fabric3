@@ -19,13 +19,15 @@ package loanapp.rate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * A collection of current loan Rates.
  *
  * @version $Rev$ $Date$
  */
-public class RateResults {
+public class RateResults implements Serializable {
+    private static final long serialVersionUID = -8117214455334146925L;
     private List<Rate> rates = new ArrayList<Rate>();
 
     public void addRate(Rate rate) {

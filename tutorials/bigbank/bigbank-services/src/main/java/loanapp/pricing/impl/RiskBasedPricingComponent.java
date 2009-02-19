@@ -16,17 +16,17 @@
  */
 package loanapp.pricing.impl;
 
-import loanapp.message.PricingRequest;
-import loanapp.message.PricingResponse;
+import loanapp.pricing.PriceResponse;
+import loanapp.pricing.PricingOption;
+import loanapp.pricing.PricingRequest;
+import loanapp.pricing.PricingService;
+import loanapp.pricing.PricingServiceCallback;
 import loanapp.rate.Rate;
 import loanapp.rate.RateResults;
 import loanapp.rate.RateService;
-import loanapp.pricing.PricingService;
+import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.Reference;
 import org.oasisopen.sca.annotation.Scope;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Default implementation of the PricingService that uses a RateService to compile up-to-date loan options.
@@ -36,17 +36,24 @@ import java.util.List;
 @Scope("COMPOSITE")
 public class RiskBasedPricingComponent implements PricingService {
     private RateService rateService;
+    private PricingServiceCallback callback;
 
     public RiskBasedPricingComponent(@Reference(name = "rateService") RateService rateService) {
         this.rateService = rateService;
     }
 
-    public PricingResponse[] calculateOptions(PricingRequest request) {
-        List<PricingResponse> pricingResponses = new ArrayList<PricingResponse>();
+    @Callback
+    public void setCallback(PricingServiceCallback callback) {
+        this.callback = callback;
+    }
+
+    public void price(PricingRequest request) {
+        System.out.println("PricingService: Pricing application");
+        PriceResponse response = new PriceResponse(request.getId());
         RateResults rateResults = rateService.calculateRates(request.getRiskFactor());
         for (Rate rate : rateResults.getRates()) {
-            pricingResponses.add(new PricingResponse(rate.getType(), rate.getRate(), rate.getApr()));
+            response.addOption(new PricingOption(rate.getType(), rate.getRate(), rate.getApr()));
         }
-        return pricingResponses.toArray(new PricingResponse[pricingResponses.size()]);
+        callback.onPrice(response);
     }
 }

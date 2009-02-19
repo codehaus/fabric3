@@ -15,20 +15,20 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<!-- Demonstrates composition. This credit service implementation uses the fictitious BigBrother Credit Bureau
+<!-- Demonstrates composition. This credit service implementation uses the fictitious Credit Bureau
 to perform credit scoring -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            targetNamespace="urn:fabric3.org:tutorials"
            name="CreditComposite">
-    <service name="CreditService" promote="BigBrotherCreditComponent/CreditService"/>
+    <service name="CreditService" promote="CreditComponent/CreditService"/>
 
-    <component name="BigBrotherCreditComponent">
-        <implementation.java class="loanapp.bigbrother.BigBrotherCreditComponent"/>
+    <component name="CreditComponent">
+        <implementation.java class="loanapp.credit.impl.CreditComponent"/>
         <reference name="auditService" target="AuditComponent"/>
     </component>
 
     <component name="AuditComponent">
-        <implementation.java class="loanapp.bigbrother.AuditServiceImpl"/>
+        <implementation.java class="loanapp.credit.impl.AuditServiceImpl"/>
     </component>
 
 </composite>

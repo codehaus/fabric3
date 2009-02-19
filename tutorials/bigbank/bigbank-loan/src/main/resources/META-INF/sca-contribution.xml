@@ -4,7 +4,6 @@
     <deployable composite="tutorials:LoanComposite"/>
     <import.java package="loanapp.api.loan"/>
     <import.java package="loanapp.api.message"/>
-    <import.java package="loanapp.message"/>
     <import.java package="loanapp.credit"/>
     <import.java package="loanapp.pricing"/>
     <import.java package="loanapp.rate"/>
