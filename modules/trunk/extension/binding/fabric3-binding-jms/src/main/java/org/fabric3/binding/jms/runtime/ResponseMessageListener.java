@@ -39,19 +39,19 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 /**
- * A <CODE>ResponseMessageListener</CODE> object is used to receive
- * asynchronously delivered messages and then optionally send response
+ * Receives an asynchronously delivered message and optionally sends a response. Implementations support different invocation types such as
+ * request-response and one-way.
  */
 public interface ResponseMessageListener {
 
     /**
      * Passes a message to the listener.
      *
-     * @param request the message passed to the listener
-     * @param responseSession the JMSSession object which is used to send response message
+     * @param request             the message passed to the listener
+     * @param responseSession     the JMSSession object which is used to send response message
      * @param responseDestination JMSDestination to which the response is sent
-     * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
+     * @throws JmsOperationException if there is an error invoking the service bound to the JMS destination
      */
-    public abstract void onMessage(Message request, Session responseSession, Destination responseDestination);
+    public abstract void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException;
 
 }

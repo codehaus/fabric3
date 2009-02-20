@@ -44,6 +44,7 @@ import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsOperationException;
 import org.fabric3.binding.jms.runtime.ResponseMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -124,6 +125,11 @@ public class ConsumerWorker extends DefaultPausableWork {
                         session.commit();
                     }
                 }
+            } catch (Fabric3JmsException e) {
+                monitor.jmsListenerError(e);
+            } catch (JmsOperationException e) {
+                // Exception was thrown by the service invocation, log the root cause
+                monitor.jmsListenerError(e.getCause());
             } catch (JmsTxException e) {
                 if (transactionType == TransactionType.GLOBAL) {
                     transactionHandler.rollback();

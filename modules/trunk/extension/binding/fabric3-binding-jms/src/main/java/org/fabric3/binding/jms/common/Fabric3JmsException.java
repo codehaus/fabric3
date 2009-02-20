@@ -65,4 +65,7 @@ public class Fabric3JmsException extends RuntimeException {
         super(message);
     }
 
+    public Fabric3JmsException(Throwable cause) {
+        super(cause);
+    }
 }

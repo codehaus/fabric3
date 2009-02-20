@@ -38,6 +38,7 @@ package org.fabric3.binding.jms.runtime;
 import java.net.URI;
 
 import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * Monitor interface for JMS Host.
@@ -47,21 +48,20 @@ import org.fabric3.api.annotation.logging.Info;
 public interface JMSRuntimeMonitor {
 
     /**
+     * Callback when an error is raised handling a message.
+     *
+     * @param e the reported exception
+     */
+    @Severe
+    void jmsListenerError(Throwable e);
+
+    /**
      * Callback when a service has been provisioned as a JMS endpoint
      *
      * @param uri the service URI
      */
     @Info
     void registerListener(URI uri);
-
-    /**
-     * Callback when an error happens when handle message.
-     *
-     * @param e the reported exception
-     */
-    @Info
-    void jmsListenerError(Exception e);
-
 
     /**
      * Callback indicating the extension has been started.

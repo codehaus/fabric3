@@ -45,33 +45,45 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JmsOperationException;
 import org.fabric3.binding.jms.runtime.ResponseMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
+
 /**
- *
  * A container class used to support MessageListener with ServerSessionPool.
- *
  */
 public class JMSMessageListenerInvoker implements MessageListener {
-    /** Request JMS object factory*/
+    /**
+     * Request JMS object factory
+     */
     private JMSObjectFactory requestJMSObjectFactory = null;
-    /** Response JMS object factory*/
+    /**
+     * Response JMS object factory
+     */
     private JMSObjectFactory responseJMSObjectFactory;
-    /** ResponseMessageListenerImpl invoked by this invoker */
+    /**
+     * ResponseMessageListenerImpl invoked by this invoker
+     */
     private ResponseMessageListener messageListener = null;
-    /** Transaction Type */
+    /**
+     * Transaction Type
+     */
     private TransactionType transactionType;
-    /** Transaction Handler*/
+    /**
+     * Transaction Handler
+     */
     private TransactionHandler transactionHandler;
-    /** WorkScheduler passed to serverSessionPool */
+    /**
+     * WorkScheduler passed to serverSessionPool
+     */
     private WorkScheduler workScheduler;
 
     public JMSMessageListenerInvoker(JMSObjectFactory requestJMSObjectFactory,
-            JMSObjectFactory responseJMSObjectFactory,
-            ResponseMessageListener messageListener,
-            TransactionType transactionType,
-            TransactionHandler transactionHandler, WorkScheduler workScheduler) {
+                                     JMSObjectFactory responseJMSObjectFactory,
+                                     ResponseMessageListener messageListener,
+                                     TransactionType transactionType,
+                                     TransactionHandler transactionHandler, WorkScheduler workScheduler) {
         this.requestJMSObjectFactory = requestJMSObjectFactory;
         this.responseJMSObjectFactory = responseJMSObjectFactory;
         this.messageListener = messageListener;
@@ -88,14 +100,14 @@ public class JMSMessageListenerInvoker implements MessageListener {
                     .getDestination(), null, serverSessionPool, 1);
             connection.start();
         } catch (JMSException e) {
-            throw new Fabric3JmsException("Error when register Listener",e);
+            throw new Fabric3JmsException("Error when register Listener", e);
 
         }
     }
 
     private StandaloneServerSessionPool createServerSessionPool(int receiverCount) {
         return new StandaloneServerSessionPool(requestJMSObjectFactory,
-                transactionHandler, this, transactionType,workScheduler,receiverCount);
+                                               transactionHandler, this, transactionType, workScheduler, receiverCount);
     }
 
     public void stop() {
@@ -111,25 +123,26 @@ public class JMSMessageListenerInvoker implements MessageListener {
             }
             Destination responseDestination = responseJMSObjectFactory
                     .getDestination();
-            messageListener.onMessage(message, responseSession,
-                    responseDestination);
+            messageListener.onMessage(message, responseSession, responseDestination);
             if (transactionType == TransactionType.GLOBAL) {
                 transactionHandler.commit();
-            }else if(transactionType == TransactionType.LOCAL){
+            } else if (transactionType == TransactionType.LOCAL) {
                 responseSession.commit();
             }
             responseJMSObjectFactory.recycle();
         } catch (JMSException e) {
-            throw new Fabric3JmsException("Error when invoking Listener",e);
+            throw new Fabric3JmsException("Error when invoking Listener", e);
         } catch (RuntimeException e) {
-            try{
+            try {
                 if (transactionType == TransactionType.GLOBAL) {
                     transactionHandler.rollback();
                 }
-            }catch(Exception ne){
+            } catch (Exception ne) {
                 //ignore
             }
             throw e;
+        } catch (JmsOperationException e) {
+            throw new Fabric3JmsException("Error when invoking Listener", e.getCause());
         }
     }
 

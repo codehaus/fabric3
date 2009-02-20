@@ -95,7 +95,7 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
     }
 
     @SuppressWarnings({"unchecked"})
-    public void onMessage(Message request, Session responseSession, Destination responseDestination) {
+    public void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException {
 
         try {
 
@@ -131,6 +131,10 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
 
             if (transactionType == TransactionType.LOCAL) {
                 responseSession.commit();
+            }
+            if (outMessage.isFault()) {
+                // throw the original exception
+                throw new JmsOperationException((Throwable) outMessage.getBody());
             }
 
         } catch (JMSException ex) {

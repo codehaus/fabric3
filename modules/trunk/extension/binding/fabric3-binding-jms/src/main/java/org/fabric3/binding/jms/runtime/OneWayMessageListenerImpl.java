@@ -84,7 +84,7 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
         }
     }
 
-    public void onMessage(Message request, Session responseSession, Destination responseDestination) {
+    public void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException {
 
         try {
 
@@ -102,7 +102,7 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
             org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
             if (outMessage.isFault()) {
-                throw new Fabric3JmsException("Error with in the UnderlyingService " + outMessage);
+                throw new JmsOperationException((Throwable) outMessage.getBody());
             }
 
         } catch (JMSException ex) {
