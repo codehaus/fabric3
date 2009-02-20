@@ -51,7 +51,6 @@ import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;

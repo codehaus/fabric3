@@ -32,13 +32,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.runtime.host;
+package org.fabric3.binding.jms.runtime;
 
 import java.net.URI;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSObjectFactory;
-import org.fabric3.binding.jms.runtime.ResponseMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 
 /**
