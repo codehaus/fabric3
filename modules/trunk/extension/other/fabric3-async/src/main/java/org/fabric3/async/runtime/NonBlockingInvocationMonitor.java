@@ -16,18 +16,13 @@
  */
 package org.fabric3.async.runtime;
 
-import junit.framework.TestCase;
-
-import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class NonBlockingInterceptorBuilderTestCase extends TestCase {
+public interface NonBlockingInvocationMonitor {
 
-    public void testBuild() throws Exception {
-        NonBlockingInterceptorBuilder builder = new NonBlockingInterceptorBuilder(null, null);
-        NonBlockingInterceptorDefinition definition = new NonBlockingInterceptorDefinition();
-        assertNotNull(builder.build(definition));
-    }
+    @Severe
+    void onError(Throwable e);
 }

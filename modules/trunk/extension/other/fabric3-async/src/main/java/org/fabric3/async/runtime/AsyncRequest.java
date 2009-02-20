@@ -35,12 +35,14 @@ public class AsyncRequest extends DefaultPausableWork {
     private final Message message;
     private List<CallFrame> stack;
     private Map<String, Object> headers;
+    private NonBlockingInvocationMonitor monitor;
 
-    public AsyncRequest(Interceptor next, Message message, List<CallFrame> stack, Map<String, Object> headers) {
+    public AsyncRequest(Interceptor next, Message message, List<CallFrame> stack, Map<String, Object> headers, NonBlockingInvocationMonitor monitor) {
         this.next = next;
         this.message = message;
         this.stack = stack;
         this.headers = headers;
+        this.monitor = monitor;
     }
 
     public void execute() {
@@ -52,7 +54,11 @@ public class AsyncRequest extends DefaultPausableWork {
             newWorkContext.addHeaders(headers);
         }
         message.setWorkContext(newWorkContext);
-        next.invoke(message);
+        Message ret = next.invoke(message);
+        if (ret.isFault()) {
+            // log the exception
+            monitor.onError((Throwable) ret.getBody());
+        }
     }
 
     public Interceptor getNext() {

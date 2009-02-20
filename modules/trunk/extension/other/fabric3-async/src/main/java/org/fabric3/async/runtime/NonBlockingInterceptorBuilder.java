@@ -18,6 +18,7 @@ package org.fabric3.async.runtime;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.builder.BuilderException;
@@ -30,13 +31,15 @@ import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
  */
 public class NonBlockingInterceptorBuilder implements InterceptorBuilder<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
     private WorkScheduler scheduler;
+    private NonBlockingInvocationMonitor monitor;
 
-    public NonBlockingInterceptorBuilder(@Reference WorkScheduler scheduler) {
+    public NonBlockingInterceptorBuilder(@Reference WorkScheduler scheduler, @Monitor NonBlockingInvocationMonitor monitor) {
         this.scheduler = scheduler;
+        this.monitor = monitor;
     }
 
     public NonBlockingInterceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
-        return new NonBlockingInterceptor(scheduler);
+        return new NonBlockingInterceptor(scheduler, monitor);
     }
 
 }

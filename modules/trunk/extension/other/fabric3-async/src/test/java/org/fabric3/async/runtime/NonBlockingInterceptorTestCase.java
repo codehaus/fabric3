@@ -18,10 +18,6 @@ package org.fabric3.async.runtime;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.getCurrentArguments;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
 
 import org.fabric3.host.work.WorkScheduler;
@@ -73,7 +69,10 @@ public class NonBlockingInterceptorTestCase extends TestCase {
 
         workScheduler = EasyMock.createMock(WorkScheduler.class);
         next = EasyMock.createMock(Interceptor.class);
-        interceptor = new NonBlockingInterceptor(workScheduler);
+        EasyMock.expect(next.invoke(EasyMock.isA(Message.class))).andReturn(new MessageImpl());
+        EasyMock.replay(next);
+        NonBlockingInvocationMonitor monitor = EasyMock.createNiceMock(NonBlockingInvocationMonitor.class);
+        interceptor = new NonBlockingInterceptor(workScheduler, monitor);
         interceptor.setNext(next);
     }
 }

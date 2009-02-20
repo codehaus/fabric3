@@ -37,10 +37,12 @@ public class NonBlockingInterceptor implements Interceptor {
     protected static final Message RESPONSE = new ImmutableMessage();
 
     private final WorkScheduler workScheduler;
+    private NonBlockingInvocationMonitor monitor;
     private Interceptor next;
 
-    public NonBlockingInterceptor(WorkScheduler workScheduler) {
+    public NonBlockingInterceptor(WorkScheduler workScheduler, NonBlockingInvocationMonitor monitor) {
         this.workScheduler = workScheduler;
+        this.monitor = monitor;
     }
 
     public Message invoke(final Message msg) {
@@ -58,7 +60,7 @@ public class NonBlockingInterceptor implements Interceptor {
             // clone the headers to avoid multiple threads seeing changes
             newHeaders = new HashMap<String, Object>(headers);
         }
-        AsyncRequest request = new AsyncRequest(next, msg, newStack, newHeaders);
+        AsyncRequest request = new AsyncRequest(next, msg, newStack, newHeaders, monitor);
         workScheduler.scheduleWork(request);
         return RESPONSE;
     }
