@@ -132,7 +132,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         classLoaderRegistry.register(uri, loader);
     }
 
-    public void destroy(URI uri) {
+    public void destroy(URI uri) throws ClassLoaderBuilderException {
         ClassLoader loader = classLoaderRegistry.getClassLoader(uri);
         assert loader != null;
         List<Component> components = componentManager.getComponents();
@@ -141,6 +141,12 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
             if (uri.equals(component.getClassLoaderId())) {
                 return;
             }
+        }
+        try {
+            // release the previously resolved contribution
+            contributionUriResolver.release(uri);
+        } catch (ResolutionException e) {
+            throw new ClassLoaderBuilderException("Error releasing artifact: " + uri.toString(), e);
         }
         classLoaderRegistry.unregister(uri);
     }

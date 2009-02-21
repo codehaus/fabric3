@@ -48,4 +48,8 @@ public class LocalContributionUriResolver implements ContributionUriResolver {
         }
         return contribution.getLocation();
     }
+
+    public void release(URI uri) throws ResolutionException {
+
+    }
 }

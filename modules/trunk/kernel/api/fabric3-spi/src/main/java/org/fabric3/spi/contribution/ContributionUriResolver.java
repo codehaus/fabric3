@@ -16,8 +16,8 @@
  */
 package org.fabric3.spi.contribution;
 
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
 
 
 /**
@@ -35,5 +35,14 @@ public interface ContributionUriResolver {
      * @throws ResolutionException if an error occurs resolving the artifact
      */
     URL resolve(URI contributionURI) throws ResolutionException;
+
+    /**
+     * Releases a previously resolved contribution. ,
+     *
+     * @param uri the contribution  URI.
+     * @throws ResolutionException if an error occurs releasing the artifact
+     */
+    void release(URI uri) throws ResolutionException;
+
 
 }

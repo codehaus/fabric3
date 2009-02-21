@@ -21,9 +21,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
+import org.fabric3.fabric.builder.classloader.ClassLoaderBuilderException;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
+import org.fabric3.spi.executor.ExecutionException;
 
 @EagerInit
 public class UnprovisionClassloaderCommandExecutor implements CommandExecutor<UnprovisionClassloaderCommand> {
@@ -42,8 +44,12 @@ public class UnprovisionClassloaderCommandExecutor implements CommandExecutor<Un
     }
 
 
-    public void execute(UnprovisionClassloaderCommand command) {
-        builder.destroy(command.getUri());
+    public void execute(UnprovisionClassloaderCommand command) throws ExecutionException {
+        try {
+            builder.destroy(command.getUri());
+        } catch (ClassLoaderBuilderException e) {
+            throw new ExecutionException(e);
+        }
     }
 
 }

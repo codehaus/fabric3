@@ -58,6 +58,7 @@ public interface ClassLoaderBuilder {
      * Removes a classloader if it is not referenced by any other registered classloader.
      *
      * @param uri the classloader uri
+     * @throws ClassLoaderBuilderException if the classloader cannot be released
      */
-    void destroy(URI uri);
+    void destroy(URI uri) throws ClassLoaderBuilderException;
 }

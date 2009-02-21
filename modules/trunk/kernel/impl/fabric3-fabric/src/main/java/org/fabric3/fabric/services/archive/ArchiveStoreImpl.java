@@ -35,6 +35,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
@@ -48,6 +49,7 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 public class ArchiveStoreImpl implements ArchiveStore {
     private Map<URI, URL> archiveUriToUrl;
     private File repository;
+    private boolean participant;
 
     /**
      * Constructor.
@@ -59,6 +61,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
         File baseDir = hostInfo.getBaseDir();
         repository = new File(baseDir, "repository");
+        participant = hostInfo.getRuntimeMode() == RuntimeMode.PARTICIPANT;
     }
 
     @Init
@@ -66,8 +69,16 @@ public class ArchiveStoreImpl implements ArchiveStore {
         if (!repository.exists() || !repository.isDirectory()) {
             return;
         }
-        for (File file : repository.listFiles()) {
-            archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
+        if (participant) {
+            // if the runtime is in participant mode, clear out cached archives as different contributions may be provisioned on restart
+            for (File file : repository.listFiles()) {
+                file.delete();
+            }
+        } else {
+            // load archives
+            for (File file : repository.listFiles()) {
+                archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
+            }
         }
     }
 

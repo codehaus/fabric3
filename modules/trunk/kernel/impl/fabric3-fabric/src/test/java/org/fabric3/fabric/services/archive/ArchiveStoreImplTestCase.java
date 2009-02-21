@@ -25,8 +25,9 @@ import java.net.URL;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.util.io.FileHelper;
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.util.io.FileHelper;
 
 public class ArchiveStoreImplTestCase extends TestCase {
     private ArchiveStoreImpl repository;
@@ -57,6 +58,7 @@ public class ArchiveStoreImplTestCase extends TestCase {
         super.setUp();
         HostInfo info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getBaseDir()).andReturn(null).atLeastOnce();
+        EasyMock.expect(info.getRuntimeMode()).andReturn(RuntimeMode.VM).atLeastOnce();
         EasyMock.replay(info);
         FileHelper.forceMkdir(new File("repository"));
         this.repository = new ArchiveStoreImpl(info);
