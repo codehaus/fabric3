@@ -42,7 +42,7 @@ import javax.jms.Session;
  * Receives an asynchronously delivered message and optionally sends a response. Implementations support different invocation types such as
  * request-response and one-way.
  */
-public interface ResponseMessageListener {
+public interface SourceMessageListener {
 
     /**
      * Passes a message to the listener.

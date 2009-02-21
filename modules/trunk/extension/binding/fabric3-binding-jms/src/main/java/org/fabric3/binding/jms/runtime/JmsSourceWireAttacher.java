@@ -156,12 +156,12 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         Map<String, PayloadType> messageTypes = source.getPayloadTypes();
         Map<PhysicalOperationDefinition, InvocationChain> operations = wire.getInvocationChains();
 
-        ResponseMessageListener messageListener;
+        SourceMessageListener messageListener;
 
         if (metadata.noResponse()) {
-            messageListener = new OneWayMessageListenerImpl(operations, messageTypes, callbackUri);
+            messageListener = new OneWaySourceMessageListener(operations, messageTypes, callbackUri);
         } else {
-            messageListener = new ResponseMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+            messageListener = new RequestResponseSourceMessageListener(operations, correlationScheme, messageTypes, transactionType, callbackUri);
         }
         jmsHost.registerResponseListener(requestJMSObjectFactory,
                                          responseJMSObjectFactory,
@@ -188,13 +188,13 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     private JMSObjectFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
                                                 DestinationDefinition destinationDefinition,
                                                 Hashtable<String, String> env) {
-        CreateOption create = connectionFactoryDefinition.getCreate();
 
-        ConnectionFactory connectionFactory =
-                connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+        CreateOption create = connectionFactoryDefinition.getCreate();
+        ConnectionFactoryStrategy connectionStrategy = connectionFactoryStrategies.get(create);
+        ConnectionFactory connectionFactory = connectionStrategy.getConnectionFactory(connectionFactoryDefinition, env);
         create = destinationDefinition.getCreate();
-        Destination reqDestination =
-                destinationStrategies.get(create).getDestination(destinationDefinition, connectionFactory, env);
+        DestinationStrategy destinationStrategy = destinationStrategies.get(create);
+        Destination reqDestination = destinationStrategy.getDestination(destinationDefinition, connectionFactory, env);
         return new JMSObjectFactory(connectionFactory, reqDestination, 1);
     }
 

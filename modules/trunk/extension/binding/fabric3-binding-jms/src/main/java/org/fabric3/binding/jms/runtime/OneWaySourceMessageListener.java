@@ -56,7 +56,7 @@ import org.fabric3.spi.wire.InvocationChain;
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class OneWayMessageListenerImpl implements ResponseMessageListener {
+public class OneWaySourceMessageListener implements SourceMessageListener {
 
     private Map<String, ChainHolder> operations;
     private String callbackUri;
@@ -68,9 +68,9 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
      * @param callbackUri  the callback URI of the client wired to the service this listener is created for. If the service is not bidirectional, the
      *                     URI will be null.
      */
-    public OneWayMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
-                                     Map<String, PayloadType> messageTypes,
-                                     String callbackUri) {
+    public OneWaySourceMessageListener(Map<PhysicalOperationDefinition, InvocationChain> chains,
+                                       Map<String, PayloadType> messageTypes,
+                                       String callbackUri) {
         this.callbackUri = callbackUri;
 
         this.operations = new HashMap<String, ChainHolder>();

@@ -45,7 +45,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsOperationException;
-import org.fabric3.binding.jms.runtime.ResponseMessageListener;
+import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.DefaultPausableWork;
@@ -60,7 +60,7 @@ public class ConsumerWorker extends DefaultPausableWork {
     private final Session session;
     private final TransactionHandler transactionHandler;
     private final MessageConsumer consumer;
-    private final ResponseMessageListener listener;
+    private final SourceMessageListener listener;
     private final long readTimeout;
     private final TransactionType transactionType;
     private final ClassLoader cl;

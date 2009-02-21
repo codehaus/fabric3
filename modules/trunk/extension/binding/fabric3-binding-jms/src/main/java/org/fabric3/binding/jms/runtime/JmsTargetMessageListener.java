@@ -46,11 +46,11 @@ import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 
 /**
- * Message listeher for service requests.
- * 
+ * Message listener that blocks for responses from a target service. This listener is attached to the reference side of a wire.
+ *
  * @version $Revison$ $Date$
  */
-public class Fabric3MessageReceiver {
+public class JmsTargetMessageListener {
 
     /**
      * Destination for receiving response.
@@ -63,45 +63,45 @@ public class Fabric3MessageReceiver {
     private ConnectionFactory connectionFactory;
 
     /**
-     * @param destination Destination for sending responses.
+     * @param destination       Destination for sending responses.
      * @param connectionFactory Connection factory for sending responses.
      */
-    public Fabric3MessageReceiver(Destination destination,
-                                  ConnectionFactory connectionFactory) {
+    public JmsTargetMessageListener(Destination destination,
+                                    ConnectionFactory connectionFactory) {
         this.destination = destination;
         this.connectionFactory = connectionFactory;
     }
 
     /**
      * Performs a blocking receive.
-     * 
+     *
      * @param correlationId Correlation Id.
      * @return Received message.
      */
     public Message receive(String correlationId) {
-        
+
         Connection connection = null;
-        
+
         try {
-            
+
             connection = connectionFactory.createConnection();
             Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
-            
+
             String selector = "JMSCorrelationID = '" + correlationId + "'";
             MessageConsumer consumer = session.createConsumer(destination, selector);
             connection.start();
 
             Message message = consumer.receive();
             session.commit();
-            
+
             return message;
-            
-        } catch(JMSException ex) {
+
+        } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to receive response", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
         }
-        
+
     }
 
 }

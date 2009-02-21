@@ -91,7 +91,7 @@ public class JmsTargetInterceptor implements Interceptor {
     /**
      * Message receiver.
      */
-    private Fabric3MessageReceiver messageReceiver;
+    private JmsTargetMessageListener messageReceiver;
 
     /**
      * Classloader to use.
@@ -112,7 +112,7 @@ public class JmsTargetInterceptor implements Interceptor {
                                 Destination destination,
                                 ConnectionFactory connectionFactory,
                                 CorrelationScheme correlationScheme,
-                                Fabric3MessageReceiver messageReceiver,
+                                JmsTargetMessageListener messageReceiver,
                                 ClassLoader cl) {
         this.methodName = methodName;
         this.payloadType = payloadType;

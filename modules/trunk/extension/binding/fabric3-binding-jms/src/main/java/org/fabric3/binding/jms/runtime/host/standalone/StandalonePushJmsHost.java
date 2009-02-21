@@ -49,7 +49,7 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
-import org.fabric3.binding.jms.runtime.ResponseMessageListener;
+import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -122,7 +122,7 @@ public class StandalonePushJmsHost implements JmsHost {
 
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
                                          JMSObjectFactory responseJMSObjectFactory,
-                                         ResponseMessageListener messageListener,
+                                         SourceMessageListener messageListener,
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl,

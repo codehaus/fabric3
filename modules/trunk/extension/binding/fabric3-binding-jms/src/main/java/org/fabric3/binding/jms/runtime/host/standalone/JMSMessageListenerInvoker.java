@@ -46,7 +46,7 @@ import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JmsOperationException;
-import org.fabric3.binding.jms.runtime.ResponseMessageListener;
+import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
 
@@ -65,7 +65,7 @@ public class JMSMessageListenerInvoker implements MessageListener {
     /**
      * ResponseMessageListenerImpl invoked by this invoker
      */
-    private ResponseMessageListener messageListener = null;
+    private SourceMessageListener messageListener = null;
     /**
      * Transaction Type
      */
@@ -81,7 +81,7 @@ public class JMSMessageListenerInvoker implements MessageListener {
 
     public JMSMessageListenerInvoker(JMSObjectFactory requestJMSObjectFactory,
                                      JMSObjectFactory responseJMSObjectFactory,
-                                     ResponseMessageListener messageListener,
+                                     SourceMessageListener messageListener,
                                      TransactionType transactionType,
                                      TransactionHandler transactionHandler, WorkScheduler workScheduler) {
         this.requestJMSObjectFactory = requestJMSObjectFactory;

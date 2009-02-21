@@ -121,7 +121,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JmsWireTargetDefinition targetDefinition, Wire wire)
             throws WiringException {
   
-        Fabric3MessageReceiver messageReceiver = null;
+        JmsTargetMessageListener messageReceiver = null;
         Destination resDestination = null;
         ConnectionFactory resCf = null;
         
@@ -158,7 +158,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
             InvocationChain chain = entry.getValue();
             
             if(resDestination != null && resCf != null){
-                messageReceiver = new Fabric3MessageReceiver(resDestination, resCf);
+                messageReceiver = new JmsTargetMessageListener(resDestination, resCf);
             }
             String operationName = op.getName();
             PayloadType payloadType = payloadTypes.get(operationName);

@@ -60,7 +60,7 @@ import org.fabric3.spi.wire.InvocationChain;
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class ResponseMessageListenerImpl implements ResponseMessageListener {
+public class RequestResponseSourceMessageListener implements SourceMessageListener {
 
     private Map<String, ChainHolder> operations;
     private final CorrelationScheme correlationScheme;
@@ -75,7 +75,7 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
      * @param transactionType   the type of transaction
      * @param callbackUri       the callback service uri
      */
-    public ResponseMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
+    public RequestResponseSourceMessageListener(Map<PhysicalOperationDefinition, InvocationChain> chains,
                                        CorrelationScheme correlationScheme,
                                        Map<String, PayloadType> messageTypes,
                                        TransactionType transactionType,

@@ -37,7 +37,7 @@ package org.fabric3.binding.jms.runtime.host.standalone;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
-import org.fabric3.binding.jms.runtime.ResponseMessageListener;
+import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 
 /**
@@ -48,7 +48,7 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 public class ConsumerWorkerTemplate {
 
     private final TransactionHandler transactionHandler;
-    private final ResponseMessageListener listener;
+    private final SourceMessageListener listener;
     private final long readTimeout;
     private final TransactionType transactionType;
     private final ClassLoader cl;
@@ -69,7 +69,7 @@ public class ConsumerWorkerTemplate {
      */
     public ConsumerWorkerTemplate(TransactionHandler transactionHandler,
                                   TransactionType transactionType,
-                                  ResponseMessageListener listener,
+                                  SourceMessageListener listener,
                                   JMSObjectFactory responseJMSObjectFactory,
                                   JMSObjectFactory requestJMSObjectFactory,
                                   long readTimeout,
@@ -89,7 +89,7 @@ public class ConsumerWorkerTemplate {
         return transactionHandler;
     }
 
-    public ResponseMessageListener getListener() {
+    public SourceMessageListener getListener() {
         return listener;
     }
 
