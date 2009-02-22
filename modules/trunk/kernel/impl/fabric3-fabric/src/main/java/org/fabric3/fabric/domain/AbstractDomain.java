@@ -146,7 +146,20 @@ public abstract class AbstractDomain implements Domain {
         include.setIncluded(composite);
         wrapper.add(include);
         if (plan == null) {
-            include(wrapper, null, transactional);
+            DeploymentPlan deploymentPlan = null;
+            if (RuntimeMode.CONTROLLER == info.getRuntimeMode()) {
+                // default to first found deployment plan in a contribution if none specifed for a distributed deployment
+                Contribution contribution = metadataStore.resolveContainingContribution(new QNameSymbol(deployable));
+                for (Resource resource : contribution.getResources()) {
+                    for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                        if (element.getValue() instanceof DeploymentPlan) {
+                            deploymentPlan = (DeploymentPlan) element.getValue();
+                            break;
+                        }
+                    }
+                }
+            }
+            include(wrapper, deploymentPlan, transactional);
         } else {
             DeploymentPlan deploymentPlan = resolvePlan(plan);
             include(wrapper, deploymentPlan, transactional);
