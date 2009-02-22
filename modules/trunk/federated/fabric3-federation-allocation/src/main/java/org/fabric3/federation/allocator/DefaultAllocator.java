@@ -22,7 +22,6 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.allocator.NoZonesAvailableException;
@@ -40,12 +39,10 @@ import org.fabric3.spi.topology.Zone;
 @EagerInit
 public class DefaultAllocator implements Allocator {
     private DomainManager domainManager;
-    private AllocatorMonitor monitor;
 
 
-    public DefaultAllocator(@Reference DomainManager domainManager, @Monitor AllocatorMonitor monitor) {
+    public DefaultAllocator(@Reference DomainManager domainManager) {
         this.domainManager = domainManager;
-        this.monitor = monitor;
     }
 
     public void allocate(LogicalComponent<?> component, List<DeploymentPlan> plans, boolean recover) throws AllocationException {
@@ -92,7 +89,6 @@ public class DefaultAllocator implements Allocator {
             throw new ZoneNotFoundException("Zone not found: " + zoneName);
         }
         component.setZone(zoneName);
-        monitor.selected(zoneName);
     }
 
 }
