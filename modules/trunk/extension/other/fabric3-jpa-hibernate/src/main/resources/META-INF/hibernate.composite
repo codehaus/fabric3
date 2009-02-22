@@ -27,6 +27,7 @@
     <!-- EMF Builder Delegate -->
     <component name="HibernateDelegate" f3-core:key="org.hibernate.ejb.HibernatePersistence">
         <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.HibernateDelegate"/>
+        <property name="logLevel" source="$systemConfig//jpa/@logging"/>
     </component>
 
     <component name="HibernateEmfClassLoaderService">

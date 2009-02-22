@@ -19,6 +19,8 @@ package org.fabric3.jpa.hibernate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceUnitInfo;
@@ -26,6 +28,8 @@ import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.ejb.Ejb3Configuration;
+import org.oasisopen.sca.annotation.Init;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.spi.EmfBuilderException;
@@ -42,7 +46,8 @@ public class HibernateDelegate implements EmfBuilderDelegate {
 
     private DataSourceRegistry dataSourceRegistry;
     private ComponentSynthesizer synthesizer;
-    
+    private Level logLevel = Level.WARNING;
+
     /**
      * Build the entity Manager factory (Hibernate {@link SessionFactory} )
      */
@@ -57,14 +62,19 @@ public class HibernateDelegate implements EmfBuilderDelegate {
             }
             cfg.setDataSource(dataSource);
         }
-        
-        setTransactionManagerLookup(cfg);
+
+        cfg.getProperties().setProperty("hibernate.transaction.manager_lookup_class",
+                                        "org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup");
         cfg.configure(info, Collections.emptyMap());
 
         return cfg.buildEntityManagerFactory();
     }
 
-    
+    @Property(required = false)
+    public void setLogLevel(String logLevel) {
+        this.logLevel = Level.parse(logLevel);
+    }
+
     @Reference
     public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
         this.dataSourceRegistry = dataSourceRegistry;
@@ -75,17 +85,13 @@ public class HibernateDelegate implements EmfBuilderDelegate {
         this.synthesizer = synthesizer;
     }
 
-    /*
-     * Set the Transaction Manager Lookup so that it does not need to be set
-     * Explicitly
-     */
-    private void setTransactionManagerLookup(Ejb3Configuration configuration) {
-    	
-	     configuration.getProperties().setProperty("hibernate.transaction.manager_lookup_class", 
-	    		                                   "org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup");
-	}
+    @Init
+    public void init() {
+        // Hibernate defauklt level is INFO which is verbose. Only log warnings by default
+        Logger.getLogger("org.hibernate").setLevel(logLevel);
+    }
 
-	/**
+    /**
      * Maps a datasource from JNDI to a Fabric3 system component. This provides the defaulting behavior where a user does not have to explicitly
      * configure a Fabric3 DataSourceProxy when deploying to a managed environment that provides its own datasources.
      * <p/>
