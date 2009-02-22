@@ -34,11 +34,53 @@ import org.fabric3.spi.model.instance.LogicalWire;
  */
 public class CollectorImpl implements Collector {
 
-    public void mark(QName deployable, LogicalCompositeComponent composite) {
+    public void markAsProvisioned(LogicalCompositeComponent composite) {
+        for (LogicalComponent<?> component : composite.getComponents()) {
+            // note: all components must be traversed as new wires could be deployed to an existing provisioned component
+            if (component instanceof LogicalCompositeComponent) {
+                markAsProvisioned((LogicalCompositeComponent) component);
+            }
+            if (LogicalState.NEW == component.getState()) {
+                component.setState(LogicalState.PROVISIONED);
+            }
+            for (LogicalService service : component.getServices()) {
+                for (LogicalBinding<?> binding : service.getBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
+                    }
+                }
+                for (LogicalBinding<?> binding : service.getCallbackBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
+                    }
+                }
+            }
+            for (LogicalReference reference : component.getReferences()) {
+                for (LogicalBinding<?> binding : reference.getBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
+                    }
+                }
+                for (LogicalBinding<?> binding : reference.getCallbackBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
+                    }
+                }
+            }
+        }
+        for (LogicalWire wire : composite.getWires()) {
+            if (LogicalState.NEW == wire.getState()) {
+                wire.setState(LogicalState.PROVISIONED);
+            }
+        }
+    }
+
+
+    public void markForCollection(QName deployable, LogicalCompositeComponent composite) {
         for (LogicalComponent<?> component : composite.getComponents()) {
             if (deployable.equals(component.getDeployable())) {
                 if (component instanceof LogicalCompositeComponent) {
-                    mark(deployable, (LogicalCompositeComponent) component);
+                    markForCollection(deployable, (LogicalCompositeComponent) component);
                 }
                 component.setState(LogicalState.MARKED);
                 for (LogicalService service : component.getServices()) {

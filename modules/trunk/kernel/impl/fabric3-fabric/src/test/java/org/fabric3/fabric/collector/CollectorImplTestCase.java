@@ -60,7 +60,7 @@ public class CollectorImplTestCase extends TestCase {
         domain.addComponent(child2);
         domain.addComponent(childComposite);
 
-        collector.mark(DEPLOYABLE, domain);
+        collector.markForCollection(DEPLOYABLE, domain);
 
         assertEquals(LogicalState.MARKED, childComposite.getState());
         assertEquals(LogicalState.MARKED, child1.getState());

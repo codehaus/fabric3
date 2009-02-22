@@ -60,13 +60,9 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.model.instance.CopyUtil;
-import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
-import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.WriteException;
@@ -248,7 +244,7 @@ public abstract class AbstractDomain implements Domain {
         if (transactional) {
             domain = CopyUtil.copy(domain);
         }
-        collector.mark(deployable, domain);
+        collector.markForCollection(deployable, domain);
         try {
             CommandMap commandMap = physicalModelGenerator.generate(domain.getComponents(), true);
             routingService.route(commandMap);
@@ -331,7 +327,7 @@ public abstract class AbstractDomain implements Domain {
 
             // Select bindings
             selectBinding(components);
-            markAsProvisioned(domain);
+            collector.markAsProvisioned(domain);
             logicalComponentManager.replaceRootComponent(domain);
 
         } catch (AllocationException e) {
@@ -502,56 +498,10 @@ public abstract class AbstractDomain implements Domain {
 
         try {
             // TODO this should happen after nodes have deployed the components and wires
-            markAsProvisioned(domain);
+            collector.markAsProvisioned(domain);
             logicalComponentManager.replaceRootComponent(domain);
         } catch (WriteException e) {
             throw new DeploymentException("Error applying deployment", e);
-        }
-    }
-
-    /**
-     * Marks all components, wires, and bindings that are part of a context as provisioned.
-     *
-     * @param composite the root composite to traverse
-     */
-    private void markAsProvisioned(LogicalCompositeComponent composite) {
-        for (LogicalComponent<?> component : composite.getComponents()) {
-            // note: all components must be traversed as new wires could be deployed to an existing provisioned component
-            if (component instanceof LogicalCompositeComponent) {
-                markAsProvisioned((LogicalCompositeComponent) component);
-            }
-            if (LogicalState.NEW == component.getState()) {
-                component.setState(LogicalState.PROVISIONED);
-            }
-            for (LogicalService service : component.getServices()) {
-                for (LogicalBinding<?> binding : service.getBindings()) {
-                    if (LogicalState.NEW == binding.getState()) {
-                        binding.setState(LogicalState.PROVISIONED);
-                    }
-                }
-                for (LogicalBinding<?> binding : service.getCallbackBindings()) {
-                    if (LogicalState.NEW == binding.getState()) {
-                        binding.setState(LogicalState.PROVISIONED);
-                    }
-                }
-            }
-            for (LogicalReference reference : component.getReferences()) {
-                for (LogicalBinding<?> binding : reference.getBindings()) {
-                    if (LogicalState.NEW == binding.getState()) {
-                        binding.setState(LogicalState.PROVISIONED);
-                    }
-                }
-                for (LogicalBinding<?> binding : reference.getCallbackBindings()) {
-                    if (LogicalState.NEW == binding.getState()) {
-                        binding.setState(LogicalState.PROVISIONED);
-                    }
-                }
-            }
-        }
-        for (LogicalWire wire : composite.getWires()) {
-            if (LogicalState.NEW == wire.getState()) {
-                wire.setState(LogicalState.PROVISIONED);
-            }
         }
     }
 

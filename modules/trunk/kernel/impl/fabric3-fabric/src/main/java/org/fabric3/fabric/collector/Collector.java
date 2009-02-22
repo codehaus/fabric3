@@ -21,19 +21,26 @@ import javax.xml.namespace.QName;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
- * Marks and collects components for undeployment.
+ * Marks and collects components, wires, and bindings during deployment and undeployment.
  *
  * @version $Revision$ $Date$
  */
 public interface Collector {
 
     /**
-     * Mark components and wires belonging to the given deployable for collection.
+     * Marks all components, wires, and bindings that are part of a context as provisioned.
+     *
+     * @param composite the root composite to traverse
+     */
+    void markAsProvisioned(LogicalCompositeComponent composite);
+
+    /**
+     * Mark components, bindings and wires belonging to the given deployable for collection.
      *
      * @param deployable the deployable being undeployed
      * @param composite  the composite containing components to be undeployed
      */
-    void mark(QName deployable, LogicalCompositeComponent composite);
+    void markForCollection(QName deployable, LogicalCompositeComponent composite);
 
     /**
      * Recursively collects marked components by removing from the given composite.
