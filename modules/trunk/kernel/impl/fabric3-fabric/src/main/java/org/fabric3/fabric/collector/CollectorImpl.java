@@ -27,6 +27,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
+import org.fabric3.spi.model.instance.LogicalWire;
 
 /**
  * Default Collector implementation.
@@ -50,6 +51,9 @@ public class CollectorImpl implements Collector {
                 for (LogicalReference reference : component.getReferences()) {
                     for (LogicalBinding<?> binding : reference.getBindings()) {
                         binding.setState(LogicalState.MARKED);
+                    }
+                    for (LogicalWire wire : composite.getWires(reference)) {
+                        wire.setState(LogicalState.MARKED);
                     }
                 }
             } else {

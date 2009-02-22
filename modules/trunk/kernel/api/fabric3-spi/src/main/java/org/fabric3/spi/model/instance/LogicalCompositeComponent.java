@@ -17,9 +17,11 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,6 +74,15 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
     }
 
     /**
+     * Remove all wires for the originating reference.
+     *
+     * @param logicalReference the reference
+     */
+    public void removeWires(LogicalReference logicalReference) {
+        wires.remove(logicalReference);
+    }
+
+    /**
      * Gets the resolved targets sourced by the specified logical reference.
      *
      * @param logicalReference Logical reference that sources the wire.
@@ -86,6 +97,19 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
         }
         return logicalWires;
 
+    }
+
+    /**
+     * Returns a collection of wires contained in this composite.
+     *
+     * @return a collection of wires contained in this composite
+     */
+    public Collection<LogicalWire> getWires() {
+        List<LogicalWire> list = new ArrayList<LogicalWire>();
+        for (Set<LogicalWire> logicalWires : wires.values()) {
+            list.addAll(logicalWires);
+        }
+        return list;
     }
 
     /**

@@ -384,6 +384,7 @@ public abstract class AbstractDomain implements Domain {
                 for (LogicalReference reference : component.getReferences()) {
                     removeMarkedBindings(reference.getBindings().iterator());
                     removeMarkedBindings(reference.getCallbackBindings().iterator());
+                    composite.removeWires(reference);
                 }
                 if (component instanceof LogicalCompositeComponent) {
                     removeMarked((LogicalCompositeComponent) component);
@@ -591,12 +592,9 @@ public abstract class AbstractDomain implements Domain {
                 }
             }
         }
-        for (LogicalReference reference : composite.getReferences()) {
-            for (LogicalWire wire : composite.getWires(reference)) {
-                if (LogicalState.NEW == wire.getState()) {
-                    wire.setState(LogicalState.PROVISIONED);
-                }
-
+        for (LogicalWire wire : composite.getWires()) {
+            if (LogicalState.NEW == wire.getState()) {
+                wire.setState(LogicalState.PROVISIONED);
             }
         }
     }
