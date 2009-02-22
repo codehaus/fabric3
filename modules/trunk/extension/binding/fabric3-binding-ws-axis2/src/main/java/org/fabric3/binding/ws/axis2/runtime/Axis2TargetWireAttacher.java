@@ -30,6 +30,9 @@ import java.util.StringTokenizer;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.description.AxisService;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
@@ -37,16 +40,14 @@ import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -95,7 +96,7 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        // no-op
     }
 
     public ObjectFactory<?> createObjectFactory(Axis2WireTargetDefinition target) throws WiringException {
