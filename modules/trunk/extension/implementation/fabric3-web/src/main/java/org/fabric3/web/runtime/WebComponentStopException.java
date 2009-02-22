@@ -14,30 +14,25 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.container.web.jetty;
+package org.fabric3.web.runtime;
 
-import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * Receives events related to web application activation and deactivation.
- *
  * @version $Revision$ $Date$
  */
-public interface WebApplicationActivatorMonitor {
+public class WebComponentStopException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = -8027164653964721953L;
 
-    /**
-     * The web application has been activated
-     *
-     * @param path the WAR context path
-     */
-    @Info
-    void activated(String path);
+    public WebComponentStopException(String message) {
+        super(message);
+    }
 
-    /**
-     * The web application has been deactivated
-     *
-     * @param path the WAR context path
-     */
-    @Info
-    void deactivated(String path);
+    public WebComponentStopException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public WebComponentStopException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -129,6 +129,11 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     }
 
     public void stop() {
+        try {
+            activator.deactivate(archiveUri);
+        } catch (WebApplicationActivationException e) {
+            throw new WebComponentStopException("Error stopping web component: " + uri.toString(), e);
+        }
     }
 
     public Map<String, PropertyValue> getDefaultPropertyValues() {

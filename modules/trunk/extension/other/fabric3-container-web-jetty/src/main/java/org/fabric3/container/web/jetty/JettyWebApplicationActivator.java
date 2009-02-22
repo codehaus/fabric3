@@ -37,8 +37,8 @@ import org.fabric3.container.web.spi.WebApplicationActivator;
 import org.fabric3.jetty.JettyService;
 import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 
 /**
@@ -51,7 +51,7 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
     private ClassLoaderRegistry classLoaderRegistry;
     private ContributionUriResolver contributionUriResolver;
     private WebApplicationActivatorMonitor monitor;
-    private Map<URI, WebAppContext> mappings;
+    private Map<URI, Holder> mappings;
 
     public JettyWebApplicationActivator(@Reference JettyService jettyService,
                                         @Reference ClassLoaderRegistry classLoaderRegistry,
@@ -61,7 +61,7 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         this.monitor = monitor;
         this.classLoaderRegistry = classLoaderRegistry;
         this.contributionUriResolver = contributionUriResolver;
-        mappings = new ConcurrentHashMap<URI, WebAppContext>();
+        mappings = new ConcurrentHashMap<URI, Holder>();
     }
 
     public ClassLoader getWebComponentClassLoader(URI componentId) {
@@ -91,8 +91,9 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
             context.getSessionHandler().addEventListener(listener);
             ServletContext servletContext = context.getServletContext();
             injectServletContext(servletContext, injectors);
-            mappings.put(uri, context);
-            monitor.activated(uri);
+            Holder holder = new Holder(contextPath, context);
+            mappings.put(uri, holder);
+            monitor.activated(holder.getContextPath());
             return servletContext;
         } catch (Exception e) {
             throw new WebApplicationActivationException(e);
@@ -100,12 +101,18 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
     }
 
     public void deactivate(URI uri) throws WebApplicationActivationException {
-        WebAppContext context = mappings.get(uri);
-        if (context == null) {
+        Holder holder = mappings.remove(uri);
+        if (holder == null) {
             throw new WebApplicationActivationException("Mapping does not exist: " + uri.toString());
         }
+        WebAppContext context = holder.getContext();
         jettyService.getServer().removeLifeCycle(context);
-        monitor.deactivated(uri);
+        try {
+            context.stop();
+        } catch (Exception e) {
+            throw new WebApplicationActivationException(e);
+        }
+        monitor.deactivated(holder.getContextPath());
     }
 
     private ClassLoader createParentClassLoader(URI parentClassLoaderId, URI id) {
@@ -139,6 +146,24 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         }
         for (Injector injector : list) {
             injector.inject(servletContext);
+        }
+    }
+
+    private static class Holder {
+        private String contextPath;
+        private WebAppContext context;
+
+        private Holder(String contextPath, WebAppContext context) {
+            this.contextPath = contextPath;
+            this.context = context;
+        }
+
+        public String getContextPath() {
+            return contextPath;
+        }
+
+        public WebAppContext getContext() {
+            return context;
         }
     }
 
