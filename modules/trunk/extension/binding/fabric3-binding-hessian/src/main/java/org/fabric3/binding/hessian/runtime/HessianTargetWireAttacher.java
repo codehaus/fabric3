@@ -105,7 +105,7 @@ public class HessianTargetWireAttacher implements TargetWireAttacher<HessianWire
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, HessianWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        // no-op
     }
 
     public ObjectFactory<?> createObjectFactory(HessianWireTargetDefinition target) throws WiringException {

@@ -102,7 +102,7 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTa
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, GroovyWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        // no-op
     }
 
     <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,

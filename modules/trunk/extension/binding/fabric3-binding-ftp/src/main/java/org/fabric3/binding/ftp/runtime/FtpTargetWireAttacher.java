@@ -81,7 +81,7 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, FtpWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        // no-op
     }
 
     public ObjectFactory<?> createObjectFactory(FtpWireTargetDefinition target) throws WiringException {

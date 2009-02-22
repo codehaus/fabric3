@@ -98,11 +98,11 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
     }
 
     public void detachFromSource(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        // no-op
     }
 
     public void detachObjectFactory(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        // no-op
     }
 
     public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)

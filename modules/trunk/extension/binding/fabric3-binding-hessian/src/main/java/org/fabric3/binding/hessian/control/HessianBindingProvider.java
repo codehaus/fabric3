@@ -92,7 +92,7 @@ public class HessianBindingProvider implements BindingProvider {
         // determing whether to configure both sides of the wire or just the reference
         if (target.getBindings().isEmpty()) {
             // configure both sides
-            configureService(target);
+            configureService(source, target);
             configureReference(source, target, baseUrl);
         } else {
             configureReference(source, target, baseUrl);
@@ -100,7 +100,7 @@ public class HessianBindingProvider implements BindingProvider {
     }
 
     @SuppressWarnings("unchecked")
-	private void configureReference(LogicalReference source, LogicalService target, String baseUrl) throws BindingSelectionException {
+    private void configureReference(LogicalReference source, LogicalService target, String baseUrl) throws BindingSelectionException {
         LogicalBinding<HessianBindingDefinition> binding = null;
         for (LogicalBinding<?> entry : target.getBindings()) {
             if (entry.getDefinition().getType().equals(BINDING_QNAME)) {
@@ -121,11 +121,12 @@ public class HessianBindingProvider implements BindingProvider {
         source.addBinding(referenceBinding);
     }
 
-    private void configureService(LogicalService target) {
+    private void configureService(LogicalReference source, LogicalService target) {
         String endpointName = target.getUri().getPath() + "/" + target.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
         HessianBindingDefinition serviceDefinition = new HessianBindingDefinition(endpointUri, null);
-        LogicalBinding<HessianBindingDefinition> serviceBinding = new LogicalBinding<HessianBindingDefinition>(serviceDefinition, target);
+        QName deployable = source.getParent().getDeployable();
+        LogicalBinding<HessianBindingDefinition> serviceBinding = new LogicalBinding<HessianBindingDefinition>(serviceDefinition, target, deployable);
         target.addBinding(serviceBinding);
     }
 }
