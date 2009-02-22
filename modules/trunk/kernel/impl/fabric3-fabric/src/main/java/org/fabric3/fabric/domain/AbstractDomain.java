@@ -75,18 +75,18 @@ import org.fabric3.spi.services.lcm.WriteException;
 public abstract class AbstractDomain implements Domain {
     private static final String PLAN_NAMESPACE = "urn:fabric3.org:extension:plan";
 
-    private final MetaDataStore metadataStore;
-    private final LogicalComponentManager logicalComponentManager;
-    protected LogicalModelInstantiator logicalModelInstantiator;
-    protected BindingSelector bindingSelector;
     protected RoutingService routingService;
     protected PhysicalModelGenerator physicalModelGenerator;
-    protected Collector collector;
-    private HostInfo info;
-
     // The service for allocating to remote zones. Domain subtypes may optionally inject this service if they support distributed domains.
     protected Allocator allocator;
     protected List<DomainListener> listeners;
+
+    private MetaDataStore metadataStore;
+    private LogicalComponentManager logicalComponentManager;
+    private LogicalModelInstantiator logicalModelInstantiator;
+    private BindingSelector bindingSelector;
+    private Collector collector;
+    private HostInfo info;
 
     /**
      * Constructor.
