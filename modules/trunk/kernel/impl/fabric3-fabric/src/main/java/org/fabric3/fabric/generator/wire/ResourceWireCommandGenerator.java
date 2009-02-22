@@ -48,7 +48,9 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
     }
 
     public AttachWireCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent || (component.getState() != LogicalState.NEW && incremental)) {
+        if (component instanceof LogicalCompositeComponent
+                || component.getResources().isEmpty()
+                || (component.getState() != LogicalState.NEW && incremental)) {
             return null;
         }
         AttachWireCommand command = new AttachWireCommand(order);
