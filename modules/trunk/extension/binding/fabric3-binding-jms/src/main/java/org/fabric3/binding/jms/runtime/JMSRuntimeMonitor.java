@@ -64,6 +64,14 @@ public interface JMSRuntimeMonitor {
     void registerListener(URI uri);
 
     /**
+     * Callback when a service has been removed as a JMS endpoint
+     *
+     * @param uri the service URI
+     */
+    @Info
+    void unRegisterListener(URI uri);
+
+    /**
      * Callback indicating the extension has been started.
      */
     @Info

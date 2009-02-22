@@ -52,8 +52,8 @@ import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
-import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.JmsHost;
+import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
@@ -147,6 +147,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         }
         JmsHelper.closeQuietly(connectionMap.remove(serviceUri));
         templateMap.remove(serviceUri);
+        monitor.unRegisterListener(serviceUri);
     }
 
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
