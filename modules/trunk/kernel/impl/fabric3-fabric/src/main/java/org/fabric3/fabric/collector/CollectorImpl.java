@@ -21,8 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 
 /**
@@ -39,6 +42,30 @@ public class CollectorImpl implements Collector {
                     mark(deployable, (LogicalCompositeComponent) component);
                 }
                 component.setState(LogicalState.MARKED);
+                for (LogicalService service : component.getServices()) {
+                    for (LogicalBinding<?> binding : service.getBindings()) {
+                        binding.setState(LogicalState.MARKED);
+                    }
+                }
+                for (LogicalReference reference : component.getReferences()) {
+                    for (LogicalBinding<?> binding : reference.getBindings()) {
+                        binding.setState(LogicalState.MARKED);
+                    }
+                }
+            } else {
+                // mark service and callback bindings that were dynamically added to satisfy a wire when the deployable was provisioned
+                for (LogicalService service : component.getServices()) {
+                    for (LogicalBinding<?> binding : service.getBindings()) {
+                        if (deployable.equals(binding.getDeployable())) {
+                            binding.setState(LogicalState.MARKED);
+                        }
+                    }
+                    for (LogicalBinding<?> binding : service.getCallbackBindings()) {
+                        if (deployable.equals(binding.getDeployable())) {
+                            binding.setState(LogicalState.MARKED);
+                        }
+                    }
+                }
             }
         }
     }

@@ -26,8 +26,8 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
  */
 public interface PhysicalOperationHelper {
 
-    public abstract PhysicalOperationDefinition mapOperation(Operation o);
+    PhysicalOperationDefinition mapOperation(Operation o);
 
-    public abstract String getClassName(Type paramType);
+    String getClassName(Type paramType);
 
 }

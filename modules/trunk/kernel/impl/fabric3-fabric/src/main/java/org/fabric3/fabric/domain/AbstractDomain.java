@@ -248,7 +248,7 @@ public abstract class AbstractDomain implements Domain {
         }
         try {
             // TODO this should happen after nodes have undeployed the components and wires
-            removeLogicalComponents(domain);
+            removeMarked(domain);
             logicalComponentManager.replaceRootComponent(domain);
             QNameSymbol deployableSymbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
@@ -353,16 +353,41 @@ public abstract class AbstractDomain implements Domain {
 
 
     /**
-     * Removes components marked for deletion from the composite. Note this method does not recurse as removal is only done against the domain level
-     * composite.
+     * Removes components and bindings marked for deletion from the composite.
      *
      * @param composite the root composite
      */
-    private void removeLogicalComponents(LogicalCompositeComponent composite) {
+    private void removeMarked(LogicalCompositeComponent composite) {
         Iterator<LogicalComponent<?>> iter = composite.getComponents().iterator();
         while (iter.hasNext()) {
             LogicalComponent<?> component = iter.next();
             if (LogicalState.MARKED == component.getState()) {
+                iter.remove();
+            } else {
+                for (LogicalService service : component.getServices()) {
+                    removeMarkedBindings(service.getBindings().iterator());
+                    removeMarkedBindings(service.getCallbackBindings().iterator());
+                }
+                for (LogicalReference reference : component.getReferences()) {
+                    removeMarkedBindings(reference.getBindings().iterator());
+                    removeMarkedBindings(reference.getCallbackBindings().iterator());
+                }
+                if (component instanceof LogicalCompositeComponent) {
+                    removeMarked((LogicalCompositeComponent) component);
+                }
+            }
+        }
+    }
+
+    /**
+     * Removes marked bindings
+     *
+     * @param iter the collection of bindings to iterate
+     */
+    private void removeMarkedBindings(Iterator<LogicalBinding<?>> iter) {
+        while (iter.hasNext()) {
+            LogicalBinding<?> binding = iter.next();
+            if (LogicalState.MARKED == binding.getState()) {
                 iter.remove();
             }
         }
@@ -484,8 +509,7 @@ public abstract class AbstractDomain implements Domain {
      * @param plans  the deployment plans to use for deployment
      * @throws DeploymentException if an error is encountered during deployment
      */
-    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans)
-            throws DeploymentException {
+    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans) throws DeploymentException {
         Collection<LogicalComponent<?>> components = domain.getComponents();
         // Allocate the components to runtime nodes
         try {
@@ -522,23 +546,34 @@ public abstract class AbstractDomain implements Domain {
      */
     private void markAsProvisioned(LogicalCompositeComponent composite) {
         for (LogicalComponent<?> component : composite.getComponents()) {
+            // note: all components must be traversed as new wires could be deployed to an existing provisioned component
+            if (component instanceof LogicalCompositeComponent) {
+                markAsProvisioned((LogicalCompositeComponent) component);
+            }
             if (LogicalState.NEW == component.getState()) {
-                if (component instanceof LogicalCompositeComponent) {
-                    markAsProvisioned((LogicalCompositeComponent) component);
-                }
                 component.setState(LogicalState.PROVISIONED);
-                for (LogicalService service : component.getServices()) {
-                    for (LogicalBinding<?> binding : service.getBindings()) {
-                        if (LogicalState.NEW == binding.getState()) {
-                            binding.setState(LogicalState.PROVISIONED);
-                        }
+            }
+            for (LogicalService service : component.getServices()) {
+                for (LogicalBinding<?> binding : service.getBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
                     }
                 }
-                for (LogicalReference reference : component.getReferences()) {
-                    for (LogicalBinding<?> binding : reference.getBindings()) {
-                        if (LogicalState.NEW == binding.getState()) {
-                            binding.setState(LogicalState.PROVISIONED);
-                        }
+                for (LogicalBinding<?> binding : service.getCallbackBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
+                    }
+                }
+            }
+            for (LogicalReference reference : component.getReferences()) {
+                for (LogicalBinding<?> binding : reference.getBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
+                    }
+                }
+                for (LogicalBinding<?> binding : reference.getCallbackBindings()) {
+                    if (LogicalState.NEW == binding.getState()) {
+                        binding.setState(LogicalState.PROVISIONED);
                     }
                 }
             }

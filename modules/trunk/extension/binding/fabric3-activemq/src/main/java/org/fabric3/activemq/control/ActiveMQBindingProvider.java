@@ -17,6 +17,7 @@
 package org.fabric3.activemq.control;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.osoa.sca.annotations.EagerInit;
@@ -62,8 +63,9 @@ public class ActiveMQBindingProvider implements BindingProvider {
         String forwardQueue = target.getUri().toString();
         JmsBindingDefinition definition = createBindingDefinition(forwardQueue);
         LogicalBinding<JmsBindingDefinition> referenceBinding = new LogicalBinding<JmsBindingDefinition>(definition, source);
+        QName deployable = source.getParent().getDeployable();
         source.addBinding(referenceBinding);
-        LogicalBinding<JmsBindingDefinition> serviceBinding = new LogicalBinding<JmsBindingDefinition>(definition, target);
+        LogicalBinding<JmsBindingDefinition> serviceBinding = new LogicalBinding<JmsBindingDefinition>(definition, target, deployable);
         target.addBinding(serviceBinding);
 
         // check if the interface is bidirectional
@@ -74,7 +76,8 @@ public class ActiveMQBindingProvider implements BindingProvider {
             JmsBindingDefinition callbackDefinition = createBindingDefinition(callbackQueue);
             LogicalBinding<JmsBindingDefinition> callbackReferenceBinding = new LogicalBinding<JmsBindingDefinition>(callbackDefinition, source);
             source.addCallbackBinding(callbackReferenceBinding);
-            LogicalBinding<JmsBindingDefinition> callbackServiceBinding = new LogicalBinding<JmsBindingDefinition>(callbackDefinition, target);
+            LogicalBinding<JmsBindingDefinition> callbackServiceBinding =
+                    new LogicalBinding<JmsBindingDefinition>(callbackDefinition, target, deployable);
             target.addCallbackBinding(callbackServiceBinding);
             callbackDefinition.setGeneratedTargetUri(createCallbackUri(source));
         }

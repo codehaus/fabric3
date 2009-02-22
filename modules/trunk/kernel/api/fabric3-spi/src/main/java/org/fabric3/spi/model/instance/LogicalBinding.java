@@ -53,10 +53,17 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
 
     private final BD definition;
     private LogicalState state = LogicalState.NEW;
+    private QName deployable;
 
     public LogicalBinding(BD definition, Bindable parent) {
         super(null, parent, TYPE);
         this.definition = definition;
+    }
+
+    public LogicalBinding(BD definition, Bindable parent, QName deployable) {
+        super(null, parent, TYPE);
+        this.definition = definition;
+        this.deployable = deployable;
     }
 
     /**
@@ -114,4 +121,14 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
         this.state = state;
     }
 
+    /**
+     * If this is a service binding, returns the deployable the binding was provisioned with if it was dynamically added to connect a source reference
+     * to a target service. Bindings are dynamically added in two instances: to provide a physical transport for binding.sca; and when a reference
+     * specifies a binding and the service it is wired to is not configured with a binding of that type.
+     *
+     * @return the deployable that dynamically provisioned the binding or null of the binding was not dynamically provisioned
+     */
+    public QName getDeployable() {
+        return deployable;
+    }
 }

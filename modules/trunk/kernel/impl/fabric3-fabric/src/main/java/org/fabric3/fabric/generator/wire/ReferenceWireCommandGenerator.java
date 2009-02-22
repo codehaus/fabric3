@@ -80,7 +80,8 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         for (LogicalReference logicalReference : component.getReferences()) {
             // FIXME the check for component state should be done individually for each binding, not on the component since bindings may be
             // dynamically added
-            if (logicalReference.getBindings().isEmpty() || (LogicalState.NEW != component.getState() && incremental)) {
+            if (logicalReference.getBindings().isEmpty()
+                    || (LogicalState.NEW != component.getState() && LogicalState.MARKED != component.getState() && incremental)) {
                 continue;
             }
 
