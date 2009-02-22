@@ -54,12 +54,12 @@
         <dependency>
             <groupId>com.sun.shoal</groupId>
             <artifactId>shoal-jxta</artifactId>
-            <version>1.1_09292008</version>
+            <version>1.1_12142008</version>
         </dependency>
         <dependency>
             <groupId>com.sun.shoal</groupId>
             <artifactId>shoal-gms</artifactId>
-            <version>1.1_09292008</version>
+            <version>1.1_12142008</version>
         </dependency>
 
         <dependency>
