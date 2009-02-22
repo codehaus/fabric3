@@ -47,7 +47,6 @@ public class SingletonTargetWireAttacher implements TargetWireAttacher<Singleton
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, SingletonWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
     }
 
     public ObjectFactory<?> createObjectFactory(SingletonWireTargetDefinition target) throws WiringException {
