@@ -16,9 +16,7 @@
  */
 package org.fabric3.fabric.collector;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -75,16 +73,41 @@ public class CollectorImpl implements Collector {
     }
 
     public void collect(LogicalCompositeComponent composite) {
-        List<URI> remove = new ArrayList<URI>();
-        for (LogicalComponent<?> component : composite.getComponents()) {
-            if (component instanceof LogicalCompositeComponent) {
-                collect((LogicalCompositeComponent) component);
+        Iterator<LogicalComponent<?>> iter = composite.getComponents().iterator();
+        while (iter.hasNext()) {
+            LogicalComponent<?> component = iter.next();
+            if (LogicalState.MARKED == component.getState()) {
+                iter.remove();
+            } else {
+                for (LogicalService service : component.getServices()) {
+                    removeMarkedBindings(service.getBindings().iterator());
+                    removeMarkedBindings(service.getCallbackBindings().iterator());
+                }
+                for (LogicalReference reference : component.getReferences()) {
+                    removeMarkedBindings(reference.getBindings().iterator());
+                    removeMarkedBindings(reference.getCallbackBindings().iterator());
+                    composite.removeWires(reference);
+                }
+                if (component instanceof LogicalCompositeComponent) {
+                    collect((LogicalCompositeComponent) component);
+                }
             }
-            remove.add(component.getUri());
-        }
-        for (URI uri : remove) {
-            composite.removeComponent(uri);
         }
     }
+
+    /**
+     * Removes marked bindings
+     *
+     * @param iter the collection of bindings to iterate
+     */
+    private void removeMarkedBindings(Iterator<LogicalBinding<?>> iter) {
+        while (iter.hasNext()) {
+            LogicalBinding<?> binding = iter.next();
+            if (LogicalState.MARKED == binding.getState()) {
+                iter.remove();
+            }
+        }
+    }
+
 
 }

@@ -70,7 +70,7 @@ public class CollectorImplTestCase extends TestCase {
         collector.collect(domain);
 
         assertNull(domain.getComponent(child1Uri));
-        assertNull(domain.getComponent(child2Uri));
+        assertNotNull(domain.getComponent(child2Uri));
         assertNull(domain.getComponent(childCompositeUri));
 
     }

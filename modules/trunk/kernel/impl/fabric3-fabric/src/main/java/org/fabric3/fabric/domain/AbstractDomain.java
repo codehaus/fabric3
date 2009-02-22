@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
@@ -261,7 +260,7 @@ public abstract class AbstractDomain implements Domain {
         }
         try {
             // TODO this should happen after nodes have undeployed the components and wires
-            removeMarked(domain);
+            collector.collect(domain);
             logicalComponentManager.replaceRootComponent(domain);
             QNameSymbol deployableSymbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
@@ -361,49 +360,6 @@ public abstract class AbstractDomain implements Domain {
             throw new DeploymentException(e);
         } catch (RoutingException e) {
             throw new DeploymentException(e);
-        }
-    }
-
-
-    /**
-     * Removes components and bindings marked for deletion from the composite.
-     *
-     * @param composite the root composite
-     */
-    private void removeMarked(LogicalCompositeComponent composite) {
-        Iterator<LogicalComponent<?>> iter = composite.getComponents().iterator();
-        while (iter.hasNext()) {
-            LogicalComponent<?> component = iter.next();
-            if (LogicalState.MARKED == component.getState()) {
-                iter.remove();
-            } else {
-                for (LogicalService service : component.getServices()) {
-                    removeMarkedBindings(service.getBindings().iterator());
-                    removeMarkedBindings(service.getCallbackBindings().iterator());
-                }
-                for (LogicalReference reference : component.getReferences()) {
-                    removeMarkedBindings(reference.getBindings().iterator());
-                    removeMarkedBindings(reference.getCallbackBindings().iterator());
-                    composite.removeWires(reference);
-                }
-                if (component instanceof LogicalCompositeComponent) {
-                    removeMarked((LogicalCompositeComponent) component);
-                }
-            }
-        }
-    }
-
-    /**
-     * Removes marked bindings
-     *
-     * @param iter the collection of bindings to iterate
-     */
-    private void removeMarkedBindings(Iterator<LogicalBinding<?>> iter) {
-        while (iter.hasNext()) {
-            LogicalBinding<?> binding = iter.next();
-            if (LogicalState.MARKED == binding.getState()) {
-                iter.remove();
-            }
         }
     }
 
