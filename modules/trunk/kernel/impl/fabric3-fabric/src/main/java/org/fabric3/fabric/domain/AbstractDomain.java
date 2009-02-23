@@ -57,8 +57,6 @@ import org.fabric3.spi.domain.RoutingException;
 import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -173,66 +171,10 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void include(List<URI> uris, boolean transactional) throws DeploymentException {
-        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
-
         List<Contribution> contributions = resolveContributions(uris);
-        for (Contribution contribution : contributions) {
-            if (ContributionState.INSTALLED != contribution.getState()) {
-                throw new ContributionNotInstalledException("Contribution is not installed: " + contribution.getUri());
-            }
-        }
-
-        List<Composite> deployables = getDeployables(contributions);
-        List<DeploymentPlan> plans = getDeploymentPlans(contributions);
-
-        // lock the contributions
-        for (Contribution contribution : contributions) {
-            for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                QName name = deployable.getName();
-                // check if the deployable has already been deployed by querying the lock owners
-                if (contribution.getLockOwners().contains(name)) {
-                    throw new CompositeAlreadyDeployedException("Composite has already been deployed: " + name);
-                }
-                contribution.acquireLock(name);
-            }
-        }
-
-        try {
-            if (transactional) {
-                domain = CopyUtil.copy(domain);
-            }
-            InstantiationContext change = logicalModelInstantiator.include(domain, deployables);
-            if (change.hasErrors()) {
-                throw new AssemblyException(change.getErrors());
-            }
-
-            allocateAndDeploy(domain, plans);
-
-            // notify listeners
-            for (int i = 0; i < deployables.size(); i++) {
-                Composite deployable = deployables.get(i);
-                String planName = null;
-                if (!plans.isEmpty()) {
-                    // deployment plans are not used in single-VM runtimes
-                    planName = plans.get(i).getName();
-                }
-                for (DomainListener listener : listeners) {
-                    listener.onInclude(deployable.getName(), planName);
-                }
-            }
-        } catch (DeploymentException e) {
-            // release the contribution locks if there was an error
-            for (Contribution contribution : contributions) {
-                for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                    QName name = deployable.getName();
-                    if (contribution.getLockOwners().contains(name)) {
-                        contribution.releaseLock(name);
-                    }
-                }
-            }
-            throw e;
-        }
+        instantiateAndDeploy(contributions, null, false, transactional);
     }
+
 
     public void undeploy(QName deployable) throws UndeploymentException {
         undeploy(deployable, false);
@@ -271,8 +213,6 @@ public abstract class AbstractDomain implements Domain {
 
     public void recover(List<QName> deployables, List<String> planNames) throws DeploymentException {
         List<Contribution> contributions = new ArrayList<Contribution>();
-        List<Composite> composites = new ArrayList<Composite>();
-        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
         for (QName deployable : deployables) {
             QNameSymbol symbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(symbol);
@@ -281,66 +221,13 @@ public abstract class AbstractDomain implements Domain {
                 throw new DeploymentException("Contribution for deployable not found: " + deployable);
             }
             contributions.add(contribution);
-            try {
-                IntrospectionContext context = new DefaultIntrospectionContext();
-                ResourceElement<QNameSymbol, Composite> element = metadataStore.resolve(contribution.getUri(), Composite.class, symbol, context);
-                composites.add(element.getValue());
-            } catch (StoreException e) {
-                throw new DeploymentException(e);
-            }
-
         }
-        for (String planName : planNames) {
-            if (planName == null) {
-                plans.add(null);
-                continue;
-            }
-            DeploymentPlan plan = resolvePlan(planName);
-            if (plan == null) {
-                // this should not happen
-                throw new DeploymentException("Deployment plan not found: " + planName);
-            }
-            plans.add(plan);
-        }
-        // lock the contributions
-        for (int i = 0; i < contributions.size(); i++) {
-            Contribution contribution = contributions.get(i);
-            QName deployable = deployables.get(i);
-            contribution.acquireLock(deployable);
-        }
-        try {
-            LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+        instantiateAndDeploy(contributions, planNames, true, false);
+    }
 
-            InstantiationContext change = logicalModelInstantiator.include(domain, composites);
-            if (change.hasErrors()) {
-                throw new AssemblyException(change.getErrors());
-            }
-            Collection<LogicalComponent<?>> components = domain.getComponents();
-
-            if (RuntimeMode.VM == info.getRuntimeMode()) {
-                // allocate and deploy components
-                allocateAndDeploy(domain, plans);
-            } else {
-                // only allocate the components to runtime nodes
-                allocate(components, plans);
-            }
-
-            // Select bindings
-            selectBinding(components);
-            collector.markAsProvisioned(domain);
-            logicalComponentManager.replaceRootComponent(domain);
-
-        } catch (AllocationException e) {
-            throw new DeploymentException("Error deploying composite", e);
-        } catch (WriteException e) {
-            throw new DeploymentException("Error applying deployment", e);
-        } finally {
-            for (int i = 0; i < contributions.size(); i++) {
-                Contribution contribution = contributions.get(i);
-                QName deployable = deployables.get(i);
-                contribution.releaseLock(deployable);
-            }
-        }
+    public void recover(List<URI> uris) throws DeploymentException {
+        List<Contribution> contributions = resolveContributions(uris);
+        instantiateAndDeploy(contributions, null, true, false);
     }
 
     public void regenerate(String zoneId, String correlationId) throws DeploymentException {
@@ -356,6 +243,125 @@ public abstract class AbstractDomain implements Domain {
             throw new DeploymentException(e);
         } catch (RoutingException e) {
             throw new DeploymentException(e);
+        }
+    }
+
+    /**
+     * Instantiates and optionally deploys all deployables from a set of contributions. Deployment is performed if recovery mode is false or the
+     * runtme is operating in single VM mode. When recovering in a distributed domain, the components contained in the deployables will be
+     * instantiated but not deployed to zones. This is because the domain can run headless (i.e. without a controller) and may already be hosting
+     * deployed components. In the case where a recovery is performed for the entire domain, including zones, the controller will instantiate
+     * components and zone managers will send synchronization requests to it, which will result in component deployments.
+     *
+     * @param contributions the contributions to deploy
+     * @param planNames     the deployment plan names or null if no deployment plans are specified. If running in a distributed domain and no plans
+     *                      are specified, the contributions will be introspected for deployment plans.
+     * @param recover       true if recovery mode is enabled
+     * @param transactional true if the deployment should be performed transactionally
+     * @throws DeploymentException if an error occurs during instantiation or deployment
+     */
+    private void instantiateAndDeploy(List<Contribution> contributions, List<String> planNames, boolean recover, boolean transactional)
+            throws DeploymentException {
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+
+        for (Contribution contribution : contributions) {
+            if (ContributionState.INSTALLED != contribution.getState()) {
+                throw new ContributionNotInstalledException("Contribution is not installed: " + contribution.getUri());
+            }
+        }
+
+        List<Composite> deployables = getDeployables(contributions);
+
+        List<DeploymentPlan> plans;
+        if (planNames == null) {
+            plans = getDeploymentPlans(contributions);
+        } else {
+            plans = new ArrayList<DeploymentPlan>();
+            for (String planName : planNames) {
+                if (planName == null) {
+                    plans.add(null);
+                    continue;
+                }
+                DeploymentPlan plan = resolvePlan(planName);
+                if (plan == null) {
+                    // this should not happen
+                    throw new DeploymentException("Deployment plan not found: " + planName);
+                }
+                plans.add(plan);
+            }
+        }
+        // lock the contributions
+        for (Contribution contribution : contributions) {
+            for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                QName name = deployable.getName();
+                // check if the deployable has already been deployed by querying the lock owners
+                if (contribution.getLockOwners().contains(name)) {
+                    throw new CompositeAlreadyDeployedException("Composite has already been deployed: " + name);
+                }
+                contribution.acquireLock(name);
+            }
+        }
+
+        try {
+            if (transactional) {
+                domain = CopyUtil.copy(domain);
+            }
+            InstantiationContext change = logicalModelInstantiator.include(domain, deployables);
+            if (change.hasErrors()) {
+                throw new AssemblyException(change.getErrors());
+            }
+            if (!recover || RuntimeMode.VM == info.getRuntimeMode()) {
+                // in single VM mode, recovery includes deployment
+                allocateAndDeploy(domain, plans);
+            } else {
+                Collection<LogicalComponent<?>> components = domain.getComponents();
+                allocate(components, plans);
+                // Select bindings
+                selectBinding(components);
+                collector.markAsProvisioned(domain);
+                logicalComponentManager.replaceRootComponent(domain);
+            }
+
+            // notify listeners
+            for (int i = 0; i < deployables.size(); i++) {
+                Composite deployable = deployables.get(i);
+                String planName = null;
+                if (!plans.isEmpty()) {
+                    // deployment plans are not used in single-VM runtimes
+                    planName = plans.get(i).getName();
+                }
+                for (DomainListener listener : listeners) {
+                    listener.onInclude(deployable.getName(), planName);
+                }
+            }
+        } catch (DeploymentException e) {
+            // release the contribution locks if there was an error
+            releaseLocks(contributions);
+            throw e;
+        } catch (AllocationException e) {
+            // release the contribution locks if there was an error
+            releaseLocks(contributions);
+            throw new DeploymentException("Error deploying composite", e);
+        } catch (WriteException e) {
+            // release the contribution locks if there was an error
+            releaseLocks(contributions);
+            throw new DeploymentException("Error deploying composite", e);
+        }
+    }
+
+    /**
+     * Releases locks held on a set of contributions. Called when an error is raised during deployment causing a rollback.
+     *
+     * @param contributions the contributions to release locks on
+     */
+    private void releaseLocks(List<Contribution> contributions) {
+        for (Contribution contribution : contributions) {
+            for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                QName name = deployable.getName();
+                if (contribution.getLockOwners().contains(name)) {
+                    contribution.releaseLock(name);
+                }
+            }
         }
     }
 

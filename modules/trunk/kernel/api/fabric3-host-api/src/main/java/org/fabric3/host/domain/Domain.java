@@ -67,7 +67,6 @@ public interface Domain {
      */
     void include(QName deployable, String plan, boolean transactional) throws DeploymentException;
 
-
     /**
      * Include a composite in the domain.
      *
@@ -114,6 +113,15 @@ public interface Domain {
      * @throws DeploymentException if an error is encountered during recovery
      */
     void recover(List<QName> deployables, List<String> plans) throws DeploymentException;
+
+    /**
+     * Initiates a recovery operation for a set of contributions. All deployables in the contributions will be deployed. When performed against a
+     * distributed domain, default deployment plans will be used.
+     *
+     * @param uris the contribution URIs
+     * @throws DeploymentException if an error is encountered during recovery
+     */
+    public void recover(List<URI> uris) throws DeploymentException;
 
     /**
      * Regenerates and routes deployment commands for the current state of the given zone.
