@@ -28,4 +28,13 @@ public interface ZoneManagerMonitor {
 
     @Info
     void receivedSyncRequest(String runtimeName);
+
+    @Info
+    void joined(String name, String zoneName);
+
+    @Info
+    void failed(String name, String zoneName);
+
+    @Info
+    void shutdown(String name, String zoneName);
 }

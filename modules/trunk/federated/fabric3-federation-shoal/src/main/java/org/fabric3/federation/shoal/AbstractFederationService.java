@@ -66,55 +66,61 @@ public abstract class AbstractFederationService implements RuntimeService, Feder
     protected GroupManagementService domainGMS;
 
     protected Map<String, FederationCallback> callbacks = new HashMap<String, FederationCallback>();
+    private Level logLevel = Level.WARNING;
 
-    @Property
+    @Property (required = false)
     public void setMulticastAddress(String multicastAddress) {
         this.multicastAddress = multicastAddress;
     }
 
-    @Property
+    @Property (required = false)
     public void setMulticastPort(String multicastPort) {
         this.multicastPort = multicastPort;
     }
 
-    @Property
+    @Property (required = false)
     public void setFdTimeout(String fdTimeout) {
         this.fdTimeout = fdTimeout;
     }
 
-    @Property
+    @Property (required = false)
     public void setFdMaxRetries(String fdMaxRetries) {
         this.fdMaxRetries = fdMaxRetries;
     }
 
-    @Property
+    @Property (required = false)
     public void setMergeMaxInterval(String mergeMaxInterval) {
         this.mergeMaxInterval = mergeMaxInterval;
     }
 
-    @Property
+    @Property (required = false)
     public void setMergeMinInterval(String mergeMinInterval) {
         this.mergeMinInterval = mergeMinInterval;
     }
 
-    @Property
+    @Property (required = false)
     public void setVsTimeout(String vsTimeout) {
         this.vsTimeout = vsTimeout;
     }
 
-    @Property
+    @Property (required = false)
     public void setPingTimeout(String pingTimeout) {
         this.pingTimeout = pingTimeout;
     }
 
-    @Property
+    @Property (required = false)
     public void setZoneName(String zoneName) {
         this.zoneName = zoneName;
     }
 
-    @Property
+    @Property (required = false)
     public void setRuntimeName(String runtimeName) {
         this.runtimeName = runtimeName;
+    }
+
+    @Property (required = false)
+    public void setLogLevel(Level logLevel) {
+        this.logLevel = logLevel;
     }
 
     /**
@@ -212,7 +218,7 @@ public abstract class AbstractFederationService implements RuntimeService, Feder
     private void initializeLogger() {
         Logger logger = GMSLogDomain.getLogger(GMSLogDomain.GMS_LOGGER);
         logger.setUseParentHandlers(false);
-        logger.setLevel(Level.ALL);
+        logger.setLevel(logLevel);
         logger.addHandler(new MonitorLogHandler(monitor));
     }
 

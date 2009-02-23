@@ -28,6 +28,7 @@
         <f3-impl:implementation.system class="org.fabric3.federation.shoal.ParticipantFederationServiceImpl"/>
         <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
         <property name="zoneName" source="$systemConfig//federation/zoneName"/>
+        <property name="logLevel" source="$systemConfig//federation/@loggin"/>
     </component>
 
     <component name="ZoneManager">

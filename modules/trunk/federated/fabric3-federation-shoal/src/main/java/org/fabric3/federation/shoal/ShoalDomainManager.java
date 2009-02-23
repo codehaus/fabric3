@@ -25,8 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.sun.enterprise.ee.cms.core.GMSException;
+import com.sun.enterprise.ee.cms.core.JoinNotificationSignal;
 import com.sun.enterprise.ee.cms.core.MessageSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
+import com.sun.enterprise.ee.cms.core.FailureNotificationSignal;
+import com.sun.enterprise.ee.cms.core.PlannedShutdownSignal;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -123,6 +126,12 @@ public class ShoalDomainManager implements DomainManager, FederationCallback {
     public void onSignal(Signal signal) throws FederationCallbackException {
         if (signal instanceof MessageSignal) {
             executeCommand((MessageSignal) signal);
+        } else if (signal instanceof JoinNotificationSignal) {
+            monitor.joined(signal.getMemberToken());
+        } else if (signal instanceof FailureNotificationSignal) {
+            monitor.failed(signal.getMemberToken());
+        } else if (signal instanceof PlannedShutdownSignal) {
+            monitor.shutdown(signal.getMemberToken());
         }
     }
 

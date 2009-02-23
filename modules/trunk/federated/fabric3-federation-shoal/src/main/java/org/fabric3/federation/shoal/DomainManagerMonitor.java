@@ -25,4 +25,13 @@ public interface DomainManagerMonitor {
 
     @Info
     void enabled(String domainName);
+
+    @Info
+    void joined(String name);
+
+    @Info
+    void failed(String name);
+
+    @Info
+    void shutdown(String memberToken);
 }

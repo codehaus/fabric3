@@ -26,6 +26,7 @@
     <component name="FederationService">
         <f3-impl:implementation.system class="org.fabric3.federation.shoal.ControllerFederationService"/>
         <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
+        <property name="logLevel" source="$systemConfig//federation/@loggin"/>
     </component>
 
     <component name="DomainManager">

@@ -25,8 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.enterprise.ee.cms.core.FailureNotificationSignal;
 import com.sun.enterprise.ee.cms.core.GMSException;
+import com.sun.enterprise.ee.cms.core.JoinNotificationSignal;
 import com.sun.enterprise.ee.cms.core.MessageSignal;
+import com.sun.enterprise.ee.cms.core.PlannedShutdownSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -145,12 +148,12 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         } else if (!isZoneManager()) {
             return;
         }
+        String zoneName = federationService.getZoneName();
         if (signal instanceof MessageSignal) {
             MessageSignal messageSignal = (MessageSignal) signal;
             Object deserialized = deserialize(messageSignal);
             if (deserialized instanceof PaticipantSyncCommand) {
                 PaticipantSyncCommand paticipantSyncCommand = (PaticipantSyncCommand) deserialized;
-                String zoneName = federationService.getZoneName();
                 String correlationId = paticipantSyncCommand.getRuntimeId();
                 ZoneSyncCommand command = new ZoneSyncCommand(zoneName, correlationId);
                 monitor.receivedSyncRequest(correlationId);
@@ -164,6 +167,12 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
                     throw new FederationCallbackException(e);
                 }
             }
+        } else if (signal instanceof JoinNotificationSignal) {
+            monitor.joined(signal.getMemberToken(), zoneName);
+        } else if (signal instanceof FailureNotificationSignal) {
+            monitor.failed(signal.getMemberToken(), zoneName);
+        } else if (signal instanceof PlannedShutdownSignal) {
+            monitor.shutdown(signal.getMemberToken(), zoneName);
         }
     }
 
