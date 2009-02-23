@@ -57,7 +57,7 @@ public class ControllerFederationService extends AbstractFederationService imple
         super(eventService, info, monitor);
     }
 
-    protected void onStartCommunications(Properties properties) {
+    protected synchronized void onStartCommunications(Properties properties) {
         try {
             domainGMS = (GroupManagementService) GMSFactory.startGMSModule(runtimeName, domainName, CORE, properties);
             monitor.joined(domainName, runtimeName);
@@ -77,7 +77,7 @@ public class ControllerFederationService extends AbstractFederationService imple
     /**
      * Callback when the runtime shuts down.
      */
-    protected void onStopCommunications() {
+    protected synchronized void onStopCommunications() {
         try {
             if (domainGMS != null) {
                 domainGMS.shutdown(GMSConstants.shutdownType.INSTANCE_SHUTDOWN);
