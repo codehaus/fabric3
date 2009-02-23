@@ -68,7 +68,7 @@ public class ParticipantFederationServiceImpl extends AbstractFederationService 
         return zoneName;
     }
 
-    public void enableDomainCommunications() {
+    public synchronized void enableDomainCommunications() {
         try {
             initializeDomainCommunications(initializeProperties());
             for (FederationCallback callback : callbacks.values()) {
@@ -81,7 +81,7 @@ public class ParticipantFederationServiceImpl extends AbstractFederationService 
         }
     }
 
-    protected void onStartCommunications(Properties properties) {
+    protected synchronized void onStartCommunications(Properties properties) {
         try {
             zoneGMS = (GroupManagementService) GMSFactory.startGMSModule(runtimeName, zoneName, CORE, properties);
             initializeCallbacks(zoneGMS);
@@ -99,7 +99,7 @@ public class ParticipantFederationServiceImpl extends AbstractFederationService 
         }
     }
 
-    protected void onStopCommunications() {
+    protected synchronized void onStopCommunications() {
         try {
             if (zoneGMS != null) {
                 zoneGMS.shutdown(GMSConstants.shutdownType.INSTANCE_SHUTDOWN);
@@ -113,7 +113,10 @@ public class ParticipantFederationServiceImpl extends AbstractFederationService 
         }
     }
 
-    private void initializeDomainCommunications(Properties properties) throws GMSException {
+    private synchronized void initializeDomainCommunications(Properties properties) throws GMSException {
+        if (domainGMS != null) {
+            return;
+        }
         // join the domain group after the zone group has joined
         if (zoneGMS.getGroupHandle().isGroupLeader()) {
             domainGMS = (GroupManagementService) GMSFactory.startGMSModule(zoneName, domainName, CORE, properties);
