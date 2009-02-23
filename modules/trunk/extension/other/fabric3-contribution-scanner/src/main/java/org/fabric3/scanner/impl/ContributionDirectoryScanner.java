@@ -51,7 +51,9 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scanner.spi.FileSystemResource;
 import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
+import org.fabric3.spi.services.event.DomainRecover;
 import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeStart;
 
@@ -65,13 +67,14 @@ import org.fabric3.spi.services.event.RuntimeStart;
  * removed files are determined by comparing the current directory contents with the contents from the previous pass. Changes or additions are also
  * determined by comparing the current directory state with that of the previous pass. Detected changes and additions are cached for the following
  * interval. Detected changes and additions from the previous interval are then checked using a checksum to see if they have changed again. If so,
- * they remain cached. If they have not changed, they are processed, contributed via the ContributionService, and activated in the domain.
+ * they remain cached. If they have not changed, they are processed, contributed via the ContributionService, and deployed in the domain.
  * <p/>
- * Note update and remove are not fully implemented.
+ * The scanner also participates in recovery on a controller in a distributed domain and in a single-VM runtime. The scanner listens for a
+ * DomainRecover event and initiates a recovery operation against the Domain service for all contributions present in the deployment directory.
  */
 @Service(VoidService.class)
 @EagerInit
-public class ContributionDirectoryScanner implements Runnable, Fabric3EventListener<RuntimeStart> {
+public class ContributionDirectoryScanner implements Runnable, Fabric3EventListener {
     private final Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
     private final ContributionService contributionService;
@@ -82,7 +85,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private FileSystemResourceFactoryRegistry registry;
     private File path;
 
-    private long delay = 5000;
+    private long delay = 2000;
     private ScheduledExecutorService executor;
 
     public ContributionDirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
@@ -109,8 +112,10 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         this.delay = delay;
     }
 
+    @SuppressWarnings({"unchecked"})
     @Init
     public void init() {
+        eventService.subscribe(DomainRecover.class, this);
         // register to be notified when the runtime starts so the scanner thread can be initialized
         eventService.subscribe(RuntimeStart.class, this);
     }
@@ -120,9 +125,15 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         executor.shutdownNow();
     }
 
-    public void onEvent(RuntimeStart event) {
-        executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
+    public void onEvent(Fabric3Event event) {
+        if (event instanceof DomainRecover) {
+            // process existing files in recovery mode
+            File[] files = path.listFiles();
+            recover(files);
+        } else if (event instanceof RuntimeStart) {
+            executor = Executors.newSingleThreadScheduledExecutor();
+            executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
+        }
     }
 
     public synchronized void run() {
@@ -138,6 +149,47 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             monitor.error(e);
         }
 
+    }
+
+    private synchronized void recover(File[] files) {
+        try {
+            List<File> contributions = new ArrayList<File>();
+            for (File file : files) {
+                String name = file.getName();
+                FileSystemResource resource = null;
+                FileSystemResource cached = errorCache.get(name);
+                if (cached != null) {
+                    resource = registry.createResource(file);
+                    assert resource != null;
+                    resource.reset();
+                    if (Arrays.equals(cached.getChecksum(), resource.getChecksum())) {
+                        // corrupt file from a previous run, continue
+                        continue;
+                    } else {
+                        // file has changed since the error was reported, retry
+                        errorCache.remove(name);
+                    }
+                }
+                cached = cache.get(name);
+                if (cached == null) {
+                    // the file has been added
+                    if (resource == null) {
+                        resource = registry.createResource(file);
+                    }
+                    if (resource == null) {
+                        // not a known type, ignore
+                        continue;
+                    }
+                    resource.reset();
+                    // cache the resource and wait to the next run to see if it has changed
+                    cache.put(name, resource);
+                    contributions.add(file);
+                }
+            }
+            processAdditions(contributions, true);
+        } catch (IOException e) {
+            monitor.error(e);
+        }
     }
 
     private synchronized void processFiles(File[] files) {
@@ -210,7 +262,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
 
             }
             processUpdates(updates);
-            processAdditions(additions);
+            processAdditions(additions, false);
         } catch (IOException e) {
             monitor.error(e);
         }
@@ -239,7 +291,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         }
     }
 
-    private synchronized void processAdditions(List<File> files) throws IOException {
+    private synchronized void processAdditions(List<File> files, boolean recover) throws IOException {
         List<ContributionSource> sources = new ArrayList<ContributionSource>();
         List<FileSystemResource> addedResources = new ArrayList<FileSystemResource>();
         for (File file : files) {
@@ -263,7 +315,11 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 List<URI> addedUris = contributionService.contribute(sources);
                 // activate the contributions by including deployables in a synthesized composite. This will ensure components are started according
                 // to dependencies even if a dependent component is defined in a different contribution.
-                domain.include(addedUris, false);
+                if (recover) {
+                    domain.recover(addedUris);
+                } else {
+                    domain.include(addedUris, false);
+                }
                 for (URI uri : addedUris) {
                     String name = uri.toString();
                     // URI is the file name
