@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-features-parent-pom</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.codehaus.fabric3</groupId>
@@ -39,47 +39,47 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-feature-set-plugin</artifactId>
-                <version>0.8-SNAPSHOT</version>
+                <version>1.0-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jdk-proxy</artifactId>
-                            <version>0.8-SNAPSHOT</version>
+                            <version>1.0-SNAPSHOT</version>
                             <scope>runtime</scope>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-java</artifactId>
-                            <version>0.8-SNAPSHOT</version>
+                            <version>1.0-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async</artifactId>
-                            <version>0.8-SNAPSHOT</version>
+                            <version>1.0-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-conversation-propagation</artifactId>
-                            <version>0.8-SNAPSHOT</version>
+                            <version>1.0-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-web</artifactId>
-                            <version>0.8-SNAPSHOT</version>
+                            <version>1.0-SNAPSHOT</version>
                             <scope>runtime</scope>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3.webapp</groupId>
                             <artifactId>fabric3-webapp-extension</artifactId>
-                            <version>0.8-SNAPSHOT</version>
+                            <version>1.0-SNAPSHOT</version>
                         </dependency>
 
                         <!--<dependency>-->
                         <!--<groupId>org.codehaus.fabric3</groupId>-->
                         <!--<artifactId>fabric3-container-web-spi</artifactId>-->
-                        <!--<version>0.8-SNAPSHOT-SNAPSHOT</version>-->
+                        <!--<version>1.0-SNAPSHOT-SNAPSHOT</version>-->
                         <!--</dependency>-->
                     </extensions>
                 </configuration>
