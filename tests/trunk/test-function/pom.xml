@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -58,9 +58,9 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <!-- generally this should point to the latest plugin and kernel version -->
-                <version>0.8-SNAPSHOT</version>
+                <version>1.0-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.8-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>1.0-SNAPSHOT</runtimeVersion>
                     <compositeName>FunctionTestHarnessComposite</compositeName>
                     <systemConfig>
                         <![CDATA[
@@ -75,7 +75,7 @@
 				        <dependency>
 				            <groupId>org.codehaus.fabric3</groupId>
 				            <artifactId>fabric3-binding-test</artifactId>
-				            <version>0.8-SNAPSHOT</version>
+				            <version>1.0-SNAPSHOT</version>
 				        </dependency>
                     </extensions>
                     <shared>

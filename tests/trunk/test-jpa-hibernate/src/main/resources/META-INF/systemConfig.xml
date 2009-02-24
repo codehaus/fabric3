@@ -7,5 +7,6 @@
         <minSize>10</minSize>
         <maxSize>10</maxSize>
     </testDsConfig>
-
+    <!-- configure JPA log level
+    <jpa logging="WARNING"></jpa>-->
 </config>
