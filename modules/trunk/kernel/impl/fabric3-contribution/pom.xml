@@ -36,7 +36,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-kernel-impl-parent-pom</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-contribution</artifactId>
@@ -55,13 +55,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-util</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>

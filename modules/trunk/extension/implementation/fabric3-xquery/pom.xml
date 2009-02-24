@@ -23,11 +23,11 @@
     <parent>
   	<groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-implementation-parent-pom</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-xquery</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>Fabric3 XQuery Component</name>
     <description>Fabric3 XQuery Implementation.</description>
     <packaging>sca-contribution-jar</packaging>

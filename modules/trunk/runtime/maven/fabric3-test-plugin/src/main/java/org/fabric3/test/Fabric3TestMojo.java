@@ -88,7 +88,7 @@ public class Fabric3TestMojo extends AbstractMojo {
     /**
      * The version of the runtime to use.
      *
-     * @parameter expression="0.8-SNAPSHOT"
+     * @parameter expression="1.0-SNAPSHOT"
      */
     public String runtimeVersion;
 

@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-rs</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 REST</name>
     <description>Fabric3 JSR-311 REST Implementation Type Extension.</description>
