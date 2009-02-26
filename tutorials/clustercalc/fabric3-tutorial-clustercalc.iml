@@ -102,6 +102,16 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="javax.ws.rs:jsr311-api:0.9">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/javax/ws/rs/jsr311-api/0.9/jsr311-api-0.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="MySQL" level="project" />
   </component>
 </module>
 
