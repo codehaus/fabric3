@@ -20,8 +20,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
+        <artifactId>fabric3-profiles-parent-pom</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>profile-web</artifactId>
     <version>1.0-SNAPSHOT</version>
