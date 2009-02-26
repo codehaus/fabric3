@@ -59,7 +59,6 @@ public class LoanApplicationFormHandler extends HttpServlet {
     }
 
     private LoanRequest populateLoanRequest(HttpServletRequest req) {
-        // TODO handle invalid doubles
         LoanRequest request = new LoanRequest();
         request.setSSN(req.getParameter("ssn"));
         request.setEmail(req.getParameter("email"));
@@ -70,7 +69,6 @@ public class LoanApplicationFormHandler extends HttpServlet {
     }
 
     private Address populateLocation(HttpServletRequest req) {
-        // TODO handle invalid zip
         Address address = new Address();
         address.setStreet(req.getParameter("street"));
         address.setCity(req.getParameter("city"));

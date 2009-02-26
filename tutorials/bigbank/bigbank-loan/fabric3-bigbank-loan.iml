@@ -145,6 +145,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-bigbank-services" />
+    <orderEntry type="module-library">
+      <library name="org.codehaus.fabric3:fabric3-api:1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/1.0-SNAPSHOT/fabric3-api-1.0-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

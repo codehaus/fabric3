@@ -60,5 +60,12 @@ public interface StoreService {
      */
     LoanRecord find(long id) throws StoreException;
 
+    /**
+     * Returns a loan record by SSB
+     *
+     * @param ssn the SSN
+     * @return the loan record or null if not found
+     * @throws StoreException if an exception retrieving the application is encountered
+     */
     LoanRecord findBySSN(String ssn) throws StoreException;
 }

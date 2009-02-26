@@ -18,8 +18,8 @@
  */
 package loanapp.acceptance;
 
-import loanapp.api.loan.LoanException;
 import loanapp.api.loan.LoanApplicationNotFoundException;
+import loanapp.api.loan.LoanException;
 import loanapp.api.message.LoanApplication;
 import loanapp.api.message.LoanOption;
 import loanapp.api.message.LoanStatus;
@@ -30,15 +30,17 @@ import loanapp.appraisal.AppraisalSchedule;
 import loanapp.appraisal.AppraisalService;
 import loanapp.domain.LoanRecord;
 import loanapp.domain.TermInfo;
+import loanapp.monitor.ErrorMonitor;
 import loanapp.notification.NotificationService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
+import org.fabric3.api.annotation.Monitor;
 import org.oasisopen.sca.annotation.Reference;
 import org.oasisopen.sca.annotation.Service;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Default implementation of the AcceptanceCoordinator.
@@ -50,13 +52,16 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     private AppraisalService appraisalService;
     private NotificationService notificationService;
     private StoreService storeService;
+    private ErrorMonitor monitor;
 
     public AcceptanceCoordinatorImpl(@Reference(name = "appraisalService") AppraisalService appraisalService,
                                      @Reference(name = "notificationService") NotificationService notificationService,
-                                     @Reference(name = "storeService") StoreService storeService) {
+                                     @Reference(name = "storeService") StoreService storeService,
+                                     @Monitor ErrorMonitor monitor) {
         this.appraisalService = appraisalService;
         this.notificationService = notificationService;
         this.storeService = storeService;
+        this.monitor = monitor;
     }
 
 
@@ -115,13 +120,13 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
             Date date = schedule.getDate();
             notificationService.appraisalScheduled(email, id, date);
         } catch (LoanException e) {
-            // TODO log exception
+            monitor.onError(e);
         }
     }
 
     public void appraisalCompleted(AppraisalResult result) {
         if (AppraisalResult.DECLINED == result.getResult()) {
-            // TODO notify
+            // just return
             return;
         }
         try {
@@ -130,7 +135,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
             calendar.add(Calendar.MONTH, 1);
             notificationService.fundingDateScheduled(record.getEmail(), record.getId(), calendar.getTime());
         } catch (LoanException e) {
-            // TODO log exception
+            monitor.onError(e);
         }
     }
 

@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>runtime-standalone</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-jpa</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-jms</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-web</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>

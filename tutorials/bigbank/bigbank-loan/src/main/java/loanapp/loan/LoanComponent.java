@@ -19,15 +19,15 @@ package loanapp.loan;
 import loanapp.acceptance.AcceptanceCoordinator;
 import loanapp.api.loan.LoanException;
 import loanapp.api.loan.LoanService;
-import loanapp.api.message.OptionSelection;
 import loanapp.api.message.LoanApplication;
 import loanapp.api.message.LoanRequest;
+import loanapp.api.message.OptionSelection;
 import loanapp.request.RequestCoordinator;
 import org.oasisopen.sca.annotation.Reference;
 
 /**
- * Default implementation of the LoanService. This implementation performs basic validation and delegates to a series
- * of coordinators that process the loan application.
+ * Default implementation of the LoanService. This implementation elegates to a series of coordinators that process the
+ * loan application.
  *
  * @version $Rev$ $Date$
  */

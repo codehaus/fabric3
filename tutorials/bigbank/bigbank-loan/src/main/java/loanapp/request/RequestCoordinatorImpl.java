@@ -28,6 +28,7 @@ import loanapp.credit.CreditServiceCallback;
 import loanapp.domain.LoanRecord;
 import loanapp.domain.PropertyInfo;
 import loanapp.domain.TermInfo;
+import loanapp.monitor.ErrorMonitor;
 import loanapp.notification.NotificationService;
 import loanapp.pricing.PriceResponse;
 import loanapp.pricing.PricingOption;
@@ -66,7 +67,7 @@ public class RequestCoordinatorImpl
     private PricingService pricingService;
     private NotificationService notificationService;
     private StoreService storeService;
-    private RequestCoordinatorMonitor monitor;
+    private ErrorMonitor monitor;
 
     /**
      * Creates a new instance.
@@ -83,7 +84,7 @@ public class RequestCoordinatorImpl
                                   @Reference(name = "pricingService") PricingService pricingService,
                                   @Reference(name = "notificationService") NotificationService notificationService,
                                   @Reference(name = "storeService") StoreService storeService,
-                                  @Monitor RequestCoordinatorMonitor monitor) {
+                                  @Monitor ErrorMonitor monitor) {
         this.creditService = creditService;
         this.riskService = riskService;
         this.pricingService = pricingService;
@@ -125,25 +126,25 @@ public class RequestCoordinatorImpl
         try {
             record = storeService.findBySSN(ssn);
         } catch (StoreException e) {
-            // TODO log exception
+            monitor.onError(e);
             return;
         }
         if (record == null) {
-            // TODO log exception
+            monitor.onErrorMessage("No record found for SSN: " + ssn);
             return;
         }
         record.setCreditScore(result.getScore());
         try {
             storeService.update(record);
         } catch (StoreException e) {
-            // TODO record error
+            monitor.onError(e);
         }
         RiskRequest request = new RiskRequest(record.getId(), record.getCreditScore(), record.getAmount(), record.getDownPayment());
         riskService.assessRisk(request);
     }
 
     public void creditScoreError(Exception exception) {
-        monitor.error(exception);
+        monitor.onError(exception);
     }
 
     public void onAssessment(RiskResponse response) {
@@ -153,7 +154,7 @@ public class RequestCoordinatorImpl
         try {
             record = findRecord(id);
         } catch (LoanException e) {
-            // TODO record
+            monitor.onError(e);
             return;
         }
         PricingRequest pricingRequest = new PricingRequest(id, response.getRiskFactor());
@@ -168,7 +169,7 @@ public class RequestCoordinatorImpl
                 // notify the client
                 notificationService.rejected(record.getEmail(), record.getId());
             } catch (StoreException e) {
-                monitor.error(e);
+                monitor.onError(e);
             }
 
         }
@@ -180,7 +181,7 @@ public class RequestCoordinatorImpl
         try {
             record = findRecord(response.getId());
         } catch (LoanException e) {
-            // TODO record
+            monitor.onError(e);
             return;
         }
         List<TermInfo> termImfos = new ArrayList<TermInfo>();
@@ -198,13 +199,13 @@ public class RequestCoordinatorImpl
             // notify the client
             notificationService.approved(record.getEmail(), record.getId());
         } catch (StoreException e) {
-            monitor.error(e);
+            monitor.onError(e);
         }
 
     }
 
     public void riskAssessmentError(Exception exception) {
-        monitor.error(exception);
+        monitor.onError(exception);
     }
 
 

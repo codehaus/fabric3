@@ -41,6 +41,7 @@ public interface AcceptanceCoordinator {
     /**
      * Accepts the terms of a loan.
      *
+     * @param id   the loan id
      * @param type the type of option selected
      * @throws LoanException if an exception during acceptance was encountered.
      */
@@ -49,6 +50,7 @@ public interface AcceptanceCoordinator {
     /**
      * Declines the terms of a loan.
      *
+     * @param id the loan id
      * @throws LoanException if an exception during acceptance was encountered. Subtypes including
      *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
