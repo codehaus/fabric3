@@ -36,8 +36,6 @@ package org.fabric3.jetty.impl;
 
 import org.fabric3.api.annotation.logging.Fine;
 import org.fabric3.api.annotation.logging.Info;
-import org.fabric3.api.annotation.logging.LogLevel;
-import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.api.annotation.logging.Warning;
 
@@ -74,6 +72,9 @@ public interface TransportMonitor {
      */
     @Warning
     void warn(String msg, Object... args);
+
+    @Severe
+    void exception(String msg, Throwable args);
 
     /**
      * Captures Jetty debug events

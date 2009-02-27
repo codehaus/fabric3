@@ -97,7 +97,7 @@ public class JettyLogger implements Logger {
 
     public void warn(String msg, Throwable th) {
         if (monitor != null) {
-            monitor.warn(msg, th);
+            monitor.exception(msg, th);
         } else if (debugEnabled) {
             System.err.println(":WARN: " + msg);
             th.printStackTrace();
