@@ -66,7 +66,6 @@ public class Axis2TargetInterceptor implements Interceptor {
     private final PolicyApplier policyApplier;
 
     private Random random = new Random();
-    private List<String> failedUris = new LinkedList<String>();
     private AxisService axisService;
     private ClassLoader classLoader;
 
@@ -96,8 +95,10 @@ public class Axis2TargetInterceptor implements Interceptor {
     }
 
     public Message invoke(Message msg) {
+        
+        List<String> failedUris = new LinkedList<String>();
 
-        String endpointUri = getEndpointUri();
+        String endpointUri = getEndpointUri(failedUris);
 
         Object[] payload = (Object[]) msg.getBody();
         OMElement message = payload == null ? null : (OMElement) payload[0];
@@ -159,7 +160,7 @@ public class Axis2TargetInterceptor implements Interceptor {
             return ret;
 
         } catch (AxisFault e) {
-            return handleFault(msg, endpointUri, e);
+            return handleFault(msg, endpointUri, e, failedUris);
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
@@ -182,7 +183,7 @@ public class Axis2TargetInterceptor implements Interceptor {
     }
     
 
-    private Message handleFault(Message msg, String endpointUri, AxisFault e) {
+    private Message handleFault(Message msg, String endpointUri, AxisFault e, List<String> failedUris) {
 
         Throwable cause = e.getCause();
         if (cause instanceof ConnectException) {
@@ -207,13 +208,13 @@ public class Axis2TargetInterceptor implements Interceptor {
 
     }
 
-    private String getEndpointUri() {
+    private String getEndpointUri(List<String> failedUris) {
 
         int index = random.nextInt(endpointUris.size());
         String endpointUri = endpointUris.get(index);
 
         if (failedUris.contains(endpointUri)) {
-            endpointUri = getEndpointUri();
+            endpointUri = getEndpointUri(failedUris);
         }
 
         return endpointUri;
