@@ -115,7 +115,13 @@ public class WarClasspathProcessor implements ClasspathProcessor {
                     }
                     int lastDelimeter = path.lastIndexOf("/");
                     String name = path.substring(lastDelimeter);
-                    File pathAndPackageName = new File(classesDir, path.substring(16, lastDelimeter)); // 16 is length of "WEB-INF/classes
+                    File pathAndPackageName;
+                    if (lastDelimeter < 16) { // 16 is length of "WEB-INF/classes
+                        // in case there is no trailing '/', i.e. properties files or other resources under WEB_INF/classes
+                        pathAndPackageName = new File(classesDir, path.substring(16));
+                    } else {
+                        pathAndPackageName = new File(classesDir, path.substring(16, lastDelimeter));
+                    }
                     pathAndPackageName.mkdirs();
                     pathAndPackageName.deleteOnExit();
                     File classFile = new File(pathAndPackageName, name);
