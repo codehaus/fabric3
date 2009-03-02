@@ -36,7 +36,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-runtime-standalone-parent-pom</artifactId>
-        <version>1.0</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
     <artifactId>fabric3-standalone-admin</artifactId>
@@ -48,19 +48,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>1.0</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-management-api</artifactId>
-            <version>1.0</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jetty</artifactId>
-            <version>1.0</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -81,9 +81,9 @@
 
     </dependencies>
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.0/runtime/standalone/fabric3-standalone-admin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.0/runtime/standalone/fabric3-standalone-admin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-1.0/runtime/standalone/fabric3-admin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-admin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-admin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/standalone/fabric3-admin</url>
     </scm>
 
 </project>
