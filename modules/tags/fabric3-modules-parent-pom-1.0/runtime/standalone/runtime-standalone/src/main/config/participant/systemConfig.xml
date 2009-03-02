@@ -1,0 +1,10 @@
+<config>
+    <web.server>
+        <http port="8181-8281"/>
+    </web.server>
+    <federation>
+        <transport>
+            <http>localhost:8181</http>
+        </transport>
+    </federation>
+</config>

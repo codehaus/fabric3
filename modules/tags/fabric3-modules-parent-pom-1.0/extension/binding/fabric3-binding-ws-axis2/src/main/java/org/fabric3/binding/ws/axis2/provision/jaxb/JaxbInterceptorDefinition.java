@@ -1,0 +1,51 @@
+/*
+ * Fabric3
+ * Copyright © 2008 Metaform Systems Limited
+ *
+ * This proprietary software may be used only connection with the Fabric3 license
+ * (the “License”), a copy of which is included in the software or may be
+ * obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ * Software distributed under the License is distributed on an “as is” basis,
+ * without warranties or conditions of any kind.  See the License for the
+ * specific language governing permissions and limitations of use of the software.
+ * This software is distributed in conjunction with other software licensed under
+ * different terms.  See the separate licenses for those programs included in the
+ * distribution for the permitted and restricted uses of such software.
+ *
+ */
+package org.fabric3.binding.ws.axis2.provision.jaxb;
+
+import java.util.Set;
+
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+
+/**
+ * @version $Revision$ $Date$
+ */
+public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
+    private static final long serialVersionUID = -8415124613439053493L;
+
+    private final Set<String> classNames;
+    private final Set<String> faultNames;
+    private final boolean service;
+
+    public JaxbInterceptorDefinition(Set<String> classNames, Set<String> faultNames, boolean service) {
+        this.classNames = classNames;
+        this.faultNames = faultNames;
+        this.service = service;
+    }
+
+    public Set<String> getClassNames() {
+        return classNames;
+    }
+
+    public Set<String> getFaultNames() {
+        return faultNames;
+    }
+
+    public boolean isService() {
+        return service;
+    }
+
+}

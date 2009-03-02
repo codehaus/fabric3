@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+    $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
+-->
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
+    <import.java package="org.fabric3.spi" version="0.8"/>
+    <import.java package="org.fabric3.pojo" version="0.8"/>
+    <deployable composite="ns:ProxyServiceExtension"/>
+</contribution>

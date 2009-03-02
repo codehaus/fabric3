@@ -1,0 +1,45 @@
+/*
+ * Fabric3
+ * Copyright © 2008 Metaform Systems Limited
+ *
+ * This proprietary software may be used only connection with the Fabric3 license
+ * (the “License”), a copy of which is included in the software or may be
+ * obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ * Software distributed under the License is distributed on an “as is” basis,
+ * without warranties or conditions of any kind.  See the License for the
+ * specific language governing permissions and limitations of use of the software.
+ * This software is distributed in conjunction with other software licensed under
+ * different terms.  See the separate licenses for those programs included in the
+ * distribution for the permitted and restricted uses of such software.
+ *
+ */
+package org.fabric3.maven.contribution;
+
+import java.io.File;
+
+import org.fabric3.host.contribution.ValidationFailure;
+
+/**
+ * Validation warning indicating that the possible contribution file with the given File could not be loaded.
+ *
+ * @version $Rev$ $Date$
+ */
+public class ContributionIndexingFailure extends ValidationFailure {
+    private File file;
+    private Exception ex;
+
+    public ContributionIndexingFailure(File file, Exception ex) {
+        this.file = file;
+        this.ex = ex;
+    }
+
+    /**
+     * Retrieves the message for the failure that includes both the standard ValidationFailure message along with details of the exception.
+     *
+     * @return the mesasge.
+     */
+    public String getMessage() {
+        return "Error indexing file " + file + "\n " + ex;
+    }
+}

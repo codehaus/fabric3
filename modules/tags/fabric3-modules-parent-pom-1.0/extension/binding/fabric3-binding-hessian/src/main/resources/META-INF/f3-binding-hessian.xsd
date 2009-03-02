@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<!--
+    $Rev$ $Date$
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://www.fabric3.org/binding/hessian/0.2" 
+    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+    elementFormDefault="qualified">
+
+    <import namespace="http://www.osoa.org/xmlns/sca/1.0" schemaLocation="sca-core.xsd"/>
+
+    <element name="binding.hessian" type="HessianBinding"
+             substitutionGroup="sca:binding"/>
+    <complexType name="HessianBinding">
+        <complexContent>
+            <extension base="sca:Binding">
+                <sequence>
+                    <any namespace="##other" processContents="lax" minOccurs="0"
+                         maxOccurs="unbounded"/>
+                </sequence>
+			 <attribute name="uri" type="anyURI" use="optional"/>
+                <anyAttribute namespace="##any" processContents="lax"/>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>

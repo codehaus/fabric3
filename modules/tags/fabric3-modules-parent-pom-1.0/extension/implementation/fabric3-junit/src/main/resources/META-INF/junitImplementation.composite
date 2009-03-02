@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright Â© 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the â€œLicenseâ€?), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an â€œas isâ€? basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
+           name="JUnitExtension"
+           targetNamespace="urn:org.codehaus.fabric3"
+           autowire="true">
+
+    <component name="JUnitImplementationLoader" f3-core:key="f3-impl:junit">
+        <f3-impl:implementation.system class="org.fabric3.junit.introspection.JUnitImplementationLoader"/>
+    </component>
+
+    <component name="JUnitImplementationProcessorImpl">
+        <f3-impl:implementation.system class="org.fabric3.junit.introspection.JUnitImplementationProcessorImpl"/>
+        <reference name="heuristic" target="JUnitHeuristic"/>
+    </component>
+
+    <component name="JUnitHeuristic">
+        <f3-impl:implementation.system class="org.fabric3.junit.introspection.JUnitHeuristic"/>
+        <reference name="service" target="JUnitServiceHeuristic"/>
+    </component>
+
+    <component name="JUnitServiceHeuristic">
+        <f3-impl:implementation.system class="org.fabric3.junit.introspection.JUnitServiceHeuristic"/>
+    </component>
+
+    <component name="JUnitComponentGenerator">
+        <f3-impl:implementation.system class="org.fabric3.junit.control.JUnitComponentGenerator"/>
+    </component>
+
+    <component f3-core:key="org.fabric3.junit.scdl.JUnitBindingDefinition" name="JUnitBindingGenerator">
+        <f3-impl:implementation.system class="org.fabric3.junit.control.JUnitBindingGenerator"/>
+    </component>
+
+    <component f3-core:key="org.fabric3.junit.provision.JUnitWireSourceDefinition" name="JunitSourceWireAttacher">
+        <f3-impl:implementation.system class="org.fabric3.junit.runtime.JunitSourceWireAttacher"/>
+    </component>
+
+</composite>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+ Fabric3
+ Copyright ? 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the ?License?), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an ?as is? basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<definitions
+        xmlns="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200712"
+        targetNamespace="urn:fabric3.org:policy"
+        xmlns:f3-policy="urn:fabric3.org:policy">
+
+    <!-- Begins a transaction if one not already in progress and commits it -->
+    <policySet name="managedTransactionPolicy" provides="sca:managedTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="BEGIN"/>
+    </policySet>
+
+    <policySet name="oasisManagedTransactionPolicy" provides="oasis:managedTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="BEGIN"/>
+    </policySet>
+
+    <!-- Suspends the transaction if one already in progress and resumes it -->
+    <policySet name="suspendsTransactionPolicy" provides="sca:suspendsTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="SUSPEND"/>
+    </policySet>
+
+    <policySet name="oasisSuspendsTransactionPolicy" provides="oasis:suspendsTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="SUSPEND"/>
+    </policySet>
+
+    <!-- No op -->
+    <policySet name="propagatesTransactionPolicy" provides="sca:propagatesTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="PROPOGATE"/>
+    </policySet>
+
+    <policySet name="oasisPropagatesTransactionPolicy" provides="oasis:propagatesTransaction" f3-policy:phase="INTERCEPTION">
+        <f3-policy:transaction action="PROPOGATE"/>
+    </policySet>
+
+</definitions>
