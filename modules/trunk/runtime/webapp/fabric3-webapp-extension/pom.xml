@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-runtime-webapp-parent-pom</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <groupId>org.codehaus.fabric3.webapp</groupId>
     <artifactId>fabric3-webapp-extension</artifactId>
@@ -32,28 +32,28 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-spi</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -93,9 +93,9 @@
 
     
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/wenapp/fabric3-webapp-extension</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-extension</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-extension</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.0/runtime/wenapp/fabric3-webapp-extension</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.0/runtime/webapp/fabric3-webapp-extension</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-1.0/runtime/webapp/fabric3-webapp-extension</url>
     </scm>
 
 </project>
