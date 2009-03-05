@@ -46,7 +46,7 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-hibernate-feature</artifactId>
-                            <version>1.0</version>
+                            <version>1.1-SNAPSHOT</version>
                             <type>xml</type>
                         </dependency>
                     </includes>
@@ -55,7 +55,7 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>1.0</version>
+                            <version>1.1-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                     <!-- API classes need to be shared between the application and extension classloaders -->
