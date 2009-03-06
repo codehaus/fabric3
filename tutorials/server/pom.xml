@@ -36,6 +36,16 @@
             <version>1.0</version>
             <classifier>bin</classifier>
             <type>zip</type>
+            <exclusions>
+               <exclusion>
+                    <groupId>com.sun.shoal</groupId>
+                    <artifactId>shoal-gms</artifactId>
+                </exclusion>
+               <exclusion>
+                    <groupId>com.sun.shoal</groupId>
+                    <artifactId>shoal-jxta</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- JPA support -->
