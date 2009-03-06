@@ -41,15 +41,9 @@
                 <include>org.codehaus.fabric3:fabric3-tx-jotm</include>
                 <include>org.codehaus.fabric3:fabric3-timer-quartz</include>
                 <include>org.codehaus.fabric3:fabric3-timer-spi</include>
+                <include>javax.resource:com.springsource.javax.resource</include>
              </includes>
             <outputDirectory>/extensions</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <includes>
-                <include>geronimo-spec:geronimo-spec-jta</include>
-                 <include>geronimo-spec:geronimo-spec-j2ee-connector</include>
-             </includes>
-            <outputDirectory>/host</outputDirectory>
         </dependencySet>
   </dependencySets>
     
