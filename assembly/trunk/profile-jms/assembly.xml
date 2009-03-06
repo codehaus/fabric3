@@ -44,14 +44,9 @@
                 <include>org.codehaus.fabric3:fabric3-tx</include>
                 <include>org.codehaus.fabric3:fabric3-tx-jotm</include>
                 <include>javax.resource:com.springsource.javax.resource</include>
+                <include>javax.jms:com.springsource.javax.jms</include>
              </includes>
             <outputDirectory>/extensions</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <includes>
-                 <include>geronimo-spec:geronimo-spec-jms</include>
-             </includes>
-            <outputDirectory>/host</outputDirectory>
         </dependencySet>
   </dependencySets>
     
