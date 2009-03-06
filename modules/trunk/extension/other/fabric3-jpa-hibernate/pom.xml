@@ -32,36 +32,6 @@
 
     <packaging>sca-contribution-jar</packaging>
 
-    <repositories>
-        <repository>
-            <id>java.net</id>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
-            <layout>legacy</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <properties>
-        <f3Shared>
-            <![CDATA[
-	            <dependencies>
-		            <dependency>
-		                <groupId>javax.transaction</groupId>
-		                <artifactId>transaction-api</artifactId>
-		                <version>1.1</version>
-		            </dependency>
-		            <dependency>
-		                <groupId>javax.persistence</groupId>
-		                <artifactId>persistence-api</artifactId>
-		                <version>1.0.2</version>
-		            </dependency>
-		        </dependencies>
-            ]]>
-        </f3Shared>
-    </properties>
-
     <dependencies>
 
         <dependency>

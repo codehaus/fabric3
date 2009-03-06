@@ -30,29 +30,6 @@
     <name>Fabric3 WS Binding (Metro)</name>
     <description>Fabric3 WS Binding Implementation using Metro.</description>
 
-    <repositories>
-        <repository>
-            <id>java.net</id>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
-            <layout>legacy</layout>
-            <snapshots><enabled>false</enabled></snapshots>
-        </repository>
-    </repositories>    
-    
-    <properties>
-        <f3Shared>
-            <![CDATA[
-	            <dependencies>
-		            <dependency>
-		                <groupId>javax.xml.ws</groupId>
-		                <artifactId>jaxws-api</artifactId>
-		                <version>2.1</version>
-		            </dependency>
-		        </dependencies>
-            ]]>
-        </f3Shared>
-    </properties>
-
     <dependencies>
 
         <dependency>
