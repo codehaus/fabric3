@@ -26,6 +26,19 @@
     <orderEntry type="module" module-name="fabric3-system" exported="" />
     <orderEntry type="module" module-name="fabric3-jmx" exported="" />
     <orderEntry type="module-library">
+      <library name="javax.activation:activation:1.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="org.codehaus.woodstox:wstx-asl:3.2.2">
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.2/wstx-asl-3.2.2.jar!/" />
