@@ -60,9 +60,9 @@
         </dependency>
         <!-- Quartz 1.6.0 requires JTA -->
         <dependency>
-            <groupId>geronimo-spec</groupId>
-            <artifactId>geronimo-spec-jta</artifactId>
-            <version>1.0.1B-rc4</version>
+            <groupId>javax.transaction</groupId>
+            <artifactId>com.springsource.javax.transaction</artifactId>
+            <version>1.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

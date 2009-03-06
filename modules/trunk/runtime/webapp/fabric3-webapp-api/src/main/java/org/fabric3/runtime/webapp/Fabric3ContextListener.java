@@ -198,6 +198,8 @@ public class Fabric3ContextListener implements ServletContextListener {
         configuration.setBootstrapper(bootstrapper);
 
         Map<String, String> exportedPackages = new HashMap<String, String>();
+        exportedPackages.put("javax.naming", "0.0");
+        exportedPackages.put("javax.security.auth", "0.0");
         exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
         exportedPackages.put("org.fabric3.host.*", Names.VERSION);
         exportedPackages.put("org.fabric3.management.*", Names.VERSION);

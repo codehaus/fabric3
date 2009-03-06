@@ -34,9 +34,6 @@
  */
 package org.fabric3.test.runtime;
 
-import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
-import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
-
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
@@ -45,10 +42,13 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.surefire.suite.SurefireTestSuite;
+
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.DefaultCoordinator;
 import org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl;
 import org.fabric3.host.Names;
+import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
+import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
@@ -204,6 +204,8 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     private void setExportedPackages(BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration) {
         
         Map<String, String> exportedPackages = new HashMap<String, String>();
+        exportedPackages.put("javax.naming", "0.0");
+        exportedPackages.put("javax.security.auth", "0.0");
         exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
         exportedPackages.put("org.fabric3.host.*", Names.VERSION);
         exportedPackages.put("org.fabric3.management.*", Names.VERSION);
