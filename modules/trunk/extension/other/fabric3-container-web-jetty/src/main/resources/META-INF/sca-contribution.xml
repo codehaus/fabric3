@@ -17,10 +17,10 @@
     $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
-    <import.java package="org.fabric3.spi" version="0.8"/>
-    <import.java package="org.fabric3.pojo" version="0.8"/>
-    <import.java package="org.fabric3.container.web.spi" version="0.8"/>
-    <import.java package="org.fabric3.jetty" version="0.8"/>
+    <import.java package="org.fabric3.spi" version="1.1"/>
+    <import.java package="org.fabric3.pojo" version="1.1"/>
+    <import.java package="org.fabric3.container.web.spi" version="1.1"/>
+    <import.java package="org.fabric3.jetty" version="1.1"/>
     <!-- Jetty, Jasper and EL classes must be visible for as this extension accesses Jetty classes and for JSP compilation -->
     <import.java package="org.mortbay.jetty.web" version="6.1.5"/>
     <import.java package="org.mortbay.component" version="6.1.5"/>
