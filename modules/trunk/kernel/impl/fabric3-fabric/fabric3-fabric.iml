@@ -25,19 +25,6 @@
     <orderEntry type="module" module-name="fabric3-introspection" exported="" />
     <orderEntry type="module" module-name="fabric3-system" exported="" />
     <orderEntry type="module" module-name="fabric3-jmx" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="org.apache.geronimo.specs:geronimo-annotation_1.0_spec:1.1">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="module-library">
       <library name="javax.activation:activation:1.1">
         <CLASSES>
@@ -48,45 +35,6 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec:1.0.1">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-j2ee-connector_1.5_spec/1.0.1/geronimo-j2ee-connector_1.5_spec-1.0.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-j2ee-connector_1.5_spec/1.0.1/geronimo-j2ee-connector_1.5_spec-1.0.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-j2ee-connector_1.5_spec/1.0.1/geronimo-j2ee-connector_1.5_spec-1.0.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:1.0.1">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="org.apache.tuscany:commonj-api_r1.1:1.0-incubator-M2">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/apache/tuscany/commonj-api_r1.1/1.0-incubator-M2/commonj-api_r1.1-1.0-incubator-M2.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/tuscany/commonj-api_r1.1/1.0-incubator-M2/commonj-api_r1.1-1.0-incubator-M2-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/apache/tuscany/commonj-api_r1.1/1.0-incubator-M2/commonj-api_r1.1-1.0-incubator-M2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
