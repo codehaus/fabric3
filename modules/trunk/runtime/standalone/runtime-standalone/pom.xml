@@ -95,9 +95,10 @@
 
         <!-- provided scope dependencies that need to be resolved -->
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-annotation_1.0_spec</artifactId>
-            <version>1.1</version>
+            <groupId>javax.annotation</groupId>
+            <artifactId>com.springsource.javax.annotation</artifactId>
+            <version>1.0.0</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
