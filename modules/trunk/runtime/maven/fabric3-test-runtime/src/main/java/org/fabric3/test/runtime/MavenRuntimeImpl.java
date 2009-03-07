@@ -204,13 +204,6 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     private void setExportedPackages(BootConfiguration<MavenRuntime, ScdlBootstrapper> bootConfiguration) {
         
         Map<String, String> exportedPackages = new HashMap<String, String>();
-        exportedPackages.put("javax.naming", "0.0");
-        exportedPackages.put("javax.security.auth", "0.0");
-        exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.host.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.management.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.model.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.pojo.*", Names.VERSION);
         exportedPackages.put("org.fabric3.test.spi", Names.VERSION);
         exportedPackages.put("org.fabric3.maven", Names.VERSION);
         

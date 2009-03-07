@@ -34,6 +34,7 @@
  */
 package org.fabric3.host.runtime;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
     private ContributionSource intents;
     private List<ContributionSource> extensions;
     private List<ContributionSource> policies = new LinkedList<ContributionSource>();
-    private Map<String, String> exportedPackages;
+    private Map<String, String> exportedPackages = new HashMap<String, String>();
 
     public RUNTIME getRuntime() {
         return runtime;
@@ -105,7 +106,7 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
     public List<ContributionSource> getPolicies() {
         return policies;
     }
-    
+
     public void setPolicies(List<ContributionSource> policies) {
         this.policies = policies;
     }

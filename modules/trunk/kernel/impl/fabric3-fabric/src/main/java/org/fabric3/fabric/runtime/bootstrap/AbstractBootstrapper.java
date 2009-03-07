@@ -35,7 +35,6 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.Map;
 import javax.management.MBeanServer;
 
@@ -307,7 +306,16 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void synthesizeContributions() throws InitializationException {
         try {
-            synthesizeContribution(HOST_CONTRIBUTION, Collections.<String, String>emptyMap(), hostClassLoader);
+            String jvmVersion = System.getProperty("java.specification.version");
+            if ("1.6".equals(jvmVersion)) {
+                // export packages included in JDK 6
+                synthesizeContribution(HOST_CONTRIBUTION, Java5HostExports.getExports(), hostClassLoader);
+            } else {
+                // export packages included in JDK 5
+                synthesizeContribution(HOST_CONTRIBUTION, Java5HostExports.getExports(), hostClassLoader);
+            }
+            // add default boot exports
+            exportedPackages.putAll(BootExports.getExports());
             synthesizeContribution(BOOT_CONTRIBUTION, exportedPackages, bootClassLoader);
         } catch (ContributionException e) {
             throw new InitializationException(e);

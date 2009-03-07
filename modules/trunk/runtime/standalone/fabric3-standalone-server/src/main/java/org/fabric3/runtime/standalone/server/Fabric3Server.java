@@ -40,9 +40,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -288,17 +286,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
         Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo, bootClassLoader);
         // create the runtime bootrapper
         configuration.setBootstrapper(bootstrapper);
-
-        // configure the packages exported by the boot contribution
-        Map<String, String> exportedPackages = new HashMap<String, String>();
-        exportedPackages.put("javax.naming", "0.0");
-        exportedPackages.put("javax.security.auth", "0.0");
-        exportedPackages.put("org.fabric3.spi.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.host.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.management.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.model.*", Names.VERSION);
-        exportedPackages.put("org.fabric3.pojo.*", Names.VERSION);
-        configuration.setExportedPackages(exportedPackages);
 
         // process extensions
         File extensionsDir = hostInfo.getExtensionsDirectory();
