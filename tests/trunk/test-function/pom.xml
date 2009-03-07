@@ -72,19 +72,22 @@
                         ]]>
                     </systemConfig>
                     <extensions>
-				        <dependency>
-				            <groupId>org.codehaus.fabric3</groupId>
-				            <artifactId>fabric3-binding-test</artifactId>
-				            <version>1.1-SNAPSHOT</version>
-				        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-binding-test</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-databinding-jaxb</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jaxb</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
                     </extensions>
-                    <shared>
-				        <dependency>
-				            <groupId>com.sun.xml.bind</groupId>
-				            <artifactId>jaxb-impl</artifactId>
-				            <version>2.1.6</version>
-				        </dependency>
-                    </shared>
                 </configuration>
                 <executions>
                     <execution>
