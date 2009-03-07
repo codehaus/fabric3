@@ -32,69 +32,69 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transform.dom2java;
+package org.fabric3.jaxb.transform;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.AbstractPullTransformer;
-import org.fabric3.spi.transform.TransformContext;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+
 public class String2Jaxb extends AbstractPullTransformer<Node, Object> {
-	
+
     private static final JavaClass<Object> TARGET = new JavaClass<Object>(Object.class);
     private Set<Class<?>> jaxbClasses = new HashSet<Class<?>>();
 
-	@Override
-	public boolean canTransform(DataType<?> targetType) {
-		Class<?> clazz = (Class<?>) targetType.getPhysical();
-		if (clazz.isAnnotationPresent(XmlRootElement.class)) {
-			jaxbClasses.add(clazz);
-			return true;
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public boolean canTransform(DataType<?> targetType) {
+        Class<?> clazz = (Class<?>) targetType.getPhysical();
+        if (clazz.isAnnotationPresent(XmlRootElement.class)) {
+            jaxbClasses.add(clazz);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public DataType<?> getTargetType() {
-		return TARGET;
-	}
+    public DataType<?> getTargetType() {
+        return TARGET;
+    }
 
-	public Object transform(Node source, TransformContext context) throws TransformationException {
-		
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		
-		try {
-			Class<?>[] classes = new Class<?>[jaxbClasses.size()];
-			classes = jaxbClasses.toArray(classes);
-			JAXBContext jaxbContext = JAXBContext.newInstance(classes);
-			
-			Thread.currentThread().setContextClassLoader(context.getTargetClassLoader());
-			NodeList children = source.getChildNodes();
-			for (int i = 0;i < children.getLength();i++) {
-				if (children.item(i) instanceof Element) {
-					return jaxbContext.createUnmarshaller().unmarshal(children.item(i));
-				}
-			}
-			throw new TransformationException("Unexpected content");
-			
-		} catch (JAXBException e) {
-			throw new TransformationException(e);
-		} finally {
-			Thread.currentThread().setContextClassLoader(cl);
-		}
-		
-	}
+    public Object transform(Node source, TransformContext context) throws TransformationException {
+
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+        try {
+            Class<?>[] classes = new Class<?>[jaxbClasses.size()];
+            classes = jaxbClasses.toArray(classes);
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            JAXBContext jaxbContext = JAXBContext.newInstance(classes);
+
+            Thread.currentThread().setContextClassLoader(context.getTargetClassLoader());
+            NodeList children = source.getChildNodes();
+            for (int i = 0; i < children.getLength(); i++) {
+                if (children.item(i) instanceof Element) {
+                    return jaxbContext.createUnmarshaller().unmarshal(children.item(i));
+                }
+            }
+            throw new TransformationException("Unexpected content");
+
+        } catch (JAXBException e) {
+            throw new TransformationException(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+
+    }
 
 }

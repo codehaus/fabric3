@@ -28,11 +28,6 @@
         <f3-impl:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
     </component>
 
-    <component name="String2Jaxb">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Jaxb"/>
-        <reference name="registry" target="PullTransformerRegistry"/>
-    </component>
-
     <component name="String2Boolean">
         <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Boolean"/>
         <reference name="registry" target="PullTransformerRegistry"/>

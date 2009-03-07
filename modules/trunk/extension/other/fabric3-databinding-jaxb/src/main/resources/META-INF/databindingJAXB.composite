@@ -23,6 +23,11 @@
            targetNamespace="org.codehaus.fabric3"
            name="DataBindingJAXBExtension">
 
+    <component name="String2Jaxb">
+        <f3-impl:implementation.system class="org.fabric3.jaxb.transform.String2Jaxb"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
     <component name="JAXBTypeIntrospector">
         <f3-impl:implementation.system class="org.fabric3.jaxb.introspection.JAXBTypeIntrospector"/>
     </component>
