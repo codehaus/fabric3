@@ -34,6 +34,7 @@ public final class Java6HostExports {
         hostMap.put("javax.accessibility", "0.0");
         hostMap.put("javax.activation", "0.0");
         hostMap.put("javax.activation", "1.1.0");
+        hostMap.put("javax.activation", "1.1.1");
         hostMap.put("javax.activity", "0.0");
         hostMap.put("javax.crypto", "0.0");
         hostMap.put("javax.crypto.interfaces", "0.0");
