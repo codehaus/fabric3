@@ -18,9 +18,6 @@ package org.fabric3.spi.contribution.manifest;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.contribution.manifest.PackageInfo;
-import org.fabric3.spi.contribution.manifest.PackageVersion;
-
 /**
  * @version $Revision$ $Date$
  */
@@ -35,6 +32,12 @@ public class PackageInfoTestCase extends TestCase {
     public void testMatchSubPackage() throws Exception {
         PackageInfo imprt = new PackageInfo("foo.bar.sub");
         PackageInfo export = new PackageInfo("foo.bar");
+        assertFalse(imprt.matches(export));
+    }
+
+    public void testMatchExportedSubPackage() throws Exception {
+        PackageInfo imprt = new PackageInfo("foo.bar");
+        PackageInfo export = new PackageInfo("foo.bar.sub");
         assertFalse(imprt.matches(export));
     }
 
