@@ -77,7 +77,7 @@ public class DependencyServiceImpl implements DependencyService {
                 Vertex<Contribution> sink = findTargetVertex(dag, imprt);
                 if (sink == null) {
                     String uri = contribution.getUri().toString();
-                    throw new UnresolvableImportException("Unable to resolve import " + imprt + " in contribution " + uri, imprt);
+                    throw new UnresolvableImportException("Unable to resolve import " + imprt + " in " + uri, imprt);
                 }
                 Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
                 dag.add(edge);
