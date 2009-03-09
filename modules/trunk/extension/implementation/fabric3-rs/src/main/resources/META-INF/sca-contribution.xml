@@ -27,6 +27,9 @@
     <import.java package="javax.xml.bind.attachment" version="1.1"/>
     <import.java package="javax.xml.bind.helpers" version="1.1"/>
     <import.java package="javax.xml.bind.util" version="1.1"/>
+    <import.java package="javax.ws.rs" version="1.0"/>
+    <import.java package="javax.ws.rs.core" version="1.0"/>
+    <import.java package="javax.ws.rs.ext" version="1.0"/>
     <!-- provides required for JAXB support. Jersey loads JAXB implementation classes using Class.forName() -->
     <f3-core:provides name="jaxb"/>
     <deployable composite="ns:RsExtension"/>

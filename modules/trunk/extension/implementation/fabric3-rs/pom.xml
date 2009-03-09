@@ -28,7 +28,7 @@
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 REST</name>
     <description>Fabric3 JSR-311 REST Implementation Type Extension.</description>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
@@ -57,7 +57,17 @@
                     <groupId>asm</groupId>
                     <artifactId>asm</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>com.springsource.javax.ws.rs</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -69,6 +79,7 @@
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
@@ -82,7 +93,7 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-        </dependency>        
+        </dependency>
     </dependencies>
     <build>
         <plugins>
