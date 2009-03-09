@@ -49,8 +49,8 @@
 
         <dependency>
             <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
+            <artifactId>com.springsource.javax.persistence</artifactId>
+            <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
 
