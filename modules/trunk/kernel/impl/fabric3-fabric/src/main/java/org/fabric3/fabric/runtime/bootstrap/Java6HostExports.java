@@ -46,10 +46,6 @@ public final class Java6HostExports {
         hostMap.put("javax.imageio.plugins.jpeg", "0.0");
         hostMap.put("javax.imageio.spi", "0.0");
         hostMap.put("javax.imageio.stream", "0.0");
-        hostMap.put("javax.jws", "0.0");
-        hostMap.put("javax.jws", "2.0");
-        hostMap.put("javax.jws.soap", "0.0");
-        hostMap.put("javax.jws.soap", "2.0");
         hostMap.put("javax.management", "0.0");
         hostMap.put("javax.management.loading", "0.0");
         hostMap.put("javax.management.modelmbean", "0.0");
@@ -123,8 +119,6 @@ public final class Java6HostExports {
         hostMap.put("javax.xml.datatype", "0.0");
         hostMap.put("javax.xml.namespace", "0.0");
         hostMap.put("javax.xml.parsers", "0.0");
-        hostMap.put("javax.xml.soap", "0.0");
-        hostMap.put("javax.xml.soap", "1.3.0");
 
         hostMap.put("javax.xml.stream", "0.0");
         hostMap.put("javax.xml.stream", "1.0.1");
@@ -138,18 +132,6 @@ public final class Java6HostExports {
         hostMap.put("javax.xml.transform.sax", "0.0");
         hostMap.put("javax.xml.transform.stream", "0.0");
         hostMap.put("javax.xml.validation", "0.0");
-        hostMap.put("javax.xml.ws", "0.0");
-        hostMap.put("javax.xml.ws", "2.1.1");
-        hostMap.put("javax.xml.ws.handler", "0.0");
-        hostMap.put("javax.xml.ws.handler", "2.1.1");
-        hostMap.put("javax.xml.ws.handler.soap", "0.0");
-        hostMap.put("javax.xml.ws.handler.soap", "2.1.1");
-        hostMap.put("javax.xml.ws.http", "0.0");
-        hostMap.put("javax.xml.ws.http", "2.1.1");
-        hostMap.put("javax.xml.ws.soap", "0.0");
-        hostMap.put("javax.xml.ws.soap", "2.1.1");
-        hostMap.put("javax.xml.ws.spi", "0.0");
-        hostMap.put("javax.xml.ws.spi", "2.1.1");
         hostMap.put("javax.xml.xpath", "0.0");
         hostMap.put("org.ietf.jgss", "0.0");
         hostMap.put("org.omg.CORBA", "0.0");
