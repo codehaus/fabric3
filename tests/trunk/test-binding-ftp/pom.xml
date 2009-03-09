@@ -95,11 +95,6 @@
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jetty</artifactId>
-                            <version>1.1-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-ws</artifactId>
                             <version>1.1-SNAPSHOT</version>
                         </dependency>
@@ -108,33 +103,37 @@
                             <artifactId>fabric3-binding-ws-axis2</artifactId>
                             <version>1.1-SNAPSHOT</version>
                         </dependency>
+
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jaxb</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jetty</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>javax.xml.ws</groupId>
+                            <artifactId>com.springsource.javax.xml.ws</artifactId>
+                            <version>2.1.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>javax.jws</groupId>
+                            <artifactId>com.springsource.javax.jws</artifactId>
+                            <version>2.0.0</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>javax.xml.soap</groupId>
+                            <artifactId>com.springsource.javax.xml.soap</artifactId>
+                            <version>1.3.0</version>
+                        </dependency>
+
                     </extensions>
-                    <shared>
-                        <!--<dependency>-->
-                            <!--<groupId>org.codehaus.fabric3</groupId>-->
-                            <!--<artifactId>fabric3-ftp-api</artifactId>-->
-                            <!--<version>1.1-SNAPSHOT</version>-->
-                        <!--</dependency>-->
-                        <dependency>
-                            <groupId>commons-codec</groupId>
-                            <artifactId>commons-codec</artifactId>
-                            <version>1.3</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.axis2</groupId>
-                            <artifactId>axis2-kernel</artifactId>
-                            <version>1.4.1</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>org.apache.ant</groupId>
-                                    <artifactId>ant</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                    </shared>
-					<policyLocations>
-						<policyLocation>test-ftp-security.xml</policyLocation>
-					</policyLocations>
+                    <policyLocations>
+                        <policyLocation>test-ftp-security.xml</policyLocation>
+                    </policyLocations>
                     <systemConfig>
                         <![CDATA[
                         <config>
