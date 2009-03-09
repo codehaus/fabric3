@@ -46,13 +46,21 @@
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
+            <artifactId>com.springsource.javax.persistence</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jpa-spi</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-api</artifactId>
             <version>1.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -115,15 +123,12 @@
                             <artifactId>com.springsource.javax.resource</artifactId>
                             <version>1.5.0</version>
                         </dependency>
-                    </extensions>
-                    <!-- API classes need to be shared between the application and extension classloaders -->
-                    <shared>
                         <dependency>
                             <groupId>javax.persistence</groupId>
-                            <artifactId>persistence-api</artifactId>
-                            <version>1.0</version>
+                            <artifactId>com.springsource.javax.persistence</artifactId>
+                            <version>1.0.0</version>
                         </dependency>
-                    </shared>
+                    </extensions>
                 </configuration>
                 <executions>
                     <execution>

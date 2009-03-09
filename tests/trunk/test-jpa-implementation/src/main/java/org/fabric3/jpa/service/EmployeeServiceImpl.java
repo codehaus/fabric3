@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.oasisopen.sca.annotation.Reference;
 
-import org.fabric3.api.jpa.ConversationalDao;
+import org.fabric3.jpa.ConversationalDao;
 import org.fabric3.jpa.model.Employee;
 
 /**
