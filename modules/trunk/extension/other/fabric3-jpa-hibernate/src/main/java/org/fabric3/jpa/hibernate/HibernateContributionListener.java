@@ -52,16 +52,22 @@ public class HibernateContributionListener implements ContributionServiceListene
             return;
         }
         ContributionManifest manifest = contribution.getManifest();
+        boolean jpaImported = false;
         for (Import imprt : manifest.getImports()) {
             if (imprt instanceof JavaImport) {
                 JavaImport contributionImport = (JavaImport) imprt;
                 if (contributionImport.getPackageInfo().getName().startsWith("org.hibernate")) {
                     // already explicitly imported, return
                     return;
+                } else if (contributionImport.getPackageInfo().getName().startsWith("javax.persistence")) {
+                    jpaImported = true;
                 }
             }
         }
-        manifest.addImport(hibernateImport);
+        if (jpaImported) {
+            // JPA is imported, add implicit Hibernate import
+            manifest.addImport(hibernateImport);
+        }
     }
 
     public void onStore(Contribution contribution) {

@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.api.jpa;
+package org.fabric3.jpa;
 
 import java.util.List;
 
