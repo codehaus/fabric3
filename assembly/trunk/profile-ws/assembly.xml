@@ -37,14 +37,11 @@
 
         <dependencySet>
             <includes>
-                <include>javax.xml.ws:jaxws-api</include>
-                <include>javax.xml.bind:jaxb-api</include>
-                <include>com.sun.xml.bind:jaxb-impl</include>
-             </includes>
-            <outputDirectory>/host</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <includes>
+                <include>javax.xml.soap:com.springsource.javax.xml.soap</include>
+                <include>javax.xml.ws:com.springsource.javax.xml.ws</include>
+                <include>javax.jws:com.springsource.javax.jws</include>
+                <include>org.codehaus.fabric3:fabric3-databinding-jaxb</include>
+                <include>org.codehaus.fabric3:fabric3-jaxb</include>
                 <include>org.codehaus.fabric3:fabric3-binding-ws</include>
                 <include>org.codehaus.fabric3:fabric3-binding-ws-axis2</include>
              </includes>
