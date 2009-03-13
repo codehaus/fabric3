@@ -67,7 +67,7 @@ public final class IOHelper {
         return count;
     }
     
-    public static final void closeQueitly(Closeable closeable) {
+    public static void closeQueitly(Closeable closeable) {
         try {
             closeable.close();
         } catch (IOException ignore) {
