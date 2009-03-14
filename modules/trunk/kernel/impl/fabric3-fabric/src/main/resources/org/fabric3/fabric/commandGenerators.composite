@@ -39,7 +39,9 @@
            name="CommandGeneratorsBootComposite"
            autowire="true">
 
-    <!-- default commands -->
+    <component name="ClassLoaderGenerator">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
+    </component>
 
     <component name="ComponentBuildCommandGenerator">
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.BuildComponentCommandGenerator"/>

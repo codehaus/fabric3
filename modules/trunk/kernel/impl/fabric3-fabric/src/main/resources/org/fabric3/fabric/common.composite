@@ -97,10 +97,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
     </component>
 
-    <component name="ClassLoaderGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
-    </component>
-
     <component name="ClassLoaderWireGenerator" f3-core:key="org.fabric3.contribution.wire.JavaContributionWire">
         <f3-impl:implementation.system class="org.fabric3.contribution.generator.JavaContributionWireGeneratorImpl"/>
     </component>
