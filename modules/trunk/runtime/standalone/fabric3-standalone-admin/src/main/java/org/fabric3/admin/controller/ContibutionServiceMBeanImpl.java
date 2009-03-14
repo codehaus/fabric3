@@ -59,13 +59,15 @@ import org.fabric3.spi.contribution.MetaDataStore;
 @EagerInit
 public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
     private static final String REPOSITORY = "/admin/repository";
+    private static final String PROFILE = "/admin/profile";
 
     private JettyService jettyService;
     private ContributionService contributionService;
     private MetaDataStore metaDataStore;
     private ContributionServiceMBeanMonitor monitor;
     private String hostName;
-    private String address;
+    private String contributionAddress;
+    private String profileAddress;
 
     public ContibutionServiceMBeanImpl(@Reference JettyService jettyService,
                                        @Reference ContributionService contributionService,
@@ -116,12 +118,18 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         initAddress();
 
         // map a servlet for uploading contributions
-        ContributionServlet servlet = new ContributionServlet(contributionService);
-        jettyService.registerMapping(REPOSITORY + "/*", servlet);
+        ContributionServlet contributionServlet = new ContributionServlet(contributionService);
+        ProfileServlet profileServlet = new ProfileServlet(contributionService);
+        jettyService.registerMapping(REPOSITORY + "/*", contributionServlet);
+        jettyService.registerMapping(PROFILE + "/*", profileServlet);
     }
 
     public String getContributionServiceAddress() {
-        return address;
+        return contributionAddress;
+    }
+
+    public String getProfileServiceAddress() {
+        return profileAddress;
     }
 
     public Set<ContributionInfo> getContributions() {
@@ -194,8 +202,61 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         }
     }
 
+    public void installProfile(URI uri) throws ContributionInstallException {
+        try {
+            contributionService.installProfile(uri);
+        } catch (ValidationException e) {
+            // propagate validaton error messages to the client
+            List<ErrorInfo> errors = new ArrayList<ErrorInfo>();
+            for (ValidationFailure failure : e.getErrors()) {
+                if (failure instanceof ArtifactValidationFailure) {
+                    ArtifactValidationFailure avf = (ArtifactValidationFailure) failure;
+                    ArtifactErrorInfo error = new ArtifactErrorInfo(avf.getArtifactName());
+                    for (ValidationFailure entry : avf.getFailures()) {
+                        ErrorInfo info = new ErrorInfo(entry.getMessage());
+                        error.addError(info);
+                    }
+                    errors.add(error);
+                } else {
+                    ErrorInfo info = new ErrorInfo(failure.getMessage());
+                    errors.add(info);
+                }
+            }
+            throw new InvalidContributionException("Error installing " + uri, errors);
+        } catch (ContributionException e) {
+            monitor.error("Error installing: " + uri, e);
+            // don't rethrow the original exception since the class will not be available on the client's classpath
+            throw new ContributionInstallException(getErrorMessage(e));
+        }
+    }
+
+    public void uninstallProfile(URI uri) throws ContributionUninstallException {
+        try {
+            contributionService.uninstallProfile(uri);
+        } catch (ContributionInUseException e) {
+            throw new ContributionInUseManagementException(e.getMessage(), e.getUri(), e.getContributions());
+        } catch (ContributionLockedException e) {
+            throw new ContributionLockedManagementException(e.getMessage(), e.getUri(), e.getDeployables());
+        } catch (ContributionException e) {
+            // log the exception as it is not recoverable
+            monitor.error("Error uninstalling profile: " + uri, e);
+            // don't rethrow the original exception since the class will not be available on the client's classpath
+            throw new ContributionUninstallException(getErrorMessage(e));
+        }
+    }
+
+    public void removeProfile(URI uri) throws ContributionRemoveException {
+        try {
+            contributionService.removeProfile(uri);
+        } catch (ContributionException e) {
+            monitor.error("Error removing profile: " + uri, e);
+            // don't rethrow the original exception since the class will not be available on the client's classpath
+            throw new ContributionRemoveException(getErrorMessage(e));
+        }
+    }
+
     /**
-     * Calculates the address clients use to upload contributions.
+     * Calculates the addresses clients use to upload contributions.
      *
      * @throws UnknownHostException if the specified host is not found
      */
@@ -206,7 +267,8 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         } else {
             baseAddress = InetAddress.getByName(hostName).getHostAddress();
         }
-        address = "http://" + baseAddress + ":" + jettyService.getHttpPort() + REPOSITORY;
+        contributionAddress = "http://" + baseAddress + ":" + jettyService.getHttpPort() + REPOSITORY;
+        profileAddress = "http://" + baseAddress + ":" + jettyService.getHttpPort() + PROFILE;
     }
 
     private String getErrorMessage(ContributionException e) {

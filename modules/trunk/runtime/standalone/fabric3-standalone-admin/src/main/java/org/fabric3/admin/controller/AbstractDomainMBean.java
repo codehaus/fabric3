@@ -19,12 +19,8 @@ package org.fabric3.admin.controller;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.AssemblyFailure;
@@ -40,7 +36,6 @@ import org.fabric3.management.domain.ComponentInfo;
 import org.fabric3.management.domain.ContributionNotFoundException;
 import org.fabric3.management.domain.ContributionNotInstalledManagementException;
 import org.fabric3.management.domain.DeploymentManagementException;
-import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.management.domain.InvalidDeploymentException;
 import org.fabric3.management.domain.InvalidPathException;
 import org.fabric3.spi.contribution.Contribution;
@@ -52,21 +47,19 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 /**
  * @version $Revision$ $Date$
  */
-public class DomainMBeanImpl implements DomainMBean {
-    private Domain domain;
-    private MetaDataStore store;
-    private LogicalComponentManager lcm;
-    private DomainMBeanMonitor monitor;
-    private String domainUri;
+public abstract class AbstractDomainMBean {
+    protected Domain domain;
+    protected MetaDataStore store;
+    protected LogicalComponentManager lcm;
+    protected HostInfo info;
+    protected DomainMBeanMonitor monitor;
+    protected String domainUri;
 
-    public DomainMBeanImpl(@Reference(name = "domain") Domain domain,
-                           @Reference MetaDataStore store,
-                           @Reference LogicalComponentManager lcm,
-                           @Reference HostInfo info,
-                           @Monitor DomainMBeanMonitor monitor) {
+    public AbstractDomainMBean(Domain domain, MetaDataStore store, LogicalComponentManager lcm, HostInfo info, DomainMBeanMonitor monitor) {
         this.domain = domain;
         this.store = store;
         this.lcm = lcm;
+        this.info = info;
         this.domainUri = info.getDomain().toString();
         this.monitor = monitor;
     }
@@ -151,7 +144,7 @@ public class DomainMBeanImpl implements DomainMBean {
         return infos;
     }
 
-    private void reportError(URI uri, DomainException e) throws DeploymentManagementException {
+    protected void reportError(URI uri, DomainException e) throws DeploymentManagementException {
         monitor.error("Error deploying " + uri, e);
         Throwable cause = e;
         while (cause.getCause() != null) {

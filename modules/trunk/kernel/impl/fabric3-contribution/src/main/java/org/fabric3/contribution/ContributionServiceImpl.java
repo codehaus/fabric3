@@ -236,6 +236,76 @@ public class ContributionServiceImpl implements ContributionService {
         return uris;
     }
 
+    public void installProfile(URI uri) throws InstallException, ContributionNotFoundException {
+        List<Contribution> toInstall = new ArrayList<Contribution>();
+        for (Contribution contribution : metaDataStore.getContributions()) {
+            if (contribution.getProfiles().contains(uri) && ContributionState.STORED == contribution.getState()) {
+                toInstall.add(contribution);
+            }
+        }
+        if (toInstall.isEmpty()) {
+            throw new ContributionNotFoundException("Profile not found: " + uri);
+        }
+        installInOrder(toInstall);
+    }
+
+    public void uninstallProfile(URI uri) throws UninstallException, ContributionNotFoundException {
+        List<Contribution> toUninstall = new ArrayList<Contribution>();
+        for (Contribution contribution : metaDataStore.getContributions()) {
+            List<URI> profiles = contribution.getProfiles();
+            if (profiles.contains(uri)) {
+                if (profiles.size() == 1) {
+                    ContributionState state = contribution.getState();
+                    if (ContributionState.INSTALLED != state) {
+                        throw new UninstallException("Contribution not in installed state: " + state);
+                    }
+                    toUninstall.add(contribution);
+                }
+            }
+        }
+        toUninstall = dependencyService.orderForUninstall(toUninstall);
+        for (Contribution contribution : toUninstall) {
+            uninstall(contribution.getUri());
+        }
+    }
+
+    public void removeProfile(URI uri) throws RemoveException, ContributionNotFoundException {
+        List<Contribution> toRemove = new ArrayList<Contribution>();
+        for (Contribution contribution : metaDataStore.getContributions()) {
+            List<URI> profiles = contribution.getProfiles();
+            if (profiles.contains(uri)) {
+                if (profiles.size() == 1) {
+                    ContributionState state = contribution.getState();
+                    if (ContributionState.STORED != state) {
+                        throw new RemoveException("Contribution not in stored state: " + state);
+                    }
+                    toRemove.add(contribution);
+                } else {
+                    contribution.removeProfile(uri);
+                }
+            }
+        }
+        for (Contribution contribution : toRemove) {
+            remove(contribution.getUri());
+        }
+    }
+
+    public void registerProfile(URI profileUri, List<URI> contributionUris) {
+        for (URI contributionUri : contributionUris) {
+            Contribution contribution = metaDataStore.find(contributionUri);
+            if (contribution == null) {
+                throw new AssertionError("Contribution not found: " + contributionUri);
+            }
+            List<URI> profiles = contribution.getProfiles();
+            if (!profiles.contains(profileUri)) {
+                profiles.add(profileUri);
+                for (ContributionServiceListener listener : listeners) {
+                    listener.onUpdate(contribution);
+                }
+            }
+        }
+    }
+
     public List<Deployable> getDeployables(URI contributionUri) throws ContributionNotFoundException {
         Contribution contribution = find(contributionUri);
         List<Deployable> list = new ArrayList<Deployable>();
@@ -286,6 +356,34 @@ public class ContributionServiceImpl implements ContributionService {
             listener.onRemove(contribution);
         }
 
+    }
+
+    public List<URI> getContributionsInProfile(URI uri) {
+        List<URI> profileContributions = new ArrayList<URI>();
+        Set<Contribution> contributions = metaDataStore.getContributions();
+        for (Contribution contribution : contributions) {
+            if (contribution.getProfiles().contains(uri)) {
+                profileContributions.add(contribution.getUri());
+            }
+        }
+
+        return profileContributions;
+    }
+
+    public List<URI> getSortedContributionsInProfile(URI uri) {
+        List<Contribution> sortedContributions = new ArrayList<Contribution>();
+        Set<Contribution> contributions = metaDataStore.getContributions();
+        for (Contribution contribution : contributions) {
+            if (contribution.getProfiles().contains(uri)) {
+                sortedContributions.add(contribution);
+            }
+        }
+        List<URI> profileContributions = new ArrayList<URI>();
+        sortedContributions = dependencyService.orderForUninstall(sortedContributions);
+        for (Contribution contribution : sortedContributions) {
+            profileContributions.add(contribution.getUri());
+        }
+        return profileContributions;
     }
 
     /**

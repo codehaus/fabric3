@@ -158,6 +158,14 @@ public interface DomainController {
      */
     void remove(URI uri) throws CommunicationException, ContributionRemoveException;
 
+    void storeProfile(URL profile, URI uri) throws CommunicationException, ContributionManagementException;
+
+    void installProfile(URI uri) throws CommunicationException, ContributionInstallException;
+
+    void uninstallProfile(URI uri) throws CommunicationException, ContributionUninstallException;
+
+    void removeProfile(URI uri) throws CommunicationException, ContributionRemoveException;
+
 
     /**
      * Returns a list of ComponentInfo instances representing the components deployed to the given composite path. The path "/" is interpreted as the

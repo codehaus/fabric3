@@ -36,6 +36,7 @@ public class Contribution implements Serializable {
 
     private final URI uri;
     private ContributionState state = ContributionState.STORED;
+    private List<URI> profiles;
     private URL location;
     private byte[] checksum;
     private long timestamp;
@@ -50,6 +51,28 @@ public class Contribution implements Serializable {
 
     public Contribution(URI uri) {
         this.uri = uri;
+        profiles = new ArrayList<URI>();
+    }
+
+    /**
+     * Instantiates a new Contribution instance.
+     *
+     * @param uri         the contribution URI
+     * @param profiles    the profiles this contribution is a member of
+     * @param location    a dereferenceble URL for the contribution archive
+     * @param checksum    the checksum for the contribution artifact
+     * @param timestamp   the time stamp of the contribution artifact
+     * @param contentType the MIME type of the contribution
+     * @param persistent  true if the contribution is persistent
+     */
+    public Contribution(URI uri, List<URI> profiles, URL location, byte[] checksum, long timestamp, String contentType, boolean persistent) {
+        this.uri = uri;
+        this.profiles = profiles;
+        this.location = location;
+        this.checksum = checksum;
+        this.timestamp = timestamp;
+        this.contentType = contentType;
+        this.persistent = persistent;
     }
 
     /**
@@ -64,6 +87,7 @@ public class Contribution implements Serializable {
      */
     public Contribution(URI uri, URL location, byte[] checksum, long timestamp, String contentType, boolean persistent) {
         this.uri = uri;
+        this.profiles = new ArrayList<URI>();
         this.location = location;
         this.checksum = checksum;
         this.timestamp = timestamp;
@@ -96,6 +120,10 @@ public class Contribution implements Serializable {
      */
     public void setState(ContributionState state) {
         this.state = state;
+    }
+
+    public List<URI> getProfiles() {
+        return profiles;
     }
 
     /**
@@ -252,8 +280,11 @@ public class Contribution implements Serializable {
      * @param owner the lock owner
      */
     public void releaseLock(QName owner) {
+        if (lockOwners.isEmpty()) {
+            return;
+        }
         if (!lockOwners.remove(owner)) {
-            throw new IllegalStateException("Lock not held by owner for contribution" + uri + " :" + owner);
+            throw new IllegalStateException("Lock not held by owner for contribution " + uri + " :" + owner);
         }
     }
 
@@ -273,5 +304,14 @@ public class Contribution implements Serializable {
      */
     public boolean isLocked() {
         return !lockOwners.isEmpty();
+    }
+
+    /**
+     * Removes the profile from the contribution. Contributions track the profiles they are members of.
+     *
+     * @param uri the profile URI
+     */
+    public void removeProfile(URI uri) {
+        profiles.remove(uri);
     }
 }

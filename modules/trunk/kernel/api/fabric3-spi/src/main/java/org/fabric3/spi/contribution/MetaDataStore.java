@@ -97,12 +97,12 @@ public interface MetaDataStore {
             throws StoreException;
 
     /**
-     * Returns true if the import is resolved.
+     * Resolves an import or returns null if it cannot be satisfied.
      *
      * @param imprt the import
-     * @return true if the import is resolved
+     * @return the contribution or null
      */
-    boolean isResolved(Import imprt);
+    Contribution resolve(Import imprt);
 
     /**
      * Resolves an import to a matching export and returns the associated ContributionWire.

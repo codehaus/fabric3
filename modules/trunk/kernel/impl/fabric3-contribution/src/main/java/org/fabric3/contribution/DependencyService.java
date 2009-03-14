@@ -23,7 +23,7 @@ import org.fabric3.spi.contribution.Contribution;
 /**
  * Processes contribution dependencies
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 6228 $ $Date: 2008-12-13 00:24:14 -0800 (Sat, 13 Dec 2008) $
  */
 public interface DependencyService {
 
@@ -35,5 +35,13 @@ public interface DependencyService {
      * @throws DependencyException if an error occurs ordering the contributions such as an unresolvable import or dependency cycle
      */
     List<Contribution> order(List<Contribution> contributions) throws DependencyException;
+
+    /**
+     * Orders a list of contributions to uninsall. Ordering is calculated by topologically sorting the list based on contribution imports.
+     *
+     * @param contributions the contributions to order
+     * @return the ordered list of contributions
+     */
+    List<Contribution> orderForUninstall(List<Contribution> contributions);
 
 }

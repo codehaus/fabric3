@@ -19,6 +19,7 @@ package org.fabric3.contribution;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -53,11 +54,12 @@ public class ContributionTrackingTestCase extends TestCase {
     public void testPersistAndReplay() throws Exception {
         URI uri = URI.create("test.jar");
         URL location = new File("test.jar").toURI().toURL();
-        Contribution contribution1 = new Contribution(uri, location, new byte[0], -1, "application/java-archive", true);
+        List<URI> list = Collections.emptyList();
+        Contribution contribution1 = new Contribution(uri, list, location, new byte[0], -1, "application/java-archive", true);
 
         URI uri2 = URI.create("test2.jar");
         URL location2 = new File("test2.jar").toURI().toURL();
-        Contribution contribution2 = new Contribution(uri2, location2, new byte[0], -1, "application/java-archive", true);
+        Contribution contribution2 = new Contribution(uri2, list, location2, new byte[0], -1, "application/java-archive", true);
 
         tracker.onStore(contribution1);
         tracker.onStore(contribution2);
@@ -120,7 +122,7 @@ public class ContributionTrackingTestCase extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        new File(data, "f3.xml").delete();
+        new File(data, "repostiory.xml").delete();
         data.delete();
     }
 }

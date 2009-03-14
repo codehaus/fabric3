@@ -186,16 +186,17 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
-    public boolean isResolved(Import imprt) {
+    public Contribution resolve(Import imprt) {
         Map<Export, Contribution> exports = exportsToContributionCache.get(imprt.getType());
         if (exports != null) {
-            for (Export export : exports.keySet()) {
+            for (Map.Entry<Export, Contribution> entry : exports.entrySet()) {
+                Export export = entry.getKey();
                 if (Export.EXACT_MATCH == export.match(imprt)) {
-                    return true;
+                    return entry.getValue();
                 }
             }
         }
-        return false;
+        return null;
     }
 
     public ContributionWire<?, ?> resolve(URI uri, Import imprt) throws UnresolvedImportException {

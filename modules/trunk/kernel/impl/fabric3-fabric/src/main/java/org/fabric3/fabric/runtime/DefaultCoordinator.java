@@ -24,20 +24,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import javax.xml.namespace.QName;
 
 import static org.fabric3.fabric.runtime.FabricNames.DEFINITIONS_REGISTRY;
 import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.FabricNames.METADATA_STORE_URI;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
+import static org.fabric3.host.Names.COMPOSITE_SYNTHESIZER_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
-import static org.fabric3.host.Namespaces.IMPLEMENTATION;
-import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.BootConfiguration;
@@ -48,12 +44,6 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.model.type.component.Composite;
-import org.fabric3.model.type.component.Include;
-import org.fabric3.spi.contribution.Contribution;
-import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.contribution.Resource;
-import org.fabric3.spi.contribution.ResourceElement;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.event.DomainRecover;
@@ -61,6 +51,7 @@ import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.JoinDomain;
 import org.fabric3.spi.services.event.RuntimeRecover;
 import org.fabric3.spi.services.event.RuntimeStart;
+import org.fabric3.spi.synthesize.CompositeSynthesizer;
 
 /**
  * Default implementation of a RuntimeLifecycleCoordinator.
@@ -216,63 +207,13 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
 
     protected void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
         Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_SERVICE_URI);
-        Composite composite = createExtensionComposite(contributionUris);
+        CompositeSynthesizer synthesizer = runtime.getSystemComponent(CompositeSynthesizer.class, COMPOSITE_SYNTHESIZER_URI);
+        Composite composite = synthesizer.createComposite(contributionUris);
         try {
             domain.include(composite);
         } catch (DeploymentException e) {
             throw new ExtensionInitializationException("Error activating extensions", e);
         }
-    }
-
-    /**
-     * Creates an extension composite by including deployables from contributions identified by the list of URIs. Since the extension composite is
-     * deployed to the runtime domain, including deployables from the list of contributions has the effect of deploying them.
-     *
-     * @param contributionUris the contributions containing the deployables to include
-     * @return the extension composite
-     * @throws InitializationException if an error occurs creating the composite
-     */
-    protected Composite createExtensionComposite(List<URI> contributionUris) throws InitializationException {
-        MetaDataStore metaDataStore = runtime.getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
-        if (metaDataStore == null) {
-            String id = METADATA_STORE_URI.toString();
-            throw new InitializationException("Extensions metadata store not configured: " + id, id);
-        }
-        QName qName = new QName(IMPLEMENTATION, "extension");
-        Composite composite = new Composite(qName);
-        for (URI uri : contributionUris) {
-            Contribution contribution = metaDataStore.find(uri);
-            assert contribution != null;
-
-            RuntimeMode runtimeMode = runtime.getHostInfo().getRuntimeMode();
-            for (Resource resource : contribution.getResources()) {
-                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
-
-                    if (!(entry.getValue() instanceof Composite)) {
-                        continue;
-                    }
-                    @SuppressWarnings({"unchecked"})
-                    ResourceElement<QNameSymbol, Composite> element = (ResourceElement<QNameSymbol, Composite>) entry;
-                    QName name = element.getSymbol().getKey();
-                    Composite childComposite = element.getValue();
-                    for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                        List<RuntimeMode> deployableModes = deployable.getRuntimeModes();
-                        if (deployable.getName().equals(name)) {
-                            if (!deployableModes.contains(runtimeMode)) {
-                                // do not include the extension as the runtime is booted in a different mode than what the extension is configured for
-                                break;
-                            }
-                            Include include = new Include();
-                            include.setName(name);
-                            include.setIncluded(childComposite);
-                            composite.add(include);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return composite;
     }
 
     protected static class SyncFuture implements Future<Void> {

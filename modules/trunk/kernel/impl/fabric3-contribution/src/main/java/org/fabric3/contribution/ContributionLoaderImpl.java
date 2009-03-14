@@ -36,6 +36,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionState;
 import org.fabric3.spi.contribution.ContributionWire;
 import org.fabric3.spi.contribution.Import;
 import org.fabric3.spi.contribution.MetaDataStore;
@@ -115,7 +116,8 @@ public class ContributionLoaderImpl implements ContributionLoader {
         for (URI uri : extenders) {
             ClassLoader cl = classLoaderRegistry.getClassLoader(uri);
             if (cl == null) {
-                throw new AssertionError("Extension point provider classloader not registered: " + uri);
+                // the extension provider may not have been loaded yet
+                continue;
             }
             if (!(cl instanceof MultiParentClassLoader)) {
                 throw new AssertionError("Extension point provider classloader must be a " + MultiParentClassLoader.class.getName());
@@ -127,7 +129,8 @@ public class ContributionLoaderImpl implements ContributionLoader {
         for (URI uri : extensionPoints) {
             ClassLoader cl = classLoaderRegistry.getClassLoader(uri);
             if (cl == null) {
-                throw new AssertionError("Extension point classloader not registered: " + uri);
+                // the extension point may not have been loaded yet
+                continue;
             }
             if (!(cl instanceof MultiParentClassLoader)) {
                 throw new AssertionError("Extension point classloader must be a " + MultiParentClassLoader.class.getName());
@@ -146,15 +149,21 @@ public class ContributionLoaderImpl implements ContributionLoader {
         if (!contributions.isEmpty()) {
             Set<URI> dependents = new HashSet<URI>(contributions.size());
             for (Contribution dependent : contributions) {
-                dependents.add(dependent.getUri());
+                if (ContributionState.INSTALLED == dependent.getState()) {
+                    dependents.add(dependent.getUri());
+                }
             }
-            throw new ContributionInUseException("Contribution is in use: " + uri, uri, dependents);
+            if (!dependents.isEmpty()) {
+                throw new ContributionInUseException("Contribution is in use: " + uri, uri, dependents);
+            }
         }
         classLoaderRegistry.unregister(uri);
     }
 
 
     private List<ContributionWire<?, ?>> resolveImports(Contribution contribution) throws UnresolvedImportException {
+        // clear the wires as the contribution may have been loaded previously
+        contribution.getWires().clear();
         List<ContributionWire<?, ?>> resolved = new ArrayList<ContributionWire<?, ?>>();
         ContributionManifest manifest = contribution.getManifest();
         for (Import imprt : manifest.getImports()) {

@@ -121,6 +121,10 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.synthesizer.SingletonComponentSynthesizer"/>
     </component>
 
+    <component name="CompositeSynthesizer">
+        <f3-impl:implementation.system class="org.fabric3.fabric.synthesizer.CompositeSynthesizerImpl"/>
+    </component>
+
     <!-- Definitions registry -->
     <component name="DefinitionsRegistry">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>

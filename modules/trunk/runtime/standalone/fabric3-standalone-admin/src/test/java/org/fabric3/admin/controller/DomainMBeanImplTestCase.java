@@ -119,6 +119,6 @@ public class DomainMBeanImplTestCase extends TestCase {
         LogicalComponentManager lcm = EasyMock.createMock(LogicalComponentManager.class);
         EasyMock.expect(lcm.getRootComponent()).andReturn(domain).atLeastOnce();
         EasyMock.replay(lcm);
-        mBean = new DomainMBeanImpl(null, null, lcm, info, null);
+        mBean = new DistributedDomainMBean(null, null, lcm, info, null);
     }
 }

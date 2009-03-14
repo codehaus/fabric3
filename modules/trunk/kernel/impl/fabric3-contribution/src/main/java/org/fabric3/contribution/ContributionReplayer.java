@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,13 +45,13 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionState;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeRecover;
+import org.fabric3.spi.xml.XMLFactory;
 
 /**
  * Used when a runtime is initialized to restore the state of contributions recorded by the ContributionTracker.
@@ -179,7 +180,20 @@ public class ContributionReplayer implements Fabric3EventListener<RuntimeRecover
                             throw createException("Invalid state", reader, e);
                         }
 
-                        Contribution contribution = new Contribution(uri, location, checksum, timestamp, contentType, true);
+                        List<URI> profiles = new ArrayList<URI>();
+                        String profilesStr = reader.getAttributeValue(null, "profiles");
+                        if (profilesStr != null) {
+                            String[] tokens = profilesStr.split(" ");
+                            for (String token : tokens) {
+                                try {
+                                    profiles.add(new URI(token));
+                                } catch (URISyntaxException e) {
+                                    throw createException("Invalid profile name:" + token, reader, e);
+                                }
+                            }
+                        }
+
+                        Contribution contribution = new Contribution(uri, profiles, location, checksum, timestamp, contentType, true);
                         contribution.setState(state);
                         if (ContributionState.STORED == state) {
                             stored.add(contribution);

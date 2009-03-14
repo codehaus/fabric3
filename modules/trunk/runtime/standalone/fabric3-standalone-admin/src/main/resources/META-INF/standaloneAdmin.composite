@@ -42,9 +42,14 @@
         <property name="hostName" source="$systemConfig//host.name"/>
     </component>
 
-    <component name="DomainMBean">
-        <f3-impl:implementation.system class="org.fabric3.admin.controller.DomainMBeanImpl"/>
+    <component name="DistributedDomainMBean">
+        <f3-impl:implementation.system class="org.fabric3.admin.controller.DistributedDomainMBean"/>
         <reference name="domain" target="ApplicationDomain"/>
+    </component>
+
+    <component name="RuntimeDomainMBean">
+        <f3-impl:implementation.system class="org.fabric3.admin.controller.RuntimeDomainMBeanImpl"/>
+        <reference name="domain" target="RuntimeDomain"/>
     </component>
 
 </composite>

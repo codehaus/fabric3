@@ -152,6 +152,59 @@ public interface ContributionService {
     Set<URI> getContributions();
 
     /**
+     * Registers a profile.
+     *
+     * @param profileUri       the profile URI
+     * @param contributionUris the URIs of contributions that are contained in the profile
+     */
+    void registerProfile(URI profileUri, List<URI> contributionUris);
+
+    /**
+     * Installs a profile. This operation involves installing contributions contained in the profile that have not been previously installed.
+     *
+     * @param uri the profile URI.
+     * @throws InstallException              if there was an error installing the profile
+     * @throws ContributionNotFoundException if a contribution was not found;
+     */
+    void installProfile(URI uri) throws InstallException, ContributionNotFoundException;
+
+    /**
+     * Uninstalls a profile. This operation involves uninstalling contributions contained in the profile that are not members of another installed
+     * profile.
+     *
+     * @param uri the profile URI.
+     * @throws UninstallException            if there was an error uninstalling the profile
+     * @throws ContributionNotFoundException if a contribution was not found;
+     */
+    void uninstallProfile(URI uri) throws UninstallException, ContributionNotFoundException;
+
+    /**
+     * Removes a profile. This operation involves removing contributions contained in the profile that are not members of another stored or installed
+     * profile.
+     *
+     * @param uri the profile URI.
+     * @throws RemoveException               if there was an error uninstalling the profile
+     * @throws ContributionNotFoundException if a contribution was not found;
+     */
+    void removeProfile(URI uri) throws RemoveException, ContributionNotFoundException;
+
+    /**
+     * Returns a list of contributions contained in a profile order.
+     *
+     * @param uri the profile URI
+     * @return the list of contributions contained in the profile
+     */
+    List<URI> getContributionsInProfile(URI uri);
+
+    /**
+     * Returns a list of contributions contained in a profile sorted topologically by dependencies.
+     *
+     * @param uri the profile URI
+     * @return the list of contributions contained in the profile
+     */
+    List<URI> getSortedContributionsInProfile(URI uri);
+
+    /**
      * Returns a list of deployables in a contribution.
      *
      * @param uri the URI of the contribution to search
@@ -159,5 +212,4 @@ public interface ContributionService {
      * @throws ContributionNotFoundException if a contribution corresponding to the URI is not found
      */
     List<Deployable> getDeployables(URI uri) throws ContributionNotFoundException;
-
 }

@@ -27,6 +27,7 @@ import org.fabric3.admin.interpreter.parser.AuthCommandParser;
 import org.fabric3.admin.interpreter.parser.DeployCommandParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
 import org.fabric3.admin.interpreter.parser.ListCommandParser;
+import org.fabric3.admin.interpreter.parser.ProfileCommandParser;
 import org.fabric3.admin.interpreter.parser.ProvisionCommandParser;
 import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
 import org.fabric3.admin.interpreter.parser.StatCommandParser;
@@ -166,6 +167,9 @@ public class InterpreterImpl implements Interpreter {
         ListCommandParser listCommandParser = new ListCommandParser(controller);
         parsers.put("ls", listCommandParser);
         parsers.put("list", listCommandParser);
+        ProfileCommandParser profileCommandParser = new ProfileCommandParser(controller);
+        parsers.put("profile", profileCommandParser);
+        parsers.put("pf", profileCommandParser);
     }
 
     /**

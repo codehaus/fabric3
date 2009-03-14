@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.stream.XMLOutputFactory;
@@ -125,10 +126,21 @@ public class ContributionTracker implements ContributionServiceListener {
                 writer.writeAttribute("timestamp", String.valueOf(contribution.getTimestamp()));
                 writer.writeAttribute("checksum", new String(contribution.getChecksum()));
                 writer.writeAttribute("contentType", contribution.getContentType());
+                List<URI> profiles = contribution.getProfiles();
+                if (!profiles.isEmpty()) {
+                    StringBuilder b = new StringBuilder();
+                    for (int i = 0; i < profiles.size() - 1; i++) {
+                        URI profile = contribution.getProfiles().get(i);
+                        b.append(profile.toString()).append(" ");
+                    }
+                    b.append(profiles.get(profiles.size() - 1));
+                    writer.writeAttribute("profiles", b.toString());
+                }
                 writer.writeAttribute("state", contribution.getState().toString());
                 writer.writeEndElement();
             }
             writer.writeEndElement();
+
             writer.writeEndDocument();
         } catch (FileNotFoundException e) {
             monitor.error(e);

@@ -57,6 +57,9 @@ public class DomainControllerImpl implements DomainController {
     private static final String DOMAIN_MBEAN =
             "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/DomainMBean\",service=DomainMBean";
 
+    private static final String RUNTIME_DOMAIN_MBEAN =
+            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/RuntimeDomainMBean\",service=RuntimeDomainMBean";
+
     private String username;
     private String password;
     private String domainAddress = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
@@ -88,30 +91,7 @@ public class DomainControllerImpl implements DomainController {
             address = (String) conn.getAttribute(oName, "ContributionServiceAddress");
 
             URL url = new URL(address + "/" + uri);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setChunkedStreamingMode(4096);
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-type", "binary/octet-stream");
-
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                os = connection.getOutputStream();
-                is = contribution.openStream();
-                copy(is, os);
-                os.flush();
-            } finally {
-                if (os != null) {
-                    os.close();
-                }
-                if (is != null) {
-                    is.close();
-                }
-            }
-
-            int code = connection.getResponseCode();
+            int code = upload(contribution, url);
             if (400 == code) {
                 throw new ContributionManagementException("Error storing contribution");
             } else if (420 == code) {
@@ -265,6 +245,108 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
+    public void storeProfile(URL profile, URI uri) throws CommunicationException, ContributionManagementException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            // find HTTP port and post contents
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+
+            // store the contribution using a chunked HTTP post to the ContributionService
+            String address;
+            ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
+            address = (String) conn.getAttribute(oName, "ProfileServiceAddress");
+
+            URL url = new URL(address + "/" + uri);
+            int code = upload(profile, url);
+            if (400 == code) {
+                throw new ContributionManagementException("Error storing profile");
+            } else if (420 == code) {
+                throw new DuplicateContributionManagementException("A profile already exists for " + uri);
+            }
+
+        } catch (MBeanException e) {
+            throw new ContributionManagementException(e.getMessage(), e.getTargetException());
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
+    }
+
+    public void installProfile(URI uri) throws CommunicationException, ContributionInstallException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            // find HTTP port and post contents
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+
+            ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
+            // install the contribution
+            conn.invoke(oName, "installProfile", new URI[]{uri}, new String[]{URI.class.getName()});
+            oName = new ObjectName(RUNTIME_DOMAIN_MBEAN);
+
+            // deploy the contributions in the profile
+            conn.invoke(oName, "deployProfile", new URI[]{uri}, new String[]{URI.class.getName()});
+
+        } catch (MBeanException e) {
+            if (e.getTargetException() instanceof InvalidContributionException) {
+                throw (InvalidContributionException) e.getTargetException();
+            } else {
+                throw new ContributionInstallException(e.getMessage(), e.getTargetException());
+            }
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
+    }
+
+    public void uninstallProfile(URI uri) throws CommunicationException, ContributionUninstallException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(RUNTIME_DOMAIN_MBEAN);
+
+            // deploy the contributions in the profile
+            conn.invoke(oName, "undeployProfile", new URI[]{uri}, new String[]{URI.class.getName()});
+
+            oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
+            conn.invoke(oName, "uninstallProfile", new Object[]{uri}, new String[]{URI.class.getName()});
+        } catch (MBeanException e) {
+            if (e.getTargetException() instanceof ContributionInUseManagementException) {
+                throw (ContributionInUseManagementException) e.getTargetException();
+            } else if (e.getTargetException() instanceof ContributionLockedManagementException) {
+                throw (ContributionLockedManagementException) e.getTargetException();
+            } else {
+                throw new ContributionUninstallException(e.getTargetException().getMessage(), e.getTargetException());
+            }
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
+    }
+
+    public void removeProfile(URI name) throws CommunicationException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
+            conn.invoke(oName, "removeProfile", new Object[]{name}, new String[]{URI.class.getName()});
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
+    }
+
     public List<ComponentInfo> getDeployedComponents(String path) throws CommunicationException {
         try {
             if (!isConnected()) {
@@ -302,6 +384,34 @@ public class DomainControllerImpl implements DomainController {
             jmxc = null;
         }
 
+    }
+
+
+    private int upload(URL contribution, URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setChunkedStreamingMode(4096);
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-type", "binary/octet-stream");
+
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            os = connection.getOutputStream();
+            is = contribution.openStream();
+            copy(is, os);
+            os.flush();
+        } finally {
+            if (os != null) {
+                os.close();
+            }
+            if (is != null) {
+                is.close();
+            }
+        }
+
+        return connection.getResponseCode();
     }
 
     private static int copy(InputStream input, OutputStream output) throws IOException {

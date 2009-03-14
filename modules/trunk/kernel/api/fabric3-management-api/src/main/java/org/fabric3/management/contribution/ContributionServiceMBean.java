@@ -37,6 +37,13 @@ public interface ContributionServiceMBean {
     String getContributionServiceAddress();
 
     /**
+     * Returns the base address for installing profile artifacts in a domain.
+     *
+     * @return the base address
+     */
+    String getProfileServiceAddress();
+
+    /**
      * Returns ContributionInfos for contributions in the domain.
      *
      * @return the URIs of contributions in the domain.
@@ -67,4 +74,30 @@ public interface ContributionServiceMBean {
      * @throws ContributionRemoveException if an error occurs during removal.
      */
     void remove(URI uri) throws ContributionRemoveException;
+
+    /**
+     * Installs a stored profile in the domain.
+     *
+     * @param uri the contribution URI
+     * @throws ContributionInstallException if an error occurs during installation. Exception types may vary, for example, a contribution may be
+     *                                      invalid. See subtypes for specifics.
+     */
+    void installProfile(URI uri) throws ContributionInstallException;
+
+    /**
+     * Uninstalls a profile.
+     *
+     * @param uri the contribution URI
+     * @throws ContributionUninstallException if an error occurs during deinstallation.
+     */
+    void uninstallProfile(URI uri) throws ContributionUninstallException;
+
+    /**
+     * Removes a stored profile in the domain.
+     *
+     * @param uri the contribution URI
+     * @throws ContributionRemoveException if an error occurs during removal.
+     */
+    void removeProfile(URI uri) throws ContributionRemoveException;
+
 }

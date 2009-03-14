@@ -21,6 +21,13 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionState;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.util.graph.Cycle;
 import org.fabric3.util.graph.CycleDetector;
 import org.fabric3.util.graph.CycleDetectorImpl;
@@ -33,11 +40,6 @@ import org.fabric3.util.graph.TopologicalSorter;
 import org.fabric3.util.graph.TopologicalSorterImpl;
 import org.fabric3.util.graph.Vertex;
 import org.fabric3.util.graph.VertexImpl;
-import org.fabric3.spi.contribution.Contribution;
-import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.Export;
-import org.fabric3.spi.contribution.Import;
-import org.fabric3.spi.contribution.MetaDataStore;
 
 /**
  * Default implementation of the DependencyService
@@ -69,18 +71,24 @@ public class DependencyServiceImpl implements DependencyService {
             ContributionManifest manifest = contribution.getManifest();
             assert manifest != null;
             for (Import imprt : manifest.getImports()) {
-                // first, see if the import is already installed
+                // See if the import is already stored
                 // note that extension imports do not need to be checked since we assume extensons are installed prior
-                if (store.isResolved(imprt)) {
-                    continue;
-                }
                 Vertex<Contribution> sink = findTargetVertex(dag, imprt);
                 if (sink == null) {
-                    String uri = contribution.getUri().toString();
-                    throw new UnresolvableImportException("Unable to resolve import " + imprt + " in " + uri, imprt);
+                    Contribution resolved = store.resolve(imprt);
+                    if (resolved != null && ContributionState.INSTALLED != resolved.getState()) {
+                        throw new DependencyException("Contribution " + contribution.getUri() + " imports "
+                                + resolved.getUri() + " which is not installed");
+                    }
+                    if (resolved == null) {
+                        String uri = contribution.getUri().toString();
+                        throw new UnresolvableImportException("Unable to resolve import " + imprt + " in " + uri, imprt);
+                    }
+
+                } else {
+                    Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
+                    dag.add(edge);
                 }
-                Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
-                dag.add(edge);
             }
 
         }
@@ -99,6 +107,52 @@ public class DependencyServiceImpl implements DependencyService {
             return ordered;
         } catch (GraphException e) {
             throw new DependencyException(e);
+        }
+    }
+
+    public List<Contribution> orderForUninstall(List<Contribution> contributions) {
+        // create a DAG
+        DirectedGraph<Contribution> dag = new DirectedGraphImpl<Contribution>();
+        // add the contributions as vertices
+        for (Contribution contribution : contributions) {
+            dag.add(new VertexImpl<Contribution>(contribution));
+        }
+        // add edges based on imports
+        for (Vertex<Contribution> source : dag.getVertices()) {
+            Contribution contribution = source.getEntity();
+            for (ContributionWire<?, ?> wire : contribution.getWires()) {
+                for (Contribution entry : contributions) {
+                    if (entry.getUri().equals(wire.getExportContributionUri())) {
+                        Import imprt = wire.getImport();
+                        Vertex<Contribution> sink = findTargetVertex(dag, imprt);
+                        if (sink == null) {
+                            String uri = contribution.getUri().toString();
+                            // this should not happen
+                            throw new AssertionError("Unable to resolve import " + imprt + " in " + uri);
+                        }
+                        Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
+                        dag.add(edge);
+                        break;
+                    }
+                }
+            }
+        }
+        // detect cycles
+        List<Cycle<Contribution>> cycles = detector.findCycles(dag);
+        if (!cycles.isEmpty()) {
+            // this is a programmin error
+            throw new AssertionError("Cylces detected");
+        }
+        try {
+            List<Vertex<Contribution>> vertices = sorter.sort(dag);
+            List<Contribution> ordered = new ArrayList<Contribution>(vertices.size());
+            for (Vertex<Contribution> vertex : vertices) {
+                ordered.add(vertex.getEntity());
+            }
+            return ordered;
+        } catch (GraphException e) {
+            // this is a programmin error
+            throw new AssertionError(e);
         }
     }
 
