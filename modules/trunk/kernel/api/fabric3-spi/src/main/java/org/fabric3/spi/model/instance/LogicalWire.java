@@ -53,6 +53,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
     private final LogicalReference source;
     private final URI targetUri;
     private LogicalState state = LogicalState.NEW;
+    private QName deployable;
 
     /**
      * Instantiates a logical wire.
@@ -124,6 +125,38 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
     }
 
     /**
+     * Returns the wire state.
+     *
+     * @return the wire state
+     */
+    public LogicalState getState() {
+        return state;
+    }
+
+    /**
+     * Sets the wire state.
+     *
+     * @param state the wire state
+     */
+    public void setState(LogicalState state) {
+        this.state = state;
+    }
+
+    /**
+     * Returns the deployable this wire was deployed with, if different than the deployable of the source component. A wire can be deployed
+     * dynamically as part of another deployable composite or when new component is deployed and dynamically autowired to an existing source.
+     *
+     * @return the deployable that provisioned the wire or null if the wire was provisioned as part of the source component deployment.
+     */
+    public QName getDeployable() {
+        return deployable;
+    }
+
+    public void setDeployable(QName deployable) {
+        this.deployable = deployable;
+    }
+
+    /**
      * Tests for quality whether the source and target URIs are the same.
      *
      * @param obj Object to be tested against.
@@ -156,24 +189,6 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
         hash = 31 * hash + targetUri.hashCode();
         return hash;
 
-    }
-
-    /**
-     * Returns the wire state.
-     *
-     * @return the wire state
-     */
-    public LogicalState getState() {
-        return state;
-    }
-
-    /**
-     * Sets the wire state.
-     *
-     * @param state the wire state
-     */
-    public void setState(LogicalState state) {
-        this.state = state;
     }
 
 
