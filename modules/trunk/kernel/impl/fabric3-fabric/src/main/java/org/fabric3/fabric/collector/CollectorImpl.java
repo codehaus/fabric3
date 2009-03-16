@@ -113,7 +113,8 @@ public class CollectorImpl implements Collector {
                         }
                     }
                 }
-                // xcv 123 hack remove and replace by adding QName deployable to LogicalWire during LocalWireGeneration or in PhysicalWireGenerator
+                // recurse through wires and mark any that were part of the deployable being undeployed
+                // this can occur when a wire is configured in a deployable other than its source component
                 for (Set<LogicalWire> set : composite.getWires().values()) {
                     for (LogicalWire wire : set) {
                         if (LogicalState.MARKED == wire.getState()) {
@@ -124,7 +125,6 @@ public class CollectorImpl implements Collector {
                         }
                     }
                 }
-                // xcv 123 hack
             }
         }
     }
