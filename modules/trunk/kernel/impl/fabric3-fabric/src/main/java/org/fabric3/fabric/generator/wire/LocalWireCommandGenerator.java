@@ -93,10 +93,6 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         if (component instanceof LogicalCompositeComponent || LogicalState.MARKED == component.getState()) {
             return null;
         }
-        return generatePhysicalWires(component, incremental);
-    }
-
-    private ReferenceConnectionCommand generatePhysicalWires(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         ReferenceConnectionCommand command = new ReferenceConnectionCommand();
 
         for (LogicalReference logicalReference : component.getReferences()) {
