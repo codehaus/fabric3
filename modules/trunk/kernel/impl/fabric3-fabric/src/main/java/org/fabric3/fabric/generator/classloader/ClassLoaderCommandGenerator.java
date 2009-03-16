@@ -18,7 +18,6 @@ package org.fabric3.fabric.generator.classloader;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.GenerationException;
@@ -39,7 +38,7 @@ public interface ClassLoaderCommandGenerator {
      * @return the classloader provisioning commands grouped by zone where they are to be provisioned
      * @throws GenerationException if an error occurs during generation
      */
-    Map<String, Set<Command>> generate(List<LogicalComponent<?>> components, boolean incremental) throws GenerationException;
+    Map<String, List<Command>> generate(List<LogicalComponent<?>> components, boolean incremental) throws GenerationException;
 
     /**
      * Generates classloader release commands for a set of components being undeployed.
@@ -48,6 +47,6 @@ public interface ClassLoaderCommandGenerator {
      * @return the classloader provisioning commands grouped by zone where they are being undeployed
      * @throws GenerationException if an error occurs during generation
      */
-    Map<String, Set<Command>> release(List<LogicalComponent<?>> components) throws GenerationException;
+    Map<String, List<Command>> release(List<LogicalComponent<?>> components) throws GenerationException;
 
 }

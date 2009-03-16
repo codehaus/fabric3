@@ -40,7 +40,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -92,12 +91,9 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         List<LogicalComponent<?>> sorted = topologicalSort(components);
         String id = UUID.randomUUID().toString();
         CommandMap commandMap = new CommandMap(id);
-        Map<String, Set<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted, incremental);
-        for (Map.Entry<String, Set<Command>> entry : commandsPerZone.entrySet()) {
-            // xcv 123 change to add all
-            for (Command command : entry.getValue()) {
-                commandMap.addCommand(entry.getKey(), command);
-            }
+        Map<String, List<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted, incremental);
+        for (Map.Entry<String, List<Command>> entry : commandsPerZone.entrySet()) {
+            commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
         // generate stop context information
@@ -127,11 +123,9 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         }
 
         // release classloaders for components being undeployed that are no longer referenced
-        Map<String, Set<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(sorted);
-        for (Map.Entry<String, Set<Command>> entry : releaseCommandsPerZone.entrySet()) {
-            for (Command command : entry.getValue()) {
-                commandMap.addCommand(entry.getKey(), command);
-            }
+        Map<String, List<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(sorted);
+        for (Map.Entry<String, List<Command>> entry : releaseCommandsPerZone.entrySet()) {
+            commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
         return commandMap;
