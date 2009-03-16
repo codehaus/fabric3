@@ -181,7 +181,7 @@ public class BootstrapAssemblyFactory {
                 createPhysicalModelGenerator(logicalComponentManager, metaDataStore);
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
-        Collector collector = new CollectorImpl(logicalComponentManager);
+        Collector collector = new CollectorImpl();
         return new RuntimeDomain(metaDataStore,
                                  physicalModelGenerator,
                                  logicalModelInstantiator,

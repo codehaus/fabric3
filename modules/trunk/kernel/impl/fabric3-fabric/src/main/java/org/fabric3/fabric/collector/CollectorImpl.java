@@ -16,12 +16,9 @@
  */
 package org.fabric3.fabric.collector;
 
-import java.net.URI;
 import java.util.Iterator;
 import java.util.Set;
 import javax.xml.namespace.QName;
-
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -30,8 +27,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.util.UriHelper;
 
 /**
  * Default Collector implementation.
@@ -39,11 +34,6 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Revision$ $Date$
  */
 public class CollectorImpl implements Collector {
-    private LogicalComponentManager lcm;
-
-    public CollectorImpl(@Reference LogicalComponentManager lcm) {
-        this.lcm = lcm;
-    }
 
     public void markAsProvisioned(LogicalCompositeComponent composite) {
         for (LogicalComponent<?> component : composite.getComponents()) {
@@ -129,9 +119,7 @@ public class CollectorImpl implements Collector {
                         if (LogicalState.MARKED == wire.getState()) {
                             continue;
                         }
-                        URI componentUri = UriHelper.getDefragmentedName(wire.getTargetUri());
-                        LogicalComponent target = lcm.getComponent(componentUri);
-                        if (deployable.equals(target.getDeployable())) {
+                        if (deployable.equals(wire.getDeployable())) {
                             wire.setState(LogicalState.MARKED);
                         }
                     }
