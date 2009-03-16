@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.binding.BindingSelector;
@@ -235,7 +234,7 @@ public abstract class AbstractDomain implements Domain {
         Collection<LogicalComponent<?>> components = domain.getComponents();
         try {
             CommandMap commandMap = physicalModelGenerator.generate(components, false);
-            Set<Command> commands = commandMap.getCommandsForZone(zoneId);
+            List<Command> commands = commandMap.getCommandsForZone(zoneId);
             CommandMap filtered = new CommandMap(commandMap.getId(), correlationId, true);
             filtered.addCommands(zoneId, commands);
             routingService.route(filtered);

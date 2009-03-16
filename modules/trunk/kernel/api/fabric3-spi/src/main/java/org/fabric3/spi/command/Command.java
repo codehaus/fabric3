@@ -37,16 +37,10 @@ package org.fabric3.spi.command;
 import java.io.Serializable;
 
 /**
- * Represents a command to be executed on a runtime.
+ * Represents an action to be executed on a runtime.
  *
  * @version $Rev$ $Date$
  */
-public interface Command extends Comparable<Command>, Serializable {
+public interface Command extends Serializable {
 
-    /**
-     * Returns the relative order the command must be exected in, 0 being the highest.
-     *
-     * @return the command execution order
-     */
-    int getOrder();
 }

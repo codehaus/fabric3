@@ -17,11 +17,9 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -100,16 +98,12 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
     }
 
     /**
-     * Returns a collection of wires contained in this composite.
+     * Returns a map of wires keyed by logical reference contained in this composite.
      *
-     * @return a collection of wires contained in this composite
+     * @return a map of wires  keyed by logical reference contained in this composite
      */
-    public Collection<LogicalWire> getWires() {
-        List<LogicalWire> list = new ArrayList<LogicalWire>();
-        for (Set<LogicalWire> logicalWires : wires.values()) {
-            list.addAll(logicalWires);
-        }
-        return list;
+    public Map<LogicalReference, Set<LogicalWire>> getWires() {
+        return wires;
     }
 
     /**

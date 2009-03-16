@@ -86,7 +86,7 @@ public class BuildComponentCommandGenerator implements CommandGenerator {
             definition.setClassLoaderId(component.getDefinition().getContributionUri());
             QName deployable = component.getDeployable();
             definition.setDeployable(deployable);
-            return new BuildComponentCommand(order, definition);
+            return new BuildComponentCommand(definition);
         }
         return null;
     }

@@ -16,20 +16,19 @@
  */
 package org.fabric3.federation.command;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
 /**
  * A command issued by the zone manager on behalf of a participant to synchronize with the domain.
  *
  * @version $Revision$ $Date$
  */
-public class ZoneSyncCommand extends AbstractCommand {
+public class ZoneSyncCommand implements Command {
     private static final long serialVersionUID = 6531949467055199113L;
     private String zoneId;
     private String runtimeId;
 
     public ZoneSyncCommand(String zoneId, String runtimeId) {
-        super(0);
         this.zoneId = zoneId;
         this.runtimeId = runtimeId;
     }

@@ -23,6 +23,8 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
+import org.fabric3.fabric.command.ReferenceConnectionCommand;
 import org.fabric3.host.Names;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.spi.generator.CommandGenerator;
@@ -83,47 +85,46 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         this.order = order;
     }
 
-    public AttachWireCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+    public int getOrder() {
+        return order;
+    }
+
+    public ReferenceConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent || LogicalState.MARKED == component.getState()) {
             return null;
         }
         return generatePhysicalWires(component, incremental);
     }
 
-    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component, boolean incremental) throws GenerationException {
-        AttachWireCommand command = new AttachWireCommand(order);
+    private ReferenceConnectionCommand generatePhysicalWires(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+        ReferenceConnectionCommand command = new ReferenceConnectionCommand();
 
         for (LogicalReference logicalReference : component.getReferences()) {
             if (logicalReference.getBindings().isEmpty()) {
                 generateUnboundReferenceWires(logicalReference, command, incremental);
             }
         }
-        if (command.getPhysicalWireDefinitions().isEmpty()) {
+        // xcv 123 get rid of need to check this
+        if (command.getAttachCommands().isEmpty() && command.getDetachCommands().isEmpty()) {
             return null;
         }
         return command;
     }
 
-    private void generateUnboundReferenceWires(LogicalReference logicalReference, AttachWireCommand command, boolean incremental)
+    private void generateUnboundReferenceWires(LogicalReference logicalReference, ReferenceConnectionCommand command, boolean incremental)
             throws GenerationException {
 
         LogicalComponent<?> component = logicalReference.getParent();
 
         for (LogicalWire logicalWire : logicalReference.getWires()) {
 
-            if (logicalWire.getState() != LogicalState.NEW && incremental) {
+            URI uri = logicalWire.getTargetUri();
+            LogicalComponent<?> target = findTarget(logicalWire);
+            if (logicalWire.getState() == LogicalState.PROVISIONED && target.getState() != LogicalState.MARKED && incremental) {
                 continue;
             }
 
-            URI uri = logicalWire.getTargetUri();
             String serviceName = uri.getFragment();
-            LogicalComponent<?> target;
-            if (uri.toString().startsWith(Names.RUNTIME_NAME)) {
-                target = runtimeLCM.getComponent(uri);
-            } else {
-                target = applicationLCM.getComponent(uri);
-            }
-            assert target != null;
             LogicalService targetService = target.getService(serviceName);
 
             assert targetService != null;
@@ -137,20 +138,42 @@ public class LocalWireCommandGenerator implements CommandGenerator {
 
             LogicalReference reference = logicalWire.getSource();
             PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
-            command.addPhysicalWireDefinition(pwd);
-
+            boolean attach = true;
+            if (logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
+                AttachWireCommand attachCommand = new AttachWireCommand();
+                attachCommand.setPhysicalWireDefinition(pwd);
+                command.add(attachCommand);
+            } else {
+                attach = false;
+                DetachWireCommand detachCommand = new DetachWireCommand();
+                detachCommand.setPhysicalWireDefinition(pwd);
+                command.add(detachCommand);
+            }
             // generate physical callback wires if the forward service is bidirectional
             if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
                 pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference, component);
-                command.addPhysicalWireDefinition(pwd);
+                if (attach) {
+                    AttachWireCommand attachCommand = new AttachWireCommand();
+                    attachCommand.setPhysicalWireDefinition(pwd);
+                    command.add(attachCommand);
+                } else {
+                    DetachWireCommand detachCommand = new DetachWireCommand();
+                    detachCommand.setPhysicalWireDefinition(pwd);
+                    command.add(detachCommand);
+                }
             }
 
         }
 
     }
 
-    public int getOrder() {
-        return order;
+    private LogicalComponent<?> findTarget(LogicalWire logicalWire) {
+        URI uri = logicalWire.getTargetUri();
+        if (uri.toString().startsWith(Names.RUNTIME_NAME)) {
+            return runtimeLCM.getComponent(uri);
+        } else {
+            return applicationLCM.getComponent(uri);
+        }
     }
 
 }

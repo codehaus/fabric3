@@ -76,19 +76,12 @@
     </component>
 
     <component name="StartCompositeContextCommandGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StartContextCommandGenerator"/>
-        <property name="order">4</property>
-    </component>
-
-    <component name="InitializeComponentCommandGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator"/>
-        <property name="order">5</property>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.context.StartContextCommandGeneratorImpl"/>
     </component>
 
 
     <component name="StopCompositeContextCommandGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StopContextCommandGenerator"/>
-        <property name="order">0</property>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.context.StopContextCommandGeneratorImpl"/>
     </component>
 
     <component name="StopComponentCommandGenerator">

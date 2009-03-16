@@ -36,7 +36,7 @@ package org.fabric3.federation.routing;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -71,7 +71,7 @@ public class FederatedRoutingService implements RoutingService {
         String id = commandMap.getId();
         for (String zone : commandMap.getZones()) {
             try {
-                Set<Command> commands = commandMap.getCommandsForZone(zone);
+                List<Command> commands = commandMap.getCommandsForZone(zone);
                 monitor.routeCommands(zone);
                 String correlationId = commandMap.getCorrelationId();
                 boolean synchronization = commandMap.isSynchornization();

@@ -45,7 +45,6 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
  * Eagerly initializes a component on a service node.
@@ -59,8 +58,7 @@ public class AttachWireCommandExecutor implements CommandExecutor<AttachWireComm
     private final Connector connector;
 
     @Constructor
-    public AttachWireCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                     @Reference Connector connector) {
+    public AttachWireCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry, @Reference Connector connector) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.connector = connector;
     }
@@ -75,14 +73,10 @@ public class AttachWireCommandExecutor implements CommandExecutor<AttachWireComm
     }
 
     public void execute(AttachWireCommand command) throws ExecutionException {
-
-        for (PhysicalWireDefinition physicalWireDefinition : command.getPhysicalWireDefinitions()) {
-            try {
-                connector.connect(physicalWireDefinition);
-            } catch (BuilderException e) {
-                throw new ExecutionException(e.getMessage(), e);
-            }
+        try {
+            connector.connect(command.getPhysicalWireDefinition());
+        } catch (BuilderException e) {
+            throw new ExecutionException(e.getMessage(), e);
         }
-
     }
 }

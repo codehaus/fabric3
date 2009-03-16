@@ -42,9 +42,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.DetachWireCommand;
-import org.fabric3.fabric.command.WireCommand;
+import org.fabric3.fabric.command.ReferenceConnectionCommand;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -55,13 +54,12 @@ import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generate a command to create a wire from a service endpoint to a component for components being deployed and a command to detach a wire for
- * components being undeployed.
+ * Generates commands to create wires from a service endpoint to a component for components being deployed and commands to detach wires for components
+ * being undeployed.
  *
  * @version $Revision$ $Date$
  */
 public class ServiceWireCommandGenerator implements CommandGenerator {
-
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;
 
@@ -74,11 +72,10 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    public Command generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+    public ReferenceConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        WireCommand command;
 
         // determine if a new binding has been added to a provisioned component. If so, an AttachWireCommand must be generated.
         boolean newBinding = false;
@@ -90,21 +87,20 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
                 }
             }
         }
-        if (newBinding || LogicalState.NEW == component.getState() || (!incremental && LogicalState.MARKED != component.getState())) {
-            command = new AttachWireCommand(order);
-        } else if (LogicalState.MARKED == component.getState()) {
-            command = new DetachWireCommand(order);
-        } else {
+        if (LogicalState.PROVISIONED == component.getState() && incremental && !newBinding) {
             return null;
         }
+
+        ReferenceConnectionCommand command = new ReferenceConnectionCommand();
         generatePhysicalWires(component, command, incremental);
-        if (command.getPhysicalWireDefinitions().isEmpty()) {
+        if (command.getAttachCommands().isEmpty() && command.getDetachCommands().isEmpty()) {
             return null;
         }
         return command;
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command, boolean incremental) throws GenerationException {
+    private void generatePhysicalWires(LogicalComponent<?> component, ReferenceConnectionCommand command, boolean incremental)
+            throws GenerationException {
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
             if (bindings.isEmpty()) {
@@ -127,14 +123,31 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
             for (LogicalBinding<?> binding : service.getBindings()) {
                 if (binding.getState() == LogicalState.NEW || binding.getState() == LogicalState.NEW || !incremental) {
                     PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri);
-                    command.addPhysicalWireDefinition(pwd);
+                    if (LogicalState.MARKED == component.getState()) {
+                        DetachWireCommand detachWireCommand = new DetachWireCommand();
+                        detachWireCommand.setPhysicalWireDefinition(pwd);
+                        command.add(detachWireCommand);
+                    } else {
+                        AttachWireCommand attachWireCommand = new AttachWireCommand();
+                        attachWireCommand.setPhysicalWireDefinition(pwd);
+                        command.add(attachWireCommand);
+                    }
+
                 }
             }
             // generate the callback command set
             if (callbackBinding != null
                     && (callbackBinding.getState() == LogicalState.NEW || callbackBinding.getState() == LogicalState.MARKED || !incremental)) {
                 PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackServiceWire(component, service, callbackBinding);
-                command.addPhysicalWireDefinition(callbackPwd);
+                if (LogicalState.MARKED == component.getState()) {
+                    DetachWireCommand detachWireCommand = new DetachWireCommand();
+                    detachWireCommand.setPhysicalWireDefinition(callbackPwd);
+                    command.add(detachWireCommand);
+                } else {
+                    AttachWireCommand attachWireCommand = new AttachWireCommand();
+                    attachWireCommand.setPhysicalWireDefinition(callbackPwd);
+                    command.add(attachWireCommand);
+                }
             }
         }
     }

@@ -34,7 +34,7 @@
  */
 package org.fabric3.fabric.domain;
 
-import java.util.Set;
+import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -65,7 +65,7 @@ public class LocalRoutingService implements RoutingService {
 
     public void route(CommandMap commandMap) throws RoutingException {
 
-        Set<Command> commands = commandMap.getCommandsForZone(null);
+        List<Command> commands = commandMap.getCommandsForZone(null);
         for (Command command : commands) {
             try {
                 registry.execute(command);

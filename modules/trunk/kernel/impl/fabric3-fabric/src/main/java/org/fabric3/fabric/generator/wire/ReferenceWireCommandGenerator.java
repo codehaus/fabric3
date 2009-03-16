@@ -16,6 +16,7 @@
  */
 package org.fabric3.fabric.generator.wire;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.osoa.sca.annotations.Property;
@@ -23,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.DetachWireCommand;
-import org.fabric3.fabric.command.WireCommand;
+import org.fabric3.fabric.command.ReferenceConnectionCommand;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -35,8 +36,8 @@ import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generates a command to attach component reference wires to their transports for components being deployed or a command to detach reference wires
- * for components being undeployed.
+ * Generates commands to attach component reference wires to their transports for components being deployed or commands to detach reference wires for
+ * components being undeployed.
  *
  * @version $Revision$ $Date$
  */
@@ -56,37 +57,18 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
 
     @SuppressWarnings("unchecked")
     public Command generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent) {
-            return null;
-        }
-        WireCommand command;
-        if (LogicalState.NEW == component.getState() || (!incremental && LogicalState.MARKED != component.getState())) {
-            command = new AttachWireCommand(order);
-        } else if (LogicalState.MARKED == component.getState()) {
-            command = new DetachWireCommand(order);
-        } else {
+        if (component instanceof LogicalCompositeComponent || (LogicalState.PROVISIONED == component.getState() && incremental)) {
             return null;
         }
 
-        generatePhysicalWires(component, command, incremental);
-        if (command.getPhysicalWireDefinitions().isEmpty()) {
-            return null;
-        }
-        return command;
-    }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command, boolean incremental) throws GenerationException {
+        ReferenceConnectionCommand command = new ReferenceConnectionCommand();
 
         for (LogicalReference logicalReference : component.getReferences()) {
-            if (logicalReference.getBindings().isEmpty()
-                    || (LogicalState.NEW != component.getState() && LogicalState.MARKED != component.getState() && incremental)) {
-                continue;
-            }
-
-            // TODO this should be extensible and moved out
             for (LogicalBinding<?> logicalBinding : logicalReference.getBindings()) {
+                List<PhysicalWireDefinition> wireDefinitions = new ArrayList<PhysicalWireDefinition>();
                 PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
-                command.addPhysicalWireDefinition(pwd);
+                wireDefinitions.add(pwd);
                 if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
                     List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
                     if (callbackBindings.size() != 1) {
@@ -99,10 +81,31 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
                     PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference,
                                                                                                                 callbackBinding,
                                                                                                                 component);
-                    command.addPhysicalWireDefinition(callbackPwd);
+                    wireDefinitions.add(callbackPwd);
                 }
+                if (LogicalState.MARKED == component.getState()) {
+                    for (PhysicalWireDefinition wireDefinition : wireDefinitions) {
+                        DetachWireCommand wireCommand = new DetachWireCommand();
+                        wireCommand.setPhysicalWireDefinition(wireDefinition);
+                        command.add(wireCommand);
+                    }
+
+                } else {
+                    for (PhysicalWireDefinition wireDefinition : wireDefinitions) {
+                        AttachWireCommand wireCommand = new AttachWireCommand();
+                        wireCommand.setPhysicalWireDefinition(wireDefinition);
+                        command.add(wireCommand);
+                    }
+                }
+
             }
+
         }
+
+        if (command.getAttachCommands().isEmpty() && command.getDetachCommands().isEmpty()) {
+            return null;
+        }
+        return command;
     }
 
 }

@@ -63,7 +63,7 @@ public class StartComponentCommandGenerator implements CommandGenerator {
     public StartComponentCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         // start a component if it is atomic and not provisioned
         if (!(component instanceof LogicalCompositeComponent) && (component.getState() == LogicalState.NEW || !incremental)) {
-            return new StartComponentCommand(order, component.getUri());
+            return new StartComponentCommand(component.getUri());
         }
         return null;
     }

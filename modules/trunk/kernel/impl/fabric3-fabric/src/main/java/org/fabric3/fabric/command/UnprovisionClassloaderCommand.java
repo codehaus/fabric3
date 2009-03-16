@@ -18,15 +18,14 @@ package org.fabric3.fabric.command;
 
 import java.net.URI;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
-public class UnprovisionClassloaderCommand extends AbstractCommand {
+public class UnprovisionClassloaderCommand implements Command {
     private static final long serialVersionUID = -155817487398296922L;
 
     private final URI uri;
 
     public UnprovisionClassloaderCommand(int order, URI uri) {
-        super(order);
         this.uri = uri;
         assert uri != null;
     }

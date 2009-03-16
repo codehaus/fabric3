@@ -34,7 +34,7 @@
  */
 package org.fabric3.fabric.command;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
@@ -42,12 +42,11 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  *
  * @version $Revision$ $Date$
  */
-public class BuildComponentCommand extends AbstractCommand {
+public class BuildComponentCommand implements Command {
     private static final long serialVersionUID = -6102447991230736883L;
     private final PhysicalComponentDefinition definition;
 
-    public BuildComponentCommand(int order, PhysicalComponentDefinition definition) {
-        super(order);
+    public BuildComponentCommand(PhysicalComponentDefinition definition) {
         this.definition = definition;
     }
 
@@ -69,8 +68,7 @@ public class BuildComponentCommand extends AbstractCommand {
 
         BuildComponentCommand that = (BuildComponentCommand) o;
 
-        if (definition != null ?
-                !definition.equals(that.definition) : that.definition != null) {
+        if (definition != null ? !definition.equals(that.definition) : that.definition != null) {
             return false;
         }
         return true;

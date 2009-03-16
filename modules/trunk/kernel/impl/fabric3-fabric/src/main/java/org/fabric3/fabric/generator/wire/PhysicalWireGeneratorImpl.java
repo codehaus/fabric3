@@ -28,12 +28,12 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -47,6 +47,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
@@ -144,8 +145,16 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         sourceDefinition.setKey(target.getDefinition().getKey());
 
         Set<PhysicalOperationDefinition> operations = generateOperations(serviceContract, policyResult, sourceBinding);
+        // xcv 123 this needs to be made more explicit
+        QName sourceDeployable = null;
+        QName targetDeployable = null;
+        if (LogicalState.NEW == target.getState()) {
+            sourceDeployable = source.getDeployable();
+            targetDeployable = target.getDeployable();
+        }
 
-        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
+        PhysicalWireDefinition wireDefinition =
+                new PhysicalWireDefinition(sourceDefinition, sourceDeployable, targetDefinition, targetDeployable, operations);
         boolean optimizable = sourceDefinition.isOptimizable() &&
                 targetDefinition.isOptimizable() &&
                 checkOptimization(serviceContract, operations);
@@ -164,7 +173,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         ServiceContract<?> contract = reference.getDefinition().getServiceContract().getCallbackContract();
         LogicalService callbackService = target.getService(contract.getInterfaceName());
         assert callbackService != null;
-        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, callbackService);
+        LogicalBinding<LocalBindingDefinition> sourceBinding =
+                new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, callbackService);
         LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
         ComponentGenerator<S> sourceGenerator = getGenerator(source);
         ComponentGenerator<T> targetGenerator = getGenerator(target);

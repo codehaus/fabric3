@@ -16,29 +16,27 @@
  */
 package org.fabric3.federation.command;
 
-import java.util.Set;
+import java.util.List;
 
-import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.command.Command;
 
 /**
  * @version $Revision$ $Date$
  */
-public class RuntimeDeploymentCommand extends AbstractCommand {
+public class RuntimeDeploymentCommand implements Command {
     private static final long serialVersionUID = -3864446712541806877L;
 
     private String id;
-    private Set<Command> commands;
+    private List<Command> commands;
     private boolean synchronization;
 
-    public RuntimeDeploymentCommand(String id, Set<Command> commands, boolean synchronization) {
-        super(0);
+    public RuntimeDeploymentCommand(String id, List<Command> commands, boolean synchronization) {
         this.id = id;
         this.commands = commands;
         this.synchronization = synchronization;
     }
 
-    public Set<Command> getCommands() {
+    public List<Command> getCommands() {
         return commands;
     }
 

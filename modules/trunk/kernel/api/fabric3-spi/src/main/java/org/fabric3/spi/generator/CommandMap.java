@@ -34,8 +34,9 @@
  */
 package org.fabric3.spi.generator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class CommandMap {
     private String correlationId;
     private boolean synchornization;
 
-    private Map<String, Set<Command>> commands = new HashMap<String, Set<Command>>();
+    private Map<String, List<Command>> commands = new HashMap<String, List<Command>>();
 
     public CommandMap(String id) {
         this.id = id;
@@ -76,12 +77,12 @@ public class CommandMap {
     }
 
     public void addCommand(String zone, Command command) {
-        Set<Command> cmds = getCommandsForRuntimeInternal(zone);
+        List<Command> cmds = getCommandsForZone(zone);
         cmds.add(command);
     }
 
-    public void addCommands(String zone, Set<Command> commandList) {
-        Set<Command> cmds = getCommandsForRuntimeInternal(zone);
+    public void addCommands(String zone, List<Command> commandList) {
+        List<Command> cmds = getCommandsForZone(zone);
         cmds.addAll(commandList);
     }
 
@@ -89,18 +90,17 @@ public class CommandMap {
         return commands.keySet();
     }
 
-    public Set<Command> getCommandsForZone(String zone) {
-        Set<Command> cmds = getCommandsForRuntimeInternal(zone);
-        return new LinkedHashSet<Command>(cmds);
-    }
-
-    private Set<Command> getCommandsForRuntimeInternal(String zone) {
-        Set<Command> cmds = commands.get(zone);
+    public List<Command> getCommandsForZone(String zone) {
+        List<Command> cmds = commands.get(zone);
         if (cmds == null) {
-            cmds = new LinkedHashSet<Command>();
+            cmds = new ArrayList<Command>();
             commands.put(zone, cmds);
         }
         return cmds;
+    }
+
+    public Map<String, List<Command>> getCommands() {
+        return commands;
     }
 
 }

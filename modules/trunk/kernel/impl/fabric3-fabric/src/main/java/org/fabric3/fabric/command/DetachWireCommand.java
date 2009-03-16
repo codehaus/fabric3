@@ -16,19 +16,8 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.Set;
-import java.util.LinkedHashSet;
-
-import org.fabric3.spi.command.AbstractCommand;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-
 public class DetachWireCommand extends WireCommand {
     private static final long serialVersionUID = 804710699486702279L;
-
-    public DetachWireCommand(int order) {
-        super(order);
-    }
-
 
 
 }

@@ -41,8 +41,8 @@ import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.collector.CollectorImpl;
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.BuildComponentCommand;
-import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
+import org.fabric3.fabric.command.ReferenceConnectionCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartContextCommand;
 import org.fabric3.fabric.domain.LocalRoutingService;
@@ -50,8 +50,8 @@ import org.fabric3.fabric.domain.RuntimeDomain;
 import org.fabric3.fabric.executor.AttachWireCommandExecutor;
 import org.fabric3.fabric.executor.BuildComponentCommandExecutor;
 import org.fabric3.fabric.executor.CommandExecutorRegistryImpl;
-import org.fabric3.fabric.executor.InitializeComponentCommandExecutor;
 import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
+import org.fabric3.fabric.executor.ReferenceConnectionCommandExecutor;
 import org.fabric3.fabric.executor.StartComponentCommandExecutor;
 import org.fabric3.fabric.executor.StartContextCommandExecutor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
@@ -60,9 +60,11 @@ import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl;
 import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
-import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
-import org.fabric3.fabric.generator.component.StartContextCommandGenerator;
+import org.fabric3.fabric.generator.context.StartContextCommandGenerator;
+import org.fabric3.fabric.generator.context.StartContextCommandGeneratorImpl;
+import org.fabric3.fabric.generator.context.StopContextCommandGenerator;
+import org.fabric3.fabric.generator.context.StopContextCommandGeneratorImpl;
 import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.PhysicalOperationHelper;
 import org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl;
@@ -179,7 +181,7 @@ public class BootstrapAssemblyFactory {
                 createPhysicalModelGenerator(logicalComponentManager, metaDataStore);
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
-        Collector collector = new CollectorImpl();
+        Collector collector = new CollectorImpl(logicalComponentManager);
         return new RuntimeDomain(metaDataStore,
                                  physicalModelGenerator,
                                  logicalModelInstantiator,
@@ -274,11 +276,11 @@ public class BootstrapAssemblyFactory {
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
 
         commandRegistry.register(StartContextCommand.class, new StartContextCommandExecutor(scopeRegistry));
-        commandRegistry.register(InitializeComponentCommand.class, new InitializeComponentCommandExecutor(scopeRegistry, componentManager));
         commandRegistry.register(BuildComponentCommand.class, new BuildComponentCommandExecutor(registry, componentManager));
         commandRegistry.register(AttachWireCommand.class, new AttachWireCommandExecutor(connector));
         commandRegistry.register(StartComponentCommand.class, new StartComponentCommandExecutor(componentManager));
         commandRegistry.register(ProvisionClassloaderCommand.class, new ProvisionClassloaderCommandExecutor(classLoaderBuilder));
+        commandRegistry.register(ReferenceConnectionCommand.class, new ReferenceConnectionCommandExecutor(commandRegistry));
 
         return commandRegistry;
 
@@ -318,9 +320,9 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new ServiceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new ResourceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new StartComponentCommandGenerator(3));
-        commandGenerators.add(new StartContextCommandGenerator(4));
-        commandGenerators.add(new InitializeComponentCommandGenerator(5));
-        return new PhysicalModelGeneratorImpl(commandGenerators, classLoaderCommandGenerator);
+        StopContextCommandGenerator stopContextGenerator = new StopContextCommandGeneratorImpl();
+        StartContextCommandGenerator startContextGenerator = new StartContextCommandGeneratorImpl();
+        return new PhysicalModelGeneratorImpl(commandGenerators, classLoaderCommandGenerator, startContextGenerator, stopContextGenerator);
     }
 
     private static GeneratorRegistry createGeneratorRegistry() {

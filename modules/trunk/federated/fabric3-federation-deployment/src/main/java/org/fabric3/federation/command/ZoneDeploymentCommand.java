@@ -16,9 +16,8 @@
  */
 package org.fabric3.federation.command;
 
-import java.util.Set;
+import java.util.List;
 
-import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.command.Command;
 
 /**
@@ -26,11 +25,11 @@ import org.fabric3.spi.command.Command;
  *
  * @version $Revision$ $Date$
  */
-public class ZoneDeploymentCommand extends AbstractCommand {
+public class ZoneDeploymentCommand implements Command {
     private static final long serialVersionUID = 8673100303949676875L;
 
     private String id;
-    private Set<Command> commands;
+    private List<Command> commands;
     private String correlationId;
     private boolean synchronization;
 
@@ -42,24 +41,11 @@ public class ZoneDeploymentCommand extends AbstractCommand {
      * @param correlationId   the correlation id used to associate the deployment command with an originating request
      * @param synchronization true if this command was in response to a runtime request to synchronize with the domain
      */
-    public ZoneDeploymentCommand(String id, Set<Command> commands, String correlationId, boolean synchronization) {
-        super(0);
+    public ZoneDeploymentCommand(String id, List<Command> commands, String correlationId, boolean synchronization) {
         this.id = id;
         this.commands = commands;
         this.correlationId = correlationId;
         this.synchronization = synchronization;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param id       the unique command id
-     * @param commands the set of commands used to deploy components
-     */
-    public ZoneDeploymentCommand(String id, Set<Command> commands) {
-        super(0);
-        this.id = id;
-        this.commands = commands;
     }
 
     /**
@@ -90,11 +76,11 @@ public class ZoneDeploymentCommand extends AbstractCommand {
     }
 
     /**
-     * Returns the set of commands used to deploy components.
+     * Returns the list of commands used to deploy components.
      *
-     * @return the set of commands used to deploy components
+     * @return the list of commands used to deploy components
      */
-    public Set<Command> getCommands() {
+    public List<Command> getCommands() {
         return commands;
     }
 

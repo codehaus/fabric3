@@ -34,10 +34,7 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
@@ -45,25 +42,17 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  *
  * @version $Revision$ $Date$
  */
-public abstract class WireCommand extends AbstractCommand {
+public abstract class WireCommand implements Command {
     private static final long serialVersionUID = -1691568679691192110L;
 
-    protected final Set<PhysicalWireDefinition> physicalWireDefinitions = new LinkedHashSet<PhysicalWireDefinition>();
+    protected PhysicalWireDefinition definition;
 
-    public WireCommand(int order) {
-        super(order);
+    public PhysicalWireDefinition getPhysicalWireDefinition() {
+        return definition;
     }
 
-    public Set<PhysicalWireDefinition> getPhysicalWireDefinitions() {
-        return physicalWireDefinitions;
-    }
-
-    public void addPhysicalWireDefinition(PhysicalWireDefinition physicalWireDefinition) {
-        physicalWireDefinitions.add(physicalWireDefinition);
-    }
-
-    public void addPhysicalWireDefinitions(Set<PhysicalWireDefinition> physicalWireDefinitions) {
-        this.physicalWireDefinitions.addAll(physicalWireDefinitions);
+    public void setPhysicalWireDefinition(PhysicalWireDefinition physicalWireDefinition) {
+        definition = physicalWireDefinition;
     }
 
     @Override
@@ -73,13 +62,12 @@ public abstract class WireCommand extends AbstractCommand {
 
         WireCommand that = (WireCommand) o;
 
-        return !(physicalWireDefinitions != null ? !physicalWireDefinitions.equals(that.physicalWireDefinitions) :
-                that.physicalWireDefinitions != null);
+        return !(definition != null ? !definition.equals(that.definition) : that.definition != null);
 
     }
 
     @Override
     public int hashCode() {
-        return physicalWireDefinitions != null ? physicalWireDefinitions.hashCode() : 0;
+        return definition != null ? definition.hashCode() : 0;
     }
 }

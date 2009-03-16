@@ -36,20 +36,19 @@ package org.fabric3.fabric.command;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
 /**
  * Starts a composite context on a runtime.
  *
  * @version $Rev$ $Date$
  */
-public class StartContextCommand extends AbstractCommand {
+public class StartContextCommand implements Command {
     private static final long serialVersionUID = -2132991925467598257L;
 
     private final QName deployable;
 
-    public StartContextCommand(int order, QName deployable) {
-        super(order);
+    public StartContextCommand(QName deployable) {
         this.deployable = deployable;
     }
 

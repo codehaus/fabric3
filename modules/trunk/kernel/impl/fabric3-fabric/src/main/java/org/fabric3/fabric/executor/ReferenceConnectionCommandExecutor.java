@@ -34,21 +34,42 @@
  */
 package org.fabric3.fabric.executor;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.command.AttachWireCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
+import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.spi.executor.CommandExecutor;
+import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 
 /**
- * Denotes an error executing the {@link org.fabric3.fabric.command.InitializeComponentCommand}
+ * Eagerly initializes a component on a service node.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 2878 $ $Date: 2008-02-23 18:42:09 +0000 (Sat, 23 Feb 2008) $
  */
-public class InitializeException extends ExecutionException {
-    private static final long serialVersionUID = -276254239988931352L;
+@EagerInit
+public class ReferenceConnectionCommandExecutor implements CommandExecutor<ReferenceConnectionCommand> {
+    private CommandExecutorRegistry commandExecutorRegistry;
 
-    public InitializeException(String message, String identifier) {
-        super(message, identifier);
+    public ReferenceConnectionCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry) {
+        this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public InitializeException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
+    @Init
+    public void init() {
+        commandExecutorRegistry.register(ReferenceConnectionCommand.class, this);
+    }
+
+    public void execute(ReferenceConnectionCommand command) throws ExecutionException {
+        for (DetachWireCommand detachWireCommand : command.getDetachCommands()) {
+            commandExecutorRegistry.execute(detachWireCommand);
+        }
+        for (AttachWireCommand attachWireCommand : command.getAttachCommands()) {
+            commandExecutorRegistry.execute(attachWireCommand);
+        }
+
     }
 }

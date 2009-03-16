@@ -47,6 +47,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
+import org.fabric3.fabric.generator.context.StartContextCommandGenerator;
+import org.fabric3.fabric.generator.context.StopContextCommandGenerator;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.CommandMap;
@@ -72,10 +74,16 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     private final List<CommandGenerator> commandGenerators;
     private ClassLoaderCommandGenerator classLoaderCommandGenerator;
+    private StartContextCommandGenerator startContextCommandGenerator;
+    private StopContextCommandGenerator stopContextCommandGenerator;
 
     public PhysicalModelGeneratorImpl(@Reference List<CommandGenerator> commandGenerators,
-                                      @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator) {
+                                      @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator,
+                                      @Reference StartContextCommandGenerator startContextCommandGenerator,
+                                      @Reference StopContextCommandGenerator stopContextCommandGenerator) {
         this.classLoaderCommandGenerator = classLoaderCommandGenerator;
+        this.startContextCommandGenerator = startContextCommandGenerator;
+        this.stopContextCommandGenerator = stopContextCommandGenerator;
         // sort the command generators
         this.commandGenerators = sort(commandGenerators);
     }
@@ -86,9 +94,16 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         CommandMap commandMap = new CommandMap(id);
         Map<String, Set<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted, incremental);
         for (Map.Entry<String, Set<Command>> entry : commandsPerZone.entrySet()) {
+            // xcv 123 change to add all
             for (Command command : entry.getValue()) {
                 commandMap.addCommand(entry.getKey(), command);
             }
+        }
+
+        // generate stop context information
+        Map<String, List<Command>> stopCommands = stopContextCommandGenerator.generate(sorted);
+        for (Map.Entry<String, List<Command>> entry : stopCommands.entrySet()) {
+            commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
         // provision components
@@ -96,9 +111,19 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component, incremental);
                 if (command != null) {
+                    //xcv 123
+                    if (commandMap.getCommandsForZone(component.getZone()).contains(command)) {
+                        continue;
+                    }
                     commandMap.addCommand(component.getZone(), command);
                 }
             }
+        }
+
+        // start contexts
+        Map<String, List<Command>> startCommands = startContextCommandGenerator.generate(sorted, commandMap, incremental);
+        for (Map.Entry<String, List<Command>> entry : startCommands.entrySet()) {
+            commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
         // release classloaders for components being undeployed that are no longer referenced

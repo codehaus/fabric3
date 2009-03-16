@@ -16,19 +16,18 @@
  */
 package org.fabric3.federation.command;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
 /**
  * A command issued by a participant to synchronize with the domain.
  *
  * @version $Revision$ $Date$
  */
-public class PaticipantSyncCommand extends AbstractCommand {
+public class PaticipantSyncCommand implements Command {
     private static final long serialVersionUID = -6969171512764646396L;
     private String runtimeId;
 
     public PaticipantSyncCommand(String runtimeId) {
-        super(0);
         this.runtimeId = runtimeId;
     }
 

@@ -16,8 +16,12 @@
  */
 package org.fabric3.fabric.collector;
 
+import java.net.URI;
 import java.util.Iterator;
+import java.util.Set;
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -26,6 +30,8 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * Default Collector implementation.
@@ -33,6 +39,11 @@ import org.fabric3.spi.model.instance.LogicalWire;
  * @version $Revision$ $Date$
  */
 public class CollectorImpl implements Collector {
+    private LogicalComponentManager lcm;
+
+    public CollectorImpl(@Reference LogicalComponentManager lcm) {
+        this.lcm = lcm;
+    }
 
     public void markAsProvisioned(LogicalCompositeComponent composite) {
         for (LogicalComponent<?> component : composite.getComponents()) {
@@ -68,9 +79,11 @@ public class CollectorImpl implements Collector {
                 }
             }
         }
-        for (LogicalWire wire : composite.getWires()) {
-            if (LogicalState.NEW == wire.getState()) {
-                wire.setState(LogicalState.PROVISIONED);
+        for (Set<LogicalWire> set : composite.getWires().values()) {
+            for (LogicalWire wire : set) {
+                if (LogicalState.NEW == wire.getState()) {
+                    wire.setState(LogicalState.PROVISIONED);
+                }
             }
         }
     }
@@ -110,6 +123,20 @@ public class CollectorImpl implements Collector {
                         }
                     }
                 }
+                // xcv 123 hack remove and replace by adding QName deployable to LogicalWire during LocalWireGeneration or in PhysicalWireGenerator
+                for (Set<LogicalWire> set : composite.getWires().values()) {
+                    for (LogicalWire wire : set) {
+                        if (LogicalState.MARKED == wire.getState()) {
+                            continue;
+                        }
+                        URI componentUri = UriHelper.getDefragmentedName(wire.getTargetUri());
+                        LogicalComponent target = lcm.getComponent(componentUri);
+                        if (deployable.equals(target.getDeployable())) {
+                            wire.setState(LogicalState.MARKED);
+                        }
+                    }
+                }
+                // xcv 123 hack
             }
         }
     }
@@ -128,10 +155,17 @@ public class CollectorImpl implements Collector {
                 for (LogicalReference reference : component.getReferences()) {
                     removeMarkedBindings(reference.getBindings().iterator());
                     removeMarkedBindings(reference.getCallbackBindings().iterator());
-                    composite.removeWires(reference);
                 }
                 if (component instanceof LogicalCompositeComponent) {
                     collect((LogicalCompositeComponent) component);
+                }
+            }
+        }
+        for (Set<LogicalWire> set : composite.getWires().values()) {
+            for (Iterator<LogicalWire> it = set.iterator(); it.hasNext();) {
+                LogicalWire wire = it.next();
+                if (LogicalState.MARKED == wire.getState()) {
+                    it.remove();
                 }
             }
         }

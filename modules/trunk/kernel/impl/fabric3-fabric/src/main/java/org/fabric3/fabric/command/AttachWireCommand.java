@@ -43,10 +43,5 @@ package org.fabric3.fabric.command;
 public class AttachWireCommand extends WireCommand {
     private static final long serialVersionUID = -5157427289507028318L;
 
-    public AttachWireCommand(int order) {
-        super(order);
-    }
-
-
 
 }

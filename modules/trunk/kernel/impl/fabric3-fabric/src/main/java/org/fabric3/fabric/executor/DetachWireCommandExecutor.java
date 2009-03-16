@@ -27,7 +27,6 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 @EagerInit
 public class DetachWireCommandExecutor implements CommandExecutor<DetachWireCommand> {
@@ -49,13 +48,10 @@ public class DetachWireCommandExecutor implements CommandExecutor<DetachWireComm
     }
 
     public void execute(DetachWireCommand command) throws ExecutionException {
-        for (PhysicalWireDefinition physicalWireDefinition : command.getPhysicalWireDefinitions()) {
-            try {
-                connector.disconnect(physicalWireDefinition);
-            } catch (BuilderException be) {
-                throw new AssertionError(be);
-            }
+        try {
+            connector.disconnect(command.getPhysicalWireDefinition());
+        } catch (BuilderException be) {
+            throw new AssertionError(be);
         }
-
     }
 }

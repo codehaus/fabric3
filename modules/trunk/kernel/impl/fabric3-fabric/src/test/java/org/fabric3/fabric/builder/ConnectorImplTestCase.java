@@ -36,7 +36,9 @@ package org.fabric3.fabric.builder;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -88,7 +90,8 @@ public class ConnectorImplTestCase extends TestCase {
         sourceDefinition.setUri(URI.create("source"));
         PhysicalWireTargetDefinition targetDefinition = new PhysicalWireTargetDefinition();
         targetDefinition.setUri(URI.create("target"));
-        definition = new PhysicalWireDefinition(sourceDefinition, targetDefinition);
+        Set<PhysicalOperationDefinition> operations = new HashSet<PhysicalOperationDefinition>();
+        definition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
         operation = new PhysicalOperationDefinition();
         operation.setName("operation");
         definition.addOperation(operation);

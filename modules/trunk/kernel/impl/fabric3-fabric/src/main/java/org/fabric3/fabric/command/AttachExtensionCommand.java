@@ -18,14 +18,14 @@ package org.fabric3.fabric.command;
 
 import java.net.URI;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
 /**
  * A command to attach a contribution classloader as an extension to a contribution classloader that provides an extension point.
  *
  * @version $Revision$ $Date$
  */
-public class AttachExtensionCommand extends AbstractCommand {
+public class AttachExtensionCommand implements Command {
     private static final long serialVersionUID = -5002990071569611217L;
     private URI contribution;
     private URI provider;
@@ -33,12 +33,10 @@ public class AttachExtensionCommand extends AbstractCommand {
     /**
      * Constructor.
      *
-     * @param order        the command order
      * @param contribution the contribution URI providing the extension point
      * @param provider     the extension point provider URI
      */
-    public AttachExtensionCommand(int order, URI contribution, URI provider) {
-        super(order);
+    public AttachExtensionCommand(URI contribution, URI provider) {
         this.contribution = contribution;
         this.provider = provider;
     }

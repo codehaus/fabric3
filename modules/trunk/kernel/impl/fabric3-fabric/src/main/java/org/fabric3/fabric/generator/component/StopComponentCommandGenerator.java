@@ -33,19 +33,19 @@ import org.fabric3.spi.model.instance.LogicalState;
 public class StopComponentCommandGenerator implements CommandGenerator {
 
     private final int order;
-    
-    public StopComponentCommandGenerator(@Property(name = "order")int order) {
+
+    public StopComponentCommandGenerator(@Property(name = "order") int order) {
         this.order = order;
     }
 
-        public int getOrder() {
+    public int getOrder() {
         return order;
     }
 
     @SuppressWarnings("unchecked")
     public StopComponentCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.MARKED) {
-            return new StopComponentCommand(order, component.getUri());
+            return new StopComponentCommand(component.getUri());
         }
         return null;
     }

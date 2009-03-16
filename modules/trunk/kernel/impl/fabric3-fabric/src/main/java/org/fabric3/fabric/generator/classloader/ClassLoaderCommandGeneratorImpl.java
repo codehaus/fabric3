@@ -254,7 +254,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             Set<Command> commands = new LinkedHashSet<Command>();
             commandsPerZone.put(entry.getKey(), commands);
             for (PhysicalClassLoaderDefinition definition : definitions) {
-                commands.add(new ProvisionClassloaderCommand(0, definition));
+                commands.add(new ProvisionClassloaderCommand(definition));
             }
         }
         return commandsPerZone;
@@ -273,7 +273,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             for (Contribution contribution : entry.getValue()) {
                 URI contributionUri = contribution.getUri();
                 for (URI providerUri : contribution.getResolvedExtensionProviders()) {
-                    AttachExtensionCommand command = new AttachExtensionCommand(1, contributionUri, providerUri);
+                    AttachExtensionCommand command = new AttachExtensionCommand(contributionUri, providerUri);
                     commands.get(zone).add(command);
                 }
             }

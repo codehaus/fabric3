@@ -36,20 +36,19 @@ package org.fabric3.fabric.command;
 
 import java.net.URI;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
 /**
  * A command to start a component on a runtime.
  *
  * @version $Revision$ $Date$
  */
-public class StartComponentCommand extends AbstractCommand {
+public class StartComponentCommand implements Command {
     private static final long serialVersionUID = -6106317903755129824L;
 
     private final URI uri;
 
-    public StartComponentCommand(int order, URI uri) {
-        super(order);
+    public StartComponentCommand(URI uri) {
         this.uri = uri;
     }
 

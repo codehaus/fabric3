@@ -34,9 +34,9 @@
  */
 package org.fabric3.spi.model.physical;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.io.Serializable;
+import java.util.Set;
+import javax.xml.namespace.QName;
 
 /**
  * Model class representing the portable definition of a wire.
@@ -49,26 +49,13 @@ import java.io.Serializable;
 public class PhysicalWireDefinition implements Serializable {
     private static final long serialVersionUID = 995196092611674935L;
 
-    // Source definition
     private PhysicalWireSourceDefinition source;
-
-    // Target definition
     private PhysicalWireTargetDefinition target;
+    private QName sourceDeployable;
+    private QName targetDeployable;
 
-    // Collection of forward operations
     private final Set<PhysicalOperationDefinition> operations;
-
     private boolean optimizable;
-
-    public PhysicalWireDefinition() {
-        operations = new HashSet<PhysicalOperationDefinition>();
-    }
-
-    public PhysicalWireDefinition(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target) {
-        this.source = source;
-        this.target = target;
-        operations = new HashSet<PhysicalOperationDefinition>();
-    }
 
     public PhysicalWireDefinition(PhysicalWireSourceDefinition source,
                                   PhysicalWireTargetDefinition target,
@@ -76,6 +63,26 @@ public class PhysicalWireDefinition implements Serializable {
         this.source = source;
         this.target = target;
         this.operations = operations;
+    }
+
+    public PhysicalWireDefinition(PhysicalWireSourceDefinition source,
+                                  QName sourceDeployable,
+                                  PhysicalWireTargetDefinition target,
+                                  QName targetDeployable,
+                                  Set<PhysicalOperationDefinition> operations) {
+        this.source = source;
+        this.sourceDeployable = sourceDeployable;
+        this.target = target;
+        this.operations = operations;
+        this.targetDeployable = targetDeployable;
+    }
+
+    public QName getSourceDeployable() {
+        return sourceDeployable;
+    }
+
+    public QName getTargetDeployable() {
+        return targetDeployable;
     }
 
     /**

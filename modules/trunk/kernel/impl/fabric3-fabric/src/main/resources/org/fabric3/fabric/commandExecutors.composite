@@ -66,10 +66,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.executor.StartContextCommandExecutor"/>
     </component>
 
-    <component name="InitializeComponentCommandExecutor">
-        <f3-impl:implementation.system class="org.fabric3.fabric.executor.InitializeComponentCommandExecutor"/>
-    </component>
-
     <component name="ComponentStopCommandExecutor">
         <f3-impl:implementation.system class="org.fabric3.fabric.executor.StopComponentCommandExecutor"/>
     </component>
@@ -86,5 +82,8 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.executor.UnprovisionClassloaderCommandExecutor"/>
     </component>
 
+    <component name="ReferenceConnectionCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.ReferenceConnectionCommandExecutor"/>
+    </component>
 
 </composite>

@@ -20,11 +20,13 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
  * @version $Revision$ $Date$
@@ -32,7 +34,7 @@ import org.fabric3.spi.model.instance.LogicalState;
 public class CollectorImplTestCase extends TestCase {
     private static final QName DEPLOYABLE = new QName(null, "deployable");
 
-    private Collector collector = new CollectorImpl();
+    private Collector collector;
 
     public <I extends Implementation<?>> void testMarkAndCollect() {
 
@@ -73,5 +75,13 @@ public class CollectorImplTestCase extends TestCase {
         assertNotNull(domain.getComponent(child2Uri));
         assertNull(domain.getComponent(childCompositeUri));
 
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        LogicalComponentManager lcm = EasyMock.createNiceMock(LogicalComponentManager.class);
+        EasyMock.replay(lcm);
+        collector = new CollectorImpl(lcm);
     }
 }

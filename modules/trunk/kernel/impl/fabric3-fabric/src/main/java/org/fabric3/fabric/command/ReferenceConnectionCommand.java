@@ -16,37 +16,37 @@
  */
 package org.fabric3.fabric.command;
 
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fabric3.spi.command.Command;
 
-public class StopComponentCommand implements Command {
-    private static final long serialVersionUID = 4385799180032870689L;
+/**
+ * @version $Revision$ $Date$
+ */
+public class ReferenceConnectionCommand implements Command {
+    private static final long serialVersionUID = -2313380946362271104L;
+    private List<AttachWireCommand> attachCommands;
+    private List<DetachWireCommand> detachCommands;
 
-    private final URI uri;
-
-    public StopComponentCommand(URI uri) {
-        this.uri = uri;
-        assert uri != null;
+    public ReferenceConnectionCommand() {
+        attachCommands = new ArrayList<AttachWireCommand>();
+        detachCommands = new ArrayList<DetachWireCommand>();
     }
 
-    public URI getUri() {
-        return uri;
+    public List<AttachWireCommand> getAttachCommands() {
+        return attachCommands;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StopComponentCommand that = (StopComponentCommand) o;
-
-        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
-
+    public List<DetachWireCommand> getDetachCommands() {
+        return detachCommands;
     }
 
-    @Override
-    public int hashCode() {
-        return uri != null ? uri.hashCode() : 0;
+    public void add(AttachWireCommand command) {
+        attachCommands.add(command);
+    }
+
+    public void add(DetachWireCommand command) {
+        detachCommands.add(command);
     }
 }

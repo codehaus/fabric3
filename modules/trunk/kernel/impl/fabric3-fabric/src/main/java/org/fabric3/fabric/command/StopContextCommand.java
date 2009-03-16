@@ -18,15 +18,14 @@ package org.fabric3.fabric.command;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
-public class StopContextCommand extends AbstractCommand {
+public class StopContextCommand implements Command {
     private static final long serialVersionUID = 6161772793715132968L;
 
     private final QName deployable;
 
-    public StopContextCommand(int order, QName deployable) {
-        super(order);
+    public StopContextCommand(QName deployable) {
         this.deployable = deployable;
         assert deployable != null;
     }

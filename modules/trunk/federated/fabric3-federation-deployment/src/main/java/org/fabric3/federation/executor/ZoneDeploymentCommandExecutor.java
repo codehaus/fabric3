@@ -18,7 +18,7 @@ package org.fabric3.federation.executor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -28,8 +28,11 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.federation.command.RuntimeDeploymentCommand;
 import org.fabric3.federation.command.ZoneDeploymentCommand;
 import org.fabric3.federation.event.RuntimeSynchronized;
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 import org.fabric3.spi.command.Command;
+import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
@@ -38,9 +41,6 @@ import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.RuntimeService;
 import org.fabric3.spi.topology.ZoneManager;
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.InstanceLifecycleException;
-import org.fabric3.model.type.component.Scope;
 
 /**
  * Processes a ZoneDeploymentCommand. This may result in routing the command locally, to an individual runtime, or to  all runtimes in a zone
@@ -151,7 +151,7 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
 
     private void routeLocally(ZoneDeploymentCommand command) throws ExecutionException {
         String id = command.getId();
-        Set<Command> commands = command.getCommands();
+        List<Command> commands = command.getCommands();
         // command destined for this runtime
         String runtimeName = runtimeService.getRuntimeName();
         monitor.routed(runtimeName, id);
@@ -170,7 +170,7 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
         String id = command.getId();
-        Set<Command> commands = command.getCommands();
+        List<Command> commands = command.getCommands();
         boolean synchronization = command.isSynchronization();
         RuntimeDeploymentCommand runtimeCommand = new RuntimeDeploymentCommand(id, commands, synchronization);
         stream.writeObject(runtimeCommand);

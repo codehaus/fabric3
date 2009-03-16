@@ -14,39 +14,22 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.generator.context;
 
-import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 import org.fabric3.spi.command.Command;
+import org.fabric3.spi.generator.CommandMap;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
-public class StopComponentCommand implements Command {
-    private static final long serialVersionUID = 4385799180032870689L;
+/**
+ * @version $Revision$ $Date$
+ */
+public interface StartContextCommandGenerator {
 
-    private final URI uri;
+    Map<String, List<Command>> generate(List<LogicalComponent<?>> components, CommandMap map, boolean incremental)
+            throws GenerationException;
 
-    public StopComponentCommand(URI uri) {
-        this.uri = uri;
-        assert uri != null;
-    }
-
-    public URI getUri() {
-        return uri;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StopComponentCommand that = (StopComponentCommand) o;
-
-        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return uri != null ? uri.hashCode() : 0;
-    }
 }
