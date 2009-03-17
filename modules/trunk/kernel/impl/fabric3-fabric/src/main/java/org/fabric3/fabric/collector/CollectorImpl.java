@@ -120,7 +120,7 @@ public class CollectorImpl implements Collector {
                         if (LogicalState.MARKED == wire.getState()) {
                             continue;
                         }
-                        if (deployable.equals(wire.getDeployable())) {
+                        if (deployable.equals(wire.getTargetDeployable())) {
                             wire.setState(LogicalState.MARKED);
                         }
                     }

@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.InstantiationContext;
@@ -191,7 +193,8 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
         // create the wires
         for (URI target : candidates) {
             URI uri = component.getUri().resolve(target);
-            LogicalWire wire = new LogicalWire(composite, logicalReference, uri);
+            QName deployable = component.getDeployable();
+            LogicalWire wire = new LogicalWire(composite, logicalReference, uri, deployable);
 
             // xcv potentially remove if LogicalWires added to LogicalReference
             LogicalComponent parent = logicalReference.getParent();

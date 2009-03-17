@@ -64,10 +64,15 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
      */
     public LogicalWire(LogicalComponent<?> parent, LogicalReference source, URI targetUri) {
         super(null, parent, TYPE);
-        assert source != null;
-        assert targetUri != null;
         this.source = source;
         this.targetUri = targetUri;
+    }
+
+    public LogicalWire(LogicalComponent<?> parent, LogicalReference source, URI targetUri, QName deployable) {
+        super(null, parent, TYPE);
+        this.source = source;
+        this.targetUri = targetUri;
+        this.deployable = deployable;
     }
 
     /**
@@ -143,17 +148,13 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
     }
 
     /**
-     * Returns the deployable this wire was deployed with, if different than the deployable of the source component. A wire can be deployed
-     * dynamically as part of another deployable composite or when new component is deployed and dynamically autowired to an existing source.
+     * Returns the deployable of the target for this wire. A source of a wire may be deployed via a different deployable thant its target. This value
+     * is used to track the target deployable so the wire may be undeployed along wih the target even if the source is not.
      *
-     * @return the deployable that provisioned the wire or null if the wire was provisioned as part of the source component deployment.
+     * @return the deployable that provisioned the wire.
      */
-    public QName getDeployable() {
+    public QName getTargetDeployable() {
         return deployable;
-    }
-
-    public void setDeployable(QName deployable) {
-        this.deployable = deployable;
     }
 
     /**

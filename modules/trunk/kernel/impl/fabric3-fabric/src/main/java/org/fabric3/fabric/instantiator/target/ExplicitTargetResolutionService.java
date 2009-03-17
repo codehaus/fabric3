@@ -22,6 +22,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.AmbiguousService;
@@ -68,14 +70,14 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         URI componentUri = logicalReference.getParent().getUri();
 
         // resolve the target URIs to services
-        List<URI> targets = new ArrayList<URI>();
+        List<LogicalService> targets = new ArrayList<LogicalService>();
         for (URI requestedTarget : requestedTargets) {
             URI resolved = parentUri.resolve(componentUri).resolve(requestedTarget);
-            URI targetURI = resolveByUri(logicalReference, resolved, component, context);
-            if (targetURI == null) {
+            LogicalService targetService = resolveByUri(logicalReference, resolved, component, context);
+            if (targetService == null) {
                 return;
             }
-            targets.add(targetURI);
+            targets.add(targetService);
 
         }
         // create the logical wires
@@ -84,14 +86,18 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         LogicalCompositeComponent grandParent = (LogicalCompositeComponent) parent.getParent();
         Set<LogicalWire> wires = new LinkedHashSet<LogicalWire>();
         if (null != grandParent) {
-            for (URI targetUri : targets) {
-                LogicalWire wire = new LogicalWire(grandParent, logicalReference, targetUri);
+            for (LogicalService targetService : targets) {
+                URI uri = targetService.getUri();
+                QName deployable = targetService.getParent().getDeployable();
+                LogicalWire wire = new LogicalWire(grandParent, logicalReference, uri, deployable);
                 wires.add(wire);
             }
             grandParent.overrideWires(logicalReference, wires);
         } else {
-            for (URI targetUri : targets) {
-                LogicalWire wire = new LogicalWire(parent, logicalReference, targetUri);
+            for (LogicalService targetService : targets) {
+                URI uri = targetService.getUri();
+                QName deployable = targetService.getParent().getDeployable();
+                LogicalWire wire = new LogicalWire(parent, logicalReference, uri, deployable);
                 wires.add(wire);
             }
             ((LogicalCompositeComponent) parent).overrideWires(logicalReference, wires);
@@ -100,7 +106,10 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         logicalReference.setResolved(true);
     }
 
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, InstantiationContext context) {
+    private LogicalService resolveByUri(LogicalReference reference,
+                                        URI targetUri,
+                                        LogicalCompositeComponent composite,
+                                        InstantiationContext context) {
 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
@@ -154,7 +163,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             }
         }
         validateContracts(reference, targetService, context);
-        return targetService.getUri();
+        return targetService;
     }
 
     /**
@@ -162,7 +171,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
      *
      * @param reference the reference
      * @param service   the service
-     * @param context    the logical context
+     * @param context   the logical context
      */
     private void validateContracts(LogicalReference reference, LogicalService service, InstantiationContext context) {
         ServiceContract<?> referenceContract = contractResolver.determineContract(reference);

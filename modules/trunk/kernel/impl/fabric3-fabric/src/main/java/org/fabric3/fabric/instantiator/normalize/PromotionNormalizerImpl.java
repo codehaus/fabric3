@@ -22,6 +22,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.fabric.instantiator.PromotionNormalizer;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.spi.model.instance.Bindable;
@@ -117,22 +119,23 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
                 continue;
             }
             List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
-            List<URI> targets = new ArrayList<URI>();
+            List<LogicalWire> wiresFromPromotedReferences = new ArrayList<LogicalWire>();
             Set<LogicalWire> wires = new LinkedHashSet<LogicalWire>();
             for (LogicalReference promoted : references) {
                 bindings.addAll(promoted.getBindings());
                 for (LogicalWire logicalWire : promoted.getWires()) {
-                    URI targetUri = logicalWire.getTargetUri();
-                    targets.add(targetUri);
+                    wiresFromPromotedReferences.add(logicalWire);
 
                 }
             }
             if (!bindings.isEmpty()) {
                 reference.overrideBindings(bindings);
             }
-            if (!targets.isEmpty()) {
-                for (URI targetUri : targets) {
-                    LogicalWire wire = new LogicalWire(parent, reference, targetUri);
+            if (!wiresFromPromotedReferences.isEmpty()) {
+                for (LogicalWire promotedWire : wiresFromPromotedReferences) {
+                    URI uri = promotedWire.getTargetUri();
+                    QName deployable = promotedWire.getParent().getDeployable();
+                    LogicalWire wire = new LogicalWire(parent, reference, uri, deployable);
                     wires.add(wire);
                 }
                 ((LogicalCompositeComponent) parent).overrideWires(reference, wires);

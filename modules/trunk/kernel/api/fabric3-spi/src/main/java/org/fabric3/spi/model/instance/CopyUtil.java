@@ -19,6 +19,8 @@ package org.fabric3.spi.model.instance;
 import java.net.URI;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.w3c.dom.Document;
 
 /**
@@ -127,8 +129,9 @@ public class CopyUtil {
 
     private static void copyWires(LogicalCompositeComponent composite, LogicalReference reference, LogicalCompositeComponent parent) {
         for (LogicalWire wire : composite.getWires(reference)) {
-            LogicalWire wireCopy = new LogicalWire(parent, reference, wire.getTargetUri());
-            wireCopy.setDeployable(wire.getDeployable());
+            URI targetUri = wire.getTargetUri();
+            QName deployable = wire.getTargetDeployable();
+            LogicalWire wireCopy = new LogicalWire(parent, reference, targetUri, deployable);
             parent.addWire(reference, wireCopy);
         }
     }

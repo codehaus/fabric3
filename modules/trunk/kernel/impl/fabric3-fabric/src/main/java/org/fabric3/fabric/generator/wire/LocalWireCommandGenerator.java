@@ -119,9 +119,6 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             if (logicalWire.getState() == LogicalState.PROVISIONED && target.getState() != LogicalState.MARKED && incremental) {
                 continue;
             }
-            if (target.getDeployable() != null && !target.getDeployable().equals(component.getDeployable())) {
-                logicalWire.setDeployable(target.getDeployable());
-            }
             String serviceName = uri.getFragment();
             LogicalService targetService = target.getService(serviceName);
 
