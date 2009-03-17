@@ -39,17 +39,26 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * Implementations inject a pre-configured value on an instance
+ * Implementations inject a pre-configured value on a component implementation instance
  *
  * @version $Rev$ $Date$
  */
 public interface Injector<T> {
 
     /**
-     * Inject a value on the given instance
+     * Inject a value on the given instance.
+     *
+     * @param instance the instance to inject on.
+     * @throws ObjectCreationException if an error is raised during injection
      */
     void inject(T instance) throws ObjectCreationException;
-    
+
+    /**
+     * Adds or updates the injector with an ObjectFactory used to inject the pre-configured value.
+     *
+     * @param objectFactory the ObjectFactory
+     * @param key           an ObjectFactory key. The key corresponds to the key used in Map-based wiring.
+     */
     void setObjectFactory(ObjectFactory<?> objectFactory, Object key);
 
 }
