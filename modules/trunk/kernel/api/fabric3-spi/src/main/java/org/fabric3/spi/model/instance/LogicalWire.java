@@ -68,6 +68,14 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
         this.targetUri = targetUri;
     }
 
+    /**
+     * Instantiates a logical wire.
+     *
+     * @param parent     component within which the wire is defined.
+     * @param source     the source reference of the wire
+     * @param targetUri  the uri of the target service
+     * @param deployable the target service deployable
+     */
     public LogicalWire(LogicalComponent<?> parent, LogicalReference source, URI targetUri, QName deployable) {
         super(null, parent, TYPE);
         this.source = source;
