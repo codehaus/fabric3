@@ -128,6 +128,7 @@ public class CopyUtil {
     private static void copyWires(LogicalCompositeComponent composite, LogicalReference reference, LogicalCompositeComponent parent) {
         for (LogicalWire wire : composite.getWires(reference)) {
             LogicalWire wireCopy = new LogicalWire(parent, reference, wire.getTargetUri());
+            wireCopy.setDeployable(wire.getDeployable());
             parent.addWire(reference, wireCopy);
         }
     }
