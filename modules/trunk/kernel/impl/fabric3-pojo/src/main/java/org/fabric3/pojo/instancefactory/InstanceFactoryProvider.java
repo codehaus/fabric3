@@ -61,9 +61,9 @@ public interface InstanceFactoryProvider<T> {
     /**
      * Sets an object factory for an injection site.
      *
-     * @param attribute the injection site
-     * @param objectFactory       the object factory
-     * @param key                 the key for Map-based injection sites
+     * @param attribute     the injection site
+     * @param objectFactory the object factory
+     * @param key           the key for Map-based injection sites
      */
     void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory, Object key);
 
@@ -74,6 +74,13 @@ public interface InstanceFactoryProvider<T> {
      * @return the object factory or null
      */
     ObjectFactory<?> getObjectFactory(InjectableAttribute attribute);
+
+    /**
+     * Removes an object factory for an injection site.
+     *
+     * @param name the injection site name
+     */
+    void removeObjectFactory(InjectableAttribute name);
 
     /**
      * Returns the type for the injection site

@@ -100,6 +100,10 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
     public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
     }
 
+    public void removeObjectFactory(AtomicComponent<?> component, String referenceName) {
+
+    }
+
     public void reinject() {
     }
 

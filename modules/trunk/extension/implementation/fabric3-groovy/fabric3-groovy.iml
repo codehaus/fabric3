@@ -17,12 +17,6 @@
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-fabric" exported="" />
-    <orderEntry type="module" module-name="fabric3-transform" exported="" />
-    <orderEntry type="module" module-name="fabric3-loader" exported="" />
-    <orderEntry type="module" module-name="fabric3-introspection" exported="" />
-    <orderEntry type="module" module-name="fabric3-system" exported="" />
-    <orderEntry type="module" module-name="fabric3-jmx" exported="" />
     <orderEntry type="module-library">
       <library name="org.apache.geronimo.specs:geronimo-annotation_1.0_spec:1.1">
         <CLASSES>

@@ -27,6 +27,7 @@ import org.fabric3.fabric.command.DetachWireCommand;
 import org.fabric3.fabric.command.ReferenceConnectionCommand;
 import org.fabric3.host.Names;
 import org.fabric3.model.type.component.CompositeImplementation;
+import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -112,11 +113,28 @@ public class LocalWireCommandGenerator implements CommandGenerator {
 
         LogicalComponent<?> component = logicalReference.getParent();
 
+        // if the reference is a multiplicity and one of the wires has changed, all of the wires need to be regenerated for reinjection
+        boolean reinjection = false;
+        Multiplicity multiplicity = logicalReference.getDefinition().getMultiplicity();
+        if (incremental && multiplicity == Multiplicity.ZERO_N || multiplicity == Multiplicity.ONE_N) {
+            for (LogicalWire wire : logicalReference.getWires()) {
+                LogicalComponent<?> target = findTarget(wire);
+                // check the source and target sides since a target may have been added or removed
+                if (wire.getState() == LogicalState.NEW
+                        || wire.getState() == LogicalState.MARKED
+                        || target.getState() == LogicalState.NEW
+                        || target.getState() == LogicalState.MARKED) {
+                    reinjection = true;
+                    break;
+                }
+            }
+        }
+
         for (LogicalWire logicalWire : logicalReference.getWires()) {
 
             URI uri = logicalWire.getTargetUri();
             LogicalComponent<?> target = findTarget(logicalWire);
-            if (logicalWire.getState() == LogicalState.PROVISIONED && target.getState() != LogicalState.MARKED && incremental) {
+            if (!reinjection && (logicalWire.getState() == LogicalState.PROVISIONED && target.getState() != LogicalState.MARKED && incremental)) {
                 continue;
             }
             String serviceName = uri.getFragment();
@@ -134,15 +152,15 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             LogicalReference reference = logicalWire.getSource();
             PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
             boolean attach = true;
-            if (logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
-                AttachWireCommand attachCommand = new AttachWireCommand();
-                attachCommand.setPhysicalWireDefinition(pwd);
-                command.add(attachCommand);
-            } else {
+            if (target.getState() == LogicalState.MARKED || logicalWire.getState() == LogicalState.MARKED) {
                 attach = false;
                 DetachWireCommand detachCommand = new DetachWireCommand();
                 detachCommand.setPhysicalWireDefinition(pwd);
                 command.add(detachCommand);
+            } else if (reinjection || logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
+                AttachWireCommand attachCommand = new AttachWireCommand();
+                attachCommand.setPhysicalWireDefinition(pwd);
+                command.add(attachCommand);
             }
             // generate physical callback wires if the forward service is bidirectional
             if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
@@ -163,7 +181,7 @@ public class LocalWireCommandGenerator implements CommandGenerator {
     }
 
     private LogicalComponent<?> findTarget(LogicalWire logicalWire) {
-        URI uri = logicalWire.getTargetUri();
+        URI uri = UriHelper.getDefragmentedName(logicalWire.getTargetUri());
         if (uri.toString().startsWith(Names.RUNTIME_NAME)) {
             return runtimeLCM.getComponent(uri);
         } else {

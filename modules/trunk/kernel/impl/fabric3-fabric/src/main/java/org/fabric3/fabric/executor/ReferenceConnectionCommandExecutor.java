@@ -64,6 +64,7 @@ public class ReferenceConnectionCommandExecutor implements CommandExecutor<Refer
     }
 
     public void execute(ReferenceConnectionCommand command) throws ExecutionException {
+        // detach must be executed first so wire attachers can drop connection prior to adding new ones
         for (DetachWireCommand detachWireCommand : command.getDetachCommands()) {
             commandExecutorRegistry.execute(detachWireCommand);
         }

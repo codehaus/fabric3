@@ -61,4 +61,9 @@ public interface Injector<T> {
      */
     void setObjectFactory(ObjectFactory<?> objectFactory, Object key);
 
+    /**
+     * Clears the currently set ObjectFactory. Used when a multiplicity reference is reinjected.
+     */
+    void clearObjectFactory();
+
 }

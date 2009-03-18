@@ -83,12 +83,20 @@ public class FieldInjector<T> implements Injector<T> {
     }
 
     public void setObjectFactory(ObjectFactory<?> objectFactory, Object key) {
-        
+
         if (this.objectFactory instanceof MultiplicityObjectFactory<?>) {
             ((MultiplicityObjectFactory<?>) this.objectFactory).addObjectFactory(objectFactory, key);
         } else {
             this.objectFactory = objectFactory;
         }
-        
+
+    }
+
+    public void clearObjectFactory() {
+        if (this.objectFactory instanceof MultiplicityObjectFactory<?>) {
+            ((MultiplicityObjectFactory<?>) this.objectFactory).clear();
+        } else {
+            objectFactory = null;
+        }
     }
 }

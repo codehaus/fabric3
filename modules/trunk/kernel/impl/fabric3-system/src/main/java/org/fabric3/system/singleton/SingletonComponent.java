@@ -276,5 +276,9 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
             // no-op
         }
 
+        public void removeObjectFactory(String referenceName) {
+            // no-op
+        }
+
     }
 }

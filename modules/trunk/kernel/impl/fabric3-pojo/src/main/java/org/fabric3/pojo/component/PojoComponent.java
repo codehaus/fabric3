@@ -179,6 +179,14 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         instanceFactory = null;
     }
 
+    public void removeObjectFactory(InjectableAttribute attribute) {
+        scopeContainer.removeObjectFactory(this, attribute.getName());
+        provider.removeObjectFactory(attribute);
+        // Clear the instance factory as it has changed and will need to be re-created. This can happen if reinjection occurs after the first
+        // instance has been created.
+        instanceFactory = null;
+    }
+
     public ObjectFactory<?> getObjectFactory(InjectableAttribute attribute) {
         return provider.getObjectFactory(attribute);
     }

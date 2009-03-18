@@ -93,4 +93,10 @@ public interface InstanceWrapper<T> {
      */
     void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key);
 
+    /**
+     * Removes an object factory for the given reference. Used to clear multiplicity references during reinjection.
+     *
+     * @param referenceName the reference
+     */
+    void removeObjectFactory(String referenceName);
 }

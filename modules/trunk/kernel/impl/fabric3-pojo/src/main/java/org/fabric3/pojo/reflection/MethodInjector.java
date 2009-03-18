@@ -87,4 +87,13 @@ public class MethodInjector<T> implements Injector<T> {
         }
 
     }
+
+    public void clearObjectFactory() {
+        if (this.objectFactory instanceof MultiplicityObjectFactory<?>) {
+            ((MultiplicityObjectFactory<?>) this.objectFactory).clear();
+        } else {
+            objectFactory = null;
+        }
+    }
+
 }

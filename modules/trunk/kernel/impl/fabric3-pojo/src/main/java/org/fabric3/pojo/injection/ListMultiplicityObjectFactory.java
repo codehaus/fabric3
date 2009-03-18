@@ -23,8 +23,7 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>List</code>
- * containing object instances
+ * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>List</code> containing object instances
  *
  * @version $Rev$ $Date$
  */
@@ -43,6 +42,10 @@ public class ListMultiplicityObjectFactory implements MultiplicityObjectFactory<
 
     public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
         factories.add(objectFactory);
+    }
+
+    public void clear() {
+        factories.clear();
     }
 
 }

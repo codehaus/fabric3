@@ -98,11 +98,14 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
     }
 
     public void detachFromSource(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        // no-op
+        detachObjectFactory(source, target);
     }
 
     public void detachObjectFactory(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        // no-op
+        URI sourceName = UriHelper.getDefragmentedName(source.getUri());
+        JavaComponent<?> component = (JavaComponent) manager.getComponent(sourceName);
+        InjectableAttribute injectableAttribute = source.getValueSource();
+        component.removeObjectFactory(injectableAttribute);
     }
 
     public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)

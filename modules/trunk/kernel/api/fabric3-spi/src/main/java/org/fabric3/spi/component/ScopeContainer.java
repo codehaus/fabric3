@@ -179,6 +179,14 @@ public interface ScopeContainer<KEY> extends Lifecycle {
     void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key);
 
     /**
+     * Removes an object factory from references of active instances for a component.
+     *
+     * @param component     Component with active instances, whose references need to be updated.
+     * @param referenceName Name of the reference.
+     */
+    void removeObjectFactory(AtomicComponent<?> component, String referenceName);
+
+    /**
      * Re-injects all live instances with updated wires.
      *
      * @throws InstanceLifecycleException if an error occurs during reinjection.

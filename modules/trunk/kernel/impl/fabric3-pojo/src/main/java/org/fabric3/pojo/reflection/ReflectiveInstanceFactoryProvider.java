@@ -114,6 +114,10 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         return factories.get(attribute);
     }
 
+    public void removeObjectFactory(InjectableAttribute attribute) {
+        factories.remove(attribute);
+    }
+
     public Class<?> getMemberType(InjectableAttribute attribute) {
         InjectionSite site = findInjectionSite(attribute);
         if (site == null) {

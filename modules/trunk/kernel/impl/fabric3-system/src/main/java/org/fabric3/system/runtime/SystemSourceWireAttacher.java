@@ -39,22 +39,22 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.builder.PojoSourceWireAttacher;
-import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.pojo.builder.PojoSourceWireAttacher;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
-import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -84,45 +84,46 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         this.proxyService = proxyService;
     }
 
-    public void attachToSource(SystemWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
-            throws WiringException {
+    public void attachToSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
         if (proxyService == null) {
-            throw new WiringException(
-                    "Attempt to inject a non-optimized wire during runtime boostrap. Non-optimizied wires are only supported in user extensions");
+            throw new WiringException("Attempt to inject a non-optimized wire during runtime boostrap.");
         }
-        URI sourceUri = sourceDefinition.getUri();
-        URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        SystemComponent<?> source = (SystemComponent) manager.getComponent(sourceName);
-        InjectableAttribute injectableAttribute = sourceDefinition.getValueSource();
+        URI sourceUri = source.getUri();
+        URI sourceName = UriHelper.getDefragmentedName(source.getUri());
+        SystemComponent<?> component = (SystemComponent) manager.getComponent(sourceName);
+        InjectableAttribute injectableAttribute = source.getValueSource();
 
         Class<?> type;
         try {
-            type = classLoaderRegistry.loadClass(sourceDefinition.getClassLoaderId(), sourceDefinition.getInterfaceName());
+            type = classLoaderRegistry.loadClass(source.getClassLoaderId(), source.getInterfaceName());
         } catch (ClassNotFoundException e) {
-            String name = sourceDefinition.getInterfaceName();
+            String name = source.getInterfaceName();
             throw new WireAttachException("Unable to load interface class: " + name, sourceUri, null, e);
         }
         if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
-            throw new UnsupportedOperationException("Callbacks not supported on system components");
+            throw new UnsupportedOperationException("Callbacks are not supported on system components");
         } else {
             String callbackUri = null;
-            URI uri = targetDefinition.getCallbackUri();
+            URI uri = target.getCallbackUri();
             if (uri != null) {
                 callbackUri = uri.toString();
             }
 
-            ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
-            Object key = getKey(sourceDefinition, source, targetDefinition, injectableAttribute);
-            source.setObjectFactory(injectableAttribute, factory, key);
+            ObjectFactory<?> factory = proxyService.createObjectFactory(type, source.getInteractionType(), wire, callbackUri);
+            Object key = getKey(source, component, target, injectableAttribute);
+            component.setObjectFactory(injectableAttribute, factory, key);
         }
     }
 
     public void detachFromSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        // no-op
+        detachObjectFactory(source, target);
     }
 
     public void detachObjectFactory(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        // no-op
+        URI sourceName = UriHelper.getDefragmentedName(source.getUri());
+        SystemComponent<?> component = (SystemComponent) manager.getComponent(sourceName);
+        InjectableAttribute injectableAttribute = source.getValueSource();
+        component.removeObjectFactory(injectableAttribute);
     }
 
     public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)

@@ -46,4 +46,8 @@ public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<M
         }
     }
 
+    public void clear() {
+        factories.clear();
+    }
+
 }

@@ -19,7 +19,7 @@ package org.fabric3.pojo.injection;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * Common  interface for all multiplicity object factories.
+ * Common interface for all multiplicity object factories.
  *
  * @version $Revision$ $Date$
  * @param <T>
@@ -34,4 +34,8 @@ public interface MultiplicityObjectFactory<T> extends ObjectFactory<T> {
      */
     void addObjectFactory(ObjectFactory<?> objectFactory, Object key);
 
+    /**
+     * Clears the contents of the object factory
+     */
+    void clear();
 }

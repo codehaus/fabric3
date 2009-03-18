@@ -149,20 +149,32 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     }
 
     public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
+        if (instance != null && !reinjectable) {
+            throw new IllegalStateException("Implementation is not reinjectable");
+        }
         for (int i = 0; i < attributes.length; i++) {
             InjectableAttribute attribute = attributes[i];
             if (attribute.getName().equals(referenceName)) {
                 Injector<T> injector = injectors[i];
                 injector.setObjectFactory(factory, key);
-                if (instance != null && !reinjectable) {
-                    throw new IllegalStateException("Implementation is not reinjectable");
-
-                } else if (instance != null) {
+                if (instance != null) {
                     updatedInjectors.add(injector);
                 }
             }
         }
-
     }
 
+    public void removeObjectFactory(String referenceName) {
+        if (instance != null && !reinjectable) {
+            throw new IllegalStateException("Implementation is not reinjectable");
+        }
+        for (int i = 0; i < attributes.length; i++) {
+            InjectableAttribute attribute = attributes[i];
+            if (attribute.getName().equals(referenceName)) {
+                Injector<T> injector = injectors[i];
+                injector.clearObjectFactory();
+            }
+        }
+
+    }
 }

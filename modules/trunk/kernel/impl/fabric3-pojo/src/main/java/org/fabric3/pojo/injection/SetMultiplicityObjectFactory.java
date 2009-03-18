@@ -44,4 +44,8 @@ public class SetMultiplicityObjectFactory implements MultiplicityObjectFactory<S
         factories.add(objectFactory);
     }
 
+    public void clear() {
+        factories.clear();
+    }
+
 }

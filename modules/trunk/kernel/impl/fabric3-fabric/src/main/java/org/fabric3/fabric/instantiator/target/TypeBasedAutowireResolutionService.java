@@ -19,7 +19,6 @@ package org.fabric3.fabric.instantiator.target;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
@@ -167,7 +166,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
                                   LogicalReference logicalReference,
                                   ServiceContract<?> contract) {
 
-        List<URI> candidates = new ArrayList<URI>();
+        List<LogicalService> candidates = new ArrayList<LogicalService>();
         Multiplicity refMultiplicity = logicalReference.getDefinition().getMultiplicity();
         boolean multiplicity = Multiplicity.ZERO_N.equals(refMultiplicity) || Multiplicity.ONE_N.equals(refMultiplicity);
         for (LogicalComponent<?> child : composite.getComponents()) {
@@ -178,7 +177,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
                     throw new AssertionError("No service contract specified on service: " + service.getUri());
                 }
                 if (contract.isAssignableFrom(targetContract)) {
-                    candidates.add(service.getUri());
+                    candidates.add(service);
                     break;
                 }
             }
@@ -191,9 +190,10 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
             return false;
         }
         // create the wires
-        for (URI target : candidates) {
-            URI uri = component.getUri().resolve(target);
-            QName deployable = component.getDeployable();
+        for (LogicalService target : candidates) {
+            URI uri = target.getUri();
+            // for autowires, the deployable of the wire is the target since the wire must be removed when the target is undeployed
+            QName deployable = target.getParent().getDeployable();
             LogicalWire wire = new LogicalWire(composite, logicalReference, uri, deployable);
 
             // xcv potentially remove if LogicalWires added to LogicalReference

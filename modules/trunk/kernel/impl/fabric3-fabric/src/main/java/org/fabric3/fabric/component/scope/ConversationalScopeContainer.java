@@ -204,6 +204,10 @@ public class ConversationalScopeContainer extends AbstractScopeContainer<Convers
 
     }
 
+    public void removeObjectFactory(AtomicComponent<?> component, String referenceName) {
+
+    }
+
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
             throws InstanceDestructionException {
     }

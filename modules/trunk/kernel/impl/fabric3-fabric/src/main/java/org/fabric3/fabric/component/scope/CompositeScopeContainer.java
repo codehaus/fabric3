@@ -219,6 +219,13 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
         }
     }
 
+    public void removeObjectFactory(AtomicComponent<?> component, String referenceName) {
+        InstanceWrapper<?> wrapper = instanceWrappers.get(component);
+        if (wrapper != null) {
+            wrapper.removeObjectFactory(referenceName);
+        }
+    }
+
     public void reinject() throws InstanceLifecycleException {
         for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
             instanceWrapper.reinject();
@@ -266,6 +273,10 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
         }
 
         public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
+
+        }
+
+        public void removeObjectFactory(String referenceName) {
 
         }
 
