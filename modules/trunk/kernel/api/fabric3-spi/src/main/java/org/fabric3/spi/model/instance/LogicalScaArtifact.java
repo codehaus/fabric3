@@ -34,10 +34,9 @@
  */
 package org.fabric3.spi.model.instance;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
-import java.io.Serializable;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -52,9 +51,9 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> implem
     private final QName type;
 
     /**
-     * @param uri URI of the SCA artifact.
+     * @param uri    URI of the SCA artifact.
      * @param parent Parent of the SCA artifact.
-     * @param type Type of this artifact.
+     * @param type   Type of this artifact.
      */
     public LogicalScaArtifact(final URI uri, final P parent, final QName type) {
         this.uri = uri;
@@ -77,7 +76,7 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> implem
     public QName getType() {
         return type;
     }
-    
+
     /**
      * @return Parent of this SCA artifact.
      */
@@ -86,14 +85,18 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> implem
     }
 
     public String toString() {
+        if (uri == null) {
+            return "";
+        }
         return uri.toString();
+
     }
 
     /**
      * @return Intents declared on the SCA artifact.
      */
     public abstract Set<QName> getIntents();
-    
+
     /**
      * @param intents Intents declared on the SCA artifact.
      */
@@ -102,11 +105,11 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> implem
     /**
      * @return Policy sets declared on the SCA artifact.
      */
-    public abstract Set<QName> getPolicySets() ;
+    public abstract Set<QName> getPolicySets();
 
     /**
      * @param policySets Policy sets declared on the SCA artifact.
      */
-    public abstract void setPolicySets(Set<QName> policySets) ;
+    public abstract void setPolicySets(Set<QName> policySets);
 
 }
