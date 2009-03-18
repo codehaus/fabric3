@@ -46,6 +46,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
     private PhysicalWireGenerator wireGenerator;
     private LogicalComponentManager lcm;
 
+    @SuppressWarnings({"unchecked"})
     public void testIncrementalAttach() throws Exception {
         URI root = URI.create("root");
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
@@ -85,6 +86,50 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         assertEquals(0, command.getDetachCommands().size());
     }
 
+    @SuppressWarnings({"unchecked"})
+    public void testRegeneration() throws Exception {
+        URI root = URI.create("root");
+        ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
+        LogicalCompositeComponent composite = new LogicalCompositeComponent(root, definition, null);
+
+        URI targetUri = URI.create("target");
+        ComponentDefinition<?> targetDefinition = new ComponentDefinition(null);
+        LogicalComponent<?> target = new LogicalComponent(targetUri, targetDefinition, composite);
+        target.setState(LogicalState.PROVISIONED);
+        MockContract contract = new MockContract();
+        ServiceDefinition serviceDefinition = new ServiceDefinition("service", contract);
+        LogicalService service = new LogicalService(URI.create("source#service"), serviceDefinition, target);
+        target.addService(service);
+        composite.addComponent(target);
+
+        URI sourceUri = URI.create("source");
+        ComponentDefinition<?> sourceDefinition = new ComponentDefinition(null);
+        LogicalComponent<?> source = new LogicalComponent(sourceUri, sourceDefinition, composite);
+        source.setState(LogicalState.PROVISIONED);
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition("reference", contract);
+        LogicalReference reference = new LogicalReference(URI.create("source#reference"), referenceDefinition, source);
+        source.addReference(reference);
+        LogicalWire wire = new LogicalWire(composite, reference, URI.create("target#service"));
+        wire.setState(LogicalState.PROVISIONED);
+        composite.addWire(reference, wire);
+        composite.addComponent(source);
+
+        lcm.getComponent(targetUri);
+        EasyMock.expectLastCall().andReturn(target);
+
+        wireGenerator.generateUnboundWire(source, reference, service, target);
+        EasyMock.expectLastCall().andReturn(new PhysicalWireDefinition(null, null, null));
+
+        EasyMock.replay(lcm, wireGenerator);
+
+        ReferenceConnectionCommand command = generator.generate(source, false);
+
+        EasyMock.verify(lcm, wireGenerator);
+        assertEquals(1, command.getAttachCommands().size());
+        assertEquals(0, command.getDetachCommands().size());
+    }
+
+    @SuppressWarnings({"unchecked"})
     public void testTargetCollectDetach() throws Exception {
         URI root = URI.create("root");
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
@@ -129,6 +174,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         assertEquals(1, command.getDetachCommands().size());
     }
 
+    @SuppressWarnings({"unchecked"})
     public void testTargetCollectDetachMultiplicity1ToNReference() throws Exception {
         URI root = URI.create("root");
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
@@ -199,6 +245,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         generator = new LocalWireCommandGenerator(wireGenerator, null, lcm, 0);
     }
 
+    @SuppressWarnings({"SerializableInnerClassWithNonSerializableOuterClass"})
     private class MockContract extends ServiceContract {
         private static final long serialVersionUID = 5001057804874060940L;
 

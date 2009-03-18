@@ -101,7 +101,6 @@ public class LocalWireCommandGenerator implements CommandGenerator {
                 generateUnboundReferenceWires(logicalReference, command, incremental);
             }
         }
-        // xcv 123 get rid of need to check this
         if (command.getAttachCommands().isEmpty() && command.getDetachCommands().isEmpty()) {
             return null;
         }
@@ -111,26 +110,11 @@ public class LocalWireCommandGenerator implements CommandGenerator {
     private void generateUnboundReferenceWires(LogicalReference logicalReference, ReferenceConnectionCommand command, boolean incremental)
             throws GenerationException {
 
-        LogicalComponent<?> component = logicalReference.getParent();
-
         // if the reference is a multiplicity and one of the wires has changed, all of the wires need to be regenerated for reinjection
-        boolean reinjection = false;
-        Multiplicity multiplicity = logicalReference.getDefinition().getMultiplicity();
-        if (incremental && multiplicity == Multiplicity.ZERO_N || multiplicity == Multiplicity.ONE_N) {
-            for (LogicalWire wire : logicalReference.getWires()) {
-                LogicalComponent<?> target = findTarget(wire);
-                // check the source and target sides since a target may have been added or removed
-                if (wire.getState() == LogicalState.NEW
-                        || wire.getState() == LogicalState.MARKED
-                        || target.getState() == LogicalState.NEW
-                        || target.getState() == LogicalState.MARKED) {
-                    reinjection = true;
-                    break;
-                }
-            }
-        }
+        boolean reinjection = isReinjection(logicalReference, incremental);
 
         for (LogicalWire logicalWire : logicalReference.getWires()) {
+            LogicalComponent<?> component = logicalReference.getParent();
 
             URI uri = logicalWire.getTargetUri();
             LogicalComponent<?> target = findTarget(logicalWire);
@@ -150,26 +134,28 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             }
 
             LogicalReference reference = logicalWire.getSource();
-            PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
             boolean attach = true;
             if (target.getState() == LogicalState.MARKED || logicalWire.getState() == LogicalState.MARKED) {
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
                 attach = false;
                 DetachWireCommand detachCommand = new DetachWireCommand();
                 detachCommand.setPhysicalWireDefinition(pwd);
                 command.add(detachCommand);
-            } else if (reinjection || logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
+            } else if (reinjection || !incremental || logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
                 AttachWireCommand attachCommand = new AttachWireCommand();
                 attachCommand.setPhysicalWireDefinition(pwd);
                 command.add(attachCommand);
             }
             // generate physical callback wires if the forward service is bidirectional
             if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
-                pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference, component);
                 if (attach) {
+                    PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference, component);
                     AttachWireCommand attachCommand = new AttachWireCommand();
                     attachCommand.setPhysicalWireDefinition(pwd);
                     command.add(attachCommand);
                 } else {
+                    PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference, component);
                     DetachWireCommand detachCommand = new DetachWireCommand();
                     detachCommand.setPhysicalWireDefinition(pwd);
                     command.add(detachCommand);
@@ -178,6 +164,23 @@ public class LocalWireCommandGenerator implements CommandGenerator {
 
         }
 
+    }
+
+    private boolean isReinjection(LogicalReference logicalReference, boolean incremental) {
+        Multiplicity multiplicity = logicalReference.getDefinition().getMultiplicity();
+        if (incremental && multiplicity == Multiplicity.ZERO_N || multiplicity == Multiplicity.ONE_N) {
+            for (LogicalWire wire : logicalReference.getWires()) {
+                LogicalComponent<?> target = findTarget(wire);
+                // check the source and target sides since a target may have been added or removed
+                if (wire.getState() == LogicalState.NEW
+                        || wire.getState() == LogicalState.MARKED
+                        || target.getState() == LogicalState.NEW
+                        || target.getState() == LogicalState.MARKED) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private LogicalComponent<?> findTarget(LogicalWire logicalWire) {
