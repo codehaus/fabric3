@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.generator;
+package org.fabric3.fabric.generator;
 
 import javax.xml.namespace.QName;
 
@@ -40,6 +40,11 @@ import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.generator.ComponentGenerator;
+import org.fabric3.spi.generator.BindingGenerator;
+import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.GeneratorNotFoundException;
+import org.fabric3.spi.generator.ResourceWireGenerator;
 
 /**
  * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, and {@link InterceptorDefinitionGenerator}s . Generators are responsible for
