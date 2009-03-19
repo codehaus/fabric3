@@ -136,20 +136,20 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             LogicalReference reference = logicalWire.getSource();
             boolean attach = true;
             if (target.getState() == LogicalState.MARKED || logicalWire.getState() == LogicalState.MARKED) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(reference, targetService);
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedWire(reference, targetService);
                 attach = false;
                 DetachWireCommand detachCommand = new DetachWireCommand();
                 detachCommand.setPhysicalWireDefinition(pwd);
                 command.add(detachCommand);
             } else if (reinjection || !incremental || logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(reference, targetService);
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedWire(reference, targetService);
                 AttachWireCommand attachCommand = new AttachWireCommand();
                 attachCommand.setPhysicalWireDefinition(pwd);
                 command.add(attachCommand);
             }
             // generate physical callback wires if the forward service is bidirectional
             if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference);
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedCallbackWire(target, reference);
                 if (attach) {
                     AttachWireCommand attachCommand = new AttachWireCommand();
                     attachCommand.setPhysicalWireDefinition(pwd);

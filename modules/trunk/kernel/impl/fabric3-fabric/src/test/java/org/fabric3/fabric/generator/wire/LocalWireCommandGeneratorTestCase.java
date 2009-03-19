@@ -74,7 +74,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         lcm.getComponent(targetUri);
         EasyMock.expectLastCall().andReturn(target);
 
-        wireGenerator.generateUnboundWire(reference, service);
+        wireGenerator.generateCollocatedWire(reference, service);
         EasyMock.expectLastCall().andReturn(new PhysicalWireDefinition(null, null, null));
 
         EasyMock.replay(lcm, wireGenerator);
@@ -117,7 +117,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         lcm.getComponent(targetUri);
         EasyMock.expectLastCall().andReturn(target);
 
-        wireGenerator.generateUnboundWire(reference, service);
+        wireGenerator.generateCollocatedWire(reference, service);
         EasyMock.expectLastCall().andReturn(new PhysicalWireDefinition(null, null, null));
 
         EasyMock.replay(lcm, wireGenerator);
@@ -162,7 +162,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         lcm.getComponent(targetUri);
         EasyMock.expectLastCall().andReturn(target);
 
-        wireGenerator.generateUnboundWire(reference, service);
+        wireGenerator.generateCollocatedWire(reference, service);
         EasyMock.expectLastCall().andReturn(new PhysicalWireDefinition(null, null, null));
 
         EasyMock.replay(lcm, wireGenerator);
@@ -222,8 +222,8 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         lcm.getComponent(targetUri2);
         EasyMock.expectLastCall().andReturn(target2);
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(null, null, null);
-        EasyMock.expect(wireGenerator.generateUnboundWire(reference, service)).andReturn(wireDefinition);
-        EasyMock.expect(wireGenerator.generateUnboundWire(reference, service2)).andReturn(wireDefinition);
+        EasyMock.expect(wireGenerator.generateCollocatedWire(reference, service)).andReturn(wireDefinition);
+        EasyMock.expect(wireGenerator.generateCollocatedWire(reference, service2)).andReturn(wireDefinition);
 
         EasyMock.replay(lcm, wireGenerator);
 

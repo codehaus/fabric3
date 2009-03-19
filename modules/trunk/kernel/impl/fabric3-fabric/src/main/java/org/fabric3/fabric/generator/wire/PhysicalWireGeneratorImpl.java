@@ -111,7 +111,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     }
 
-    public PhysicalWireDefinition generateUnboundWire(LogicalReference reference, LogicalService service) throws GenerationException {
+    public PhysicalWireDefinition generateCollocatedWire(LogicalReference reference, LogicalService service) throws GenerationException {
         LogicalComponent source = reference.getParent();
         LogicalComponent target = service.getParent();
         ReferenceDefinition referenceDefinition = reference.getDefinition();
@@ -162,7 +162,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings({"unchecked"})
-    public PhysicalWireDefinition generateUnboundCallbackWire(LogicalComponent<?> component, LogicalReference reference) throws GenerationException {
+    public PhysicalWireDefinition generateCollocatedCallbackWire(LogicalComponent<?> component, LogicalReference reference) throws GenerationException {
         LogicalComponent<?> callbackTarget = reference.getParent();
         ServiceContract<?> contract = reference.getDefinition().getServiceContract().getCallbackContract();
         LogicalService callbackService = callbackTarget.getService(contract.getInterfaceName());
@@ -235,10 +235,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         Set<PhysicalOperationDefinition> operations = generateOperations(contract, policyResult, binding);
         PhysicalWireDefinition pwd = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
-        boolean optimizable = sourceDefinition.isOptimizable() &&
-                targetDefinition.isOptimizable() &&
-                checkOptimization(contract, operations);
-
+        boolean optimizable = sourceDefinition.isOptimizable() &&  targetDefinition.isOptimizable() && checkOptimization(contract, operations);
         pwd.setOptimizable(optimizable);
         return pwd;
 
