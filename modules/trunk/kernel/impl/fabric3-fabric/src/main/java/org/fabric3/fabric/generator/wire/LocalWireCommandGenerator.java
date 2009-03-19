@@ -149,13 +149,12 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             }
             // generate physical callback wires if the forward service is bidirectional
             if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference);
                 if (attach) {
-                    PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference, component);
                     AttachWireCommand attachCommand = new AttachWireCommand();
                     attachCommand.setPhysicalWireDefinition(pwd);
                     command.add(attachCommand);
                 } else {
-                    PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference, component);
                     DetachWireCommand detachCommand = new DetachWireCommand();
                     detachCommand.setPhysicalWireDefinition(pwd);
                     command.add(detachCommand);

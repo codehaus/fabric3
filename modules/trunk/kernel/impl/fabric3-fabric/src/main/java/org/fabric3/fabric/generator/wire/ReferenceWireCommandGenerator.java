@@ -65,7 +65,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
             boolean reinjection = isReinjection(logicalReference, incremental);
 
             for (LogicalBinding<?> logicalBinding : logicalReference.getBindings()) {
-                generateCommand(component, logicalReference, logicalBinding, command, incremental, reinjection, false);
+                generateCommand(logicalReference, logicalBinding, command, incremental, reinjection, false);
             }
             if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
                 List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
@@ -78,7 +78,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
                                 "specified on reference: " + uri);
                     }
                     LogicalBinding<?> callbackBinding = callbackBindings.get(0);
-                    generateCommand(component, logicalReference, callbackBinding, command, incremental, reinjection, true);
+                    generateCommand(logicalReference, callbackBinding, command, incremental, reinjection, true);
                 }
             }
 
@@ -89,17 +89,17 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         return command;
     }
 
-    private void generateCommand(LogicalComponent<?> component,
-                                 LogicalReference logicalReference,
+    private void generateCommand(LogicalReference logicalReference,
                                  LogicalBinding<?> logicalBinding,
                                  ReferenceConnectionCommand command,
                                  boolean incremental,
                                  boolean reinjection,
                                  boolean callback) throws GenerationException {
+        LogicalComponent<?> component = logicalReference.getParent();
         if (LogicalState.MARKED == component.getState() || LogicalState.MARKED == logicalBinding.getState()) {
             PhysicalWireDefinition wireDefinition;
             if (callback) {
-                wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding, component);
+                wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding);
             } else {
                 wireDefinition = physicalWireGenerator.generateBoundReferenceWire(logicalReference, logicalBinding);
             }
@@ -110,7 +110,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         } else if (LogicalState.NEW == logicalBinding.getState() || !incremental || reinjection) {
             PhysicalWireDefinition wireDefinition;
             if (callback) {
-                wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding, component);
+                wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding);
             } else {
                 wireDefinition = physicalWireGenerator.generateBoundReferenceWire(logicalReference, logicalBinding);
             }

@@ -62,8 +62,7 @@ public interface PhysicalWireGenerator {
 
 
     /**
-     * Generates a PhysicalWireDefinition from a bound service to a component. A physical change set for the runtime the wire will be provisioned to
-     * is updated with the physical wire definition
+     * Generates a PhysicalWireDefinition from a bound service to a component.
      *
      * @param service     the logical service representing the wire source
      * @param binding     the binding the wire will be attached to at its source
@@ -73,10 +72,8 @@ public interface PhysicalWireGenerator {
      */
     PhysicalWireDefinition generateBoundServiceWire(LogicalService service, LogicalBinding<?> binding, URI callbackUri) throws GenerationException;
 
-
     /**
-     * Generates a PhysicalWireDefinition from a bound service to a component. A physical change set for the runtime the wire will be provisioned to
-     * is updated with the physical wire definition
+     * Generates a PhysicalWireDefinition from a bound service to a component.
      *
      * @param reference the component reference the wire is associated with to at its source
      * @param binding   the binding the wire will be attached to at its terminating end
@@ -99,42 +96,32 @@ public interface PhysicalWireGenerator {
     /**
      * Generates an unbound callback wire between two collocated components.
      *
-     * @param source    the source component, which is the target of the forward wire
+     * @param component the component originating the callback, which is the target of the forward wire
      * @param reference the reference the forward wire is injected on
-     * @param target    the target component, which is the source of the forward wire
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      * @FIXME JFM passing in the LogicalReference doesn't seem right but the policy generation appears to need it. Look to remove.
      */
-    public <S extends LogicalComponent<?>, T extends LogicalComponent<?>> PhysicalWireDefinition generateUnboundCallbackWire(S source,
-                                                                                                                             LogicalReference reference,
-                                                                                                                             T target)
-            throws GenerationException;
+    public PhysicalWireDefinition generateUnboundCallbackWire(LogicalComponent<?> component, LogicalReference reference) throws GenerationException;
 
     /**
-     * Generates a callback wire from a reference to the callback service offered by the client component
+     * Generates a callback wire for a reference with the specified binding
      *
-     * @param reference the logical reference which is the callback wire source
+     * @param reference the logical reference which is the wire source
      * @param binding   the callback binding
-     * @param component the client component which originates an invocation over the forward wire associated with the callback wire to be generated.
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundCallbackRerenceWire(LogicalReference reference,
-                                                                                            LogicalBinding<?> binding,
-                                                                                            C component) throws GenerationException;
+    PhysicalWireDefinition generateBoundCallbackRerenceWire(LogicalReference reference, LogicalBinding<?> binding) throws GenerationException;
 
     /**
      * Generates a callback wire from a component to the callback service provided by a forward service
      *
-     * @param component the client component which was the target of the forward wire and source of the callback
-     * @param service   the logical service which provides the callback service
-     * @param binding   the callback binding
+     * @param service the logical service which provides the callback service
+     * @param binding the callback binding
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundCallbackServiceWire(C component,
-                                                                                            LogicalService service,
-                                                                                            LogicalBinding<?> binding) throws GenerationException;
+    PhysicalWireDefinition generateBoundCallbackServiceWire(LogicalService service, LogicalBinding<?> binding) throws GenerationException;
 
 }
