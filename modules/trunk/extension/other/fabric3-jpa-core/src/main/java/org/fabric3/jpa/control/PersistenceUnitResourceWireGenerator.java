@@ -16,17 +16,13 @@
  */
 package org.fabric3.jpa.control;
 
-import java.net.URI;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  *
@@ -34,25 +30,6 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerator<PersistenceUnitWireTargetDefinition, PersistenceUnitResource> {
-
-    private GeneratorRegistry registry;
-
-    
-    /**
-     * @param registry Injected registry.
-     */
-    @Reference
-    public void setRegistry(@Reference GeneratorRegistry registry) {
-        this.registry = registry;
-    }
-    
-    /**
-     * Registers with the registry.
-     */
-    @Init
-    public void start() {
-        registry.register(PersistenceUnitResource.class, this);
-    }
 
     public PersistenceUnitWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource)
         throws GenerationException {

@@ -34,8 +34,6 @@
  */
 package org.fabric3.spi.generator;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.component.BindingDefinition;
@@ -50,22 +48,6 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  * @version $Rev$ $Date$
  */
 public interface GeneratorRegistry {
-
-    /**
-     * Registers a component generator.
-     *
-     * @param clazz     the implementation type the generator handles
-     * @param generator the generator to register
-     */
-    <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator);
-
-    /**
-     * Unregisters a component generator.
-     *
-     * @param clazz     the implementation type the generator handles
-     * @param generator the generator to unregister
-     */
-    <T extends Implementation<?>> void unregister(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator);
 
     /**
      * Gets a component generator for the specified implementation.
@@ -86,22 +68,6 @@ public interface GeneratorRegistry {
     <T extends BindingDefinition> BindingGenerator<?, ?, T> getBindingGenerator(Class<T> clazz) throws GeneratorNotFoundException;
 
     /**
-     * Registers a resource wire generator.
-     *
-     * @param clazz     The resource type the generator handles.
-     * @param generator The generator to register.
-     */
-    <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator);
-
-    /**
-     * Unregisters a resource wire generator.
-     *
-     * @param clazz     the resource type the generator handles
-     * @param generator the generator to register
-     */
-    <T extends ResourceDefinition> void unregister(Class<T> clazz, ResourceWireGenerator<?, T> generator);
-
-    /**
      * Gets the resource wire generator for the resource type.
      *
      * @param clazz the resource type the generator handles
@@ -111,22 +77,6 @@ public interface GeneratorRegistry {
     <T extends ResourceDefinition> ResourceWireGenerator<?, T> getResourceWireGenerator(Class<T> clazz) throws GeneratorNotFoundException;
 
     /**
-     * Registers an interceptor generator by type.
-     *
-     * @param extensionName fully qualified name of the extension
-     * @param generator     interceptor generator to register
-     */
-    void register(QName extensionName, InterceptorDefinitionGenerator generator);
-
-    /**
-     * Registers an interceptor generator by type.
-     *
-     * @param extensionName fully qualified name of the extension
-     * @param generator     interceptor generator to register
-     */
-    void unregister(QName extensionName, InterceptorDefinitionGenerator generator);
-
-    /**
      * Gets the interceptor definition generator for the qualified name.
      *
      * @param extensionName qualified name of the policy extension
@@ -134,26 +84,5 @@ public interface GeneratorRegistry {
      * @throws GeneratorNotFoundException if no generator is registered for the policy extension type
      */
     InterceptorDefinitionGenerator getInterceptorDefinitionGenerator(QName extensionName) throws GeneratorNotFoundException;
-
-    /**
-     * Registers a command generator.
-     *
-     * @param generator the generator to register
-     */
-    void register(CommandGenerator generator);
-
-    /**
-     * Unregisters a command generator.
-     *
-     * @param generator the generator to unregister
-     */
-    void unregister(CommandGenerator generator);
-
-    /**
-     * Gets all the registered command generators.
-     *
-     * @return All the registered command generators.
-     */
-    List<CommandGenerator> getCommandGenerators();
 
 }

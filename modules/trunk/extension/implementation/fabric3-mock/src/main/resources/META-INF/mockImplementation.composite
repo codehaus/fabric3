@@ -34,7 +34,7 @@
     </component>
 
     <!-- Generator -->
-    <component name="MockComponentGenerator">
+    <component name="MockComponentGenerator" f3-core:key="org.fabric3.mock.ImplementationMock">
         <f3-impl:implementation.system class="org.fabric3.mock.MockComponentGenerator"/>
     </component>
 

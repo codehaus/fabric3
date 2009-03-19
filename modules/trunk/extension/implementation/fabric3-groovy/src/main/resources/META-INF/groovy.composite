@@ -36,7 +36,7 @@
         <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyHeuristic"/>
     </component>
 
-    <component name="GroovyComponentGenerator">
+    <component name="GroovyComponentGenerator" f3-core:key="org.fabric3.groovy.scdl.GroovyImplementation">
         <f3-impl:implementation.system class="org.fabric3.groovy.control.GroovyComponentGenerator"/>
     </component>
 

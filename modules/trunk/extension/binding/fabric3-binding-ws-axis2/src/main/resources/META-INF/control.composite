@@ -27,7 +27,7 @@
     </component>
     
     <!-- Jaxb Databinding Interceptor Generator -->
-    <component name="JaxbInterceptorGenerator">
+    <component name="JaxbInterceptorGenerator" f3-core:key="{urn:fabric3.org:policy}dataBinding.jaxb">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.jaxb.JaxbInterceptorDefinitionGenerator"/>
     </component>
     

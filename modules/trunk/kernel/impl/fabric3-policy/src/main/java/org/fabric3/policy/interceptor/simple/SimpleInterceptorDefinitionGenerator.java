@@ -16,17 +16,12 @@
  */
 package org.fabric3.policy.interceptor.simple;
 
-import javax.xml.namespace.QName;
+import org.osoa.sca.annotations.EagerInit;
+import org.w3c.dom.Element;
 
-import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * Interceptor definition generator for simple policy set extensions.
@@ -35,29 +30,9 @@ import org.w3c.dom.Element;
  */
 @EagerInit
 public class SimpleInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
-    
-    // Qualified name of the handled element
-    private static final QName EXTENSION_NAME = new QName(Namespaces.POLICY, "interceptor");
-    private GeneratorRegistry generatorRegistry;
 
-    public SimpleInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-    }
-
-    /**
-     * Registers with the registry.
-     */
-    @Init
-    public void start() {
-        generatorRegistry.register(EXTENSION_NAME, this);
-    }
-
-    public SimpleInterceptorDefinition generate(Element policySetDefinition, 
-                                                Operation<?> operation,
-                                                LogicalBinding<?> logicalBinding) {
-
+    public SimpleInterceptorDefinition generate(Element policySetDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding) {
         String interceptorClass = policySetDefinition.getAttribute("class");
-
         return new SimpleInterceptorDefinition(interceptorClass);
     }
 

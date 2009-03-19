@@ -41,9 +41,10 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.monitor.MonitorProcessor"/>
     </component>
 
-    <component name="MonitorWireGenerator">
+    <component name="MonitorWireGenerator" f3-core:key="org.fabric3.fabric.monitor.MonitorResource">
         <f3-impl:implementation.system class="org.fabric3.fabric.monitor.MonitorWireGenerator"/>
     </component>
+
     <component name="MonitorWireAttacher" f3-core:key="org.fabric3.fabric.monitor.MonitorWireTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.fabric.monitor.MonitorWireAttacher"/>
     </component>

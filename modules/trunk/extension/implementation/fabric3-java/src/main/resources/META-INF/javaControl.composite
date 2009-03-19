@@ -21,7 +21,7 @@
            name="JavaControllerExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
            autowire="true">
 
-    <component name="JavaComponentGenerator">
+    <component name="JavaComponentGenerator" f3-core:key="org.fabric3.java.control.JavaImplementation">
         <f3-impl:implementation.system class="org.fabric3.java.control.JavaComponentGenerator"/>
     </component>
 

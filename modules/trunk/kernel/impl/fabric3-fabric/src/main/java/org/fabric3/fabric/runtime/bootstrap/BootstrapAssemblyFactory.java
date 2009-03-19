@@ -88,6 +88,7 @@ import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
+import org.fabric3.fabric.monitor.MonitorResource;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
@@ -119,6 +120,7 @@ import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.generator.ClassLoaderWireGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -133,7 +135,9 @@ import org.fabric3.system.provision.SystemWireTargetDefinition;
 import org.fabric3.system.runtime.SystemComponentBuilder;
 import org.fabric3.system.runtime.SystemSourceWireAttacher;
 import org.fabric3.system.runtime.SystemTargetWireAttacher;
+import org.fabric3.system.scdl.SystemImplementation;
 import org.fabric3.system.singleton.SingletonComponentGenerator;
+import org.fabric3.system.singleton.SingletonImplementation;
 import org.fabric3.system.singleton.SingletonSourceWireAttacher;
 import org.fabric3.system.singleton.SingletonTargetWireAttacher;
 import org.fabric3.system.singleton.SingletonWireSourceDefinition;
@@ -321,13 +325,16 @@ public class BootstrapAssemblyFactory {
         return new GeneratorImpl(commandGenerators, classLoaderCommandGenerator, startContextGenerator, stopContextGenerator);
     }
 
+    @SuppressWarnings({"unchecked"})
     private static GeneratorRegistry createGeneratorRegistry() {
         GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
         GenerationHelperImpl helper = new GenerationHelperImpl();
-        new SystemComponentGenerator(registry, helper);
-        new SingletonComponentGenerator(registry);
+        ComponentGenerator systemComponentGenerator = new SystemComponentGenerator(helper);
+        ComponentGenerator singletonComponentGenerator = new SingletonComponentGenerator();
+        registry.register(SystemImplementation.class, systemComponentGenerator);
+        registry.register(SingletonImplementation.class, singletonComponentGenerator);
         registry.register(JMXBinding.class, new JMXBindingGenerator());
-        new MonitorWireGenerator(registry).init();
+        registry.register(MonitorResource.class, new MonitorWireGenerator());
         return registry;
     }
 

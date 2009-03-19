@@ -16,17 +16,13 @@
  */
 package org.fabric3.jpa.control;
 
-import java.net.URI;
 import javax.persistence.PersistenceContextType;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.provision.PersistenceContextWireTargetDefinition;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
 
@@ -35,16 +31,6 @@ import org.fabric3.spi.model.instance.LogicalResource;
  */
 @EagerInit
 public class PersistenceContextResourceWireGenerator implements ResourceWireGenerator<PersistenceContextWireTargetDefinition, PersistenceContextResource> {
-    private final GeneratorRegistry registry;
-
-    public PersistenceContextResourceWireGenerator(@Reference GeneratorRegistry registry) {
-        this.registry = registry;
-    }
-
-    @Init
-    public void start() {
-        registry.register(PersistenceContextResource.class, this);
-    }
 
     public PersistenceContextWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceContextResource> logicalResource)
             throws GenerationException {

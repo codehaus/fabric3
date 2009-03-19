@@ -22,7 +22,7 @@
            name="WebImplementationControllerExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-web"
            autowire="true">
 
-    <component name="WebComponentGenerator">
+    <component name="WebComponentGenerator" f3-core:key="org.fabric3.web.introspection.WebImplementation">
         <f3-impl:implementation.system class="org.fabric3.web.control.WebComponentGenerator"/>
     </component>
 </composite>

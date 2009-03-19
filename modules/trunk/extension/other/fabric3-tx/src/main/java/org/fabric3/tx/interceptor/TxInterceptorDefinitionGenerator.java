@@ -16,19 +16,14 @@
  */
 package org.fabric3.tx.interceptor;
 
-import javax.xml.namespace.QName;
+import org.osoa.sca.annotations.EagerInit;
+import org.w3c.dom.Element;
 
-import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * Interceptor definition generator for suspend transaction policy extensions.
@@ -37,26 +32,10 @@ import org.w3c.dom.Element;
  */
 @EagerInit
 public class TxInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
-    private static final QName EXTENSION_NAME = new QName(Namespaces.POLICY, "transaction");
-    private GeneratorRegistry generatorRegistry;
 
-    public TxInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-    }
-
-    /**
-     * Registers with the registry.
-     */
-    @Init
-    public void start() {
-        generatorRegistry.register(EXTENSION_NAME, this);
-    }
-
-    public PhysicalInterceptorDefinition generate(Element policyDefinition,
-                                                  Operation<?> operation,
-                                                  LogicalBinding<?> logicalBinding) throws GenerationException {
+    public PhysicalInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding)
+            throws GenerationException {
         String action = policyDefinition.getAttribute("action");
-
         return new TxInterceptorDefinition(TxAction.valueOf(action));
     }
 }

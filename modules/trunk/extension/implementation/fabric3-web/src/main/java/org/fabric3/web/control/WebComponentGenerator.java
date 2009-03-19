@@ -38,7 +38,6 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -68,10 +67,9 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
     private HostInfo info;
     private ContributionUriEncoder encoder;
 
-    public WebComponentGenerator(@Reference GeneratorRegistry registry, @Reference HostInfo info, @Reference ContributionUriEncoder encoder) {
+    public WebComponentGenerator(@Reference HostInfo info, @Reference ContributionUriEncoder encoder) {
         this.info = info;
         this.encoder = encoder;
-        registry.register(WebImplementation.class, this);
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<WebImplementation> component) throws GenerationException {

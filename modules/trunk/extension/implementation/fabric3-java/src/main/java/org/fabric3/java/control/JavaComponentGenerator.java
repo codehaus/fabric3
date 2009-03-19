@@ -17,17 +17,15 @@
 package org.fabric3.java.control;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
-import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -44,21 +42,12 @@ import org.fabric3.spi.policy.Policy;
  */
 @EagerInit
 public class JavaComponentGenerator implements ComponentGenerator<LogicalComponent<JavaImplementation>> {
-    protected final GeneratorRegistry registry;
-    private JavaGenerationHelper generationHelper;
     protected final InstanceFactoryGenerationHelper ifHelper;
+    private JavaGenerationHelper generationHelper;
 
-    public JavaComponentGenerator(@Reference GeneratorRegistry registry,
-                                  @Reference JavaGenerationHelper generationHelper,
-                                  @Reference InstanceFactoryGenerationHelper ifHelper) {
-        this.registry = registry;
+    public JavaComponentGenerator(@Reference JavaGenerationHelper generationHelper, @Reference InstanceFactoryGenerationHelper ifHelper) {
         this.generationHelper = generationHelper;
         this.ifHelper = ifHelper;
-    }
-
-    @Init
-    public void init() {
-        registry.register(JavaImplementation.class, this);
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component) throws GenerationException {

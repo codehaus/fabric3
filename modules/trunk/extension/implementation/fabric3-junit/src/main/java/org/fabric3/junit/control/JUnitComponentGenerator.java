@@ -19,24 +19,22 @@ package org.fabric3.junit.control;
 import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.junit.scdl.JUnitImplementation;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Scope;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -52,18 +50,10 @@ import org.fabric3.spi.policy.Policy;
  */
 @EagerInit
 public class JUnitComponentGenerator implements ComponentGenerator<LogicalComponent<JUnitImplementation>> {
-
-    private final GeneratorRegistry registry;
     private final InstanceFactoryGenerationHelper helper;
 
-    public JUnitComponentGenerator(@Reference GeneratorRegistry registry, @Reference InstanceFactoryGenerationHelper helper) {
-        this.registry = registry;
+    public JUnitComponentGenerator(@Reference InstanceFactoryGenerationHelper helper) {
         this.helper = helper;
-    }
-
-    @Init
-    public void init() {
-        registry.register(JUnitImplementation.class, this);
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<JUnitImplementation> component)

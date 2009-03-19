@@ -30,7 +30,7 @@
     </component>
 
     <!-- Authorization Interceptor Generator -->
-    <component name="AuthorizationInterceptorDefinitionGenerator">
+    <component name="AuthorizationInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}authorization">
         <f3-impl:implementation.system class="org.fabric3.security.authorization.AuthorizationInterceptorDefinitionGenerator"/>
     </component>
 

@@ -39,7 +39,7 @@
         <f3-impl:implementation.system class="org.fabric3.junit.introspection.JUnitServiceHeuristic"/>
     </component>
 
-    <component name="JUnitComponentGenerator">
+    <component name="JUnitComponentGenerator" f3-core:key="org.fabric3.junit.scdl.JUnitImplementation">
         <f3-impl:implementation.system class="org.fabric3.junit.control.JUnitComponentGenerator"/>
     </component>
 

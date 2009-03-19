@@ -32,7 +32,7 @@
         <f3-impl:implementation.system class="org.fabric3.jaxb.introspection.JAXBTypeIntrospector"/>
     </component>
 
-    <component name="TransformingInterceptorDefinitionGenerator">
+    <component name="TransformingInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}jaxbPolicy">
         <f3-impl:implementation.system class="org.fabric3.jaxb.control.impl.TransformingInterceptorDefinitionGenerator"/>
     </component>
 

@@ -24,12 +24,9 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 import org.w3c.dom.Element;
 
-import org.fabric3.host.Namespaces;
 import org.fabric3.jaxb.control.api.JAXBTransformationService;
 import org.fabric3.jaxb.provision.AbstractTransformingInterceptorDefinition;
 import org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition;
@@ -37,7 +34,6 @@ import org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -50,20 +46,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 @Service(interfaces = {InterceptorDefinitionGenerator.class, JAXBTransformationService.class})
 @EagerInit
 public class TransformingInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator, JAXBTransformationService {
-    private static final QName INTENT_QNAME = new QName(Namespaces.POLICY, "jaxbPolicy");
-
-    private GeneratorRegistry generatorRegistry;
-    private Map<QName, QName> engagedBindings;
-
-    public TransformingInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-        engagedBindings = new HashMap<QName, QName>();
-    }
-
-    @Init
-    public void init() {
-        generatorRegistry.register(INTENT_QNAME, this);
-    }
+    private Map<QName, QName> engagedBindings = new HashMap<QName, QName>();
 
     public void registerBinding(QName name, QName dataType) {
         engagedBindings.put(name, dataType);

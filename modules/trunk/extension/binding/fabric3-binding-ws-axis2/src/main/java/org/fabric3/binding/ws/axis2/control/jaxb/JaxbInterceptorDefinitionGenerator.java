@@ -20,20 +20,15 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.xml.namespace.QName;
 import javax.xml.ws.WebFault;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition;
-import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -44,27 +39,11 @@ import org.fabric3.spi.model.instance.LogicalService;
 @EagerInit
 public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
 
-    private static final QName EXTENSION_NAME = new QName(Namespaces.POLICY, "dataBinding.jaxb");
-    
-    private GeneratorRegistry generatorRegistry;
-
-    public JaxbInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-    }
-
-    /**
-     * Registers with the registry.
-     */
-    @Init
-    public void init() {
-        generatorRegistry.register(EXTENSION_NAME, this);
-    }
-
     public JaxbInterceptorDefinition generate(Element policySet, Operation<?> operation, LogicalBinding<?> logicalBinding)
-        throws GenerationException {
-        
+            throws GenerationException {
+
         boolean service = logicalBinding.getParent() instanceof LogicalService;
-        
+
         // This assumes a Java interface contract
 
         List<? extends DataType<?>> inputTypes = operation.getInputType().getLogical();

@@ -34,8 +34,6 @@
  */
 package org.fabric3.fabric.generator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
@@ -46,7 +44,6 @@ import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -59,102 +56,79 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  */
 public class GeneratorRegistryImpl implements GeneratorRegistry {
 
-    private Map<Class<?>, ComponentGenerator<? extends LogicalComponent<? extends Implementation<?>>>> componentGenerators =
-        new ConcurrentHashMap<Class<?>, ComponentGenerator<? extends LogicalComponent<? extends Implementation<?>>>>();
-    
-    private Map<Class<? extends BindingDefinition>, BindingGenerator<?, ?, ? extends BindingDefinition>> bindingGenerators =
-        new ConcurrentHashMap<Class<? extends BindingDefinition>, BindingGenerator<?, ?, ? extends BindingDefinition>>();
-    
-    private List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
-    
-    private Map<QName, InterceptorDefinitionGenerator> interceptorDefinitionGenerators = 
-        new ConcurrentHashMap<QName, InterceptorDefinitionGenerator>();
-    
-    private Map<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>> resourceWireGenerators =
-        new ConcurrentHashMap<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>>();
-    
+    private Map<Class<?>, ComponentGenerator<?>> componentGenerators = new ConcurrentHashMap<Class<?>, ComponentGenerator<?>>();
+
+    private Map<Class<?>, BindingGenerator<?, ?, ?>> bindingGenerators = new ConcurrentHashMap<Class<?>, BindingGenerator<?, ?, ?>>();
+
+    private Map<QName, InterceptorDefinitionGenerator> interceptorGenerators =  new ConcurrentHashMap<QName, InterceptorDefinitionGenerator>();
+
+    private Map<Class<?>, ResourceWireGenerator<?, ?>> resourceGenerators = new ConcurrentHashMap<Class<?>, ResourceWireGenerator<?, ?>>();
+
     @Reference(required = false)
-    public void setBindingGenerators(Map<Class<? extends BindingDefinition>, BindingGenerator<?, ?, ? extends BindingDefinition>> bindingGenerators) {
+    public void setBindingGenerators(Map<Class<?>, BindingGenerator<?, ?, ?>> bindingGenerators) {
         this.bindingGenerators = bindingGenerators;
+    }
+
+    @Reference(required = false)
+    public void setComponentGenerators(Map<Class<?>, ComponentGenerator<?>> componentGenerators) {
+        this.componentGenerators = componentGenerators;
+    }
+
+    @Reference(required = false)
+    public void setResourceGenerators(Map<Class<?>, ResourceWireGenerator<?, ?>> resourceGenerators) {
+        this.resourceGenerators = resourceGenerators;
+    }
+
+    @Reference(required = false)
+    public void setInterceptorGenerators(Map<QName, InterceptorDefinitionGenerator> interceptorGenerators) {
+        this.interceptorGenerators = interceptorGenerators;
     }
 
     public <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator) {
         componentGenerators.put(clazz, generator);
     }
 
-    public <T extends Implementation<?>> void unregister(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator) {
-        componentGenerators.remove(clazz);
+    public <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
+        resourceGenerators.put(clazz, generator);
+    }
+
+    public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator) {
+        bindingGenerators.put(clazz, generator);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Implementation<?>> ComponentGenerator<LogicalComponent<T>> getComponentGenerator(Class<T> clazz)  
-        throws GeneratorNotFoundException {
+    public <T extends Implementation<?>> ComponentGenerator<LogicalComponent<T>> getComponentGenerator(Class<T> clazz)
+            throws GeneratorNotFoundException {
         if (!componentGenerators.containsKey(clazz)) {
             throw new GeneratorNotFoundException(clazz);
         }
         return (ComponentGenerator<LogicalComponent<T>>) componentGenerators.get(clazz);
     }
-    
-    public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator) {
-        bindingGenerators.put(clazz, generator);
-    }
-
-    public <T extends BindingDefinition> void unregister(Class<T> clazz, BindingGenerator<?, ?, T> generator) {
-        bindingGenerators.remove(clazz);
-    }
 
     @SuppressWarnings("unchecked")
-    public <T extends BindingDefinition> BindingGenerator<?, ?, T> getBindingGenerator(Class<T> clazz) 
-        throws GeneratorNotFoundException {        
+    public <T extends BindingDefinition> BindingGenerator<?, ?, T> getBindingGenerator(Class<T> clazz)
+            throws GeneratorNotFoundException {
         if (!bindingGenerators.containsKey(clazz)) {
             throw new GeneratorNotFoundException(clazz);
         }
         return (BindingGenerator<?, ?, T>) bindingGenerators.get(clazz);
     }
 
-    public <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
-        resourceWireGenerators.put(clazz, generator);
-    }
-
-    public <T extends ResourceDefinition> void unregister(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
-        resourceWireGenerators.remove(clazz);
-    }
-
     @SuppressWarnings("unchecked")
-    public <T extends ResourceDefinition> ResourceWireGenerator<?, T> getResourceWireGenerator(Class<T> clazz) 
-        throws GeneratorNotFoundException {      
-        if (!resourceWireGenerators.containsKey(clazz)) {
+    public <T extends ResourceDefinition> ResourceWireGenerator<?, T> getResourceWireGenerator(Class<T> clazz)
+            throws GeneratorNotFoundException {
+        if (!resourceGenerators.containsKey(clazz)) {
             throw new GeneratorNotFoundException(clazz);
         }
-        return (ResourceWireGenerator<?, T>) resourceWireGenerators.get(clazz);
-    }
-    
-    public void register(QName extensionName, InterceptorDefinitionGenerator interceptorDefinitionGenerator) {
-        interceptorDefinitionGenerators.put(extensionName, interceptorDefinitionGenerator);
-    }
-
-    public void unregister(QName extensionName, InterceptorDefinitionGenerator generator) {
-        interceptorDefinitionGenerators.remove(extensionName);
+        return (ResourceWireGenerator<?, T>) resourceGenerators.get(clazz);
     }
 
     public InterceptorDefinitionGenerator getInterceptorDefinitionGenerator(QName extensionName)
-        throws GeneratorNotFoundException {
-        if (!interceptorDefinitionGenerators.containsKey(extensionName)) {
+            throws GeneratorNotFoundException {
+        if (!interceptorGenerators.containsKey(extensionName)) {
             throw new GeneratorNotFoundException(extensionName);
         }
-        return interceptorDefinitionGenerators.get(extensionName);
-    }
-    
-    public void register(CommandGenerator generator) {
-        commandGenerators.add(generator);
-    }
-
-    public void unregister(CommandGenerator generator) {
-        commandGenerators.remove(generator);
-    }
-
-    public List<CommandGenerator> getCommandGenerators() {
-        return commandGenerators;
+        return interceptorGenerators.get(extensionName);
     }
 
 }

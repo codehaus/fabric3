@@ -35,7 +35,7 @@
     </component>
 
     <!-- Wire Target Definition Generator -->
-    <component name="SystemSourcedResourceWireGenerator">
+    <component name="SystemSourcedResourceWireGenerator" f3-core:key="org.fabric3.resource.model.SystemSourcedResource">
         <f3-impl:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator"/>
     </component>
 

@@ -16,18 +16,12 @@
  */
 package org.fabric3.async.control;
 
-import javax.xml.namespace.QName;
-
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
-import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
@@ -40,19 +34,6 @@ import org.fabric3.spi.model.type.LocalBindingDefinition;
  */
 @EagerInit
 public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
-
-    private static final QName QNAME = new QName(Namespaces.POLICY, "oneWayPolicy");
-
-    private GeneratorRegistry registry;
-
-    public NonBlockingGenerator(@Reference GeneratorRegistry registry) {
-        this.registry = registry;
-    }
-
-    @Init
-    public void init() {
-        registry.register(QNAME, this);
-    }
 
     public PhysicalInterceptorDefinition generate(Element policyDefinition,
                                                   Operation<?> operation,

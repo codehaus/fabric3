@@ -41,7 +41,7 @@
 
     <!-- Singleton implementation type -->
 
-    <component name="SingletonGenerator">
+    <component name="SingletonGenerator" f3-core:key="org.fabric3.system.singleton.SingletonImplementation">
         <f3-impl:implementation.system class="org.fabric3.system.singleton.SingletonComponentGenerator"/>
     </component>
 

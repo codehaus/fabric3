@@ -55,7 +55,7 @@
     </component>
 
     <!-- Simple interceptor generator -->
-    <component name="SimpleInterceptorDefinitionGenerator">
+    <component name="SimpleInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}interceptor">
         <f3-impl:implementation.system class="org.fabric3.policy.interceptor.simple.SimpleInterceptorDefinitionGenerator"/>
     </component>
 

@@ -25,21 +25,19 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.ComponentReference;
 import org.fabric3.model.type.component.ComponentService;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -50,7 +48,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.xquery.provision.XQueryComponentDefinition;
 import org.fabric3.xquery.provision.XQueryComponentWireSourceDefinition;
@@ -65,18 +62,7 @@ import org.fabric3.xquery.scdl.XQueryServiceContract;
  */
 @EagerInit
 public class XQueryComponentGenerator implements ComponentGenerator<LogicalComponent<XQueryImplementation>> {
-
-    private final GeneratorRegistry registry;
     private ContributionUriEncoder encoder;
-
-    public XQueryComponentGenerator(@Reference GeneratorRegistry registry) {
-        this.registry = registry;
-    }
-
-    @Init
-    public void init() {
-        registry.register(XQueryImplementation.class, this);
-    }
 
     public PhysicalComponentDefinition generate(LogicalComponent<XQueryImplementation> component) throws GenerationException {
         ComponentDefinition<XQueryImplementation> definition = component.getDefinition();
