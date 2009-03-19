@@ -86,16 +86,15 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public <C extends LogicalComponent<?>> PhysicalWireDefinition generateResourceWire(C source, LogicalResource<?> resource)
-            throws GenerationException {
+    public PhysicalWireDefinition generateResourceWire(LogicalResource<?> resource) throws GenerationException {
 
         ResourceDefinition resourceDefinition = resource.getResourceDefinition();
         ServiceContract<?> serviceContract = resourceDefinition.getServiceContract();
-
+        LogicalComponent<?> component = resource.getParent();
         // Generates the source side of the wire
-        ComponentGenerator<C> sourceGenerator = getGenerator(source);
-        PhysicalWireSourceDefinition pwsd = sourceGenerator.generateResourceWireSource(source, resource);
-        pwsd.setClassLoaderId(source.getDefinition().getContributionUri());
+        ComponentGenerator sourceGenerator = getGenerator(component);
+        PhysicalWireSourceDefinition pwsd = sourceGenerator.generateResourceWireSource(component, resource);
+        pwsd.setClassLoaderId(component.getDefinition().getContributionUri());
         // Generates the target side of the wire
         ResourceWireGenerator targetGenerator = getGenerator(resourceDefinition);
         @SuppressWarnings("unchecked")
@@ -112,12 +111,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     }
 
-    public <S extends LogicalComponent<?>, T extends LogicalComponent<?>> PhysicalWireDefinition generateUnboundWire(S source,
-                                                                                                                     LogicalReference reference,
-                                                                                                                     LogicalService service,
-                                                                                                                     T target)
-            throws GenerationException {
-
+    public PhysicalWireDefinition generateUnboundWire(LogicalReference reference, LogicalService service) throws GenerationException {
+        LogicalComponent source = reference.getParent();
+        LogicalComponent target = service.getParent();
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
 
@@ -128,7 +124,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Policy sourcePolicy = policyResult.getSourcePolicy();
         Policy targetPolicy = policyResult.getTargetPolicy();
 
-        ComponentGenerator<T> targetGenerator = getGenerator(target);
+        ComponentGenerator targetGenerator = getGenerator(target);
         // generate metadata for the target side of the wire
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, target, targetPolicy);
         targetDefinition.setClassLoaderId(target.getDefinition().getContributionUri());
@@ -139,7 +135,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             targetDefinition.setCallbackUri(callbackUri);
         }
 
-        ComponentGenerator<S> sourceGenerator = getGenerator(source);
+        ComponentGenerator sourceGenerator = getGenerator(source);
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, sourcePolicy);
         sourceDefinition.setClassLoaderId(source.getDefinition().getContributionUri());
         sourceDefinition.setKey(target.getDefinition().getKey());
@@ -199,11 +195,10 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     @SuppressWarnings("unchecked")
 
-    public <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundServiceWire(LogicalService service,
-                                                                                           LogicalBinding<?> binding,
-                                                                                           C component,
-                                                                                           URI callbackUri) throws GenerationException {
+    public PhysicalWireDefinition generateBoundServiceWire(LogicalService service, LogicalBinding<?> binding, URI callbackUri)
+            throws GenerationException {
 
+        LogicalComponent<?> component = service.getParent();
         // use the service contract from the binding's parent service if it is defined, otherwise default to the one
         // defined on the original component
         Bindable bindable = binding.getParent();
@@ -232,7 +227,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             targetService = component.getService(targetUri.getFragment());
         }
 
-        ComponentGenerator<C> targetGenerator = getGenerator(component);
+        ComponentGenerator targetGenerator = getGenerator(component);
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, component, targetPolicy);
         targetDefinition.setClassLoaderId(targetService.getParent().getDefinition().getContributionUri());
         targetDefinition.setCallbackUri(callbackUri);
@@ -252,10 +247,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundReferenceWire(C component,
-                                                                                             LogicalReference reference,
-                                                                                             LogicalBinding<?> binding) throws GenerationException {
+    public PhysicalWireDefinition generateBoundReferenceWire(LogicalReference reference, LogicalBinding<?> binding) throws GenerationException {
 
+        LogicalComponent component = reference.getParent();
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
@@ -276,7 +270,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         targetDefinition.setClassLoaderId(binding.getParent().getParent().getDefinition().getContributionUri());
 
 
-        ComponentGenerator<C> sourceGenerator = getGenerator(component);
+        ComponentGenerator sourceGenerator = getGenerator(component);
 
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, reference, sourcePolicy);
         sourceDefinition.setClassLoaderId(component.getDefinition().getContributionUri());

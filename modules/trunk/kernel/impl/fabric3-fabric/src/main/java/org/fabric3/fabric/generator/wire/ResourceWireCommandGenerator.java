@@ -57,7 +57,7 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
         ReferenceConnectionCommand command = new ReferenceConnectionCommand();
         for (LogicalResource<?> resource : component.getResources()) {
             AttachWireCommand attachWireCommand = new AttachWireCommand();
-            PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
+            PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(resource);
             attachWireCommand.setPhysicalWireDefinition(pwd);
             command.add(attachWireCommand);
         }

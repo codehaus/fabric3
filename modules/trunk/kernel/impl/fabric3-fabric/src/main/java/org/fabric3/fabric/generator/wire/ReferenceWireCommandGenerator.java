@@ -101,7 +101,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
             if (callback) {
                 wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding, component);
             } else {
-                wireDefinition = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
+                wireDefinition = physicalWireGenerator.generateBoundReferenceWire(logicalReference, logicalBinding);
             }
             DetachWireCommand wireCommand = new DetachWireCommand();
             wireCommand.setPhysicalWireDefinition(wireDefinition);
@@ -112,7 +112,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
             if (callback) {
                 wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding, component);
             } else {
-                wireDefinition = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
+                wireDefinition = physicalWireGenerator.generateBoundReferenceWire(logicalReference, logicalBinding);
             }
             AttachWireCommand wireCommand = new AttachWireCommand();
             wireCommand.setPhysicalWireDefinition(wireDefinition);

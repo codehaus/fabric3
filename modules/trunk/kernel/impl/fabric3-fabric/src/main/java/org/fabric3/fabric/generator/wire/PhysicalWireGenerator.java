@@ -54,12 +54,11 @@ public interface PhysicalWireGenerator {
     /**
      * Generates the physical wires for the resources in this component.
      *
-     * @param source   the source component.
      * @param resource the resource definition.
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> PhysicalWireDefinition generateResourceWire(C source, LogicalResource<?> resource) throws GenerationException;
+    PhysicalWireDefinition generateResourceWire(LogicalResource<?> resource) throws GenerationException;
 
 
     /**
@@ -68,47 +67,34 @@ public interface PhysicalWireGenerator {
      *
      * @param service     the logical service representing the wire source
      * @param binding     the binding the wire will be attached to at its source
-     * @param target      the target lgical component for the wire
      * @param callbackUri the callback URI associated with this wire or null if the service is unidirectional
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundServiceWire(LogicalService service,
-                                                                                    LogicalBinding<?> binding,
-                                                                                    C target,
-                                                                                    URI callbackUri) throws GenerationException;
+    PhysicalWireDefinition generateBoundServiceWire(LogicalService service, LogicalBinding<?> binding, URI callbackUri) throws GenerationException;
 
 
     /**
      * Generates a PhysicalWireDefinition from a bound service to a component. A physical change set for the runtime the wire will be provisioned to
      * is updated with the physical wire definition
      *
-     * @param source    the source logical component for the wire
      * @param reference the component reference the wire is associated with to at its source
      * @param binding   the binding the wire will be attached to at its terminating end
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundReferenceWire(C source,
-                                                                                      LogicalReference reference,
-                                                                                      LogicalBinding<?> binding) throws GenerationException;
+    PhysicalWireDefinition generateBoundReferenceWire(LogicalReference reference, LogicalBinding<?> binding) throws GenerationException;
 
     /**
      * Generates a PhysicalWireDefinition for an unbound wire. Unbound wires are direct connections between two components. A physical change set for
      * the runtime the wire will be provisioned to is updated with the physical wire definition
      *
-     * @param source    the source component the wire will be attached to
      * @param reference the component reference the wire is associated with at its source
      * @param service   the component service the wire is associated with to at its terminating end
-     * @param target    the target component the wire will be attached to
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    <S extends LogicalComponent<?>, T extends LogicalComponent<?>> PhysicalWireDefinition generateUnboundWire(S source,
-                                                                                                              LogicalReference reference,
-                                                                                                              LogicalService service,
-                                                                                                              T target)
-            throws GenerationException;
+    PhysicalWireDefinition generateUnboundWire(LogicalReference reference, LogicalService service) throws GenerationException;
 
     /**
      * Generates an unbound callback wire between two collocated components.

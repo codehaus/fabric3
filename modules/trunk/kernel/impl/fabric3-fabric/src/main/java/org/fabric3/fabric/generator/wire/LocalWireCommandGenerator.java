@@ -136,13 +136,13 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             LogicalReference reference = logicalWire.getSource();
             boolean attach = true;
             if (target.getState() == LogicalState.MARKED || logicalWire.getState() == LogicalState.MARKED) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(reference, targetService);
                 attach = false;
                 DetachWireCommand detachCommand = new DetachWireCommand();
                 detachCommand.setPhysicalWireDefinition(pwd);
                 command.add(detachCommand);
             } else if (reinjection || !incremental || logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(reference, targetService);
                 AttachWireCommand attachCommand = new AttachWireCommand();
                 attachCommand.setPhysicalWireDefinition(pwd);
                 command.add(attachCommand);
