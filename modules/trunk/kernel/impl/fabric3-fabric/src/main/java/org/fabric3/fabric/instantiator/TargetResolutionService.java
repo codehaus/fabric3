@@ -20,17 +20,16 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 
 /**
- * Abstraction for resolving targets for references. Possible implementations include explicit targets, intent based auto-wiring, and type based
- * auto-wiring. Resolution strategies are exclusive. That is, only one strategy is used per reference.
+ * Abstraction for resolving refeence targets. Implementations perform resolution through matching an explicit target URI or through autowire.
  *
  * @version $Revision$ $Date$
  */
 public interface TargetResolutionService {
 
     /**
-     * Resolves the target for a logical reference.
+     * Resolves the target for a logical reference. If the reference is resolved, {@link LogicalReference#isResolved()} will return true.
      *
-     * @param reference Logical reference whose target needs to be resolved.
+     * @param reference Logical reference to be resolved.
      * @param component Composite component within which the targets are resolved.
      * @param context   the instantiation context. Recoverable errors and warnings should be reported here.
      */

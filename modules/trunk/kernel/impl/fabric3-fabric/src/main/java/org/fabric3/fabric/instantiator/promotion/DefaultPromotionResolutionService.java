@@ -139,14 +139,25 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                     context.addError(error);
                     return;
                 }
-                logicalReference.setPromotedUri(i, componentReferences.iterator().next().getUri());
-            } else if (promotedComponent.getReference(promotedReferenceName) == null) {
-                String msg = "Reference " + promotedReferenceName + " not found on component " + promotedComponentUri;
-                URI componentUri = parent.getUri();
-                URI contributionUri = parent.getDefinition().getContributionUri();
-                ReferenceNotFound error = new ReferenceNotFound(msg, promotedReferenceName, componentUri, contributionUri);
-                context.addError(error);
-                return;
+                LogicalReference promotedReference = componentReferences.iterator().next();
+                logicalReference.setPromotedUri(i, promotedReference.getUri());
+                // mark the promoted reference as resolved but not the current reference being evaluated since it may by at the top of the promotion
+                // hierarchy and need to be resolved
+                promotedReference.setResolved(true);
+            } else {
+                LogicalReference promotedReference = promotedComponent.getReference(promotedReferenceName);
+                if (promotedReference == null) {
+
+                    String msg = "Reference " + promotedReferenceName + " not found on component " + promotedComponentUri;
+                    URI componentUri = parent.getUri();
+                    URI contributionUri = parent.getDefinition().getContributionUri();
+                    ReferenceNotFound error = new ReferenceNotFound(msg, promotedReferenceName, componentUri, contributionUri);
+                    context.addError(error);
+                    return;
+                }
+                // mark the promoted reference as resolved but not the current reference being evaluated since it may by at the top of the promotion
+                // hierarchy and need to be resolved
+                promotedReference.setResolved(true);
             }
 
         }

@@ -70,6 +70,8 @@
 
     <component name="WiringService">
         <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.ResolutionServiceImpl"/>
+        <reference name="explicitResolutionService" target="ExplicitTargetResolutionService"/>
+        <reference name="autowireResolutionService" target="TypeBasedAutoWireResolutionService"/>
     </component>
 
     <component name="PromotionNormalizer">

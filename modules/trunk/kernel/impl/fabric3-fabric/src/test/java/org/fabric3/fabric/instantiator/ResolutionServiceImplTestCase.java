@@ -17,8 +17,6 @@
 package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -124,13 +122,10 @@ public class ResolutionServiceImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
-        List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         ServiceContractResolver serviceContractResolver = new ServiceContractResolverImpl();
         ExplicitTargetResolutionService resolutionService = new ExplicitTargetResolutionService(serviceContractResolver);
-        targetResolutionServices.add(resolutionService);
         TypeBasedAutowireResolutionService autowireResolutionService = new TypeBasedAutowireResolutionService(serviceContractResolver);
-        targetResolutionServices.add(autowireResolutionService);
-        this.resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
+        this.resolutionService = new ResolutionServiceImpl(promotionResolutionService, resolutionService, autowireResolutionService);
         URI domainUri = URI.create("fabric3://runtime");
         domain = new LogicalCompositeComponent(domainUri, null, null);
     }

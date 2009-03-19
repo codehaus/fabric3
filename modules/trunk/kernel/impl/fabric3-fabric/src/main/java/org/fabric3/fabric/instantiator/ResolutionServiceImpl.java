@@ -16,8 +16,6 @@
  */
 package org.fabric3.fabric.instantiator;
 
-import java.util.List;
-
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Multiplicity;
@@ -27,38 +25,34 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * Default implementation of the resolution service. Resolves promotions first and subsequently invokes a series of resolvers to determine reference
- * targets.
+ * Implementation that resolves promotions using PromotionResolutionService and delegates to TargetResolutionServices to resolve reference targets.
  *
  * @version $Revision$ $Date$
  */
 public class ResolutionServiceImpl implements ResolutionService {
 
-    private final PromotionResolutionService promotionResolutionService;
-    private final List<TargetResolutionService> targetResolutionServices;
+    private PromotionResolutionService promotionResolutionService;
+    private TargetResolutionService explicitResolutionService;
+    private TargetResolutionService autowireResolutionService;
 
-    /**
-     * Constructor.
-     *
-     * @param promotionResolutionService Service for handling promotions.
-     * @param targetResolutionServices   An ordered list of target resolution services.
-     */
-    public ResolutionServiceImpl(@Reference PromotionResolutionService promotionResolutionService,
-                                 @Reference List<TargetResolutionService> targetResolutionServices) {
+
+    public ResolutionServiceImpl(@Reference(name = "promotionResolutionService") PromotionResolutionService promotionResolutionService,
+                                 @Reference(name = "explicitResolutionService") TargetResolutionService explicitResolutionService,
+                                 @Reference(name = "autowireResolutionService") TargetResolutionService autowireResolutionService) {
         this.promotionResolutionService = promotionResolutionService;
-        this.targetResolutionServices = targetResolutionServices;
+        this.explicitResolutionService = explicitResolutionService;
+        this.autowireResolutionService = autowireResolutionService;
     }
 
     public void resolve(LogicalComponent<?> logicalComponent, InstantiationContext context) {
+        resolveReferences(logicalComponent, context);
+        resolveServices(logicalComponent, context);
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
                 resolve(child, context);
             }
         }
-
-        resolveReferences(logicalComponent, context);
-        resolveServices(logicalComponent, context);
     }
 
     public void resolve(LogicalService logicalService, InstantiationContext context) {
@@ -67,9 +61,11 @@ public class ResolutionServiceImpl implements ResolutionService {
 
     public void resolve(LogicalReference reference, LogicalCompositeComponent component, InstantiationContext context) {
         promotionResolutionService.resolve(reference, context);
-        for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-            targetResolutionService.resolve(reference, component, context);
+        explicitResolutionService.resolve(reference, component, context);
+        if (reference.isResolved()) {
+            return;
         }
+        autowireResolutionService.resolve(reference, component, context);
     }
 
     /*
@@ -77,21 +73,19 @@ public class ResolutionServiceImpl implements ResolutionService {
      */
     private void resolveReferences(LogicalComponent<?> logicalComponent, InstantiationContext context) {
         LogicalCompositeComponent parent = logicalComponent.getParent();
-        for (LogicalReference logicalReference : logicalComponent.getReferences()) {
-            Multiplicity multiplicityValue = logicalReference.getDefinition().getMultiplicity();
+        for (LogicalReference reference : logicalComponent.getReferences()) {
+            Multiplicity multiplicityValue = reference.getDefinition().getMultiplicity();
             boolean refMultiplicity = multiplicityValue.equals(Multiplicity.ZERO_N) || multiplicityValue.equals(Multiplicity.ONE_N);
-            if (refMultiplicity || !logicalReference.isResolved()) {
+            if (refMultiplicity || !reference.isResolved()) {
                 // Only resolve references that have not been resolved or ones that are multiplicities since the latter may be reinjected.
                 // Explicitly set the reference to unresolved, since if it was a multiplicity it may have been previously resolved.
-                logicalReference.setResolved(false);
-                promotionResolutionService.resolve(logicalReference, context);
-                for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-                    targetResolutionService.resolve(logicalReference, parent, context);
-                    if (logicalReference.isResolved()) {
-                        // the reference has been resolved
-                        break;
-                    }
+                reference.setResolved(false);
+                promotionResolutionService.resolve(reference, context);
+                explicitResolutionService.resolve(reference, parent, context);
+                if (reference.isResolved()) {
+                    continue;
                 }
+                autowireResolutionService.resolve(reference, parent, context);
             }
         }
     }

@@ -78,7 +78,6 @@ import org.fabric3.fabric.instantiator.PromotionNormalizer;
 import org.fabric3.fabric.instantiator.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.ResolutionService;
 import org.fabric3.fabric.instantiator.ResolutionServiceImpl;
-import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.fabric.instantiator.WireInstantiator;
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator;
@@ -194,13 +193,11 @@ public class BootstrapAssemblyFactory {
 
     private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
         PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
-        List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         ServiceContractResolver serviceContractResolver = new ServiceContractResolverImpl();
         ExplicitTargetResolutionService explicitTargetResolutionService = new ExplicitTargetResolutionService(serviceContractResolver);
-        targetResolutionServices.add(explicitTargetResolutionService);
         TypeBasedAutowireResolutionService autowireResolutionService = new TypeBasedAutowireResolutionService(serviceContractResolver);
-        targetResolutionServices.add(autowireResolutionService);
-        ResolutionService resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
+        ResolutionService resolutionService =
+                new ResolutionServiceImpl(promotionResolutionService, explicitTargetResolutionService, autowireResolutionService);
 
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         DocumentLoader documentLoader = new DocumentLoaderImpl();

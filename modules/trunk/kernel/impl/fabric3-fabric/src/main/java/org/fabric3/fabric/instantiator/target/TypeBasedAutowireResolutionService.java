@@ -60,7 +60,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
 
         if (componentReference == null) {
             // The reference is not configured on the component definition in the composite. i.e. it is only present in the componentType
-            if (!logicalReference.getBindings().isEmpty() || isPromoted(compositeComponent, logicalReference)) {
+            if (logicalReference.isResolved()) {
                 return;
             }
 
@@ -68,22 +68,22 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
 
             Autowire autowire = calculateAutowire(compositeComponent, component);
             if (autowire == Autowire.ON) {
-                resolveByType(compositeComponent, component, logicalReference, requiredContract);
+                resolveByType(compositeComponent, logicalReference, requiredContract);
             }
 
         } else {
             // The reference is explicity configured on the component definition in the composite
             List<URI> uris = componentReference.getTargets();
-            if (!uris.isEmpty() || isPromoted(compositeComponent, logicalReference)) {
+            if (!uris.isEmpty()) {
                 return;
             }
 
             if (componentReference.isAutowire()) {
                 ReferenceDefinition referenceDefinition = logicalReference.getDefinition();
                 ServiceContract<?> requiredContract = referenceDefinition.getServiceContract();
-                boolean resolved = resolveByType(component.getParent(), component, logicalReference, requiredContract);
+                boolean resolved = resolveByType(component.getParent(), logicalReference, requiredContract);
                 if (!resolved) {
-                    resolveByType(compositeComponent, component, logicalReference, requiredContract);
+                    resolveByType(compositeComponent, logicalReference, requiredContract);
                 }
             }
         }
@@ -156,15 +156,11 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
      * of LogicalWires is created.
      *
      * @param composite        the composite to resolve against
-     * @param component        the component containing the reference
      * @param logicalReference the logical reference
      * @param contract         the contract to match against
      * @return true if the reference has been resolved.
      */
-    private boolean resolveByType(LogicalCompositeComponent composite,
-                                  LogicalComponent<?> component,
-                                  LogicalReference logicalReference,
-                                  ServiceContract<?> contract) {
+    private boolean resolveByType(LogicalCompositeComponent composite, LogicalReference logicalReference, ServiceContract<?> contract) {
 
         List<LogicalService> candidates = new ArrayList<LogicalService>();
         Multiplicity refMultiplicity = logicalReference.getDefinition().getMultiplicity();
@@ -208,34 +204,6 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
         }
 
         return true;
-
-    }
-
-    private boolean isPromoted(LogicalComponent<?> composite, LogicalReference logicalReference) {
-        LogicalComponent<?> component = logicalReference.getParent();
-        for (LogicalReference compositeReference : composite.getReferences()) {
-            List<URI> uris = compositeReference.getPromotedUris();
-            if (component.getReferences().size() == 1) {
-                LogicalReference componentRef = component.getReferences().iterator().next();
-                for (URI uri : uris) {
-                    if (uri.getFragment() == null && component.getUri().equals(uri)) {
-                        return true;
-                    } else {
-                        if (componentRef.getUri().equals(uri)) {
-                            return true;
-                        }
-                    }
-                }
-            } else {
-                for (URI uri : uris) {
-                    if (logicalReference.getUri().equals(uri)) {
-                        return true;
-                    }
-                }
-
-            }
-        }
-        return false;
 
     }
 
