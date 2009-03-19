@@ -54,9 +54,9 @@ import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
 import org.fabric3.fabric.executor.ReferenceConnectionCommandExecutor;
 import org.fabric3.fabric.executor.StartComponentCommandExecutor;
 import org.fabric3.fabric.executor.StartContextCommandExecutor;
+import org.fabric3.fabric.generator.Generator;
+import org.fabric3.fabric.generator.GeneratorImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
-import org.fabric3.fabric.generator.PhysicalModelGenerator;
-import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl;
 import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
@@ -176,13 +176,12 @@ public class BootstrapAssemblyFactory {
 
         LocalRoutingService routingService = new LocalRoutingService(commandRegistry, scopeRegistry);
 
-        PhysicalModelGenerator physicalModelGenerator =
-                createPhysicalModelGenerator(logicalComponentManager, metaDataStore);
+        Generator generator = createGenerator(logicalComponentManager, metaDataStore);
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
         Collector collector = new CollectorImpl();
         return new RuntimeDomain(metaDataStore,
-                                 physicalModelGenerator,
+                                 generator,
                                  logicalModelInstantiator,
                                  logicalComponentManager,
                                  bindingSelector,
@@ -296,8 +295,8 @@ public class BootstrapAssemblyFactory {
         return new ClassLoaderBuilderImpl(wireBuilder, classLoaderRegistry, resolver, cpRegistry, componentManager, info);
     }
 
-    private static PhysicalModelGenerator createPhysicalModelGenerator(LogicalComponentManager logicalComponentManager,
-                                                                       MetaDataStore metaDataStore) {
+    private static Generator createGenerator(LogicalComponentManager logicalComponentManager,
+                                             MetaDataStore metaDataStore) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
@@ -319,7 +318,7 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new StartComponentCommandGenerator(3));
         StopContextCommandGenerator stopContextGenerator = new StopContextCommandGeneratorImpl();
         StartContextCommandGenerator startContextGenerator = new StartContextCommandGeneratorImpl();
-        return new PhysicalModelGeneratorImpl(commandGenerators, classLoaderCommandGenerator, startContextGenerator, stopContextGenerator);
+        return new GeneratorImpl(commandGenerators, classLoaderCommandGenerator, startContextGenerator, stopContextGenerator);
     }
 
     private static GeneratorRegistry createGeneratorRegistry() {

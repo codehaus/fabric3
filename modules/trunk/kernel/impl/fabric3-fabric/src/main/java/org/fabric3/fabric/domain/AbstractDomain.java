@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.collector.Collector;
-import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.generator.Generator;
 import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.RuntimeMode;
@@ -73,7 +73,7 @@ public abstract class AbstractDomain implements Domain {
     private static final String PLAN_NAMESPACE = "urn:fabric3.org:extension:plan";
 
     protected RoutingService routingService;
-    protected PhysicalModelGenerator physicalModelGenerator;
+    protected Generator generator;
     // The service for allocating to remote zones. Domain subtypes may optionally inject this service if they support distributed domains.
     protected Allocator allocator;
     protected List<DomainListener> listeners;
@@ -90,7 +90,7 @@ public abstract class AbstractDomain implements Domain {
      *
      * @param metadataStore            the store for resolving contribution artifacts
      * @param logicalComponentManager  the manager for logical components
-     * @param physicalModelGenerator   the physical model generator
+     * @param generator   the physical model generator
      * @param logicalModelInstantiator the logical model instantiator
      * @param bindingSelector          the selector for binding.sca
      * @param routingService           the service for routing deployment commands
@@ -99,14 +99,14 @@ public abstract class AbstractDomain implements Domain {
      */
     public AbstractDomain(MetaDataStore metadataStore,
                           LogicalComponentManager logicalComponentManager,
-                          PhysicalModelGenerator physicalModelGenerator,
+                          Generator generator,
                           LogicalModelInstantiator logicalModelInstantiator,
                           BindingSelector bindingSelector,
                           RoutingService routingService,
                           Collector collector,
                           HostInfo info) {
         this.metadataStore = metadataStore;
-        this.physicalModelGenerator = physicalModelGenerator;
+        this.generator = generator;
         this.logicalModelInstantiator = logicalModelInstantiator;
         this.logicalComponentManager = logicalComponentManager;
         this.bindingSelector = bindingSelector;
@@ -187,7 +187,7 @@ public abstract class AbstractDomain implements Domain {
         }
         collector.markForCollection(deployable, domain);
         try {
-            CommandMap commandMap = physicalModelGenerator.generate(domain.getComponents(), true);
+            CommandMap commandMap = generator.generate(domain.getComponents(), true);
             routingService.route(commandMap);
         } catch (GenerationException e) {
             throw new UndeploymentException("Error undeploying: " + deployable, e);
@@ -233,7 +233,7 @@ public abstract class AbstractDomain implements Domain {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
         Collection<LogicalComponent<?>> components = domain.getComponents();
         try {
-            CommandMap commandMap = physicalModelGenerator.generate(components, false);
+            CommandMap commandMap = generator.generate(components, false);
             List<Command> commands = commandMap.getCommandsForZone(zoneId);
             CommandMap filtered = new CommandMap(commandMap.getId(), correlationId, true);
             filtered.addCommands(zoneId, commands);
@@ -493,7 +493,7 @@ public abstract class AbstractDomain implements Domain {
         selectBinding(components);
         try {
             // generate and provision any new components and new wires
-            CommandMap commandMap = physicalModelGenerator.generate(components, true);
+            CommandMap commandMap = generator.generate(components, true);
             routingService.route(commandMap);
         } catch (GenerationException e) {
             throw new DeploymentException("Error deploying components", e);

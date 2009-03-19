@@ -20,7 +20,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.collector.Collector;
-import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.generator.Generator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.contribution.MetaDataStore;
@@ -37,7 +37,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 public class RuntimeDomain extends AbstractDomain {
 
     public RuntimeDomain(@Reference MetaDataStore metadataStore,
-                         @Reference PhysicalModelGenerator physicalModelGenerator,
+                         @Reference Generator generator,
                          @Reference LogicalModelInstantiator logicalModelInstantiator,
                          @Reference LogicalComponentManager logicalComponentManager,
                          @Reference BindingSelector bindingSelector,
@@ -46,7 +46,7 @@ public class RuntimeDomain extends AbstractDomain {
                          @Reference HostInfo info) {
         super(metadataStore,
               logicalComponentManager,
-              physicalModelGenerator,
+              generator,
               logicalModelInstantiator,
               bindingSelector,
               routingService,
@@ -57,11 +57,11 @@ public class RuntimeDomain extends AbstractDomain {
     /**
      * Used for reinjection.
      *
-     * @param physicalModelGenerator the generator to inject
+     * @param generator the generator to inject
      */
     @Reference
-    public void setPhysicalModelGenerator(PhysicalModelGenerator physicalModelGenerator) {
-        this.physicalModelGenerator = physicalModelGenerator;
+    public void setGenerator(Generator generator) {
+        this.generator = generator;
     }
 
     /**

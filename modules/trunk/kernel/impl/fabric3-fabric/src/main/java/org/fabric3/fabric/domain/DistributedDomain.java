@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.collector.Collector;
-import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.generator.Generator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.HostInfo;
@@ -41,7 +41,7 @@ public class DistributedDomain extends AbstractDomain implements Domain {
 
     public DistributedDomain(@Reference(name = "store") MetaDataStore metaDataStore,
                              @Reference(name = "logicalComponentManager") LogicalComponentManager logicalComponentManager,
-                             @Reference PhysicalModelGenerator physicalModelGenerator,
+                             @Reference Generator generator,
                              @Reference LogicalModelInstantiator logicalModelInstantiator,
                              @Reference BindingSelector bindingSelector,
                              @Reference RoutingService routingService,
@@ -49,7 +49,7 @@ public class DistributedDomain extends AbstractDomain implements Domain {
                              @Reference HostInfo info) {
         super(metaDataStore,
               logicalComponentManager,
-              physicalModelGenerator,
+              generator,
               logicalModelInstantiator,
               bindingSelector,
               routingService,

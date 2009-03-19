@@ -49,11 +49,11 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
     </component>
 
-    <component name="PhysicalModelGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.PhysicalModelGeneratorImpl"/>
+    <component name="Generator">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.GeneratorImpl"/>
     </component>
     <!-- the wire forces a reinjection of the generator into the RuntimeDomain -->
-    <wire source="RuntimeDomain/physicalModelGenerator" target="PhysicalModelGenerator"/>
+    <wire source="RuntimeDomain/generator" target="Generator"/>
 
     <component name="PhysicalWireGenerator">
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>

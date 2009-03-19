@@ -45,7 +45,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  *
  * @version $Revision$ $Date$
  */
-public interface PhysicalModelGenerator {
+public interface Generator {
 
     /**
      * Generate commands to provision a set of newly instantiated components and wires to zones.

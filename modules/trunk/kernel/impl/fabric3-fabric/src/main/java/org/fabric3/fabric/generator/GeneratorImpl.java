@@ -64,7 +64,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
+public class GeneratorImpl implements Generator {
     private static final Comparator<LogicalComponent<?>> COMPARATOR = new Comparator<LogicalComponent<?>>() {
         public int compare(LogicalComponent<?> first, LogicalComponent<?> second) {
             return first.getUri().compareTo(second.getUri());
@@ -76,7 +76,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     private StartContextCommandGenerator startContextCommandGenerator;
     private StopContextCommandGenerator stopContextCommandGenerator;
 
-    public PhysicalModelGeneratorImpl(@Reference List<CommandGenerator> commandGenerators,
+    public GeneratorImpl(@Reference List<CommandGenerator> commandGenerators,
                                       @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator,
                                       @Reference StartContextCommandGenerator startContextCommandGenerator,
                                       @Reference StopContextCommandGenerator stopContextCommandGenerator) {
