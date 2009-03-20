@@ -35,7 +35,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JUnitBindingGenerator implements BindingGenerator<JUnitWireSourceDefinition, PhysicalWireTargetDefinition, JUnitBindingDefinition> {
+public class JUnitBindingGenerator implements BindingGenerator<JUnitBindingDefinition> {
 
     public JUnitWireSourceDefinition generateWireSource(LogicalBinding<JUnitBindingDefinition> bindingDefinition,
                                                         Policy policy,

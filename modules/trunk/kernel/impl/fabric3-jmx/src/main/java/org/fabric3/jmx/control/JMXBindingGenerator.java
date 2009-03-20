@@ -35,7 +35,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefinition, PhysicalWireTargetDefinition, JMXBinding> {
+public class JMXBindingGenerator implements BindingGenerator<JMXBinding> {
 
     public JMXWireSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding, Policy policy, ServiceDefinition serviceDefinition)
             throws GenerationException {

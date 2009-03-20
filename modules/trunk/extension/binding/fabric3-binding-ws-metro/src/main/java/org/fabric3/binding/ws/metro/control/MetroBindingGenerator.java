@@ -43,7 +43,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
  * 
  * TODO Add support for WSDL Contract
  */
-public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceDefinition, MetroWireTargetDefinition, WsBindingDefinition> {
+public class MetroBindingGenerator  implements BindingGenerator<WsBindingDefinition> {
     
     @Reference protected ClassLoaderRegistry classLoaderRegistry;
     @Reference protected WsdlElementParser wsdlElementParser;

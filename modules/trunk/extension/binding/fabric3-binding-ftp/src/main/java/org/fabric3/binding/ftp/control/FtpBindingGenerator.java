@@ -41,7 +41,7 @@ import org.fabric3.spi.policy.Policy;
 /**
  * @version $Revision$ $Date$
  */
-public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefinition, FtpWireTargetDefinition, FtpBindingDefinition> {
+public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinition> {
     private int connectTimeout = 120000; // two minutes
     private int socketTimeout = 1800000;  // default timeout of 30 minutes
 

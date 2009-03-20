@@ -57,8 +57,7 @@ public interface InterceptorDefinitionGenerator {
      * @return Physical interceptor definition or null if an interceptor should not be added.
      * @throws GenerationException i an exception occurs during generation
      */
-    PhysicalInterceptorDefinition generate(Element policyDefinition,
-                                           Operation<?> operation,
-                                           LogicalBinding<?> logicalBinding) throws GenerationException;
+    PhysicalInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding)
+            throws GenerationException;
 
 }

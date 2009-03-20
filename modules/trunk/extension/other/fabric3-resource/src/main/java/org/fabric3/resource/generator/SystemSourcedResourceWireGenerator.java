@@ -31,7 +31,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
  */
 @SuppressWarnings("unchecked")
 @EagerInit
-public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator<SystemSourcedWireTargetDefinition, SystemSourcedResource> {
+public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator<SystemSourcedResource> {
 
     private static final String SYSTEM_URI = "fabric3://runtime/";
 

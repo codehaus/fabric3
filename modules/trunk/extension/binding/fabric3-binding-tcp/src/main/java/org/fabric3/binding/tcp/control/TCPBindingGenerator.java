@@ -32,7 +32,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 public class TCPBindingGenerator implements
-        BindingGenerator<TCPWireSourceDefinition, TCPWireTargetDefinition, TCPBindingDefinition> {
+        BindingGenerator<TCPBindingDefinition> {
 
     /**
      * {@inheritDoc}

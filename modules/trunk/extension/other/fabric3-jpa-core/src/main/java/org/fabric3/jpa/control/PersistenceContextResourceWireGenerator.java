@@ -30,7 +30,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class PersistenceContextResourceWireGenerator implements ResourceWireGenerator<PersistenceContextWireTargetDefinition, PersistenceContextResource> {
+public class PersistenceContextResourceWireGenerator implements ResourceWireGenerator<PersistenceContextResource> {
 
     public PersistenceContextWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceContextResource> logicalResource)
             throws GenerationException {

@@ -27,7 +27,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTargetDefinition, MonitorResource> {
+public class MonitorWireGenerator implements ResourceWireGenerator<MonitorResource> {
 
     public MonitorWireTargetDefinition generateWireTargetDefinition(LogicalResource<MonitorResource> resource) throws GenerationException {
 

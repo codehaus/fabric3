@@ -57,14 +57,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     private Map<Class<?>, ComponentGenerator<?>> componentGenerators = new ConcurrentHashMap<Class<?>, ComponentGenerator<?>>();
 
-    private Map<Class<?>, BindingGenerator<?, ?, ?>> bindingGenerators = new ConcurrentHashMap<Class<?>, BindingGenerator<?, ?, ?>>();
+    private Map<Class<?>, BindingGenerator<?>> bindingGenerators = new ConcurrentHashMap<Class<?>, BindingGenerator<?>>();
 
     private Map<QName, InterceptorDefinitionGenerator> interceptorGenerators =  new ConcurrentHashMap<QName, InterceptorDefinitionGenerator>();
 
-    private Map<Class<?>, ResourceWireGenerator<?, ?>> resourceGenerators = new ConcurrentHashMap<Class<?>, ResourceWireGenerator<?, ?>>();
+    private Map<Class<?>, ResourceWireGenerator<?>> resourceGenerators = new ConcurrentHashMap<Class<?>, ResourceWireGenerator<?>>();
 
     @Reference(required = false)
-    public void setBindingGenerators(Map<Class<?>, BindingGenerator<?, ?, ?>> bindingGenerators) {
+    public void setBindingGenerators(Map<Class<?>, BindingGenerator<?>> bindingGenerators) {
         this.bindingGenerators = bindingGenerators;
     }
 
@@ -74,7 +74,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @Reference(required = false)
-    public void setResourceGenerators(Map<Class<?>, ResourceWireGenerator<?, ?>> resourceGenerators) {
+    public void setResourceGenerators(Map<Class<?>, ResourceWireGenerator<?>> resourceGenerators) {
         this.resourceGenerators = resourceGenerators;
     }
 
@@ -87,11 +87,11 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         componentGenerators.put(clazz, generator);
     }
 
-    public <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
+    public <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<T> generator) {
         resourceGenerators.put(clazz, generator);
     }
 
-    public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator) {
+    public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<T> generator) {
         bindingGenerators.put(clazz, generator);
     }
 
@@ -105,21 +105,21 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends BindingDefinition> BindingGenerator<?, ?, T> getBindingGenerator(Class<T> clazz)
+    public <T extends BindingDefinition> BindingGenerator<T> getBindingGenerator(Class<T> clazz)
             throws GeneratorNotFoundException {
         if (!bindingGenerators.containsKey(clazz)) {
             throw new GeneratorNotFoundException(clazz);
         }
-        return (BindingGenerator<?, ?, T>) bindingGenerators.get(clazz);
+        return (BindingGenerator<T>) bindingGenerators.get(clazz);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ResourceDefinition> ResourceWireGenerator<?, T> getResourceWireGenerator(Class<T> clazz)
+    public <T extends ResourceDefinition> ResourceWireGenerator<T> getResourceWireGenerator(Class<T> clazz)
             throws GeneratorNotFoundException {
         if (!resourceGenerators.containsKey(clazz)) {
             throw new GeneratorNotFoundException(clazz);
         }
-        return (ResourceWireGenerator<?, T>) resourceGenerators.get(clazz);
+        return (ResourceWireGenerator<T>) resourceGenerators.get(clazz);
     }
 
     public InterceptorDefinitionGenerator getInterceptorDefinitionGenerator(QName extensionName)

@@ -54,7 +54,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSourceDefinition, BurlapWireTargetDefinition, BurlapBindingDefinition> {
+public class BurlapBindingGenerator implements BindingGenerator<BurlapBindingDefinition> {
 
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Policy policy,

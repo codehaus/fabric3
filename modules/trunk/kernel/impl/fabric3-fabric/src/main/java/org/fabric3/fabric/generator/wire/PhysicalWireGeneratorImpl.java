@@ -423,13 +423,13 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends ResourceDefinition> ResourceWireGenerator<?, T> getGenerator(T definition) throws GeneratorNotFoundException {
-        return (ResourceWireGenerator<?, T>) generatorRegistry.getResourceWireGenerator(definition.getClass());
+    private <T extends ResourceDefinition> ResourceWireGenerator<T> getGenerator(T definition) throws GeneratorNotFoundException {
+        return (ResourceWireGenerator<T>) generatorRegistry.getResourceWireGenerator(definition.getClass());
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends BindingDefinition> BindingGenerator<?, ?, T> getGenerator(LogicalBinding<T> binding) throws GeneratorNotFoundException {
-        return (BindingGenerator<?, ?, T>) generatorRegistry.getBindingGenerator(binding.getDefinition().getClass());
+    private <T extends BindingDefinition> BindingGenerator<T> getGenerator(LogicalBinding<T> binding) throws GeneratorNotFoundException {
+        return (BindingGenerator<T>) generatorRegistry.getBindingGenerator(binding.getDefinition().getClass());
     }
 
     private boolean checkOptimization(ServiceContract<?> serviceContract, Set<PhysicalOperationDefinition> operationDefinitions) {

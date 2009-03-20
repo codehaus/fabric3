@@ -43,11 +43,11 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * Generates {@link PhysicalWireSourceDefinition}s and {@link PhysicalWireTargetDefinition}s for a resolved binding
+ * Generates {@link PhysicalWireSourceDefinition}s and {@link PhysicalWireTargetDefinition}s for a resolved binding.
  *
  * @version $Rev$ $Date$
  */
-public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition, PWTD extends PhysicalWireTargetDefinition, BD extends BindingDefinition> {
+public interface BindingGenerator<BD extends BindingDefinition> {
 
     /**
      * Generates a physical wire source definition from a logical binding.
@@ -58,7 +58,8 @@ public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition, PWT
      * @return Physical wire source definition.
      * @throws GenerationException if an error is raised during generation
      */
-    PWSD generateWireSource(LogicalBinding<BD> binding, Policy policy, ServiceDefinition serviceDefinition) throws GenerationException;
+    PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding, Policy policy, ServiceDefinition serviceDefinition)
+            throws GenerationException;
 
     /**
      * Generates a physical wire target definition from a logical binding.
@@ -69,6 +70,7 @@ public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition, PWT
      * @return Physical wire target definition.
      * @throws GenerationException if an error is raised during generation
      */
-    PWTD generateWireTarget(LogicalBinding<BD> binding, Policy policy, ServiceContract<?> contract) throws GenerationException;
+    PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding, Policy policy, ServiceContract<?> contract)
+            throws GenerationException;
 
 }

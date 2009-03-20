@@ -67,7 +67,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefinition, JmsWireTargetDefinition, JmsBindingDefinition> {
+public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinition> {
 
     // Transacted one way intent
     private static final QName TRANSACTED_ONEWAY = new QName(SCA_NS, "transactedOneWay");

@@ -70,7 +70,7 @@ public interface GeneratorRegistry {
      * @return The registered binding generator.
      * @throws GeneratorNotFoundException if no generator is registered for the binding type
      */
-    <T extends BindingDefinition> BindingGenerator<?, ?, T> getBindingGenerator(Class<T> clazz) throws GeneratorNotFoundException;
+    <T extends BindingDefinition> BindingGenerator<T> getBindingGenerator(Class<T> clazz) throws GeneratorNotFoundException;
 
     /**
      * Gets the resource wire generator for the resource type.
@@ -79,7 +79,7 @@ public interface GeneratorRegistry {
      * @return the registered resource wire generator
      * @throws GeneratorNotFoundException if no generator is registered for the resource type
      */
-    <T extends ResourceDefinition> ResourceWireGenerator<?, T> getResourceWireGenerator(Class<T> clazz) throws GeneratorNotFoundException;
+    <T extends ResourceDefinition> ResourceWireGenerator<T> getResourceWireGenerator(Class<T> clazz) throws GeneratorNotFoundException;
 
     /**
      * Gets the interceptor definition generator for the qualified name.

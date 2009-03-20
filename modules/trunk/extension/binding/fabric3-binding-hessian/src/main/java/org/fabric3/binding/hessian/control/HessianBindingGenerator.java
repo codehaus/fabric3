@@ -54,7 +54,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianBindingGenerator implements BindingGenerator<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
+public class HessianBindingGenerator implements BindingGenerator<HessianBindingDefinition> {
 
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Policy policy,

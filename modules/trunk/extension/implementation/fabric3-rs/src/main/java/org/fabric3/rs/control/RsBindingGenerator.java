@@ -34,7 +34,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class RsBindingGenerator implements BindingGenerator<RsWireSourceDefinition, RsWireTargetDefinition, RsBindingDefinition> {
+public class RsBindingGenerator implements BindingGenerator<RsBindingDefinition> {
 
     public RsWireSourceDefinition generateWireSource(LogicalBinding<RsBindingDefinition> logicalBinding,
                                                      Policy policy,

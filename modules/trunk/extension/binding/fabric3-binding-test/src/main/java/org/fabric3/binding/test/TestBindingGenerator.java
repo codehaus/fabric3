@@ -31,7 +31,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class TestBindingGenerator implements BindingGenerator<TestBindingSourceDefinition, TestBindingTargetDefinition, TestBindingDefinition> {
+public class TestBindingGenerator implements BindingGenerator<TestBindingDefinition> {
 
     public TestBindingSourceDefinition generateWireSource(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Policy policy,
