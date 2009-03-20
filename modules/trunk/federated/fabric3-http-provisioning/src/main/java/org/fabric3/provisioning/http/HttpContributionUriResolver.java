@@ -77,7 +77,7 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
                 // resolve remotely
                 URL url = uri.toURL();
                 stream = url.openStream();
-                localURL = repository.store(decoded, stream);
+                localURL = repository.cache(decoded, stream);
 
                 // update the reference count
                 Integer count = counter.get(decoded);

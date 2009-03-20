@@ -60,6 +60,14 @@ public class MavenRepository implements Repository {
         return find(uri);
     }
 
+    public URL storeExtension(URI uri, InputStream stream) throws RepositoryException {
+        throw new UnsupportedOperationException();
+    }
+
+    public URL cache(URI uri, InputStream stream) throws RepositoryException {
+        throw new UnsupportedOperationException();
+    }
+
     public boolean exists(URI uri) {
         // always return false
         return false;

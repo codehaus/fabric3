@@ -27,19 +27,39 @@ import java.util.List;
 public interface Repository {
 
     /**
-     * Copies an artifact to the repository.
+     * Persists a user artifact to the repository.
      *
-     * @param uri    A URI pointing to the artifact being copied to the store
-     * @param stream InputStream with the content of the distribution
-     * @return a URL pointing to the stored artifact
+     * @param uri    The artifact URI
+     * @param stream the artifact contents
+     * @return a URL for the persisted artifact
      * @throws RepositoryException if an error occurs storing the artifact
      */
     URL store(URI uri, InputStream stream) throws RepositoryException;
 
     /**
-     * Returns true if the archive exists.
+     * Persists a runtime extension artifact to the repository.
      *
-     * @param uri the archive URI
+     * @param uri    The artifact URI
+     * @param stream the artifact contents
+     * @return a URL for the persisted artifact
+     * @throws RepositoryException if an error occurs storing the artifact
+     */
+    URL storeExtension(URI uri, InputStream stream) throws RepositoryException;
+
+    /**
+     * Temporarily persists an artifact to the repository. The lifetime of the artifact will not extend past the lifetime of the runtime instance.
+     *
+     * @param uri    The artifact URI
+     * @param stream the artifact contents
+     * @return a URL for the persisted artifact
+     * @throws RepositoryException if an error occurs storing the artifact
+     */
+    URL cache(URI uri, InputStream stream) throws RepositoryException;
+
+    /**
+     * Returns true if the artifact exists.
+     *
+     * @param uri the artifact URI
      * @return true if the archive exists
      */
     boolean exists(URI uri);
@@ -47,7 +67,7 @@ public interface Repository {
     /**
      * Look up the artifact URL by URI.
      *
-     * @param uri The URI of the artifact
+     * @param uri The artifact URI
      * @return A URL pointing to the artifact or null if the artifact cannot be found
      * @throws RepositoryException if an exception occurs storing the artifact
      */
@@ -56,7 +76,7 @@ public interface Repository {
     /**
      * Removes an artifact from the repository.
      *
-     * @param uri The URI of the contribution to be removed
+     * @param uri The URI of the artifact to be removed
      * @throws RepositoryException if an exception occurs removing the artifact
      */
     void remove(URI uri) throws RepositoryException;

@@ -211,7 +211,8 @@ public final class BootstrapHelper {
     public static StandaloneHostInfo createHostInfo(RuntimeMode runtimeMode, File baseDir, File configDir, File modeConfigDir, Properties props)
             throws BootstrapException, IOException {
 
-        File extensionsDir = getDirectory(baseDir, "extensions");
+        File repositoryDir = getDirectory(baseDir, "repository");
+        File extensionsDir = getDirectory(repositoryDir, "extensions");
         File tempDir = getDirectory(baseDir, "tmp");
         File dataDir = getDirectory(baseDir, "data");
 

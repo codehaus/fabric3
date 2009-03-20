@@ -35,7 +35,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.repository.Repository;
 import org.fabric3.spi.services.repository.RepositoryException;
@@ -48,8 +47,9 @@ import org.fabric3.spi.services.repository.RepositoryException;
 @EagerInit
 public class RepositoryImpl implements Repository {
     private Map<URI, URL> archiveUriToUrl;
-    private File repository;
-    private boolean participant;
+    private File userDir;
+    private File extensionsDir;
+    private File cacheDir;
 
     /**
      * Constructor.
@@ -60,42 +60,44 @@ public class RepositoryImpl implements Repository {
     public RepositoryImpl(@Reference HostInfo hostInfo) throws IOException {
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
         File baseDir = hostInfo.getBaseDir();
-        repository = new File(baseDir, "repository");
-        participant = hostInfo.getRuntimeMode() == RuntimeMode.PARTICIPANT;
+        // three locations for artifacts: user; extensions; and a temporary cache
+        File repository = new File(baseDir, "repository");
+        userDir = new File(repository, "user");
+        extensionsDir = new File(repository, "extensions");
+        cacheDir = new File(hostInfo.getTempDir(), "cache");
     }
 
     @Init
     public void init() throws MalformedURLException {
-        if (!repository.exists() || !repository.isDirectory()) {
+        if (!userDir.exists() || !userDir.isDirectory()) {
             return;
         }
-        if (participant) {
-            // if the runtime is in participant mode, clear out cached archives as different contributions may be provisioned on restart
-            for (File file : repository.listFiles()) {
+        if (!cacheDir.exists()) {
+            cacheDir.mkdir();
+        } else {
+            for (File file : cacheDir.listFiles()) {
                 file.delete();
             }
-        } else {
-            // load archives
-            for (File file : repository.listFiles()) {
-                archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
-            }
+        }
+        // load artifacts
+        for (File file : extensionsDir.listFiles()) {
+            archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
+        }
+        for (File file : userDir.listFiles()) {
+            archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
         }
     }
 
     public URL store(URI uri, InputStream stream) throws RepositoryException {
-        try {
-            if (!repository.exists() || !repository.isDirectory() || !repository.canRead()) {
-                throw new IOException("The repository location is not a directory: " + repository);
-            }
-            File location = mapToFile(uri);
-            write(stream, location);
-            URL locationUrl = location.toURL();
-            archiveUriToUrl.put(uri, locationUrl);
-            return locationUrl;
-        } catch (IOException e) {
-            String id = uri.toString();
-            throw new RepositoryException("Error storing archive: " + id, id, e);
-        }
+        return store(userDir, uri, stream);
+    }
+
+    public URL storeExtension(URI uri, InputStream stream) throws RepositoryException {
+        return store(extensionsDir, uri, stream);
+    }
+
+    public URL cache(URI uri, InputStream stream) throws RepositoryException {
+        return store(cacheDir, uri, stream);
     }
 
     public boolean exists(URI uri) {
@@ -108,12 +110,12 @@ public class RepositoryImpl implements Repository {
 
     public void remove(URI uri) throws RepositoryException {
         try {
-            File location = mapToFile(uri);
+            File location = mapToFile(userDir, uri);
             archiveUriToUrl.remove(uri);
             location.delete();
         } catch (IOException e) {
             String id = uri.toString();
-            throw new RepositoryException("Error storing archive: " + id, id, e);
+            throw new RepositoryException("Error removing: " + id, id, e);
         }
     }
 
@@ -121,18 +123,35 @@ public class RepositoryImpl implements Repository {
         return new ArrayList<URI>(archiveUriToUrl.keySet());
     }
 
+    private URL store(File base, URI uri, InputStream stream) throws RepositoryException {
+        try {
+            if (!base.exists() || !base.isDirectory() || !base.canRead()) {
+                throw new IOException("The repository location is not a directory: " + base);
+            }
+            File location = mapToFile(base, uri);
+            write(stream, location);
+            URL locationUrl = location.toURL();
+            archiveUriToUrl.put(uri, locationUrl);
+            return locationUrl;
+        } catch (IOException e) {
+            String id = uri.toString();
+            throw new RepositoryException("Error storing: " + id, id, e);
+        }
+    }
+
     /**
      * Resolve contribution location in the repository.
      *
-     * @param uri the uri to resolve
+     * @param base the base repository directory
+     * @param uri  the uri to resolve @return the mapped file
      * @return the mapped file
      * @throws IOException if an exception occurs mapping the file
      */
-    private File mapToFile(URI uri) throws IOException {
-        if (!repository.exists() || !repository.isDirectory() || !repository.canRead()) {
-            throw new IOException("The repository location is not a directory: " + repository);
+    private File mapToFile(File base, URI uri) throws IOException {
+        if (!base.exists() || !base.isDirectory() || !base.canRead()) {
+            throw new IOException("The repository location is not a directory: " + base);
         }
-        return new File(repository, uri.getPath());
+        return new File(base, uri.getPath());
     }
 
     /**

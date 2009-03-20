@@ -58,15 +58,19 @@ public class RepositoryImplTestCase extends TestCase {
         super.setUp();
         HostInfo info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getBaseDir()).andReturn(null).atLeastOnce();
+        EasyMock.expect(info.getTempDir()).andReturn(null).atLeastOnce();
         EasyMock.expect(info.getRuntimeMode()).andReturn(RuntimeMode.VM).atLeastOnce();
         EasyMock.replay(info);
-        FileHelper.forceMkdir(new File("repository"));
+        File repository = new File("repository");
+        FileHelper.forceMkdir(new File(repository, "user"));
+        FileHelper.forceMkdir(new File(repository, "extensions"));
+        FileHelper.forceMkdir(new File(repository, "cache"));
         this.repository = new RepositoryImpl(info);
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        FileHelper.deleteDirectory(new File("repository"));
+        FileHelper.forceDelete(new File("repository"));
     }
 }
