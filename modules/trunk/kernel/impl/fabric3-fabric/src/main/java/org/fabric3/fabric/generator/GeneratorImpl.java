@@ -77,9 +77,9 @@ public class GeneratorImpl implements Generator {
     private StopContextCommandGenerator stopContextCommandGenerator;
 
     public GeneratorImpl(@Reference List<CommandGenerator> commandGenerators,
-                                      @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator,
-                                      @Reference StartContextCommandGenerator startContextCommandGenerator,
-                                      @Reference StopContextCommandGenerator stopContextCommandGenerator) {
+                         @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator,
+                         @Reference StartContextCommandGenerator startContextCommandGenerator,
+                         @Reference StopContextCommandGenerator stopContextCommandGenerator) {
         this.classLoaderCommandGenerator = classLoaderCommandGenerator;
         this.startContextCommandGenerator = startContextCommandGenerator;
         this.stopContextCommandGenerator = stopContextCommandGenerator;
