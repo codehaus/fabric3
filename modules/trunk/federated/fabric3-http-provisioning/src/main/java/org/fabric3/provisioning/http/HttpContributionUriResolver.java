@@ -31,8 +31,8 @@ import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.ResolutionException;
-import org.fabric3.spi.services.archive.ArchiveStore;
-import org.fabric3.spi.services.archive.ArchiveStoreException;
+import org.fabric3.spi.services.repository.Repository;
+import org.fabric3.spi.services.repository.RepositoryException;
 
 /**
  * Resolves contributions using the <code>http</code> scheme, copying them to a local archive store.
@@ -44,15 +44,15 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
     private static final String HTTP_SCHEME = "http";
     // the path mapping of the ArchiveResolverServlet
 
-    private ArchiveStore archiveStore;
+    private Repository repository;
     private MetaDataStore metaDataStore;
     private ArtifactResolverMonitor monitor;
     private Map<URI, Integer> counter;
 
-    public HttpContributionUriResolver(@Reference ArchiveStore archiveStore,
+    public HttpContributionUriResolver(@Reference Repository repository,
                                        @Reference MetaDataStore metaDataStore,
                                        @Monitor ArtifactResolverMonitor monitor) {
-        this.archiveStore = archiveStore;
+        this.repository = repository;
         this.metaDataStore = metaDataStore;
         this.monitor = monitor;
         counter = new HashMap<URI, Integer>();
@@ -72,12 +72,12 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
         try {
             URI decoded = URI.create(uri.getPath().substring(HttpProvisionConstants.REPOSITORY.length() + 2)); // +2 for leading and trailing '/'
             // check to see if the archive is cached locally
-            URL localURL = archiveStore.find(decoded);
+            URL localURL = repository.find(decoded);
             if (localURL == null) {
                 // resolve remotely
                 URL url = uri.toURL();
                 stream = url.openStream();
-                localURL = archiveStore.store(decoded, stream);
+                localURL = repository.store(decoded, stream);
 
                 // update the reference count
                 Integer count = counter.get(decoded);
@@ -92,7 +92,7 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
         } catch (IOException e) {
             String identifier = uri.toString();
             throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
-        } catch (ArchiveStoreException e) {
+        } catch (RepositoryException e) {
             String identifier = uri.toString();
             throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
         } finally {
@@ -115,8 +115,8 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
         if (count == 1) {
             counter.remove(uri);
             try {
-                archiveStore.remove(uri);
-            } catch (ArchiveStoreException e) {
+                repository.remove(uri);
+            } catch (RepositoryException e) {
                 throw new ResolutionException("Error removing contribution: " + uri, e);
             }
         } else {

@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.archive;
+package org.fabric3.spi.services.repository;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -22,19 +22,19 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Implementations store artifacts
+ * Implementations store and retrieve artifacts from persistent storage.
  */
-public interface ArchiveStore {
+public interface Repository {
 
     /**
-     * Copies an artifact to the store.
+     * Copies an artifact to the repository.
      *
      * @param uri    A URI pointing to the artifact being copied to the store
      * @param stream InputStream with the content of the distribution
      * @return a URL pointing to the stored artifact
-     * @throws ArchiveStoreException if an error occurs storing the artifact
+     * @throws RepositoryException if an error occurs storing the artifact
      */
-    URL store(URI uri, InputStream stream) throws ArchiveStoreException;
+    URL store(URI uri, InputStream stream) throws RepositoryException;
 
     /**
      * Returns true if the archive exists.
@@ -49,20 +49,20 @@ public interface ArchiveStore {
      *
      * @param uri The URI of the artifact
      * @return A URL pointing to the artifact or null if the artifact cannot be found
-     * @throws ArchiveStoreException if an exception occurs storing the contribution
+     * @throws RepositoryException if an exception occurs storing the artifact
      */
-    URL find(URI uri) throws ArchiveStoreException;
+    URL find(URI uri) throws RepositoryException;
 
     /**
-     * Removes an artifact from the store.
+     * Removes an artifact from the repository.
      *
      * @param uri The URI of the contribution to be removed
-     * @throws ArchiveStoreException if an exception occurs removing the contribution
+     * @throws RepositoryException if an exception occurs removing the artifact
      */
-    void remove(URI uri) throws ArchiveStoreException;
+    void remove(URI uri) throws RepositoryException;
 
     /**
-     * Returns a list of URIs for all the artifacts in the store.
+     * Returns a list of URIs for all the artifacts in the repository.
      *
      * @return A list of artifact URIs
      */

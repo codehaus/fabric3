@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.services.archive;
+package org.fabric3.fabric.services.repository;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -29,8 +29,8 @@ import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.util.io.FileHelper;
 
-public class ArchiveStoreImplTestCase extends TestCase {
-    private ArchiveStoreImpl repository;
+public class RepositoryImplTestCase extends TestCase {
+    private RepositoryImpl repository;
 
     public void testStoreAndFind() throws Exception {
         URI uri = URI.create("test-resource");
@@ -61,7 +61,7 @@ public class ArchiveStoreImplTestCase extends TestCase {
         EasyMock.expect(info.getRuntimeMode()).andReturn(RuntimeMode.VM).atLeastOnce();
         EasyMock.replay(info);
         FileHelper.forceMkdir(new File("repository"));
-        this.repository = new ArchiveStoreImpl(info);
+        this.repository = new RepositoryImpl(info);
     }
 
     @Override

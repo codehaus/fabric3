@@ -40,8 +40,8 @@
            name="MavenExtensionComposite"
            autowire="true">
 
-    <component name="ContributionStore">
-        <f3-impl:implementation.system class="org.fabric3.maven.archive.MavenArchiveStore"/>
+    <component name="MavenRepository">
+        <f3-impl:implementation.system class="org.fabric3.maven.archive.MavenRepository"/>
     </component>
 
     <component name="ModuleContributionProcessor">

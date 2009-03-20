@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.services.archive;
+package org.fabric3.fabric.services.repository;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,16 +37,16 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.archive.ArchiveStore;
-import org.fabric3.spi.services.archive.ArchiveStoreException;
+import org.fabric3.spi.services.repository.Repository;
+import org.fabric3.spi.services.repository.RepositoryException;
 
 /**
- * The default implementation of ArchiveStore
+ * The default implementation of a Repository that persists artifacts to the file system.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class ArchiveStoreImpl implements ArchiveStore {
+public class RepositoryImpl implements Repository {
     private Map<URI, URL> archiveUriToUrl;
     private File repository;
     private boolean participant;
@@ -57,7 +57,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
      * @param hostInfo the host info for the runtime
      * @throws IOException if an error occurs initializing the repository
      */
-    public ArchiveStoreImpl(@Reference HostInfo hostInfo) throws IOException {
+    public RepositoryImpl(@Reference HostInfo hostInfo) throws IOException {
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
         File baseDir = hostInfo.getBaseDir();
         repository = new File(baseDir, "repository");
@@ -82,7 +82,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
         }
     }
 
-    public URL store(URI uri, InputStream stream) throws ArchiveStoreException {
+    public URL store(URI uri, InputStream stream) throws RepositoryException {
         try {
             if (!repository.exists() || !repository.isDirectory() || !repository.canRead()) {
                 throw new IOException("The repository location is not a directory: " + repository);
@@ -94,7 +94,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
             return locationUrl;
         } catch (IOException e) {
             String id = uri.toString();
-            throw new ArchiveStoreException("Error storing archive: " + id, id, e);
+            throw new RepositoryException("Error storing archive: " + id, id, e);
         }
     }
 
@@ -106,14 +106,14 @@ public class ArchiveStoreImpl implements ArchiveStore {
         return archiveUriToUrl.get(uri);
     }
 
-    public void remove(URI uri) throws ArchiveStoreException {
+    public void remove(URI uri) throws RepositoryException {
         try {
             File location = mapToFile(uri);
             archiveUriToUrl.remove(uri);
             location.delete();
         } catch (IOException e) {
             String id = uri.toString();
-            throw new ArchiveStoreException("Error storing archive: " + id, id, e);
+            throw new RepositoryException("Error storing archive: " + id, id, e);
         }
     }
 

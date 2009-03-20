@@ -81,10 +81,10 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.introspection.validation.ValidationUtils;
-import org.fabric3.spi.services.archive.ArchiveStore;
-import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
+import org.fabric3.spi.services.repository.Repository;
+import org.fabric3.spi.services.repository.RepositoryException;
 
 /**
  * Default ContributionService implementation
@@ -95,7 +95,7 @@ import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 @EagerInit
 public class ContributionServiceImpl implements ContributionService {
     private ProcessorRegistry processorRegistry;
-    private ArchiveStore archiveStore;
+    private Repository repository;
     private MetaDataStore metaDataStore;
     private ContributionLoader contributionLoader;
     private ContentTypeResolver contentTypeResolver;
@@ -124,13 +124,13 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     /**
-     * Lazily injects the archive store. Some environments may inject the archive store via an extension loaded after bootstrap.
+     * Lazily injects the repository. Some environments may inject the repository via an extension loaded after bootstrap.
      *
-     * @param archiveStore the store to inject
+     * @param repository the store to inject
      */
     @Reference(required = false)
-    public void setArchiveStore(ArchiveStore archiveStore) {
-        this.archiveStore = archiveStore;
+    public void setRepository(Repository repository) {
+        this.repository = repository;
     }
 
     public URI store(ContributionSource source) throws StoreException {
@@ -348,8 +348,8 @@ public class ContributionServiceImpl implements ContributionService {
         }
         metaDataStore.remove(uri);
         try {
-            getArchiveStore().remove(uri);
-        } catch (ArchiveStoreException e) {
+            getRepository().remove(uri);
+        } catch (RepositoryException e) {
             throw new RemoveException("Error removing contribution archive", e);
         }
         for (ContributionServiceListener listener : listeners) {
@@ -584,10 +584,10 @@ public class ContributionServiceImpl implements ContributionService {
             InputStream stream = null;
             try {
                 stream = source.getSource();
-                locationUrl = getArchiveStore().store(contributionUri, stream);
+                locationUrl = getRepository().store(contributionUri, stream);
             } catch (IOException e) {
                 throw new StoreException(e);
-            } catch (ArchiveStoreException e) {
+            } catch (RepositoryException e) {
                 throw new StoreException(e);
             } finally {
                 try {
@@ -651,10 +651,10 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    private ArchiveStore getArchiveStore() {
-        if (archiveStore == null) {
-            throw new UnsupportedOperationException(ArchiveStore.class.getSimpleName() + " not configured");
+    private Repository getRepository() {
+        if (repository == null) {
+            throw new UnsupportedOperationException(Repository.class.getSimpleName() + " not configured");
         }
-        return archiveStore;
+        return repository;
     }
 }

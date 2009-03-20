@@ -26,16 +26,16 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.spi.services.archive.ArchiveStore;
-import org.fabric3.spi.services.archive.ArchiveStoreException;
+import org.fabric3.spi.services.repository.Repository;
+import org.fabric3.spi.services.repository.RepositoryException;
 
 /**
- * An archive store that delegates to a set of local and remote Maven repositories.
+ * A Repository implementation that delegates to a set of local and remote Maven repositories.
  *
  * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
  */
 @EagerInit
-public class MavenArchiveStore implements ArchiveStore {
+public class MavenRepository implements Repository {
     private static final String DEFAULT_REPO = "http://repo1.maven.org/maven2/";
     private String remoteRepositories = DEFAULT_REPO;
     private MavenHelper helper;
@@ -56,7 +56,7 @@ public class MavenArchiveStore implements ArchiveStore {
         helper.stop();
     }
 
-    public URL store(URI uri, InputStream stream) throws ArchiveStoreException {
+    public URL store(URI uri, InputStream stream) throws RepositoryException {
         return find(uri);
     }
 
@@ -65,7 +65,7 @@ public class MavenArchiveStore implements ArchiveStore {
         return false;
     }
 
-    public URL find(URI uri) throws ArchiveStoreException {
+    public URL find(URI uri) throws RepositoryException {
         // assume uri is in the form 'group id:artifact id: version'
         String[] parsed = uri.toString().split(":");
         Artifact artifact = new Artifact();
@@ -79,7 +79,7 @@ public class MavenArchiveStore implements ArchiveStore {
             }
         } catch (Fabric3DependencyException e) {
             String id = uri.toString();
-            throw new ArchiveStoreException("Error finding archive: " + id, id, e);
+            throw new RepositoryException("Error finding archive: " + id, id, e);
         }
         return artifact.getUrl();
     }

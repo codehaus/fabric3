@@ -14,20 +14,21 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.archive;
+package org.fabric3.spi.services.repository;
 
 import org.fabric3.host.Fabric3Exception;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ArchiveStoreException extends Fabric3Exception {
+public class RepositoryException extends Fabric3Exception {
+    private static final long serialVersionUID = 5086187312198742010L;
 
-    public ArchiveStoreException(String message, Throwable cause) {
+    public RepositoryException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ArchiveStoreException(String message, String identifier, Throwable cause) {
+    public RepositoryException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 }
