@@ -211,9 +211,7 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
             QName firstDeployable = ((StartContextCommand) first).getDeployable();
             Integer firstPos = deployableOrder.get(firstDeployable);
             if (firstPos == null) {
-                // xcv 123 does this handle the case where a component has no wires to other components in other deployables?
                 return 0;
-                //throw new AssertionError("Deployable not found:" + firstDeployable);
             }
             QName secondDeployable = ((StartContextCommand) second).getDeployable();
             Integer secondPos = deployableOrder.get(secondDeployable);
