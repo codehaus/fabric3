@@ -46,8 +46,8 @@ import org.fabric3.host.contribution.ContributionSource;
  *
  * @version $Revision$ $Date$
  */
-public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER extends Bootstrapper> {
-    private RUNTIME runtime;
+public class BootConfiguration<BOOTSTRAPPER extends Bootstrapper> {
+    private Fabric3Runtime<?> runtime;
     private BOOTSTRAPPER bootstrapper;
     private ClassLoader bootClassLoader;
     private ContributionSource intents;
@@ -55,11 +55,11 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
     private List<ContributionSource> policies = new LinkedList<ContributionSource>();
     private Map<String, String> exportedPackages = new HashMap<String, String>();
 
-    public RUNTIME getRuntime() {
+    public Fabric3Runtime<?> getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(RUNTIME runtime) {
+    public void setRuntime(Fabric3Runtime<?> runtime) {
         this.runtime = runtime;
     }
 

@@ -49,10 +49,10 @@ import java.net.URLClassLoader;
 import java.util.Properties;
 import java.util.jar.JarFile;
 
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 
 /**
@@ -303,11 +303,11 @@ public final class BootstrapHelper {
     }
 
     @SuppressWarnings({"unchecked"})
-    public static RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> createCoordinator(ClassLoader bootClassLoader)
+    public static RuntimeLifecycleCoordinator<Bootstrapper> createCoordinator(ClassLoader bootClassLoader)
             throws BootstrapException {
         try {
             Class<?> implClass = Class.forName(COORDINATOR_CLASS, true, bootClassLoader);
-            return (RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>) implClass.newInstance();
+            return (RuntimeLifecycleCoordinator<Bootstrapper>) implClass.newInstance();
         } catch (ClassNotFoundException e) {
             throw new BootstrapException(e);
         } catch (IllegalAccessException e) {

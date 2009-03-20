@@ -27,12 +27,12 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
+
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.maven.MavenEmbeddedRuntime;
 
 /**
  * @version $Revision$ $Date$
@@ -41,7 +41,7 @@ public class ExtensionHelper {
 
     public ArtifactHelper artifactHelper;
 
-    public void processExtensions(BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration,
+    public void processExtensions(BootConfiguration<ScdlBootstrapper> configuration,
                                   Dependency[] extensions,
                                   List<FeatureSet> featureSets) throws MojoExecutionException {
         List<URL> extensionUrls = resolveDependencies(extensions);

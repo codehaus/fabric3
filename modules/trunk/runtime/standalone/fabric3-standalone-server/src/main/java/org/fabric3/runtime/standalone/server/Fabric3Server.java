@@ -82,7 +82,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
     private static final String INTENTS_FILE = "intents.xml";
 
     private final File installDirectory;
-    private RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator;
+    private RuntimeLifecycleCoordinator<Bootstrapper> coordinator;
     private RmiAgent agent;
     private ServerMonitor monitor;
 
@@ -211,7 +211,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
             // boot the runtime
             coordinator = BootstrapHelper.createCoordinator(bootLoader);
-            BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = createBootConfiguration(runtime, bootLoader);
+            BootConfiguration<Bootstrapper> configuration = createBootConfiguration(runtime, bootLoader);
             coordinator.setConfiguration(configuration);
             coordinator.bootPrimordial();
             // load and initialize runtime extension components and the local runtime domain
@@ -277,10 +277,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
 
-    private BootConfiguration<StandaloneRuntime, Bootstrapper> createBootConfiguration(StandaloneRuntime runtime, ClassLoader bootClassLoader)
+    private BootConfiguration<Bootstrapper> createBootConfiguration(StandaloneRuntime runtime, ClassLoader bootClassLoader)
             throws BootstrapException, InitializationException {
         StandaloneHostInfo hostInfo = runtime.getHostInfo();
-        BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = new BootConfiguration<StandaloneRuntime, Bootstrapper>();
+        BootConfiguration<Bootstrapper> configuration = new BootConfiguration<Bootstrapper>();
         configuration.setBootClassLoader(bootClassLoader);
 
         Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo, bootClassLoader);

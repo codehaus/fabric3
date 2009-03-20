@@ -92,7 +92,7 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
  */
 public class Fabric3ContextListener implements ServletContextListener {
 
-    private RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> coordinator;
+    private RuntimeLifecycleCoordinator<Bootstrapper> coordinator;
 
     public void contextInitialized(ServletContextEvent event) {
 
@@ -114,7 +114,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             runtime = createRuntime(webappClassLoader, servletContext, utils);
             monitor = runtime.getMonitorFactory().getMonitor(WebAppMonitor.class);
             coordinator = utils.getCoordinator(webappClassLoader);
-            BootConfiguration<WebappRuntime, Bootstrapper> configuration = createBootConfiguration(runtime, webappClassLoader, utils);
+            BootConfiguration<Bootstrapper> configuration = createBootConfiguration(runtime, webappClassLoader, utils);
             coordinator.setConfiguration(configuration);
 
             // boot the runtime
@@ -184,11 +184,11 @@ public class Fabric3ContextListener implements ServletContextListener {
     /*
      * Creates the boot configuration.
      */
-    private BootConfiguration<WebappRuntime, Bootstrapper> createBootConfiguration(WebappRuntime runtime,
-                                                                                   ClassLoader webappClassLoader,
-                                                                                   WebappUtil utils) throws InitializationException {
+    private BootConfiguration<Bootstrapper> createBootConfiguration(WebappRuntime runtime,
+                                                                    ClassLoader webappClassLoader,
+                                                                    WebappUtil utils) throws InitializationException {
 
-        BootConfiguration<WebappRuntime, Bootstrapper> configuration = new BootConfiguration<WebappRuntime, Bootstrapper>();
+        BootConfiguration<Bootstrapper> configuration = new BootConfiguration<Bootstrapper>();
         configuration.setBootClassLoader(webappClassLoader);
 
         // create the runtime bootrapper

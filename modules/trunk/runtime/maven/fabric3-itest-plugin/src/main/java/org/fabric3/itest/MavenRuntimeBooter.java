@@ -78,7 +78,7 @@ public class MavenRuntimeBooter {
     private List<URL> policyUrls;
 
 
-    private RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, ScdlBootstrapper> coordinator;
+    private RuntimeLifecycleCoordinator<ScdlBootstrapper> coordinator;
     private MavenEmbeddedRuntime runtime;
     private ExtensionHelper extensionHelper;
 
@@ -103,7 +103,7 @@ public class MavenRuntimeBooter {
     @SuppressWarnings({"unchecked"})
     public MavenEmbeddedRuntime boot() throws MojoExecutionException {
         runtime = createRuntime();
-        BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration = createBootConfiguration();
+        BootConfiguration<ScdlBootstrapper> configuration = createBootConfiguration();
         coordinator = instantiate(RuntimeLifecycleCoordinator.class, COORDINATOR_IMPL, bootClassLoader);
         coordinator.setConfiguration(configuration);
         bootRuntime();
@@ -132,9 +132,9 @@ public class MavenRuntimeBooter {
         return runtime;
     }
 
-    private BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> createBootConfiguration() throws MojoExecutionException {
+    private BootConfiguration<ScdlBootstrapper> createBootConfiguration() throws MojoExecutionException {
 
-        BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration = new BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper>();
+        BootConfiguration<ScdlBootstrapper> configuration = new BootConfiguration<ScdlBootstrapper>();
         configuration.setBootClassLoader(bootClassLoader);
 
         // create the runtime bootrapper

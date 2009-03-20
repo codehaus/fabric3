@@ -102,11 +102,11 @@ public class WebappUtilImpl implements WebappUtil {
     }
 
     @SuppressWarnings({"unchecked"})
-    public RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> getCoordinator(ClassLoader bootClassLoader) throws Fabric3InitException {
+    public RuntimeLifecycleCoordinator<Bootstrapper> getCoordinator(ClassLoader bootClassLoader) throws Fabric3InitException {
 
         try {
 
-            return (RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper>) bootClassLoader.loadClass(COORDINATOR_CLASS).newInstance();
+            return (RuntimeLifecycleCoordinator<Bootstrapper>) bootClassLoader.loadClass(COORDINATOR_CLASS).newInstance();
 
         } catch (InstantiationException e) {
             throw new Fabric3InitException(e);

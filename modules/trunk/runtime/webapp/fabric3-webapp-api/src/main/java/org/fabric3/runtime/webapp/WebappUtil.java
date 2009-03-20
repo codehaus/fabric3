@@ -49,7 +49,7 @@ public interface WebappUtil {
 
     ScdlBootstrapper getBootstrapper(ClassLoader bootClassLoader) throws Fabric3InitException;
 
-    RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> getCoordinator(ClassLoader bootClassLoader) throws Fabric3InitException;
+    RuntimeLifecycleCoordinator<Bootstrapper> getCoordinator(ClassLoader bootClassLoader) throws Fabric3InitException;
 
     URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath;
 
