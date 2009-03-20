@@ -111,18 +111,11 @@ public interface Fabric3Runtime<HI extends HostInfo> {
     void setJmxSubDomain(String jmxSubDomain);
 
     /**
-     * Initialize a runtime. An initialized runtime has has completed core service initialization, recovery operations, and is ready to be started.
+     * Boots core services in the runtime.
      *
      * @throws InitializationException if there is an error initializing the runtime
      */
-    void initialize() throws InitializationException;
-
-    /**
-     * Starts the runtime. A runtime is ready to process requests when it has been started.
-     *
-     * @throws StartException if there is an error starting the runtime
-     */
-    void start() throws StartException;
+    void boot() throws InitializationException;
 
     /**
      * Destroy the runtime. Any further invocations should result in an error.
@@ -142,7 +135,7 @@ public interface Fabric3Runtime<HI extends HostInfo> {
     <I> I getSystemComponent(Class<I> service, URI uri);
 
     /**
-     * Starts the component context.
+     * Starts a component context.
      *
      * @param compositeId the context id
      * @throws ContextStartException if an error starting the context is encountered

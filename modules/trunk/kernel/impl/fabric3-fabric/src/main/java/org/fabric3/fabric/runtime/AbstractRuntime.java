@@ -53,7 +53,6 @@ import org.fabric3.host.runtime.ContextStartException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.StartException;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.model.type.component.Autowire;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -178,7 +177,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         this.jmxSubDomain = jmxDomain;
     }
 
-    public void initialize() throws InitializationException {
+    public void boot() throws InitializationException {
         LogicalComponentStore store = new TransientLogicalComponentStore(RUNTIME_URI, Autowire.ON);
         logicalComponentManager = new LogicalComponentManagerImpl(store);
         try {
@@ -194,9 +193,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         scopeContainer.start();
         scopeRegistry = new ScopeRegistryImpl();
         scopeRegistry.register(scopeContainer);
-    }
-
-    public void start() throws StartException {
     }
 
     public void destroy() {

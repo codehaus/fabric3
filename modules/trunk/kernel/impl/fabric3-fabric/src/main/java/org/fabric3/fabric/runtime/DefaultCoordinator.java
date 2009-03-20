@@ -42,7 +42,6 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.host.runtime.StartException;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
@@ -93,7 +92,7 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         if (state != State.UNINITIALIZED) {
             throw new IllegalStateException("Not in UNINITIALIZED state");
         }
-        runtime.initialize();
+        runtime.boot();
         bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, exportedPackages);
         state = State.PRIMORDIAL;
     }
@@ -154,16 +153,10 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         if (state != State.DOMAIN_JOINED) {
             throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
-        try {
-            runtime.start();
-            // starts the runtime by publishing a start event
-            EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
-            eventService.publish(new RuntimeStart());
-            state = State.STARTED;
-        } catch (StartException e) {
-            state = State.ERROR;
-            return new SyncFuture(new ExecutionException(e));
-        }
+        // starts the runtime by publishing a start event
+        EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
+        eventService.publish(new RuntimeStart());
+        state = State.STARTED;
         return new SyncFuture();
     }
 
