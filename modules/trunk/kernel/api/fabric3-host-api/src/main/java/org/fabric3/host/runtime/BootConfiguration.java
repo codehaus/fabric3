@@ -46,9 +46,9 @@ import org.fabric3.host.contribution.ContributionSource;
  *
  * @version $Revision$ $Date$
  */
-public class BootConfiguration<BOOTSTRAPPER extends Bootstrapper> {
+public class BootConfiguration {
     private Fabric3Runtime<?> runtime;
-    private BOOTSTRAPPER bootstrapper;
+    private Bootstrapper bootstrapper;
     private ClassLoader bootClassLoader;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
@@ -63,11 +63,11 @@ public class BootConfiguration<BOOTSTRAPPER extends Bootstrapper> {
         this.runtime = runtime;
     }
 
-    public BOOTSTRAPPER getBootstrapper() {
+    public Bootstrapper getBootstrapper() {
         return bootstrapper;
     }
 
-    public void setBootstrapper(BOOTSTRAPPER bootstrapper) {
+    public void setBootstrapper(Bootstrapper bootstrapper) {
         this.bootstrapper = bootstrapper;
     }
 

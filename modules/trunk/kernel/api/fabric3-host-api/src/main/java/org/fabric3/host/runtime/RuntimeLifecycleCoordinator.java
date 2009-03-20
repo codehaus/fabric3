@@ -53,14 +53,14 @@ import java.util.concurrent.Future;
  *
  * @version $Rev$ $Date$
  */
-public interface RuntimeLifecycleCoordinator<B extends Bootstrapper> {
+public interface RuntimeLifecycleCoordinator {
 
     /**
      * Sets the bootstrap configuration. Thismust be done prior to booting the runtime.
      *
      * @param configuration the bootstrap configuration
      */
-    void setConfiguration(BootConfiguration<B> configuration);
+    void setConfiguration(BootConfiguration configuration);
 
     /**
      * Boots the runtime with its primordial components.

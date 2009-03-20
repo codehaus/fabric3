@@ -58,10 +58,10 @@ import org.fabric3.spi.synthesize.CompositeSynthesizer;
  *
  * @version $Rev$ $Date$
  */
-public class DefaultCoordinator<BOOTSTRAPPER extends Bootstrapper> implements RuntimeLifecycleCoordinator<BOOTSTRAPPER> {
+public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
     private State state = State.UNINITIALIZED;
     private Fabric3Runtime<?> runtime;
-    private BOOTSTRAPPER bootstrapper;
+    private Bootstrapper bootstrapper;
     private ClassLoader bootClassLoader;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
@@ -79,7 +79,7 @@ public class DefaultCoordinator<BOOTSTRAPPER extends Bootstrapper> implements Ru
         ERROR
     }
 
-    public void setConfiguration(BootConfiguration<BOOTSTRAPPER> configuration) {
+    public void setConfiguration(BootConfiguration configuration) {
         runtime = configuration.getRuntime();
         bootstrapper = configuration.getBootstrapper();
         bootClassLoader = configuration.getBootClassLoader();

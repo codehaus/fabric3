@@ -32,7 +32,6 @@ import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.BootConfiguration;
-import org.fabric3.host.runtime.ScdlBootstrapper;
 
 /**
  * @version $Revision$ $Date$
@@ -41,7 +40,7 @@ public class ExtensionHelper {
 
     public ArtifactHelper artifactHelper;
 
-    public void processExtensions(BootConfiguration<ScdlBootstrapper> configuration,
+    public void processExtensions(BootConfiguration configuration,
                                   Dependency[] extensions,
                                   List<FeatureSet> featureSets) throws MojoExecutionException {
         List<URL> extensionUrls = resolveDependencies(extensions);

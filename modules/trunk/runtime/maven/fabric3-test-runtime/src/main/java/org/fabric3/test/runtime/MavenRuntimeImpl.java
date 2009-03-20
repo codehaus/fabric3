@@ -87,9 +87,9 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
      */
     public void start(Properties hostProperties, List<ContributionSource> extensions) throws StartException {
         
-        BootConfiguration<ScdlBootstrapper> bootConfiguration = getBootConfiguration(extensions);
+        BootConfiguration bootConfiguration = getBootConfiguration(extensions);
         
-        RuntimeLifecycleCoordinator<ScdlBootstrapper> coordinator = new DefaultCoordinator<ScdlBootstrapper>();
+        RuntimeLifecycleCoordinator coordinator = new DefaultCoordinator();
         coordinator.setConfiguration(bootConfiguration);
         
         MavenHostInfo mavenHostInfo = new MavenHostInfoImpl(hostProperties);
@@ -142,7 +142,7 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     /*
      * Boots the runtime.
      */
-    private void boot(RuntimeLifecycleCoordinator<ScdlBootstrapper> coordinator) {
+    private void boot(RuntimeLifecycleCoordinator coordinator) {
         
         try {
             coordinator.bootPrimordial();
@@ -159,9 +159,9 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     /*
      * Create the boot configuration.
      */
-    private BootConfiguration<ScdlBootstrapper> getBootConfiguration(List<ContributionSource> extensions) {
+    private BootConfiguration getBootConfiguration(List<ContributionSource> extensions) {
         
-        BootConfiguration<ScdlBootstrapper> bootConfiguration = new BootConfiguration<ScdlBootstrapper>();
+        BootConfiguration bootConfiguration = new BootConfiguration();
         
         bootConfiguration.setExtensions(extensions);
         bootConfiguration.setRuntime(this);
@@ -178,7 +178,7 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     /*
      * Set the system intents.
      */
-    private void setIntents(BootConfiguration<ScdlBootstrapper> bootConfiguration) {
+    private void setIntents(BootConfiguration bootConfiguration) {
         
         URL intentsLocation = getClass().getClassLoader().getResource("/META-INF/fabric3/intents.xml");
         ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
@@ -189,7 +189,7 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     /*
      * Set the bootstrapper.
      */
-    private void setBootstrapper(BootConfiguration<ScdlBootstrapper> bootConfiguration) {
+    private void setBootstrapper(BootConfiguration bootConfiguration) {
         
         ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
         URL systemScdl = getClass().getClassLoader().getResource("META-INF/fabric3/embeddedMaven.composite");
@@ -201,7 +201,7 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     /*
      * Set the packages to be exported.
      */
-    private void setExportedPackages(BootConfiguration<ScdlBootstrapper> bootConfiguration) {
+    private void setExportedPackages(BootConfiguration bootConfiguration) {
         
         Map<String, String> exportedPackages = new HashMap<String, String>();
         exportedPackages.put("org.fabric3.test.spi", Names.VERSION);

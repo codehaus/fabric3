@@ -41,7 +41,6 @@ import javax.management.MBeanServer;
 import javax.servlet.ServletContext;
 
 import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.jmx.agent.DefaultAgent;
@@ -102,11 +101,11 @@ public class WebappUtilImpl implements WebappUtil {
     }
 
     @SuppressWarnings({"unchecked"})
-    public RuntimeLifecycleCoordinator<Bootstrapper> getCoordinator(ClassLoader bootClassLoader) throws Fabric3InitException {
+    public RuntimeLifecycleCoordinator getCoordinator(ClassLoader bootClassLoader) throws Fabric3InitException {
 
         try {
 
-            return (RuntimeLifecycleCoordinator<Bootstrapper>) bootClassLoader.loadClass(COORDINATOR_CLASS).newInstance();
+            return (RuntimeLifecycleCoordinator) bootClassLoader.loadClass(COORDINATOR_CLASS).newInstance();
 
         } catch (InstantiationException e) {
             throw new Fabric3InitException(e);
