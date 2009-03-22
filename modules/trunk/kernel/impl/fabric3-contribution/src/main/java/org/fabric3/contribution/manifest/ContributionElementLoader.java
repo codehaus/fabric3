@@ -33,6 +33,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Constants;
 import org.fabric3.host.RuntimeMode;
+import org.fabric3.host.Namespaces;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.Export;
@@ -75,17 +76,19 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
 
     public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         ContributionManifest manifest = new ContributionManifest();
+        QName element = reader.getName();
+        if (!CONTRIBUTION.equals(element)) {
+            throw new AssertionError("Loader not positioned on the <contribution> element: " + element);
+        }
+        validateContributionAttributes(reader, context);
+        boolean extension = Boolean.valueOf(reader.getAttributeValue(Namespaces.CORE, "extension"));
+        manifest.setExtension(extension);
         while (true) {
             int event = reader.next();
             switch (event) {
             case START_ELEMENT:
-                QName element = reader.getName();
-                if (CONTRIBUTION.equals(element)) {
-                    validateContributionAttributes(reader, context);
-                    boolean extension = Boolean.valueOf(reader.getAttributeValue(null, "extension"));
-                    manifest.setExtension(extension);
-                    continue;
-                } else if (DEPLOYABLE.equals(element)) {
+                element = reader.getName();
+                if (DEPLOYABLE.equals(element)) {
                     validateDeployableAttributes(reader, context);
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
