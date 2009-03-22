@@ -86,7 +86,7 @@
 
     <component name="StopComponentCommandGenerator">
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StopComponentCommandGenerator"/>
-        <property name="order">1</property>
+        <property name="order">3</property>
     </component>
 
 </composite>
