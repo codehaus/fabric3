@@ -49,6 +49,12 @@ import org.fabric3.runtime.standalone.SyntheticContributionSource;
  */
 public class RepositoryScanner {
     private static final String MANIFEST_PATH = "META-INF/sca-contribution.xml";
+    DocumentBuilderFactory documentBuilderFactory;
+
+    public RepositoryScanner() {
+        documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+    }
 
     /**
      * Scans a repository directory for contributions.
@@ -146,9 +152,7 @@ public class RepositoryScanner {
      */
     private boolean isExtension(URL manifestUrl) throws InitializationException {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setNamespaceAware(true);
-            DocumentBuilder db = dbf.newDocumentBuilder();
+            DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
 
             InputStream stream = manifestUrl.openStream();
             Document document = db.parse(stream);
