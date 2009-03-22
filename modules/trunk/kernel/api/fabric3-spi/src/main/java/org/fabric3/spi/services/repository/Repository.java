@@ -37,16 +37,6 @@ public interface Repository {
     URL store(URI uri, InputStream stream) throws RepositoryException;
 
     /**
-     * Temporarily persists an artifact to the repository. The lifetime of the artifact will not extend past the lifetime of the runtime instance.
-     *
-     * @param uri    The artifact URI
-     * @param stream the artifact contents
-     * @return a URL for the persisted artifact
-     * @throws RepositoryException if an error occurs storing the artifact
-     */
-    URL cache(URI uri, InputStream stream) throws RepositoryException;
-
-    /**
      * Returns true if the artifact exists.
      *
      * @param uri the artifact URI

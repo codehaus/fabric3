@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -31,8 +29,8 @@ import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.ResolutionException;
-import org.fabric3.spi.services.repository.Repository;
-import org.fabric3.spi.services.repository.RepositoryException;
+import org.fabric3.spi.services.artifact.ArtifactCache;
+import org.fabric3.spi.services.artifact.CacheException;
 
 /**
  * Resolves contributions using the <code>http</code> scheme, copying them to a local archive store.
@@ -42,20 +40,15 @@ import org.fabric3.spi.services.repository.RepositoryException;
 @EagerInit
 public class HttpContributionUriResolver implements ContributionUriResolver {
     private static final String HTTP_SCHEME = "http";
-    // the path mapping of the ArchiveResolverServlet
 
-    private Repository repository;
+    private ArtifactCache cache;
     private MetaDataStore metaDataStore;
     private ArtifactResolverMonitor monitor;
-    private Map<URI, Integer> counter;
 
-    public HttpContributionUriResolver(@Reference Repository repository,
-                                       @Reference MetaDataStore metaDataStore,
-                                       @Monitor ArtifactResolverMonitor monitor) {
-        this.repository = repository;
-        this.metaDataStore = metaDataStore;
+    public HttpContributionUriResolver(@Reference ArtifactCache cache, @Reference MetaDataStore store, @Monitor ArtifactResolverMonitor monitor) {
+        this.cache = cache;
+        this.metaDataStore = store;
         this.monitor = monitor;
-        counter = new HashMap<URI, Integer>();
     }
 
     public URL resolve(URI uri) throws ResolutionException {
@@ -63,8 +56,7 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
             // the contribution is being provisioned locally, resolve it directly
             Contribution contribution = metaDataStore.find(uri);
             if (contribution == null) {
-                String id = uri.toString();
-                throw new ResolutionException("Contribution not found: " + id, id);
+                throw new ResolutionException("Contribution not found: " + uri);
             }
             return contribution.getLocation();
         }
@@ -72,29 +64,18 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
         try {
             URI decoded = URI.create(uri.getPath().substring(HttpProvisionConstants.REPOSITORY.length() + 2)); // +2 for leading and trailing '/'
             // check to see if the archive is cached locally
-            URL localURL = repository.find(decoded);
+            URL localURL = cache.get(decoded);
             if (localURL == null) {
                 // resolve remotely
                 URL url = uri.toURL();
                 stream = url.openStream();
-                localURL = repository.cache(decoded, stream);
-
-                // update the reference count
-                Integer count = counter.get(decoded);
-                if (count == null) {
-                    counter.put(decoded, 1);
-                } else {
-                    counter.put(decoded, count + 1);
-                }
-
+                localURL = cache.cache(decoded, stream);
             }
             return localURL;
         } catch (IOException e) {
-            String identifier = uri.toString();
-            throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
-        } catch (RepositoryException e) {
-            String identifier = uri.toString();
-            throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
+            throw new ResolutionException("Error resolving artifact: " + uri, e);
+        } catch (CacheException e) {
+            throw new ResolutionException("Error resolving artifact: " + uri, e);
         } finally {
             try {
                 if (stream != null) {
@@ -107,20 +88,11 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
     }
 
     public void release(URI uri) throws ResolutionException {
-        Integer count = counter.get(uri);
-        if (count == null) {
-            // locally provisioned
-            return;
-        }
-        if (count == 1) {
-            counter.remove(uri);
-            try {
-                repository.remove(uri);
-            } catch (RepositoryException e) {
-                throw new ResolutionException("Error removing contribution: " + uri, e);
-            }
-        } else {
-            counter.put(uri, count - 1);
+        try {
+            cache.release(uri);
+        } catch (CacheException e) {
+            throw new ResolutionException("Error releasing artifact: " + uri, e);
         }
     }
 }
+

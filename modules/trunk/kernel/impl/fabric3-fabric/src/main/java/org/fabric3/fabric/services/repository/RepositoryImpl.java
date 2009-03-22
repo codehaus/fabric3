@@ -19,13 +19,9 @@ package org.fabric3.fabric.services.repository;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +34,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.repository.Repository;
 import org.fabric3.spi.services.repository.RepositoryException;
+import org.fabric3.util.io.FileHelper;
 
 /**
  * The default implementation of a Repository that persists artifacts to the file system.
@@ -48,7 +45,6 @@ import org.fabric3.spi.services.repository.RepositoryException;
 public class RepositoryImpl implements Repository {
     private Map<URI, URL> archiveUriToUrl;
     private File repositoryDir;
-    private File cacheDir;
 
     /**
      * Constructor.
@@ -61,20 +57,12 @@ public class RepositoryImpl implements Repository {
         File baseDir = hostInfo.getBaseDir();
         // three locations for artifacts: user; extensions; and a temporary cache
         repositoryDir = new File(baseDir, "repository");
-        cacheDir = new File(hostInfo.getTempDir(), "cache");
     }
 
     @Init
     public void init() throws MalformedURLException {
         if (!repositoryDir.exists() || !repositoryDir.isDirectory()) {
             return;
-        }
-        if (!cacheDir.exists()) {
-            cacheDir.mkdir();
-        } else {
-            for (File file : cacheDir.listFiles()) {
-                file.delete();
-            }
         }
         // load artifacts
         for (File file : repositoryDir.listFiles()) {
@@ -83,11 +71,19 @@ public class RepositoryImpl implements Repository {
     }
 
     public URL store(URI uri, InputStream stream) throws RepositoryException {
-        return store(repositoryDir, uri, stream);
-    }
-
-    public URL cache(URI uri, InputStream stream) throws RepositoryException {
-        return store(cacheDir, uri, stream);
+        try {
+            if (!repositoryDir.exists() || !repositoryDir.isDirectory() || !repositoryDir.canRead()) {
+                throw new IOException("The repository location is not a directory: " + repositoryDir);
+            }
+            File location = mapToFile(repositoryDir, uri);
+            FileHelper.write(stream, location);
+            URL locationUrl = location.toURL();
+            archiveUriToUrl.put(uri, locationUrl);
+            return locationUrl;
+        } catch (IOException e) {
+            String id = uri.toString();
+            throw new RepositoryException("Error storing: " + id, id, e);
+        }
     }
 
     public boolean exists(URI uri) {
@@ -111,22 +107,6 @@ public class RepositoryImpl implements Repository {
 
     public List<URI> list() {
         return new ArrayList<URI>(archiveUriToUrl.keySet());
-    }
-
-    private URL store(File base, URI uri, InputStream stream) throws RepositoryException {
-        try {
-            if (!base.exists() || !base.isDirectory() || !base.canRead()) {
-                throw new IOException("The repository location is not a directory: " + base);
-            }
-            File location = mapToFile(base, uri);
-            write(stream, location);
-            URL locationUrl = location.toURL();
-            archiveUriToUrl.put(uri, locationUrl);
-            return locationUrl;
-        } catch (IOException e) {
-            String id = uri.toString();
-            throw new RepositoryException("Error storing: " + id, id, e);
-        }
     }
 
     /**
@@ -154,34 +134,4 @@ public class RepositoryImpl implements Repository {
         return URI.create(file.getName());
     }
 
-    private void write(InputStream source, File target) throws IOException {
-        RandomAccessFile file = new RandomAccessFile(target, "rw");
-        FileChannel channel = null;
-        FileLock lock = null;
-        try {
-            channel = file.getChannel();
-            lock = channel.lock();
-            ByteBuffer buffer = ByteBuffer.allocate(1024);
-            byte[] bytes = buffer.array();
-            int limit;
-            while (-1 != (limit = source.read(bytes))) {
-                buffer.flip();
-                buffer.limit(limit);
-                while (buffer.hasRemaining()) {
-                    channel.write(buffer);
-                }
-                buffer.clear();
-            }
-            channel.force(true);
-        } finally {
-            if (channel != null) {
-                if (lock != null) {
-                    lock.release();
-                }
-                channel.close();
-            }
-            file.close();
-        }
-
-    }
 }

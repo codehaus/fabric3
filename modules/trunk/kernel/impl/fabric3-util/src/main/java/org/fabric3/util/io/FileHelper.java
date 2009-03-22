@@ -40,7 +40,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.regex.Pattern;
 
 public class FileHelper {
@@ -65,8 +70,7 @@ public class FileHelper {
     /**
      * Returns the index of the last directory separator character.
      * <p/>
-     * This method will handle a file in either Unix or Windows format. The position of the last forward or backslash is
-     * returned.
+     * This method will handle a file in either Unix or Windows format. The position of the last forward or backslash is returned.
      * <p/>
      * The output will be the same irrespective of the machine that the code is running on.
      *
@@ -85,8 +89,8 @@ public class FileHelper {
     /**
      * Returns the index of the last extension separator character, which is a dot.
      * <p/>
-     * This method also checks that there is no directory separator after the last dot. To do this it uses {@link
-     * #indexOfLastSeparator(String)} which will handle a file in either Unix or Windows format.
+     * This method also checks that there is no directory separator after the last dot. To do this it uses {@link #indexOfLastSeparator(String)} which
+     * will handle a file in either Unix or Windows format.
      * <p/>
      * The output will be the same irrespective of the machine that the code is running on.
      *
@@ -105,8 +109,7 @@ public class FileHelper {
     /**
      * Gets the name minus the path from a full filename.
      * <p/>
-     * This method will handle a file in either Unix or Windows format. The text after the last forward or backslash is
-     * returned.
+     * This method will handle a file in either Unix or Windows format. The text after the last forward or backslash is returned.
      * <p/>
      * <pre>
      * a/b/c.txt --&gt; c.txt
@@ -132,8 +135,7 @@ public class FileHelper {
     /**
      * Gets the extension of a filename.
      * <p/>
-     * This method returns the textual part of the filename after the last dot. There must be no directory separator
-     * after the dot.
+     * This method returns the textual part of the filename after the last dot. There must be no directory separator after the dot.
      * <p/>
      * <pre>
      * foo.txt      --&gt; &quot;txt&quot;
@@ -161,8 +163,8 @@ public class FileHelper {
     }
 
     /**
-     * Make a directory, including any necessary but nonexistent parent directories. If there already exists a file with
-     * specified name or the directory cannot be created then an exception is thrown.
+     * Make a directory, including any necessary but nonexistent parent directories. If there already exists a file with specified name or the
+     * directory cannot be created then an exception is thrown.
      *
      * @param directory directory to create, not null
      * @throws NullPointerException if the directory is null
@@ -186,9 +188,8 @@ public class FileHelper {
     /**
      * Delete a file. If file is a directory, delete it and all sub-directories.
      * <p/>
-     * The difference between File.delete() and this method are: <ul> <li>A directory to be deleted does not have to be
-     * empty.</li> <li>You get exceptions when a file or directory cannot be deleted. (java.io.File methods returns a
-     * boolean)</li> </ul>
+     * The difference between File.delete() and this method are: <ul> <li>A directory to be deleted does not have to be empty.</li> <li>You get
+     * exceptions when a file or directory cannot be deleted. (java.io.File methods returns a boolean)</li> </ul>
      *
      * @param file file or directory to delete, not null
      * @throws IOException in case deletion is unsuccessful
@@ -210,12 +211,11 @@ public class FileHelper {
     /**
      * Convert from a <code>URL</code> to a <code>File</code>.
      * <p/>
-     * From version 1.1 this method will decode the URL. Syntax such as <code>file:///my%20docs/file.txt</code> will be
-     * correctly decoded to <code>/my docs/file.txt</code>.
+     * From version 1.1 this method will decode the URL. Syntax such as <code>file:///my%20docs/file.txt</code> will be correctly decoded to <code>/my
+     * docs/file.txt</code>.
      *
      * @param url the file URL to convert, null returns null
-     * @return the equivalent <code>File</code> object, or <code>null</code> if the URL's protocol is not
-     *         <code>file</code>
+     * @return the equivalent <code>File</code> object, or <code>null</code> if the URL's protocol is not <code>file</code>
      * @throws IllegalArgumentException if the file is incorrectly encoded
      */
     public static File toFile(URL url) {
@@ -229,12 +229,11 @@ public class FileHelper {
     /**
      * Convert from a <code>URL</code> to a <code>File</code>.
      * <p/>
-     * From version 1.1 this method will decode the URL. Syntax such as <code>file:///my%20docs/file.txt</code> will be
-     * correctly decoded to <code>/my docs/file.txt</code>.
+     * From version 1.1 this method will decode the URL. Syntax such as <code>file:///my%20docs/file.txt</code> will be correctly decoded to <code>/my
+     * docs/file.txt</code>.
      *
      * @param url the file URL to convert, null returns null
-     * @return the equivalent <code>File</code> object, or <code>null</code> if the URL's protocol is not
-     *         <code>file</code>
+     * @return the equivalent <code>File</code> object, or <code>null</code> if the URL's protocol is not <code>file</code>
      * @throws IllegalArgumentException if the file is incorrectly encoded
      */
     public static String toFileString(URL url) {
@@ -375,11 +374,11 @@ public class FileHelper {
     /**
      * Copies a whole directory to a new location preserving the file dates.
      * <p/>
-     * This method copies the specified directory and all its child directories and files to the specified destination.
-     * The destination is the new location and name of the directory.
+     * This method copies the specified directory and all its child directories and files to the specified destination. The destination is the new
+     * location and name of the directory.
      * <p/>
-     * The destination directory is created if it does not exist. If the destination directory did exist, then this
-     * method merges the source with the destination, with the source taking precedence.
+     * The destination directory is created if it does not exist. If the destination directory did exist, then this method merges the source with the
+     * destination, with the source taking precedence.
      *
      * @param srcDir  an existing directory to copy, must not be <code>null</code>
      * @param destDir the new directory, must not be <code>null</code>
@@ -395,8 +394,8 @@ public class FileHelper {
      * <p/>
      * This method copies the contents of the specified source directory to within the specified destination directory.
      * <p/>
-     * The destination directory is created if it does not exist. If the destination directory did exist, then this
-     * method merges the source with the destination, with the source taking precedence.
+     * The destination directory is created if it does not exist. If the destination directory did exist, then this method merges the source with the
+     * destination, with the source taking precedence.
      *
      * @param srcDir           an existing directory to copy, must not be <code>null</code>
      * @param destDir          the new directory, must not be <code>null</code>
@@ -425,11 +424,10 @@ public class FileHelper {
     /**
      * Copies a directory to within another directory preserving the file dates.
      * <p/>
-     * This method copies the source directory and all its contents to a directory of the same name in the specified
-     * destination directory.
+     * This method copies the source directory and all its contents to a directory of the same name in the specified destination directory.
      * <p/>
-     * The destination directory is created if it does not exist. If the destination directory did exist, then this
-     * method merges the source with the destination, with the source taking precedence.
+     * The destination directory is created if it does not exist. If the destination directory did exist, then this method merges the source with the
+     * destination, with the source taking precedence.
      *
      * @param srcDir  an existing directory to copy, must not be <code>null</code>
      * @param destDir the directory to place the copy in, must not be <code>null</code>
@@ -454,9 +452,8 @@ public class FileHelper {
     /**
      * Copies a file to a new location preserving the file date.
      * <p/>
-     * This method copies the contents of the specified source file to the specified destination file. The directory
-     * holding the destination file is created if it does not exist. If the destination file exists, then this method
-     * will overwrite it.
+     * This method copies the contents of the specified source file to the specified destination file. The directory holding the destination file is
+     * created if it does not exist. If the destination file exists, then this method will overwrite it.
      *
      * @param srcFile  an existing file to copy, must not be <code>null</code>
      * @param destFile the new file, must not be <code>null</code>
@@ -469,9 +466,8 @@ public class FileHelper {
     /**
      * Copies a file to a new location.
      * <p/>
-     * This method copies the contents of the specified source file to the specified destination file. The directory
-     * holding the destination file is created if it does not exist. If the destination file exists, then this method
-     * will overwrite it.
+     * This method copies the contents of the specified source file to the specified destination file. The directory holding the destination file is
+     * created if it does not exist. If the destination file exists, then this method will overwrite it.
      *
      * @param srcFile          an existing file to copy, must not be <code>null</code>
      * @param destFile         the new file, must not be <code>null</code>
@@ -508,9 +504,8 @@ public class FileHelper {
     /**
      * Copies a file to a directory preserving the file date.
      * <p/>
-     * This method copies the contents of the specified source file to a file of the same name in the specified
-     * destination directory. The destination directory is created if it does not exist. If the destination file exists,
-     * then this method will overwrite it.
+     * This method copies the contents of the specified source file to a file of the same name in the specified destination directory. The destination
+     * directory is created if it does not exist. If the destination file exists, then this method will overwrite it.
      *
      * @param srcFile an existing file to copy, must not be <code>null</code>
      * @param destDir the directory to place the copy in, must not be <code>null</code>
@@ -523,9 +518,8 @@ public class FileHelper {
     /**
      * Copies a file to a directory optionally preserving the file date.
      * <p/>
-     * This method copies the contents of the specified source file to a file of the same name in the specified
-     * destination directory. The destination directory is created if it does not exist. If the destination file exists,
-     * then this method will overwrite it.
+     * This method copies the contents of the specified source file to a file of the same name in the specified destination directory. The destination
+     * directory is created if it does not exist. If the destination file exists, then this method will overwrite it.
      *
      * @param srcFile          an existing file to copy, must not be <code>null</code>
      * @param destDir          the directory to place the copy in, must not be <code>null</code>
@@ -559,6 +553,45 @@ public class FileHelper {
             String message = "Unable to delete directory " + directory + ".";
             throw new IOException(message);
         }
+    }
+
+
+    /**
+     * Writes an InputStream to disk.
+     *
+     * @param source the source stream
+     * @param target the target disk location
+     * @throws IOException if the write encountered an error
+     */
+    public static void write(InputStream source, File target) throws IOException {
+        RandomAccessFile file = new RandomAccessFile(target, "rw");
+        FileChannel channel = null;
+        FileLock lock = null;
+        try {
+            channel = file.getChannel();
+            lock = channel.lock();
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            byte[] bytes = buffer.array();
+            int limit;
+            while (-1 != (limit = source.read(bytes))) {
+                buffer.flip();
+                buffer.limit(limit);
+                while (buffer.hasRemaining()) {
+                    channel.write(buffer);
+                }
+                buffer.clear();
+            }
+            channel.force(true);
+        } finally {
+            if (channel != null) {
+                if (lock != null) {
+                    lock.release();
+                }
+                channel.close();
+            }
+            file.close();
+        }
+
     }
 
     /**

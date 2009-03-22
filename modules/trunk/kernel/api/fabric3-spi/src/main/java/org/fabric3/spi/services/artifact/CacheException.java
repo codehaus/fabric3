@@ -14,33 +14,19 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.contribution;
+package org.fabric3.spi.services.artifact;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * @version $Rev$ $Date$
+ * Denotes a general exception caching an artifact.
+ *
+ * @version $Revision$ $Date$
  */
-public class ResolutionException extends ContributionException {
-    private static final long serialVersionUID = -1175837242576928094L;
+public class CacheException extends Fabric3Exception {
+    private static final long serialVersionUID = -8045584133726217777L;
 
-    public ResolutionException(String message) {
-        super(message);
-    }
-
-    public ResolutionException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public ResolutionException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public ResolutionException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ResolutionException(Throwable cause) {
+    public CacheException(Throwable cause) {
         super(cause);
     }
 }
