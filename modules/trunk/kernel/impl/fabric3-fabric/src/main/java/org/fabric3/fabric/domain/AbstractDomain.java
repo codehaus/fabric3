@@ -20,7 +20,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.binding.BindingSelector;
@@ -170,7 +172,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void include(List<URI> uris, boolean transactional) throws DeploymentException {
-        List<Contribution> contributions = resolveContributions(uris);
+        Set<Contribution> contributions = resolveContributions(uris);
         instantiateAndDeploy(contributions, null, false, transactional);
     }
 
@@ -211,7 +213,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void recover(List<QName> deployables, List<String> planNames) throws DeploymentException {
-        List<Contribution> contributions = new ArrayList<Contribution>();
+        Set<Contribution> contributions = new LinkedHashSet<Contribution>();
         for (QName deployable : deployables) {
             QNameSymbol symbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(symbol);
@@ -225,7 +227,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void recover(List<URI> uris) throws DeploymentException {
-        List<Contribution> contributions = resolveContributions(uris);
+        Set<Contribution> contributions = resolveContributions(uris);
         instantiateAndDeploy(contributions, null, true, false);
     }
 
@@ -259,7 +261,7 @@ public abstract class AbstractDomain implements Domain {
      * @param transactional true if the deployment should be performed transactionally
      * @throws DeploymentException if an error occurs during instantiation or deployment
      */
-    private void instantiateAndDeploy(List<Contribution> contributions, List<String> planNames, boolean recover, boolean transactional)
+    private void instantiateAndDeploy(Set<Contribution> contributions, List<String> planNames, boolean recover, boolean transactional)
             throws DeploymentException {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
@@ -353,7 +355,7 @@ public abstract class AbstractDomain implements Domain {
      *
      * @param contributions the contributions to release locks on
      */
-    private void releaseLocks(List<Contribution> contributions) {
+    private void releaseLocks(Set<Contribution> contributions) {
         for (Contribution contribution : contributions) {
             for (Deployable deployable : contribution.getManifest().getDeployables()) {
                 QName name = deployable.getName();
@@ -547,8 +549,8 @@ public abstract class AbstractDomain implements Domain {
         }
     }
 
-    private List<Contribution> resolveContributions(List<URI> uris) {
-        List<Contribution> contributions = new ArrayList<Contribution>(uris.size());
+    private Set<Contribution> resolveContributions(List<URI> uris) {
+        Set<Contribution> contributions = new LinkedHashSet<Contribution>(uris.size());
         for (URI uri : uris) {
             Contribution contribution = metadataStore.find(uri);
             contributions.add(contribution);
@@ -562,7 +564,7 @@ public abstract class AbstractDomain implements Domain {
      * @param contributions the contributions containing the deployables
      * @return the list of deployables
      */
-    private List<Composite> getDeployables(List<Contribution> contributions) {
+    private List<Composite> getDeployables(Set<Contribution> contributions) {
         List<Composite> deployables = new ArrayList<Composite>();
         for (Contribution contribution : contributions) {
             for (Resource resource : contribution.getResources()) {
@@ -597,7 +599,7 @@ public abstract class AbstractDomain implements Domain {
      * @param contributions the contributions plans
      * @return the deployment plans
      */
-    private List<DeploymentPlan> getDeploymentPlans(List<Contribution> contributions) {
+    private List<DeploymentPlan> getDeploymentPlans(Set<Contribution> contributions) {
         List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
         for (Contribution contribution : contributions) {
             for (Resource resource : contribution.getResources()) {
