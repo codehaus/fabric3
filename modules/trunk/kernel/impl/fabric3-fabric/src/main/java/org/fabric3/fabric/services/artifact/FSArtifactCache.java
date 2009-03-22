@@ -52,7 +52,7 @@ public class FSArtifactCache implements ArtifactCache {
         if (tempDir.exists()) {
             FileHelper.deleteDirectory(tempDir);
         }
-        tempDir.mkdir();
+        tempDir.mkdirs();
     }
 
     public URL cache(URI uri, InputStream stream) throws CacheException {
@@ -69,6 +69,12 @@ public class FSArtifactCache implements ArtifactCache {
             return url;
         } catch (IOException e) {
             throw new CacheException(e);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                throw new CacheException(e);
+            }
         }
     }
 
@@ -93,7 +99,11 @@ public class FSArtifactCache implements ArtifactCache {
         if (entry == null) {
             return;
         }
-        entry.getFile().delete();
+        int i = entry.getCounter().decrementAndGet();
+        if (i == 0) {
+            entry.getFile().delete();
+            entries.remove(uri);
+        }
     }
 
     private class Entry {
@@ -104,7 +114,7 @@ public class FSArtifactCache implements ArtifactCache {
         private Entry(URL entryURL, File file) {
             this.entryURL = entryURL;
             this.file = file;
-            counter = new AtomicInteger();
+            counter = new AtomicInteger(1);
         }
 
         public AtomicInteger getCounter() {

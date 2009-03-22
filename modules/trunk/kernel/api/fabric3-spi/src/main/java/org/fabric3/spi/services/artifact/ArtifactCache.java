@@ -28,7 +28,8 @@ import java.net.URL;
 public interface ArtifactCache {
 
     /**
-     * Temporarily persists an artifact. The lifetime of the artifact will not extend past the lifetime of the runtime instance.
+     * Temporarily persists an artifact. The lifetime of the artifact will not extend past the lifetime of the runtime instance. When the operation
+     * completes, the input stream will be closed.
      *
      * @param uri    The artifact URI
      * @param stream the artifact contents

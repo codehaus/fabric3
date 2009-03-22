@@ -24,7 +24,6 @@ import java.net.URL;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.MetaDataStore;
@@ -43,12 +42,10 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
 
     private ArtifactCache cache;
     private MetaDataStore metaDataStore;
-    private ArtifactResolverMonitor monitor;
 
-    public HttpContributionUriResolver(@Reference ArtifactCache cache, @Reference MetaDataStore store, @Monitor ArtifactResolverMonitor monitor) {
+    public HttpContributionUriResolver(@Reference ArtifactCache cache, @Reference MetaDataStore store) {
         this.cache = cache;
         this.metaDataStore = store;
-        this.monitor = monitor;
     }
 
     public URL resolve(URI uri) throws ResolutionException {
@@ -76,14 +73,6 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
             throw new ResolutionException("Error resolving artifact: " + uri, e);
         } catch (CacheException e) {
             throw new ResolutionException("Error resolving artifact: " + uri, e);
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                monitor.resolutionError(e);
-            }
         }
     }
 
