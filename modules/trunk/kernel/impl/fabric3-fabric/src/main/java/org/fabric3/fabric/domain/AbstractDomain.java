@@ -90,7 +90,7 @@ public abstract class AbstractDomain implements Domain {
      *
      * @param metadataStore            the store for resolving contribution artifacts
      * @param logicalComponentManager  the manager for logical components
-     * @param generator   the physical model generator
+     * @param generator                the physical model generator
      * @param logicalModelInstantiator the logical model instantiator
      * @param bindingSelector          the selector for binding.sca
      * @param routingService           the service for routing deployment commands
@@ -557,7 +557,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     /**
-     * Returns the list of deployable composites contained in the list of contributions
+     * Returns the list of deployable composites contained in the list of contributions that are configured to run in the current runtime mode
      *
      * @param contributions the contributions containing the deployables
      * @return the list of deployables
@@ -576,7 +576,12 @@ public abstract class AbstractDomain implements Domain {
                     Composite composite = element.getValue();
                     for (Deployable deployable : contribution.getManifest().getDeployables()) {
                         if (deployable.getName().equals(name)) {
-                            deployables.add(composite);
+                            List<RuntimeMode> deployableModes = deployable.getRuntimeModes();
+                            RuntimeMode runtimeMode = info.getRuntimeMode();
+                            // only add deployables that are set to boot in the current runtime mode
+                            if (deployableModes.contains(runtimeMode)) {
+                                deployables.add(composite);
+                            }
                             break;
                         }
                     }

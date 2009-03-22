@@ -163,7 +163,7 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
         
         BootConfiguration bootConfiguration = new BootConfiguration();
         
-        bootConfiguration.setExtensions(extensions);
+        bootConfiguration.setExtensionContributions(extensions);
         bootConfiguration.setRuntime(this);
         bootConfiguration.setBootClassLoader(getClass().getClassLoader());
         

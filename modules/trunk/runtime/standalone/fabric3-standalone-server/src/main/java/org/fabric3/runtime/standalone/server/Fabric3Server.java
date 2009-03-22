@@ -35,15 +35,10 @@
 package org.fabric3.runtime.standalone.server;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
 
 import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
@@ -62,7 +57,6 @@ import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
-import org.fabric3.runtime.standalone.SyntheticContributionSource;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. The class boots a Fabric3 runtime and launches a daemon
@@ -216,12 +210,9 @@ public class Fabric3Server implements Fabric3ServerMBean {
             coordinator.bootPrimordial();
             // load and initialize runtime extension components and the local runtime domain
             coordinator.initialize();
-            Future<Void> future = coordinator.recover();
-            future.get();
-            future = coordinator.joinDomain(joinTimeout);
-            future.get();
-            future = coordinator.start();
-            future.get();
+            coordinator.recover();
+            coordinator.joinDomain(joinTimeout);
+            coordinator.start();
 
             agent.start();
             // create the shutdown daemon
@@ -288,9 +279,11 @@ public class Fabric3Server implements Fabric3ServerMBean {
         configuration.setBootstrapper(bootstrapper);
 
         // process extensions
-        File extensionsDir = hostInfo.getExtensionsDirectory();
-        List<ContributionSource> extensions = getExtensionContributions(extensionsDir);
-        configuration.setExtensions(extensions);
+        File repositoryDirectory = hostInfo.getRepositoryDirectory();
+        RepositoryScanner scanner = new RepositoryScanner();
+        ScanResult result = scanner.scan(repositoryDirectory);
+        configuration.setExtensionContributions(result.getExtensionContributions());
+        configuration.setUserContributions(result.getUserContributions());
 
         // process the baseline intents
         ContributionSource source = getIntentsContribution(hostInfo.getConfigDirectory());
@@ -311,43 +304,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
             throw new InitializationException(e);
         }
     }
-
-    private List<ContributionSource> getExtensionContributions(File dir) throws InitializationException {
-        List<ContributionSource> sources = new ArrayList<ContributionSource>();
-        File[] files = dir.listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                String name = pathname.getName();
-                return name.endsWith(".jar") || name.endsWith(".zip") || name.endsWith(".xml");
-            }
-        });
-        for (File file : files) {
-            try {
-                URI uri = URI.create(file.getName());
-                URL location = file.toURI().toURL();
-                ContributionSource source = new FileContributionSource(uri, location, -1, new byte[0]);
-                sources.add(source);
-            } catch (MalformedURLException e) {
-                throw new InitializationException("Error loading extension", file.getName(), e);
-            }
-        }
-
-        // create synthetic contributions from directories contained in /extensions
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory()) {
-                try {
-                    URI uri = URI.create("f3-" + file.getName());
-                    URL location = file.toURI().toURL();
-                    ContributionSource source = new SyntheticContributionSource(uri, location);
-                    sources.add(source);
-                } catch (MalformedURLException e) {
-                    throw new InitializationException(e);
-                }
-            }
-        }
-        return sources;
-    }
-
-
     public interface ServerMonitor {
         @Severe
         void runError(Exception e);

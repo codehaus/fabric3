@@ -63,6 +63,4 @@ public interface Names {
 
     URI RUNTIME_DOMAIN_SERVICE_URI = URI.create(RUNTIME_NAME + "/RuntimeDomain");
 
-    URI COMPOSITE_SYNTHESIZER_URI = URI.create(RUNTIME_NAME + "/CompositeSynthesizer");
-
 }

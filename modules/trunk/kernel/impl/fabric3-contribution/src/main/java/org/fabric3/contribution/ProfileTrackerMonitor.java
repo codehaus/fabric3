@@ -21,7 +21,7 @@ import org.fabric3.api.annotation.logging.Severe;
 /**
  * @version $Revision$ $Date$
  */
-public interface ContributionReplayMonitor {
+public interface ProfileTrackerMonitor {
 
     @Severe
     void error(Exception e);

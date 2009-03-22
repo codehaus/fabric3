@@ -51,8 +51,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -119,12 +117,9 @@ public class Fabric3ContextListener implements ServletContextListener {
             // boot the runtime
             coordinator.bootPrimordial();
             coordinator.initialize();
-            Future<Void> future = coordinator.recover();
-            future.get();
-            future = coordinator.joinDomain(-1);
-            future.get();
-            future = coordinator.start();
-            future.get();
+            coordinator.recover();
+            coordinator.joinDomain(-1);
+            coordinator.start();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
             monitor.started(runtime.getJMXSubDomain());
             // deploy the application composite
@@ -184,8 +179,8 @@ public class Fabric3ContextListener implements ServletContextListener {
      * Creates the boot configuration.
      */
     private BootConfiguration createBootConfiguration(WebappRuntime runtime,
-                                                                    ClassLoader webappClassLoader,
-                                                                    WebappUtil utils) throws InitializationException {
+                                                      ClassLoader webappClassLoader,
+                                                      WebappUtil utils) throws InitializationException {
 
         BootConfiguration configuration = new BootConfiguration();
         configuration.setBootClassLoader(webappClassLoader);
@@ -204,7 +199,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         // process extensions
         ServletContext context = runtime.getHostInfo().getServletContext();
         List<ContributionSource> extensions = getExtensionContributions("/WEB-INF/lib/f3Extensions.properties", context);
-        configuration.setExtensions(extensions);
+        configuration.setExtensionContributions(extensions);
 
         // process the baseline intents
         URL intentsLocation = utils.getIntentsLocation(webappClassLoader);
@@ -305,13 +300,8 @@ public class Fabric3ContextListener implements ServletContextListener {
             if (coordinator == null) {
                 return;
             }
-            Future<Void> future = coordinator.shutdown();
-            future.get();
+            coordinator.shutdown();
         } catch (ShutdownException e) {
-            servletContext.log("Error shutting runtume down", e);
-        } catch (ExecutionException e) {
-            servletContext.log("Error shutting runtume down", e);
-        } catch (InterruptedException e) {
             servletContext.log("Error shutting runtume down", e);
         }
 

@@ -34,8 +34,6 @@
  */
 package org.fabric3.host.runtime;
 
-import java.util.concurrent.Future;
-
 /**
  * Implementations manage the Fabric3 runtime lifecycle. This involves transitioning through a series of states:
  * <pre>
@@ -48,8 +46,6 @@ import java.util.concurrent.Future;
  *      <li>SHUTDOWN - the runtime has stopped prcessing synnchronous requests and detached from the domain.
  * </ul>
  * </pre>
- * The initialize operation is synchronous while all other operations are performed in non-blocking fashion. For non-blocking transitions, host
- * environments may choose to block on the returned Future or perform additional work prior to querying for completion.
  *
  * @version $Rev$ $Date$
  */
@@ -79,36 +75,32 @@ public interface RuntimeLifecycleCoordinator {
     /**
      * Performs local recovery operations.
      *
-     * @return a future that can be polled for completion of the operation
      * @throws InitializationException if an error occurs performing recovery
      */
-    Future<Void> recover() throws InitializationException;
+    void recover() throws InitializationException;
 
     /**
      * Joins the domain in a non-blocking fashion.
      *
      * @param timeout the timeout in milliseconds or -1 if the operation should wait indefinitely
-     * @return a future that can be polled for completion of the operation
      * @throws InitializationException if an error occurs joining the domain
      */
-    Future<Void> joinDomain(long timeout) throws InitializationException;
+    void joinDomain(long timeout) throws InitializationException;
 
     /**
      * Start the runtime receiving requests.
      *
-     * @return a future that can be polled for completion of the operation
-     * @throws StartException if an error starting the runtime occurs
+     * @throws InitializationException if an error occurs starting the runtime
      */
-    Future<Void> start() throws StartException;
+    void start() throws InitializationException;
 
     /**
      * Shuts the runtime down, stopping it from receiving requests and detaching it from the domain. In-flight synchronous operations will be allowed
      * to proceed to completion.
      *
-     * @return a future that can be polled for completion of the operation
      * @throws ShutdownException if an error ocurrs shutting down the runtime
      */
-    Future<Void> shutdown() throws ShutdownException;
+    void shutdown() throws ShutdownException;
 }
 
 

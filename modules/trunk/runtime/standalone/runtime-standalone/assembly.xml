@@ -137,7 +137,7 @@
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-admin</include>
                 <include>javax.transaction:com.springsource.javax.transaction</include>
             </includes>
-            <outputDirectory>repository/extensions</outputDirectory>
+            <outputDirectory>repository</outputDirectory>
         </dependencySet>
 
     </dependencySets>

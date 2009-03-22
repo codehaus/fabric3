@@ -60,11 +60,11 @@ public interface StandaloneHostInfo extends HostInfo {
     File getModeConfigDirectory();
 
     /**
-     * Returns the runtime extensions directory.
+     * Returns the runtime repository directory.
      *
-     * @return the runtime extensions directory
+     * @return the runtime repository directory
      */
-    File getExtensionsDirectory();
+    File getRepositoryDirectory();
 
 
 }

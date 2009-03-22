@@ -20,15 +20,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.fabric3.fabric.runtime.FabricNames.DEFINITIONS_REGISTRY;
 import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
-import static org.fabric3.host.Names.COMPOSITE_SYNTHESIZER_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
@@ -42,7 +37,6 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.event.DomainRecover;
@@ -50,7 +44,6 @@ import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.JoinDomain;
 import org.fabric3.spi.services.event.RuntimeRecover;
 import org.fabric3.spi.services.event.RuntimeStart;
-import org.fabric3.spi.synthesize.CompositeSynthesizer;
 
 /**
  * Default implementation of a RuntimeLifecycleCoordinator.
@@ -63,9 +56,10 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
     private Bootstrapper bootstrapper;
     private ClassLoader bootClassLoader;
     private ContributionSource intents;
-    private List<ContributionSource> extensions;
     private List<ContributionSource> policies;
     private Map<String, String> exportedPackages;
+    private List<ContributionSource> extensionContributions;
+    private List<ContributionSource> userContributions;
 
     public enum State {
         UNINITIALIZED,
@@ -84,7 +78,8 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         bootClassLoader = configuration.getBootClassLoader();
         exportedPackages = configuration.getExportedPackages();
         intents = configuration.getIntents();
-        extensions = configuration.getExtensions();
+        extensionContributions = configuration.getExtensionContributions();
+        userContributions = configuration.getUserContributions();
         policies = configuration.getPolicies();
     }
 
@@ -96,7 +91,6 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, exportedPackages);
         state = State.PRIMORDIAL;
     }
-
 
     public void initialize() throws InitializationException {
 
@@ -111,33 +105,34 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
             for (ContributionSource policy : policies) {
                 activateDefinitions(policy);
             }
-            includeExtensions(extensions);
+            // install extensions
+            List<URI> uris = installContributions(extensionContributions);
+            // deploy extensions
+            deploy(uris);
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
         }
 
         state = State.INITIALIZED;
-
     }
 
-    public Future<Void> recover() {
+    public void recover() throws InitializationException {
         if (state != State.INITIALIZED) {
             throw new IllegalStateException("Not in INITIALIZED state");
         }
         Domain domain = runtime.getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
         if (domain == null) {
             String name = APPLICATION_DOMAIN_URI.toString();
-            InitializationException e = new InitializationException("Domain not found: " + name, name);
-            return new SyncFuture(new ExecutionException(e));
-
+            throw new InitializationException("Domain not found: " + name, name);
         }
+        // install user contibutions - they will be deployed when the domain recovers
+        installContributions(userContributions);
         EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
         eventService.publish(new RuntimeRecover());
         state = State.RECOVERED;
-        return new SyncFuture();
     }
 
-    public Future<Void> joinDomain(final long timeout) throws InitializationException {
+    public void joinDomain(final long timeout) {
         if (state != State.RECOVERED) {
             throw new IllegalStateException("Not in RECOVERED state");
         }
@@ -145,11 +140,9 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         eventService.publish(new JoinDomain());
         eventService.publish(new DomainRecover());
         state = State.DOMAIN_JOINED;
-        // no domain to join
-        return new SyncFuture();
     }
 
-    public Future<Void> start() {
+    public void start() throws InitializationException {
         if (state != State.DOMAIN_JOINED) {
             throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
@@ -157,18 +150,16 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
         eventService.publish(new RuntimeStart());
         state = State.STARTED;
-        return new SyncFuture();
     }
 
-    public Future<Void> shutdown() throws ShutdownException {
+    public void shutdown() throws ShutdownException {
         if (state == State.STARTED) {
             runtime.destroy();
             state = State.SHUTDOWN;
         }
-        return new SyncFuture();
     }
 
-    protected void activateDefinitions(ContributionSource source) throws InitializationException {
+    private void activateDefinitions(ContributionSource source) throws InitializationException {
         try {
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI uri = contributionService.contribute(source);
@@ -183,66 +174,26 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         }
     }
 
-    protected void includeExtensions(List<ContributionSource> sources) throws InitializationException, DefinitionActivationException {
+    private List<URI> installContributions(List<ContributionSource> sources) throws InitializationException {
         try {
-            ContributionService contributionService =
-                    runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-            List<URI> contributionUris = contributionService.contribute(sources);
-            includeExtensionContributions(contributionUris);
-            DefinitionsRegistry definitionsRegistry =
-                    runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
-            definitionsRegistry.activateDefinitions(contributionUris);
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+            // install the contributions
+            return contributionService.contribute(sources);
+
         } catch (ContributionException e) {
             throw new ExtensionInitializationException("Error contributing extensions", e);
         }
     }
 
-    protected void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_SERVICE_URI);
-        CompositeSynthesizer synthesizer = runtime.getSystemComponent(CompositeSynthesizer.class, COMPOSITE_SYNTHESIZER_URI);
-        Composite composite = synthesizer.createComposite(contributionUris);
+    private void deploy(List<URI> contributionUris) throws InitializationException, DefinitionActivationException {
         try {
-            domain.include(composite);
+            Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_SERVICE_URI);
+            domain.include(contributionUris, false);
+            DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
+            definitionsRegistry.activateDefinitions(contributionUris);
         } catch (DeploymentException e) {
-            throw new ExtensionInitializationException("Error activating extensions", e);
+            throw new ExtensionInitializationException("Error deploying extensions", e);
         }
     }
 
-    protected static class SyncFuture implements Future<Void> {
-        private ExecutionException ex;
-
-        public SyncFuture() {
-        }
-
-        public SyncFuture(ExecutionException ex) {
-            this.ex = ex;
-        }
-
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            return false;
-        }
-
-        public boolean isCancelled() {
-            return false;
-        }
-
-        public boolean isDone() {
-            return true;
-        }
-
-        public Void get() throws InterruptedException, ExecutionException {
-            if (ex != null) {
-                throw ex;
-            }
-            return null;
-        }
-
-        public Void get(long timeout, TimeUnit unit)
-                throws InterruptedException, ExecutionException, TimeoutException {
-            if (ex != null) {
-                throw ex;
-            }
-            return null;
-        }
-    }
 }

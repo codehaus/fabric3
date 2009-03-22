@@ -126,6 +126,14 @@ public class Contribution implements Serializable {
         return profiles;
     }
 
+    public void addProfile(URI uri) {
+        profiles.add(uri);
+    }
+
+    public void addProfiles(List<URI> uris) {
+        profiles.addAll(uris);
+    }
+
     /**
      * Returns the locally dereferenceable URL for the contribution artifact.
      *

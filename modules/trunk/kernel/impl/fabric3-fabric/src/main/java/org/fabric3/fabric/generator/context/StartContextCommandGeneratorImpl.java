@@ -216,7 +216,8 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
             QName secondDeployable = ((StartContextCommand) second).getDeployable();
             Integer secondPos = deployableOrder.get(secondDeployable);
             if (secondPos == null) {
-                throw new AssertionError("Deployable not found:" + secondDeployable);
+                return 0;
+                //throw new AssertionError("Deployable not found:" + secondDeployable);
             }
             return firstPos - secondPos;
         }

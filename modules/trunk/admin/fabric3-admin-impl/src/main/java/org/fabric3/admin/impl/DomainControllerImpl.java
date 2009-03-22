@@ -55,7 +55,7 @@ public class DomainControllerImpl implements DomainController {
     private static final String CONTRIBUTION_SERVICE_MBEAN =
             "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/ContibutionServiceMBean\",service=ContributionServiceMBean";
     private static final String DOMAIN_MBEAN =
-            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/DomainMBean\",service=DomainMBean";
+            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/DistributedDomainMBean\",service=DomainMBean";
 
     private static final String RUNTIME_DOMAIN_MBEAN =
             "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/RuntimeDomainMBean\",service=RuntimeDomainMBean";

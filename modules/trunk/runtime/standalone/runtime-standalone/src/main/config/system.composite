@@ -87,12 +87,8 @@
         <property name="autowire" source="$systemConfig/domain/@autowire"/>
     </component>
 
-    <component name="ContributionReplayer">
-        <f3-impl:implementation.system class="org.fabric3.contribution.ContributionReplayer"/>
-    </component>
-
-    <component name="ContributionTracker">
-        <f3-impl:implementation.system class="org.fabric3.contribution.ContributionTracker"/>
+    <component name="ProfileTracker">
+        <f3-impl:implementation.system class="org.fabric3.contribution.ProfileTracker"/>
     </component>
 
     <component name="FSDomainTracker">

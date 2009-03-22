@@ -49,7 +49,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
     private final File baseDir;
     private File modeConfigDirectory;
     private final Properties properties;
-    private final File extensionsDirectory;
+    private final File repositoryDirectory;
     private final File configDirectory;
     private final File tempDirectory;
     private File dataDirectory;
@@ -57,20 +57,20 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
     /**
      * Constructor.
      *
-     * @param runtimeMode   the mode the runtime is started in
-     * @param domain        the SCA domain this runtime belongs to
-     * @param baseDir       directory containing the standalone installation
-     * @param extensionsDir directory containing the standalone extensions
-     * @param configDir     directory containing the standalone configuration
-     * @param modeConfigDir directory containing the standalone boot mode configuration
-     * @param properties    properties for this runtime
-     * @param tempDirectory the directory for writing temporary files
-     * @param dataDirectory the directory for writing persistent data that survives restarts
+     * @param runtimeMode         the mode the runtime is started in
+     * @param domain              the SCA domain this runtime belongs to
+     * @param baseDir             directory containing the standalone installation
+     * @param repositoryDirectory directory containing the standalone repository
+     * @param configDir           directory containing the standalone configuration
+     * @param modeConfigDir       directory containing the standalone boot mode configuration
+     * @param properties          properties for this runtime
+     * @param tempDirectory       the directory for writing temporary files
+     * @param dataDirectory       the directory for writing persistent data that survives restarts
      */
     public StandaloneHostInfoImpl(RuntimeMode runtimeMode,
                                   URI domain,
                                   File baseDir,
-                                  File extensionsDir,
+                                  File repositoryDirectory,
                                   File configDir,
                                   File modeConfigDir,
                                   Properties properties,
@@ -79,7 +79,7 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
         this.runtimeMode = runtimeMode;
         this.domain = domain;
         this.baseDir = baseDir;
-        this.extensionsDirectory = extensionsDir;
+        this.repositoryDirectory = repositoryDirectory;
         this.configDirectory = configDir;
         this.modeConfigDirectory = modeConfigDir;
         this.properties = properties;
@@ -115,8 +115,8 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
         return true;
     }
 
-    public File getExtensionsDirectory() {
-        return extensionsDirectory;
+    public File getRepositoryDirectory() {
+        return repositoryDirectory;
     }
 
     public File getConfigDirectory() {

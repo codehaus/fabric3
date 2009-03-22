@@ -34,6 +34,7 @@
  */
 package org.fabric3.host.runtime;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +52,8 @@ public class BootConfiguration {
     private Bootstrapper bootstrapper;
     private ClassLoader bootClassLoader;
     private ContributionSource intents;
-    private List<ContributionSource> extensions;
+    private List<ContributionSource> extensionContributions = Collections.emptyList();
+    private List<ContributionSource> userContributions = Collections.emptyList();
     private List<ContributionSource> policies = new LinkedList<ContributionSource>();
     private Map<String, String> exportedPackages = new HashMap<String, String>();
 
@@ -95,12 +97,20 @@ public class BootConfiguration {
         this.intents = intents;
     }
 
-    public List<ContributionSource> getExtensions() {
-        return extensions;
+    public List<ContributionSource> getExtensionContributions() {
+        return extensionContributions;
     }
 
-    public void setExtensions(List<ContributionSource> extensions) {
-        this.extensions = extensions;
+    public void setExtensionContributions(List<ContributionSource> extensionContributions) {
+        this.extensionContributions = extensionContributions;
+    }
+
+    public List<ContributionSource> getUserContributions() {
+        return userContributions;
+    }
+
+    public void setUserContributions(List<ContributionSource> userContributions) {
+        this.userContributions = userContributions;
     }
 
     public List<ContributionSource> getPolicies() {

@@ -51,7 +51,7 @@ public class ExtensionHelper {
             }
         }
         List<ContributionSource> sources = createContributionSources(extensionUrls);
-        configuration.setExtensions(sources);
+        configuration.setExtensionContributions(sources);
     }
 
     private List<ContributionSource> createContributionSources(List<URL> urls) {

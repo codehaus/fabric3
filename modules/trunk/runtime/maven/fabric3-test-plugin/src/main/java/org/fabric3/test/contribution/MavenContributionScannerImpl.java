@@ -24,7 +24,6 @@ import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,9 +31,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.fabric3.host.Namespaces;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import org.fabric3.host.Namespaces;
 
 /**
  * Default implementation of the Maven contribution scanner.
@@ -90,7 +90,7 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
         } catch (SAXException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
     }
     
     /*
@@ -118,7 +118,7 @@ public class MavenContributionScannerImpl implements MavenContributionScanner {
         
         String externalForm = manifestUrl.toExternalForm();
         String protocol = manifestUrl.getProtocol();
-        String url = null;
+        String url;
         
         if ("jar".equals(protocol)) {
             url = externalForm.substring(0, externalForm.indexOf("!/" + MANIFEST_PATH));

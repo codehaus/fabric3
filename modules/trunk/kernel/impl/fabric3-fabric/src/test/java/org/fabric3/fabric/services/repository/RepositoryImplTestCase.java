@@ -62,8 +62,6 @@ public class RepositoryImplTestCase extends TestCase {
         EasyMock.expect(info.getRuntimeMode()).andReturn(RuntimeMode.VM).atLeastOnce();
         EasyMock.replay(info);
         File repository = new File("repository");
-        FileHelper.forceMkdir(new File(repository, "user"));
-        FileHelper.forceMkdir(new File(repository, "extensions"));
         FileHelper.forceMkdir(new File(repository, "cache"));
         this.repository = new RepositoryImpl(info);
     }

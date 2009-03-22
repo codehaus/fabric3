@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -45,7 +44,6 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.host.runtime.StartException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.MavenEmbeddedRuntime;
@@ -189,18 +187,9 @@ public class MavenRuntimeBooter {
             log.info("Starting Embedded Fabric3 Runtime ...");
             coordinator.bootPrimordial();
             coordinator.initialize();
-            Future<Void> future = coordinator.recover();
-            future.get();
-            future = coordinator.joinDomain(-1);
-            future.get();
-            future = coordinator.start();
-            future.get();
-        } catch (StartException e) {
-            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-        } catch (ExecutionException e) {
-            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-        } catch (InterruptedException e) {
-            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+            coordinator.recover();
+            coordinator.joinDomain(-1);
+            coordinator.start();
         } catch (InitializationException e) {
             throw new MojoExecutionException("Error booting Fabric3 runtime", e);
         }
@@ -208,8 +197,7 @@ public class MavenRuntimeBooter {
 
     public void shutdown() throws ShutdownException, InterruptedException, ExecutionException {
         log.info("Stopping Fabric3 Runtime ...");
-        Future<Void> future = coordinator.shutdown();
-        future.get();
+        coordinator.shutdown();
     }
 
     private <T> T instantiate(Class<T> type, String impl, ClassLoader cl) {

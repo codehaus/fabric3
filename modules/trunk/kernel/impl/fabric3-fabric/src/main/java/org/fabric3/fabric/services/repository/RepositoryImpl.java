@@ -47,8 +47,7 @@ import org.fabric3.spi.services.repository.RepositoryException;
 @EagerInit
 public class RepositoryImpl implements Repository {
     private Map<URI, URL> archiveUriToUrl;
-    private File userDir;
-    private File extensionsDir;
+    private File repositoryDir;
     private File cacheDir;
 
     /**
@@ -61,15 +60,13 @@ public class RepositoryImpl implements Repository {
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
         File baseDir = hostInfo.getBaseDir();
         // three locations for artifacts: user; extensions; and a temporary cache
-        File repository = new File(baseDir, "repository");
-        userDir = new File(repository, "user");
-        extensionsDir = new File(repository, "extensions");
+        repositoryDir = new File(baseDir, "repository");
         cacheDir = new File(hostInfo.getTempDir(), "cache");
     }
 
     @Init
     public void init() throws MalformedURLException {
-        if (!userDir.exists() || !userDir.isDirectory()) {
+        if (!repositoryDir.exists() || !repositoryDir.isDirectory()) {
             return;
         }
         if (!cacheDir.exists()) {
@@ -80,20 +77,13 @@ public class RepositoryImpl implements Repository {
             }
         }
         // load artifacts
-        for (File file : extensionsDir.listFiles()) {
-            archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
-        }
-        for (File file : userDir.listFiles()) {
+        for (File file : repositoryDir.listFiles()) {
             archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
         }
     }
 
     public URL store(URI uri, InputStream stream) throws RepositoryException {
-        return store(userDir, uri, stream);
-    }
-
-    public URL storeExtension(URI uri, InputStream stream) throws RepositoryException {
-        return store(extensionsDir, uri, stream);
+        return store(repositoryDir, uri, stream);
     }
 
     public URL cache(URI uri, InputStream stream) throws RepositoryException {
@@ -110,7 +100,7 @@ public class RepositoryImpl implements Repository {
 
     public void remove(URI uri) throws RepositoryException {
         try {
-            File location = mapToFile(userDir, uri);
+            File location = mapToFile(repositoryDir, uri);
             archiveUriToUrl.remove(uri);
             location.delete();
         } catch (IOException e) {
