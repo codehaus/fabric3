@@ -91,7 +91,8 @@ public class StoreCommand implements Command {
                 contributionUri = CommandHelper.parseContributionName(contribution);
             }
             controller.store(contribution, contributionUri);
-            out.println("Stored " + contributionUri);
+            controller.install(contributionUri);
+            out.println("Installed " + contributionUri);
             return true;
         } catch (DuplicateContributionManagementException e) {
             out.println("ERROR: A contribution with that name already exists");

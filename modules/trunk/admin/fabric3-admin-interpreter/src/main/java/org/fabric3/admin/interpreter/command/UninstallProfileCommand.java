@@ -77,6 +77,7 @@ public class UninstallProfileCommand implements Command {
                 controller.connect();
             }
             controller.uninstallProfile(profileUri);
+            controller.removeProfile(profileUri);
             out.println("Uninstalled " + profileUri);
             return true;
         } catch (CommunicationException e) {

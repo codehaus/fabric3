@@ -26,8 +26,8 @@ import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
-import org.fabric3.management.contribution.DuplicateContributionManagementException;
 import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.DuplicateContributionManagementException;
 
 /**
  * @version $Revision$ $Date$
@@ -91,7 +91,8 @@ public class StoreProfileCommand implements Command {
                 profileUri = CommandHelper.parseContributionName(profile);
             }
             controller.storeProfile(profile, profileUri);
-            out.println("Stored " + profileUri);
+            controller.installProfile(profileUri);
+            out.println("Installed " + profileUri);
             return true;
         } catch (DuplicateContributionManagementException e) {
             out.println("ERROR: A contribution with that name already exists");

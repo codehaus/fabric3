@@ -21,11 +21,16 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 import org.fabric3.management.contribution.ContributionRemoveException;
+import org.fabric3.management.contribution.ContributionInUseManagementException;
+import org.fabric3.management.contribution.ContributionLockedManagementException;
+import org.fabric3.management.contribution.ContributionUninstallException;
 
 /**
  * @version $Revision$ $Date$
@@ -76,9 +81,23 @@ public class RemoveCommand implements Command {
             if (disconnected) {
                 controller.connect();
             }
+            controller.uninstall(contributionUri);
             controller.remove(contributionUri);
-            out.println("Removed " + contributionUri);
+            out.println("Uninstalled " + contributionUri);
             return true;
+        } catch (ContributionInUseManagementException e) {
+            out.println("ERROR: Contribution is in use by the following contributions:");
+            for (URI uri : e.getContributions()) {
+                out.println("       " + uri);
+            }
+        } catch (ContributionLockedManagementException e) {
+            out.println("ERROR: Contribution is in use by the following deployed composites:");
+            for (QName name : e.getDeployables()) {
+                out.println("       " + name);
+            }
+        } catch (ContributionUninstallException e) {
+            out.println("ERROR: Error uninstalling contribution");
+            out.println("       " + e.getMessage());
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());

@@ -25,7 +25,6 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
-import org.fabric3.admin.interpreter.command.InstallProfileCommand;
 import org.fabric3.admin.interpreter.command.StoreProfileCommand;
 import org.fabric3.admin.interpreter.command.UninstallProfileCommand;
 
@@ -40,8 +39,7 @@ public class ProfileCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "profile (pf): Uploads and/or installs a profile to the domain repository.\n" +
-                "usage: profile store <profile file> [-u username -p password]" +
+        return "profile (pf): Installs a profile to the domain repository.\n" +
                 "usage: profile install <profile> [-u username -p password]";
     }
 
@@ -49,9 +47,7 @@ public class ProfileCommandParser implements CommandParser {
         if (tokens.length != 2 && tokens.length != 6) {
             throw new ParseException("Illegal number of arguments");
         }
-        if ("store".equals(tokens[0])) {
-            return store(tokens);
-        } else if ("install".equals(tokens[0])) {
+        if ("install".equals(tokens[0])) {
             return install(tokens);
         } else if ("uninstall".equals(tokens[0])) {
             return uninstall(tokens);
@@ -74,19 +70,6 @@ public class ProfileCommandParser implements CommandParser {
     }
 
     private Command install(String[] tokens) throws ParseException {
-        InstallProfileCommand command = new InstallProfileCommand(controller);
-        try {
-            command.setProfileUri(new URI(tokens[1]));
-        } catch (URISyntaxException e) {
-            throw new ParseException("Invalid profile name", e);
-        }
-        if (tokens.length == 6) {
-            ParserHelper.parseAuthorization(command, tokens, 2);
-        }
-        return command;
-    }
-
-    private Command store(String[] tokens) throws ParseException {
         StoreProfileCommand command = new StoreProfileCommand(controller);
         try {
             URL url = ParserHelper.parseUrl(tokens[1]);

@@ -18,10 +18,8 @@ package org.fabric3.admin.interpreter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URL;
 import java.net.URI;
 
 import junit.framework.TestCase;
@@ -39,12 +37,14 @@ public class RemoveTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.remove(URI.create("foo.jar"));
+        URI uri = URI.create("foo.jar");
+        controller.uninstall(uri);
+        controller.remove(uri);
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("remove foo.jar -u username -p password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("uninstall foo.jar -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 

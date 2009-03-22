@@ -40,12 +40,14 @@ public class ProfileStoreTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.storeProfile(contributionUrl, URI.create("foo.jar"));
+        URI uri = URI.create("foo.jar");
+        controller.storeProfile(contributionUrl, uri);
+        controller.installProfile(uri);
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("profile store foo.jar -u username -p password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("profile install foo.jar -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
@@ -57,12 +59,14 @@ public class ProfileStoreTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.storeProfile(new URL("file://bar/foo.jar"), URI.create("foo.jar"));
+        URI uri = URI.create("foo.jar");
+        controller.storeProfile(new URL("file://bar/foo.jar"), uri);
+        controller.installProfile(uri);
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("pf store file://bar/foo.jar -u username -p password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("pf install file://bar/foo.jar -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
@@ -74,12 +78,14 @@ public class ProfileStoreTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.storeProfile(new URL("file://bar/foo.jar/"), URI.create("foo.jar"));
+        URI uri = URI.create("foo.jar");
+        controller.storeProfile(new URL("file://bar/foo.jar/"), uri);
+        controller.installProfile(uri);
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("profile store file://bar/foo.jar/ -u username -p password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("profile install file://bar/foo.jar/ -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 

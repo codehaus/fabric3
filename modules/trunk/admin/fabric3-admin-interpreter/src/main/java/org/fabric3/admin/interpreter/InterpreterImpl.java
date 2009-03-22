@@ -25,7 +25,6 @@ import java.util.Scanner;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.parser.AuthCommandParser;
 import org.fabric3.admin.interpreter.parser.DeployCommandParser;
-import org.fabric3.admin.interpreter.parser.InstallCommandParser;
 import org.fabric3.admin.interpreter.parser.ListCommandParser;
 import org.fabric3.admin.interpreter.parser.ProfileCommandParser;
 import org.fabric3.admin.interpreter.parser.ProvisionCommandParser;
@@ -33,7 +32,6 @@ import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
 import org.fabric3.admin.interpreter.parser.StatCommandParser;
 import org.fabric3.admin.interpreter.parser.StoreCommandParser;
 import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
-import org.fabric3.admin.interpreter.parser.UninstallCommandParser;
 import org.fabric3.admin.interpreter.parser.UseCommandParser;
 
 /**
@@ -140,11 +138,8 @@ public class InterpreterImpl implements Interpreter {
         parsers.put("au", authenticateParser);
         parsers.put("authenticate", authenticateParser);
         StoreCommandParser storeParser = new StoreCommandParser(controller);
-        parsers.put("store", storeParser);
-        parsers.put("sto", storeParser);
-        InstallCommandParser installParser = new InstallCommandParser(controller);
-        parsers.put("install", installParser);
-        parsers.put("ins", installParser);
+        parsers.put("install", storeParser);
+        parsers.put("ins", storeParser);
         StatCommandParser statusParser = new StatCommandParser(controller);
         parsers.put("status", statusParser);
         parsers.put("st", statusParser);
@@ -154,12 +149,9 @@ public class InterpreterImpl implements Interpreter {
         UndeployCommandParser undeployParser = new UndeployCommandParser(controller);
         parsers.put("undeploy", undeployParser);
         parsers.put("ude", undeployParser);
-        UninstallCommandParser uninstalParser = new UninstallCommandParser(controller);
-        parsers.put("uninstall", uninstalParser);
-        parsers.put("uin", uninstalParser);
         RemoveCommandParser removeParser = new RemoveCommandParser(controller);
-        parsers.put("remove", removeParser);
-        parsers.put("rm", removeParser);
+        parsers.put("uninstall", removeParser);
+        parsers.put("uin", removeParser);
         parsers.put("use", new UseCommandParser(controller, settings));
         ProvisionCommandParser provisionParser = new ProvisionCommandParser(controller);
         parsers.put("pr", provisionParser);

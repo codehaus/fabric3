@@ -36,7 +36,7 @@ public class ProvisionCommandParser implements CommandParser {
     }
 
     public String getUsage() {
-        return "provision (pr): Stores, installs, and deploys a contribution.\n" +
+        return "provision (pr): Installs and deploys a contribution.\n" +
                 "usage: provision <contribution file> <plan name>|-plan <plan file> [-u username -p password]";
     }
 

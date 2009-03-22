@@ -18,9 +18,11 @@ package org.fabric3.admin.interpreter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
+import java.net.URL;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -37,7 +39,10 @@ public class InstallTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.install(URI.create("foo.jar"));
+        URL contributionUrl = new File("foo.jar").toURI().toURL();
+        URI uri = URI.create("foo.jar");
+        controller.store(contributionUrl, uri);
+        controller.install(uri);
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);

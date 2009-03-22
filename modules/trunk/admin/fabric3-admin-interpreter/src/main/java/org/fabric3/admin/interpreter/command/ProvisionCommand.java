@@ -31,13 +31,11 @@ import org.fabric3.admin.interpreter.CommandException;
 public class ProvisionCommand implements Command {
     private DeployCommand deployCommand;
     private StoreCommand storeCommand;
-    private InstallCommand installCommand;
     private DomainController controller;
 
     public ProvisionCommand(DomainController controller) {
         this.controller = controller;
         storeCommand = new StoreCommand(controller);
-        installCommand = new InstallCommand(controller);
         deployCommand = new DeployCommand(controller);
     }
 
@@ -53,13 +51,11 @@ public class ProvisionCommand implements Command {
         storeCommand.setContribution(contribution);
         URI contributionUri = CommandHelper.parseContributionName(contribution);
         storeCommand.setContributionUri(contributionUri);
-        installCommand.setContributionUri(contributionUri);
         deployCommand.setContributionUri(contributionUri);
     }
 
     public void setContributionUri(URI uri) {
         storeCommand.setContributionUri(uri);
-        installCommand.setContributionUri(uri);
         deployCommand.setContributionUri(uri);
     }
 
@@ -74,7 +70,7 @@ public class ProvisionCommand implements Command {
     public boolean execute(PrintStream out) throws CommandException {
         boolean disconnected = !controller.isConnected();
         try {
-            return storeCommand.execute(out) && installCommand.execute(out) && deployCommand.execute(out);
+            return storeCommand.execute(out) && deployCommand.execute(out);
         } finally {
             if (disconnected && controller.isConnected()) {
                 try {
