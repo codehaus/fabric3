@@ -30,32 +30,32 @@ import org.fabric3.admin.interpreter.CommandException;
  */
 public class ProvisionCommand implements Command {
     private DeployCommand deployCommand;
-    private StoreCommand storeCommand;
+    private InstallCommand2 installCommand;
     private DomainController controller;
 
     public ProvisionCommand(DomainController controller) {
         this.controller = controller;
-        storeCommand = new StoreCommand(controller);
+        installCommand = new InstallCommand2(controller);
         deployCommand = new DeployCommand(controller);
     }
 
     public void setUsername(String username) {
-        storeCommand.setUsername(username);
+        installCommand.setUsername(username);
     }
 
     public void setPassword(String password) {
-        storeCommand.setPassword(password);
+        installCommand.setPassword(password);
     }
 
     public void setContribution(URL contribution) {
-        storeCommand.setContribution(contribution);
+        installCommand.setContribution(contribution);
         URI contributionUri = CommandHelper.parseContributionName(contribution);
-        storeCommand.setContributionUri(contributionUri);
+        installCommand.setContributionUri(contributionUri);
         deployCommand.setContributionUri(contributionUri);
     }
 
     public void setContributionUri(URI uri) {
-        storeCommand.setContributionUri(uri);
+        installCommand.setContributionUri(uri);
         deployCommand.setContributionUri(uri);
     }
 
@@ -70,7 +70,7 @@ public class ProvisionCommand implements Command {
     public boolean execute(PrintStream out) throws CommandException {
         boolean disconnected = !controller.isConnected();
         try {
-            return storeCommand.execute(out) && deployCommand.execute(out);
+            return installCommand.execute(out) && deployCommand.execute(out);
         } finally {
             if (disconnected && controller.isConnected()) {
                 try {

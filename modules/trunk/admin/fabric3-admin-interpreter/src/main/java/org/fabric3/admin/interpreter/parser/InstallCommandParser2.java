@@ -23,15 +23,15 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
-import org.fabric3.admin.interpreter.command.StoreCommand;
+import org.fabric3.admin.interpreter.command.InstallCommand2;
 
 /**
  * @version $Revision$ $Date$
  */
-public class StoreCommandParser implements CommandParser {
+public class InstallCommandParser2 implements CommandParser {
     private DomainController controller;
 
-    public StoreCommandParser(DomainController controller) {
+    public InstallCommandParser2(DomainController controller) {
         this.controller = controller;
     }
 
@@ -44,7 +44,7 @@ public class StoreCommandParser implements CommandParser {
         if (tokens.length != 1 && tokens.length != 5) {
             throw new ParseException("Illegal number of arguments");
         }
-        StoreCommand command = new StoreCommand(controller);
+        InstallCommand2 command = new InstallCommand2(controller);
         try {
             URL contributionUrl = ParserHelper.parseUrl(tokens[0]);
             command.setContribution(contributionUrl);

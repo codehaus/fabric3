@@ -33,6 +33,7 @@ import org.fabric3.admin.api.DomainController;
  * @version $Revision$ $Date$
  */
 public class InstallTestCase extends TestCase {
+    private URL contributionUrl;
 
     public void testInstallWithName() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
@@ -54,8 +55,66 @@ public class InstallTestCase extends TestCase {
         EasyMock.verify(controller);
     }
 
+    public void testInstallWithNoNameNoPath() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        controller.setUsername("username");
+        controller.setPassword("password");
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        URI uri = URI.create("foo.jar");
+        controller.store(contributionUrl, uri);
+        controller.install(uri);
+        EasyMock.replay(controller);
+
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("install foo.jar -u username -p password \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
+    public void testInstallWithNoNameWithPath() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        controller.setUsername("username");
+        controller.setPassword("password");
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        URI uri = URI.create("foo.jar");
+        controller.store(new URL("file://bar/foo.jar"), uri);
+        controller.install(uri);
+        EasyMock.replay(controller);
+
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("install file://bar/foo.jar -u username -p password \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
+    public void testInstallWithNoNameWithSlashAtEnd() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        controller.setUsername("username");
+        controller.setPassword("password");
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        URI uri = URI.create("foo.jar");
+        controller.store(new URL("file://bar/foo.jar/"), uri);
+        controller.install(uri);
+        EasyMock.replay(controller);
+
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("install file://bar/foo.jar/ -u username -p password \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        contributionUrl = new File("foo.jar").toURI().toURL();
     }
 }

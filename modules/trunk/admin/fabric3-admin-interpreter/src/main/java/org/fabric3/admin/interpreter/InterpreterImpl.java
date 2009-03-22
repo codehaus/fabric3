@@ -30,7 +30,7 @@ import org.fabric3.admin.interpreter.parser.ProfileCommandParser;
 import org.fabric3.admin.interpreter.parser.ProvisionCommandParser;
 import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
 import org.fabric3.admin.interpreter.parser.StatCommandParser;
-import org.fabric3.admin.interpreter.parser.StoreCommandParser;
+import org.fabric3.admin.interpreter.parser.InstallCommandParser2;
 import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
 import org.fabric3.admin.interpreter.parser.UseCommandParser;
 
@@ -50,10 +50,10 @@ public class InterpreterImpl implements Interpreter {
             + "   deploy (de) \n"
             + "   install (ins) \n"
             + "   list (ls) \n"
+            + "   profile (pf) \n"
             + "   provision (pr) \n"
             + "   remove (rm) \n"
             + "   status (st) \n"
-            + "   store (sto) \n"
             + "   undeploy (ude) \n"
             + "   uninstall (uin) \n"
             + "   use \n";
@@ -137,9 +137,9 @@ public class InterpreterImpl implements Interpreter {
         AuthCommandParser authenticateParser = new AuthCommandParser(controller);
         parsers.put("au", authenticateParser);
         parsers.put("authenticate", authenticateParser);
-        StoreCommandParser storeParser = new StoreCommandParser(controller);
-        parsers.put("install", storeParser);
-        parsers.put("ins", storeParser);
+        InstallCommandParser2 installParser = new InstallCommandParser2(controller);
+        parsers.put("install", installParser);
+        parsers.put("ins", installParser);
         StatCommandParser statusParser = new StatCommandParser(controller);
         parsers.put("status", statusParser);
         parsers.put("st", statusParser);

@@ -25,7 +25,7 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
-import org.fabric3.admin.interpreter.command.StoreProfileCommand;
+import org.fabric3.admin.interpreter.command.InstallProfileCommand2;
 import org.fabric3.admin.interpreter.command.UninstallProfileCommand;
 
 /**
@@ -70,7 +70,7 @@ public class ProfileCommandParser implements CommandParser {
     }
 
     private Command install(String[] tokens) throws ParseException {
-        StoreProfileCommand command = new StoreProfileCommand(controller);
+        InstallProfileCommand2 command = new InstallProfileCommand2(controller);
         try {
             URL url = ParserHelper.parseUrl(tokens[1]);
             command.setProfile(url);

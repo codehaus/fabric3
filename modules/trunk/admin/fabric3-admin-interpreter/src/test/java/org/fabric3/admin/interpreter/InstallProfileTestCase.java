@@ -32,7 +32,7 @@ import org.fabric3.admin.api.DomainController;
 /**
  * @version $Revision$ $Date$
  */
-public class ProfileStoreTestCase extends TestCase {
+public class InstallProfileTestCase extends TestCase {
     private URL contributionUrl;
 
     public void testInstallWithNoNameNoPath() throws Exception {
