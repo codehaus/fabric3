@@ -30,12 +30,12 @@ import org.fabric3.admin.interpreter.CommandException;
  */
 public class ProvisionCommand implements Command {
     private DeployCommand deployCommand;
-    private InstallCommand2 installCommand;
+    private InstallCommand installCommand;
     private DomainController controller;
 
     public ProvisionCommand(DomainController controller) {
         this.controller = controller;
-        installCommand = new InstallCommand2(controller);
+        installCommand = new InstallCommand(controller);
         deployCommand = new DeployCommand(controller);
     }
 

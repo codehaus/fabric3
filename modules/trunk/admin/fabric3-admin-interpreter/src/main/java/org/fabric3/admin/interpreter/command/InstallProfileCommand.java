@@ -32,31 +32,31 @@ import org.fabric3.management.contribution.DuplicateContributionManagementExcept
 /**
  * @version $Revision$ $Date$
  */
-public class InstallCommand2 implements Command {
+public class InstallProfileCommand implements Command {
     private DomainController controller;
-    private URL contribution;
-    private URI contributionUri;
+    private URL profile;
+    private URI profileUri;
     private String username;
     private String password;
 
-    public InstallCommand2(DomainController controller) {
+    public InstallProfileCommand(DomainController controller) {
         this.controller = controller;
     }
 
-    public URL getContribution() {
-        return contribution;
+    public URL getProfile() {
+        return profile;
     }
 
-    public void setContribution(URL contribution) {
-        this.contribution = contribution;
+    public void setProfile(URL profile) {
+        this.profile = profile;
     }
 
-    public URI getContributionUri() {
-        return contributionUri;
+    public URI getProfileUri() {
+        return profileUri;
     }
 
-    public void setContributionUri(URI uri) {
-        this.contributionUri = uri;
+    public void setProfileUri(URI uri) {
+        this.profileUri = uri;
     }
 
     public String getUsername() {
@@ -87,12 +87,12 @@ public class InstallCommand2 implements Command {
             if (disconnected) {
                 controller.connect();
             }
-            if (contributionUri == null) {
-                contributionUri = CommandHelper.parseContributionName(contribution);
+            if (profileUri == null) {
+                profileUri = CommandHelper.parseContributionName(profile);
             }
-            controller.store(contribution, contributionUri);
-            controller.install(contributionUri);
-            out.println("Installed " + contributionUri);
+            controller.storeProfile(profile, profileUri);
+            controller.installProfile(profileUri);
+            out.println("Installed " + profileUri);
             return true;
         } catch (DuplicateContributionManagementException e) {
             out.println("ERROR: A contribution with that name already exists");

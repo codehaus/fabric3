@@ -30,7 +30,7 @@ import org.fabric3.admin.interpreter.parser.ProfileCommandParser;
 import org.fabric3.admin.interpreter.parser.ProvisionCommandParser;
 import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
 import org.fabric3.admin.interpreter.parser.StatCommandParser;
-import org.fabric3.admin.interpreter.parser.InstallCommandParser2;
+import org.fabric3.admin.interpreter.parser.InstallCommandParser;
 import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
 import org.fabric3.admin.interpreter.parser.UseCommandParser;
 
@@ -137,7 +137,7 @@ public class InterpreterImpl implements Interpreter {
         AuthCommandParser authenticateParser = new AuthCommandParser(controller);
         parsers.put("au", authenticateParser);
         parsers.put("authenticate", authenticateParser);
-        InstallCommandParser2 installParser = new InstallCommandParser2(controller);
+        InstallCommandParser installParser = new InstallCommandParser(controller);
         parsers.put("install", installParser);
         parsers.put("ins", installParser);
         StatCommandParser statusParser = new StatCommandParser(controller);
