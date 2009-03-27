@@ -17,6 +17,7 @@
 package org.fabric3.admin.controller;
 
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
@@ -51,12 +52,20 @@ public class RuntimeDomainMBeanImpl extends AbstractDomainMBean implements Runti
         this.contributionService = contributionService;
     }
 
-    public void deployProfile(URI uri) throws DeploymentManagementException {
-        List<URI> uris = contributionService.getContributionsInProfile(uri);
+    public void deployProfile(URI profileUri) throws DeploymentManagementException {
+        List<URI> uris = contributionService.getContributionsInProfile(profileUri);
         try {
+            for (Iterator<URI> it = uris.iterator(); it.hasNext();) {
+                URI uri = it.next();
+                Contribution contribution = store.find(uri);
+                if (contribution.isLocked()) {
+                    // only include contributions in the profile that were not previously deployed 
+                    it.remove();
+                }
+            }
             domain.include(uris, false);
         } catch (DeploymentException e) {
-            throw new DeploymentManagementException("Error deploying profile " + uri + ":" + e.getMessage());
+            throw new DeploymentManagementException("Error deploying profile " + profileUri + ":" + e.getMessage());
         }
     }
 
