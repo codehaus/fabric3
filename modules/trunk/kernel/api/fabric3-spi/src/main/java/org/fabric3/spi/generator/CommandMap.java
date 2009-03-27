@@ -42,7 +42,7 @@ import java.util.Set;
 import org.fabric3.spi.command.Command;
 
 /**
- * Contains a set of comamnds mapped by the zone to which they are to be applied.
+ * Contains commands mapped by the zone to which they are to be applied.
  *
  * @version $Revision$ $Date$
  */

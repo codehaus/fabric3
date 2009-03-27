@@ -17,6 +17,8 @@
 package org.fabric3.fabric.command;
 
 /**
+ * Command to unprovision a set of extensions.
+ *
  * @version $Revision$ $Date$
  */
 public class UnProvisionExtensionsCommand extends AbstractExtensionsCommand {

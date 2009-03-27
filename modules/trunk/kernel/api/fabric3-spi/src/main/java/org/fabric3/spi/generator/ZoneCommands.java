@@ -22,6 +22,9 @@ import java.util.List;
 import org.fabric3.spi.command.Command;
 
 /**
+ * A collection of commands sent to a zone. Extension-related commands are segregated so they may be deserialized and executed prior to other
+ * commands.
+ *
  * @version $Revision$ $Date$
  */
 public class ZoneCommands {
