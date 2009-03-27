@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.contribution.DuplicateContributionException;
 
 /**

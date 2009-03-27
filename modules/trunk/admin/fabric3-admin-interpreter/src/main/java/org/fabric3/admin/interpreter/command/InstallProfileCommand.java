@@ -95,7 +95,7 @@ public class InstallProfileCommand implements Command {
             out.println("Installed " + profileUri);
             return true;
         } catch (DuplicateContributionManagementException e) {
-            out.println("ERROR: A contribution with that name already exists");
+            out.println("ERROR: A profile with that name already exists");
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());

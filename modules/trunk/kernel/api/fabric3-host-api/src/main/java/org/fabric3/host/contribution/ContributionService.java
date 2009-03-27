@@ -152,12 +152,21 @@ public interface ContributionService {
     Set<URI> getContributions();
 
     /**
+     * Returns true if the profile exists.
+     *
+     * @param uri the profile URI
+     * @return true if the profile exists
+     */
+    boolean profileExists(URI uri);
+
+    /**
      * Registers a profile.
      *
      * @param profileUri       the profile URI
      * @param contributionUris the URIs of contributions that are contained in the profile
+     * @throws DuplicateProfileException if a profile already exists by that name
      */
-    void registerProfile(URI profileUri, List<URI> contributionUris);
+    void registerProfile(URI profileUri, List<URI> contributionUris) throws DuplicateProfileException;
 
     /**
      * Installs a profile. This operation involves installing contributions contained in the profile that have not been previously installed.

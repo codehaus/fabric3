@@ -59,6 +59,7 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.DuplicateContributionException;
+import org.fabric3.host.contribution.DuplicateProfileException;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.host.contribution.RemoveException;
 import org.fabric3.host.contribution.StoreException;
@@ -236,6 +237,15 @@ public class ContributionServiceImpl implements ContributionService {
         return uris;
     }
 
+    public boolean profileExists(URI uri) {
+        for (Contribution contribution : metaDataStore.getContributions()) {
+            if (contribution.getProfiles().contains(uri)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void installProfile(URI uri) throws InstallException, ContributionNotFoundException {
         List<Contribution> toInstall = new ArrayList<Contribution>();
         for (Contribution contribution : metaDataStore.getContributions()) {
@@ -290,7 +300,10 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    public void registerProfile(URI profileUri, List<URI> contributionUris) {
+    public void registerProfile(URI profileUri, List<URI> contributionUris) throws DuplicateProfileException {
+        if (profileExists(profileUri)) {
+            throw new DuplicateProfileException("Profile already installed: " + profileUri);
+        }
         for (URI contributionUri : contributionUris) {
             Contribution contribution = metaDataStore.find(contributionUri);
             if (contribution == null) {

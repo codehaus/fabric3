@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.DuplicateProfileException;
 import org.fabric3.host.contribution.StoreException;
 
 /**
@@ -72,12 +73,18 @@ public class ProfileServlet extends HttpServlet {
                 return;
             }
             URI uri = new URI(substr);  // remove the leading "/"
+            if (contributionService.profileExists(uri)) {
+                resp.setStatus(420);
+                return;
+            }
             store(uri, req.getInputStream());
             resp.setStatus(201);
         } catch (URISyntaxException e) {
             resp.setStatus(400);
             resp.getWriter().write("<?xml version=\"1.0\" encoding=\"ASCII\"?><description>Invalid URI: " + substr + "</description>");
             throw new ServletException("Invalid contribution name", e);
+        } catch (DuplicateProfileException e) {
+            resp.setStatus(420);
         } catch (IOException e) {
             resp.setStatus(422);
             resp.getWriter().write("<?xml version=\"1.0\" encoding=\"ASCII\"?><description>Error storing profile</description>");
