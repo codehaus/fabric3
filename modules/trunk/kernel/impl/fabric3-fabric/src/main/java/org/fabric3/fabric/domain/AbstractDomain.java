@@ -58,6 +58,7 @@ import org.fabric3.spi.domain.RoutingException;
 import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.generator.ZoneCommands;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -236,8 +237,11 @@ public abstract class AbstractDomain implements Domain {
         Collection<LogicalComponent<?>> components = domain.getComponents();
         try {
             CommandMap commandMap = generator.generate(components, false);
-            List<Command> commands = commandMap.getCommandsForZone(zoneId);
+            ZoneCommands zoneCommands = commandMap.getZoneCommands(zoneId);
+            List<Command> extensionCommands = zoneCommands.getExtensionCommands();
+            List<Command> commands = zoneCommands.getCommands();
             CommandMap filtered = new CommandMap(commandMap.getId(), correlationId, true);
+            filtered.addExtensionCommands(zoneId, extensionCommands);
             filtered.addCommands(zoneId, commands);
             routingService.route(filtered);
         } catch (GenerationException e) {

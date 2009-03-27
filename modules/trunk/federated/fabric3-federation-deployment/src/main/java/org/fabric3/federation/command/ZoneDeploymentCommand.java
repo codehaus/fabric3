@@ -16,8 +16,6 @@
  */
 package org.fabric3.federation.command;
 
-import java.util.List;
-
 import org.fabric3.spi.command.Command;
 
 /**
@@ -29,20 +27,23 @@ public class ZoneDeploymentCommand implements Command {
     private static final long serialVersionUID = 8673100303949676875L;
 
     private String id;
-    private List<Command> commands;
+    private byte[] extensionCommands;
+    private byte[] commands;
     private String correlationId;
     private boolean synchronization;
 
     /**
      * Constructor.
      *
-     * @param id              the unique command id
-     * @param commands        the set of commands used to deploy components
-     * @param correlationId   the correlation id used to associate the deployment command with an originating request
-     * @param synchronization true if this command was in response to a runtime request to synchronize with the domain
+     * @param id                the unique command id
+     * @param extensionCommands the serialized set of commands used to deploy extensions required to run the components being deployed
+     * @param commands          the serialized set of commands used to deploy components
+     * @param correlationId     the correlation id used to associate the deployment command with an originating request
+     * @param synchronization   true if this command was in response to a runtime request to synchronize with the domain
      */
-    public ZoneDeploymentCommand(String id, List<Command> commands, String correlationId, boolean synchronization) {
+    public ZoneDeploymentCommand(String id, byte[] extensionCommands, byte[] commands, String correlationId, boolean synchronization) {
         this.id = id;
+        this.extensionCommands = extensionCommands;
         this.commands = commands;
         this.correlationId = correlationId;
         this.synchronization = synchronization;
@@ -76,11 +77,20 @@ public class ZoneDeploymentCommand implements Command {
     }
 
     /**
-     * Returns the list of commands used to deploy components.
+     * Returns the serialized list of extension commands used to deploy components.
      *
-     * @return the list of commands used to deploy components
+     * @return the serialized list of extension commands used to deploy components
      */
-    public List<Command> getCommands() {
+    public byte[] getExtensionCommands() {
+        return extensionCommands;
+    }
+
+    /**
+     * Returns the serialized list of commands used to deploy components.
+     *
+     * @return the serialized list of commands used to deploy components
+     */
+    public byte[] getCommands() {
         return commands;
     }
 

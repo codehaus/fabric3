@@ -39,6 +39,14 @@
            name="CommandGeneratorsBootComposite"
            autowire="true">
 
+    <component name="ContributionCollator">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.ContributionCollatorImpl"/>
+    </component>
+
+    <component name="ExtensionGenerator">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.extension.ExtensionGeneratorImpl"/>
+    </component>
+
     <component name="ClassLoaderGenerator">
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
     </component>

@@ -36,6 +36,7 @@ package org.fabric3.federation.routing;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -71,11 +72,14 @@ public class FederatedRoutingService implements RoutingService {
         String id = commandMap.getId();
         for (String zone : commandMap.getZones()) {
             try {
-                List<Command> commands = commandMap.getCommandsForZone(zone);
                 monitor.routeCommands(zone);
+                List<Command> extensionCommands = commandMap.getZoneCommands(zone).getExtensionCommands();
+                byte[] serializedExtensionCommands = serialize((Serializable) extensionCommands);
+                List<Command> commands = commandMap.getZoneCommands(zone).getCommands();
+                byte[] serializedCommands = serialize((Serializable) commands);
                 String correlationId = commandMap.getCorrelationId();
                 boolean synchronization = commandMap.isSynchornization();
-                Command command = new ZoneDeploymentCommand(id, commands, correlationId, synchronization);
+                Command command = new ZoneDeploymentCommand(id, serializedExtensionCommands, serializedCommands, correlationId, synchronization);
                 ByteArrayOutputStream bas = new ByteArrayOutputStream();
                 MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
                 stream.writeObject(command);
@@ -89,4 +93,10 @@ public class FederatedRoutingService implements RoutingService {
 
     }
 
+    private byte[] serialize(Serializable serializable) throws IOException {
+        ByteArrayOutputStream bas = new ByteArrayOutputStream();
+        MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
+        stream.writeObject(serializable);
+        return bas.toByteArray();
+    }
 }

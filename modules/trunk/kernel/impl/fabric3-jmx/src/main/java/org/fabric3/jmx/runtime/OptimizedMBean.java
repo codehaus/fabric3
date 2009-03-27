@@ -16,8 +16,8 @@
  */
 package org.fabric3.jmx.runtime;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import javax.management.Attribute;
 import javax.management.AttributeNotFoundException;
@@ -26,11 +26,11 @@ import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.ReflectionException;
 
-import org.fabric3.spi.invocation.WorkContextTunnel;
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 
 /**
  * @version $Rev$ $Date$
@@ -92,6 +92,8 @@ public class OptimizedMBean<T> extends AbstractMBean {
             throw new AssertionError(e);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
+            // FIXME print to a monitor
+            cause.printStackTrace();
             if (cause instanceof Exception) {
                 throw new MBeanException((Exception) e.getCause());
             } else {

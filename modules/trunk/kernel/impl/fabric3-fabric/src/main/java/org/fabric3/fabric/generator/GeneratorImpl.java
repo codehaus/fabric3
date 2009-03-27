@@ -48,12 +48,15 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
 import org.fabric3.fabric.generator.context.StartContextCommandGenerator;
 import org.fabric3.fabric.generator.context.StopContextCommandGenerator;
+import org.fabric3.fabric.generator.extension.ExtensionGenerator;
 import org.fabric3.spi.command.Command;
+import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Default implementation of the physical model generator. This implementation topologically sorts components according to their position in the
@@ -72,14 +75,18 @@ public class GeneratorImpl implements Generator {
     };
 
     private final List<CommandGenerator> commandGenerators;
+    private ContributionCollator collator;
     private ClassLoaderCommandGenerator classLoaderCommandGenerator;
     private StartContextCommandGenerator startContextCommandGenerator;
     private StopContextCommandGenerator stopContextCommandGenerator;
+    private ExtensionGenerator extensionGenerator;
 
     public GeneratorImpl(@Reference List<CommandGenerator> commandGenerators,
+                         @Reference ContributionCollator collator,
                          @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator,
                          @Reference StartContextCommandGenerator startContextCommandGenerator,
                          @Reference StopContextCommandGenerator stopContextCommandGenerator) {
+        this.collator = collator;
         this.classLoaderCommandGenerator = classLoaderCommandGenerator;
         this.startContextCommandGenerator = startContextCommandGenerator;
         this.stopContextCommandGenerator = stopContextCommandGenerator;
@@ -87,11 +94,32 @@ public class GeneratorImpl implements Generator {
         this.commandGenerators = sort(commandGenerators);
     }
 
+    /**
+     * Lazily injected after bootstrap.
+     *
+     * @param extensionGenerator the extension  generator
+     */
+    @Reference(required = false)
+    public void setExtensionGenerator(ExtensionGenerator extensionGenerator) {
+        this.extensionGenerator = extensionGenerator;
+    }
+
     public CommandMap generate(Collection<LogicalComponent<?>> components, boolean incremental) throws GenerationException {
         List<LogicalComponent<?>> sorted = topologicalSort(components);
         String id = UUID.randomUUID().toString();
         CommandMap commandMap = new CommandMap(id);
-        Map<String, List<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted, incremental);
+        Map<String, List<Contribution>> deployingContributions;
+        if (incremental) {
+            deployingContributions = collator.collateContributions(sorted, LogicalState.NEW);
+        } else {
+            deployingContributions = collator.collateContributions(sorted, null);
+        }
+
+        // generate extension provision commands
+        generateExtensionCommands(commandMap, deployingContributions, true);
+
+        // generate classloader provision commands
+        Map<String, List<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted, deployingContributions, incremental);
         for (Map.Entry<String, List<Command>> entry : commandsPerZone.entrySet()) {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
@@ -108,7 +136,7 @@ public class GeneratorImpl implements Generator {
                 Command command = generator.generate(component, incremental);
                 if (command != null) {
                     //xcv 123
-                    if (commandMap.getCommandsForZone(component.getZone()).contains(command)) {
+                    if (commandMap.getZoneCommands(component.getZone()).getCommands().contains(command)) {
                         continue;
                     }
                     commandMap.addCommand(component.getZone(), command);
@@ -122,13 +150,35 @@ public class GeneratorImpl implements Generator {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
+
         // release classloaders for components being undeployed that are no longer referenced
-        Map<String, List<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(sorted);
+        Map<String, List<Contribution>> undeployingContributions = collator.collateContributions(sorted, LogicalState.MARKED);
+        Map<String, List<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(sorted, undeployingContributions);
         for (Map.Entry<String, List<Command>> entry : releaseCommandsPerZone.entrySet()) {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
+        // release extensions that are no longer used
+        generateExtensionCommands(commandMap, undeployingContributions, false);
+
         return commandMap;
+    }
+
+    private void generateExtensionCommands(CommandMap commandMap, Map<String, List<Contribution>> deployingContributions, boolean provision)
+            throws GenerationException {
+        if (extensionGenerator != null) {
+            Map<String, Command> extensionsPerZone = extensionGenerator.generate(deployingContributions, provision);
+            if (extensionsPerZone != null) {
+                for (Map.Entry<String, Command> entry : extensionsPerZone.entrySet()) {
+                    if (provision) {
+                        // if an extension is being provisioned, the command needs to be executed before others
+                        commandMap.addExtensionCommand(entry.getKey(), entry.getValue());
+                    } else {
+                        commandMap.addCommand(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
+        }
     }
 
 

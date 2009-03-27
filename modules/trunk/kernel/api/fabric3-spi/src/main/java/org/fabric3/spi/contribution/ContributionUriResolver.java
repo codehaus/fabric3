@@ -28,6 +28,14 @@ import java.net.URL;
 public interface ContributionUriResolver {
 
     /**
+     * Decodes a URI.
+     *
+     * @param uri the uri
+     * @return the decoded uri
+     */
+    public URI decode(URI uri);
+
+    /**
      * Resolves the contribution artifact associated with the URI, returning a local URL by which it may be dereferenced
      *
      * @param contributionURI the contribution URI

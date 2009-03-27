@@ -34,7 +34,6 @@
  */
 package org.fabric3.spi.generator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class CommandMap {
     private String correlationId;
     private boolean synchornization;
 
-    private Map<String, List<Command>> commands = new HashMap<String, List<Command>>();
+    private Map<String, ZoneCommands> commands = new HashMap<String, ZoneCommands>();
 
     public CommandMap(String id) {
         this.id = id;
@@ -77,30 +76,44 @@ public class CommandMap {
     }
 
     public void addCommand(String zone, Command command) {
-        List<Command> cmds = getCommandsForZone(zone);
-        cmds.add(command);
+        ZoneCommands cmds = getZoneCommands(zone);
+        cmds.addCommand(command);
     }
 
-    public void addCommands(String zone, List<Command> commandList) {
-        List<Command> cmds = getCommandsForZone(zone);
-        cmds.addAll(commandList);
+    public void addExtensionCommand(String zone, Command command) {
+        ZoneCommands cmds = getZoneCommands(zone);
+        cmds.addExtensionCommand(command);
+    }
+
+    public void addExtensionCommands(String zone, List<Command> commands) {
+        ZoneCommands cmds = getZoneCommands(zone);
+        cmds.addExtensionCommands(commands);
+    }
+
+    public void addCommands(String zone, List<Command> commands) {
+        ZoneCommands cmds = getZoneCommands(zone);
+        cmds.addCommands(commands);
     }
 
     public Set<String> getZones() {
         return commands.keySet();
     }
 
-    public List<Command> getCommandsForZone(String zone) {
-        List<Command> cmds = commands.get(zone);
+    public ZoneCommands getZoneCommands(String zone) {
+        ZoneCommands cmds = commands.get(zone);
         if (cmds == null) {
-            cmds = new ArrayList<Command>();
+            cmds = new ZoneCommands();
             commands.put(zone, cmds);
         }
         return cmds;
     }
 
     public Map<String, List<Command>> getCommands() {
-        return commands;
+        Map<String, List<Command>> ret = new HashMap<String, List<Command>>();
+        for (Map.Entry<String, ZoneCommands> entry : commands.entrySet()) {
+            ret.put(entry.getKey(), entry.getValue().getCommands());
+        }
+        return ret;
     }
 
 }

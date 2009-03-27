@@ -54,10 +54,12 @@ import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
 import org.fabric3.fabric.executor.ReferenceConnectionCommandExecutor;
 import org.fabric3.fabric.executor.StartComponentCommandExecutor;
 import org.fabric3.fabric.executor.StartContextCommandExecutor;
+import org.fabric3.fabric.generator.ContributionCollator;
+import org.fabric3.fabric.generator.ContributionCollatorImpl;
 import org.fabric3.fabric.generator.Generator;
 import org.fabric3.fabric.generator.GeneratorImpl;
-import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.GeneratorRegistry;
+import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl;
 import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
@@ -299,8 +301,7 @@ public class BootstrapAssemblyFactory {
         return new ClassLoaderBuilderImpl(wireBuilder, classLoaderRegistry, resolver, cpRegistry, componentManager, info);
     }
 
-    private static Generator createGenerator(LogicalComponentManager logicalComponentManager,
-                                             MetaDataStore metaDataStore) {
+    private static Generator createGenerator(LogicalComponentManager logicalComponentManager, MetaDataStore metaDataStore) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
@@ -312,7 +313,7 @@ public class BootstrapAssemblyFactory {
                 new HashMap<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>>();
         generators.put(JavaContributionWire.class, javaGenerator);
         generators.put(LocationContributionWire.class, locationGenerator);
-        ClassLoaderCommandGenerator classLoaderCommandGenerator = new ClassLoaderCommandGeneratorImpl(metaDataStore, generators);
+        ClassLoaderCommandGenerator classLoaderCommandGenerator = new ClassLoaderCommandGeneratorImpl(generators);
 
         List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
         commandGenerators.add(new BuildComponentCommandGenerator(generatorRegistry, 1));
@@ -322,7 +323,8 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new StartComponentCommandGenerator(3));
         StopContextCommandGenerator stopContextGenerator = new StopContextCommandGeneratorImpl();
         StartContextCommandGenerator startContextGenerator = new StartContextCommandGeneratorImpl();
-        return new GeneratorImpl(commandGenerators, classLoaderCommandGenerator, startContextGenerator, stopContextGenerator);
+        ContributionCollator collator = new ContributionCollatorImpl(metaDataStore);
+        return new GeneratorImpl(commandGenerators, collator, classLoaderCommandGenerator, startContextGenerator, stopContextGenerator);
     }
 
     @SuppressWarnings({"unchecked"})

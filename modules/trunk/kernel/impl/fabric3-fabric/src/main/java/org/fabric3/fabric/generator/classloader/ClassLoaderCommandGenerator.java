@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.fabric3.spi.command.Command;
+import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -33,20 +34,24 @@ public interface ClassLoaderCommandGenerator {
     /**
      * Generates classloader provisioning commands for a set of components being deployed.
      *
-     * @param components  the components being deployed
-     * @param incremental true if generation should be incremental, i.e. commands are only generated for new components opposed to existing ones
+     * @param components    the components being deployed
+     * @param contributions the required contributions for the deployment, grouped by zone
+     * @param incremental   true if generation should be incremental, i.e. commands are only generated for new components opposed to existing ones
      * @return the classloader provisioning commands grouped by zone where they are to be provisioned
      * @throws GenerationException if an error occurs during generation
      */
-    Map<String, List<Command>> generate(List<LogicalComponent<?>> components, boolean incremental) throws GenerationException;
+    Map<String, List<Command>> generate(List<LogicalComponent<?>> components, Map<String, List<Contribution>> contributions, boolean incremental)
+            throws GenerationException;
 
     /**
      * Generates classloader release commands for a set of components being undeployed.
      *
-     * @param components the components being undeployed
+     * @param components    the components being undeployed
+     * @param contributions the required contributions for the deployment, grouped by zone
      * @return the classloader provisioning commands grouped by zone where they are being undeployed
      * @throws GenerationException if an error occurs during generation
      */
-    Map<String, List<Command>> release(List<LogicalComponent<?>> components) throws GenerationException;
+    Map<String, List<Command>> release(List<LogicalComponent<?>> components, Map<String, List<Contribution>> contributions)
+            throws GenerationException;
 
 }

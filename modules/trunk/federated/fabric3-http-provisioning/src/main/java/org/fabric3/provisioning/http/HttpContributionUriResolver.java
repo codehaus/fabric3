@@ -48,6 +48,14 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
         this.metaDataStore = store;
     }
 
+    public URI decode(URI uri) {
+        if (!HTTP_SCHEME.equals(uri.getScheme())) {
+            // the contribution is being provisioned locally
+            return uri;
+        }
+        return URI.create(uri.getPath().substring(HttpProvisionConstants.REPOSITORY.length() + 2)); // +2 for leading and trailing '/'
+    }
+
     public URL resolve(URI uri) throws ResolutionException {
         if (!HTTP_SCHEME.equals(uri.getScheme())) {
             // the contribution is being provisioned locally, resolve it directly
@@ -57,7 +65,7 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
             }
             return contribution.getLocation();
         }
-        InputStream stream = null;
+        InputStream stream;
         try {
             URI decoded = URI.create(uri.getPath().substring(HttpProvisionConstants.REPOSITORY.length() + 2)); // +2 for leading and trailing '/'
             // check to see if the archive is cached locally

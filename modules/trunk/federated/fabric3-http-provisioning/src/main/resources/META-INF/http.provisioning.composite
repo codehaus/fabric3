@@ -26,6 +26,7 @@
     </component>
 
     <wire source="ClassLoaderGenerator/encoder" target="HTTPArtifactLocationEncoder"/>
+    <wire source="ExtensionGenerator/encoder" target="HTTPArtifactLocationEncoder"/>
 
     <component name="HttpContributionUriResolver">
         <f3-impl:implementation.system
@@ -33,6 +34,7 @@
     </component>
 
     <wire source="ClassLoaderBuilder/contributionUriResolver" target="HttpContributionUriResolver"/>
+    <wire source="ProvisionExtensionsCommandExecutor/contributionUriResolver" target="HttpContributionUriResolver"/>
 
 
 </composite>

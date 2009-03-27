@@ -14,41 +14,27 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.command;
+package org.fabric3.fabric.command;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fabric3.spi.command.Command;
 
 /**
  * @version $Revision$ $Date$
  */
-public class RuntimeDeploymentCommand implements Command {
-    private static final long serialVersionUID = -3864446712541806877L;
+public abstract class AbstractExtensionsCommand implements Command {
+    private static final long serialVersionUID = -4757212674286772185L;
 
-    private String id;
-    private byte[] extensionCommands;
-    private byte[] commands;
-    private boolean synchronization;
+    private List<URI> extensionUris = new ArrayList<URI>();
 
-    public RuntimeDeploymentCommand(String id, byte[] extensionCommands, byte[] commands, boolean synchronization) {
-        this.id = id;
-        this.extensionCommands = extensionCommands;
-        this.commands = commands;
-        this.synchronization = synchronization;
+    public List<URI> getExtensionUris() {
+        return extensionUris;
     }
 
-    public byte[] getExtensionCommands() {
-        return extensionCommands;
-    }
-
-    public byte[] getCommands() {
-        return commands;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public boolean isSynchronization() {
-        return synchronization;
+    public void addExtensionUri(URI uri) {
+        extensionUris.add(uri);
     }
 }

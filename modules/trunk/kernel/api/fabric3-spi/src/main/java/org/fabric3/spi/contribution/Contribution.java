@@ -322,4 +322,21 @@ public class Contribution implements Serializable {
     public void removeProfile(URI uri) {
         profiles.remove(uri);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Contribution that = (Contribution) o;
+
+        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
+
+    }
+
+
 }

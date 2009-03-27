@@ -86,4 +86,14 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.executor.ReferenceConnectionCommandExecutor"/>
     </component>
 
+    <component name="ProvisionExtensionsCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.ProvisionExtensionsCommandExecutor"/>
+        <reference name="domain" target="RuntimeDomain"/>
+    </component>
+
+    <component name="UnProvisionExtensionsCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.UnProvisionExtensionsCommandExecutor"/>
+        <reference name="domain" target="RuntimeDomain"/>
+    </component>
+
 </composite>

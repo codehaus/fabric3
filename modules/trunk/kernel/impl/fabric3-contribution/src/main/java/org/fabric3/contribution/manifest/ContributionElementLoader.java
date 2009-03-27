@@ -32,8 +32,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Constants;
-import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.Namespaces;
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.Export;
@@ -83,6 +83,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
         validateContributionAttributes(reader, context);
         boolean extension = Boolean.valueOf(reader.getAttributeValue(Namespaces.CORE, "extension"));
         manifest.setExtension(extension);
+        parseCapabilities(reader, manifest);
         while (true) {
             int event = reader.next();
             switch (event) {
@@ -114,26 +115,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                     } else {
                         qName = new QName(null, name);
                     }
-                    String modeAttr = reader.getAttributeValue(null, "modes");
-                    List<RuntimeMode> runtimeModes;
-                    if (modeAttr == null) {
-                        runtimeModes = Deployable.DEFAULT_MODES;
-                    } else {
-                        String[] modes = modeAttr.trim().split(" ");
-                        runtimeModes = new ArrayList<RuntimeMode>();
-                        for (String mode : modes) {
-                            if ("controller".equals(mode)) {
-                                runtimeModes.add(RuntimeMode.CONTROLLER);
-                            } else if ("participant".equals(mode)) {
-                                runtimeModes.add(RuntimeMode.PARTICIPANT);
-                            } else {
-                                runtimeModes = Deployable.DEFAULT_MODES;
-                                InvalidValue error = new InvalidValue("Invalid mode attrbiute: " + modeAttr, reader);
-                                context.addError(error);
-                                break;
-                            }
-                        }
-                    }
+                    List<RuntimeMode> runtimeModes = parseRuntimeModes(reader, context);
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE, runtimeModes);
                     manifest.addDeployable(deployable);
                 } else {
@@ -171,10 +153,53 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
         }
     }
 
+    private void parseCapabilities(XMLStreamReader reader, ContributionManifest manifest) {
+
+        String requiresAttr = reader.getAttributeValue(Namespaces.CORE, "required-capabilities");
+        if (requiresAttr != null) {
+            String[] requires = requiresAttr.trim().split(" ");
+            for (String require : requires) {
+                manifest.addRequiredCapability(require);
+            }
+        }
+
+        String providesAttr = reader.getAttributeValue(Namespaces.CORE, "capabilities");
+        if (providesAttr != null) {
+            String[] provides = providesAttr.trim().split(" ");
+            for (String provide : provides) {
+                manifest.addProvidedCapability(provide);
+            }
+        }
+    }
+
+    private List<RuntimeMode> parseRuntimeModes(XMLStreamReader reader, IntrospectionContext context) {
+        String modeAttr = reader.getAttributeValue(null, "modes");
+        List<RuntimeMode> runtimeModes;
+        if (modeAttr == null) {
+            runtimeModes = Deployable.DEFAULT_MODES;
+        } else {
+            String[] modes = modeAttr.trim().split(" ");
+            runtimeModes = new ArrayList<RuntimeMode>();
+            for (String mode : modes) {
+                if ("controller".equals(mode)) {
+                    runtimeModes.add(RuntimeMode.CONTROLLER);
+                } else if ("participant".equals(mode)) {
+                    runtimeModes.add(RuntimeMode.PARTICIPANT);
+                } else {
+                    runtimeModes = Deployable.DEFAULT_MODES;
+                    InvalidValue error = new InvalidValue("Invalid mode attrbiute: " + modeAttr, reader);
+                    context.addError(error);
+                    break;
+                }
+            }
+        }
+        return runtimeModes;
+    }
+
     private void validateContributionAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"extension".equals(name)) {
+            if (!"extension".equals(name) && !"capabilities".equals(name) && !"required-capabilities".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

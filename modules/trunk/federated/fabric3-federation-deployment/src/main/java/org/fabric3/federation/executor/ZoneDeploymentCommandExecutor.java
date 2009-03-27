@@ -16,8 +16,10 @@
  */
 package org.fabric3.federation.executor;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -29,6 +31,8 @@ import org.fabric3.federation.command.RuntimeDeploymentCommand;
 import org.fabric3.federation.command.ZoneDeploymentCommand;
 import org.fabric3.federation.event.RuntimeSynchronized;
 import org.fabric3.model.type.component.Scope;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.component.InstanceLifecycleException;
@@ -57,12 +61,14 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
     private EventService eventService;
     private ZoneDeploymentCommandExecutorMonitor monitor;
     private boolean domainSynchronized;
+    private ClassLoaderRegistry classLoaderRegistry;
 
     public ZoneDeploymentCommandExecutor(@Reference ZoneManager zoneManager,
                                          @Reference CommandExecutorRegistry executorRegistry,
                                          @Reference RuntimeService runtimeService,
                                          @Reference ScopeRegistry scopeRegistry,
                                          @Reference EventService eventService,
+                                         @Reference ClassLoaderRegistry classLoaderRegistry,
                                          @Monitor ZoneDeploymentCommandExecutorMonitor monitor) {
         this.zoneManager = zoneManager;
         this.executorRegistry = executorRegistry;
@@ -70,6 +76,7 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
         this.scopeRegistry = scopeRegistry;
         this.eventService = eventService;
         this.monitor = monitor;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     @Init
@@ -150,11 +157,24 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
     }
 
     private void routeLocally(ZoneDeploymentCommand command) throws ExecutionException {
-        String id = command.getId();
-        List<Command> commands = command.getCommands();
-        // command destined for this runtime
         String runtimeName = runtimeService.getRuntimeName();
+        String id = command.getId();
         monitor.routed(runtimeName, id);
+
+        // execute the extension commands first before deserializing the other commands as they may contain extension-specific metadata classes
+        byte[] serializedExtensionCommands = command.getExtensionCommands();
+        List<Command> extensionCommands = deserialize(serializedExtensionCommands);
+        for (Command cmd : extensionCommands) {
+            executorRegistry.execute(cmd);
+        }
+        try {
+            scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
+        } catch (InstanceLifecycleException e) {
+            throw new ExecutionException(e);
+        }
+
+        byte[] serializedCommands = command.getCommands();
+        List<Command> commands = deserialize(serializedCommands);
         for (Command cmd : commands) {
             executorRegistry.execute(cmd);
         }
@@ -170,12 +190,37 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
         String id = command.getId();
-        List<Command> commands = command.getCommands();
+        byte[] extensionCommands = command.getExtensionCommands();
+        byte[] commands = command.getCommands();
         boolean synchronization = command.isSynchronization();
-        RuntimeDeploymentCommand runtimeCommand = new RuntimeDeploymentCommand(id, commands, synchronization);
+        RuntimeDeploymentCommand runtimeCommand = new RuntimeDeploymentCommand(id, extensionCommands, commands, synchronization);
         stream.writeObject(runtimeCommand);
         stream.close();
         return bas.toByteArray();
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private List<Command> deserialize(byte[] commands) throws ExecutionException {
+        MultiClassLoaderObjectInputStream ois = null;
+        try {
+            InputStream stream = new ByteArrayInputStream(commands);
+            // Deserialize the command set. As command set classes may be loaded in an extension classloader, use a MultiClassLoaderObjectInputStream
+            // to deserialize classes in the appropriate classloader.
+            ois = new MultiClassLoaderObjectInputStream(stream, classLoaderRegistry);
+            return (List<Command>) ois.readObject();
+        } catch (IOException e) {
+            throw new ExecutionException(e);
+        } catch (ClassNotFoundException e) {
+            throw new ExecutionException(e);
+        } finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+            } catch (IOException e) {
+                // ignore;
+            }
+        }
     }
 
 }

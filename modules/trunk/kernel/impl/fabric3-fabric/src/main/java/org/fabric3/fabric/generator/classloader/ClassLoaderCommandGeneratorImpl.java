@@ -31,16 +31,13 @@ import org.fabric3.contribution.DependencyService;
 import org.fabric3.fabric.command.AttachExtensionCommand;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
-import org.fabric3.host.Names;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.contribution.ContributionWire;
-import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.generator.ClassLoaderWireGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 
@@ -68,14 +65,11 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
  * by two composites that is released when one composite is undeployed will not be removed until both composites are undeployed.
  */
 public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenerator {
-    private MetaDataStore store;
     private Map<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>> generators;
     private ContributionUriEncoder encoder;
     private DependencyService dependencyService;
 
-    public ClassLoaderCommandGeneratorImpl(@Reference MetaDataStore store,
-                                           @Reference Map<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>> generators) {
-        this.store = store;
+    public ClassLoaderCommandGeneratorImpl(@Reference Map<Class<? extends ContributionWire<?, ?>>, ClassLoaderWireGenerator<?>> generators) {
         this.generators = generators;
     }
 
@@ -100,31 +94,26 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         this.dependencyService = dependencyService;
     }
 
-    public Map<String, List<Command>> generate(List<LogicalComponent<?>> components, boolean incremental) throws GenerationException {
+    public Map<String, List<Command>> generate(List<LogicalComponent<?>> components,
+                                               Map<String, List<Contribution>> contributions,
+                                               boolean incremental) throws GenerationException {
         // commands mapped to zone
-        Map<String, List<Contribution>> collated;
-        if (incremental) {
-            collated = collateContributions(components, LogicalState.NEW);
-        } else {
-            collated = collateContributions(components, null);
-        }
 
         // Create the classloader definitions for contributions required to run the components being deployed.
         // These are created first since they must be instantitated on a runtime prior to component classloaders
-        Map<String, List<PhysicalClassLoaderDefinition>> definitionsPerZone = createContributionDefinitions(collated);
+        Map<String, List<PhysicalClassLoaderDefinition>> definitionsPerZone = createContributionDefinitions(contributions);
         Map<String, List<Command>> commands = createProvisionCommands(definitionsPerZone);
-        createExtensionCommands(commands, collated);
+        createExtensionCommands(commands, contributions);
         return commands;
     }
 
-    public Map<String, List<Command>> release(List<LogicalComponent<?>> components) throws GenerationException {
+    public Map<String, List<Command>> release(List<LogicalComponent<?>> components, Map<String, List<Contribution>> contributions)
+            throws GenerationException {
         // commands mapped to the zone
         Map<String, List<Command>> commandsPerZone = new HashMap<String, List<Command>>();
 
-        Map<String, List<Contribution>> collated = collateContributions(components, LogicalState.MARKED);
-
         // generate commands to unprovision contribution classloaders
-        for (Map.Entry<String, List<Contribution>> entry : collated.entrySet()) {
+        for (Map.Entry<String, List<Contribution>> entry : contributions.entrySet()) {
             if (entry.getKey() == null) {
                 // Don't uprovision the contribution classloader for locally deployed components since it is shared by the contrbution service
                 // In a multi-VM domain, the contribution classloaders are unprovisioned when they are no longer referenced by component classloaders.
@@ -155,44 +144,6 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         }
 
         return commandsPerZone;
-    }
-
-    /**
-     * Collates contributions for components being deployed or undeployed by zone. That is, the list of components is processed to determine the
-     * required set of contributions keyed by zone where the components are to be deployed to or undeployed from.
-     *
-     * @param components the set of components
-     * @param state      the logical state. This can be LogicalState#NEW or LogicalState#MARKED representing deploy and undeploy respectively, or null
-     *                   if a non-incremental generation is performed
-     * @return the set of required contributions grouped by zone
-     */
-    private Map<String, List<Contribution>> collateContributions(List<LogicalComponent<?>> components, LogicalState state) {
-        // collate all contributions that must be provisioned as part of the change set
-        Map<String, List<Contribution>> contributionsPerZone = new HashMap<String, List<Contribution>>();
-        for (LogicalComponent<?> component : components) {
-            if (state != null && state != component.getState()) {
-                continue;
-            }
-            URI contributionUri = component.getDefinition().getContributionUri();
-            String zone = component.getZone();
-            List<Contribution> contributions = contributionsPerZone.get(zone);
-            if (contributions == null) {
-                contributions = new ArrayList<Contribution>();
-                contributionsPerZone.put(zone, contributions);
-            }
-            Contribution contribution = store.find(contributionUri);
-            // imported contributions must also be provisioned
-            List<ContributionWire<?, ?>> contributionWires = contribution.getWires();
-            for (ContributionWire<?, ?> wire : contributionWires) {
-                URI importedUri = wire.getExportContributionUri();
-                Contribution imported = store.find(importedUri);
-                if (!contributions.contains(imported) && !Names.HOST_CONTRIBUTION.equals(importedUri)) {
-                    contributions.add(imported);
-                }
-            }
-            contributions.add(contribution);
-        }
-        return contributionsPerZone;
     }
 
     /**

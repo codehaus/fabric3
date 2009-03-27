@@ -64,8 +64,8 @@ public class LocalRoutingService implements RoutingService {
     }
 
     public void route(CommandMap commandMap) throws RoutingException {
-
-        List<Command> commands = commandMap.getCommandsForZone(null);
+        // ignore extension commands since extensions will already be loaded locally
+        List<Command> commands = commandMap.getZoneCommands(null).getCommands();
         for (Command command : commands) {
             try {
                 registry.execute(command);

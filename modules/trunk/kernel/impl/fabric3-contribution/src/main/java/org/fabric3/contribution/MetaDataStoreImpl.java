@@ -259,6 +259,41 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return extensionPoints;
     }
 
+    public Set<Contribution> resolveCapabilities(Contribution contribution) {
+        Set<Contribution> extensions = new HashSet<Contribution>();
+        return resolveCapabilities(contribution, extensions);
+    }
+
+    private Set<Contribution> resolveCapabilities(Contribution contribution, Set<Contribution> extensions) {
+        List<String> required = contribution.getManifest().getRequiredCapabilities();
+        for (String capability : required) {
+            for (Contribution entry : cache.values()) {
+                if (entry.getManifest().getProvidedCapabilities().contains(capability) && !extensions.contains(entry)) {
+                    extensions.add(entry);
+                    resolveCapabilities(entry, extensions);
+                }
+            }
+        }
+        for (ContributionWire<?, ?> wire : contribution.getWires()) {
+            Contribution imported = cache.get(wire.getExportContributionUri());
+            if (!extensions.contains(imported)) {
+                extensions.add(imported);
+            }
+            // recurse for the imported contribution
+            resolveCapabilities(imported, extensions);
+        }
+        for (URI uri : contribution.getResolvedExtensionProviders()) {
+            Contribution provider = cache.get(uri);
+            if (!extensions.contains(provider)) {
+                extensions.add(provider);
+            }
+            // TODO figure out how to recurse up providers without introducing a cycle
+//            resolveCapabilities(provider, extensions);
+        }
+        return extensions;
+    }
+
+
     @SuppressWarnings({"unchecked"})
     private <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolveInternal(Contribution contribution,
                                                                                              Class<V> type,

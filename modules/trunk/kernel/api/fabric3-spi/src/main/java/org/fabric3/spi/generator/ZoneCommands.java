@@ -14,41 +14,42 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.command;
+package org.fabric3.spi.generator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fabric3.spi.command.Command;
 
 /**
  * @version $Revision$ $Date$
  */
-public class RuntimeDeploymentCommand implements Command {
-    private static final long serialVersionUID = -3864446712541806877L;
+public class ZoneCommands {
 
-    private String id;
-    private byte[] extensionCommands;
-    private byte[] commands;
-    private boolean synchronization;
+    private List<Command> extensionCommands = new ArrayList<Command>();
+    private List<Command> commands = new ArrayList<Command>();
 
-    public RuntimeDeploymentCommand(String id, byte[] extensionCommands, byte[] commands, boolean synchronization) {
-        this.id = id;
-        this.extensionCommands = extensionCommands;
-        this.commands = commands;
-        this.synchronization = synchronization;
+    public void addExtensionCommand(Command command) {
+        extensionCommands.add(command);
     }
 
-    public byte[] getExtensionCommands() {
+    public void addExtensionCommands(List<Command> command) {
+        extensionCommands.addAll(command);
+    }
+
+    public List<Command> getExtensionCommands() {
         return extensionCommands;
     }
 
-    public byte[] getCommands() {
+    public void addCommand(Command command) {
+        commands.add(command);
+    }
+
+    public void addCommands(List<Command> command) {
+        commands.addAll(command);
+    }
+
+    public List<Command> getCommands() {
         return commands;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public boolean isSynchronization() {
-        return synchronization;
     }
 }

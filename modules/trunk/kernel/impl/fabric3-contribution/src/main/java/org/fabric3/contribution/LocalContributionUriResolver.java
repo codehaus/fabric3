@@ -40,6 +40,10 @@ public class LocalContributionUriResolver implements ContributionUriResolver {
         this.store = store;
     }
 
+    public URI decode(URI uri) {
+        return uri;
+    }
+
     public URL resolve(URI uri) throws ResolutionException {
         Contribution contribution = store.find(uri);
         if (contribution == null) {

@@ -33,6 +33,8 @@ public class ContributionManifest implements Serializable {
     private boolean extension;
     private List<Export> exports = new ArrayList<Export>();
     private List<Import> imports = new ArrayList<Import>();
+    private List<String> requiredCapabilities = new ArrayList<String>();
+    private List<String> providedCapabilities = new ArrayList<String>();
     private List<Deployable> deployables = new ArrayList<Deployable>();
     private List<String> extensionPoints = new ArrayList<String>();
     private List<String> extend = new ArrayList<String>();
@@ -89,6 +91,42 @@ public class ContributionManifest implements Serializable {
      */
     public void addImport(Import imprt) {
         imports.add(imprt);
+    }
+
+    /**
+     * Adds a capablity required by the contribution.
+     *
+     * @param capability a capablity required by the contribution
+     */
+    public void addRequiredCapability(String capability) {
+        requiredCapabilities.add(capability);
+    }
+
+    /**
+     * Returns a list of capabilities required by this contribution.
+     *
+     * @return a list of capabilities required by this contribution
+     */
+    public List<String> getRequiredCapabilities() {
+        return requiredCapabilities;
+    }
+
+    /**
+     * Adds a capability provided by this contribution.
+     *
+     * @param capability a capability provided by this contribution
+     */
+    public void addProvidedCapability(String capability) {
+        providedCapabilities.add(capability);
+    }
+
+    /**
+     * Returns a list of capabilities provided by this contribution.
+     *
+     * @return a list of capabilities provided by this contribution
+     */
+    public List<String> getProvidedCapabilities() {
+        return providedCapabilities;
     }
 
     /**

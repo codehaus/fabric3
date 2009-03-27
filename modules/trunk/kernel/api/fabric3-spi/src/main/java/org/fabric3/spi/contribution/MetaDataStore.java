@@ -146,4 +146,12 @@ public interface MetaDataStore {
      * @return the URIs of the contibutions that provide the extension points
      */
     List<Contribution> resolveExtensionPoints(String name);
+
+    /**
+     * Resolves the extensions that provide capabilities required by the given contribution.
+     *
+     * @param contribution the contribution
+     * @return the extensions
+     */
+    Set<Contribution> resolveCapabilities(Contribution contribution);
 }
