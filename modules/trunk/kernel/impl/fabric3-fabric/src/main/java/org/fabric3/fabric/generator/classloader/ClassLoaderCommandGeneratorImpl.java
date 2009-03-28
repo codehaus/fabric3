@@ -37,7 +37,6 @@ import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.contribution.ContributionWire;
 import org.fabric3.spi.generator.ClassLoaderWireGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 
@@ -94,9 +93,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         this.dependencyService = dependencyService;
     }
 
-    public Map<String, List<Command>> generate(List<LogicalComponent<?>> components,
-                                               Map<String, List<Contribution>> contributions,
-                                               boolean incremental) throws GenerationException {
+    public Map<String, List<Command>> generate(Map<String, List<Contribution>> contributions) throws GenerationException {
         // commands mapped to zone
 
         // Create the classloader definitions for contributions required to run the components being deployed.
@@ -107,8 +104,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         return commands;
     }
 
-    public Map<String, List<Command>> release(List<LogicalComponent<?>> components, Map<String, List<Contribution>> contributions)
-            throws GenerationException {
+    public Map<String, List<Command>> release(Map<String, List<Contribution>> contributions) throws GenerationException {
         // commands mapped to the zone
         Map<String, List<Command>> commandsPerZone = new HashMap<String, List<Command>>();
 

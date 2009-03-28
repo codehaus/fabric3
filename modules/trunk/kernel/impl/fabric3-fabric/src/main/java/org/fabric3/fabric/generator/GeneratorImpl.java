@@ -119,7 +119,7 @@ public class GeneratorImpl implements Generator {
         generateExtensionCommands(commandMap, deployingContributions, true);
 
         // generate classloader provision commands
-        Map<String, List<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted, deployingContributions, incremental);
+        Map<String, List<Command>> commandsPerZone = classLoaderCommandGenerator.generate(deployingContributions);
         for (Map.Entry<String, List<Command>> entry : commandsPerZone.entrySet()) {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
@@ -153,7 +153,7 @@ public class GeneratorImpl implements Generator {
 
         // release classloaders for components being undeployed that are no longer referenced
         Map<String, List<Contribution>> undeployingContributions = collator.collateContributions(sorted, LogicalState.MARKED);
-        Map<String, List<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(sorted, undeployingContributions);
+        Map<String, List<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(undeployingContributions);
         for (Map.Entry<String, List<Command>> entry : releaseCommandsPerZone.entrySet()) {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }

@@ -22,36 +22,30 @@ import java.util.Map;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Generates commands for provisioning and releasing classloaders on runtimes for a set of components being deployed or undeployed.
+ * Generates commands for provisioning and releasing classloaders on runtimes for a set of contributions being deployed or undeployed.
  *
  * @version $Revision$ $Date$
  */
 public interface ClassLoaderCommandGenerator {
 
     /**
-     * Generates classloader provisioning commands for a set of components being deployed.
+     * Generates classloader provisioning commands for a set of contributions being deployed.
      *
-     * @param components    the components being deployed
      * @param contributions the required contributions for the deployment, grouped by zone
-     * @param incremental   true if generation should be incremental, i.e. commands are only generated for new components opposed to existing ones
      * @return the classloader provisioning commands grouped by zone where they are to be provisioned
      * @throws GenerationException if an error occurs during generation
      */
-    Map<String, List<Command>> generate(List<LogicalComponent<?>> components, Map<String, List<Contribution>> contributions, boolean incremental)
-            throws GenerationException;
+    Map<String, List<Command>> generate(Map<String, List<Contribution>> contributions) throws GenerationException;
 
     /**
-     * Generates classloader release commands for a set of components being undeployed.
+     * Generates classloader release commands for a set of contributions being undeployed.
      *
-     * @param components    the components being undeployed
      * @param contributions the required contributions for the deployment, grouped by zone
      * @return the classloader provisioning commands grouped by zone where they are being undeployed
      * @throws GenerationException if an error occurs during generation
      */
-    Map<String, List<Command>> release(List<LogicalComponent<?>> components, Map<String, List<Contribution>> contributions)
-            throws GenerationException;
+    Map<String, List<Command>> release(Map<String, List<Contribution>> contributions) throws GenerationException;
 
 }
