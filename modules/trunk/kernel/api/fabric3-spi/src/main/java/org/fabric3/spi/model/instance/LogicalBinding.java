@@ -54,6 +54,7 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     private final BD definition;
     private LogicalState state = LogicalState.NEW;
     private QName deployable;
+    private boolean assigned;
 
     public LogicalBinding(BD definition, Bindable parent) {
         super(null, parent, TYPE);
@@ -130,5 +131,23 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
      */
     public QName getDeployable() {
         return deployable;
+    }
+
+    /**
+     * Returns true if the binding was assigned - e.g. binding.sca - by the controller as opposed to being explicitly declared in a composite.
+     *
+     * @return true f the binding is assigned
+     */
+    public boolean isAssigned() {
+        return assigned;
+    }
+
+    /**
+     * Sets if the binding is assigned.
+     *
+     * @param assigned true if the binding is assigned
+     */
+    public void setAssigned(boolean assigned) {
+        this.assigned = assigned;
     }
 }

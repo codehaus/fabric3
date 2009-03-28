@@ -124,6 +124,7 @@ public class CopyUtil {
             LogicalBinding<?> copy = new LogicalBinding(binding.getDefinition(), to);
             copy.setState(binding.getState());
             to.addCallbackBinding(copy);
+            copy.setAssigned(binding.isAssigned());
         }
     }
 

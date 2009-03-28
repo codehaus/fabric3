@@ -63,9 +63,11 @@ public class ActiveMQBindingProvider implements BindingProvider {
         String forwardQueue = target.getUri().toString();
         JmsBindingDefinition definition = createBindingDefinition(forwardQueue);
         LogicalBinding<JmsBindingDefinition> referenceBinding = new LogicalBinding<JmsBindingDefinition>(definition, source);
+        referenceBinding.setAssigned(true);
         QName deployable = source.getParent().getDeployable();
         source.addBinding(referenceBinding);
         LogicalBinding<JmsBindingDefinition> serviceBinding = new LogicalBinding<JmsBindingDefinition>(definition, target, deployable);
+        serviceBinding.setAssigned(true);
         target.addBinding(serviceBinding);
 
         // check if the interface is bidirectional
@@ -75,9 +77,11 @@ public class ActiveMQBindingProvider implements BindingProvider {
             String callbackQueue = source.getUri().toString();
             JmsBindingDefinition callbackDefinition = createBindingDefinition(callbackQueue);
             LogicalBinding<JmsBindingDefinition> callbackReferenceBinding = new LogicalBinding<JmsBindingDefinition>(callbackDefinition, source);
+            callbackReferenceBinding.setAssigned(true);
             source.addCallbackBinding(callbackReferenceBinding);
             LogicalBinding<JmsBindingDefinition> callbackServiceBinding =
                     new LogicalBinding<JmsBindingDefinition>(callbackDefinition, target, deployable);
+            callbackServiceBinding.setAssigned(true);
             target.addCallbackBinding(callbackServiceBinding);
             callbackDefinition.setGeneratedTargetUri(createCallbackUri(source));
         }

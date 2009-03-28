@@ -118,6 +118,7 @@ public class HessianBindingProvider implements BindingProvider {
     private void constructLogicalReference(LogicalReference source, URI targetUri) {
         HessianBindingDefinition referenceDefinition = new HessianBindingDefinition(targetUri, null);
         LogicalBinding<HessianBindingDefinition> referenceBinding = new LogicalBinding<HessianBindingDefinition>(referenceDefinition, source);
+        referenceBinding.setAssigned(true);
         source.addBinding(referenceBinding);
     }
 
@@ -127,6 +128,7 @@ public class HessianBindingProvider implements BindingProvider {
         HessianBindingDefinition serviceDefinition = new HessianBindingDefinition(endpointUri, null);
         QName deployable = source.getParent().getDeployable();
         LogicalBinding<HessianBindingDefinition> serviceBinding = new LogicalBinding<HessianBindingDefinition>(serviceDefinition, target, deployable);
+        serviceBinding.setAssigned(true);
         target.addBinding(serviceBinding);
     }
 }
