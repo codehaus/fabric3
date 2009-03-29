@@ -18,7 +18,9 @@ package org.fabric3.spi.contribution;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fabric3.host.contribution.Deployable;
 
@@ -33,8 +35,8 @@ public class ContributionManifest implements Serializable {
     private boolean extension;
     private List<Export> exports = new ArrayList<Export>();
     private List<Import> imports = new ArrayList<Import>();
-    private List<String> requiredCapabilities = new ArrayList<String>();
-    private List<String> providedCapabilities = new ArrayList<String>();
+    private Set<String> requiredCapabilities = new HashSet<String>();
+    private Set<String> providedCapabilities = new HashSet<String>();
     private List<Deployable> deployables = new ArrayList<Deployable>();
     private List<String> extensionPoints = new ArrayList<String>();
     private List<String> extend = new ArrayList<String>();
@@ -107,7 +109,7 @@ public class ContributionManifest implements Serializable {
      *
      * @return a list of capabilities required by this contribution
      */
-    public List<String> getRequiredCapabilities() {
+    public Set<String> getRequiredCapabilities() {
         return requiredCapabilities;
     }
 
@@ -125,7 +127,7 @@ public class ContributionManifest implements Serializable {
      *
      * @return a list of capabilities provided by this contribution
      */
-    public List<String> getProvidedCapabilities() {
+    public Set<String> getProvidedCapabilities() {
         return providedCapabilities;
     }
 

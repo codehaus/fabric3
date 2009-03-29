@@ -31,11 +31,18 @@ import org.fabric3.fabric.command.ProvisionExtensionsCommand;
 import org.fabric3.fabric.command.UnProvisionExtensionsCommand;
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 
 /**
  * @version $Revision$ $Date$
@@ -61,13 +68,19 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
         this.encoder = encoder;
     }
 
-    public Map<String, Command> generate(Map<String, List<Contribution>> contributions, boolean provision) throws GenerationException {
+    public Map<String, Command> generate(Map<String, List<Contribution>> contributions, List<LogicalComponent<?>> components, boolean provision)
+            throws GenerationException {
         if (RuntimeMode.CONTROLLER != info.getRuntimeMode()) {
             // short circuit this unless running in distributed mode
             return null;
         }
         Map<String, Command> commands = new HashMap<String, Command>();
         for (Map.Entry<String, List<Contribution>> entry : contributions.entrySet()) {
+            String zone = entry.getKey();
+            if (zone == null) {
+                // skip local runtime
+                continue;
+            }
             AbstractExtensionsCommand command;
             if (provision) {
                 command = new ProvisionExtensionsCommand();
@@ -86,13 +99,79 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
                 command.addExtensionUri(encoded);
             }
             if (!command.getExtensionUris().isEmpty()) {
-                commands.put(entry.getKey(), command);
+                commands.put(zone, command);
             }
+
         }
+        // evaluate model objects for required capabilities
+        for (LogicalComponent<?> component : components) {
+            String componentZone = component.getZone();
+            if (componentZone == null) {
+                // skip local runtime
+                continue;
+            }
+            AbstractExtensionsCommand command;
+            command = (AbstractExtensionsCommand) commands.get(componentZone);    // safe cast
+            if (command == null) {
+                if (provision) {
+                    command = new ProvisionExtensionsCommand();
+                    commands.put(componentZone, command);
+                } else {
+                    command = new UnProvisionExtensionsCommand();
+                    commands.put(componentZone, command);
+                }
+
+            }
+            generate(component, command);
+        }
+
+
         if (commands.isEmpty()) {
             return null;
         }
         return commands;
+    }
+
+    /**
+     * Evaluates a component for required capabilities
+     *
+     * @param component the component
+     * @param command   the command to update
+     * @throws GenerationException if an exception during evaluation is encountered
+     */
+    private void generate(LogicalComponent<?> component, AbstractExtensionsCommand command) throws GenerationException {
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
+                generate(child, command);
+            }
+        }
+        Implementation<?> impl = component.getDefinition().getImplementation();
+        AbstractComponentType<?, ?, ?, ?> type = impl.getComponentType();
+        Set<Contribution> extensions = new HashSet<Contribution>();
+        for (String capability : type.getRequiredCapabilities()) {
+            extensions.addAll(store.resolveCapability(capability));
+        }
+        // evaluate services
+        for (LogicalService service : component.getServices()) {
+            for (LogicalBinding<?> binding : service.getBindings()) {
+                for (String capability : binding.getDefinition().getRequiredCapabilities()) {
+                    extensions.addAll(store.resolveCapability(capability));
+                }
+            }
+        }
+        // evaluate references
+        for (LogicalReference reference : component.getReferences()) {
+            for (LogicalBinding<?> binding : reference.getBindings()) {
+                for (String capability : binding.getDefinition().getRequiredCapabilities()) {
+                    extensions.addAll(store.resolveCapability(capability));
+                }
+            }
+        }
+        for (Contribution extension : extensions) {
+            URI encoded = encode(extension.getUri());
+            command.addExtensionUri(encoded);
+        }
     }
 
 

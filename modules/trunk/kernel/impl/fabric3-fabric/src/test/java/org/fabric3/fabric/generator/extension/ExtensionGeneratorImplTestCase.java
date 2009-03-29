@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -30,9 +31,17 @@ import org.easymock.EasyMock;
 import org.fabric3.fabric.command.ProvisionExtensionsCommand;
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
 
 /**
  * @version $Revision$ $Date$
@@ -41,12 +50,22 @@ public class ExtensionGeneratorImplTestCase extends TestCase {
 
     private ExtensionGenerator generator;
     private MetaDataStore store;
+    private ArrayList<LogicalComponent<?>> components;
+
 
     public void testResolve() throws Exception {
 
         Set<Contribution> extensions = new HashSet<Contribution>();
-        URI extensionUri = URI.create("foo");
+        URI extensionUri = URI.create("extensionUri");
         extensions.add(new Contribution(extensionUri));
+
+        Set<Contribution> componentExtensions = new HashSet<Contribution>();
+        URI componentExtensionUri = URI.create("componentExtension");
+        componentExtensions.add(new Contribution(componentExtensionUri));
+
+        Set<Contribution> bindingExtensions = new HashSet<Contribution>();
+        URI bindingExtensionUri = URI.create("bindingExtension");
+        bindingExtensions.add(new Contribution(bindingExtensionUri));
 
         List<Contribution> contributions = new ArrayList<Contribution>();
         URI contributionUri = URI.create("app");
@@ -55,11 +74,16 @@ public class ExtensionGeneratorImplTestCase extends TestCase {
         map.put("zone1", contributions);
 
         EasyMock.expect(store.resolveCapabilities(EasyMock.isA(Contribution.class))).andReturn(extensions);
+        EasyMock.expect(store.resolveCapability("componentCapability")).andReturn(componentExtensions);
+        EasyMock.expect(store.resolveCapability("bindingCapability")).andReturn(bindingExtensions);
+
         EasyMock.replay(store);
-        Map<String, Command> ret = generator.generate(map, true);
+        Map<String, Command> ret = generator.generate(map, components, true);
         Command commands = ret.get("zone1");
         ProvisionExtensionsCommand command = (ProvisionExtensionsCommand) commands;
-        assertEquals(extensionUri, command.getExtensionUris().get(0));
+        assertTrue(command.getExtensionUris().contains(extensionUri));
+        assertTrue(command.getExtensionUris().contains(componentExtensionUri));
+        assertTrue(command.getExtensionUris().contains(bindingExtensionUri));
 
     }
 
@@ -71,5 +95,42 @@ public class ExtensionGeneratorImplTestCase extends TestCase {
         EasyMock.expect(info.getRuntimeMode()).andReturn(RuntimeMode.CONTROLLER);
         EasyMock.replay(info);
         generator = new ExtensionGeneratorImpl(store, info);
+
+        // setup components
+        MockImplementation implementation = new MockImplementation();
+        InjectingComponentType type = new InjectingComponentType();
+        type.addRequiredCapability("componentCapability");
+        implementation.setComponentType(type);
+        ComponentDefinition<MockImplementation> definition = new ComponentDefinition<MockImplementation>("test", implementation);
+        URI uri = URI.create("test");
+        LogicalComponent<MockImplementation> component = new LogicalComponent<MockImplementation>(uri, definition, null);
+        component.setZone("zone1");
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition("reference", null);
+        LogicalReference reference = new LogicalReference(URI.create("test#referemce"), referenceDefinition, component);
+        MockBinding bindingDefiniton = new MockBinding();
+        bindingDefiniton.addRequiredCapability("bindingCapability");
+        LogicalBinding binding = new LogicalBinding<MockBinding>(bindingDefiniton, reference);
+        reference.addBinding(binding);
+        component.addReference(reference);
+        components = new ArrayList<LogicalComponent<?>>();
+        components.add(component);
+
+
     }
+
+    private class MockBinding extends BindingDefinition {
+
+        public MockBinding() {
+            super(null, null, null);
+        }
+    }
+
+    private class MockImplementation extends Implementation<InjectingComponentType> {
+
+        public QName getType() {
+            return null;
+        }
+    }
+
+
 }

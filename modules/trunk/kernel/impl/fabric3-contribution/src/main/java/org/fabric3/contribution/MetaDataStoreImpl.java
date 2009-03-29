@@ -264,8 +264,19 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return resolveCapabilities(contribution, extensions);
     }
 
+    public Set<Contribution> resolveCapability(String capability) {
+        Set<Contribution> extensions = new HashSet<Contribution>();
+        for (Contribution entry : cache.values()) {
+            if (entry.getManifest().getProvidedCapabilities().contains(capability) && !extensions.contains(entry)) {
+                extensions.add(entry);
+                resolveCapabilities(entry, extensions);
+            }
+        }
+        return extensions;
+    }
+
     private Set<Contribution> resolveCapabilities(Contribution contribution, Set<Contribution> extensions) {
-        List<String> required = contribution.getManifest().getRequiredCapabilities();
+        Set<String> required = contribution.getManifest().getRequiredCapabilities();
         for (String capability : required) {
             for (Contribution entry : cache.values()) {
                 if (entry.getManifest().getProvidedCapabilities().contains(capability) && !extensions.contains(entry)) {

@@ -148,10 +148,19 @@ public interface MetaDataStore {
     List<Contribution> resolveExtensionPoints(String name);
 
     /**
-     * Resolves the extensions that provide capabilities required by the given contribution.
+     * Transitively resolves the extensions that provide capabilities required by the given contribution.
      *
      * @param contribution the contribution
      * @return the extensions
      */
     Set<Contribution> resolveCapabilities(Contribution contribution);
+
+    /**
+     * Transitively resolves the extensions that provide the given capability.
+     *
+     * @param capability the capability
+     * @return the extensions
+     */
+    Set<Contribution> resolveCapability(String capability);
+
 }

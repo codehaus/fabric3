@@ -116,7 +116,7 @@ public class GeneratorImpl implements Generator {
         }
 
         // generate extension provision commands
-        generateExtensionCommands(commandMap, deployingContributions, true);
+        generateExtensionCommands(commandMap, deployingContributions, sorted, true);
 
         // generate classloader provision commands
         Map<String, List<Command>> commandsPerZone = classLoaderCommandGenerator.generate(deployingContributions);
@@ -159,15 +159,27 @@ public class GeneratorImpl implements Generator {
         }
 
         // release extensions that are no longer used
-        generateExtensionCommands(commandMap, undeployingContributions, false);
+        generateExtensionCommands(commandMap, undeployingContributions, sorted, false);
 
         return commandMap;
     }
 
-    private void generateExtensionCommands(CommandMap commandMap, Map<String, List<Contribution>> deployingContributions, boolean provision)
+    /**
+     * Generate extension provision commands for the contributions and components being deployed/undeployed
+     *
+     * @param commandMap             the map of commands for deployment
+     * @param deployingContributions the contributions being deployed
+     * @param components             the components being deployed
+     * @param provision              true if this is a deployment or false if it is an undeployement
+     * @throws GenerationException if an error during generation is encountered
+     */
+    private void generateExtensionCommands(CommandMap commandMap,
+                                           Map<String, List<Contribution>> deployingContributions,
+                                           List<LogicalComponent<?>> components,
+                                           boolean provision)
             throws GenerationException {
         if (extensionGenerator != null) {
-            Map<String, Command> extensionsPerZone = extensionGenerator.generate(deployingContributions, provision);
+            Map<String, Command> extensionsPerZone = extensionGenerator.generate(deployingContributions, components, provision);
             if (extensionsPerZone != null) {
                 for (Map.Entry<String, Command> entry : extensionsPerZone.entrySet()) {
                     if (provision) {
