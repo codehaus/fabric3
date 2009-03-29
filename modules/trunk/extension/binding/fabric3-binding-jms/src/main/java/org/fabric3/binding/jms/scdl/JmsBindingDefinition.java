@@ -44,25 +44,24 @@ import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * Logical model object for JMS binding definition. TODO Support for overriding
- * request connection, response connection and operation properties from a
- * definition document as well as activation spec and resource adaptor.
- * 
+ * Logical model object for JMS binding definition. TODO Support for overriding request connection, response connection and operation properties from
+ * a definition document as well as activation spec and resource adaptor.
+ *
  * @version $Revision$ $Date$
  */
 public class JmsBindingDefinition extends BindingDefinition {
-	private static final long serialVersionUID = -1888120511695824132L;
+    private static final long serialVersionUID = -1888120511695824132L;
 
     /**
      * Qualified name for the binding element.
      */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
-    
-	/***
+
+    /**
      * A generated URI overriding TargetUri in base class.
      */
-	private URI generatedTargetUri;
-	
+    private URI generatedTargetUri;
+
     /**
      * JMS binding metadata shared between logical and physical.
      */
@@ -70,21 +69,30 @@ public class JmsBindingDefinition extends BindingDefinition {
 
 
     /**
+     * Constructor.
+     *
      * @param metadata Metadata to be initialized.
+     * @param key      the binding key
      */
     public JmsBindingDefinition(JmsBindingMetadata metadata, Document key) {
         super(null, BINDING_QNAME, key);
         this.metadata = metadata;
+        addRequiredCapability("jms");
     }
-    
-	/**
-	 * @param targetURI URI of binding target
-	 * @param metadata Metadata to be initialized.
-	 */
-    public JmsBindingDefinition(URI targetURI,JmsBindingMetadata metadata, Document key) {
+
+    /**
+     * Constructor.
+     *
+     * @param targetURI URI of binding target
+     * @param metadata  Metadata to be initialized.
+     * @param key       the binding key
+     */
+    public JmsBindingDefinition(URI targetURI, JmsBindingMetadata metadata, Document key) {
         super(targetURI, BINDING_QNAME, key);
         this.metadata = metadata;
+        addRequiredCapability("jms");
     }
+
     /**
      * @return the metadata
      */
@@ -99,13 +107,13 @@ public class JmsBindingDefinition extends BindingDefinition {
         this.metadata = metadata;
     }
 
-	public void setGeneratedTargetUri(URI generatedTargetUri) {
-		this.generatedTargetUri = generatedTargetUri;
-	}
+    public void setGeneratedTargetUri(URI generatedTargetUri) {
+        this.generatedTargetUri = generatedTargetUri;
+    }
 
-	@Override
-	public URI getTargetUri() {
-		return generatedTargetUri;
-	}
+    @Override
+    public URI getTargetUri() {
+        return generatedTargetUri;
+    }
 
 }
