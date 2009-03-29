@@ -55,13 +55,19 @@ public class PersistenceUnitProcessor<I extends Implementation<? extends Injecti
     public void visitField(PersistenceUnit annotation, Field field, I implementation, IntrospectionContext context) {
         FieldInjectionSite site = new FieldInjectionSite(field);
         PersistenceUnitResource definition = createDefinition(annotation);
-        implementation.getComponentType().add(definition, site);
+        InjectingComponentType componentType = implementation.getComponentType();
+        componentType.add(definition, site);
+        // record that the implementation requires JPA
+        componentType.addRequiredCapability("jpa");
     }
 
     public void visitMethod(PersistenceUnit annotation, Method method, I implementation, IntrospectionContext context) {
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         PersistenceUnitResource definition = createDefinition(annotation);
-        implementation.getComponentType().add(definition, site);
+        InjectingComponentType componentType = implementation.getComponentType();
+        componentType.add(definition, site);
+        // record that the implementation requires JPA
+        componentType.addRequiredCapability("jpa");
     }
 
     PersistenceUnitResource createDefinition(PersistenceUnit annotation) {

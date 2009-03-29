@@ -60,6 +60,8 @@ public class PersistenceContextProcessor<I extends Implementation<? extends Inje
         InjectingComponentType componentType = implementation.getComponentType();
         PersistenceContextResource definition = createDefinition(annotation, componentType);
         componentType.add(definition, site);
+        // record that the implementation requires JPA
+        componentType.addRequiredCapability("jpa");
     }
 
     public void visitMethod(PersistenceContext annotation, Method method, I implementation, IntrospectionContext context) {
@@ -67,6 +69,8 @@ public class PersistenceContextProcessor<I extends Implementation<? extends Inje
         InjectingComponentType componentType = implementation.getComponentType();
         PersistenceContextResource definition = createDefinition(annotation, componentType);
         componentType.add(definition, site);
+        // record that the implementation requires JPA
+        componentType.addRequiredCapability("jpa");
     }
 
     private PersistenceContextResource createDefinition(PersistenceContext annotation, InjectingComponentType componentType) {
