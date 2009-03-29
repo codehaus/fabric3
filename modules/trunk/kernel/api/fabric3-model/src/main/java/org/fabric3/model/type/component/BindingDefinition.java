@@ -35,23 +35,27 @@
 package org.fabric3.model.type.component;
 
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 
 import org.fabric3.model.type.AbstractPolicyAware;
+import org.fabric3.model.type.CapabilityAware;
 
 /**
  * The base representation of a binding specified in an assembly
  *
  * @version $Rev: 5650 $ $Date: 2008-10-12 09:43:10 -0700 (Sun, 12 Oct 2008) $
  */
-public abstract class BindingDefinition extends AbstractPolicyAware {
+public abstract class BindingDefinition extends AbstractPolicyAware implements CapabilityAware {
     private static final long serialVersionUID = 8780407747984243865L;
 
     private URI targetUri;
     private QName type;
     private Document key;
+    private Set<String> requiredCapabilities = new HashSet<String>();
 
     public BindingDefinition(URI targetUri, QName type, Document key) {
         this.targetUri = targetUri;
@@ -62,13 +66,21 @@ public abstract class BindingDefinition extends AbstractPolicyAware {
     public URI getTargetUri() {
         return targetUri;
     }
-    
+
     public QName getType() {
         return type;
     }
-    
+
     public Document getKey() {
-    	return key;
+        return key;
     }
-    
+
+    public Set<String> getRequiredCapabilities() {
+        return requiredCapabilities;
+    }
+
+    public void addRequiredCapability(String capability) {
+        requiredCapabilities.add(capability);
+    }
+
 }

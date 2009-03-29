@@ -35,8 +35,11 @@
 package org.fabric3.model.type.component;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.fabric3.model.type.CapabilityAware;
 import org.fabric3.model.type.ModelObject;
 
 /**
@@ -60,7 +63,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
         R extends ReferenceDefinition,
         P extends Property,
         RD extends ResourceDefinition>
-        extends ModelObject {
+        extends ModelObject implements CapabilityAware {
     private static final long serialVersionUID = 5302580019263119837L;
     private String scope;
     private int initLevel;
@@ -70,6 +73,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     private final Map<String, R> references = new HashMap<String, R>();
     private final Map<String, P> properties = new HashMap<String, P>();
     private final Map<String, RD> resources = new HashMap<String, RD>();
+    private final Set<String> requiredCapabilities = new HashSet<String>();
 
     protected AbstractComponentType() {
     }
@@ -269,4 +273,11 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
         return resources.containsKey(name);
     }
 
+    public Set<String> getRequiredCapabilities() {
+        return requiredCapabilities;
+    }
+
+    public void addRequiredCapability(String capability) {
+        requiredCapabilities.add(capability);
+    }
 }
