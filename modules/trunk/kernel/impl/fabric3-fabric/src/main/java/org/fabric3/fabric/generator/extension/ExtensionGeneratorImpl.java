@@ -152,6 +152,9 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
         for (String capability : type.getRequiredCapabilities()) {
             extensions.addAll(store.resolveCapability(capability));
         }
+        for (String capability : impl.getRequiredCapabilities()) {
+            extensions.addAll(store.resolveCapability(capability));
+        }
         // evaluate services
         for (LogicalService service : component.getServices()) {
             for (LogicalBinding<?> binding : service.getBindings()) {

@@ -34,18 +34,22 @@
  */
 package org.fabric3.model.type.component;
 
+import java.util.Set;
+import java.util.HashSet;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.AbstractPolicyAware;
+import org.fabric3.model.type.CapabilityAware;
 
 /**
  * Represents a component implementation
  *
  * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
  */
-public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>> extends AbstractPolicyAware {
+public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>> extends AbstractPolicyAware implements CapabilityAware {
     private static final long serialVersionUID = -6060603636927660850L;
     private T componentType;
+    private final Set<String> requiredCapabilities = new HashSet<String>();
 
     protected Implementation() {
     }
@@ -83,11 +87,20 @@ public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>
         return false;
     }
 
+    public Set<String> getRequiredCapabilities() {
+        return requiredCapabilities;
+    }
+
+    public void addRequiredCapability(String capability) {
+        requiredCapabilities.add(capability);
+    }
+
     /**
      * Returns the SCDL XML element corresponding to this type.
      *
      * @return the SCDL XML element corresponding to this type
      */
     public abstract QName getType();
+
 
 }
