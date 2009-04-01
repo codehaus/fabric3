@@ -34,7 +34,6 @@
  */
 package org.fabric3.spi.model.instance;
 
-import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
@@ -59,12 +58,22 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     public LogicalBinding(BD definition, Bindable parent) {
         super(null, parent, TYPE);
         this.definition = definition;
+        if (definition != null) {
+            // null check for testing so full model does not need to be instantiated
+            addIntents(definition.getIntents());
+            addPolicySets(definition.getPolicySets());
+        }
     }
 
     public LogicalBinding(BD definition, Bindable parent, QName deployable) {
         super(null, parent, TYPE);
         this.definition = definition;
         this.deployable = deployable;
+        if (definition != null) {
+            // null check for testing so full model does not need to be instantiated
+            addIntents(definition.getIntents());
+            addPolicySets(definition.getPolicySets());
+        }
     }
 
     /**
@@ -74,34 +83,6 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
      */
     public BD getDefinition() {
         return definition;
-    }
-
-    /**
-     * @return Intents declared on the SCA artifact.
-     */
-    public Set<QName> getIntents() {
-        return definition.getIntents();
-    }
-
-    /**
-     * @param intents Intents declared on the SCA artifact.
-     */
-    public void setIntents(Set<QName> intents) {
-        definition.setIntents(intents);
-    }
-
-    /**
-     * @return Policy sets declared on the SCA artifact.
-     */
-    public Set<QName> getPolicySets() {
-        return definition.getPolicySets();
-    }
-
-    /**
-     * @param policySets Policy sets declared on the SCA artifact.
-     */
-    public void setPolicySets(Set<QName> policySets) {
-        definition.setPolicySets(policySets);
     }
 
     /**

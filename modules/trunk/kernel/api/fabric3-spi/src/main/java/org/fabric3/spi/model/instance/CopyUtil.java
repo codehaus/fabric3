@@ -56,6 +56,8 @@ public class CopyUtil {
         copy.setAutowireOverride(composite.getAutowireOverride());
         copy.setState(composite.getState());
         copy.setZone(composite.getZone());
+        copy.setIntents(composite.getIntents());
+        copy.setPolicySets(composite.getPolicySets());
         for (Map.Entry<String, Document> entry : composite.getPropertyValues().entrySet()) {
             copy.setPropertyValue(entry.getKey(), entry.getValue());
         }
@@ -85,6 +87,8 @@ public class CopyUtil {
         } else {
             copy = new LogicalComponent(component.getUri(), component.getDefinition(), parent);
             copy.setZone(component.getZone());
+            copy.setIntents(component.getIntents());
+            copy.setPolicySets(component.getPolicySets());
         }
         parent.addComponent(copy);
     }
@@ -94,6 +98,8 @@ public class CopyUtil {
         for (URI uri : reference.getPromotedUris()) {
             copy.addPromotedUri(uri);
         }
+        copy.setIntents(reference.getIntents());
+        copy.setPolicySets(reference.getPolicySets());
         copy(reference, copy);
         parent.addReference(copy);
     }
@@ -110,6 +116,8 @@ public class CopyUtil {
         LogicalService copy = new LogicalService(service.getUri(), service.getDefinition(), parent);
         copy.setPromotedUri(service.getPromotedUri());
         copy(service, copy);
+        copy.setIntents(service.getIntents());
+        copy.setPolicySets(service.getPolicySets());
         parent.addService(copy);
     }
 
@@ -119,12 +127,16 @@ public class CopyUtil {
             LogicalBinding<?> copy = new LogicalBinding(binding.getDefinition(), to);
             copy.setState(binding.getState());
             to.addBinding(copy);
+            copy.setIntents(binding.getIntents());
+            copy.setPolicySets(binding.getPolicySets());
         }
         for (LogicalBinding<?> binding : from.getCallbackBindings()) {
             LogicalBinding<?> copy = new LogicalBinding(binding.getDefinition(), to);
             copy.setState(binding.getState());
             to.addCallbackBinding(copy);
             copy.setAssigned(binding.isAssigned());
+            copy.setIntents(binding.getIntents());
+            copy.setPolicySets(binding.getPolicySets());
         }
     }
 

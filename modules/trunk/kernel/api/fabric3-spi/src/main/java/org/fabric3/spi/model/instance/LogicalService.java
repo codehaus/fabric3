@@ -35,8 +35,6 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
-import java.util.Set;
-
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
@@ -66,6 +64,11 @@ public class LogicalService extends Bindable {
     public LogicalService(URI uri, ServiceDefinition definition, LogicalComponent<?> parent) {
         super(uri, parent, TYPE);
         this.definition = definition;
+        if (definition != null) {
+            // null check for testing so full model does not need to be instantiated
+            addIntents(definition.getIntents());
+            addPolicySets(definition.getPolicySets());
+        }
     }
 
     /**
@@ -94,47 +97,4 @@ public class LogicalService extends Bindable {
     public void setPromotedUri(URI uri) {
         this.promote = uri;
     }
-
-    /**
-     * @return Intents declared on the SCA artifact.
-     */
-    public Set<QName> getIntents() {
-        return definition.getIntents();
-    }
-    
-    /**
-     * @param intents Intents declared on the SCA artifact.
-     */
-    public void setIntents(Set<QName> intents) {
-        definition.setIntents(intents);
-    }
-    
-    /**
-     * @param intents Adds intents to the definition.
-     */
-    public void addIntents(Set<QName> intents) {
-        definition.addIntents(intents);
-    }
-
-    /**
-     * @return Policy sets declared on the SCA artifact.
-     */
-    public Set<QName> getPolicySets() {
-        return definition.getPolicySets();
-    }
-
-    /**
-     * @param policySets Policy sets declared on the SCA artifact.
-     */
-    public void setPolicySets(Set<QName> policySets) {
-        definition.setPolicySets(policySets);
-    }
-    
-    /**
-     * @param policySets Adds policy sets to the definition.
-     */
-    public void addPolicySets(Set<QName> policySets) {
-        definition.addPolicySets(policySets);
-    }
-
 }

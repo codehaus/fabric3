@@ -70,6 +70,11 @@ public class LogicalReference extends Bindable {
         super(uri, parent, TYPE);
         this.definition = definition;
         promotedUris = new ArrayList<URI>();
+        if (definition != null) {
+            // null check for testing so full model does not need to be instantiated
+            addIntents(definition.getIntents());
+            addPolicySets(definition.getPolicySets());
+        }
     }
 
     /**
@@ -134,60 +139,6 @@ public class LogicalReference extends Bindable {
      */
     public void setResolved(boolean resolved) {
         this.resolved = resolved;
-    }
-
-    /**
-     * Returns the intents declared on the SCA artifact.
-     *
-     * @return the intents declared on the SCA artifact
-     */
-    public Set<QName> getIntents() {
-        return definition.getIntents();
-    }
-
-    /**
-     * Sets the intents declared on the SCA artifact.
-     *
-     * @param intents Intents declared on the SCA artifact
-     */
-    public void setIntents(Set<QName> intents) {
-        definition.setIntents(intents);
-    }
-
-    /**
-     * Adds intents to the definition.
-     *
-     * @param intents the intents
-     */
-    public void addIntents(Set<QName> intents) {
-        definition.addIntents(intents);
-    }
-
-    /**
-     * Returns policy sets declared on the SCA artifact.
-     *
-     * @return policy sets declared on the SCA artifact
-     */
-    public Set<QName> getPolicySets() {
-        return definition.getPolicySets();
-    }
-
-    /**
-     * Sets policy sets declared on the SCA artifact.
-     *
-     * @param policySets the policy sets
-     */
-    public void setPolicySets(Set<QName> policySets) {
-        definition.setPolicySets(policySets);
-    }
-
-    /**
-     * Sets policy sets declared on the SCA artifact.
-     *
-     * @param policySets the policy sets.
-     */
-    public void addPolicySets(Set<QName> policySets) {
-        definition.addPolicySets(policySets);
     }
 
     /**
