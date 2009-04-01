@@ -41,6 +41,6 @@ package org.fabric3.model.type.definitions;
  */
 public enum PolicyPhase {
     
-    INTERCEPTION, PROVIDED;
+    INTERCEPTION, PROVIDED
 
 }
