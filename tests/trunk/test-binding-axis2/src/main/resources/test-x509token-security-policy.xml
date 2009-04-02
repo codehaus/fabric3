@@ -20,17 +20,17 @@
     xmlns:f3-policy="urn:fabric3.org:policy">
     
     <!-- Authorization policy -->
-    <policySet name="testServerX509TokenAuthrizationPolicy" 
+    <policySet name="testServerX509TokenAuthrizationPolicy"
                provides="f3-policy:authorization.message"
-               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsX509Token'"
+               appliesTo="binding.ws and sca:OperationRef('Axis2EchoService/echoWsX509Token')"
                f3-policy:phase="INTERCEPTION">
         <f3-policy:authorization roles="ADMIN"/>            
     </policySet>
     
     <!-- Server policy using ws-policy -->
-    <policySet name="testServerX509TokenPolicy" 
+    <policySet name="testServerX509TokenPolicy"
                provides="sca:authentication.message" 
-               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsX509Token'">
+               appliesTo="service/binding.ws and sca:OperationRef('Axis2EchoService/echoWsX509Token')">
         <f3-policy:axisConfig module="rampart" message="In">
             <wsp:Policy wsu:Id="X509TokenPolicy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
                 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" 
@@ -88,9 +88,9 @@
     </policySet>
     
     <!-- Client policy using ws-policy -->
-    <policySet 	name="testClientX509TokenPolicy" 
+    <policySet 	name="testClientX509TokenPolicy"
                 provides="sca:authentication.message" 
-                appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echoWsX509Token'">
+                appliesTo="reference/binding.ws and sca:OperationRef('Axis2EchoService/echoWsX509Token')">
         <f3-policy:axisConfig module="rampart" message="Out">
         <wsp:Policy wsu:Id="X509TokenPolicy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
             xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" 

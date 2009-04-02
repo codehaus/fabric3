@@ -15,34 +15,34 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
-    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-    targetNamespace="urn:fabric3.org:policy"
-    xmlns:f3-policy="urn:fabric3.org:policy">    
-    
+             xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+             targetNamespace="urn:fabric3.org:policy"
+             xmlns:f3-policy="urn:fabric3.org:policy">
+
     <!-- Authorization policy -->
-    <policySet name="testServerUsernameTokenAuthrizationPolicy" 
+    <policySet name="testServerUsernameTokenAuthrizationPolicy"
                provides="f3-policy:authorization.message"
-               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsUsernameToken'"
+               appliesTo="binding.ws and sca:OperationRef('Axis2EchoService/echoWsUsernameToken')"
                f3-policy:phase="INTERCEPTION">
         <f3-policy:authorization roles="ADMIN"/>
     </policySet>
-    
+
     <!-- Server policy using ws-policy -->
-    <policySet name="testServerUsernameTokenPolicy" 
-               provides="sca:authentication.message" 
-               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsUsernameToken'">
+    <policySet name="testServerUsernameTokenPolicy"
+               provides="sca:authentication.message"
+               appliesTo="service/binding.ws and sca:OperationRef('Axis2EchoService/echoWsUsernameToken')">
         <f3-policy:axisConfig module="rampart">
-            <wsp:Policy wsu:Id="UTOverTransport" 
-                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+            <wsp:Policy wsu:Id="UTOverTransport"
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
                         xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
                 <wsp:ExactlyOne>
                     <wsp:All>
                         <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
                             <wsp:Policy>
-                                <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient" />
+                                <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"/>
                             </wsp:Policy>
                         </sp:SignedSupportingTokens>
-                        <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy">                         
+                        <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy">
                             <ramp:passwordCallbackClass>org.fabric3.tests.security.AuthenticationHandler</ramp:passwordCallbackClass>
                         </ramp:RampartConfig>
                     </wsp:All>
@@ -50,23 +50,23 @@
             </wsp:Policy>
         </f3-policy:axisConfig>
     </policySet>
-    
+
     <!-- Client policy using ws-policy -->
-    <policySet name="testClientUsernameTokenPolicy" 
-               provides="sca:authentication.message" 
-               appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echoWsUsernameToken'">
+    <policySet name="testClientUsernameTokenPolicy"
+               provides="sca:authentication.message"
+               appliesTo="reference/binding.ws and sca:OperationRef('Axis2EchoService/echoWsUsernameToken')">
         <f3-policy:axisConfig module="rampart">
-            <wsp:Policy wsu:Id="UTOverTransport" 
-                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+            <wsp:Policy wsu:Id="UTOverTransport"
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
                         xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
                 <wsp:ExactlyOne>
                     <wsp:All>
                         <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
                             <wsp:Policy>
-                                <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient" />
+                                <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"/>
                             </wsp:Policy>
                         </sp:SignedSupportingTokens>
-                        <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy"> 
+                        <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy">
                             <ramp:user>Fred</ramp:user>
                             <ramp:passwordType>PasswordText</ramp:passwordType>
                             <ramp:passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</ramp:passwordCallbackClass>
