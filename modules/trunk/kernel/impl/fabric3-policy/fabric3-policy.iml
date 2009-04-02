@@ -58,6 +58,17 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jaxen:jaxen:1.1.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1.1/jaxen-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../../../../../../../../Downloads/incoming/jaxen-1-1.1.1/src/java/main" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
 
