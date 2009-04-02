@@ -39,25 +39,28 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
+import org.fabric3.model.type.service.ServiceContract;
+
 /**
  * Super class for logical services and references.
  *
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */
-public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
+public abstract class Bindable extends LogicalAttachPoint {
     private static final long serialVersionUID = 570403036597601956L;
-    private final List<LogicalBinding<?>> bindings;
-    private final List<LogicalBinding<?>> callbackBindings;
+    private List<LogicalBinding<?>> bindings;
+    private List<LogicalBinding<?>> callbackBindings;
 
     /**
      * Initializes the URI and parent for the service or the reference.
      *
-     * @param uri    URI of the service or the reference.
-     * @param parent Parent of the service or the reference.
-     * @param type   Type of this artifact (service or reference).
+     * @param uri      URI of the service or the reference.
+     * @param contract the service contract
+     * @param parent   Parent of the service or the reference.
+     * @param type     Type of this artifact (service or reference).
      */
-    protected Bindable(URI uri, LogicalComponent<?> parent, QName type) {
-        super(uri, parent, type);
+    protected Bindable(URI uri, ServiceContract<?> contract, LogicalComponent<?> parent, QName type) {
+        super(uri, contract, parent, type);
         bindings = new ArrayList<LogicalBinding<?>>();
         callbackBindings = new ArrayList<LogicalBinding<?>>();
     }

@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.Constants;
 
 /**
- * Representation of a wire from a reference to a service.
+ * Representation of a wire from a reference to a service in the domain.
  *
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */

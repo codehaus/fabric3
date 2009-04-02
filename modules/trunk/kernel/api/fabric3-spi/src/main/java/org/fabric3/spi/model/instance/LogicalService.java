@@ -42,7 +42,7 @@ import org.osoa.sca.Constants;
 import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
- * Represents a resolved service
+ * Represents an instantiated service in the domain.
  *
  * @version $Rev$ $Date$
  */
@@ -51,7 +51,7 @@ public class LogicalService extends Bindable {
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "service");
 
-    private final ServiceDefinition definition;
+    private ServiceDefinition definition;
     private URI promote;
 
     /**
@@ -62,7 +62,7 @@ public class LogicalService extends Bindable {
      * @param parent     the service parent component
      */
     public LogicalService(URI uri, ServiceDefinition definition, LogicalComponent<?> parent) {
-        super(uri, parent, TYPE);
+        super(uri, definition != null ? definition.getServiceContract() : null, parent, TYPE);
         this.definition = definition;
         if (definition != null) {
             // null check for testing so full model does not need to be instantiated

@@ -41,7 +41,7 @@ import org.osoa.sca.Constants;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * Represents a resolved binding
+ * Represents a binding on an LogicalService.
  *
  * @version $Rev$ $Date$
  */

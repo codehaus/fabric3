@@ -46,7 +46,7 @@ import org.fabric3.model.type.component.ComponentReference;
 import org.fabric3.model.type.component.ReferenceDefinition;
 
 /**
- * Represents a resolved reference
+ * Represents a reference on an instantiated component in the domain.
  *
  * @version $Rev$ $Date$
  */
@@ -55,7 +55,7 @@ public class LogicalReference extends Bindable {
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "reference");
 
-    private final ReferenceDefinition definition;
+    private ReferenceDefinition definition;
     private List<URI> promotedUris;
     private boolean resolved;
 
@@ -67,7 +67,7 @@ public class LogicalReference extends Bindable {
      * @param parent     the parent component
      */
     public LogicalReference(URI uri, ReferenceDefinition definition, LogicalComponent<?> parent) {
-        super(uri, parent, TYPE);
+        super(uri, definition != null ? definition.getServiceContract() : null, parent, TYPE);
         this.definition = definition;
         promotedUris = new ArrayList<URI>();
         if (definition != null) {

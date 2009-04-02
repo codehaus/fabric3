@@ -27,7 +27,7 @@ import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.CompositeImplementation;
 
 /**
- * Represents a composite component.
+ * Represents an instantiated composite component in the domain.
  */
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
     private static final long serialVersionUID = 6661201121307925462L;

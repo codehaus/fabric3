@@ -23,16 +23,16 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.ResourceDefinition;
 
 /**
- * Represents a resource in the logical model.
+ * Represents a resource on an instantiated component in the domain.
  *
  * @version $Revision$ $Date$
  */
-public class LogicalResource<RD extends ResourceDefinition> extends LogicalScaArtifact<LogicalComponent<?>> {
+public class LogicalResource<RD extends ResourceDefinition> extends LogicalAttachPoint {
     private static final long serialVersionUID = -6298167441706672513L;
 
     private static final QName TYPE = new QName(Namespaces.BINDING, "resource");
 
-    private final RD resourceDefinition;
+    private RD resourceDefinition;
     private URI target;
 
     /**
@@ -43,7 +43,7 @@ public class LogicalResource<RD extends ResourceDefinition> extends LogicalScaAr
      * @param parent             the parent component
      */
     public LogicalResource(URI uri, RD resourceDefinition, LogicalComponent<?> parent) {
-        super(uri, parent, TYPE);
+        super(uri, resourceDefinition != null ? resourceDefinition.getServiceContract() : null, parent, TYPE);
         this.resourceDefinition = resourceDefinition;
     }
 
