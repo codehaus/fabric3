@@ -18,8 +18,8 @@ package org.fabric3.spi.policy;
 
 import java.util.List;
 
-import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.spi.model.instance.LogicalOperation;
 
 /**
  * Result of resolving intents and policy sets on a wire. The policies are resolved for 
@@ -83,6 +83,6 @@ public interface PolicyResult {
      * @param operation Operation against which interceptors are defined.
      * @return Interceptors that are defined against the operation.
      */
-    public List<PolicySet> getInterceptedPolicySets(Operation<?> operation);
+    public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation);
 
 }

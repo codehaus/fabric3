@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResult;
 
@@ -36,79 +36,37 @@ public class PolicyResultImpl implements PolicyResult {
     private final PolicyImpl sourcePolicy = new PolicyImpl();
     private final PolicyImpl targetPolicy = new PolicyImpl();
 
-    private final Map<Operation<?>, List<PolicySet>> interceptedPolicySets = new HashMap<Operation<?>, List<PolicySet>>();
+    private final Map<LogicalOperation, List<PolicySet>> interceptedPolicySets = new HashMap<LogicalOperation, List<PolicySet>>();
 
-    /**
-     * @return Policies and intents provided at the source end.
-     */
     public Policy getSourcePolicy() {
         return sourcePolicy;
     }
 
-    /**
-     * @return Policies and intents provided at the target end.
-     */
     public Policy getTargetPolicy() {
         return targetPolicy;
     }
 
-    /**
-     * Gets all the policy sets that are implemented as interceptors that were resolved against the intents requested against the operation.
-     *
-     * @param operation Operation against which the intent was requested.
-     * @return Resolved policy sets.
-     */
-    public List<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
+    public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
         return interceptedPolicySets.get(operation);
     }
 
-    /**
-     * Adds an intent that is requested on the operation and provided by the source component implementation or binding type.
-     *
-     * @param operation Operation against which the intent was requested.
-     * @param intents   Intents that are provided.
-     */
-    void addSourceIntents(Operation<?> operation, Set<Intent> intents) {
+    void addSourceIntents(LogicalOperation operation, Set<Intent> intents) {
         sourcePolicy.addIntents(operation, intents);
     }
 
-    /**
-     * Adds an intent that is requested on the operation and provided by the target component implementation or binding type.
-     *
-     * @param operation Operation against which the intent was requested.
-     * @param intents   Intents that are provided.
-     */
-    void addTargetIntents(Operation<?> operation, Set<Intent> intents) {
+    void addTargetIntents(LogicalOperation operation, Set<Intent> intents) {
         targetPolicy.addIntents(operation, intents);
     }
 
-    /**
-     * Adds a policy set mapped to the inetnt that is requested on the operation and provided by the source component implementation or binding type.
-     *
-     * @param operation  Operation against which the intent was requested.
-     * @param policySets Resolved policy sets.
-     */
-    void addSourcePolicySets(Operation<?> operation, Set<PolicySet> policySets) {
+    void addSourcePolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
         sourcePolicy.addPolicySets(operation, policySets);
     }
 
-    /**
-     * Adds a policy set mapped to the inetnt that is requested on the operation and provided by the target component implementation or binding type.
-     *
-     * @param operation  Operation against which the intent was requested.
-     * @param policySets Resolved policy sets.
-     */
-    void addTargetPolicySets(Operation<?> operation, Set<PolicySet> policySets) {
+    void addTargetPolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
         targetPolicy.addPolicySets(operation, policySets);
     }
 
-    /**
-     * Adds a policy set mapped to the intent that is requested on the operation and is implemented as an interceptor.
-     *
-     * @param operation  Operation against which the intent was requested.
-     * @param policySets Resolved policy sets.
-     */
-    void addInterceptedPolicySets(Operation<?> operation, Set<PolicySet> policySets) {
+    void addInterceptedPolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
 
         if (!interceptedPolicySets.containsKey(operation)) {
             interceptedPolicySets.put(operation, new ArrayList<PolicySet>());

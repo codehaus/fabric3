@@ -22,12 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -36,8 +35,8 @@ import org.fabric3.spi.policy.Policy;
  */
 public class PolicyImpl implements Policy {
     
-    private final Map<Operation<?>, List<Intent>> intentMap = new HashMap<Operation<?>, List<Intent>>();
-    private final Map<Operation<?>, List<PolicySet>> policySetMap = new HashMap<Operation<?>, List<PolicySet>>();
+    private final Map<LogicalOperation, List<Intent>> intentMap = new HashMap<LogicalOperation, List<Intent>>();
+    private final Map<LogicalOperation, List<PolicySet>> policySetMap = new HashMap<LogicalOperation, List<PolicySet>>();
 
     /**
      * Intents that are provided by the binding or implemenenation for 
@@ -47,7 +46,7 @@ public class PolicyImpl implements Policy {
      */
     public List<QName> getProvidedIntents() {
         List<QName> ret = new LinkedList<QName>();
-        for (Operation<?> operation : intentMap.keySet()) {
+        for (LogicalOperation operation : intentMap.keySet()) {
             ret.addAll(getProvidedIntents(operation));
         }
         return ret;
@@ -61,7 +60,7 @@ public class PolicyImpl implements Policy {
      */
     public List<PolicySet> getProvidedPolicySets() {
         List<PolicySet> ret = new LinkedList<PolicySet>();
-        for (Operation<?> operation : intentMap.keySet()) {
+        for (LogicalOperation operation : intentMap.keySet()) {
             ret.addAll(getProvidedPolicySets(operation));
         }
         return ret;
@@ -74,7 +73,7 @@ public class PolicyImpl implements Policy {
      * @param operation Operation against which the intent was requested.
      * @return All intents that are provided.
      */
-    public List<QName> getProvidedIntents(Operation<?> operation) {
+    public List<QName> getProvidedIntents(LogicalOperation operation) {
         List<QName> ret = new LinkedList<QName>();
         for (Intent intent : intentMap.get(operation)) {
             ret.add(intent.getName());
@@ -90,7 +89,7 @@ public class PolicyImpl implements Policy {
      * @param operation Operation against which the intent was requested.
      * @return Resolved policy sets.
      */
-    public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+    public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
         return policySetMap.get(operation);
     }
     
@@ -101,7 +100,7 @@ public class PolicyImpl implements Policy {
      * @param operation Operation against which the intent was requested.
      * @param intents Intents that are provided.
      */
-    void addIntents(Operation<?> operation, Set<Intent> intents) {
+    void addIntents(LogicalOperation operation, Set<Intent> intents) {
         
         if (!intentMap.containsKey(operation)) {
             intentMap.put(operation, new ArrayList<Intent>());
@@ -118,7 +117,7 @@ public class PolicyImpl implements Policy {
      * @param operation Operation against which the intent was requested.
      * @param policySets Resolved policy sets.
      */
-    void addPolicySets(Operation<?> operation, Set<PolicySet> policySets) {
+    void addPolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
         
         if (!policySetMap.containsKey(operation)) {
             policySetMap.put(operation, new ArrayList<PolicySet>());

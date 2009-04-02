@@ -34,10 +34,12 @@
  */
 package org.fabric3.spi.generator;
 
+import java.util.List;
+
 import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
@@ -52,25 +54,31 @@ public interface BindingGenerator<BD extends BindingDefinition> {
     /**
      * Generates a physical wire source definition from a logical binding.
      *
-     * @param binding           Logical binding.
-     * @param policy            the policy metadata associated with the wire
-     * @param serviceDefinition Service definition for the target.
+     * @param binding    Logical binding.
+     * @param contract   the service contract
+     * @param operations the operations to generate the wire for
+     * @param policy     the policy metadata associated with the wire
      * @return Physical wire source definition.
      * @throws GenerationException if an error is raised during generation
      */
-    PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding, Policy policy, ServiceDefinition serviceDefinition)
-            throws GenerationException;
+    PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding,
+                                                    ServiceContract<?> contract,
+                                                    List<LogicalOperation> operations,
+                                                    Policy policy) throws GenerationException;
 
     /**
      * Generates a physical wire target definition from a logical binding.
      *
-     * @param binding  Logical binding.
-     * @param policy   the policy metadata associated with the wire
-     * @param contract the service contract of the wire
+     * @param binding    Logical binding.
+     * @param contract   the service contract
+     * @param operations the operations to generate the wire for
+     * @param policy     the policy metadata associated with the wire
      * @return Physical wire target definition.
      * @throws GenerationException if an error is raised during generation
      */
-    PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding, Policy policy, ServiceContract<?> contract)
-            throws GenerationException;
+    PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding,
+                                                    ServiceContract<?> contract,
+                                                    List<LogicalOperation> operations,
+                                                    Policy policy) throws GenerationException;
 
 }

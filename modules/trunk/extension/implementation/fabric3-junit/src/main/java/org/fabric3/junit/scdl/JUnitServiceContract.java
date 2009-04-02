@@ -42,4 +42,8 @@ public class JUnitServiceContract extends ServiceContract<Type> {
         return null;
     }
 
+    @Override
+    public String getInterfaceName() {
+        return "";
+    }
 }

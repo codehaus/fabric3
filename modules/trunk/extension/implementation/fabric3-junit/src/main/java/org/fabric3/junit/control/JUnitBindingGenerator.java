@@ -16,16 +16,18 @@
  */
 package org.fabric3.junit.control;
 
+import java.util.List;
+
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.junit.provision.JUnitWireSourceDefinition;
 import org.fabric3.junit.scdl.JUnitBindingDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
@@ -38,16 +40,18 @@ import org.fabric3.spi.policy.Policy;
 public class JUnitBindingGenerator implements BindingGenerator<JUnitBindingDefinition> {
 
     public JUnitWireSourceDefinition generateWireSource(LogicalBinding<JUnitBindingDefinition> bindingDefinition,
-                                                        Policy policy,
-                                                        ServiceDefinition serviceDefinition) throws GenerationException {
+                                                        ServiceContract<?> contract,
+                                                        List<LogicalOperation> operations,
+                                                        Policy policy) throws GenerationException {
         ComponentDefinition<?> definition = bindingDefinition.getParent().getParent().getDefinition();
         String testName = definition.getName();
         return new JUnitWireSourceDefinition(testName);
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JUnitBindingDefinition> bindingDefinition,
-                                                           Policy policy,
-                                                           ServiceContract<?> contract) throws GenerationException {
+                                                           ServiceContract<?> contract,
+                                                           List<LogicalOperation> operations,
+                                                           Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 }

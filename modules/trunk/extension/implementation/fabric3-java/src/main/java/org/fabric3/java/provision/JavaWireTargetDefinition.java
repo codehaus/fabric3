@@ -24,5 +24,5 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class JavaWireTargetDefinition extends PhysicalWireTargetDefinition {
-
+    private static final long serialVersionUID = 3947087633254650441L;
 }

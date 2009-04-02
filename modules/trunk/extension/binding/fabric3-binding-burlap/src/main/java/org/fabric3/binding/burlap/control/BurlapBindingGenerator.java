@@ -35,17 +35,18 @@
 package org.fabric3.binding.burlap.control;
 
 import java.net.URI;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.binding.burlap.provision.BurlapWireSourceDefinition;
 import org.fabric3.binding.burlap.provision.BurlapWireTargetDefinition;
 import org.fabric3.binding.burlap.scdl.BurlapBindingDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -57,9 +58,9 @@ import org.fabric3.spi.policy.Policy;
 public class BurlapBindingGenerator implements BindingGenerator<BurlapBindingDefinition> {
 
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         Policy policy,
-                                                         ServiceDefinition serviceDefinition)
-            throws GenerationException {
+                                                         ServiceContract<?> contract,
+                                                         List<LogicalOperation> operations,
+                                                         Policy policy) throws GenerationException {
         // TODO Pass the contract information to physical
         BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition();
         URI targetUri = logicalBinding.getDefinition().getTargetUri();
@@ -68,8 +69,9 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapBindingDef
     }
 
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         Policy policy,
-                                                         ServiceContract<?> contract) throws GenerationException {
+                                                         ServiceContract<?> contract,
+                                                         List<LogicalOperation> operations,
+                                                         Policy policy) throws GenerationException {
 
         // TODO Pass the contract information to the physical
         BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition();

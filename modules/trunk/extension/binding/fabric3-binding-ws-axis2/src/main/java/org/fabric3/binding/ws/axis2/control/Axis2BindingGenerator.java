@@ -31,7 +31,6 @@ import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.host.Namespaces;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
@@ -39,6 +38,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -53,23 +53,26 @@ public class Axis2BindingGenerator implements BindingGenerator<WsBindingDefiniti
     protected ClassLoaderRegistry classLoaderRegistry;
 
     public Axis2WireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
-                                                        Policy policy,
-                                                        ServiceDefinition serviceDefinition) throws GenerationException {
+                                                        ServiceContract<?> contract,
+                                                        List<LogicalOperation> operations,
+                                                        Policy policy) throws GenerationException {
 
         Axis2WireSourceDefinition hwsd = new Axis2WireSourceDefinition();
         hwsd.setUri(binding.getDefinition().getTargetUri());
 
-        ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
 
-        setPolicyConfigs(hwsd, policy, contract);
+        setPolicyConfigs(hwsd, policy, operations);
 
         return hwsd;
 
     }
 
-    public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding, Policy policy, ServiceContract<?> contract)
-            throws GenerationException {
+
+    public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
+                                                        ServiceContract<?> contract,
+                                                        List<LogicalOperation> operations,
+                                                        Policy policy) throws GenerationException {
 
         Axis2WireTargetDefinition hwtd = new Axis2WireTargetDefinition();
         WsdlElement wsdlElement = parseWsdlElement(binding.getDefinition().getWsdlElement());
@@ -86,7 +89,7 @@ public class Axis2BindingGenerator implements BindingGenerator<WsBindingDefiniti
         //Set config
         hwtd.setConfig(binding.getDefinition().getConfig());
 
-        setPolicyConfigs(hwtd, policy, contract);
+        setPolicyConfigs(hwtd, policy, operations);
 
         return hwtd;
 
@@ -101,9 +104,9 @@ public class Axis2BindingGenerator implements BindingGenerator<WsBindingDefiniti
         }
     }
 
-    private void setPolicyConfigs(Axis2PolicyAware policyAware, Policy policy, ServiceContract<?> serviceContract) throws Axis2GenerationException {
+    private void setPolicyConfigs(Axis2PolicyAware policyAware, Policy policy, List<LogicalOperation> operations) throws Axis2GenerationException {
 
-        for (Operation<?> operation : serviceContract.getOperations()) {
+        for (LogicalOperation operation : operations) {
 
             List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
             if (policySets == null) {
@@ -131,7 +134,7 @@ public class Axis2BindingGenerator implements BindingGenerator<WsBindingDefiniti
                 }
 
                 AxisPolicy axisPolicy = new AxisPolicy(message, module, opaquePolicy);
-                policyAware.addPolicy(operation.getName(), axisPolicy);
+                policyAware.addPolicy(operation.getDefinition().getName(), axisPolicy);
 
             }
 

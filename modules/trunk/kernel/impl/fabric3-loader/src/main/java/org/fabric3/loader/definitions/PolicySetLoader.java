@@ -105,9 +105,10 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
         }
 
         String appliesTo = policyElement.getAttribute("appliesTo");
+        String attachTo = policyElement.getAttribute("attachTo");
 
         String sPhase = policyElement.getAttributeNS(Namespaces.POLICY, "phase");
-        PolicyPhase phase = null;
+        PolicyPhase phase;
         if (sPhase != null && !"".equals(sPhase.trim())) {
             phase = PolicyPhase.valueOf(sPhase);
         } else {
@@ -123,14 +124,14 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
             }
         }
 
-        return new PolicySet(qName, provides, appliesTo, extension, phase);
+        return new PolicySet(qName, provides, appliesTo, attachTo, extension, phase);
 
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"name".equals(name) && !"provides".equals(name) && !"appliesTo".equals(name) && !"phase".equals(name)) {
+            if (!"name".equals(name) && !"provides".equals(name) && !"appliesTo".equals(name) && !"phase".equals(name) && !"attachTo".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

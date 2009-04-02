@@ -22,18 +22,16 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
-import org.fabric3.policy.infoset.PolicyInfosetBuilder;
-import org.fabric3.policy.helper.ImplementationPolicyHelper;
-import org.fabric3.policy.helper.InteractionPolicyHelper;
 import org.fabric3.host.Namespaces;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.definitions.PolicyPhase;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.policy.helper.ImplementationPolicyHelper;
+import org.fabric3.policy.helper.InteractionPolicyHelper;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
@@ -59,17 +57,17 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
     private static final PolicyResult RESULT = new PolicyResult() {
 
-        public List<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
+        public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
             return Collections.emptyList();
         }
 
         public Policy getSourcePolicy() {
             return new Policy() {
-                public List<QName> getProvidedIntents(Operation<?> operation) {
+                public List<QName> getProvidedIntents(LogicalOperation operation) {
                     return Collections.emptyList();
                 }
 
-                public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
                     return Collections.emptyList();
                 }
 
@@ -85,11 +83,11 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
         public Policy getTargetPolicy() {
             return new Policy() {
-                public List<QName> getProvidedIntents(Operation<?> operation) {
+                public List<QName> getProvidedIntents(LogicalOperation operation) {
                     return Collections.emptyList();
                 }
 
-                public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
                     return Collections.emptyList();
                 }
 
@@ -116,28 +114,14 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
     private final InteractionPolicyHelper interactionPolicyHelper;
     private final ImplementationPolicyHelper implementationPolicyHelper;
-    private final PolicyInfosetBuilder policyInfosetBuilder;
 
     public DefaultPolicyResolver(@Reference InteractionPolicyHelper interactionPolicyHelper,
-                                 @Reference ImplementationPolicyHelper implementationPolicyHelper,
-                                 @Reference PolicyInfosetBuilder policyInfosetBuilder) {
+                                 @Reference ImplementationPolicyHelper implementationPolicyHelper) {
         this.interactionPolicyHelper = interactionPolicyHelper;
         this.implementationPolicyHelper = implementationPolicyHelper;
-        this.policyInfosetBuilder = policyInfosetBuilder;
     }
 
-    /**
-     * Resolves all the interaction and implementation intents for the wire.
-     *
-     * @param serviceContract Service contract for the wire.
-     * @param sourceBinding   Source binding.
-     * @param targetBinding   Target binding.
-     * @param source          Source component.
-     * @param target          Target component.
-     * @return Policy resolution result.
-     * @throws PolicyResolutionException If unable to resolve any policies.
-     */
-    public PolicyResult resolvePolicies(ServiceContract<?> serviceContract,
+    public PolicyResult resolvePolicies(List<LogicalOperation> operations,
                                         LogicalBinding<?> sourceBinding,
                                         LogicalBinding<?> targetBinding,
                                         LogicalComponent<?> source,
@@ -147,8 +131,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
         PolicyResultImpl policyResult = new PolicyResultImpl();
 
-        for (Operation<?> operation : serviceContract.getOperations()) {
-
+        for (LogicalOperation operation : operations) {
             policyResult.addSourceIntents(operation, interactionPolicyHelper.getProvidedIntents(sourceBinding, operation));
 
             policyResult.addTargetIntents(operation, interactionPolicyHelper.getProvidedIntents(targetBinding, operation));
@@ -157,26 +140,21 @@ public class DefaultPolicyResolver implements PolicyResolver {
             }
 
             Set<PolicySet> policies;
-            Element policyInfoset;
-
-            policyInfoset = policyInfosetBuilder.buildInfoSet(sourceBinding);
-            policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation, policyInfoset);
+            policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation);
             policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
             policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
 
-            policyInfoset = policyInfosetBuilder.buildInfoSet(targetBinding);
-            policies = interactionPolicyHelper.resolveIntents(targetBinding, operation, policyInfoset);
+            policies = interactionPolicyHelper.resolveIntents(targetBinding, operation);
             policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
             policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
 
             if (target != null) {
-                policyInfoset = policyInfosetBuilder.buildInfoSet(target);
-                policies = implementationPolicyHelper.resolveIntents(target, operation, policyInfoset);
+                policies = implementationPolicyHelper.resolveIntents(target, operation);
                 policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
                 policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
             }
 
-        }                       
+        }
 
         return policyResult;
 

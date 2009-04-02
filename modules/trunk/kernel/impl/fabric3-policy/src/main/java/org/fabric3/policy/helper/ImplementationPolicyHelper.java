@@ -18,39 +18,37 @@ package org.fabric3.policy.helper;
 
 import java.util.Set;
 
-import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
 public interface ImplementationPolicyHelper {
-    
+
     /**
-     * Returns the set of intents that need to be explictly provided by the implementation. These 
-     * are the intents requested by the use and available in the <code>mayProvide</code> list of intents 
-     * declared by the implementation type.
-     * 
-     * @param logicalComponent Logical component for which intents are to be resolved.
-     * @param operation Operation for which the provided intents are to be computed.
+     * Returns the set of intents that need to be explictly provided by the implementation. These are the intents requested by the use and available
+     * in the <code>mayProvide</code> list of intents declared by the implementation type.
+     *
+     * @param component the logical component for which intents are to be resolved.
+     * @param operation the operation for which the provided intents are to be computed.
      * @return Set of intents that need to be explictly provided by the implementation.
      * @throws PolicyResolutionException If there are any unidentified intents.
      */
-    Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) 
-    throws PolicyResolutionException;
-    
+    Set<Intent> getProvidedIntents(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
+
     /**
      * Returns the set of policies that will address the intents that are not provided by the implementation type.
-     * 
-     * @param logicalComponent Logical component for which policies are to be resolved.
-     * @param operation Operation for which the provided intents are to be computed.
+     *
+     * @param component the logical component for which policies are to be resolved.
+     * @param operation the oeration for which the provided intents are to be computed.
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation, Element target) throws PolicyResolutionException;
+    Set<PolicySet> resolveIntents(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
+
 
 }

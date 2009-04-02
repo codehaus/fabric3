@@ -35,17 +35,18 @@
 package org.fabric3.binding.hessian.control;
 
 import java.net.URI;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.binding.hessian.provision.HessianWireSourceDefinition;
 import org.fabric3.binding.hessian.provision.HessianWireTargetDefinition;
 import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -57,8 +58,9 @@ import org.fabric3.spi.policy.Policy;
 public class HessianBindingGenerator implements BindingGenerator<HessianBindingDefinition> {
 
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          Policy policy,
-                                                          ServiceDefinition serviceDefinition) throws GenerationException {
+                                                          ServiceContract<?> contract,
+                                                          List<LogicalOperation> operations,
+                                                          Policy policy) throws GenerationException {
 
         HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition();
         URI targetUri = logicalBinding.getDefinition().getTargetUri();
@@ -69,8 +71,9 @@ public class HessianBindingGenerator implements BindingGenerator<HessianBindingD
     }
 
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          Policy policy,
-                                                          ServiceContract<?> contract) throws GenerationException {
+                                                          ServiceContract<?> contract,
+                                                          List<LogicalOperation> operations,
+                                                          Policy policy) throws GenerationException {
         HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition();
         hwtd.setUri(logicalBinding.getDefinition().getTargetUri());
 

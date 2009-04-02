@@ -47,16 +47,25 @@ import org.w3c.dom.Element;
 public final class PolicySet extends AbstractDefinition {
     private static final long serialVersionUID = -4507145141780962741L;
 
-    /** Intents provided by this policy set. */
+    /**
+     * Intents provided by this policy set.
+     */
     private final Set<QName> provides;
 
-    /** Policy set extension */
+    /**
+     * Policy set extension
+     */
     private final Element extension;
 
     /**
      * XPath expression for the apples to attribute.
      */
     private final String appliesTo;
+
+    /**
+     * XPath expression for the attach to attribute.
+     */
+    private final String attachTo;
 
     /**
      * The phase at which the policy is applied.
@@ -69,12 +78,14 @@ public final class PolicySet extends AbstractDefinition {
      * @param name      Name of the policy set.
      * @param provides  Intents provided by this policy set.
      * @param appliesTo XPath expression for the applies to attribute.
+     * @param attachTo  XPath expression for the attach to attribute.
      * @param extension Extension for the policy set.
      * @param phase     The phase at which the policy is applied.
      */
-    public PolicySet(QName name, Set<QName> provides, String appliesTo, Element extension, PolicyPhase phase) {
+    public PolicySet(QName name, Set<QName> provides, String appliesTo, String attachTo, Element extension, PolicyPhase phase) {
         super(name);
         this.provides = provides;
+        this.attachTo = "".equals(attachTo) ? null : attachTo;
         this.appliesTo = "".equals(appliesTo) ? null : appliesTo;
         this.extension = extension;
         this.phase = phase;
@@ -87,6 +98,15 @@ public final class PolicySet extends AbstractDefinition {
      */
     public String getAppliesTo() {
         return appliesTo;
+    }
+
+    /**
+     * XPath expression to the element to which the policy set attaches.
+     *
+     * @return The attaches to XPath expression.
+     */
+    public String getAttachTo() {
+        return attachTo;
     }
 
     /**

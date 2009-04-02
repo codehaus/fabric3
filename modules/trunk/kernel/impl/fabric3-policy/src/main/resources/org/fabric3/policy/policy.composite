@@ -24,14 +24,8 @@
            name="PolicyBootComposite"
            autowire="true">
 
-    <!-- Policy Infoset Builder -->
-    <component name="PolicyInfosetBuilder">
-        <f3-impl:implementation.system class="org.fabric3.policy.infoset.DefaultPolicyInfosetBuilder"/>
-    </component>
-
-    <!-- Policy Set Evaluator -->
-    <component name="PolicySetEvaluator">
-        <f3-impl:implementation.system class="org.fabric3.policy.infoset.DefaultPolicySetEvaluator"/>
+    <component name="PolicyEvaluator">
+        <f3-impl:implementation.system class="org.fabric3.policy.infoset.PolicyEvaluatorImpl"/>
     </component>
 
     <!-- Interception policy helper -->

@@ -29,13 +29,12 @@ import org.fabric3.binding.ftp.provision.FtpWireSourceDefinition;
 import org.fabric3.binding.ftp.provision.FtpWireTargetDefinition;
 import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
 import org.fabric3.binding.ftp.scdl.TransferMode;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -66,11 +65,11 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
     }
 
     public FtpWireSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding,
-                                                      Policy policy,
-                                                      ServiceDefinition serviceDefinition) throws GenerationException {
+                                                      ServiceContract<?> contract,
+                                                      List<LogicalOperation> operations,
+                                                      Policy policy) throws GenerationException {
 
-        ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
-        if (serviceContract.getOperations().size() != 1) {
+        if (contract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");
         }
 
@@ -85,10 +84,11 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
     }
 
     public FtpWireTargetDefinition generateWireTarget(LogicalBinding<FtpBindingDefinition> binding,
-                                                      Policy policy,
-                                                      ServiceContract<?> contract) throws GenerationException {
+                                                      ServiceContract<?> contract,
+                                                      List<LogicalOperation> operations,
+                                                      Policy policy) throws GenerationException {
 
-        if (contract.getOperations().size() != 1) {
+        if (operations.size() != 1) {
             throw new GenerationException("Expects only one operation");
         }
 
@@ -96,7 +96,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
         FtpBindingDefinition definition = binding.getDefinition();
         boolean active = definition.getTransferMode() == TransferMode.ACTIVE;
 
-        FtpSecurity security = processPolicies(policy, contract.getOperations().iterator().next());
+        FtpSecurity security = processPolicies(policy, operations.get(0));
 
         FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security, connectTimeout, socketTimeout);
         hwtd.setUri(definition.getTargetUri());
@@ -108,7 +108,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
 
     }
 
-    private FtpSecurity processPolicies(Policy policy, Operation<?> operation) throws GenerationException {
+    private FtpSecurity processPolicies(Policy policy, LogicalOperation operation) throws GenerationException {
 
         List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
         if (policySets == null || policySets.size() == 0) {

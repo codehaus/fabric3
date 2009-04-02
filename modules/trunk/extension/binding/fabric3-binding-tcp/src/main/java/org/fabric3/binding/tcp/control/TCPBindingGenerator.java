@@ -17,31 +17,29 @@
 package org.fabric3.binding.tcp.control;
 
 import java.net.URI;
+import java.util.List;
 
 import org.fabric3.binding.tcp.provision.TCPWireSourceDefinition;
 import org.fabric3.binding.tcp.provision.TCPWireTargetDefinition;
 import org.fabric3.binding.tcp.scdl.TCPBindingDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
  * @version $Revision$ $Date$
  */
-public class TCPBindingGenerator implements
-        BindingGenerator<TCPBindingDefinition> {
+public class TCPBindingGenerator implements BindingGenerator<TCPBindingDefinition> {
 
-    /**
-     * {@inheritDoc}
-     */
-    public TCPWireSourceDefinition generateWireSource(LogicalBinding<TCPBindingDefinition> binding, Policy policy,
-                                                      ServiceDefinition serviceDefinition) throws GenerationException {
+    public TCPWireSourceDefinition generateWireSource(LogicalBinding<TCPBindingDefinition> binding,
+                                                      ServiceContract<?> contract,
+                                                      List<LogicalOperation> operations,
+                                                      Policy policy) throws GenerationException {
 
-        ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
-        if (serviceContract.getOperations().size() != 1) {
+        if (contract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");
         }
 
@@ -55,11 +53,10 @@ public class TCPBindingGenerator implements
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public TCPWireTargetDefinition generateWireTarget(LogicalBinding<TCPBindingDefinition> binding, Policy policy,
-                                                      ServiceContract<?> contract) throws GenerationException {
+    public TCPWireTargetDefinition generateWireTarget(LogicalBinding<TCPBindingDefinition> binding,
+                                                      ServiceContract<?> contract,
+                                                      List<LogicalOperation> operations,
+                                                      Policy policy) throws GenerationException {
 
         if (contract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");

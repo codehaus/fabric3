@@ -38,6 +38,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
@@ -54,10 +55,10 @@ import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -82,25 +83,26 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     }
 
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      Policy policy,
-                                                      ServiceDefinition serviceDefinition) throws GenerationException {
+                                                      ServiceContract<?> contract,
+                                                      List<LogicalOperation> operations,
+                                                      Policy policy) throws GenerationException {
 
-        ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
-        TransactionType transactionType = getTransactionType(policy, serviceContract);
-        Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
+        TransactionType transactionType = getTransactionType(policy, operations);
+        Set<String> oneWayOperations = getOneWayOperations(policy, operations);
 
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
-        Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
+        Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
         URI uri = logicalBinding.getDefinition().getTargetUri();
         return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations);
     }
 
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      Policy policy,
-                                                      ServiceContract<?> contract) throws GenerationException {
+                                                      ServiceContract<?> contract,
+                                                      List<LogicalOperation> operations,
+                                                      Policy policy) throws GenerationException {
 
-        TransactionType transactionType = getTransactionType(policy, contract);
-        Set<String> oneWayOperations = getOneWayOperations(policy, contract);
+        TransactionType transactionType = getTransactionType(policy, logicalBinding.getParent().getOperations());
+        Set<String> oneWayOperations = getOneWayOperations(policy, operations);
 
         URI uri = logicalBinding.getDefinition().getTargetUri();
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
@@ -111,10 +113,10 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     /*
      * Gets the transaction type.
      */
-    private TransactionType getTransactionType(Policy policy, ServiceContract<?> serviceContract) {
+    private TransactionType getTransactionType(Policy policy, List<LogicalOperation> operations) {
 
         // If any operation has the intent, return that
-        for (Operation<?> operation : serviceContract.getOperations()) {
+        for (LogicalOperation operation : operations) {
             for (QName intent : policy.getProvidedIntents(operation)) {
                 if (TRANSACTED_ONEWAY_GLOBAL.equals(intent)) {
                     return TransactionType.GLOBAL;
@@ -133,16 +135,16 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     /*
      * Gets one way method names.
      */
-    private Set<String> getOneWayOperations(Policy policy, ServiceContract<?> serviceContract) {
+    private Set<String> getOneWayOperations(Policy policy, List<LogicalOperation> operations) {
         Set<String> result = null;
         // If any operation has the intent, return that
-        for (Operation<?> operation : serviceContract.getOperations()) {
+        for (LogicalOperation operation : operations) {
             for (QName intent : policy.getProvidedIntents(operation)) {
                 if (ONEWAY.equals(intent)) {
                     if (result == null) {
                         result = new HashSet<String>();
                     }
-                    result.add(operation.getName());
+                    result.add(operation.getDefinition().getName());
                     break;
                 }
             }

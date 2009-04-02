@@ -115,6 +115,7 @@
                 <include>org.codehaus.fabric3:fabric3-loader</include>
                 <include>org.codehaus.fabric3:fabric3-thread-pool</include>
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-host</include>
+                <include>jaxen:jaxen</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
             </includes>
             <outputDirectory>boot</outputDirectory>

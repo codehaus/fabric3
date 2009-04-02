@@ -40,6 +40,14 @@ public class PolicyResolutionException extends Fabric3Exception {
         super(message, identifier.toString());
     }
 
+    public PolicyResolutionException(String message) {
+        super(message);
+    }
+
+    public PolicyResolutionException(Throwable cause) {
+        super(cause);
+    }
+
     @Override
     public String getMessage() {
         return super.getMessage() + ":" + getIdentifier();

@@ -20,11 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
@@ -34,29 +33,32 @@ import org.fabric3.spi.policy.PolicyResult;
  * @version $Revision$ $Date$
  */
 public class NullPolicyResolver implements PolicyResolver {
-    
-    public PolicyResult resolvePolicies(ServiceContract<?> serviceContract,
-                                            LogicalBinding<?> sourceBinding, 
-                                            LogicalBinding<?> targetBinding, 
-                                            LogicalComponent<?> source, 
-                                            LogicalComponent<?> target) throws PolicyResolutionException {
+
+    public PolicyResult resolvePolicies(List<LogicalOperation> operations,
+                                        LogicalBinding<?> sourceBinding,
+                                        LogicalBinding<?> targetBinding,
+                                        LogicalComponent<?> source,
+                                        LogicalComponent<?> target) throws PolicyResolutionException {
         return new PolicyResult() {
 
-            public List<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
+            public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
                 return Collections.emptyList();
             }
 
             public Policy getSourcePolicy() {
                 return new Policy() {
-                    public List<QName> getProvidedIntents(Operation<?> operation) {
+                    public List<QName> getProvidedIntents(LogicalOperation operation) {
                         return Collections.emptyList();
                     }
-                    public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+
+                    public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
                         return Collections.emptyList();
                     }
+
                     public List<QName> getProvidedIntents() {
                         return Collections.emptyList();
                     }
+
                     public List<PolicySet> getProvidedPolicySets() {
                         return Collections.emptyList();
                     }
@@ -65,21 +67,24 @@ public class NullPolicyResolver implements PolicyResolver {
 
             public Policy getTargetPolicy() {
                 return new Policy() {
-                    public List<QName> getProvidedIntents(Operation<?> operation) {
+                    public List<QName> getProvidedIntents(LogicalOperation operation) {
                         return Collections.emptyList();
                     }
-                    public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+
+                    public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
                         return Collections.emptyList();
                     }
+
                     public List<QName> getProvidedIntents() {
                         return Collections.emptyList();
                     }
+
                     public List<PolicySet> getProvidedPolicySets() {
                         return Collections.emptyList();
                     }
                 };
             }
-            
+
         };
     }
 

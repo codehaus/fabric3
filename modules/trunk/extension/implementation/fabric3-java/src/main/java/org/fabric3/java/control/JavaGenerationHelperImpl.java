@@ -17,6 +17,7 @@
 package org.fabric3.java.control;
 
 import java.net.URI;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
@@ -25,20 +26,19 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
-import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.model.type.component.CallbackDefinition;
+import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Scope;
+import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.model.type.component.CallbackDefinition;
-import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -100,7 +100,9 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         // assume for now that any wire from a Java component can be optimized
         wireDefinition.setOptimizable(true);
 
-        calculateConversationalPolicy(wireDefinition, serviceContract, policy);
+        boolean conversational = serviceContract.isConversational();
+        List<LogicalOperation> operations = reference.getOperations();
+        calculateConversationalPolicy(wireDefinition, operations, policy, conversational);
         return wireDefinition;
     }
 
@@ -167,12 +169,16 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
     /**
      * Determines if the wire propagates conversations. Conversational propagation is handled by the source component.
      *
-     * @param wireDefinition  the source wire defintion
-     * @param serviceContract the wire service cotnract
-     * @param policy          the set of policies for the wire
+     * @param wireDefinition the source wire defintion
+     * @param operations     the logical operations
+     * @param policy         the set of policies for the wire
+     * @param conversational true if the contract is conversational
      */
-    private void calculateConversationalPolicy(JavaWireSourceDefinition wireDefinition, ServiceContract<?> serviceContract, Policy policy) {
-        for (Operation<?> operation : serviceContract.getOperations()) {
+    private void calculateConversationalPolicy(JavaWireSourceDefinition wireDefinition,
+                                               List<LogicalOperation> operations,
+                                               Policy policy,
+                                               boolean conversational) {
+        for (LogicalOperation operation : operations) {
             for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
                 if (PROPAGATES_CONVERSATION_POLICY.equals(policySet.getName())) {
                     wireDefinition.setInteractionType(InteractionType.PROPAGATES_CONVERSATION);
@@ -181,7 +187,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
                 }
             }
         }
-        if (serviceContract.isConversational()) {
+        if (conversational) {
             wireDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
         }
 
