@@ -121,7 +121,7 @@ public interface Domain {
      * @param uris the contribution URIs
      * @throws DeploymentException if an error is encountered during recovery
      */
-    public void recover(List<URI> uris) throws DeploymentException;
+    void recover(List<URI> uris) throws DeploymentException;
 
     /**
      * Regenerates and routes deployment commands for the current state of the given zone.
