@@ -118,8 +118,8 @@
     </component>
 
     <!-- Definitions registry -->
-    <component name="DefinitionsRegistry">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
+    <component name="PolicyRegistry">
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.DefaultPolicyRegistry"/>
     </component>
 
     <component name="ClasspathProcessorRegistry">

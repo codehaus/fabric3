@@ -14,27 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.definitions;
+package org.fabric3.spi.policy;
 
 import org.fabric3.host.Fabric3Exception;
 
 /**
  * Execption thrown if unable to activate definition.
- * 
+ *
  * @version $Revision$ $Date$
  */
-public class DefinitionActivationException extends Fabric3Exception {
-
-    /**
-     * Serial version UID.
-     */
+public class PolicyActivationException extends Fabric3Exception {
     private static final long serialVersionUID = -7879956099570998326L;
 
     /**
-     * @param message Message for the exception.
+     * @param message    Message for the exception.
      * @param identifier Contextual information.
      */
-    public DefinitionActivationException(String message, String identifier) {
+    public PolicyActivationException(String message, String identifier) {
         super(message, identifier);
     }
 

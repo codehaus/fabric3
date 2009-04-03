@@ -28,7 +28,7 @@ import org.fabric3.policy.infoset.PolicyEvaluator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.services.definitions.DefinitionsRegistry;
+import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -39,10 +39,10 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 public class AbstractPolicyHelper {
     protected LogicalComponentManager lcm;
     protected PolicyEvaluator policyEvaluator;
-    protected DefinitionsRegistry definitionsRegistry;
+    protected PolicyRegistry policyRegistry;
 
-    protected AbstractPolicyHelper(DefinitionsRegistry definitionsRegistry, LogicalComponentManager lcm, PolicyEvaluator policyEvaluator) {
-        this.definitionsRegistry = definitionsRegistry;
+    protected AbstractPolicyHelper(PolicyRegistry policyRegistry, LogicalComponentManager lcm, PolicyEvaluator policyEvaluator) {
+        this.policyRegistry = policyRegistry;
         this.lcm = lcm;
         this.policyEvaluator = policyEvaluator;
     }
@@ -59,7 +59,7 @@ public class AbstractPolicyHelper {
 
         Set<PolicySet> policies = new LinkedHashSet<PolicySet>();
 
-        Collection<PolicySet> definitions = definitionsRegistry.getAllDefinitions(PolicySet.class);
+        Collection<PolicySet> definitions = policyRegistry.getAllDefinitions(PolicySet.class);
         // calculate appliesTo
         for (PolicySet policySet : definitions) {
             Iterator<Intent> iterator = requiredIntents.iterator();
@@ -98,7 +98,7 @@ public class AbstractPolicyHelper {
                 if (!intent.isQualified()) {
                     throw new PolicyResolutionException("Unqualified intent without constrained artifact", intentName);
                 }
-                Intent qualifiableIntent = definitionsRegistry.getDefinition(intent.getQualifiable(), Intent.class);
+                Intent qualifiableIntent = policyRegistry.getDefinition(intent.getQualifiable(), Intent.class);
                 if (qualifiableIntent == null) {
                     throw new PolicyResolutionException("Unknown intent", intent.getQualifiable());
                 }
@@ -136,13 +136,13 @@ public class AbstractPolicyHelper {
     protected Set<Intent> resolveProfileIntents(Set<QName> intentNames) throws PolicyResolutionException {
         Set<Intent> requiredIntents = new LinkedHashSet<Intent>();
         for (QName intentName : intentNames) {
-            Intent intent = definitionsRegistry.getDefinition(intentName, Intent.class);
+            Intent intent = policyRegistry.getDefinition(intentName, Intent.class);
             if (intent == null) {
                 throw new PolicyResolutionException("Unknown intent", intentName);
             }
             if (intent.isProfile()) {
                 for (QName requiredInentName : intent.getRequires()) {
-                    Intent requiredIntent = definitionsRegistry.getDefinition(requiredInentName, Intent.class);
+                    Intent requiredIntent = policyRegistry.getDefinition(requiredInentName, Intent.class);
                     if (requiredIntent == null) {
                         throw new PolicyResolutionException("Unknown intent", requiredInentName);
                     }

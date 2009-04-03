@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.fabric3.fabric.runtime.FabricNames.DEFINITIONS_REGISTRY;
+import static org.fabric3.fabric.runtime.FabricNames.POLICY_REGISTRY;
 import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
@@ -37,8 +37,8 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.spi.services.definitions.DefinitionActivationException;
-import org.fabric3.spi.services.definitions.DefinitionsRegistry;
+import org.fabric3.spi.policy.PolicyActivationException;
+import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.services.event.DomainRecover;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.JoinDomain;
@@ -109,7 +109,7 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
             List<URI> uris = installContributions(extensionContributions);
             // deploy extensions
             deploy(uris);
-        } catch (DefinitionActivationException e) {
+        } catch (PolicyActivationException e) {
             throw new InitializationException(e);
         }
 
@@ -163,13 +163,13 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         try {
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI uri = contributionService.contribute(source);
-            DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
+            PolicyRegistry policyRegistry = runtime.getSystemComponent(PolicyRegistry.class, POLICY_REGISTRY);
             List<URI> definitions = new ArrayList<URI>();
             definitions.add(uri);
-            definitionsRegistry.activateDefinitions(definitions);
+            policyRegistry.activateDefinitions(definitions);
         } catch (ContributionException e) {
             throw new InitializationException(e);
-        } catch (DefinitionActivationException e) {
+        } catch (PolicyActivationException e) {
             throw new InitializationException(e);
         }
     }
@@ -185,12 +185,12 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         }
     }
 
-    private void deploy(List<URI> contributionUris) throws InitializationException, DefinitionActivationException {
+    private void deploy(List<URI> contributionUris) throws InitializationException, PolicyActivationException {
         try {
             Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_SERVICE_URI);
             domain.include(contributionUris, false);
-            DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
-            definitionsRegistry.activateDefinitions(contributionUris);
+            PolicyRegistry policyRegistry = runtime.getSystemComponent(PolicyRegistry.class, POLICY_REGISTRY);
+            policyRegistry.activateDefinitions(contributionUris);
         } catch (DeploymentException e) {
             throw new ExtensionInitializationException("Error deploying extensions", e);
         }

@@ -29,7 +29,7 @@ public interface FabricNames {
 
     URI EVENT_SERVICE_URI = URI.create(Names.RUNTIME_NAME + "/EventService");
 
-    URI DEFINITIONS_REGISTRY = URI.create(Names.RUNTIME_NAME + "/DefinitionsRegistry");
+    URI POLICY_REGISTRY = URI.create(Names.RUNTIME_NAME + "/PolicyRegistry");
 
     URI METADATA_STORE_URI = URI.create(Names.RUNTIME_NAME + "/MetaDataStore");
 

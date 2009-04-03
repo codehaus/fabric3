@@ -14,15 +14,16 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.services.definitions;
+package org.fabric3.fabric.policy;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.BindingType;
@@ -33,32 +34,33 @@ import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
-import org.fabric3.spi.services.definitions.DefinitionActivationException;
-import org.fabric3.spi.services.definitions.DefinitionsRegistry;
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.spi.policy.PolicyActivationException;
+import org.fabric3.spi.policy.PolicyRegistry;
 
 /**
- * Default implementation of the definitions registry.
- * 
+ * Default implementation of the policy registry.
+ *
  * @version $Revision$ $Date$
  */
-public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
+public class DefaultPolicyRegistry implements PolicyRegistry {
 
     private MetaDataStore metaDataStore;
-    private Map<Class<? extends AbstractDefinition>, Map<QName, ? extends AbstractDefinition>> cache = 
-        new ConcurrentHashMap<Class<? extends AbstractDefinition>, Map<QName,? extends AbstractDefinition>>();
-    
+    private Map<Class<? extends AbstractDefinition>, Map<QName, ? extends AbstractDefinition>> cache =
+            new ConcurrentHashMap<Class<? extends AbstractDefinition>, Map<QName, ? extends AbstractDefinition>>();
+
     /**
      * Initializes the cache.
+     *
+     * @param metaDataStore the metadata store
      */
-    public DefaultDefinitionsRegistry(@Reference MetaDataStore metaDataStore) {    
-        
+    public DefaultPolicyRegistry(@Reference MetaDataStore metaDataStore) {
+
         this.metaDataStore = metaDataStore;
-        
+
         cache.put(Intent.class, new ConcurrentHashMap<QName, Intent>());
         cache.put(PolicySet.class, new ConcurrentHashMap<QName, PolicySet>());
         cache.put(BindingType.class, new ConcurrentHashMap<QName, BindingType>());
-        cache.put(ImplementationType.class, new ConcurrentHashMap<QName, ImplementationType>());        
+        cache.put(ImplementationType.class, new ConcurrentHashMap<QName, ImplementationType>());
     }
 
     public <D extends AbstractDefinition> Collection<D> getAllDefinitions(Class<D> definitionClass) {
@@ -73,7 +75,7 @@ public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
         getSubCache(definitionClass).put(definition.getName(), definition);
     }
 
-    public void activateDefinitions(List<URI> contributionUris) throws DefinitionActivationException {
+    public void activateDefinitions(List<URI> contributionUris) throws PolicyActivationException {
 
         for (URI uri : contributionUris) {
             Contribution contribution = metaDataStore.find(uri);
@@ -89,7 +91,7 @@ public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
 
     }
 
-    private void activate(AbstractDefinition definition) throws DefinitionActivationException {
+    private void activate(AbstractDefinition definition) throws PolicyActivationException {
 
         if (definition instanceof Intent) {
             getSubCache(Intent.class).put(definition.getName(), (Intent) definition);
@@ -102,7 +104,7 @@ public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
         }
 
     }
-    
+
     @SuppressWarnings("unchecked")
     private <D extends AbstractDefinition> Map<QName, D> getSubCache(Class<D> definitionClass) {
         return (Map<QName, D>) cache.get(definitionClass);

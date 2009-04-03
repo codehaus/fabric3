@@ -32,7 +32,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.services.definitions.DefinitionsRegistry;
+import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -40,16 +40,16 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
  */
 public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements InteractionPolicyHelper {
 
-    public InteractionPolicyHelperImpl(@Reference DefinitionsRegistry definitionsRegistry,
+    public InteractionPolicyHelperImpl(@Reference PolicyRegistry policyRegistry,
                                        @Reference LogicalComponentManager lcm,
                                        @Reference PolicyEvaluator policyEvaluator) {
-        super(definitionsRegistry, lcm, policyEvaluator);
+        super(policyRegistry, lcm, policyEvaluator);
     }
 
     public Set<Intent> getProvidedIntents(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException {
 
         QName type = binding.getDefinition().getType();
-        BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
+        BindingType bindingType = policyRegistry.getDefinition(type, BindingType.class);
 
         // FIXME This should not happen, all binding types should be registsred
         if (bindingType == null) {
@@ -75,7 +75,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
     public Set<PolicySet> resolveIntents(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException {
 
         QName type = binding.getDefinition().getType();
-        BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
+        BindingType bindingType = policyRegistry.getDefinition(type, BindingType.class);
 
         Set<QName> alwaysProvidedIntents = new LinkedHashSet<QName>();
         Set<QName> mayProvidedIntents = new LinkedHashSet<QName>();

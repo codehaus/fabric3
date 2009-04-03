@@ -14,49 +14,47 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.definitions;
+package org.fabric3.spi.policy;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.definitions.AbstractDefinition;
 
 /**
- * Registry of binding types, implementation types, intents and policy sets 
- * within an SCA domain.
- * 
+ * Registry of binding types, implementation types, intents and policy sets within an SCA domain.
+ *
  * @version $Revision$ $Date$
  */
-public interface DefinitionsRegistry {
-    
+public interface PolicyRegistry {
+
     /**
      * Returns all the definitions of a given type.
-     * 
-     * @param <D> Definition type.
+     *
+     * @param <D>             Definition type.
      * @param definitionClass Definition class.
      * @return All definitions of the given type.
      */
     <D extends AbstractDefinition> Collection<D> getAllDefinitions(Class<D> definitionClass);
-    
+
     /**
      * Returns the definition of specified type and qualified name.
-     * 
-     * @param <D> Definition type.
-     * @param name Qualified name of the definition object.
+     *
+     * @param <D>             Definition type.
+     * @param name            Qualified name of the definition object.
      * @param definitionClass Definition class.
      * @return Requested definition object if available, otherwise null.
      */
     <D extends AbstractDefinition> D getDefinition(QName name, Class<D> definitionClass);
-    
+
     /**
-     * Activates all the definitions in the specified contributions.
-     * 
+     * Activates all the policy definitions in the specified contributions.
+     *
      * @param contributionUris The URIs for the contribution.
-     * @throws DefinitionActivationException If unable to find definition.
+     * @throws PolicyActivationException If unable to find definition.
      */
-    void activateDefinitions(List<URI> contributionUris) throws DefinitionActivationException;
+    void activateDefinitions(List<URI> contributionUris) throws PolicyActivationException;
 
 }
