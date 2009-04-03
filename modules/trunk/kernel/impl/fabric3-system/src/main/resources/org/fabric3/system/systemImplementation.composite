@@ -44,7 +44,7 @@
         <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
 
-    <component name="SystemComponentBuilder">
+    <component name="SystemComponentBuilder" f3-core:key="org.fabric3.system.provision.SystemComponentDefinition">
         <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemComponentBuilder"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>

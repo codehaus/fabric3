@@ -20,7 +20,6 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
@@ -38,7 +37,6 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -55,19 +53,13 @@ import org.fabric3.spi.transform.TransformerRegistry;
 public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaComponentDefinition, JavaComponent<T>> {
     private ProxyService proxyService;
 
-    public JavaComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
-                                @Reference ScopeRegistry scopeRegistry,
+    public JavaComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                 @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
                                 @Reference ProxyService proxyService) {
-        super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
+        super(scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
         this.proxyService = proxyService;
-    }
-
-    @Init
-    public void init() {
-        builderRegistry.register(JavaComponentDefinition.class, this);
     }
 
     public JavaComponent<T> build(JavaComponentDefinition definition) throws BuilderException {

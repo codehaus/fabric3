@@ -40,7 +40,7 @@
         <f3-impl:implementation.system class="org.fabric3.groovy.control.GroovyComponentGenerator"/>
     </component>
 
-    <component name="GroovyComponentBuilder">
+    <component name="GroovyComponentBuilder" f3-core:key="org.fabric3.groovy.provision.GroovyComponentDefinition">
         <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyComponentBuilder"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>

@@ -19,21 +19,17 @@ package org.fabric3.web.runtime;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.container.web.spi.WebApplicationActivator;
 import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.web.provision.WebComponentDefinition;
 
 /**
@@ -44,25 +40,13 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
     private WebApplicationActivator activator;
     private InjectorFactory injectorFactory;
     private ProxyService proxyService;
-    private ComponentBuilderRegistry builderRegistry;
 
     public WebComponentBuilder(@Reference ProxyService proxyService,
-                               @Reference ComponentBuilderRegistry registry,
                                @Reference WebApplicationActivator activator,
                                @Reference InjectorFactory injectorFactory) {
         this.proxyService = proxyService;
-        this.builderRegistry = registry;
         this.activator = activator;
         this.injectorFactory = injectorFactory;
-    }
-
-    @Init
-    public void init() {
-        builderRegistry.register(WebComponentDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
     }
 
     public WebComponent build(WebComponentDefinition definition) throws BuilderException {

@@ -23,7 +23,7 @@
            name="JavaRuntimeExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
            autowire="true">
 
-    <component name="JavaComponentBuilder">
+    <component name="JavaComponentBuilder" f3-core:key="org.fabric3.java.provision.JavaComponentDefinition">
         <f3-impl:implementation.system class="org.fabric3.java.runtime.JavaComponentBuilder"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>

@@ -39,7 +39,7 @@
     </component>
 
     <!-- Builder -->
-    <component name="MockComponentBuilder">
+    <component name="MockComponentBuilder" f3-core:key="org.fabric3.mock.MockComponentDefinition">
         <f3-impl:implementation.system class="org.fabric3.mock.MockComponentBuilder"/>
     </component>
 

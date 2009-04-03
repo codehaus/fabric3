@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.builder.component;
+package org.fabric3.fabric.builder.component;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.component.Component;
@@ -44,16 +44,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  * @version $Rev$ $Date$
  */
 public interface ComponentBuilderRegistry {
-
-    /**
-     * Registers a component builder.
-     *
-     * @param <PCD>           Type of the physical component definition.
-     * @param definitionClass Class of the physical component definition.
-     * @param builder         Builder for the physical component definition.
-     */
-    <PCD extends PhysicalComponentDefinition, C extends Component>
-            void register(Class<?> definitionClass, ComponentBuilder<PCD, C> builder);
 
     /**
      * Builds a physical component from a component definition.

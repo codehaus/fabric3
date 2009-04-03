@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.fabric.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;

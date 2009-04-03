@@ -40,13 +40,12 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
+import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.model.type.java.Signature;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.system.provision.SystemComponentDefinition;
 
 /**
@@ -70,7 +69,6 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
         QName deployable = new QName("test", "test");
         componentId = URI.create("fabric3://component");
 
-        ComponentBuilderRegistry builderRegistry = EasyMock.createMock(ComponentBuilderRegistry.class);
         ScopeRegistry scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
 
         ClassLoader classLoader = getClass().getClassLoader();
@@ -85,12 +83,10 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
         EasyMock.expect(providerBuilders.build(providerDefinition, classLoader)).andStubReturn(instanceFactoryProvider);
         EasyMock.replay(providerBuilders);
 
-        builder = new SystemComponentBuilder<T>(builderRegistry,
-                                                scopeRegistry,
+        builder = new SystemComponentBuilder<T>(scopeRegistry,
                                                 providerBuilders,
                                                 classLoaderRegistry,
                                                 null);
-
         definition = new SystemComponentDefinition();
         definition.setDeployable(deployable);
         definition.setComponentId(componentId);

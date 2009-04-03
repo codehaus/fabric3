@@ -44,23 +44,22 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;
@@ -73,7 +72,6 @@ import org.fabric3.spi.transform.TransformerRegistry;
  */
 public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinition, C extends Component> implements ComponentBuilder<PCD, C> {
 
-    protected final ComponentBuilderRegistry builderRegistry;
     protected final ScopeRegistry scopeRegistry;
     protected final InstanceFactoryBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
@@ -94,12 +92,10 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         OBJECT_TYPES.put(Double.TYPE, Double.class);
     }
 
-    protected PojoComponentBuilder(ComponentBuilderRegistry builderRegistry,
-                                   ScopeRegistry scopeRegistry,
+    protected PojoComponentBuilder(ScopeRegistry scopeRegistry,
                                    InstanceFactoryBuilderRegistry providerBuilders,
                                    ClassLoaderRegistry classLoaderRegistry,
                                    TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
-        this.builderRegistry = builderRegistry;
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
         this.classLoaderRegistry = classLoaderRegistry;

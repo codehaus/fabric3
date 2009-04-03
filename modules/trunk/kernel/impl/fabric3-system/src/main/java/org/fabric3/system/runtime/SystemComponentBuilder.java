@@ -38,22 +38,20 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.component.Scope;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.system.provision.SystemComponentDefinition;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.system.provision.SystemComponentDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -61,18 +59,11 @@ import org.fabric3.spi.transform.TransformerRegistry;
 @EagerInit
 public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemComponentDefinition, SystemComponent<T>> {
 
-    public SystemComponentBuilder(
-            @Reference ComponentBuilderRegistry builderRegistry,
-            @Reference ScopeRegistry scopeRegistry,
-            @Reference InstanceFactoryBuilderRegistry providerBuilders,
-            @Reference ClassLoaderRegistry classLoaderRegistry,
-            @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
-        super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
-    }
-
-    @Init
-    public void init() {
-        builderRegistry.register(SystemComponentDefinition.class, this);
+    public SystemComponentBuilder(@Reference ScopeRegistry scopeRegistry,
+                                  @Reference InstanceFactoryBuilderRegistry providerBuilders,
+                                  @Reference ClassLoaderRegistry classLoaderRegistry,
+                                  @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+        super(scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
     }
 
     public SystemComponent<T> build(SystemComponentDefinition definition) throws BuilderException {

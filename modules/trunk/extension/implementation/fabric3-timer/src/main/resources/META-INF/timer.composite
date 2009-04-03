@@ -31,7 +31,7 @@
     </component>
 
 
-    <component name="TimerComponentBuilder">
+    <component name="TimerComponentBuilder" f3-core:key="org.fabric3.timer.component.provision.TimerComponentDefinition">
         <f3-impl:implementation.system class="org.fabric3.timer.component.runtime.TimerComponentBuilder"/>
     </component>
 

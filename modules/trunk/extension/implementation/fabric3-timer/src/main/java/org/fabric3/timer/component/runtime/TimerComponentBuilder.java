@@ -20,24 +20,22 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.builder.ProxyService;
+import org.fabric3.pojo.component.OASISPojoComponentContext;
+import org.fabric3.pojo.component.OASISPojoRequestContext;
 import org.fabric3.pojo.component.PojoComponentContext;
 import org.fabric3.pojo.component.PojoRequestContext;
-import org.fabric3.pojo.component.OASISPojoRequestContext;
-import org.fabric3.pojo.component.OASISPojoComponentContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -56,23 +54,17 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
     private TimerService trxTimerService;
     private ProxyService proxyService;
 
-    public TimerComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
-                                 @Reference ScopeRegistry scopeRegistry,
+    public TimerComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                  @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
                                  @Reference ProxyService proxyService,
                                  @Reference(name = "nonTrxTimerService") TimerService nonTrxTimerService,
                                  @Reference(name = "trxTimerService") TimerService trxTimerService) {
-        super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
+        super(scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
         this.proxyService = proxyService;
         this.nonTrxTimerService = nonTrxTimerService;
         this.trxTimerService = trxTimerService;
-    }
-
-    @Init
-    public void init() {
-        builderRegistry.register(TimerComponentDefinition.class, this);
     }
 
     public TimerComponent<T> build(TimerComponentDefinition definition) throws BuilderException {

@@ -37,10 +37,11 @@ package org.fabric3.fabric.builder.component;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.fabric.builder.BuilderNotFoundException;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
@@ -57,6 +58,12 @@ public class DefaultComponentBuilderRegistry implements ComponentBuilderRegistry
             ComponentBuilder<? extends PhysicalComponentDefinition, ? extends Component>> registry =
             new ConcurrentHashMap<Class<?>,
                     ComponentBuilder<? extends PhysicalComponentDefinition, ? extends Component>>();
+
+    @Reference(required = false)
+    public void setRegistry(Map<Class<?>,
+            ComponentBuilder<? extends PhysicalComponentDefinition, ? extends Component>> registry) {
+        this.registry = registry;
+    }
 
     /**
      * Registers a physical component builder.

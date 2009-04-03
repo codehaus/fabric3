@@ -112,7 +112,6 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -132,6 +131,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.system.control.SystemComponentGenerator;
+import org.fabric3.system.provision.SystemComponentDefinition;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
 import org.fabric3.system.provision.SystemWireTargetDefinition;
 import org.fabric3.system.runtime.SystemComponentBuilder;
@@ -244,14 +244,14 @@ public class BootstrapAssemblyFactory {
         transformerRegistry.register(new String2ListOfString());
         transformerRegistry.register(new String2ListOfQName());
 
-        ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
+        DefaultComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
-        SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
-                                                                               scopeRegistry,
+        SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(scopeRegistry,
                                                                                providerRegistry,
                                                                                classLoaderRegistry,
                                                                                transformerRegistry);
-        builder.init();
+
+        registry.register(SystemComponentDefinition.class, builder);
 
         Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
