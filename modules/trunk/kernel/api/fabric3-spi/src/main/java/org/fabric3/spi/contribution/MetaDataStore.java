@@ -93,8 +93,7 @@ public interface MetaDataStore {
     <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri,
                                                                              Class<V> type,
                                                                              S symbol,
-                                                                             IntrospectionContext context)
-            throws StoreException;
+                                                                             IntrospectionContext context) throws StoreException;
 
     /**
      * Resolves an import or returns null if it cannot be satisfied.
