@@ -22,9 +22,10 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  * @version $Revision$ $Date$
  */
 public class TxInterceptorDefinition extends PhysicalInterceptorDefinition {
-    
+    private static final long serialVersionUID = 5601171801790816606L;
+
     private final TxAction txAction;
-    
+
     public TxInterceptorDefinition(TxAction txAction) {
         this.txAction = txAction;
     }
