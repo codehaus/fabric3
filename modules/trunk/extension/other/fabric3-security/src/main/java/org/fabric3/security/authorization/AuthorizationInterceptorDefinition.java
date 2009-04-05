@@ -31,9 +31,10 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  *
  */
 public class AuthorizationInterceptorDefinition extends PhysicalInterceptorDefinition {
-    
+    private static final long serialVersionUID = -6234482688280435134L;
+
     private String[] roles;
-    
+
     /**
      * Initializes the roles required to pass through this interceptor.
      * 
