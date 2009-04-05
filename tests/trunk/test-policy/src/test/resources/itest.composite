@@ -24,32 +24,32 @@
 
     <!-- Unit test -->
     <component name="TransactionalServiceTest">
-        <f3-impl:junit class="org.fabric3.policy.TransactionalServiceTest"/>
+        <f3-impl:junit class="org.fabric3.policy.tx.TransactionalServiceTest"/>
         <reference name="transactionalService" target="TransactionalService1"/>
         <reference name="managedTransactionService" target="AnnotatedManagedTransactionService"/>
     </component>
 
     <component name="TransactionalService1">
-        <implementation.java class="org.fabric3.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
+        <implementation.java class="org.fabric3.policy.tx.TransactionalServiceImpl" requires="sca:managedTransaction"/>
         <reference name="childService" target="TransactionalService2" requires="sca:suspendsTransaction"/>
     </component>
 
     <component name="TransactionalService2">
-        <implementation.java class="org.fabric3.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
+        <implementation.java class="org.fabric3.policy.tx.TransactionalServiceImpl" requires="sca:managedTransaction"/>
     </component>
 
     <component name="AnnotatedManagedTransactionService">
-        <implementation.java class="org.fabric3.policy.AnnotatedManagedTransactionService"/>
+        <implementation.java class="org.fabric3.policy.tx.AnnotatedManagedTransactionService"/>
         <reference name="suspendedTransactionService" target="SuspendedTransactionService"/>
         <reference name="propagatesTransactionService" target="PropagatesTransactionService"/>
     </component>
 
     <component name="SuspendedTransactionService">
-        <implementation.java class="org.fabric3.policy.SuspendedTransactionService"/>
+        <implementation.java class="org.fabric3.policy.tx.SuspendedTransactionService"/>
     </component>
 
     <component name="PropagatesTransactionService">
-        <implementation.java class="org.fabric3.policy.PropagatesTransactionService"/>
+        <implementation.java class="org.fabric3.policy.tx.PropagatesTransactionService"/>
     </component>
 
 </composite>

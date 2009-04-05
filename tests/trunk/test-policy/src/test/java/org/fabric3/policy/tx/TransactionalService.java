@@ -14,23 +14,14 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.policy;
+package org.fabric3.policy.tx;
 
-import javax.transaction.Status;
-import javax.transaction.TransactionManager;
-
-import org.fabric3.api.annotation.Resource;
 
 /**
  * @version $Revision$ $Date$
  */
-public class PropagatesTransactionService implements TransactionalService {
-    @Resource(mappedName = "TransactionManager")
-    protected TransactionManager tm;
+public interface TransactionalService {
+    
+    void call() throws Exception;
 
-    public void call() throws Exception {
-        if (tm.getTransaction() == null || Status.STATUS_ACTIVE != tm.getTransaction().getStatus()) {
-            throw new AssertionError("Transaction not active");
-        }
-    }
 }

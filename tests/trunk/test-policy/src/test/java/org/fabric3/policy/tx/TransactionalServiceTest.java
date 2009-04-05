@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.policy;
+package org.fabric3.policy.tx;
 
 import junit.framework.TestCase;
 import org.oasisopen.sca.annotation.Reference;

@@ -14,39 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.policy;
+package org.fabric3.policy.tx;
 
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 
-import org.oasisopen.sca.annotation.Reference;
-
 import org.fabric3.api.annotation.Resource;
-import org.fabric3.api.annotation.transaction.ManagedTransaction;
-import org.fabric3.api.annotation.transaction.PropagatesTransaction;
-import org.fabric3.api.annotation.transaction.SuspendsTransaction;
 
 /**
  * @version $Revision$ $Date$
  */
-@ManagedTransaction
-public class AnnotatedManagedTransactionService implements TransactionalService {
+public class PropagatesTransactionService implements TransactionalService {
     @Resource(mappedName = "TransactionManager")
     protected TransactionManager tm;
-
-    @Reference
-    @SuspendsTransaction
-    protected TransactionalService suspendedTransactionService;
-
-    @Reference
-    @PropagatesTransaction
-    protected TransactionalService propagatesTransactionService;
 
     public void call() throws Exception {
         if (tm.getTransaction() == null || Status.STATUS_ACTIVE != tm.getTransaction().getStatus()) {
             throw new AssertionError("Transaction not active");
         }
-        suspendedTransactionService.call();
-        propagatesTransactionService.call();
     }
 }

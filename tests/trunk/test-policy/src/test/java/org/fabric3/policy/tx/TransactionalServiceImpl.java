@@ -14,25 +14,29 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.policy;
+package org.fabric3.policy.tx;
 
-import javax.transaction.Status;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transaction;
-
-import org.fabric3.api.annotation.Resource;
+import org.oasisopen.sca.annotation.Reference;
+import org.oasisopen.sca.annotation.Scope;
 
 /**
  * @version $Revision$ $Date$
  */
-public class SuspendedTransactionService implements TransactionalService {
-    @Resource(mappedName = "TransactionManager")
-    protected TransactionManager tm;
+@Scope("COMPOSITE")
+public class TransactionalServiceImpl implements TransactionalService {
 
+    private TransactionalService transactionalService;
+    
+    @Reference(required = false)
+    public void setChildService(TransactionalService transactionalService) {
+        this.transactionalService = transactionalService;
+    }
+    
     public void call() throws Exception {
-        Transaction transaction = tm.getTransaction();
-        if (transaction != null && Status.STATUS_NO_TRANSACTION != transaction.getStatus()) {
-            throw new AssertionError("Transaction is not suspended");
+        if (transactionalService != null) {
+            transactionalService.call();
         }
     }
+
+
 }

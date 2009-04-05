@@ -14,14 +14,25 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.policy;
+package org.fabric3.policy.tx;
 
+import javax.transaction.Status;
+import javax.transaction.TransactionManager;
+import javax.transaction.Transaction;
+
+import org.fabric3.api.annotation.Resource;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface TransactionalService {
-    
-    void call() throws Exception;
+public class SuspendedTransactionService implements TransactionalService {
+    @Resource(mappedName = "TransactionManager")
+    protected TransactionManager tm;
 
+    public void call() throws Exception {
+        Transaction transaction = tm.getTransaction();
+        if (transaction != null && Status.STATUS_NO_TRANSACTION != transaction.getStatus()) {
+            throw new AssertionError("Transaction is not suspended");
+        }
+    }
 }
