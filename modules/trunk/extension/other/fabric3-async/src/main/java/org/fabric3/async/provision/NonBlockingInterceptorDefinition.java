@@ -24,6 +24,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  * @version $Revision$ $Date$
  */
 public class NonBlockingInterceptorDefinition extends PhysicalInterceptorDefinition {
+    private static final long serialVersionUID = -202608743794458705L;
 
 }
  
