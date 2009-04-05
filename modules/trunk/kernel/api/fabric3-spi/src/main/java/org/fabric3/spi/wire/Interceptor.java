@@ -37,29 +37,29 @@ package org.fabric3.spi.wire;
 import org.fabric3.spi.invocation.Message;
 
 /**
- * Synchronous, around-style mediation associated with wire.
+ * Mediates a service invocation.
  *
  * @version $Rev$ $Date$
  */
 public interface Interceptor {
 
     /**
-     * Process a synchronous wire
+     * Mediates a service invocation.
      *
-     * @param msg the request Message for the wire
-     * @return the response Message from the wire
+     * @param msg the request Message for the invocation
+     * @return the response Message from the invocation
      */
     Message invoke(Message msg);
 
     /**
-     * Sets the next interceptor
+     * Sets the next interceptor in the invocation chain.
      *
      * @param next the next interceptor
      */
     void setNext(Interceptor next);
 
     /**
-     * Returns the next interceptor or null
+     * Returns the next interceptor in the invocation chain or null if the interceptor is the last one.
      *
      * @return he next interceptor or null
      */
