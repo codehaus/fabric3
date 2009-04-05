@@ -20,23 +20,26 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
  * Interceptor definition that encapsulates the interceptor class.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class SimpleInterceptorDefinition extends PhysicalInterceptorDefinition {
-    
-    // Interceptor class
+    private static final long serialVersionUID = 880405443267716015L;
     private String interceptorClass;
 
     /**
-     * @param Interceptor class.
+     * Constructor.
+     *
+     * @param interceptorClass the interceptor class
      */
     public SimpleInterceptorDefinition(String interceptorClass) {
         this.interceptorClass = interceptorClass;
     }
 
     /**
-     * @return Interceptor class.
+     * Returns the interceptor class.
+     *
+     * @return the interceptor class
      */
     public String getInterceptorClass() {
         return interceptorClass;
