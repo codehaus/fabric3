@@ -17,6 +17,7 @@
 package org.fabric3.fabric.policy;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,17 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
 
     public <D extends AbstractDefinition> Collection<D> getAllDefinitions(Class<D> definitionClass) {
         return getSubCache(definitionClass).values();
+    }
+
+    public List<PolicySet> getExternalAttachmentPolicies() {
+        Map<QName, PolicySet> subCache = getSubCache(PolicySet.class);
+        List<PolicySet> policySets = new ArrayList<PolicySet>();
+        for (PolicySet policySet : subCache.values()) {
+            if (policySet.getAttachTo() != null) {
+                policySets.add(policySet);
+            }
+        }
+        return policySets;
     }
 
     public <D extends AbstractDefinition> D getDefinition(QName name, Class<D> definitionClass) {

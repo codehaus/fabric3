@@ -22,6 +22,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.definitions.AbstractDefinition;
+import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Registry of binding types, implementation types, intents and policy sets within an SCA domain.
@@ -48,6 +49,13 @@ public interface PolicyRegistry {
      * @return Requested definition object if available, otherwise null.
      */
     <D extends AbstractDefinition> D getDefinition(QName name, Class<D> definitionClass);
+
+    /**
+     * Returns a list of active PolicySets that use external attachment.
+     *
+     * @return the PolicySets
+     */
+    List<PolicySet> getExternalAttachmentPolicies();
 
     /**
      * Activates all the policy definitions in the specified contributions.
