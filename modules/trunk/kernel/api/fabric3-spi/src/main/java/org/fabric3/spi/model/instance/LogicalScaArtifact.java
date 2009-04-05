@@ -36,8 +36,8 @@ package org.fabric3.spi.model.instance;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Set;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 /**
@@ -92,42 +92,31 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> implem
             return "";
         }
         return uri.toString();
-
     }
 
     public Set<QName> getIntents() {
-         return intents;
-     }
+        return intents;
+    }
 
-     public Set<QName> getPolicySets() {
-         return policySets;
-     }
+    public Set<QName> getPolicySets() {
+        return policySets;
+    }
 
-     public void setIntents(Set<QName> intents) {
-         this.intents = intents;
-     }
+    public void addIntent(QName intent) {
+        intents.add(intent);
+    }
 
-     public void addIntent(QName intent) {
-         intents.add(intent);
-     }
+    public void addIntents(Set<QName> intents) {
+        this.intents.addAll(intents);
+    }
 
-     public void addIntents(Set<QName> intents) {
-         this.intents.addAll(intents);
-     }
+    public void addPolicySet(QName policySet) {
+        policySets.add(policySet);
+    }
 
-     public void setPolicySets(Set<QName> policySets) {
-         this.policySets = policySets;
-     }
-
-     public void addPolicySet(QName policySet) {
-         policySets.add(policySet);
-     }
-
-     public void addPolicySets(Set<QName> policySets) {
-         this.policySets.addAll(policySets);
-     }
-
-
+    public void addPolicySets(Set<QName> policySets) {
+        this.policySets.addAll(policySets);
+    }
 
 
 }

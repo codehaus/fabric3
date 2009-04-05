@@ -120,24 +120,6 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
     }
 
     /**
-     * Intents are not supported on wires.
-     */
-    @Override
-    public final void setIntents(Set<QName> intents) {
-        throw new UnsupportedOperationException("Intents are not supported on wires");
-    }
-
-    /**
-     * Policy sets are not supported on wires.
-     *
-     * @param policySets Policy sets declared on the SCA artifact.
-     */
-    @Override
-    public final void setPolicySets(Set<QName> policySets) {
-        throw new UnsupportedOperationException("Policy sets are not supported on wires");
-    }
-
-    /**
      * Returns the wire state.
      *
      * @return the wire state
