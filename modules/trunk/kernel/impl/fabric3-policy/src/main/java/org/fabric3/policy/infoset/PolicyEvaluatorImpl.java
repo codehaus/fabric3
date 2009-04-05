@@ -25,18 +25,20 @@ import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
+import org.fabric3.spi.model.instance.LogicalScaArtifact;
 
 /**
  * @version $Revision$ $Date$
  */
 public class PolicyEvaluatorImpl implements PolicyEvaluator {
 
-    public List<?> evaluate(String xpathExpression, LogicalComponent<?> component) throws PolicyEvaluationException {
+    @SuppressWarnings({"unchecked"})
+    public List<LogicalScaArtifact<?>> evaluate(String xpathExpression, LogicalComponent<?> component) throws PolicyEvaluationException {
         try {
             LogicalModelXPath xpath = new LogicalModelXPath(xpathExpression);
             Object ret = xpath.evaluate(component);
             if (ret instanceof List) {
-                return (List<?>) ret;
+                return (List<LogicalScaArtifact<?>>) ret;
             }
             throw new PolicyEvaluationException("Invalid select expression: " + xpathExpression);
         } catch (JaxenException e) {

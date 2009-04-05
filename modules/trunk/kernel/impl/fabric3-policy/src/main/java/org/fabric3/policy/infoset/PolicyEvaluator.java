@@ -19,6 +19,7 @@ package org.fabric3.policy.infoset;
 import java.util.List;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalScaArtifact;
 
 /**
  * Evaluates an XPath policy expression against the logical domain model.
@@ -35,7 +36,7 @@ public interface PolicyEvaluator {
      * @return a list of selected nodes, i.e. LogicalComponnet, LogicalService, LogicalReference, LogicalBinding, or LogicalOperation
      * @throws PolicyEvaluationException if there is an exception evaluating the expression
      */
-    List<?> evaluate(String xpathExpression, LogicalComponent<?> target) throws PolicyEvaluationException;
+    List<LogicalScaArtifact<?>> evaluate(String xpathExpression, LogicalComponent<?> target) throws PolicyEvaluationException;
 
     /**
      * Determines if the XPath expression applies to the target component, i.e. selects it or one of its children.
@@ -47,6 +48,15 @@ public interface PolicyEvaluator {
      */
     boolean doesApply(String appliesToXPath, LogicalComponent<?> target) throws PolicyEvaluationException;
 
+    /**
+     * Returns true if the given XPath expression attaches to the target starting at the given context.
+     *
+     * @param attachesToXPath the XPath expression
+     * @param target          the target component
+     * @param context         the context
+     * @return true if the expression attaches
+     * @throws PolicyEvaluationException if there is an exception evaluating the expression
+     */
     boolean doesAttach(String attachesToXPath, LogicalComponent<?> target, LogicalComponent<?> context) throws PolicyEvaluationException;
 
 
