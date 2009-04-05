@@ -34,6 +34,7 @@
  */
 package org.fabric3.model.type.definitions;
 
+import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -51,6 +52,7 @@ public final class PolicySet extends AbstractDefinition {
      * Intents provided by this policy set.
      */
     private final Set<QName> provides;
+    private URI contributionUri;
 
     /**
      * Policy set extension
@@ -75,20 +77,22 @@ public final class PolicySet extends AbstractDefinition {
     /**
      * Initializes the state for the policy set.
      *
-     * @param name      Name of the policy set.
-     * @param provides  Intents provided by this policy set.
-     * @param appliesTo XPath expression for the applies to attribute.
-     * @param attachTo  XPath expression for the attach to attribute.
-     * @param extension Extension for the policy set.
-     * @param phase     The phase at which the policy is applied.
+     * @param name            Name of the policy set.
+     * @param provides        Intents provided by this policy set.
+     * @param appliesTo       XPath expression for the applies to attribute.
+     * @param attachTo        XPath expression for the attach to attribute.
+     * @param extension       Extension for the policy set.
+     * @param phase           The phase at which the policy is applied.
+     * @param contributionUri the contribution this policy set is contained in
      */
-    public PolicySet(QName name, Set<QName> provides, String appliesTo, String attachTo, Element extension, PolicyPhase phase) {
+    public PolicySet(QName name, Set<QName> provides, String appliesTo, String attachTo, Element extension, PolicyPhase phase, URI contributionUri) {
         super(name);
         this.provides = provides;
         this.attachTo = "".equals(attachTo) ? null : attachTo;
         this.appliesTo = "".equals(appliesTo) ? null : appliesTo;
         this.extension = extension;
         this.phase = phase;
+        this.contributionUri = contributionUri;
     }
 
     /**
@@ -148,6 +152,13 @@ public final class PolicySet extends AbstractDefinition {
      */
     public PolicyPhase getPhase() {
         return phase;
+    }
+
+    /**
+     * @return Gets the contribution this policy set is contained in.
+     */
+    public URI getContributionUri() {
+        return contributionUri;
     }
 
     public boolean equals(Object o) {

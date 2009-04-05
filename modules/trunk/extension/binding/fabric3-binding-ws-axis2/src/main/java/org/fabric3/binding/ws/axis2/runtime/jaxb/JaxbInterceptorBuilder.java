@@ -46,7 +46,7 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
 
     public JaxbInterceptor build(JaxbInterceptorDefinition definition) throws BuilderException {
 
-        URI classLoaderId = definition.getClassLoaderId();
+        URI classLoaderId = definition.getWireClassLoaderId();
 
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
 

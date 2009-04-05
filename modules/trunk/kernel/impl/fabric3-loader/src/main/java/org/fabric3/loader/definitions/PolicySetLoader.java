@@ -123,8 +123,8 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
                 break;
             }
         }
-
-        return new PolicySet(qName, provides, appliesTo, attachTo, extension, phase);
+        URI uri = context.getContributionUri();
+        return new PolicySet(qName, provides, appliesTo, attachTo, extension, phase, uri);
 
     }
 

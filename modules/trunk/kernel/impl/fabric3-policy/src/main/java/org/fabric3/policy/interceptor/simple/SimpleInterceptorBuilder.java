@@ -16,29 +16,40 @@
  */
 package org.fabric3.policy.interceptor.simple;
 
+import java.net.URI;
+
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Builder for simple interceptors.
- * <p/>
- * TODO Not sure whether the loader will have the class definition, probably not, the interceptor builder will need the classloader passed in.
  *
  * @version $Revision$ $Date$
  */
 public class SimpleInterceptorBuilder implements InterceptorBuilder<SimpleInterceptorDefinition, Interceptor> {
+    private ClassLoaderRegistry registry;
 
-    public SimpleInterceptorBuilder() {
+    public SimpleInterceptorBuilder(@Reference ClassLoaderRegistry registry) {
+        this.registry = registry;
     }
 
+    @SuppressWarnings("unchecked")
     public Interceptor build(SimpleInterceptorDefinition definition) throws BuilderException {
 
         String className = definition.getInterceptorClass();
+        URI classLoaderUri = definition.getPolicyClassLoaderid();
+        ClassLoader loader = registry.getClassLoader(classLoaderUri);
+        if (loader == null) {
+            // this is really a programming error
+            throw new SimpleInterceptorBuilderException("Interceptor classloader not found: " + classLoaderUri);
+        }
 
         try {
-            @SuppressWarnings("unchecked")
-            Class<Interceptor> interceptorClass = (Class<Interceptor>) Class.forName(className);
+            Class<Interceptor> interceptorClass = (Class<Interceptor>) loader.loadClass(className);
             return interceptorClass.newInstance();
         } catch (InstantiationException ex) {
             throw new SimpleInterceptorBuilderException("Unable to instantiate", className, ex);

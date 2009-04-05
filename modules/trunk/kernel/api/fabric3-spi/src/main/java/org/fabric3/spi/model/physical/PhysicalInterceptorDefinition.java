@@ -45,13 +45,44 @@ import java.net.URI;
  */
 public class PhysicalInterceptorDefinition implements Serializable {
     private static final long serialVersionUID = -1850310857357736392L;
-    private URI classLoaderId;
+    private URI wireClassLoaderId;
+    private URI policyClassLoaderid;
 
-    public URI getClassLoaderId() {
-        return classLoaderId;
+    /**
+     * Returns the classloader id for the wire. That is, the classloader for the wire source which is associated with the user contribution.
+     *
+     * @return the classloader id for the wire
+     */
+    public URI getWireClassLoaderId() {
+        return wireClassLoaderId;
     }
 
-    public void setClassLoaderId(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
+    /**
+     * Sets the classloader id for the wire. That is, the classloader for the wire source which is associated with the user contribution.
+     *
+     * @param id classloader id for the wire
+     */
+    public void setWireClassLoaderId(URI id) {
+        this.wireClassLoaderId = id;
+    }
+
+    /**
+     * Returns the classloader id for the contribution containing the interceptor. This may be the same as the wire classloader id if the policy is
+     * contained in the same user contribution as the source component of the wire.
+     *
+     * @return the classloader id for the policy
+     */
+    public URI getPolicyClassLoaderid() {
+        return policyClassLoaderid;
+    }
+
+    /**
+     * Sets the classloader id for the contribution containing the interceptor. This may be the same as the wire classloader id if the policy is
+     * contained in the same user contribution as the source component of the wire.
+     *
+     * @param id classloader id for the policy
+     */
+    public void setPolicyClassLoaderid(URI id) {
+        this.policyClassLoaderid = id;
     }
 }

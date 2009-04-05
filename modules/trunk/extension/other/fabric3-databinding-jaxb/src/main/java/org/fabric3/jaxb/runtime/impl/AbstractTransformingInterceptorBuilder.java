@@ -42,7 +42,7 @@ public abstract class AbstractTransformingInterceptorBuilder<T extends AbstractT
     }
 
     public I build(T definition) throws BuilderException {
-        URI classLoaderId = definition.getClassLoaderId();
+        URI classLoaderId = definition.getWireClassLoaderId();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
         QName dataType = definition.getDataType();
         assert classLoader != null;

@@ -24,17 +24,12 @@ import org.fabric3.spi.builder.BuilderException;
  * @version $Revision$ $Date$
  */
 public class SimpleInterceptorBuilderException extends BuilderException {
-
-    /**
-     * Serial version UID.
-     */
     private static final long serialVersionUID = -3619466088352819526L;
 
-    /**
-     * @param message Message for the exception.
-     * @param identifier Exception identifier.
-     * @param cause Root cause of the exception.
-     */
+    public SimpleInterceptorBuilderException(String message) {
+        super(message);
+    }
+
     public SimpleInterceptorBuilderException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
