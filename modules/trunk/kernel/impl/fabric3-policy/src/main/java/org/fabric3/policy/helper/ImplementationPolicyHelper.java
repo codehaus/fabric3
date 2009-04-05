@@ -30,7 +30,7 @@ import org.fabric3.spi.policy.PolicyResolutionException;
 public interface ImplementationPolicyHelper {
 
     /**
-     * Returns the set of intents that need to be explictly provided by the implementation. These are the intents requested by the use and available
+     * Returns the set of intents that need to be explictly provided by the implementation. These are the intents requested by the user and available
      * in the <code>mayProvide</code> list of intents declared by the implementation type.
      *
      * @param component the logical component for which intents are to be resolved.
@@ -41,14 +41,14 @@ public interface ImplementationPolicyHelper {
     Set<Intent> getProvidedIntents(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
 
     /**
-     * Returns the set of policies that will address the intents that are not provided by the implementation type.
+     * Returns the set of policies explicitly declared for the operation and those that satisfy the intents not provided by the implementation type.
      *
      * @param component the logical component for which policies are to be resolved.
      * @param operation the oeration for which the provided intents are to be computed.
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySet> resolveIntents(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
+    Set<PolicySet> resolve(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
 
 
 }

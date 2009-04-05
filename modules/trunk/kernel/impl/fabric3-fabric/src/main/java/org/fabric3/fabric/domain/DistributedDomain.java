@@ -30,6 +30,7 @@ import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.domain.DomainListener;
 import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -43,6 +44,7 @@ public class DistributedDomain extends AbstractDomain implements Domain {
                              @Reference(name = "logicalComponentManager") LogicalComponentManager logicalComponentManager,
                              @Reference Generator generator,
                              @Reference LogicalModelInstantiator logicalModelInstantiator,
+                             @Reference PolicyResolver policyResolver,
                              @Reference BindingSelector bindingSelector,
                              @Reference RoutingService routingService,
                              @Reference Collector collector,
@@ -51,6 +53,7 @@ public class DistributedDomain extends AbstractDomain implements Domain {
               logicalComponentManager,
               generator,
               logicalModelInstantiator,
+              policyResolver,
               bindingSelector,
               routingService,
               collector,

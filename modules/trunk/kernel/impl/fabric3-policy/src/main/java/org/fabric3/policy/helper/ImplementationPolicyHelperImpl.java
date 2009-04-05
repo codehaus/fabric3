@@ -31,8 +31,9 @@ import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.policy.infoset.PolicyEvaluator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.PolicyResolutionException;
+import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyRegistry;
+import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -70,7 +71,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
 
     }
 
-    public Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, LogicalOperation operation) throws PolicyResolutionException {
+    public Set<PolicySet> resolve(LogicalComponent<?> logicalComponent, LogicalOperation operation) throws PolicyResolutionException {
 
         Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
         QName type = implementation.getType();
@@ -95,13 +96,19 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
                 requiredIntents.remove(intent);
             }
         }
-        if (requiredIntents.isEmpty()) {
+        Set<QName> policySets = aggregatePolicySets(operation);
+        if (requiredIntents.isEmpty() && policySets.isEmpty()) {
             // short-circuit intent resolution
             return Collections.emptySet();
         }
         Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalComponent);
         if (!requiredIntents.isEmpty()) {
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
+        }
+
+        for (QName name : policySets) {
+            PolicySet policySet = policyRegistry.getDefinition(name, PolicySet.class);
+            policies.add(policySet);
         }
 
         return policies;
@@ -125,5 +132,22 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         return requiredIntents;
 
     }
+
+    /**
+     * Aggregate policies from ancestors.
+     *
+     * @param operation the operaton
+     * @return the agreggated policy sets
+     */
+    protected Set<QName> aggregatePolicySets(LogicalOperation operation) {
+        LogicalScaArtifact<?> temp = operation;
+        Set<QName> policySetNames = new LinkedHashSet<QName>();
+        while (temp != null) {
+            policySetNames.addAll(temp.getPolicySets());
+            temp = temp.getParent();
+        }
+        return policySetNames;
+    }
+
 
 }

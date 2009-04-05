@@ -126,6 +126,7 @@ import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
+import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
@@ -181,14 +182,16 @@ public class BootstrapAssemblyFactory {
                                               info);
 
         LocalRoutingService routingService = new LocalRoutingService(commandRegistry, scopeRegistry);
+        PolicyResolver policyResolver = new NullPolicyResolver();
 
-        Generator generator = createGenerator(logicalComponentManager, metaDataStore);
+        Generator generator = createGenerator(logicalComponentManager, metaDataStore, policyResolver);
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
         Collector collector = new CollectorImpl();
         return new RuntimeDomain(metaDataStore,
                                  generator,
                                  logicalModelInstantiator,
+                                 policyResolver,
                                  logicalComponentManager,
                                  bindingSelector,
                                  routingService,
@@ -301,11 +304,11 @@ public class BootstrapAssemblyFactory {
         return new ClassLoaderBuilderImpl(wireBuilder, classLoaderRegistry, resolver, cpRegistry, componentManager, info);
     }
 
-    private static Generator createGenerator(LogicalComponentManager logicalComponentManager, MetaDataStore metaDataStore) {
+    private static Generator createGenerator(LogicalComponentManager lcm, MetaDataStore metaDataStore, PolicyResolver policyResolver) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
-        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, new NullPolicyResolver(), physicalOperationHelper);
+        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, policyResolver, physicalOperationHelper);
 
         ClassLoaderWireGenerator<?> javaGenerator = new JavaContributionWireGeneratorImpl();
         ClassLoaderWireGenerator<?> locationGenerator = new LocationContributionWireGeneratorImpl();
@@ -317,7 +320,7 @@ public class BootstrapAssemblyFactory {
 
         List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
         commandGenerators.add(new BuildComponentCommandGenerator(generatorRegistry, 1));
-        commandGenerators.add(new LocalWireCommandGenerator(wireGenerator, logicalComponentManager, 2));
+        commandGenerators.add(new LocalWireCommandGenerator(wireGenerator, lcm, 2));
         commandGenerators.add(new ServiceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new ResourceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new StartComponentCommandGenerator(3));

@@ -64,6 +64,8 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.plan.DeploymentPlan;
+import org.fabric3.spi.policy.PolicyResolutionException;
+import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.WriteException;
 
@@ -84,6 +86,7 @@ public abstract class AbstractDomain implements Domain {
     private MetaDataStore metadataStore;
     private LogicalComponentManager logicalComponentManager;
     private LogicalModelInstantiator logicalModelInstantiator;
+    private PolicyResolver policyResolver;
     private BindingSelector bindingSelector;
     private Collector collector;
     private HostInfo info;
@@ -95,6 +98,7 @@ public abstract class AbstractDomain implements Domain {
      * @param logicalComponentManager  the manager for logical components
      * @param generator                the physical model generator
      * @param logicalModelInstantiator the logical model instantiator
+     * @param policyResolver           the resolver for applying external attachment policies
      * @param bindingSelector          the selector for binding.sca
      * @param routingService           the service for routing deployment commands
      * @param collector                the collector for undeploying componentsco
@@ -104,6 +108,7 @@ public abstract class AbstractDomain implements Domain {
                           LogicalComponentManager logicalComponentManager,
                           Generator generator,
                           LogicalModelInstantiator logicalModelInstantiator,
+                          PolicyResolver policyResolver,
                           BindingSelector bindingSelector,
                           RoutingService routingService,
                           Collector collector,
@@ -112,6 +117,7 @@ public abstract class AbstractDomain implements Domain {
         this.generator = generator;
         this.logicalModelInstantiator = logicalModelInstantiator;
         this.logicalComponentManager = logicalComponentManager;
+        this.policyResolver = policyResolver;
         this.bindingSelector = bindingSelector;
         this.routingService = routingService;
         this.collector = collector;
@@ -315,6 +321,7 @@ public abstract class AbstractDomain implements Domain {
             if (change.hasErrors()) {
                 throw new AssemblyException(change.getErrors());
             }
+            policyResolver.attachPolicies(domain, !recover);
             if (!recover || RuntimeMode.VM == info.getRuntimeMode()) {
                 // in single VM mode, recovery includes deployment
                 allocateAndDeploy(domain, plans);
@@ -348,6 +355,10 @@ public abstract class AbstractDomain implements Domain {
             releaseLocks(contributions);
             throw new DeploymentException("Error deploying composite", e);
         } catch (WriteException e) {
+            // release the contribution locks if there was an error
+            releaseLocks(contributions);
+            throw new DeploymentException("Error deploying composite", e);
+        } catch (PolicyResolutionException e) {
             // release the contribution locks if there was an error
             releaseLocks(contributions);
             throw new DeploymentException("Error deploying composite", e);
@@ -412,6 +423,7 @@ public abstract class AbstractDomain implements Domain {
             if (context.hasErrors()) {
                 throw new AssemblyException(context.getErrors());
             }
+            policyResolver.attachPolicies(domain, true);
             allocateAndDeploy(domain, plans);
         } catch (DeploymentException e) {
             // release the contribution lock if there was an error
@@ -419,6 +431,12 @@ public abstract class AbstractDomain implements Domain {
                 contribution.releaseLock(name);
             }
             throw e;
+        } catch (PolicyResolutionException e) {
+            // release the contribution lock if there was an error
+            if (contribution != null && contribution.getLockOwners().contains(name)) {
+                contribution.releaseLock(name);
+            }
+            throw new DeploymentException(e);
         }
     }
 

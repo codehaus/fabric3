@@ -31,8 +31,9 @@ import org.fabric3.policy.infoset.PolicyEvaluator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.PolicyResolutionException;
+import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyRegistry;
+import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -72,7 +73,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
     }
 
 
-    public Set<PolicySet> resolveIntents(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException {
+    public Set<PolicySet> resolve(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException {
 
         QName type = binding.getDefinition().getType();
         BindingType bindingType = policyRegistry.getDefinition(type, BindingType.class);
@@ -96,7 +97,8 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
                 requiredIntents.remove(intent);
             }
         }
-        if (requiredIntents.isEmpty()) {
+        Set<QName> policySets = aggregatePolicySets(binding, operation);
+        if (requiredIntents.isEmpty() && policySets.isEmpty()) {
             // short-circuit intent resolution
             return Collections.emptySet();
         }
@@ -105,6 +107,11 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         Set<PolicySet> policies = resolvePolicies(requiredIntents, target);
         if (!requiredIntents.isEmpty()) {
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
+        }
+
+        for (QName name : policySets) {
+            PolicySet policySet = policyRegistry.getDefinition(name, PolicySet.class);
+            policies.add(policySet);
         }
 
         return policies;
@@ -128,5 +135,27 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         return requiredIntents;
 
     }
+
+    /**
+     * Aggregates policy sets from ancestors.
+     *
+     * @param binding   the binding
+     * @param operation the operaton
+     * @return the agreggated policy sets
+     */
+    private Set<QName> aggregatePolicySets(LogicalBinding<?> binding, LogicalOperation operation) {
+        LogicalScaArtifact<?> temp = operation;
+        Set<QName> policySetNames = new LinkedHashSet<QName>();
+        while (temp != null) {
+            policySetNames.addAll(temp.getPolicySets());
+            temp = temp.getParent();
+        }
+        // also attach policy sets specified on the binding
+        for (QName name : binding.getPolicySets()) {
+            policySetNames.add(name);
+        }
+        return policySetNames;
+    }
+
 
 }

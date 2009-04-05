@@ -30,62 +30,60 @@ import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
 
 /**
+ * No-op resolver used during bootstrap.
+ *
  * @version $Revision$ $Date$
  */
 public class NullPolicyResolver implements PolicyResolver {
+    private static final PolicyResult EMPTY_RESULT = new NullPolicyResult();
+
+    public void attachPolicies(LogicalComponent<?> component, boolean incremental) {
+        // no-op
+    }
 
     public PolicyResult resolvePolicies(List<LogicalOperation> operations,
                                         LogicalBinding<?> sourceBinding,
                                         LogicalBinding<?> targetBinding,
                                         LogicalComponent<?> source,
                                         LogicalComponent<?> target) throws PolicyResolutionException {
-        return new PolicyResult() {
-
-            public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
-                return Collections.emptyList();
-            }
-
-            public Policy getSourcePolicy() {
-                return new Policy() {
-                    public List<QName> getProvidedIntents(LogicalOperation operation) {
-                        return Collections.emptyList();
-                    }
-
-                    public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
-                        return Collections.emptyList();
-                    }
-
-                    public List<QName> getProvidedIntents() {
-                        return Collections.emptyList();
-                    }
-
-                    public List<PolicySet> getProvidedPolicySets() {
-                        return Collections.emptyList();
-                    }
-                };
-            }
-
-            public Policy getTargetPolicy() {
-                return new Policy() {
-                    public List<QName> getProvidedIntents(LogicalOperation operation) {
-                        return Collections.emptyList();
-                    }
-
-                    public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
-                        return Collections.emptyList();
-                    }
-
-                    public List<QName> getProvidedIntents() {
-                        return Collections.emptyList();
-                    }
-
-                    public List<PolicySet> getProvidedPolicySets() {
-                        return Collections.emptyList();
-                    }
-                };
-            }
-
-        };
+        return EMPTY_RESULT;
     }
 
+    private static class NullPolicyResult implements PolicyResult {
+
+        public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
+            return Collections.emptyList();
+        }
+
+        public Policy getSourcePolicy() {
+            return new NullPolicy();
+        }
+
+        public Policy getTargetPolicy() {
+            return new NullPolicy();
+        }
+
+    }
+
+    private static class NullPolicy implements Policy {
+        public List<QName> getProvidedIntents(LogicalOperation operation) {
+            return Collections.emptyList();
+        }
+
+        public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
+            return Collections.emptyList();
+        }
+
+        public List<QName> getProvidedIntents() {
+            return Collections.emptyList();
+        }
+
+        public List<PolicySet> getProvidedPolicySets() {
+            return Collections.emptyList();
+        }
+    }
+
+
 }
+
+

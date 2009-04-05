@@ -31,7 +31,16 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 public interface PolicyResolver {
 
     /**
-     * Resolves all the interaction and implementation intents for the wire.
+     * Attaches PolicySets (i.e. those that use external attachment) to the component hierarchy.
+     *
+     * @param component   the top-most component to evaluate external attachments against
+     * @param incremental true if the attachment is performed as part of an incremental deployment
+     * @throws PolicyResolutionException if an error occurs evaluating the policies
+     */
+    void attachPolicies(LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException;
+
+    /**
+     * Resolves all the interaction and implementation intents for the operations on wire.
      *
      * @param operations    the operations to resolve policies for
      * @param sourceBinding Source binding.

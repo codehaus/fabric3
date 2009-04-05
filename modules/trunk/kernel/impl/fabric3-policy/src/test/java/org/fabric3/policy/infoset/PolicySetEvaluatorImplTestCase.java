@@ -17,8 +17,8 @@
 package org.fabric3.policy.infoset;
 
 import java.net.URI;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -29,8 +29,8 @@ import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -73,6 +73,28 @@ public class PolicySetEvaluatorImplTestCase extends TestCase {
 
     public void testAttachesToBindingsForSpecificComponent() throws Exception {
         assertTrue(evaluator.doesAttach("/component[@name='childComposite']//component/binding.mock", child3, domain));
+    }
+
+    public void testEvaluateComponentName() throws Exception {
+        List<?> result = evaluator.evaluate("component[@name='childComposite']", domain);
+        assertEquals(1, result.size());
+        assertEquals("childComposite", ((LogicalComponent<?>) result.get(0)).getUri().toString());
+    }
+
+    public void testEvaluateBindingWithComponentSelection() throws Exception {
+        List<?> results = evaluator.evaluate("//component/binding.mock", domain);
+        assertEquals(2, results.size());
+        for (Object result : results) {
+            assertTrue(result instanceof LogicalBinding);
+        }
+    }
+
+    public void testEvaluateBinding() throws Exception {
+        List<?> results = evaluator.evaluate("//binding.mock", domain);
+        assertEquals(2, results.size());
+        for (Object result : results) {
+            assertTrue(result instanceof LogicalBinding);
+        }
     }
 
     @Override

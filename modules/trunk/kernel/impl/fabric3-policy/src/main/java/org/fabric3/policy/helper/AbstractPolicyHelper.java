@@ -27,8 +27,8 @@ import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.policy.infoset.PolicyEvaluator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
-import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyRegistry;
+import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -116,7 +116,7 @@ public class AbstractPolicyHelper {
      * @param scaArtifact the logical artifact to aggregate intents for
      * @return the agreggated intents
      */
-    protected Set<QName> aggregateIntents(final LogicalScaArtifact<?> scaArtifact) {
+    protected Set<QName> aggregateIntents(LogicalScaArtifact<?> scaArtifact) {
         LogicalScaArtifact<?> temp = scaArtifact;
         Set<QName> intentNames = new LinkedHashSet<QName>();
         while (temp != null) {

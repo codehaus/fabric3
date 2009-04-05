@@ -26,6 +26,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.policy.PolicyResolver;
 
 /**
  * Implements a domain for system components in a runtime. Fabric3 runtimes are constituted using SCA components and the runtime domain manages
@@ -39,6 +40,7 @@ public class RuntimeDomain extends AbstractDomain {
     public RuntimeDomain(@Reference MetaDataStore metadataStore,
                          @Reference Generator generator,
                          @Reference LogicalModelInstantiator logicalModelInstantiator,
+                         @Reference PolicyResolver policyResolver,
                          @Reference LogicalComponentManager logicalComponentManager,
                          @Reference BindingSelector bindingSelector,
                          @Reference RoutingService routingService,
@@ -48,6 +50,7 @@ public class RuntimeDomain extends AbstractDomain {
               logicalComponentManager,
               generator,
               logicalModelInstantiator,
+              policyResolver,
               bindingSelector,
               routingService,
               collector,
