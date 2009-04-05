@@ -103,7 +103,7 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
 
     }
 
-    private void activate(AbstractDefinition definition) throws PolicyActivationException {
+    public void activate(AbstractDefinition definition) throws PolicyActivationException {
 
         if (definition instanceof Intent) {
             getSubCache(Intent.class).put(definition.getName(), (Intent) definition);
