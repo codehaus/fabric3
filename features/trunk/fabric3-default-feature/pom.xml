@@ -73,6 +73,11 @@
                             <artifactId>fabric3-conversation-propagation</artifactId>
                             <version>1.1-SNAPSHOT</version>
                         </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-security-intents</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
                     </extensions>
                     <shared>
                         <dependency>
