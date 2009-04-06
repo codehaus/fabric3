@@ -123,10 +123,6 @@
                             <version>1.3.0</version>
                         </dependency>
                     </extensions>
-                    <policyLocations>
-                        <policyLocation>test-usernametoken-security-policy.xml</policyLocation>
-                        <policyLocation>test-x509token-security-policy.xml</policyLocation>
-                    </policyLocations>
                     <systemConfig>
                         <![CDATA[
                         <config>

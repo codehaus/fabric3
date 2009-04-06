@@ -131,9 +131,6 @@
                         </dependency>
 
                     </extensions>
-                    <policyLocations>
-                        <policyLocation>test-ftp-security.xml</policyLocation>
-                    </policyLocations>
                     <systemConfig>
                         <![CDATA[
                         <config>
