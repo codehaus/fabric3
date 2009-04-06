@@ -30,6 +30,7 @@ import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.domain.DomainListener;
 import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
@@ -90,5 +91,13 @@ public class DistributedDomain extends AbstractDomain implements Domain {
         this.listeners = listeners;
     }
 
-
+    /**
+     * Used to inject the PolicyRegistry after bootstrap.
+     *
+     * @param policyRegistry the registry
+     */
+    @Reference(required = false)
+    public void setPolicyRegistry(PolicyRegistry policyRegistry) {
+        this.policyRegistry = policyRegistry;
+    }
 }

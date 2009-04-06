@@ -43,6 +43,7 @@ import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
+import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.binding.BindingSelectionException;
@@ -64,6 +65,8 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.plan.DeploymentPlan;
+import org.fabric3.spi.policy.PolicyActivationException;
+import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -81,6 +84,8 @@ public abstract class AbstractDomain implements Domain {
     protected Generator generator;
     // The service for allocating to remote zones. Domain subtypes may optionally inject this service if they support distributed domains.
     protected Allocator allocator;
+    protected PolicyRegistry policyRegistry;
+
     protected List<DomainListener> listeners;
 
     private MetaDataStore metadataStore;
@@ -317,6 +322,9 @@ public abstract class AbstractDomain implements Domain {
             if (transactional) {
                 domain = CopyUtil.copy(domain);
             }
+            for (Contribution contribution : contributions) {
+                activateDefinitions(contribution);
+            }
             InstantiationContext change = logicalModelInstantiator.include(domain, deployables);
             if (change.hasErrors()) {
                 throw new AssemblyException(change.getErrors());
@@ -364,6 +372,33 @@ public abstract class AbstractDomain implements Domain {
             throw new DeploymentException("Error deploying composite", e);
         }
     }
+
+    /**
+     * Activates policy definitions contained in the contribution.
+     *
+     * @param contribution the contribution
+     * @throws DeploymentException if an exception occurs when the definitions are activated
+     */
+    private void activateDefinitions(Contribution contribution) throws DeploymentException {
+        if (policyRegistry == null) {
+            // registry not available until after bootstrap
+            return;
+        }
+        for (Resource resource : contribution.getResources()) {
+            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                if (!(element.getValue() instanceof AbstractDefinition)) {
+                    break;
+                }
+                try {
+                    policyRegistry.activate((AbstractDefinition) element.getValue());
+                } catch (PolicyActivationException e) {
+                    // TODO rollback policy activation
+                    throw new DeploymentException(e);
+                }
+            }
+        }
+    }
+
 
     /**
      * Releases locks held on a set of contributions. Called when an error is raised during deployment causing a rollback.
@@ -415,10 +450,10 @@ public abstract class AbstractDomain implements Domain {
                 // lock the contribution
                 contribution.acquireLock(name);
             }
-
             if (transactional) {
                 domain = CopyUtil.copy(domain);
             }
+            activateDefinitions(contribution);
             InstantiationContext context = logicalModelInstantiator.include(domain, composite);
             if (context.hasErrors()) {
                 throw new AssemblyException(context.getErrors());

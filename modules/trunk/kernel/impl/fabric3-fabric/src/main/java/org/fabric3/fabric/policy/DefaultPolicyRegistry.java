@@ -55,9 +55,7 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
      * @param metaDataStore the metadata store
      */
     public DefaultPolicyRegistry(@Reference MetaDataStore metaDataStore) {
-
         this.metaDataStore = metaDataStore;
-
         cache.put(Intent.class, new ConcurrentHashMap<QName, Intent>());
         cache.put(PolicySet.class, new ConcurrentHashMap<QName, PolicySet>());
         cache.put(BindingType.class, new ConcurrentHashMap<QName, BindingType>());
@@ -88,7 +86,6 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
     }
 
     public void activateDefinitions(List<URI> contributionUris) throws PolicyActivationException {
-
         for (URI uri : contributionUris) {
             Contribution contribution = metaDataStore.find(uri);
             for (Resource resource : contribution.getResources()) {
@@ -100,11 +97,9 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
                 }
             }
         }
-
     }
 
     public void activate(AbstractDefinition definition) throws PolicyActivationException {
-
         if (definition instanceof Intent) {
             getSubCache(Intent.class).put(definition.getName(), (Intent) definition);
         } else if (definition instanceof PolicySet) {
@@ -114,7 +109,6 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
         } else if (definition instanceof ImplementationType) {
             getSubCache(ImplementationType.class).put(definition.getName(), (ImplementationType) definition);
         }
-
     }
 
     @SuppressWarnings("unchecked")

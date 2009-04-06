@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.fabric3.fabric.runtime.FabricNames.POLICY_REGISTRY;
 import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.FabricNames.POLICY_REGISTRY;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
@@ -189,8 +189,6 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         try {
             Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_SERVICE_URI);
             domain.include(contributionUris, false);
-            PolicyRegistry policyRegistry = runtime.getSystemComponent(PolicyRegistry.class, POLICY_REGISTRY);
-            policyRegistry.activateDefinitions(contributionUris);
         } catch (DeploymentException e) {
             throw new ExtensionInitializationException("Error deploying extensions", e);
         }

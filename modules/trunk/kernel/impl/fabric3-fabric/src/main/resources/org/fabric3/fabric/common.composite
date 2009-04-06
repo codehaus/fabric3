@@ -117,10 +117,12 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.synthesizer.SingletonComponentSynthesizer"/>
     </component>
 
-    <!-- Definitions registry -->
     <component name="PolicyRegistry">
         <f3-impl:implementation.system class="org.fabric3.fabric.policy.DefaultPolicyRegistry"/>
     </component>
+
+    <wire source="ApplicationDomain/policyRegistry" target="PolicyRegistry"/>
+    <wire source="RuntimeDomain/policyRegistry" target="PolicyRegistry"/>
 
     <component name="ClasspathProcessorRegistry">
         <f3-impl:implementation.system class="org.fabric3.contribution.ClasspathProcessorRegistryImpl"/>
