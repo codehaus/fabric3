@@ -96,7 +96,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
                 requiredIntents.remove(intent);
             }
         }
-        Set<QName> policySets = aggregatePolicySets(operation);
+        Set<QName> policySets = aggregatePolicySets(operation, logicalComponent);
         if (requiredIntents.isEmpty() && policySets.isEmpty()) {
             // short-circuit intent resolution
             return Collections.emptySet();
@@ -136,16 +136,18 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
     /**
      * Aggregate policies from ancestors.
      *
-     * @param operation the operaton
+     * @param operation        the operaton
+     * @param logicalComponent the target component
      * @return the agreggated policy sets
      */
-    protected Set<QName> aggregatePolicySets(LogicalOperation operation) {
+    protected Set<QName> aggregatePolicySets(LogicalOperation operation, LogicalComponent<?> logicalComponent) {
         LogicalScaArtifact<?> temp = operation;
         Set<QName> policySetNames = new LinkedHashSet<QName>();
         while (temp != null) {
             policySetNames.addAll(temp.getPolicySets());
             temp = temp.getParent();
         }
+        policySetNames.addAll(logicalComponent.getPolicySets());
         return policySetNames;
     }
 
