@@ -52,7 +52,6 @@ import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.BootConfiguration;
@@ -167,22 +166,10 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
         bootConfiguration.setRuntime(this);
         bootConfiguration.setBootClassLoader(getClass().getClassLoader());
         
-        setIntents(bootConfiguration);
         setExportedPackages(bootConfiguration);
         setBootstrapper(bootConfiguration);
         
         return bootConfiguration;
-        
-    }
-
-    /*
-     * Set the system intents.
-     */
-    private void setIntents(BootConfiguration bootConfiguration) {
-        
-        URL intentsLocation = getClass().getClassLoader().getResource("/META-INF/fabric3/intents.xml");
-        ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
-        bootConfiguration.setIntents(source);
         
     }
 

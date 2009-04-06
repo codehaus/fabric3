@@ -57,7 +57,6 @@ public class WebappUtilImpl implements WebappUtil {
     private static final String BOOTSTRAPPER_CLASS = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
     private static final String COORDINATOR_CLASS = "org.fabric3.fabric.runtime.DefaultCoordinator";
     private static final String SYSETM_COMPOSITE = "META-INF/fabric3/webapp.composite";
-    private static final String SYSTEM_INTENTS = "META-INF/fabric3/intents.xml";
 
     private final ServletContext servletContext;
 
@@ -123,16 +122,6 @@ public class WebappUtilImpl implements WebappUtil {
             return convertToURL(SYSETM_COMPOSITE, bootClassLoader);
         } catch (MalformedURLException e) {
             throw new InvalidResourcePath("Webapp system composite", SYSETM_COMPOSITE, e);
-        }
-
-    }
-
-    public URL getIntentsLocation(ClassLoader bootClassLoader) throws InvalidResourcePath {
-
-        try {
-            return convertToURL(SYSTEM_INTENTS, bootClassLoader);
-        } catch (MalformedURLException e) {
-            throw new InvalidResourcePath("Ssytem intents", SYSTEM_INTENTS, e);
         }
 
     }

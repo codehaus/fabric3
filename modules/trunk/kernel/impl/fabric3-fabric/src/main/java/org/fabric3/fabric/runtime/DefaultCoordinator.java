@@ -17,12 +17,10 @@
 package org.fabric3.fabric.runtime;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.fabric3.fabric.runtime.FabricNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.FabricNames.POLICY_REGISTRY;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
@@ -38,7 +36,6 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.spi.policy.PolicyActivationException;
-import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.services.event.DomainRecover;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.JoinDomain;
@@ -55,8 +52,6 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
     private Fabric3Runtime<?> runtime;
     private Bootstrapper bootstrapper;
     private ClassLoader bootClassLoader;
-    private ContributionSource intents;
-    private List<ContributionSource> policies;
     private Map<String, String> exportedPackages;
     private List<ContributionSource> extensionContributions;
     private List<ContributionSource> userContributions;
@@ -77,10 +72,8 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         bootstrapper = configuration.getBootstrapper();
         bootClassLoader = configuration.getBootClassLoader();
         exportedPackages = configuration.getExportedPackages();
-        intents = configuration.getIntents();
         extensionContributions = configuration.getExtensionContributions();
         userContributions = configuration.getUserContributions();
-        policies = configuration.getPolicies();
     }
 
     public void bootPrimordial() throws InitializationException {
@@ -101,10 +94,6 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         bootstrapper.bootSystem();
 
         try {
-            activateDefinitions(intents);
-            for (ContributionSource policy : policies) {
-                activateDefinitions(policy);
-            }
             // install extensions
             List<URI> uris = installContributions(extensionContributions);
             // deploy extensions
@@ -156,21 +145,6 @@ public class DefaultCoordinator implements RuntimeLifecycleCoordinator {
         if (state == State.STARTED) {
             runtime.destroy();
             state = State.SHUTDOWN;
-        }
-    }
-
-    private void activateDefinitions(ContributionSource source) throws InitializationException {
-        try {
-            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-            URI uri = contributionService.contribute(source);
-            PolicyRegistry policyRegistry = runtime.getSystemComponent(PolicyRegistry.class, POLICY_REGISTRY);
-            List<URI> definitions = new ArrayList<URI>();
-            definitions.add(uri);
-            policyRegistry.activateDefinitions(definitions);
-        } catch (ContributionException e) {
-            throw new InitializationException(e);
-        } catch (PolicyActivationException e) {
-            throw new InitializationException(e);
         }
     }
 

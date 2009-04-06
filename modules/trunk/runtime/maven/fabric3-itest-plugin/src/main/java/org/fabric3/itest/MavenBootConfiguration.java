@@ -12,7 +12,6 @@ import org.fabric3.featureset.FeatureSet;
 
 public class MavenBootConfiguration {
     private URL systemScdl;
-    private URL intentsLocation;
     private String managementDomain;
     private Properties properties;
     private File outputDirectory;
@@ -33,14 +32,6 @@ public class MavenBootConfiguration {
 
     public void setSystemScdl(URL systemScdl) {
         this.systemScdl = systemScdl;
-    }
-
-    public URL getIntentsLocation() {
-        return intentsLocation;
-    }
-
-    public void setIntentsLocation(URL intentsLocation) {
-        this.intentsLocation = intentsLocation;
     }
 
     public String getManagementDomain() {

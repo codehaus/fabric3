@@ -172,20 +172,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public URL systemScdl;
 
     /**
-     * The location of the default intents file for the Fabric3 runtime.
-     *
-     * @parameter
-     */
-    public URL intentsLocation;
-
-    /**
-     * The location of the default user policy file for the Fabric3 runtime.
-     *
-     * @parameter
-     */
-    public String[] policyLocations;
-
-    /**
      * The version of the runtime to use.
      *
      * @parameter expression="0.7"
@@ -362,9 +348,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setFeatureSets(featureSets);
         configuration.setExtensions(extensions);
 
-        configuration.setIntentsLocation(intentsLocation);
-        List<URL> policyUrls = getPolicyUrls(moduleDependencies);
-        configuration.setPolicyUrls(policyUrls);
         configuration.setModuleDependencies(moduleDependencies);
         configuration.setOutputDirectory(outputDirectory);
         configuration.setProperties(properties);
@@ -372,13 +355,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setSystemConfigDir(systemConfigDir);
         configuration.setSystemScdl(systemScdl);
         return configuration;
-    }
-
-    /**
-     * Creates user specified policy URLs.
-     */
-    private List<URL> getPolicyUrls(Set<URL> moduleDependencies) throws MojoExecutionException {
-        return PolicyFileHelper.getPolicyUrls(project, moduleDependencies, policyLocations);
     }
 
     /**

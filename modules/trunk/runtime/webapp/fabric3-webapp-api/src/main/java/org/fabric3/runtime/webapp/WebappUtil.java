@@ -52,8 +52,6 @@ public interface WebappUtil {
 
     URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath;
 
-    URL getIntentsLocation(ClassLoader bootClassLoader) throws InvalidResourcePath;
-
     /**
      * Return a init parameter from the servlet context or provide a default.
      *

@@ -36,16 +36,12 @@ package org.fabric3.runtime.standalone.server;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
 import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
-import org.fabric3.host.Names;
 import org.fabric3.host.RuntimeMode;
-import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.Bootstrapper;
@@ -73,7 +69,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
     private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
     private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
     private static final String JOIN_DOMAIN_TIMEOUT = "fabric3.join.domain.timeout";
-    private static final String INTENTS_FILE = "intents.xml";
 
     private final File installDirectory;
     private RuntimeLifecycleCoordinator coordinator;
@@ -285,25 +280,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
         configuration.setExtensionContributions(result.getExtensionContributions());
         configuration.setUserContributions(result.getUserContributions());
 
-        // process the baseline intents
-        ContributionSource source = getIntentsContribution(hostInfo.getConfigDirectory());
-        configuration.setIntents(source);
         configuration.setRuntime(runtime);
         return configuration;
     }
 
-    private ContributionSource getIntentsContribution(File dir) throws InitializationException {
-        try {
-            File file = new File(dir, INTENTS_FILE);
-            if (!file.exists()) {
-                return null;
-            }
-            URL location = file.toURI().toURL();
-            return new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, location, -1, new byte[0]);
-        } catch (MalformedURLException e) {
-            throw new InitializationException(e);
-        }
-    }
     public interface ServerMonitor {
         @Severe
         void runError(Exception e);

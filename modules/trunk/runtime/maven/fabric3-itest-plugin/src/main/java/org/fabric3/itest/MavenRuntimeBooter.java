@@ -23,7 +23,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -36,8 +35,6 @@ import org.xml.sax.InputSource;
 
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.Names;
-import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.InitializationException;
@@ -61,7 +58,6 @@ public class MavenRuntimeBooter {
 
     // configuration elements
     private URL systemScdl;
-    private URL intentsLocation;
     private String managementDomain;
     private Properties properties;
     private File outputDirectory;
@@ -73,7 +69,6 @@ public class MavenRuntimeBooter {
     private org.apache.maven.model.Dependency[] extensions;
     private List<FeatureSet> featureSets;
     private Log log;
-    private List<URL> policyUrls;
 
 
     private RuntimeLifecycleCoordinator coordinator;
@@ -82,7 +77,6 @@ public class MavenRuntimeBooter {
 
     public MavenRuntimeBooter(MavenBootConfiguration configuration) {
         systemScdl = configuration.getSystemScdl();
-        intentsLocation = configuration.getIntentsLocation();
         managementDomain = configuration.getManagementDomain();
         properties = configuration.getProperties();
         outputDirectory = configuration.getOutputDirectory();
@@ -95,7 +89,6 @@ public class MavenRuntimeBooter {
         featureSets = configuration.getFeatureSets();
         log = configuration.getLog();
         extensionHelper = configuration.getExtensionHelper();
-        policyUrls = configuration.getPolicyUrls();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -146,21 +139,7 @@ public class MavenRuntimeBooter {
         // process extensions
         extensionHelper.processExtensions(configuration, extensions, featureSets);
 
-        // process the baseline intents
-        if (intentsLocation == null) {
-            intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
-        }
-        ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
-        configuration.setIntents(source);
         configuration.setRuntime(runtime);
-
-        List<ContributionSource> policyContributions = new LinkedList<ContributionSource>();
-        int i = 0;
-        for (URL policyUrl : policyUrls) {
-            URI uri = URI.create(Names.USER_POLICY_CONTRIBUTION.toASCIIString() + i++);
-            policyContributions.add(new FileContributionSource(uri, policyUrl, -1, new byte[0]));
-        }
-        configuration.setPolicies(policyContributions);
 
         return configuration;
     }
