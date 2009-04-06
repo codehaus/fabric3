@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-policy="urn:fabric3.org:policy">
+
+    <policySet name="testImplementationPolicy"
+               f3-policy:phase="INTERCEPTION"
+               attachTo="//component[@name='AttachToImplementationService'] | //service/binding.test">
+        <f3-policy:interceptor class="org.fabric3.policy.attachment.AttachToImplementationInterceptor"/>
+    </policySet>
+
+</definitions>
