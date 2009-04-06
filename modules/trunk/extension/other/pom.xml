@@ -51,6 +51,7 @@
 		<module>fabric3-resource</module>
 		<module>fabric3-sca-taglib</module>
 		<module>fabric3-security</module>
+		<module>fabric3-security-intents</module>
 		<module>fabric3-tx</module>
 		<module>fabric3-tx-jotm</module>
 		<module>fabric3-xapool</module>
