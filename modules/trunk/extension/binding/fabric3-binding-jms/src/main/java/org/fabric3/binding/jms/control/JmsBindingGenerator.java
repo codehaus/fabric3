@@ -101,7 +101,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
                                                       List<LogicalOperation> operations,
                                                       Policy policy) throws GenerationException {
 
-        TransactionType transactionType = getTransactionType(policy, logicalBinding.getParent().getOperations());
+        TransactionType transactionType = getTransactionType(policy, operations);
         Set<String> oneWayOperations = getOneWayOperations(policy, operations);
 
         URI uri = logicalBinding.getDefinition().getTargetUri();
