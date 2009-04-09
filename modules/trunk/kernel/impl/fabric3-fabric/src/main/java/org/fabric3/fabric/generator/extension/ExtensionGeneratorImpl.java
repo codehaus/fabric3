@@ -40,7 +40,6 @@ import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -140,12 +139,6 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
      * @throws GenerationException if an exception during evaluation is encountered
      */
     private void generate(LogicalComponent<?> component, AbstractExtensionsCommand command) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : composite.getComponents()) {
-                generate(child, command);
-            }
-        }
         Implementation<?> impl = component.getDefinition().getImplementation();
         AbstractComponentType<?, ?, ?, ?> type = impl.getComponentType();
         Set<Contribution> extensions = new HashSet<Contribution>();
