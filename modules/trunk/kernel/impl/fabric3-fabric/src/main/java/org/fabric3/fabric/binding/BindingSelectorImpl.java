@@ -17,13 +17,14 @@
 package org.fabric3.fabric.binding;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.spi.binding.BindingMatchResult;
 import org.fabric3.spi.binding.BindingProvider;
 import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.binding.BindingSelectionStrategy;
@@ -44,11 +45,11 @@ import org.fabric3.spi.util.UriHelper;
  */
 @EagerInit
 public class BindingSelectorImpl implements BindingSelector {
-    private Map<QName, BindingProvider> providers = new HashMap<QName, BindingProvider>();
+    private List<BindingProvider> providers = new ArrayList<BindingProvider>();
     private BindingSelectionStrategy strategy;
     private LogicalComponentManager logicalComponentManager;
 
-    public BindingSelectorImpl(@Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager) {
+    public BindingSelectorImpl(@Reference(name = "logicalComponentManager") LogicalComponentManager logicalComponentManager) {
         this.logicalComponentManager = logicalComponentManager;
     }
 
@@ -58,14 +59,23 @@ public class BindingSelectorImpl implements BindingSelector {
      * @param providers the set of providers
      */
     @Reference(required = false)
-    public void setProviders(Map<QName, BindingProvider> providers) {
+    public void setProviders(List<BindingProvider> providers) {
         this.providers = providers;
+        orderProviders();
     }
 
     @Reference(required = false)
     public void setStrategy(BindingSelectionStrategy strategy) {
         this.strategy = strategy;
     }
+
+    @Init
+    public void orderProviders() {
+        if (strategy != null) {
+            strategy.order(providers);
+        }
+    }
+
 
     public void selectBindings(LogicalComponent<?> component) throws BindingSelectionException {
         for (LogicalReference reference : component.getReferences()) {
@@ -87,7 +97,6 @@ public class BindingSelectorImpl implements BindingSelector {
                 }
             }
         }
-
     }
 
     /**
@@ -98,31 +107,20 @@ public class BindingSelectorImpl implements BindingSelector {
      * @throws BindingSelectionException if an error occurs selecting a binding
      */
     private void selectBinding(LogicalReference source, LogicalService target) throws BindingSelectionException {
-        Map<QName, BindingProvider> requiredMatches = new HashMap<QName, BindingProvider>();
-        Map<QName, BindingProvider> allMatches = new HashMap<QName, BindingProvider>();
+        List<BindingMatchResult> results = new ArrayList<BindingMatchResult>();
 
-        for (Map.Entry<QName, BindingProvider> entry : providers.entrySet()) {
-            BindingProvider.MatchType matchType = entry.getValue().canBind(source, target);
-            switch (matchType) {
-            case ALL_INTENTS:
-                allMatches.put(entry.getKey(), entry.getValue());
-                break;
-            case REQUIRED_INTENTS:
-                requiredMatches.put(entry.getKey(), entry.getValue());
-                break;
-            case NO_MATCH:
-                break;
+        for (BindingProvider provider : providers) {
+            BindingMatchResult result = provider.canBind(source, target);
+            if (result.isMatch()) {
+                provider.bind(source, target);
+                return;
             }
+            results.add(result);
+
         }
-        if (!allMatches.isEmpty()) {
-            strategy.select(allMatches).bind(source, target);
-        } else if (!requiredMatches.isEmpty()) {
-            strategy.select(requiredMatches).bind(source, target);
-        } else {
-            URI sourceUri = source.getUri();
-            URI targetUri = target.getUri();
-            throw new NoSCABindingProviderException("No SCA binding provider suitable for creating wire from " + sourceUri + " to " + targetUri);
-        }
+        URI sourceUri = source.getUri();
+        URI targetUri = target.getUri();
+        throw new NoSCABindingProviderException("No SCA binding provider suitable for creating wire from " + sourceUri + " to " + targetUri, results);
     }
 
 }

@@ -16,6 +16,9 @@
  */
 package org.fabric3.fabric.binding;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -32,29 +35,37 @@ import org.fabric3.spi.binding.BindingSelectionStrategy;
  * @version $Revision$ $Date$
  */
 public class ConfigurableBindingSelectionStrategy implements BindingSelectionStrategy {
-    private List<QName> scaBindingOrder;
+    private Map<QName, Integer> bindingOrder;
+    private BindingProviderComparator COMPARATOR = new BindingProviderComparator();
 
     @Property
-    public void setScaBindingOrder(List<QName> scaBindingOrder) {
-        this.scaBindingOrder = scaBindingOrder;
+    public void setScaBindingOrder(List<QName> order) {
+        this.bindingOrder = new HashMap<QName, Integer>(order.size());
+        for (int i = 0; i < order.size(); i++) {
+            QName name = order.get(i);
+            bindingOrder.put(name, i);
+        }
     }
 
-    public BindingProvider select(Map<QName, BindingProvider> providers) {
-        if (scaBindingOrder == null) {
-            return providers.values().iterator().next();
+    public void order(List<BindingProvider> providers) {
+        if (bindingOrder == null || providers.isEmpty()) {
+            return;
         }
-        BindingProvider provider = null;
-        for (QName name : scaBindingOrder) {
-            provider = providers.get(name);
-            if (provider != null) {
-                break;
+        Collections.sort(providers, COMPARATOR);
+    }
+
+
+    private class BindingProviderComparator implements Comparator<BindingProvider> {
+        public int compare(BindingProvider one, BindingProvider two) {
+            Integer posOne = bindingOrder.get(one.getType());
+            if (posOne == null) {
+                posOne = -1;
             }
+            Integer posTwo = bindingOrder.get(two.getType());
+            if (posTwo == null) {
+                posTwo = -1;
+            }
+            return posOne - posTwo;
         }
-        if (provider == null) {
-            // none of the ordered bindings were found, default to the first one
-            // TODO support exclusions
-            return providers.values().iterator().next();
-        }
-        return provider;
     }
 }
