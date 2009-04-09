@@ -188,6 +188,14 @@ public abstract class AbstractDomain implements Domain {
         instantiateAndDeploy(contributions, null, false, transactional);
     }
 
+    public void activateDefinitions(URI uri) throws DeploymentException {
+        Contribution contribution = metadataStore.find(uri);
+        if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
+            // a composite may not be associated with a contribution, e.g. a bootstrap composite
+            throw new ContributionNotInstalledException("Contribution is not installed: " + contribution.getUri());
+        }
+        activateDefinitions(contribution);
+    }
 
     public void undeploy(QName deployable) throws UndeploymentException {
         undeploy(deployable, false);

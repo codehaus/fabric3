@@ -73,6 +73,11 @@ public abstract class AbstractDomainMBean {
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution not found: " + uri);
         }
+        try {
+            domain.activateDefinitions(uri);
+        } catch (DeploymentException e) {
+            throw new ContributionNotInstalledManagementException(e.getMessage());
+        }
         for (Deployable deployable : contribution.getManifest().getDeployables()) {
             try {
                 if (plan == null) {

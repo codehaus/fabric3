@@ -87,6 +87,8 @@ public interface Domain {
      */
     void include(List<URI> uris, boolean transactional) throws DeploymentException;
 
+    void activateDefinitions(URI contribution) throws DeploymentException;
+
     /**
      * Remove a deployable Composite from the domain.
      *
