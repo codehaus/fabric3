@@ -16,14 +16,39 @@
  */
 package org.fabric3.spi.binding;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
 
 /**
- * Implementations select a BindingProvider based on some criteria such as a weighting algorithm.
+ * Result for a binding match operation.
  *
  * @version $Revision$ $Date$
  */
-public interface BindingSelectionStrategy {
+public class BindingMatchResult {
+    private boolean match;
+    private QName type;
+    private List<String> reasons = new ArrayList<String>();
 
-    void order(List<BindingProvider> providers);
+    public BindingMatchResult(boolean match, QName type) {
+        this.match = match;
+        this.type = type;
+    }
+
+    public boolean isMatch() {
+        return match;
+    }
+
+    public QName getType() {
+        return type;
+    }
+
+    public List<String> getReasons() {
+        return reasons;
+    }
+
+    public void addReason(String reason) {
+        reasons.add(reason);
+    }
+
 }

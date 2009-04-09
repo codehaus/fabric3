@@ -16,6 +16,8 @@
  */
 package org.fabric3.spi.binding;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -38,11 +40,8 @@ import org.fabric3.spi.model.instance.LogicalService;
  * @version $Revision$ $Date$
  */
 public interface BindingProvider {
-    enum MatchType {
-        NO_MATCH,
-        REQUIRED_INTENTS,
-        ALL_INTENTS
-    }
+
+    QName getType();
 
     /**
      * Determines if this binding provider can be used as a remote transport for the wire from the source reference to the target service.
@@ -50,11 +49,9 @@ public interface BindingProvider {
      *
      * @param source the source reference
      * @param target the target service
-     * @return if the binding provider can wire from the source to target. {@link MatchType#NO_MATCH} indicates the binding provider cannot be used
-     *         for the wire; {@link MatchType#REQUIRED_INTENTS} if the provider can be used but not all the mayProvides intents will be supported; and
-     *         {@link MatchType#ALL_INTENTS} if all required and mayProvides intents are supported by the provider.
+     * @return if the binding provider can wire from the source to target.
      */
-    MatchType canBind(LogicalReference source, LogicalService target);
+    BindingMatchResult canBind(LogicalReference source, LogicalService target);
 
     /**
      * Configures binding information for the source reference and target service.

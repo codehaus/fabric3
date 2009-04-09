@@ -17,9 +17,7 @@
 package org.fabric3.fabric.binding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -41,37 +39,40 @@ public class ConfigurableBindingSelectionStrategyTestCase extends TestCase {
         order.add(baz);
         strategy.setScaBindingOrder(order);
 
-        Map<QName, BindingProvider> providers = new HashMap<QName, BindingProvider>();
         BindingProvider bazProvider = EasyMock.createMock(BindingProvider.class);
+        EasyMock.expect(bazProvider.getType()).andReturn(baz);
         EasyMock.replay(bazProvider);
         BindingProvider barProvider = EasyMock.createMock(BindingProvider.class);
+        EasyMock.expect(barProvider.getType()).andReturn(bar);
         EasyMock.replay(barProvider);
-        providers.put(baz, bazProvider);
-        providers.put(bar, barProvider);
 
-        assertEquals(barProvider, strategy.select(providers));
+        List<BindingProvider> providers = new ArrayList<BindingProvider>();
+        providers.add(bazProvider);
+        providers.add(barProvider);
+        strategy.order(providers);
+        assertEquals(barProvider, providers.get(0));
+        assertEquals(bazProvider, providers.get(1));
 
     }
 
     public void testNoConfiguredOrderSelection() throws Exception {
         ConfigurableBindingSelectionStrategy strategy = new ConfigurableBindingSelectionStrategy();
-        List<QName> order = new ArrayList<QName>();
-
-        strategy.setScaBindingOrder(order);
-
         QName bar = new QName("foo", "bar");
         QName baz = new QName("foo", "baz");
 
-        Map<QName, BindingProvider> providers = new HashMap<QName, BindingProvider>();
         BindingProvider bazProvider = EasyMock.createMock(BindingProvider.class);
+        EasyMock.expect(bazProvider.getType()).andReturn(baz);
         EasyMock.replay(bazProvider);
         BindingProvider barProvider = EasyMock.createMock(BindingProvider.class);
+        EasyMock.expect(barProvider.getType()).andReturn(bar);
         EasyMock.replay(barProvider);
-        providers.put(baz, bazProvider);
-        providers.put(bar, barProvider);
 
-        assertNotNull(strategy.select(providers));
-
+        List<BindingProvider> providers = new ArrayList<BindingProvider>();
+        providers.add(bazProvider);
+        providers.add(barProvider);
+        strategy.order(providers);
+        assertEquals(bazProvider, providers.get(0));
+        assertEquals(barProvider, providers.get(1));
     }
 
     public void testBadConfigurationSelectionOrder() throws Exception {
@@ -85,16 +86,19 @@ public class ConfigurableBindingSelectionStrategyTestCase extends TestCase {
 
         QName baz = new QName("foo", "baz");
 
-        Map<QName, BindingProvider> providers = new HashMap<QName, BindingProvider>();
+        List<BindingProvider> providers = new ArrayList<BindingProvider>();
         BindingProvider bazProvider = EasyMock.createMock(BindingProvider.class);
+        EasyMock.expect(bazProvider.getType()).andReturn(baz);
         EasyMock.replay(bazProvider);
         BindingProvider barProvider = EasyMock.createMock(BindingProvider.class);
+        EasyMock.expect(barProvider.getType()).andReturn(bar);
         EasyMock.replay(barProvider);
-        providers.put(baz, bazProvider);
-        providers.put(bar, barProvider);
+        providers.add(bazProvider);
+        providers.add(barProvider);
 
-        assertEquals(barProvider, strategy.select(providers));
-
+        strategy.order(providers);
+        assertEquals(bazProvider, providers.get(0));
+        assertEquals(barProvider, providers.get(1));
     }
 
 }
