@@ -59,10 +59,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 
 /**
- * Default implementation of the physical model generator. This implementation topologically sorts components according to their position in the
- * domain hierarchy. That is, by URI. This guarantees commands will be generated in in the proper order. As part of the topological sort, an ordered
- * set of all logical components is created. The set is then iterated and command generators called based on their command order are dispatched to for
- * each logical component.
+ * Default Generator implementation.
  *
  * @version $Revision$ $Date$
  */
@@ -130,12 +127,10 @@ public class GeneratorImpl implements Generator {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
-        // provision components
         for (CommandGenerator generator : commandGenerators) {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component, incremental);
                 if (command != null) {
-                    //xcv 123
                     if (commandMap.getZoneCommands(component.getZone()).getCommands().contains(command)) {
                         continue;
                     }
