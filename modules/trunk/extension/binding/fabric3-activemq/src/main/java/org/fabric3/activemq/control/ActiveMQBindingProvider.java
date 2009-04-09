@@ -29,6 +29,7 @@ import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.DestinationType;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.spi.binding.BindingMatchResult;
 import org.fabric3.spi.binding.BindingProvider;
 import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -52,9 +53,13 @@ public class ActiveMQBindingProvider implements BindingProvider {
         this.brokerUrl = brokerUrl;
     }
 
-    public MatchType canBind(LogicalReference source, LogicalService target) {
+    public QName getType() {
+        return JmsBindingDefinition.BINDING_QNAME;
+    }
+
+    public BindingMatchResult canBind(LogicalReference source, LogicalService target) {
         // TODO handle must provide intents
-        return MatchType.REQUIRED_INTENTS;
+        return new BindingMatchResult(true, getType());
     }
 
     public void bind(LogicalReference source, LogicalService target) throws BindingSelectionException {

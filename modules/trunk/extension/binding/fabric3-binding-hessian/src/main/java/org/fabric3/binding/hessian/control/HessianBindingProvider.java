@@ -41,6 +41,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
+import org.fabric3.spi.binding.BindingMatchResult;
 import org.fabric3.spi.binding.BindingProvider;
 import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -69,9 +70,13 @@ public class HessianBindingProvider implements BindingProvider {
         this.domainManager = domainManager;
     }
 
-    public MatchType canBind(LogicalReference source, LogicalService target) {
-        // TODO handle must provide intents
-        return MatchType.REQUIRED_INTENTS;
+    public QName getType() {
+        return BINDING_QNAME;
+    }
+
+    public BindingMatchResult canBind(LogicalReference source, LogicalService target) {
+        // TODO error for one-way operations
+        return new BindingMatchResult(true, getType());
     }
 
     public void bind(LogicalReference source, LogicalService target) throws BindingSelectionException {
