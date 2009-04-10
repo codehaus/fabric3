@@ -154,7 +154,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
             }
             if (incremental && !component.getPolicySets().contains(policySet)) {
                 component.addPolicySet(policySet);
-                component.setState(LogicalState.NEW);
+                processComponent(component, policySet, incremental);
             } else if (!incremental) {
                 component.addPolicySet(policySet);
             }
@@ -200,6 +200,16 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
     }
 
+    private void processComponent(LogicalComponent<?> component, QName policySet, boolean incremental) {
+        // do not mark the component as new, just the wires since the implementation does not need to be reprovisioned
+        for (LogicalReference reference : component.getReferences()) {
+            processReference(reference, policySet, incremental);
+        }
+        for (LogicalService service : component.getServices()) {
+            processService(service, policySet, incremental);
+        }
+    }
+
     private void processService(LogicalService service, QName policySet, boolean incremental) {
         for (LogicalBinding<?> binding : service.getBindings()) {
             if (incremental && binding.getPolicySets().contains(policySet)) {
@@ -212,9 +222,6 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
     private void processReference(LogicalReference reference, QName policySet, boolean incremental) {
         for (LogicalWire wire : reference.getWires()) {
-            if (incremental && wire.getPolicySets().contains(policySet)) {
-                continue;
-            }
             wire.setState(LogicalState.NEW);
         }
         for (LogicalBinding<?> binding : reference.getBindings()) {
