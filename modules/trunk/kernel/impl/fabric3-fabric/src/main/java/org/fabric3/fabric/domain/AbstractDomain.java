@@ -192,7 +192,7 @@ public abstract class AbstractDomain implements Domain {
         Contribution contribution = metadataStore.find(uri);
         if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
             // a composite may not be associated with a contribution, e.g. a bootstrap composite
-            throw new ContributionNotInstalledException("Contribution is not installed: " + contribution.getUri());
+            throw new ContributionNotInstalledException("Contribution is not installed: " + uri);
         }
         activateDefinitions(contribution);
     }
