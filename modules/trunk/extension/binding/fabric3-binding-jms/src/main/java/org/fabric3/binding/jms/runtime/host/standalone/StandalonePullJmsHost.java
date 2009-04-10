@@ -140,6 +140,10 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     }
 
+    public boolean isRegistered(URI serviceUri) {
+        return consumerWorkerMap.containsKey(serviceUri);
+    }
+
     public void unregisterListener(URI serviceUri) {
         List<ConsumerWorker> workers = consumerWorkerMap.remove(serviceUri);
         for (ConsumerWorker consumerWorker : workers) {

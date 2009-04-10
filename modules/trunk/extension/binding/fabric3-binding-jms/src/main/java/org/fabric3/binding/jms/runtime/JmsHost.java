@@ -47,7 +47,15 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 public interface JmsHost {
 
     /**
-     * Register a <code>ResponseMessageListener<code> which handle inbound message and send response.
+     * Returns true if a listener for the service URI is registered.
+     *
+     * @param serviceUri the service URI
+     * @return true if a listener is registered
+     */
+    boolean isRegistered(URI serviceUri);
+
+    /**
+     * Register a ResponseMessageListener which handle inbound message and send response.
      *
      * @param requestJMSObjectFactory  Factory for creating JMS objects for request.
      * @param responseJMSObjectFactory Factory for creating JMS objects for response.
@@ -57,18 +65,18 @@ public interface JmsHost {
      * @param cl                       Classloader to use.
      * @param serviceUri               URI of the service to which the binding is attached.
      */
-    public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
-                                         JMSObjectFactory responseJMSObjectFactory,
-                                         SourceMessageListener messageListener,
-                                         TransactionType transactionType,
-                                         TransactionHandler transactionHandler,
-                                         ClassLoader cl,
-                                         URI serviceUri);
+    void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
+                                  JMSObjectFactory responseJMSObjectFactory,
+                                  SourceMessageListener messageListener,
+                                  TransactionType transactionType,
+                                  TransactionHandler transactionHandler,
+                                  ClassLoader cl,
+                                  URI serviceUri);
 
     /**
-     * Unregister message listener at the endpoint at serviceUri
+     * Unregister the message listener at the endpoint at serviceUri
      *
      * @param serviceUri URI of the service to which the binding is attached.
      */
-    public void unregisterListener(URI serviceUri);
+    void unregisterListener(URI serviceUri);
 }

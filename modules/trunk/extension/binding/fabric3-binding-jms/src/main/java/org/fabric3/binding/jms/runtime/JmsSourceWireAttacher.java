@@ -163,6 +163,10 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         } else {
             messageListener = new RequestResponseSourceMessageListener(operations, correlationScheme, messageTypes, transactionType, callbackUri);
         }
+        if (jmsHost.isRegistered(serviceUri)) {
+            // the wire has changed and it is being reprovisioned
+            jmsHost.unregisterListener(serviceUri);
+        }
         jmsHost.registerResponseListener(requestJMSObjectFactory,
                                          responseJMSObjectFactory,
                                          messageListener,
