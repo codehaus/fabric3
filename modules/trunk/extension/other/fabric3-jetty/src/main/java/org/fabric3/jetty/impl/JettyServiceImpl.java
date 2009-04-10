@@ -265,7 +265,11 @@ public class JettyServiceImpl implements JettyService {
     }
 
     public synchronized boolean isMappingRegistered(String path) {
-        for (ServletMapping mapping : servletHandler.getServletMappings()) {
+        ServletMapping[] mappings = servletHandler.getServletMappings();
+        if (mappings == null) {
+            return false;
+        }
+        for (ServletMapping mapping : mappings) {
             for (String spec : mapping.getPathSpecs()) {
                 if (spec.equals(path)) {
                     return true;

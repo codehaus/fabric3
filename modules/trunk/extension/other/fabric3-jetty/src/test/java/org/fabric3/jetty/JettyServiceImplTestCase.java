@@ -103,6 +103,7 @@ public class JettyServiceImplTestCase extends TestCase {
     public void testUnRegisterServletMapping() throws Exception {
         service.setHttpPort(String.valueOf(HTTP_PORT));
         service.init();
+        assertFalse(service.isMappingRegistered("/"));
         TestServlet servlet = new TestServlet();
         service.registerMapping("/", servlet);
         assertEquals(servlet, service.unregisterMapping("/"));
