@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
 import org.fabric3.model.type.definitions.AbstractDefinition;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.binding.BindingSelectionException;
@@ -188,15 +190,6 @@ public abstract class AbstractDomain implements Domain {
         instantiateAndDeploy(contributions, null, false, transactional);
     }
 
-    public void activateDefinitions(URI uri) throws DeploymentException {
-        Contribution contribution = metadataStore.find(uri);
-        if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
-            // a composite may not be associated with a contribution, e.g. a bootstrap composite
-            throw new ContributionNotInstalledException("Contribution is not installed: " + uri);
-        }
-        activateDefinitions(contribution);
-    }
-
     public void undeploy(QName deployable) throws UndeploymentException {
         undeploy(deployable, false);
     }
@@ -230,6 +223,70 @@ public abstract class AbstractDomain implements Domain {
         } catch (WriteException e) {
             throw new UndeploymentException("Error applying undeployment: " + deployable, e);
         }
+    }
+
+    public void activateDefinitions(URI uri, boolean apply, boolean transactional) throws DeploymentException {
+        Contribution contribution = metadataStore.find(uri);
+        if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
+            // a composite may not be associated with a contribution, e.g. a bootstrap composite
+            throw new ContributionNotInstalledException("Contribution is not installed: " + uri);
+        }
+        Set<AbstractDefinition> definitions = activateDefinitions(contribution);
+        if (apply) {
+            for (AbstractDefinition definition : definitions) {
+                if (definition instanceof PolicySet) {
+                    PolicySet policySet = (PolicySet) definition;
+                    if (policySet.getAttachTo() != null) {
+                        if (transactional) {
+
+                        }
+                        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+                        if (transactional) {
+                            domain = CopyUtil.copy(domain);
+                        }
+
+                        try {
+                            policyResolver.attachPolicies(domain, true);
+                            Collection<LogicalComponent<?>> components = domain.getComponents();
+                            // generate and provision any new components and new wires
+                            CommandMap commandMap = generator.generate(components, true);
+                            routingService.route(commandMap);
+
+                            logicalComponentManager.replaceRootComponent(domain);
+                        } catch (WriteException e) {
+                            throw new DeploymentException(e);
+                        } catch (PolicyResolutionException e) {
+                            throw new DeploymentException(e);
+                        } catch (GenerationException e) {
+                            throw new DeploymentException(e);
+                        } catch (RoutingException e) {
+                            throw new DeploymentException(e);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void deactivateDefinitions(URI uri) throws DeploymentException {
+        Contribution contribution = metadataStore.find(uri);
+        if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
+            // a composite may not be associated with a contribution, e.g. a bootstrap composite
+            throw new ContributionNotInstalledException("Contribution is not installed: " + uri);
+        }
+        for (Resource resource : contribution.getResources()) {
+            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                if (!(element.getValue() instanceof AbstractDefinition)) {
+                    break;
+                }
+                try {
+                    policyRegistry.deactivate((AbstractDefinition) element.getValue());
+                } catch (PolicyActivationException e) {
+                    throw new DeploymentException(e);
+                }
+            }
+        }
+
     }
 
     public void recover(List<QName> deployables, List<String> planNames) throws DeploymentException {
@@ -385,26 +442,31 @@ public abstract class AbstractDomain implements Domain {
      * Activates policy definitions contained in the contribution.
      *
      * @param contribution the contribution
+     * @return the policy definitions activated
      * @throws DeploymentException if an exception occurs when the definitions are activated
      */
-    private void activateDefinitions(Contribution contribution) throws DeploymentException {
+    private Set<AbstractDefinition> activateDefinitions(Contribution contribution) throws DeploymentException {
         if (policyRegistry == null) {
             // registry not available until after bootstrap
-            return;
+            return Collections.emptySet();
         }
+        Set<AbstractDefinition> definitions = new HashSet<AbstractDefinition>();
         for (Resource resource : contribution.getResources()) {
             for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                 if (!(element.getValue() instanceof AbstractDefinition)) {
                     break;
                 }
                 try {
-                    policyRegistry.activate((AbstractDefinition) element.getValue());
+                    AbstractDefinition definition = (AbstractDefinition) element.getValue();
+                    definitions.add(definition);
+                    policyRegistry.activate(definition);
                 } catch (PolicyActivationException e) {
                     // TODO rollback policy activation
                     throw new DeploymentException(e);
                 }
             }
         }
+        return definitions;
     }
 
 

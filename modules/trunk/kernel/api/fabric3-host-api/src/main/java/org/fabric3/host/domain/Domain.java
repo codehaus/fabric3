@@ -87,8 +87,6 @@ public interface Domain {
      */
     void include(List<URI> uris, boolean transactional) throws DeploymentException;
 
-    void activateDefinitions(URI contribution) throws DeploymentException;
-
     /**
      * Remove a deployable Composite from the domain.
      *
@@ -106,6 +104,25 @@ public interface Domain {
      * @throws UndeploymentException if an error is encountered during undeployment
      */
     void undeploy(QName deployable, boolean transactional) throws UndeploymentException;
+
+    /**
+     * Activates a set of definitions contained in the contribution.
+     *
+     * @param uri           the contribution URI
+     * @param apply         if policy sets using external attachment should be applied and wires regenerated.
+     * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
+     *                      after componnets have been deployed to a runtime or runtimes.
+     * @throws DeploymentException if an error is encountered durng activation
+     */
+    void activateDefinitions(URI uri, boolean apply, boolean transactional) throws DeploymentException;
+
+    /**
+     * Deactivates a set of definitions contained in the contribution.
+     *
+     * @param uri the contribution URI
+     * @throws DeploymentException if an error is encountered durng activation
+     */
+    void deactivateDefinitions(URI uri) throws DeploymentException;
 
     /**
      * Initiates a recovery operation using the set of deployables and plans.
