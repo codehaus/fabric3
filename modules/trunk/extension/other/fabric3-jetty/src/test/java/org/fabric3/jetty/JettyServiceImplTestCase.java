@@ -90,6 +90,7 @@ public class JettyServiceImplTestCase extends TestCase {
         service.init();
         TestServlet servlet = new TestServlet();
         service.registerMapping("/", servlet);
+        assertTrue(service.isMappingRegistered("/"));
         Socket client = new Socket("127.0.0.1", HTTP_PORT);
         OutputStream os = client.getOutputStream();
         os.write(REQUEST1.getBytes());
@@ -97,6 +98,16 @@ public class JettyServiceImplTestCase extends TestCase {
         read(client);
         service.destroy();
         assertTrue(servlet.invoked);
+    }
+
+    public void testUnRegisterServletMapping() throws Exception {
+        service.setHttpPort(String.valueOf(HTTP_PORT));
+        service.init();
+        TestServlet servlet = new TestServlet();
+        service.registerMapping("/", servlet);
+        assertEquals(servlet, service.unregisterMapping("/"));
+        assertFalse(service.isMappingRegistered("/"));
+        service.destroy();
     }
 
 //    public void testRequestSession() throws Exception {

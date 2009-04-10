@@ -37,8 +37,11 @@ package org.fabric3.jetty.impl;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Handler;
@@ -221,7 +224,7 @@ public class JettyServiceImpl implements JettyService {
         return servletHandler.getServletContext();
     }
 
-    public void registerMapping(String path, Servlet servlet) {
+    public synchronized void registerMapping(String path, Servlet servlet) {
         ServletHolder holder = new ServletHolder(servlet);
         servletHandler.addServlet(holder);
         ServletMapping mapping = new ServletMapping();
@@ -230,12 +233,46 @@ public class JettyServiceImpl implements JettyService {
         servletHandler.addServletMapping(mapping);
     }
 
-    public Servlet unregisterMapping(String string) {
-        return null;
+    public synchronized Servlet unregisterMapping(String path) {
+        List<ServletMapping> mappings = new ArrayList<ServletMapping>();
+        List<String> names = new ArrayList<String>();
+        for (ServletMapping mapping : servletHandler.getServletMappings()) {
+            for (String spec : mapping.getPathSpecs()) {
+                if (spec.equals(path)) {
+                    // ok even though a servlet can be mapped to multiple paths in Jetty since ServletHost only allows one path per registration
+                    names.add(mapping.getServletName());
+                    continue;
+                }
+                mappings.add(mapping);
+            }
+        }
+        Servlet servlet = null;
+        List<ServletHolder> holders = new ArrayList<ServletHolder>();
+        for (ServletHolder holder : servletHandler.getServlets()) {
+            if (!names.contains(holder.getName())) {
+                holders.add(holder);
+            } else {
+                try {
+                    servlet = holder.getServlet();
+                } catch (ServletException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        servletHandler.setServlets(holders.toArray(new ServletHolder[holders.size()]));
+        servletHandler.setServletMappings(mappings.toArray(new ServletMapping[mappings.size()]));
+        return servlet;
     }
 
-    public boolean isMappingRegistered(String path) {
-        throw new UnsupportedOperationException();
+    public synchronized boolean isMappingRegistered(String path) {
+        for (ServletMapping mapping : servletHandler.getServletMappings()) {
+            for (String spec : mapping.getPathSpecs()) {
+                if (spec.equals(path)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Server getServer() {
