@@ -86,6 +86,10 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
             application = new RsWebApplication(getClass().getClassLoader());
             webApplications.put(sourceUri, application);
             String mapping = creatingMappingUri(sourceUri);
+            if (servletHost.isMappingRegistered(mapping)) {
+                // wire reprovisioned
+                servletHost.unregisterMapping(mapping);
+            }
             servletHost.registerMapping(mapping, application);
         }
 

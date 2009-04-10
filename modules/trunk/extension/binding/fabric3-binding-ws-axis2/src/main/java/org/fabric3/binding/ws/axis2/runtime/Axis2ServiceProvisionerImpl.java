@@ -35,6 +35,12 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.WSDL2Constants;
 import org.apache.axis2.engine.MessageReceiver;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
@@ -49,11 +55,6 @@ import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * Axis2 Service provisioner.
@@ -110,7 +111,12 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         configurationContext = f3Configurator.getConfigurationContext();
 
         axisServlet = new F3AxisServlet(configurationContext);
-        servletHost.registerMapping("/" + servicePath + "/*", axisServlet);
+        String mapping = "/" + servicePath + "/*";
+        if (servletHost.isMappingRegistered(mapping)) {
+            // wire reprovisioned
+            servletHost.unregisterMapping(mapping);
+        }
+        servletHost.registerMapping(mapping, axisServlet);
         monitor.extensionStarted();
     }
 

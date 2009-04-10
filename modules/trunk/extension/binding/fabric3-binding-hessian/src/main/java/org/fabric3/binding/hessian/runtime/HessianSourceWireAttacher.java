@@ -102,13 +102,17 @@ public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWire
         HessianServiceHandler handler = new HessianServiceHandler(ops, callbackUri, loader, serializerFactory);
         URI uri = sourceDefinition.getUri();
         String servicePath = uri.getPath();
+        if (servletHost.isMappingRegistered(servicePath)) {
+            // wire reprovisioned
+            servletHost.unregisterMapping(servicePath);
+        }
         servletHost.registerMapping(servicePath, handler);
         monitor.provisionedEndpoint(uri);
 
     }
 
     public void detachFromSource(HessianWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        servletHost.unregisterMapping(source.getUri().getPath());
     }
 
     public void detachObjectFactory(HessianWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {

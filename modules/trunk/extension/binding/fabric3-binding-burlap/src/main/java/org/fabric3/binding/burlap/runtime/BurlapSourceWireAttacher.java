@@ -43,9 +43,9 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.burlap.provision.BurlapWireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -94,13 +94,17 @@ public class BurlapSourceWireAttacher implements SourceWireAttacher<BurlapWireSo
         BurlapServiceHandler handler = new BurlapServiceHandler(ops, loader);
         URI uri = sourceDefinition.getUri();
         String servicePath = uri.getPath();
+        if (servletHost.isMappingRegistered(servicePath)) {
+            // wire reprovisioned
+            servletHost.unregisterMapping(servicePath);
+        }
         servletHost.registerMapping(servicePath, handler);
         monitor.provisionedEndpoint(uri);
     }
 
     public void detachFromSource(BurlapWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition)
             throws WiringException {
-        throw new AssertionError();
+        servletHost.unregisterMapping(sourceDefinition.getUri().getPath());
     }
 
     public void attachObjectFactory(BurlapWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
