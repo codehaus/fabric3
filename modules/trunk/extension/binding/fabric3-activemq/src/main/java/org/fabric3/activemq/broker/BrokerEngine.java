@@ -18,7 +18,6 @@ package org.fabric3.activemq.broker;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.URI;
 
@@ -81,8 +80,18 @@ public class BrokerEngine {
         // JMX must be turned off prior to configuring connections to avoid conflicts with the F3 JMX agent.
         broker.setUseJmx(false);
 
-        selectPort();
-        TransportConnector connector = broker.addConnector("tcp://" + hostAddress + ":" + selectedPort);
+        boolean loop = true;
+        TransportConnector connector = null;
+        while (loop) {
+            try {
+                connector = broker.addConnector("tcp://" + hostAddress + ":" + selectedPort);
+                loop = false;
+            } catch (IOException e) {
+                selectPort();
+
+
+            }
+        }
         connector.setDiscoveryUri(URI.create("multicast://default"));
         broker.addNetworkConnector("multicast://default");
         broker.start();
@@ -106,7 +115,7 @@ public class BrokerEngine {
                 ServerSocket socket = new ServerSocket(selectedPort);
                 socket.close();
                 return;
-            } catch (BindException e) {
+            } catch (IOException e) {
                 selectedPort++;
             }
         }
