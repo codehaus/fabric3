@@ -73,7 +73,6 @@ public class BrokerEngine {
 
     @Init
     public void init() throws Exception {
-        selectPort();
         broker = new BrokerService();
         broker.setBrokerName(brokerName);
         broker.setTmpDataDirectory(tempDir);
@@ -82,6 +81,7 @@ public class BrokerEngine {
         // JMX must be turned off prior to configuring connections to avoid conflicts with the F3 JMX agent.
         broker.setUseJmx(false);
 
+        selectPort();
         TransportConnector connector = broker.addConnector("tcp://" + hostAddress + ":" + selectedPort);
         connector.setDiscoveryUri(URI.create("multicast://default"));
         broker.addNetworkConnector("multicast://default");
