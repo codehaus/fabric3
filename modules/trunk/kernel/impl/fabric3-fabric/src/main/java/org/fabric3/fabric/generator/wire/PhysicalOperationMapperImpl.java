@@ -29,10 +29,10 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 /**
  * @version $Revision$ $Date$
  */
-public class PhysicalOperationHelperImpl implements PhysicalOperationHelper {
+public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
 
     @SuppressWarnings({"unchecked"})
-    public PhysicalOperationDefinition mapOperation(Operation o) {
+    public PhysicalOperationDefinition map(Operation o) {
 
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName(o.getName());
@@ -49,7 +49,7 @@ public class PhysicalOperationHelperImpl implements PhysicalOperationHelper {
 
     }
 
-    public String getClassName(Type paramType) {
+    private String getClassName(Type paramType) {
 
         // TODO this needs to be fixed
         if (paramType instanceof Class) {

@@ -67,21 +67,21 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     private final GeneratorRegistry generatorRegistry;
     private final PolicyResolver policyResolver;
-    private final PhysicalOperationHelper physicalOperationHelper;
+    private final PhysicalOperationMapper mapper;
 
     /**
      * Constructor.
      *
      * @param generatorRegistry       the generator registry.
      * @param policyResolver          the policy resolver
-     * @param physicalOperationHelper the physical operation helper
+     * @param mapper the physical operation helper
      */
     public PhysicalWireGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
                                      @Reference PolicyResolver policyResolver,
-                                     @Reference PhysicalOperationHelper physicalOperationHelper) {
+                                     @Reference PhysicalOperationMapper mapper) {
         this.generatorRegistry = generatorRegistry;
         this.policyResolver = policyResolver;
-        this.physicalOperationHelper = physicalOperationHelper;
+        this.mapper = mapper;
     }
 
     @SuppressWarnings("unchecked")
@@ -340,7 +340,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Set<PhysicalOperationDefinition> physicalOperations = new HashSet<PhysicalOperationDefinition>(operations.size());
 
         for (LogicalOperation operation : operations) {
-            PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation.getDefinition());
+            PhysicalOperationDefinition physicalOperation = mapper.map(operation.getDefinition());
             if (policyResult != null) {
                 List<PolicySet> policies = policyResult.getInterceptedPolicySets(operation);
                 Set<PhysicalInterceptorDefinition> interceptors = generateInterceptorDefinitions(policies, operation, logicalBinding);

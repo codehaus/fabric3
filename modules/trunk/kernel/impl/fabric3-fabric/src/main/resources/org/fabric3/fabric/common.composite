@@ -45,8 +45,8 @@
 
     <include name="CommonExecutorsBootComposite" scdlLocation="commandExecutors.composite"/>
 
-    <component name="PhysicalOperationHelper">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
+    <component name="PhysicalOperationMapper">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationMapperImpl"/>
     </component>
 
     <component name="Generator">

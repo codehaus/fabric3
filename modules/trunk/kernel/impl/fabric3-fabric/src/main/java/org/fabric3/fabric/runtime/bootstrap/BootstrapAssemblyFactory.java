@@ -69,8 +69,8 @@ import org.fabric3.fabric.generator.context.StartContextCommandGeneratorImpl;
 import org.fabric3.fabric.generator.context.StopContextCommandGenerator;
 import org.fabric3.fabric.generator.context.StopContextCommandGeneratorImpl;
 import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
-import org.fabric3.fabric.generator.wire.PhysicalOperationHelper;
-import org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl;
+import org.fabric3.fabric.generator.wire.PhysicalOperationMapper;
+import org.fabric3.fabric.generator.wire.PhysicalOperationMapperImpl;
 import org.fabric3.fabric.generator.wire.PhysicalWireGenerator;
 import org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl;
 import org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator;
@@ -307,8 +307,8 @@ public class BootstrapAssemblyFactory {
     private static Generator createGenerator(LogicalComponentManager lcm, MetaDataStore metaDataStore, PolicyResolver policyResolver) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
-        PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
-        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, policyResolver, physicalOperationHelper);
+        PhysicalOperationMapper mapper = new PhysicalOperationMapperImpl();
+        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, policyResolver, mapper);
 
         ClassLoaderWireGenerator<?> javaGenerator = new JavaContributionWireGeneratorImpl();
         ClassLoaderWireGenerator<?> locationGenerator = new LocationContributionWireGeneratorImpl();

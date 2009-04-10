@@ -16,18 +16,22 @@
  */
 package org.fabric3.fabric.generator.wire;
 
-import java.lang.reflect.Type;
-
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**
+ * Maps an Operation type to a PhysicalOperationDefinition.
+ *
  * @version $Revision$ $Date$
  */
-public interface PhysicalOperationHelper {
+public interface PhysicalOperationMapper {
 
-    PhysicalOperationDefinition mapOperation(Operation o);
-
-    String getClassName(Type paramType);
+    /**
+     * Performs the mapping.
+     *
+     * @param operation the operation to map.
+     * @return the mapped PhysicalOperationDefinition
+     */
+    PhysicalOperationDefinition map(Operation operation);
 
 }
