@@ -112,9 +112,6 @@ public class GeneratorImpl implements Generator {
             deployingContributions = collator.collateContributions(sorted, null);
         }
 
-        // generate extension provision commands
-        generateExtensionCommands(commandMap, deployingContributions, sorted, true);
-
         // generate classloader provision commands
         Map<String, List<Command>> commandsPerZone = classLoaderCommandGenerator.generate(deployingContributions);
         for (Map.Entry<String, List<Command>> entry : commandsPerZone.entrySet()) {
@@ -153,6 +150,9 @@ public class GeneratorImpl implements Generator {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
+        // generate extension provision commands - this must be done after policies are calculated for policy extensions to be included
+        generateExtensionCommands(commandMap, deployingContributions, sorted, true);
+
         // release extensions that are no longer used
         generateExtensionCommands(commandMap, undeployingContributions, sorted, false);
 
@@ -171,10 +171,9 @@ public class GeneratorImpl implements Generator {
     private void generateExtensionCommands(CommandMap commandMap,
                                            Map<String, List<Contribution>> deployingContributions,
                                            List<LogicalComponent<?>> components,
-                                           boolean provision)
-            throws GenerationException {
+                                           boolean provision) throws GenerationException {
         if (extensionGenerator != null) {
-            Map<String, Command> extensionsPerZone = extensionGenerator.generate(deployingContributions, components, provision);
+            Map<String, Command> extensionsPerZone = extensionGenerator.generate(deployingContributions, components, commandMap, provision);
             if (extensionsPerZone != null) {
                 for (Map.Entry<String, Command> entry : extensionsPerZone.entrySet()) {
                     if (provision) {

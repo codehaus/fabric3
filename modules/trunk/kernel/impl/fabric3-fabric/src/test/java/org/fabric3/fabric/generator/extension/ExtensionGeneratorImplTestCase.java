@@ -39,6 +39,7 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -78,7 +79,8 @@ public class ExtensionGeneratorImplTestCase extends TestCase {
         EasyMock.expect(store.resolveCapability("bindingCapability")).andReturn(bindingExtensions);
 
         EasyMock.replay(store);
-        Map<String, Command> ret = generator.generate(map, components, true);
+        CommandMap commandMap = new CommandMap("123", "123", false);
+        Map<String, Command> ret = generator.generate(map, components, commandMap, true);
         Command commands = ret.get("zone1");
         ProvisionExtensionsCommand command = (ProvisionExtensionsCommand) commands;
         assertTrue(command.getExtensionUris().contains(extensionUri));

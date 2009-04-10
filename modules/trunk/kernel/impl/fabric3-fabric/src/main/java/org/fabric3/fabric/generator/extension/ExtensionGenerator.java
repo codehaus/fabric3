@@ -21,11 +21,12 @@ import java.util.Map;
 
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Generates commands to un/provision extensions for the list of contributions being deployed or undeployed.
+ * Generates commands to un/provision extensions for a deployment or undeployment.
  *
  * @version $Revision$ $Date$
  */
@@ -36,10 +37,13 @@ public interface ExtensionGenerator {
      *
      * @param contributions the contributions being deployed or undeployed
      * @param components    the components being deployed or undeployed
+     * @param commandMap    the CommandMap being generated
      * @param provision     true if the contributions are being provisioned (i.e. deployed) @return the commands
      * @return the provision commands keyed by zone
      * @throws GenerationException if an error occurs generating the commands
      */
-    Map<String, Command> generate(Map<String, List<Contribution>> contributions, List<LogicalComponent<?>> components, boolean provision)
-            throws GenerationException;
+    Map<String, Command> generate(Map<String, List<Contribution>> contributions,
+                                  List<LogicalComponent<?>> components,
+                                  CommandMap commandMap,
+                                  boolean provision) throws GenerationException;
 }
