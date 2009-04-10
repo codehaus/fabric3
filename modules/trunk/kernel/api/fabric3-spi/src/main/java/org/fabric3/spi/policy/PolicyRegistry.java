@@ -66,11 +66,27 @@ public interface PolicyRegistry {
     void activateDefinitions(List<URI> contributionUris) throws PolicyActivationException;
 
     /**
-     * Activates all the policy definition
+     * Activates the policy definition.
      *
      * @param definition the definition
      * @throws PolicyActivationException If unable to find definition.
      */
     void activate(AbstractDefinition definition) throws PolicyActivationException;
+
+    /**
+     * Deactivates all the policy definitions in the specified contributions.
+     *
+     * @param contributionUris The URIs for the contribution.
+     * @throws PolicyActivationException If unable to find definition.
+     */
+    void deactivateDefinitions(List<URI> contributionUris) throws PolicyActivationException;
+
+    /**
+     * Deactivates the policy definition
+     *
+     * @param definition the definition
+     * @throws PolicyActivationException If unable to find definition.
+     */
+    void deactivate(AbstractDefinition definition) throws PolicyActivationException;
 
 }
