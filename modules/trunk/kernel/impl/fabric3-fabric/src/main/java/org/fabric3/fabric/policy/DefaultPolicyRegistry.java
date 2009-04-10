@@ -81,10 +81,6 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
         return getSubCache(definitionClass).get(name);
     }
 
-    public <D extends AbstractDefinition> void registerDefinition(D definition, Class<D> definitionClass) {
-        getSubCache(definitionClass).put(definition.getName(), definition);
-    }
-
     public void activateDefinitions(List<URI> contributionUris) throws PolicyActivationException {
         for (URI uri : contributionUris) {
             Contribution contribution = metaDataStore.find(uri);
@@ -108,6 +104,32 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
             getSubCache(BindingType.class).put(definition.getName(), (BindingType) definition);
         } else if (definition instanceof ImplementationType) {
             getSubCache(ImplementationType.class).put(definition.getName(), (ImplementationType) definition);
+        }
+    }
+
+    public void deactivateDefinitions(List<URI> contributionUris) throws PolicyActivationException {
+        for (URI uri : contributionUris) {
+            Contribution contribution = metaDataStore.find(uri);
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> resourceElement : resource.getResourceElements()) {
+                    Object value = resourceElement.getValue();
+                    if (value instanceof AbstractDefinition) {
+                        deactivate((AbstractDefinition) value);
+                    }
+                }
+            }
+        }
+    }
+
+    public void deactivate(AbstractDefinition definition) throws PolicyActivationException {
+        if (definition instanceof Intent) {
+            getSubCache(Intent.class).remove(definition.getName());
+        } else if (definition instanceof PolicySet) {
+            getSubCache(PolicySet.class).remove(definition.getName());
+        } else if (definition instanceof BindingType) {
+            getSubCache(BindingType.class).remove(definition.getName());
+        } else if (definition instanceof ImplementationType) {
+            getSubCache(ImplementationType.class).remove(definition.getName());
         }
     }
 
