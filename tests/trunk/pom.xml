@@ -38,13 +38,13 @@
             </activation>
 
             <modules>
+                <module>test-function</module>
                 <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
-                <module>test-function</module>
+                <module>test-jpa-core</module>
                 <module>test-groovy</module>
                 <module>test-policy</module>
                 <module>test-mock</module>
-                <module>test-runtime-jetty</module>
                 <module>test-binding-axis2</module>
                 <module>test-binding-burlap</module>
                 <module>test-binding-hessian</module>
@@ -57,6 +57,8 @@
               <!--  <module>test-binding-metro</module> -->
                 <module>test-jpa-implementation</module>
                 <module>bookstore</module>
+                <module>test-runtime-jetty</module>
+                <module>test-runtime-tomcat</module>
             </modules>
         </profile>
     </profiles>

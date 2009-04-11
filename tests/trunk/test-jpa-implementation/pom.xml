@@ -76,57 +76,21 @@
                 <configuration>
                     <runtimeVersion>1.1-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
-                    <extensions>
+                    <features>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-hibernate</artifactId>
+                            <artifactId>fabric3-hibernate-jotm-feature</artifactId>
                             <version>1.1-SNAPSHOT</version>
+                            <type>xml</type>
                         </dependency>
-                        <!-- JPA Core Components -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-spi</artifactId>
-                            <version>1.1-SNAPSHOT</version>
-                        </dependency>
-                        <!-- Transaction Manager Using JOTM -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>1.1-SNAPSHOT</version>
-                        </dependency>
-                        <!-- Declarative Transaction Policies -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx</artifactId>
-                            <version>1.1-SNAPSHOT</version>
-                        </dependency>
-                        <!-- JSR 250 Resource Support and Datasource Management -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-resource</artifactId>
-                            <version>1.1-SNAPSHOT</version>
-                        </dependency>
+                    </features>
+                    <extensions>
                         <!-- Test Extension to Install the Datasource -->
                         <dependency>
                             <groupId>org.codehaus.fabric3.tests</groupId>
                             <artifactId>test-ds-extension</artifactId>
                             <version>0.1-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.transaction</groupId>
-                            <artifactId>com.springsource.javax.transaction</artifactId>
-                            <version>1.1.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.resource</groupId>
-                            <artifactId>com.springsource.javax.resource</artifactId>
-                            <version>1.5.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.persistence</groupId>
-                            <artifactId>com.springsource.javax.persistence</artifactId>
-                            <version>1.0.0</version>
                         </dependency>
                     </extensions>
                 </configuration>

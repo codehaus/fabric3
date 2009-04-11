@@ -35,31 +35,17 @@
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.3</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>com.experlog</groupId>-->
-        <!--<artifactId>xapool</artifactId>-->
-        <!--<version>1.5.0</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xapool</artifactId>
             <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>10.3.1.4</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.0.71</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derbytools</artifactId>
-            <version>10.3.1.4</version>
-        </dependency>
+
     </dependencies>
 
     <build>
