@@ -53,10 +53,35 @@
                 <module>test-binding-axis2</module>
                 <module>test-binding-burlap</module>
                 <module>test-binding-hessian</module>
-              <!--  <module>test-binding-jms</module> -->
+                <module>test-binding-jms</module>
                 <module>test-binding-ftp</module>
                 <module>test-binding-tcp</module>
-              <!--  <module>test-binding-metro</module> -->
+                <module>test-binding-metro</module>
+                <module>test-runtime-jetty</module>
+                <module>test-runtime-tomcat</module>
+            </modules>
+        </profile>
+        <profile>
+            <!-- profile without Metro and JMS -->
+            <id>bamboo</id>
+            <modules>
+                <module>test-function</module>
+                <module>test-policy</module>
+                <module>bookstore</module>
+                <module>test-ds-extension</module>
+                <module>test-jpa-hibernate</module>
+                <module>test-jpa-core</module>
+                <module>test-jpa-implementation</module>
+                <module>test-groovy</module>
+                <module>test-rs</module>
+                <module>test-timer-quartz</module>
+                <module>test-timer-implementation</module>
+                <module>test-mock</module>
+                <module>test-binding-axis2</module>
+                <module>test-binding-burlap</module>
+                <module>test-binding-hessian</module>
+                <module>test-binding-ftp</module>
+                <module>test-binding-tcp</module>
                 <module>test-runtime-jetty</module>
                 <module>test-runtime-tomcat</module>
             </modules>
