@@ -75,6 +75,11 @@
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-activemq</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jaxb</artifactId>
                             <version>1.1-SNAPSHOT</version>
                         </dependency>
@@ -104,19 +109,6 @@
                             <version>1.5.0</version>
                         </dependency>
                     </extensions>
-                    <shared>
-                        <dependency>
-                            <groupId>org.apache.activemq</groupId>
-                            <artifactId>activemq-core</artifactId>
-                            <version>5.1.0</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>org.apache.activemq</groupId>
-                                    <artifactId>activeio-core</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                    </shared>
                 </configuration>
                 <executions>
                     <execution>
