@@ -46,6 +46,7 @@ public class RuntimeDomain extends AbstractDomain {
                          @Reference BindingSelector bindingSelector,
                          @Reference RoutingService routingService,
                          @Reference Collector collector,
+                         @Reference ContributionHelper contributionHelper,
                          @Reference HostInfo info) {
         super(metadataStore,
               logicalComponentManager,
@@ -55,6 +56,7 @@ public class RuntimeDomain extends AbstractDomain {
               bindingSelector,
               routingService,
               collector,
+              contributionHelper,
               info);
     }
 

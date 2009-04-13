@@ -64,6 +64,10 @@
         <reference name="logicalComponentManager" target="LogicalComponentManager"/>
     </component>
 
+    <component name="ContributionHelper">
+        <f3-impl:implementation.system class="org.fabric3.fabric.domain.ContributionHelperImpl"/>
+    </component>
+
     <component name="BindingSelector">
         <f3-impl:implementation.system class="org.fabric3.fabric.binding.BindingSelectorImpl"/>
         <reference name="logicalComponentManager" target="LogicalComponentManager"/>

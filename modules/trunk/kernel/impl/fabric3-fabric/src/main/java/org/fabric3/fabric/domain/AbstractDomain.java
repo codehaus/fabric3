@@ -32,12 +32,9 @@ import org.fabric3.fabric.generator.Generator;
 import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.RuntimeMode;
-import org.fabric3.host.contribution.Deployable;
-import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.CompositeAlreadyDeployedException;
 import org.fabric3.host.domain.ContributionNotInstalledException;
-import org.fabric3.host.domain.DeployableNotFoundException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.domain.UndeploymentException;
@@ -80,7 +77,6 @@ import org.fabric3.spi.services.lcm.WriteException;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractDomain implements Domain {
-    private static final String PLAN_NAMESPACE = "urn:fabric3.org:extension:plan";
 
     protected RoutingService routingService;
     protected Generator generator;
@@ -96,6 +92,7 @@ public abstract class AbstractDomain implements Domain {
     private PolicyResolver policyResolver;
     private BindingSelector bindingSelector;
     private Collector collector;
+    private ContributionHelper contributionHelper;
     private HostInfo info;
 
     /**
@@ -108,7 +105,8 @@ public abstract class AbstractDomain implements Domain {
      * @param policyResolver           the resolver for applying external attachment policies
      * @param bindingSelector          the selector for binding.sca
      * @param routingService           the service for routing deployment commands
-     * @param collector                the collector for undeploying componentsco
+     * @param collector                the collector for undeploying components
+     * @param contributionHelper       the contribution helper
      * @param info                     the host info
      */
     public AbstractDomain(MetaDataStore metadataStore,
@@ -119,6 +117,7 @@ public abstract class AbstractDomain implements Domain {
                           BindingSelector bindingSelector,
                           RoutingService routingService,
                           Collector collector,
+                          ContributionHelper contributionHelper,
                           HostInfo info) {
         this.metadataStore = metadataStore;
         this.generator = generator;
@@ -128,6 +127,7 @@ public abstract class AbstractDomain implements Domain {
         this.bindingSelector = bindingSelector;
         this.routingService = routingService;
         this.collector = collector;
+        this.contributionHelper = contributionHelper;
         this.info = info;
         listeners = Collections.emptyList();
     }
@@ -145,7 +145,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void include(QName deployable, String plan, boolean transactional) throws DeploymentException {
-        Composite composite = resolveComposite(deployable);
+        Composite composite = contributionHelper.resolveComposite(deployable);
         // In order to include a composite at the domain level, it must first be wrapped in a composite that includes it.
         // This wrapper is thrown away during the inclusion.
         Composite wrapper = new Composite(deployable);
@@ -169,7 +169,7 @@ public abstract class AbstractDomain implements Domain {
             }
             include(wrapper, deploymentPlan, transactional);
         } else {
-            DeploymentPlan deploymentPlan = resolvePlan(plan);
+            DeploymentPlan deploymentPlan = contributionHelper.resolvePlan(plan);
             include(wrapper, deploymentPlan, transactional);
         }
         for (DomainListener listener : listeners) {
@@ -186,7 +186,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void include(List<URI> uris, boolean transactional) throws DeploymentException {
-        Set<Contribution> contributions = resolveContributions(uris);
+        Set<Contribution> contributions = contributionHelper.resolveContributions(uris);
         instantiateAndDeploy(contributions, null, false, transactional);
     }
 
@@ -304,7 +304,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void recover(List<URI> uris) throws DeploymentException {
-        Set<Contribution> contributions = resolveContributions(uris);
+        Set<Contribution> contributions = contributionHelper.resolveContributions(uris);
         instantiateAndDeploy(contributions, null, true, false);
     }
 
@@ -351,11 +351,11 @@ public abstract class AbstractDomain implements Domain {
             }
         }
 
-        List<Composite> deployables = getDeployables(contributions);
+        List<Composite> deployables = contributionHelper.getDeployables(contributions, info.getRuntimeMode());
 
         List<DeploymentPlan> plans;
         if (planNames == null) {
-            plans = getDeploymentPlans(contributions);
+            plans = contributionHelper.getDeploymentPlans(contributions);
         } else {
             plans = new ArrayList<DeploymentPlan>();
             for (String planName : planNames) {
@@ -363,7 +363,7 @@ public abstract class AbstractDomain implements Domain {
                     plans.add(null);
                     continue;
                 }
-                DeploymentPlan plan = resolvePlan(planName);
+                DeploymentPlan plan = contributionHelper.resolvePlan(planName);
                 if (plan == null) {
                     // this should not happen
                     throw new DeploymentException("Deployment plan not found: " + planName);
@@ -372,17 +372,7 @@ public abstract class AbstractDomain implements Domain {
             }
         }
         // lock the contributions
-        for (Contribution contribution : contributions) {
-            for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                QName name = deployable.getName();
-                // check if the deployable has already been deployed by querying the lock owners
-                if (contribution.getLockOwners().contains(name)) {
-                    throw new CompositeAlreadyDeployedException("Composite has already been deployed: " + name);
-                }
-                contribution.acquireLock(name);
-            }
-        }
-
+        contributionHelper.lock(contributions);
         try {
             if (transactional) {
                 domain = CopyUtil.copy(domain);
@@ -421,19 +411,19 @@ public abstract class AbstractDomain implements Domain {
             }
         } catch (DeploymentException e) {
             // release the contribution locks if there was an error
-            releaseLocks(contributions);
+            contributionHelper.releaseLocks(contributions);
             throw e;
         } catch (AllocationException e) {
             // release the contribution locks if there was an error
-            releaseLocks(contributions);
+            contributionHelper.releaseLocks(contributions);
             throw new DeploymentException("Error deploying composite", e);
         } catch (WriteException e) {
             // release the contribution locks if there was an error
-            releaseLocks(contributions);
+            contributionHelper.releaseLocks(contributions);
             throw new DeploymentException("Error deploying composite", e);
         } catch (PolicyResolutionException e) {
             // release the contribution locks if there was an error
-            releaseLocks(contributions);
+            contributionHelper.releaseLocks(contributions);
             throw new DeploymentException("Error deploying composite", e);
         }
     }
@@ -467,23 +457,6 @@ public abstract class AbstractDomain implements Domain {
             }
         }
         return definitions;
-    }
-
-
-    /**
-     * Releases locks held on a set of contributions. Called when an error is raised during deployment causing a rollback.
-     *
-     * @param contributions the contributions to release locks on
-     */
-    private void releaseLocks(Set<Contribution> contributions) {
-        for (Contribution contribution : contributions) {
-            for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                QName name = deployable.getName();
-                if (contribution.getLockOwners().contains(name)) {
-                    contribution.releaseLock(name);
-                }
-            }
-        }
     }
 
     /**
@@ -543,63 +516,6 @@ public abstract class AbstractDomain implements Domain {
             }
             throw new DeploymentException(e);
         }
-    }
-
-    /**
-     * Resolves a deployment plan by name.
-     *
-     * @param plan the deployment plan name
-     * @return the resolved deployment plan
-     * @throws DeploymentException if the plan cannot be resolved
-     */
-    private DeploymentPlan resolvePlan(String plan) throws DeploymentException {
-        ResourceElement<QNameSymbol, ?> element;
-        DeploymentPlan deploymentPlan;
-        try {
-            QName planName = new QName(PLAN_NAMESPACE, plan);
-            element = metadataStore.resolve(new QNameSymbol(planName));
-        } catch (StoreException e) {
-            throw new DeploymentException("Error finding plan: " + plan, e);
-        }
-        if (element == null) {
-            throw new DeployableNotFoundException("Plan not found: " + plan, plan);
-        }
-
-        Object object = element.getValue();
-        if (!(object instanceof DeploymentPlan)) {
-            throw new IllegalDeployableTypeException("Not a deployment plan:" + plan, plan);
-        }
-
-        deploymentPlan = (DeploymentPlan) object;
-        return deploymentPlan;
-    }
-
-    /**
-     * Resolves a deployable by name.
-     *
-     * @param deployable the deployable name
-     * @return the deployable
-     * @throws DeploymentException if the deployable cannot be resolved
-     */
-    private Composite resolveComposite(QName deployable) throws DeploymentException {
-        ResourceElement<QNameSymbol, ?> element;
-        try {
-            element = metadataStore.resolve(new QNameSymbol(deployable));
-        } catch (StoreException e) {
-            throw new DeploymentException("Error deploying: " + deployable, e);
-        }
-        if (element == null) {
-            String id = deployable.toString();
-            throw new DeployableNotFoundException("Deployable not found: " + id, id);
-        }
-
-        Object object = element.getValue();
-        if (!(object instanceof Composite)) {
-            String id = deployable.toString();
-            throw new IllegalDeployableTypeException("Deployable must be a composite:" + id, id);
-        }
-
-        return (Composite) object;
     }
 
     /**
@@ -675,74 +591,5 @@ public abstract class AbstractDomain implements Domain {
             }
         }
     }
-
-    private Set<Contribution> resolveContributions(List<URI> uris) {
-        Set<Contribution> contributions = new LinkedHashSet<Contribution>(uris.size());
-        for (URI uri : uris) {
-            Contribution contribution = metadataStore.find(uri);
-            contributions.add(contribution);
-        }
-        return contributions;
-    }
-
-    /**
-     * Returns the list of deployable composites contained in the list of contributions that are configured to run in the current runtime mode
-     *
-     * @param contributions the contributions containing the deployables
-     * @return the list of deployables
-     */
-    private List<Composite> getDeployables(Set<Contribution> contributions) {
-        List<Composite> deployables = new ArrayList<Composite>();
-        for (Contribution contribution : contributions) {
-            for (Resource resource : contribution.getResources()) {
-                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
-                    if (!(entry.getValue() instanceof Composite)) {
-                        continue;
-                    }
-                    @SuppressWarnings({"unchecked"})
-                    ResourceElement<QNameSymbol, Composite> element = (ResourceElement<QNameSymbol, Composite>) entry;
-                    QName name = element.getSymbol().getKey();
-                    Composite composite = element.getValue();
-                    for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                        if (deployable.getName().equals(name)) {
-                            List<RuntimeMode> deployableModes = deployable.getRuntimeModes();
-                            RuntimeMode runtimeMode = info.getRuntimeMode();
-                            // only add deployables that are set to boot in the current runtime mode
-                            if (deployableModes.contains(runtimeMode)) {
-                                deployables.add(composite);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return deployables;
-    }
-
-    /**
-     * Returns a list of deployment plans contained in the list of contributions.
-     *
-     * @param contributions the contributions plans
-     * @return the deployment plans
-     */
-    private List<DeploymentPlan> getDeploymentPlans(Set<Contribution> contributions) {
-        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
-        for (Contribution contribution : contributions) {
-            for (Resource resource : contribution.getResources()) {
-                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
-                    if (!(entry.getValue() instanceof DeploymentPlan)) {
-                        continue;
-                    }
-                    @SuppressWarnings({"unchecked"})
-                    ResourceElement<QNameSymbol, DeploymentPlan> element = (ResourceElement<QNameSymbol, DeploymentPlan>) entry;
-                    DeploymentPlan plan = element.getValue();
-                    plans.add(plan);
-                }
-            }
-        }
-        return plans;
-    }
-
 
 }

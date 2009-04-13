@@ -45,6 +45,8 @@ import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.ReferenceConnectionCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartContextCommand;
+import org.fabric3.fabric.domain.ContributionHelper;
+import org.fabric3.fabric.domain.ContributionHelperImpl;
 import org.fabric3.fabric.domain.LocalRoutingService;
 import org.fabric3.fabric.domain.RuntimeDomain;
 import org.fabric3.fabric.executor.AttachWireCommandExecutor;
@@ -188,6 +190,8 @@ public class BootstrapAssemblyFactory {
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
         Collector collector = new CollectorImpl();
+        ContributionHelper contributionHelper = new ContributionHelperImpl(metaDataStore);
+
         return new RuntimeDomain(metaDataStore,
                                  generator,
                                  logicalModelInstantiator,
@@ -196,6 +200,7 @@ public class BootstrapAssemblyFactory {
                                  bindingSelector,
                                  routingService,
                                  collector,
+                                 contributionHelper,
                                  info);
     }
 

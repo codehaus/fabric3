@@ -49,6 +49,7 @@ public class DistributedDomain extends AbstractDomain implements Domain {
                              @Reference BindingSelector bindingSelector,
                              @Reference RoutingService routingService,
                              @Reference Collector collector,
+                             @Reference ContributionHelper contributionHelper,
                              @Reference HostInfo info) {
         super(metaDataStore,
               logicalComponentManager,
@@ -58,6 +59,7 @@ public class DistributedDomain extends AbstractDomain implements Domain {
               bindingSelector,
               routingService,
               collector,
+              contributionHelper,
               info);
     }
 
