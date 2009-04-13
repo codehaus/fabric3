@@ -89,6 +89,7 @@ public class CopyUtil {
             copy.setZone(component.getZone());
             copy.addIntents(component.getIntents());
             copy.addPolicySets(component.getPolicySets());
+            copy.setState(component.getState());
         }
         parent.addComponent(copy);
     }
