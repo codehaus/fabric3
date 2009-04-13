@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.DetachWireCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.host.Names;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Multiplicity;
@@ -90,11 +90,11 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    public ReferenceConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+    public ConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent || LogicalState.MARKED == component.getState()) {
             return null;
         }
-        ReferenceConnectionCommand command = new ReferenceConnectionCommand();
+        ConnectionCommand command = new ConnectionCommand();
 
         for (LogicalReference logicalReference : component.getReferences()) {
             if (logicalReference.getBindings().isEmpty()) {
@@ -107,7 +107,7 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         return command;
     }
 
-    private void generateUnboundReferenceWires(LogicalReference logicalReference, ReferenceConnectionCommand command, boolean incremental)
+    private void generateUnboundReferenceWires(LogicalReference logicalReference, ConnectionCommand command, boolean incremental)
             throws GenerationException {
 
         // if the reference is a multiplicity and one of the wires has changed, all of the wires need to be regenerated for reinjection

@@ -40,7 +40,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.DetachWireCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
@@ -51,7 +51,7 @@ import org.fabric3.spi.executor.ExecutionException;
  * @version $Rev: 2878 $ $Date: 2008-02-23 18:42:09 +0000 (Sat, 23 Feb 2008) $
  */
 @EagerInit
-public class ReferenceConnectionCommandExecutor implements CommandExecutor<ReferenceConnectionCommand> {
+public class ReferenceConnectionCommandExecutor implements CommandExecutor<ConnectionCommand> {
     private CommandExecutorRegistry commandExecutorRegistry;
 
     public ReferenceConnectionCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry) {
@@ -60,10 +60,10 @@ public class ReferenceConnectionCommandExecutor implements CommandExecutor<Refer
 
     @Init
     public void init() {
-        commandExecutorRegistry.register(ReferenceConnectionCommand.class, this);
+        commandExecutorRegistry.register(ConnectionCommand.class, this);
     }
 
-    public void execute(ReferenceConnectionCommand command) throws ExecutionException {
+    public void execute(ConnectionCommand command) throws ExecutionException {
         // detach must be executed first so wire attachers can drop connection prior to adding new ones
         for (DetachWireCommand detachWireCommand : command.getDetachCommands()) {
             commandExecutorRegistry.execute(detachWireCommand);

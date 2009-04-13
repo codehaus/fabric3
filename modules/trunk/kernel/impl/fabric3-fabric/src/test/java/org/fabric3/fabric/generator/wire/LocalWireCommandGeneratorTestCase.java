@@ -21,7 +21,7 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Multiplicity;
@@ -79,7 +79,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(lcm, wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, true);
+        ConnectionCommand command = generator.generate(source, true);
 
         EasyMock.verify(lcm, wireGenerator);
         assertEquals(1, command.getAttachCommands().size());
@@ -122,7 +122,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(lcm, wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, false);
+        ConnectionCommand command = generator.generate(source, false);
 
         EasyMock.verify(lcm, wireGenerator);
         assertEquals(1, command.getAttachCommands().size());
@@ -167,7 +167,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(lcm, wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, true);
+        ConnectionCommand command = generator.generate(source, true);
 
         EasyMock.verify(lcm, wireGenerator);
         assertEquals(0, command.getAttachCommands().size());
@@ -227,7 +227,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(lcm, wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, true);
+        ConnectionCommand command = generator.generate(source, true);
 
         EasyMock.verify(lcm, wireGenerator);
         // The generator should create:

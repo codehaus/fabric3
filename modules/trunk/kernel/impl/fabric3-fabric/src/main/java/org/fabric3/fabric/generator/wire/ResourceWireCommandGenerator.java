@@ -20,7 +20,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -48,13 +48,13 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    public ReferenceConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+    public ConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent
                 || component.getResources().isEmpty()
                 || (component.getState() != LogicalState.NEW && incremental)) {
             return null;
         }
-        ReferenceConnectionCommand command = new ReferenceConnectionCommand();
+        ConnectionCommand command = new ConnectionCommand();
         for (LogicalResource<?> resource : component.getResources()) {
             AttachWireCommand attachWireCommand = new AttachWireCommand();
             PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(resource);

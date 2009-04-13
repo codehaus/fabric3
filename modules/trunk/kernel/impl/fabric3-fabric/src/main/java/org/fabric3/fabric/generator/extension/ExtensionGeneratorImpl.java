@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.command.AbstractExtensionsCommand;
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.ProvisionExtensionsCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.fabric.command.UnProvisionExtensionsCommand;
 import org.fabric3.host.Names;
 import org.fabric3.host.RuntimeMode;
@@ -220,8 +220,8 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
             }
 
             for (Command generatedCommand : entry.getValue()) {
-                if (generatedCommand instanceof ReferenceConnectionCommand) {
-                    ReferenceConnectionCommand connectionCommand = (ReferenceConnectionCommand) generatedCommand;
+                if (generatedCommand instanceof ConnectionCommand) {
+                    ConnectionCommand connectionCommand = (ConnectionCommand) generatedCommand;
                     for (AttachWireCommand attachWireCommand : connectionCommand.getAttachCommands()) {
                         for (PhysicalOperationDefinition operation : attachWireCommand.getPhysicalWireDefinition().getOperations()) {
                             for (PhysicalInterceptorDefinition interceptor : operation.getInterceptors()) {

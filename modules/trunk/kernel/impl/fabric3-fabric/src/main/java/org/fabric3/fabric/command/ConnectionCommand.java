@@ -22,14 +22,16 @@ import java.util.List;
 import org.fabric3.spi.command.Command;
 
 /**
+ * Contains commands for attaching and detaching wires.
+ * 
  * @version $Revision$ $Date$
  */
-public class ReferenceConnectionCommand implements Command {
+public class ConnectionCommand implements Command {
     private static final long serialVersionUID = -2313380946362271104L;
     private List<AttachWireCommand> attachCommands;
     private List<DetachWireCommand> detachCommands;
 
-    public ReferenceConnectionCommand() {
+    public ConnectionCommand() {
         attachCommands = new ArrayList<AttachWireCommand>();
         detachCommands = new ArrayList<DetachWireCommand>();
     }

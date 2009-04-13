@@ -21,7 +21,7 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
@@ -64,7 +64,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, true);
+        ConnectionCommand command = generator.generate(source, true);
 
         EasyMock.verify(wireGenerator);
         assertEquals(1, command.getAttachCommands().size());
@@ -95,7 +95,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, true);
+        ConnectionCommand command = generator.generate(source, true);
 
         EasyMock.verify(wireGenerator);
         assertEquals(0, command.getAttachCommands().size());
@@ -132,7 +132,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, true);
+        ConnectionCommand command = generator.generate(source, true);
 
         EasyMock.verify(wireGenerator);
         assertEquals(1, command.getAttachCommands().size());
@@ -160,7 +160,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
 
         EasyMock.replay(wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, true);
+        ConnectionCommand command = generator.generate(source, true);
         assertNull(command);
         EasyMock.verify(wireGenerator);
 
@@ -189,7 +189,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
         EasyMock.expectLastCall().andReturn(new PhysicalWireDefinition(null, null, null));
         EasyMock.replay(wireGenerator);
 
-        ReferenceConnectionCommand command = generator.generate(source, false);
+        ConnectionCommand command = generator.generate(source, false);
         assertEquals(1, command.getAttachCommands().size());
         EasyMock.verify(wireGenerator);
 

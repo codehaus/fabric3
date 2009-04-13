@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.fabric.command.AttachWireCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.fabric.command.StartContextCommand;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandMap;
@@ -146,8 +146,8 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
         DirectedGraph<QName> dag = new DirectedGraphImpl<QName>();
         // add the contributions as vertices
         for (Command command : commands) {
-            if (command instanceof ReferenceConnectionCommand) {
-                ReferenceConnectionCommand connectionCommand = (ReferenceConnectionCommand) command;
+            if (command instanceof ConnectionCommand) {
+                ConnectionCommand connectionCommand = (ConnectionCommand) command;
                 for (AttachWireCommand wireCommand : connectionCommand.getAttachCommands()) {
                     PhysicalWireDefinition definition = wireCommand.getPhysicalWireDefinition();
                     QName source = definition.getSourceDeployable();

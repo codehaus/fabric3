@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.DetachWireCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -55,11 +55,11 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public ReferenceConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+    public ConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        ReferenceConnectionCommand command = new ReferenceConnectionCommand();
+        ConnectionCommand command = new ConnectionCommand();
 
         for (LogicalReference logicalReference : component.getReferences()) {
             boolean reinjection = isReinjection(logicalReference, incremental);
@@ -91,7 +91,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
 
     private void generateCommand(LogicalReference logicalReference,
                                  LogicalBinding<?> logicalBinding,
-                                 ReferenceConnectionCommand command,
+                                 ConnectionCommand command,
                                  boolean incremental,
                                  boolean reinjection,
                                  boolean callback) throws GenerationException {

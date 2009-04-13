@@ -42,7 +42,7 @@ import org.fabric3.fabric.collector.CollectorImpl;
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartContextCommand;
 import org.fabric3.fabric.domain.ContributionHelper;
@@ -290,7 +290,7 @@ public class BootstrapAssemblyFactory {
         commandRegistry.register(AttachWireCommand.class, new AttachWireCommandExecutor(connector));
         commandRegistry.register(StartComponentCommand.class, new StartComponentCommandExecutor(componentManager));
         commandRegistry.register(ProvisionClassloaderCommand.class, new ProvisionClassloaderCommandExecutor(classLoaderBuilder));
-        commandRegistry.register(ReferenceConnectionCommand.class, new ReferenceConnectionCommandExecutor(commandRegistry));
+        commandRegistry.register(ConnectionCommand.class, new ReferenceConnectionCommandExecutor(commandRegistry));
 
         return commandRegistry;
 

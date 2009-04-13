@@ -42,7 +42,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.DetachWireCommand;
-import org.fabric3.fabric.command.ReferenceConnectionCommand;
+import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -72,7 +72,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    public ReferenceConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
+    public ConnectionCommand generate(LogicalComponent<?> component, boolean incremental) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
@@ -91,7 +91,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
             return null;
         }
 
-        ReferenceConnectionCommand command = new ReferenceConnectionCommand();
+        ConnectionCommand command = new ConnectionCommand();
         generatePhysicalWires(component, command, incremental);
         if (command.getAttachCommands().isEmpty() && command.getDetachCommands().isEmpty()) {
             return null;
@@ -99,7 +99,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         return command;
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, ReferenceConnectionCommand command, boolean incremental)
+    private void generatePhysicalWires(LogicalComponent<?> component, ConnectionCommand command, boolean incremental)
             throws GenerationException {
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
