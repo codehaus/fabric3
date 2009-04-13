@@ -119,10 +119,11 @@ public interface Domain {
     /**
      * Deactivates a set of definitions contained in the contribution.
      *
-     * @param uri the contribution URI
+     * @param uri           the contribution URI
+     * @param transactional if true, the deployment operation will be done transactionally.
      * @throws DeploymentException if an error is encountered durng activation
      */
-    void deactivateDefinitions(URI uri) throws DeploymentException;
+    void deactivateDefinitions(URI uri, boolean transactional) throws DeploymentException;
 
     /**
      * Initiates a recovery operation using the set of deployables and plans.

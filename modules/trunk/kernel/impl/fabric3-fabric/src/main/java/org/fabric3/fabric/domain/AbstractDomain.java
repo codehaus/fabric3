@@ -232,61 +232,104 @@ public abstract class AbstractDomain implements Domain {
             throw new ContributionNotInstalledException("Contribution is not installed: " + uri);
         }
         Set<AbstractDefinition> definitions = activateDefinitions(contribution);
+
         if (apply) {
+            List<PolicySet> policySets = new ArrayList<PolicySet>();
             for (AbstractDefinition definition : definitions) {
                 if (definition instanceof PolicySet) {
                     PolicySet policySet = (PolicySet) definition;
                     if (policySet.getAttachTo() != null) {
-                        if (transactional) {
-
-                        }
-                        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
-                        if (transactional) {
-                            domain = CopyUtil.copy(domain);
-                        }
-
-                        try {
-                            policyResolver.attachPolicies(domain, true);
-                            Collection<LogicalComponent<?>> components = domain.getComponents();
-                            // generate and provision any new components and new wires
-                            CommandMap commandMap = generator.generate(components, true);
-                            routingService.route(commandMap);
-
-                            logicalComponentManager.replaceRootComponent(domain);
-                        } catch (WriteException e) {
-                            throw new DeploymentException(e);
-                        } catch (PolicyResolutionException e) {
-                            throw new DeploymentException(e);
-                        } catch (GenerationException e) {
-                            throw new DeploymentException(e);
-                        } catch (RoutingException e) {
-                            throw new DeploymentException(e);
-                        }
+                        policySets.add(policySet);
                     }
                 }
+            }
+            if (!policySets.isEmpty()) {
+                deployPolicySets(policySets, transactional);
             }
         }
     }
 
-    public void deactivateDefinitions(URI uri) throws DeploymentException {
+    public void deactivateDefinitions(URI uri, boolean transactional) throws DeploymentException {
         Contribution contribution = metadataStore.find(uri);
         if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
             // a composite may not be associated with a contribution, e.g. a bootstrap composite
             throw new ContributionNotInstalledException("Contribution is not installed: " + uri);
         }
+        List<PolicySet> policySets = new ArrayList<PolicySet>();
         for (Resource resource : contribution.getResources()) {
             for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                 if (!(element.getValue() instanceof AbstractDefinition)) {
                     break;
                 }
+                AbstractDefinition definition = (AbstractDefinition) element.getValue();
                 try {
-                    policyRegistry.deactivate((AbstractDefinition) element.getValue());
+                    policyRegistry.deactivate(definition);
+                    if (definition instanceof PolicySet) {
+                        PolicySet policySet = (PolicySet) definition;
+                        if (policySet.getAttachTo() != null) {
+                            policySets.add(policySet);
+                        }
+                    }
                 } catch (PolicyActivationException e) {
                     throw new DeploymentException(e);
                 }
             }
         }
+        if (!policySets.isEmpty()) {
+            undeployPolicySet(policySets, transactional);
+        }
 
+    }
+
+    private void deployPolicySets(List<PolicySet> policySets, boolean transactional) throws DeploymentException {
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+        if (transactional) {
+            domain = CopyUtil.copy(domain);
+        }
+
+        try {
+            policyResolver.attachPolicies(policySets, domain, true);
+            Collection<LogicalComponent<?>> components = domain.getComponents();
+            // generate and provision any new components and new wires
+            CommandMap commandMap = generator.generate(components, true);
+            routingService.route(commandMap);
+
+            logicalComponentManager.replaceRootComponent(domain);
+        } catch (WriteException e) {
+            throw new DeploymentException(e);
+        } catch (PolicyResolutionException e) {
+            throw new DeploymentException(e);
+        } catch (GenerationException e) {
+            throw new DeploymentException(e);
+        } catch (RoutingException e) {
+            throw new DeploymentException(e);
+        }
+    }
+
+
+    private void undeployPolicySet(List<PolicySet> policySets, boolean transactional) throws DeploymentException {
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+        if (transactional) {
+            domain = CopyUtil.copy(domain);
+        }
+
+        try {
+            policyResolver.detachPolicies(policySets, domain);
+            Collection<LogicalComponent<?>> components = domain.getComponents();
+            // generate and provision any new components and new wires
+            CommandMap commandMap = generator.generate(components, true);
+            routingService.route(commandMap);
+
+            logicalComponentManager.replaceRootComponent(domain);
+        } catch (WriteException e) {
+            throw new DeploymentException(e);
+        } catch (PolicyResolutionException e) {
+            throw new DeploymentException(e);
+        } catch (GenerationException e) {
+            throw new DeploymentException(e);
+        } catch (RoutingException e) {
+            throw new DeploymentException(e);
+        }
     }
 
     public void recover(List<QName> deployables, List<String> planNames) throws DeploymentException {

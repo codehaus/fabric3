@@ -18,6 +18,7 @@ package org.fabric3.spi.policy;
 
 import java.util.List;
 
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
@@ -31,13 +32,32 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 public interface PolicyResolver {
 
     /**
-     * Attaches PolicySets (i.e. those that use external attachment) to the component hierarchy.
+     * Attaches all active PolicySets (i.e. those that use external attachment) to the component hierarchy.
      *
      * @param component   the top-most component to evaluate external attachments against
      * @param incremental true if the attachment is performed as part of an incremental deployment
      * @throws PolicyResolutionException if an error occurs evaluating the policies
      */
     void attachPolicies(LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException;
+
+    /**
+     * Attaches PolicySets (i.e. those that use external attachment) to the component hierarchy.
+     *
+     * @param policySets  the policy sets to attach
+     * @param component   the top-most component to evaluate external attachments against
+     * @param incremental true if the attachment is performed as part of an incremental deployment
+     * @throws PolicyResolutionException if an error occurs evaluating the policies
+     */
+    void attachPolicies(List<PolicySet> policySets, LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException;
+
+    /**
+     * Detaches PolicySets (i.e. those that use external attachment) to the component hierarchy.
+     *
+     * @param policySets the policy sets to detach
+     * @param component  the top-most component to evaluate external attachments against
+     * @throws PolicyResolutionException if an error occurs evaluating the policies
+     */
+    void detachPolicies(List<PolicySet> policySets, LogicalComponent<?> component) throws PolicyResolutionException;
 
     /**
      * Resolves all the interaction and implementation intents for the operations on wire.

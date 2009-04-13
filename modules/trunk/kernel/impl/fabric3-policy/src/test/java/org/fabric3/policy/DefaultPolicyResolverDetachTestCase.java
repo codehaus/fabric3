@@ -40,7 +40,7 @@ import org.fabric3.spi.model.instance.LogicalState;
 /**
  * @version $Revision$ $Date$
  */
-public class DefaultPolicyResolverTestCase extends TestCase {
+public class DefaultPolicyResolverDetachTestCase extends TestCase {
     private static final QName POLICY_SET = new QName("urn:test", "testPolicy");
     private LogicalComponent child1;
     private DefaultPolicyResolver resolver;
@@ -48,75 +48,33 @@ public class DefaultPolicyResolverTestCase extends TestCase {
     private LogicalReference child1Reference;
     private LogicalBinding child1ReferenceBinding;
 
-    public void testAttachesToComponent() throws Exception {
-        resolver.attach(POLICY_SET, child1, true);
-        assertEquals(LogicalState.NEW, child1.getState());
-        assertTrue(child1.getPolicySets().contains(POLICY_SET));
-    }
-
-    public void testAttachesToComponentIncremental() throws Exception {
-        // simulate the policy already being attached and the component deployed
-        child1.setState(LogicalState.PROVISIONED);
-        child1.addPolicySet(POLICY_SET);
-        resolver.attach(POLICY_SET, child1, true);
-        assertEquals(LogicalState.PROVISIONED, child1.getState());
-    }
-
-    public void testAttachesToComponentNonIncremental() throws Exception {
-        child1.setState(LogicalState.PROVISIONED);
-        resolver.attach(POLICY_SET, child1, false);
-        assertTrue(child1.getPolicySets().contains(POLICY_SET));
-    }
-
-    public void testAttachesToServiceIncremental() throws Exception {
-        resolver.attach(POLICY_SET, child1Service, true);
-        for (LogicalBinding<?> binding : child1Service.getBindings()) {
-            assertEquals(LogicalState.NEW, binding.getState());
-        }
-        assertTrue(child1Service.getPolicySets().contains(POLICY_SET));
-    }
-
-    public void testAttachesToServiceNonIncremental() throws Exception {
-        for (LogicalBinding<?> binding : child1Service.getBindings()) {
-            binding.setState(LogicalState.PROVISIONED);
-        }
-        resolver.attach(POLICY_SET, child1Service, false);
-        for (LogicalBinding<?> binding : child1Service.getBindings()) {
-            assertEquals(LogicalState.NEW, binding.getState());
-        }
-        assertTrue(child1Service.getPolicySets().contains(POLICY_SET));
-    }
-
-    public void testAttachesToReferenceIncremental() throws Exception {
-        resolver.attach(POLICY_SET, child1Reference, true);
-        for (LogicalBinding<?> binding : child1Reference.getBindings()) {
-            assertEquals(LogicalState.NEW, binding.getState());
-        }
-        assertTrue(child1Reference.getPolicySets().contains(POLICY_SET));
-    }
-
-    public void testAttachesToReferenceNonIncremental() throws Exception {
-        for (LogicalBinding<?> binding : child1Reference.getBindings()) {
-            binding.setState(LogicalState.PROVISIONED);
-        }
-        resolver.attach(POLICY_SET, child1Reference, false);
-        for (LogicalBinding<?> binding : child1Reference.getBindings()) {
-            assertEquals(LogicalState.NEW, binding.getState());
-        }
-        assertTrue(child1Reference.getPolicySets().contains(POLICY_SET));
-    }
-
-    public void testAttachesToBindingIncremental() throws Exception {
-        resolver.attach(POLICY_SET, child1ReferenceBinding, true);
+    public void testDetachComponent() throws Exception {
+        resolver.detach(POLICY_SET, child1);
+        // the component should not be reprovisioned, just the bindings
         assertEquals(LogicalState.NEW, child1ReferenceBinding.getState());
-        assertTrue(child1ReferenceBinding.getPolicySets().contains(POLICY_SET));
+        assertFalse(child1.getPolicySets().contains(POLICY_SET));
     }
 
-    public void testAttachesToBindingNonIncremental() throws Exception {
-        child1ReferenceBinding.setState(LogicalState.PROVISIONED);
-        resolver.attach(POLICY_SET, child1ReferenceBinding, true);
+    public void testDetachFromService() throws Exception {
+        resolver.detach(POLICY_SET, child1Service);
+        for (LogicalBinding<?> binding : child1Service.getBindings()) {
+            assertEquals(LogicalState.NEW, binding.getState());
+        }
+        assertFalse(child1Service.getPolicySets().contains(POLICY_SET));
+    }
+
+    public void testDetachFromReference() throws Exception {
+        resolver.detach(POLICY_SET, child1Reference);
+        for (LogicalBinding<?> binding : child1Reference.getBindings()) {
+            assertEquals(LogicalState.NEW, binding.getState());
+        }
+        assertFalse(child1Reference.getPolicySets().contains(POLICY_SET));
+    }
+
+    public void testDetachFromBinding() throws Exception {
+        resolver.detach(POLICY_SET, child1ReferenceBinding);
         assertEquals(LogicalState.NEW, child1ReferenceBinding.getState());
-        assertTrue(child1ReferenceBinding.getPolicySets().contains(POLICY_SET));
+        assertFalse(child1ReferenceBinding.getPolicySets().contains(POLICY_SET));
     }
 
     @Override
@@ -134,13 +92,18 @@ public class DefaultPolicyResolverTestCase extends TestCase {
         ComponentDefinition definition1 = new ComponentDefinition("child1");
         definition1.setImplementation(new MockImplementation());
         child1 = new LogicalComponent(child1Uri, definition1, domain);
+        child1.setState(LogicalState.PROVISIONED);
+        child1.addPolicySet(POLICY_SET);
         ServiceContract referenceContract = new MockServiceContract();
         referenceContract.setInterfaceName("ChildService");
         ReferenceDefinition referenceDefinition = new ReferenceDefinition("child1Reference", referenceContract);
         child1Reference = new LogicalReference(URI.create("child1#child1Reference"), referenceDefinition, child1);
         BindingDefinition definiton = new MockBindingDefintion();
         child1ReferenceBinding = new LogicalBinding(definiton, child1Reference);
+        child1ReferenceBinding.addPolicySet(POLICY_SET);
+        child1ReferenceBinding.setState(LogicalState.PROVISIONED);
         child1Reference.addBinding(child1ReferenceBinding);
+        child1Reference.addPolicySet(POLICY_SET);
         child1.addReference(child1Reference);
         ServiceContract serviceContract = new MockServiceContract();
         serviceContract.setInterfaceName("ChildService");
@@ -150,8 +113,8 @@ public class DefaultPolicyResolverTestCase extends TestCase {
         serviceContract.setOperations(operations);
         ServiceDefinition serviceDefinition = new ServiceDefinition("child1Service", serviceContract);
         child1Service = new LogicalService(URI.create("child1#child1Service"), serviceDefinition, child1);
-        child1Service.addPolicySet(POLICY_SET);
         child1Service.addBinding(child1ReferenceBinding);
+        child1Service.addPolicySet(POLICY_SET);
         child1.addService(child1Service);
         domain.addComponent(child1);
     }

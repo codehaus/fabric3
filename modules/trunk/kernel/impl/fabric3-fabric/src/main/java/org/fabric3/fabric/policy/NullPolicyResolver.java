@@ -41,6 +41,14 @@ public class NullPolicyResolver implements PolicyResolver {
         // no-op
     }
 
+    public void attachPolicies(List<PolicySet> policySets, LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException {
+        // no-op
+    }
+
+    public void detachPolicies(List<PolicySet> policySets, LogicalComponent<?> component) throws PolicyResolutionException {
+        // no-op
+    }
+
     public PolicyResult resolvePolicies(List<LogicalOperation> operations,
                                         LogicalBinding<?> sourceBinding,
                                         LogicalBinding<?> targetBinding,
