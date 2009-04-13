@@ -117,6 +117,11 @@ public abstract class AbstractDomainMBean {
             }
 
         }
+        try {
+            domain.deactivateDefinitions(uri, false);
+        } catch (DeploymentException e) {
+            throw new ContributionNotInstalledManagementException(e.getMessage());
+        }
     }
 
     public List<ComponentInfo> getDeployedComponents(String path) throws InvalidPathException {
