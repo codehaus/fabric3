@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<!--
+    $Rev: 6427 $ $Date: 2009-01-04 02:56:50 -0800 (Sun, 04 Jan 2009) $
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.codehaus.fabric3.tests</groupId>
+        <artifactId>tests-standalone-parent-pom</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>test-standalone-setup</artifactId>
+    <packaging>jar</packaging>
+    <version>0.1-SNAPSHOT</version>
+    <name>Fabric3 Standalone Runtime Integration Tests Setup</name>
+    <description>Fabric3 Standalone Runtime Integration Tests Setup</description>
+      <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>RELEASE</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.codehaus.fabric3</groupId>
+                                    <artifactId>runtime-standalone</artifactId>
+                                    <classifier>bin</classifier>
+                                    <type>zip</type>
+                                    <version>1.1-SNAPSHOT</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/assembly</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+ <!--                   <execution>
+                        <id>copy</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>junit</groupId>
+                                    <artifactId>junit</artifactId>
+                                    <version>3.8.2</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>ant</groupId>
+                                    <artifactId>ant-junit</artifactId>
+                                    <version>1.6.5</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>-->
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
