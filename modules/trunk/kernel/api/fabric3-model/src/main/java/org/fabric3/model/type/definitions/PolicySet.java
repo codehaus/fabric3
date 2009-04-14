@@ -161,6 +161,7 @@ public final class PolicySet extends AbstractDefinition {
         return contributionUri;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -168,16 +169,24 @@ public final class PolicySet extends AbstractDefinition {
 
         PolicySet policySet = (PolicySet) o;
 
-        if (getName() != null ? !getName().equals(policySet.getName()) : policySet.getName() != null) return false;
+        if (appliesTo != null ? !appliesTo.equals(policySet.appliesTo) : policySet.appliesTo != null) return false;
+        if (attachTo != null ? !attachTo.equals(policySet.attachTo) : policySet.attachTo != null) return false;
+        if (contributionUri != null ? !contributionUri.equals(policySet.contributionUri) : policySet.contributionUri != null) return false;
+        if (extension != null ? !extension.equals(policySet.extension) : policySet.extension != null) return false;
+        if (phase != policySet.phase) return false;
+        if (provides != null ? !provides.equals(policySet.provides) : policySet.provides != null) return false;
 
         return true;
     }
 
+    @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (provides != null ? provides.hashCode() : 0);
+        result = 31 * result + (contributionUri != null ? contributionUri.hashCode() : 0);
         result = 31 * result + (extension != null ? extension.hashCode() : 0);
         result = 31 * result + (appliesTo != null ? appliesTo.hashCode() : 0);
+        result = 31 * result + (attachTo != null ? attachTo.hashCode() : 0);
         result = 31 * result + (phase != null ? phase.hashCode() : 0);
         return result;
     }

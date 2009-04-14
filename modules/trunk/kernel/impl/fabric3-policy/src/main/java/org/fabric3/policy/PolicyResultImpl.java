@@ -77,10 +77,11 @@ public class PolicyResultImpl implements PolicyResult {
             if (!interceptedSets.contains(policySet)) {
                 // Check to see if the policy set has already been added. This can happen for intents specified on service contracts, as they will
                 // be picked up on both the reference and service sides of a wire.
-                interceptedSets.addAll(policySets);
+                interceptedSets.add(policySet);
             }
         }
 
     }
+
 
 }
