@@ -156,13 +156,16 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
                                     Map<String, Command> commands,
                                     GenerationType type) throws GenerationException {
         for (LogicalComponent<?> component : components) {
-            String componentZone = component.getZone();
-            if (componentZone == null) {
+            String zone = component.getZone();
+            if (zone == null) {
                 // skip local runtime
                 continue;
             }
-            AbstractExtensionsCommand command = getExtensionsCommand(commands, componentZone, type);
+            AbstractExtensionsCommand command = getExtensionsCommand(commands, zone, type);
             evaluateComponent(component, command, type);
+            if (!command.getExtensionUris().isEmpty()) {
+                commands.put(zone, command);
+            }
         }
     }
 
@@ -277,6 +280,7 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
                 }
                 AbstractExtensionsCommand command = getExtensionsCommand(commands, zone, type);
                 command.addExtensionUri(encode(contributionUri));
+                commands.put(zone, command);
                 addDependencies(contribution, command);
             }
         }
@@ -329,21 +333,19 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
     /**
      * Gets or creates un/provision extension commands from the command map.
      *
-     * @param commands      the command map
-     * @param componentZone the zone extensions are provisioned to
-     * @param type          the generation type
+     * @param commands the command map
+     * @param zone     the zone extensions are provisioned to
+     * @param type     the generation type
      * @return the command
      */
-    private AbstractExtensionsCommand getExtensionsCommand(Map<String, Command> commands, String componentZone, GenerationType type) {
+    private AbstractExtensionsCommand getExtensionsCommand(Map<String, Command> commands, String zone, GenerationType type) {
         AbstractExtensionsCommand command;
-        command = (AbstractExtensionsCommand) commands.get(componentZone);    // safe cast
+        command = (AbstractExtensionsCommand) commands.get(zone);    // safe cast
         if (command == null) {
             if (GenerationType.UNDEPLOY == type) {
                 command = new UnProvisionExtensionsCommand();
-                commands.put(componentZone, command);
             } else {
                 command = new ProvisionExtensionsCommand();
-                commands.put(componentZone, command);
             }
 
         }
