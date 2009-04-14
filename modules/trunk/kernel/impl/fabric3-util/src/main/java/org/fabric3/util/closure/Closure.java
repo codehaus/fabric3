@@ -18,13 +18,11 @@ package org.fabric3.util.closure;
 
 /**
  * Represents a typed closure.
- * 
- * TODO To be moved into a separate module.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public interface Closure<OBJECT, RESULT> {
-    
+
     RESULT execute(OBJECT object);
 
 }
