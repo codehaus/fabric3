@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Calculates contributions required for a deployment.
@@ -35,9 +34,8 @@ public interface ContributionCollator {
      * required set of contributions keyed by zone where the components are to be deployed to or undeployed from.
      *
      * @param components the set of components
-     * @param state      the logical state. This can be LogicalState#NEW or LogicalState#MARKED representing deploy and undeploy respectively, or null
-     *                   if a non-incremental generation is performed
+     * @param type       the type of generation being performed: incremental deploy, full deploy; or undeploy
      * @return the set of required contributions grouped by zone
      */
-    Map<String, List<Contribution>> collateContributions(List<LogicalComponent<?>> components, LogicalState state);
+    Map<String, List<Contribution>> collateContributions(List<LogicalComponent<?>> components, GenerationType type);
 }

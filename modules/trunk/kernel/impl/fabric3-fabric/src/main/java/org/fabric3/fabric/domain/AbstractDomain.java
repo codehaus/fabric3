@@ -132,19 +132,19 @@ public abstract class AbstractDomain implements Domain {
         listeners = Collections.emptyList();
     }
 
-    public void include(QName deployable) throws DeploymentException {
+    public synchronized void include(QName deployable) throws DeploymentException {
         include(deployable, null, false);
     }
 
-    public void include(QName deployable, boolean transactional) throws DeploymentException {
+    public synchronized void include(QName deployable, boolean transactional) throws DeploymentException {
         include(deployable, null, transactional);
     }
 
-    public void include(QName deployable, String plan) throws DeploymentException {
+    public synchronized void include(QName deployable, String plan) throws DeploymentException {
         include(deployable, plan, false);
     }
 
-    public void include(QName deployable, String plan, boolean transactional) throws DeploymentException {
+    public synchronized void include(QName deployable, String plan, boolean transactional) throws DeploymentException {
         Composite composite = contributionHelper.resolveComposite(deployable);
         // In order to include a composite at the domain level, it must first be wrapped in a composite that includes it.
         // This wrapper is thrown away during the inclusion.
@@ -178,23 +178,23 @@ public abstract class AbstractDomain implements Domain {
 
     }
 
-    public void include(Composite composite) throws DeploymentException {
+    public synchronized void include(Composite composite) throws DeploymentException {
         include(composite, null, false);
         for (DomainListener listener : listeners) {
             listener.onInclude(composite.getName(), null);
         }
     }
 
-    public void include(List<URI> uris, boolean transactional) throws DeploymentException {
+    public synchronized void include(List<URI> uris, boolean transactional) throws DeploymentException {
         Set<Contribution> contributions = contributionHelper.resolveContributions(uris);
         instantiateAndDeploy(contributions, null, false, transactional);
     }
 
-    public void undeploy(QName deployable) throws UndeploymentException {
+    public synchronized void undeploy(QName deployable) throws UndeploymentException {
         undeploy(deployable, false);
     }
 
-    public void undeploy(QName deployable, boolean transactional) throws UndeploymentException {
+    public synchronized void undeploy(QName deployable, boolean transactional) throws UndeploymentException {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         if (transactional) {
@@ -225,7 +225,7 @@ public abstract class AbstractDomain implements Domain {
         }
     }
 
-    public void activateDefinitions(URI uri, boolean apply, boolean transactional) throws DeploymentException {
+    public synchronized void activateDefinitions(URI uri, boolean apply, boolean transactional) throws DeploymentException {
         Contribution contribution = metadataStore.find(uri);
         if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
             // a composite may not be associated with a contribution, e.g. a bootstrap composite
@@ -249,7 +249,7 @@ public abstract class AbstractDomain implements Domain {
         }
     }
 
-    public void deactivateDefinitions(URI uri, boolean transactional) throws DeploymentException {
+    public synchronized void deactivateDefinitions(URI uri, boolean transactional) throws DeploymentException {
         Contribution contribution = metadataStore.find(uri);
         if (contribution == null || ContributionState.INSTALLED != contribution.getState()) {
             // a composite may not be associated with a contribution, e.g. a bootstrap composite

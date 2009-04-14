@@ -19,6 +19,7 @@ package org.fabric3.fabric.generator.extension;
 import java.util.List;
 import java.util.Map;
 
+import org.fabric3.fabric.generator.GenerationType;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.generator.CommandMap;
@@ -38,12 +39,12 @@ public interface ExtensionGenerator {
      * @param contributions the contributions being deployed or undeployed
      * @param components    the components being deployed or undeployed
      * @param commandMap    the CommandMap being generated
-     * @param provision     true if the contributions are being provisioned (i.e. deployed) @return the commands
+     * @param type          the generation type being performed
      * @return the provision commands keyed by zone
      * @throws GenerationException if an error occurs generating the commands
      */
     Map<String, Command> generate(Map<String, List<Contribution>> contributions,
                                   List<LogicalComponent<?>> components,
                                   CommandMap commandMap,
-                                  boolean provision) throws GenerationException;
+                                  GenerationType type) throws GenerationException;
 }

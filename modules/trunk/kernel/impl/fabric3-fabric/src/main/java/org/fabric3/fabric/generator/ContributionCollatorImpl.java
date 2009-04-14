@@ -41,12 +41,16 @@ public class ContributionCollatorImpl implements ContributionCollator {
         this.store = store;
     }
 
-    public Map<String, List<Contribution>> collateContributions(List<LogicalComponent<?>> components, LogicalState state) {
+    public Map<String, List<Contribution>> collateContributions(List<LogicalComponent<?>> components, GenerationType type) {
         // collate all contributions that must be provisioned as part of the change set
         Map<String, List<Contribution>> contributionsPerZone = new HashMap<String, List<Contribution>>();
         for (LogicalComponent<?> component : components) {
-            if (state != null && state != component.getState()) {
-                continue;
+            if (type != GenerationType.FULL) {
+                if (GenerationType.INCREMENTAL == type && LogicalState.NEW != component.getState()) {
+                    continue;
+                } else if (GenerationType.UNDEPLOY == type && LogicalState.MARKED != component.getState()) {
+                    continue;
+                }
             }
             URI contributionUri = component.getDefinition().getContributionUri();
             String zone = component.getZone();

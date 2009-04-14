@@ -29,6 +29,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.fabric.command.ProvisionExtensionsCommand;
+import org.fabric3.fabric.generator.GenerationType;
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.component.BindingDefinition;
@@ -80,7 +81,7 @@ public class ExtensionGeneratorImplTestCase extends TestCase {
 
         EasyMock.replay(store);
         CommandMap commandMap = new CommandMap("123", "123", false);
-        Map<String, Command> ret = generator.generate(map, components, commandMap, true);
+        Map<String, Command> ret = generator.generate(map, components, commandMap, GenerationType.INCREMENTAL);
         Command commands = ret.get("zone1");
         ProvisionExtensionsCommand command = (ProvisionExtensionsCommand) commands;
         assertTrue(command.getExtensionUris().contains(extensionUri));

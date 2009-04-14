@@ -56,7 +56,6 @@ import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Default Generator implementation.
@@ -107,9 +106,9 @@ public class GeneratorImpl implements Generator {
         CommandMap commandMap = new CommandMap(id);
         Map<String, List<Contribution>> deployingContributions;
         if (incremental) {
-            deployingContributions = collator.collateContributions(sorted, LogicalState.NEW);
+            deployingContributions = collator.collateContributions(sorted, GenerationType.INCREMENTAL);
         } else {
-            deployingContributions = collator.collateContributions(sorted, null);
+            deployingContributions = collator.collateContributions(sorted, GenerationType.FULL);
         }
 
         // generate classloader provision commands
@@ -142,19 +141,21 @@ public class GeneratorImpl implements Generator {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
-
         // release classloaders for components being undeployed that are no longer referenced
-        Map<String, List<Contribution>> undeployingContributions = collator.collateContributions(sorted, LogicalState.MARKED);
+        Map<String, List<Contribution>> undeployingContributions = collator.collateContributions(sorted, GenerationType.UNDEPLOY);
         Map<String, List<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(undeployingContributions);
         for (Map.Entry<String, List<Command>> entry : releaseCommandsPerZone.entrySet()) {
             commandMap.addCommands(entry.getKey(), entry.getValue());
         }
 
         // generate extension provision commands - this must be done after policies are calculated for policy extensions to be included
-        generateExtensionCommands(commandMap, deployingContributions, sorted, true);
-
+        if (incremental) {
+            generateExtensionCommands(commandMap, deployingContributions, sorted, GenerationType.INCREMENTAL);
+        } else {
+            generateExtensionCommands(commandMap, deployingContributions, sorted, GenerationType.FULL);
+        }
         // release extensions that are no longer used
-        generateExtensionCommands(commandMap, undeployingContributions, sorted, false);
+        generateExtensionCommands(commandMap, undeployingContributions, sorted, GenerationType.UNDEPLOY);
 
         return commandMap;
     }
@@ -165,22 +166,22 @@ public class GeneratorImpl implements Generator {
      * @param commandMap             the map of commands for deployment
      * @param deployingContributions the contributions being deployed
      * @param components             the components being deployed
-     * @param provision              true if this is a deployment or false if it is an undeployement
+     * @param type                   the type of generation being performed
      * @throws GenerationException if an error during generation is encountered
      */
     private void generateExtensionCommands(CommandMap commandMap,
                                            Map<String, List<Contribution>> deployingContributions,
                                            List<LogicalComponent<?>> components,
-                                           boolean provision) throws GenerationException {
+                                           GenerationType type) throws GenerationException {
         if (extensionGenerator != null) {
-            Map<String, Command> extensionsPerZone = extensionGenerator.generate(deployingContributions, components, commandMap, provision);
+            Map<String, Command> extensionsPerZone = extensionGenerator.generate(deployingContributions, components, commandMap, type);
             if (extensionsPerZone != null) {
                 for (Map.Entry<String, Command> entry : extensionsPerZone.entrySet()) {
-                    if (provision) {
+                    if (type == GenerationType.UNDEPLOY) {
+                        commandMap.addCommand(entry.getKey(), entry.getValue());
+                    } else {
                         // if an extension is being provisioned, the command needs to be executed before others
                         commandMap.addExtensionCommand(entry.getKey(), entry.getValue());
-                    } else {
-                        commandMap.addCommand(entry.getKey(), entry.getValue());
                     }
                 }
             }

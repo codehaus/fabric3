@@ -28,9 +28,12 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AbstractExtensionsCommand;
 import org.fabric3.fabric.command.AttachWireCommand;
-import org.fabric3.fabric.command.ProvisionExtensionsCommand;
 import org.fabric3.fabric.command.ConnectionCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
+import org.fabric3.fabric.command.ProvisionExtensionsCommand;
 import org.fabric3.fabric.command.UnProvisionExtensionsCommand;
+import org.fabric3.fabric.command.WireCommand;
+import org.fabric3.fabric.generator.GenerationType;
 import org.fabric3.host.Names;
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.HostInfo;
@@ -47,6 +50,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
@@ -79,7 +83,7 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
     public Map<String, Command> generate(Map<String, List<Contribution>> contributions,
                                          List<LogicalComponent<?>> components,
                                          CommandMap commandMap,
-                                         boolean provision) throws GenerationException {
+                                         GenerationType type) throws GenerationException {
         if (RuntimeMode.CONTROLLER != info.getRuntimeMode()) {
             // short circuit this unless running in distributed mode
             return null;
@@ -88,11 +92,11 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
         Map<String, Command> commands = new HashMap<String, Command>();
 
         // evaluate contributions being provisioned for required capabilities
-        evaluateContributions(contributions, provision, commands);
+        evaluateContributions(contributions, commands, type);
         // evaluate components for required capabilities
-        evaluateComponents(components, provision, commands);
+        evaluateComponents(components, commands, type);
         // evaluate policies on wires
-        evaluatePolicies(commands, contributions, commandMap, provision);
+        evaluatePolicies(commands, contributions, commandMap, type);
 
         if (commands.isEmpty()) {
             return null;
@@ -104,12 +108,13 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
      * Evaluates contributions for required capabilities, resolving those capabilities to extensions.
      *
      * @param contributions the contributions  to evaluate
-     * @param provision     true if the generation is a provision operation
      * @param commands      the list of commands to update with un/provison extension commands
+     * @param type          the generation type
      * @throws GenerationException if an exception occurs
      */
-    private void evaluateContributions(Map<String, List<Contribution>> contributions, boolean provision, Map<String, Command> commands)
-            throws GenerationException {
+    private void evaluateContributions(Map<String, List<Contribution>> contributions,
+                                       Map<String, Command> commands,
+                                       GenerationType type) throws GenerationException {
         for (Map.Entry<String, List<Contribution>> entry : contributions.entrySet()) {
             String zone = entry.getKey();
             if (zone == null) {
@@ -117,10 +122,10 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
                 continue;
             }
             AbstractExtensionsCommand command;
-            if (provision) {
-                command = new ProvisionExtensionsCommand();
-            } else {
+            if (type == GenerationType.UNDEPLOY) {
                 command = new UnProvisionExtensionsCommand();
+            } else {
+                command = new ProvisionExtensionsCommand();
             }
 
             List<Contribution> zoneContributions = entry.getValue();
@@ -143,20 +148,21 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
      * Evaluates components for required capabilities, resolving those capabilities to extensions.
      *
      * @param components the components  to evaluate
-     * @param provision  true if the generation is a provision operation
      * @param commands   the list of commands to update with un/provison extension commands
+     * @param type       the generation  type
      * @throws GenerationException if an exception occurs
      */
-    private void evaluateComponents(List<LogicalComponent<?>> components, boolean provision, Map<String, Command> commands)
-            throws GenerationException {
+    private void evaluateComponents(List<LogicalComponent<?>> components,
+                                    Map<String, Command> commands,
+                                    GenerationType type) throws GenerationException {
         for (LogicalComponent<?> component : components) {
             String componentZone = component.getZone();
             if (componentZone == null) {
                 // skip local runtime
                 continue;
             }
-            AbstractExtensionsCommand command = getExtensionsCommand(commands, componentZone, provision);
-            evaluateComponent(component, command);
+            AbstractExtensionsCommand command = getExtensionsCommand(commands, componentZone, type);
+            evaluateComponent(component, command, type);
         }
     }
 
@@ -165,31 +171,38 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
      *
      * @param component the component
      * @param command   the command to update
+     * @param type      the generation type
      * @throws GenerationException if an exception during evaluation is encountered
      */
-    private void evaluateComponent(LogicalComponent<?> component, AbstractExtensionsCommand command) throws GenerationException {
+    private void evaluateComponent(LogicalComponent<?> component, AbstractExtensionsCommand command, GenerationType type) throws GenerationException {
         Implementation<?> impl = component.getDefinition().getImplementation();
-        AbstractComponentType<?, ?, ?, ?> type = impl.getComponentType();
+        AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
         Set<Contribution> extensions = new HashSet<Contribution>();
-        for (String capability : type.getRequiredCapabilities()) {
-            extensions.addAll(store.resolveCapability(capability));
-        }
-        for (String capability : impl.getRequiredCapabilities()) {
-            extensions.addAll(store.resolveCapability(capability));
+        if (isGenerate(component.getState(), type)) {
+            for (String capability : componentType.getRequiredCapabilities()) {
+                extensions.addAll(store.resolveCapability(capability));
+            }
+            for (String capability : impl.getRequiredCapabilities()) {
+                extensions.addAll(store.resolveCapability(capability));
+            }
         }
         // evaluate services
         for (LogicalService service : component.getServices()) {
             for (LogicalBinding<?> binding : service.getBindings()) {
-                for (String capability : binding.getDefinition().getRequiredCapabilities()) {
-                    extensions.addAll(store.resolveCapability(capability));
+                if (isGenerate(binding.getState(), type)) {
+                    for (String capability : binding.getDefinition().getRequiredCapabilities()) {
+                        extensions.addAll(store.resolveCapability(capability));
+                    }
                 }
             }
         }
         // evaluate references
         for (LogicalReference reference : component.getReferences()) {
             for (LogicalBinding<?> binding : reference.getBindings()) {
-                for (String capability : binding.getDefinition().getRequiredCapabilities()) {
-                    extensions.addAll(store.resolveCapability(capability));
+                if (isGenerate(binding.getState(), type)) {
+                    for (String capability : binding.getDefinition().getRequiredCapabilities()) {
+                        extensions.addAll(store.resolveCapability(capability));
+                    }
                 }
             }
         }
@@ -199,19 +212,30 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
         }
     }
 
+    private boolean isGenerate(LogicalState state, GenerationType type) {
+        if (GenerationType.FULL == type && LogicalState.MARKED != state) {
+            return true;
+        } else if (GenerationType.INCREMENTAL == type && LogicalState.NEW == state) {
+            return true;
+        } else if (GenerationType.UNDEPLOY == type && LogicalState.MARKED == state) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Evaluates policy interceptors added to wires for required capabilities, resolving those capabilities to extensions.
      *
      * @param contributions the contributions  to evaluate
      * @param commandMap    the generated command map to introspect for policy interceptors
-     * @param provision     true if the generation is a provision operation
+     * @param type          the generation type
      * @param commands      the list of commands to update with un/provison extension commands
      * @throws GenerationException if an exception occurs
      */
     private void evaluatePolicies(Map<String, Command> commands,
                                   Map<String, List<Contribution>> contributions,
                                   CommandMap commandMap,
-                                  boolean provision) throws GenerationException {
+                                  GenerationType type) throws GenerationException {
         for (Map.Entry<String, List<Command>> entry : commandMap.getCommands().entrySet()) {
             String zone = entry.getKey();
             if (zone == null) {
@@ -222,23 +246,38 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
             for (Command generatedCommand : entry.getValue()) {
                 if (generatedCommand instanceof ConnectionCommand) {
                     ConnectionCommand connectionCommand = (ConnectionCommand) generatedCommand;
-                    for (AttachWireCommand attachWireCommand : connectionCommand.getAttachCommands()) {
-                        for (PhysicalOperationDefinition operation : attachWireCommand.getPhysicalWireDefinition().getOperations()) {
-                            for (PhysicalInterceptorDefinition interceptor : operation.getInterceptors()) {
-                                URI contributionUri = interceptor.getPolicyClassLoaderid();
-                                Contribution contribution = store.find(contributionUri);
-                                if (findContribution(contribution, contributions)) {
-                                    // the interceptor is bundled with user contribution so skip
-                                    continue;
-                                }
-                                AbstractExtensionsCommand command = getExtensionsCommand(commands, zone, provision);
-                                command.addExtensionUri(encode(contributionUri));
-                                addDependencies(contribution, command);
-                            }
+                    if (GenerationType.UNDEPLOY == type) {
+                        // undeployment, evaluate wire detach commands
+                        for (DetachWireCommand command : connectionCommand.getDetachCommands()) {
+                            evaluateWireCommand(command, commands, contributions, zone, type);
+                        }
+                    } else {
+                        // a deployment, evaluate the wire attach commands
+                        for (AttachWireCommand command : connectionCommand.getAttachCommands()) {
+                            evaluateWireCommand(command, commands, contributions, zone, type);
                         }
                     }
 
                 }
+            }
+        }
+    }
+
+    private void evaluateWireCommand(WireCommand wireCommand,
+                                     Map<String, Command> commands,
+                                     Map<String, List<Contribution>> contributions,
+                                     String zone, GenerationType type) throws GenerationException {
+        for (PhysicalOperationDefinition operation : wireCommand.getPhysicalWireDefinition().getOperations()) {
+            for (PhysicalInterceptorDefinition interceptor : operation.getInterceptors()) {
+                URI contributionUri = interceptor.getPolicyClassLoaderid();
+                Contribution contribution = store.find(contributionUri);
+                if (findContribution(contribution, contributions)) {
+                    // the interceptor is bundled with user contribution so skip
+                    continue;
+                }
+                AbstractExtensionsCommand command = getExtensionsCommand(commands, zone, type);
+                command.addExtensionUri(encode(contributionUri));
+                addDependencies(contribution, command);
             }
         }
     }
@@ -292,18 +331,18 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
      *
      * @param commands      the command map
      * @param componentZone the zone extensions are provisioned to
-     * @param provision     true if this is a provision operation
+     * @param type          the generation type
      * @return the command
      */
-    private AbstractExtensionsCommand getExtensionsCommand(Map<String, Command> commands, String componentZone, boolean provision) {
+    private AbstractExtensionsCommand getExtensionsCommand(Map<String, Command> commands, String componentZone, GenerationType type) {
         AbstractExtensionsCommand command;
         command = (AbstractExtensionsCommand) commands.get(componentZone);    // safe cast
         if (command == null) {
-            if (provision) {
-                command = new ProvisionExtensionsCommand();
+            if (GenerationType.UNDEPLOY == type) {
+                command = new UnProvisionExtensionsCommand();
                 commands.put(componentZone, command);
             } else {
-                command = new UnProvisionExtensionsCommand();
+                command = new ProvisionExtensionsCommand();
                 commands.put(componentZone, command);
             }
 
