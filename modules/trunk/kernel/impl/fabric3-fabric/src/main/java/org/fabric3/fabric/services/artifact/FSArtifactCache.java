@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -44,7 +44,7 @@ public class FSArtifactCache implements ArtifactCache {
 
     public FSArtifactCache(@Reference HostInfo info) {
         tempDir = new File(info.getTempDir(), "cache");
-        entries = new ConcurrentHashMap<URI, Entry>();
+        entries = new HashMap<URI, Entry>();
     }
 
     @Init
@@ -55,7 +55,7 @@ public class FSArtifactCache implements ArtifactCache {
         tempDir.mkdirs();
     }
 
-    public URL cache(URI uri, InputStream stream) throws CacheException {
+    public synchronized URL cache(URI uri, InputStream stream) throws CacheException {
         if (entries.containsKey(uri)) {
             throw new CacheRuntimeException("Entry for URI already exists: " + uri);
         }
@@ -78,7 +78,7 @@ public class FSArtifactCache implements ArtifactCache {
         }
     }
 
-    public URL get(URI uri) {
+    public synchronized URL get(URI uri) {
         Entry entry = entries.get(uri);
         if (entry == null) {
             return null;
@@ -86,7 +86,7 @@ public class FSArtifactCache implements ArtifactCache {
         return entry.getEntryURL();
     }
 
-    public void increment(URI uri) {
+    public synchronized void increment(URI uri) {
         Entry entry = entries.get(uri);
         if (entry == null) {
             throw new CacheRuntimeException("Entry for URI not found:" + uri);
@@ -94,16 +94,26 @@ public class FSArtifactCache implements ArtifactCache {
         entry.getCounter().getAndIncrement();
     }
 
-    public void release(URI uri) {
+    public synchronized boolean release(URI uri) {
         Entry entry = entries.get(uri);
         if (entry == null) {
-            return;
+            return false;
         }
         int i = entry.getCounter().decrementAndGet();
         if (i == 0) {
             entry.getFile().delete();
             entries.remove(uri);
+            return true;
         }
+        return false;
+    }
+
+    public synchronized int getCount(URI uri) {
+        Entry entry = entries.get(uri);
+        if (entry == null) {
+            return 0;
+        }
+        return entry.getCounter().get();
     }
 
     private class Entry {

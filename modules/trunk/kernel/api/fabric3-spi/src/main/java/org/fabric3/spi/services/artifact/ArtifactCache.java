@@ -58,7 +58,16 @@ public interface ArtifactCache {
      * will be decremented.
      *
      * @param uri the artifact URI.
+     * @return returns true if the artifact was evicted
      * @throws CacheException if an error occurs releasing the artifact
      */
-    void release(URI uri) throws CacheException;
+    boolean release(URI uri) throws CacheException;
+
+    /**
+     * Returns the in-use count for the artifact.
+     *
+     * @param uri the artifact URI
+     * @return the in-use count
+     */
+    int getCount(URI uri);
 }

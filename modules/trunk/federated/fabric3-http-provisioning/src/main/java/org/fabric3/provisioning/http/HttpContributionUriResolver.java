@@ -91,5 +91,9 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
             throw new ResolutionException("Error releasing artifact: " + uri, e);
         }
     }
+
+    public int getInUseCount(URI uri) {
+        return cache.getCount(uri);
+    }
 }
 

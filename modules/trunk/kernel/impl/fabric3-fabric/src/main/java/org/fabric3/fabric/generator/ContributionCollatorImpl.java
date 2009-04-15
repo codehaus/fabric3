@@ -65,7 +65,9 @@ public class ContributionCollatorImpl implements ContributionCollator {
             for (ContributionWire<?, ?> wire : contributionWires) {
                 URI importedUri = wire.getExportContributionUri();
                 Contribution imported = store.find(importedUri);
-                if (!contributions.contains(imported) && !Names.HOST_CONTRIBUTION.equals(importedUri)) {
+                if (!contributions.contains(imported)
+                        && !Names.HOST_CONTRIBUTION.equals(importedUri) 
+                        && !Names.BOOT_CONTRIBUTION.equals(importedUri)) {
                     contributions.add(imported);
                 }
             }

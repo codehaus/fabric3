@@ -36,7 +36,8 @@ public interface ContributionUriResolver {
     public URI decode(URI uri);
 
     /**
-     * Resolves the contribution artifact associated with the URI, returning a local URL by which it may be dereferenced
+     * Resolves the contribution artifact associated with the URI, returning a local URL by which it may be dereferenced. Resolving the artifact also
+     * increments the in-use count.
      *
      * @param contributionURI the contribution URI
      * @return the local dereferenceable URL for the artifact
@@ -45,12 +46,19 @@ public interface ContributionUriResolver {
     URL resolve(URI contributionURI) throws ResolutionException;
 
     /**
-     * Releases a previously resolved contribution. ,
+     * Releases a previously resolved contribution. If the in-use count reaches 0, the artifact will be evicted.
      *
      * @param uri the contribution  URI.
      * @throws ResolutionException if an error occurs releasing the artifact
      */
     void release(URI uri) throws ResolutionException;
 
+    /**
+     * Returns the in-use count if the resolver does not support caching.
+     *
+     * @param uri the artifact
+     * @return the in-use count
+     */
+    int getInUseCount(URI uri);
 
 }

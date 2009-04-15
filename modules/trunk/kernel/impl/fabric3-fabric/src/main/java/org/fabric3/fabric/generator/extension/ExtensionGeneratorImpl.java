@@ -210,8 +210,11 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
             }
         }
         for (Contribution extension : extensions) {
-            URI encoded = encode(extension.getUri());
-            command.addExtensionUri(encoded);
+            URI uri = extension.getUri();
+            URI encoded = encode(uri);
+            if (!command.getExtensionUris().contains(encoded) && !Names.HOST_CONTRIBUTION.equals(uri) && !Names.BOOT_CONTRIBUTION.equals(uri)) {
+                command.addExtensionUri(encoded);
+            }
         }
     }
 
@@ -279,7 +282,12 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
                     continue;
                 }
                 AbstractExtensionsCommand command = getExtensionsCommand(commands, zone, type);
-                command.addExtensionUri(encode(contributionUri));
+                URI encoded = encode(contributionUri);
+                if (!command.getExtensionUris().contains(encoded)
+                        && !Names.HOST_CONTRIBUTION.equals(contributionUri)
+                        && !Names.BOOT_CONTRIBUTION.equals(contributionUri)) {
+                    command.addExtensionUri(encoded);
+                }
                 commands.put(zone, command);
                 addDependencies(contribution, command);
             }
@@ -316,7 +324,9 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
             Contribution imported = store.find(importedUri);
             addDependencies(imported, command);
             URI encoded = encode(importedUri);
-            if (!command.getExtensionUris().contains(encoded) && !Names.HOST_CONTRIBUTION.equals(importedUri)) {
+            if (!command.getExtensionUris().contains(encoded)
+                    && !Names.HOST_CONTRIBUTION.equals(importedUri)
+                    && !Names.BOOT_CONTRIBUTION.equals(importedUri)) {
                 command.addExtensionUri(encoded);
             }
         }

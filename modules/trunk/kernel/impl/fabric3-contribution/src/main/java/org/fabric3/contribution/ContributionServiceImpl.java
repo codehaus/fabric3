@@ -335,6 +335,11 @@ public class ContributionServiceImpl implements ContributionService {
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution does not exist:" + uri);
         }
+        uninstall(contribution);
+    }
+
+    private void uninstall(Contribution contribution) throws UninstallException, ContributionNotFoundException {
+        URI uri = contribution.getUri();
         if (contribution.getState() != ContributionState.INSTALLED) {
             throw new UninstallException("Contribution not installed: " + uri);
         }
@@ -348,7 +353,21 @@ public class ContributionServiceImpl implements ContributionService {
         for (ContributionServiceListener listener : listeners) {
             listener.onUninstall(contribution);
         }
+    }
 
+    public void uninstall(List<URI> uris) throws UninstallException, ContributionNotFoundException {
+        List<Contribution> contributions = new ArrayList<Contribution>(uris.size());
+        for (URI uri : uris) {
+            Contribution contribution = metaDataStore.find(uri);
+            if (contribution == null) {
+                throw new ContributionNotFoundException("Contribution does not exist:" + uri);
+            }
+            contributions.add(contribution);
+        }
+        contributions = dependencyService.orderForUninstall(contributions);
+        for (Contribution contribution : contributions) {
+            uninstall(contribution);
+        }
     }
 
     public void remove(URI uri) throws RemoveException, ContributionNotFoundException {
@@ -368,7 +387,12 @@ public class ContributionServiceImpl implements ContributionService {
         for (ContributionServiceListener listener : listeners) {
             listener.onRemove(contribution);
         }
+    }
 
+    public void remove(List<URI> uris) throws ContributionNotFoundException, RemoveException {
+        for (URI uri : uris) {
+            remove(uri);
+        }
     }
 
     public List<URI> getContributionsInProfile(URI uri) {

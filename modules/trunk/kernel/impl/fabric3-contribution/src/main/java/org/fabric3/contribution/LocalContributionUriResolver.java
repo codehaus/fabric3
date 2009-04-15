@@ -56,4 +56,8 @@ public class LocalContributionUriResolver implements ContributionUriResolver {
     public void release(URI uri) throws ResolutionException {
 
     }
+
+    public int getInUseCount(URI uri) {
+        return 0;
+    }
 }

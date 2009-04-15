@@ -35,6 +35,7 @@
 
     <wire source="ClassLoaderBuilder/contributionUriResolver" target="HttpContributionUriResolver"/>
     <wire source="ProvisionExtensionsCommandExecutor/contributionUriResolver" target="HttpContributionUriResolver"/>
+    <wire source="UnProvisionExtensionsCommandExecutor/contributionUriResolver" target="HttpContributionUriResolver"/>
 
 
 </composite>

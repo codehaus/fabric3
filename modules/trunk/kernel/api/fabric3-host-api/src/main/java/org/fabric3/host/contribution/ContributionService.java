@@ -120,6 +120,15 @@ public interface ContributionService {
     void uninstall(URI uri) throws UninstallException, ContributionNotFoundException;
 
     /**
+     * Uninstalls multiple contributions.
+     *
+     * @param uris The URIs of the contributions
+     * @throws UninstallException            if there was a problem with the contribution
+     * @throws ContributionNotFoundException if a contribution is not found
+     */
+    void uninstall(List<URI> uris) throws UninstallException, ContributionNotFoundException;
+
+    /**
      * Remove a contribution from persistent storage. Contribution must be uninstalled prior to being removed.
      *
      * @param uri The URI of the contribution
@@ -127,6 +136,15 @@ public interface ContributionService {
      * @throws ContributionNotFoundException if a contribution is not found
      */
     void remove(URI uri) throws RemoveException, ContributionNotFoundException;
+
+    /**
+     * Remove multiple contributions from persistent storage. Contribution must be uninstalled prior to being removed.
+     *
+     * @param uris The URIs of the contributions
+     * @throws RemoveException               if there was a problem with the contribution
+     * @throws ContributionNotFoundException if a contribution is not found
+     */
+    void remove(List<URI> uris) throws ContributionNotFoundException, RemoveException;
 
     /**
      * Returns true if a contribution for the given URI exists.
@@ -221,4 +239,5 @@ public interface ContributionService {
      * @throws ContributionNotFoundException if a contribution corresponding to the URI is not found
      */
     List<Deployable> getDeployables(URI uri) throws ContributionNotFoundException;
+
 }

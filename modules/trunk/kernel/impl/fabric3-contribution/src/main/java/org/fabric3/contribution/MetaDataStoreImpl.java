@@ -30,6 +30,7 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.contribution.wire.ContributionWireInstantiatorRegistry;
+import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -287,7 +288,9 @@ public class MetaDataStoreImpl implements MetaDataStore {
         }
         for (ContributionWire<?, ?> wire : contribution.getWires()) {
             Contribution imported = cache.get(wire.getExportContributionUri());
-            if (!extensions.contains(imported)) {
+            if (!extensions.contains(imported)
+                    && !imported.getUri().equals(Names.HOST_CONTRIBUTION)
+                    && !imported.getUri().equals(Names.BOOT_CONTRIBUTION)) {
                 extensions.add(imported);
             }
             // recurse for the imported contribution
