@@ -73,9 +73,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
             throw new GenerationException("Expects only one operation");
         }
 
-        URI id = binding.getParent().getParent().getParent().getUri();
         FtpWireSourceDefinition hwsd = new FtpWireSourceDefinition();
-        hwsd.setClassLoaderId(id);
         URI targetUri = binding.getDefinition().getTargetUri();
         hwsd.setUri(targetUri);
 
