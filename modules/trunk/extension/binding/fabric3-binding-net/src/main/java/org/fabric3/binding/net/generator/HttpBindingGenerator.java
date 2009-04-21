@@ -59,9 +59,6 @@ public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinit
         HttpWireTargetDefinition targetDefinition = new HttpWireTargetDefinition();
         HttpBindingDefinition bindingDefinition = binding.getDefinition();
         String format = bindingDefinition.getWireFormat();
-        if (format == null) {
-            format = "json";
-        }
         targetDefinition.setWireFormat(format);
         targetDefinition.setUri(binding.getDefinition().getTargetUri());
         return targetDefinition;

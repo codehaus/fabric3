@@ -44,7 +44,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 @EagerInit
 public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
     private final LoaderHelper loaderHelper;
-    private static final QName JSON_POLICY = new QName(Namespaces.POLICY, "dataBinding.json");
+    private static final QName JAXB_POLICY = new QName(Namespaces.POLICY, "dataBinding.jaxb");
 
     /**
      * Constructor.
@@ -67,20 +67,23 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
             switch (reader.next()) {
             case XMLStreamConstants.END_ELEMENT:
                 if ("binding.http".equals(reader.getName().getLocalPart())) {
-                    if (definition.getWireFormat() == null) {
+                    String wireFormat = definition.getWireFormat();
+                    if (wireFormat == null) {
                         // make JSON the default serialization
                         // TODO make this configurable
-                        definition.addIntent(JSON_POLICY);
+                        definition.addIntent(JAXB_POLICY);
+                    } else {
+                        definition.addIntent(new QName(Namespaces.POLICY, "dataBinding." + wireFormat));
                     }
                     return definition;
                 }
                 break;
             case XMLStreamConstants.START_ELEMENT:
                 String name = reader.getName().getLocalPart();
-                if ("wireFormat".equals(name)) {
+                if (name.startsWith("wireFormat.")) {
                     parseWireFormat(reader, definition, false, context);
-                } else if ("responseWireFormat".equals(name)) {
-                    parseWireFormat(reader, definition, true, context);
+                } else if ("response".equals(name)) {
+                    parseResponse(reader, definition, context);
                 } else if ("sslSettings".equals(name)) {
                     parseSslSettings(reader, definition, context);
                 } else if ("authentication".equals(name)) {
@@ -89,6 +92,22 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
                 break;
             }
 
+        }
+    }
+
+    private void parseResponse(XMLStreamReader reader, HttpBindingDefinition definition, IntrospectionContext context) throws XMLStreamException {
+        while (true) {
+            switch (reader.next()) {
+            case XMLStreamConstants.START_ELEMENT:
+                if (reader.getName().getLocalPart().startsWith("wireFormat.")) {
+                    parseWireFormat(reader, definition, true, context);
+                    break;
+                }
+            case XMLStreamConstants.END_ELEMENT:
+                if ("response".equals(reader.getName().getLocalPart())) {
+                    return;
+                }
+            }
         }
     }
 
@@ -134,16 +153,18 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
     }
 
     private void parseWireFormat(XMLStreamReader reader, HttpBindingDefinition definition, boolean response, IntrospectionContext context) {
-        String type = reader.getAttributeValue(null, "type");
-        if (type == null) {
-            MissingAttribute failure = new MissingAttribute("A wire format type must be specified ", reader);
+        String name = reader.getName().getLocalPart();
+        if (name.length() < 11) {
+            InvalidWireFormat failure = new InvalidWireFormat("Invalid wire format: " + name, reader);
             context.addError(failure);
             return;
         }
+        String format = name.substring(11); //wireFormat.
+
         if (response) {
-            definition.setResponseWireFormat(type);
+            definition.setResponseWireFormat(format);
         } else {
-            definition.setWireFormat(type);
+            definition.setWireFormat(format);
         }
 
     }

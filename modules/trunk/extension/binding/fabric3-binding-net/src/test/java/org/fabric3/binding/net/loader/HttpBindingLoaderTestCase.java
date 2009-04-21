@@ -34,8 +34,10 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 public class HttpBindingLoaderTestCase extends TestCase {
 
     private static final String XML = "<binding.http readTimeout='10000' numberOfRetries='1' uri ='TestComponent'>" +
-            "<wireFormat type='testFormat'/>" +
-            "<responseWireFormat type='testResponseFormat'/>" +
+            "<wireFormat.testFormat/>" +
+            "<response>" +
+            "  <wireFormat.testResponseFormat/>" +
+            "</response>" +
             "<sslSettings alias='sslSettings'/>" +
             "<authentication type='basic'/>" +
             "</binding.http>";
