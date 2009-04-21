@@ -42,6 +42,7 @@ import org.w3c.dom.Document;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.Encodings;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding request connection, response connection and operation properties from
@@ -116,4 +117,9 @@ public class JmsBindingDefinition extends BindingDefinition {
         return generatedTargetUri;
     }
 
+    @Override
+    public String getEncoding() {
+        // for now, default to ASCII but we should support binary as well 
+        return Encodings.ASCII;
+    }
 }

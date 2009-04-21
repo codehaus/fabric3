@@ -16,21 +16,17 @@
  */
 package org.fabric3.jaxb.control.impl;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Service;
 import org.w3c.dom.Element;
 
-import org.fabric3.jaxb.control.api.JAXBTransformationService;
 import org.fabric3.jaxb.provision.AbstractTransformingInterceptorDefinition;
 import org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition;
 import org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition;
+import org.fabric3.model.type.component.Encodings;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
@@ -43,30 +39,23 @@ import org.fabric3.spi.model.instance.LogicalService;
  *
  * @version $Revision$ $Date$
  */
-@Service(interfaces = {InterceptorDefinitionGenerator.class, JAXBTransformationService.class})
 @EagerInit
-public class TransformingInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator, JAXBTransformationService {
-    private Map<QName, QName> engagedBindings = new HashMap<QName, QName>();
-
-    public void registerBinding(QName name, QName dataType) {
-        engagedBindings.put(name, dataType);
-    }
+public class TransformingInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
 
     public AbstractTransformingInterceptorDefinition generate(Element policySet, Operation<?> operation, LogicalBinding<?> logicalBinding)
             throws GenerationException {
-        QName dataType = engagedBindings.get(logicalBinding.getDefinition().getType());
-        if (dataType == null) {
-            // The binding does not use JAXB, ignore. For example, a collocated wire may pass JAXB types but they do not need to be serialized
-            // as invocations flow through the same VM.
+        String encoding = logicalBinding.getDefinition().getEncoding();
+        if (Encodings.JAVA.equals(encoding)) {
+            // The binding does not use an encoding scheme so ignore.
             return null;
         }
 
         Set<String> classNames = calculateParameterClassNames(operation);
 
         if (logicalBinding.getParent() instanceof LogicalService) {
-            return new ServiceTransformingInterceptorDefinition(dataType, classNames);
+            return new ServiceTransformingInterceptorDefinition(encoding, classNames);
         } else {
-            return new ReferenceTransformingInterceptorDefinition(dataType, classNames);
+            return new ReferenceTransformingInterceptorDefinition(encoding, classNames);
         }
     }
 

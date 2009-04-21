@@ -17,7 +17,6 @@
 package org.fabric3.jaxb.provision;
 
 import java.util.Set;
-import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
@@ -28,21 +27,21 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  */
 public abstract class AbstractTransformingInterceptorDefinition extends PhysicalInterceptorDefinition {
     private static final long serialVersionUID = -2187418436391138272L;
-    private QName dataType;
+    private String encoding;
     private Set<String> classNames;
 
     /**
      * Cosntructor.
      *
-     * @param dataType      the data type the transformer must convert to and from
-     * @param classNames    set of parameter and fault types the transformer must be able to convert
+     * @param encoding   the encoding transformer must convert to and from
+     * @param classNames set of parameter and fault types the transformer must be able to convert
      */
-    public AbstractTransformingInterceptorDefinition(QName dataType, Set<String> classNames) {
-        this.dataType = dataType;
+    public AbstractTransformingInterceptorDefinition(String encoding, Set<String> classNames) {
+        this.encoding = encoding;
         this.classNames = classNames;
     }
 
-     /**
+    /**
      * The set of parameter and fault types the transformer must be able to convert.
      *
      * @return the parameter and fault types
@@ -52,11 +51,11 @@ public abstract class AbstractTransformingInterceptorDefinition extends Physical
     }
 
     /**
-     * Returns the data type the transformer must convert to and from.
+     * Returns the encoding the transformer must convert to and from.
      *
      * @return the data type
      */
-    public QName getDataType() {
-        return dataType;
+    public String getEncoding() {
+        return encoding;
     }
 }

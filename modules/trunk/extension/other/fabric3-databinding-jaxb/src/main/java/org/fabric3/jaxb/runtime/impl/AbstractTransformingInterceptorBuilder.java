@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
 
 import org.fabric3.jaxb.provision.AbstractTransformingInterceptorDefinition;
 import org.fabric3.spi.builder.BuilderException;
@@ -44,12 +43,12 @@ public abstract class AbstractTransformingInterceptorBuilder<T extends AbstractT
     public I build(T definition) throws BuilderException {
         URI classLoaderId = definition.getWireClassLoaderId();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
-        QName dataType = definition.getDataType();
+        String encoding = definition.getEncoding();
         assert classLoader != null;
         try {
             Set<String> classNames = definition.getClassNames();
             JAXBContext context = getJAXBContext(classLoader, classNames);
-            return build(dataType, context, classLoader);
+            return build(encoding, context, classLoader);
         } catch (ClassNotFoundException e) {
             throw new TransformingBuilderException(e);
         } catch (JAXBException e) {
@@ -60,13 +59,13 @@ public abstract class AbstractTransformingInterceptorBuilder<T extends AbstractT
     /**
      * Subtypes are responsible for creating a transforming interceptor.
      *
-     * @param dataType    the datatype to transform to and from
+     * @param encoding    the encoding to transform to and from
      * @param context     the JAXB context to perform transformations with
      * @param classLoader the classloader for transformed types
      * @return the transforming interceptor
      * @throws TransformingBuilderException if an error occurs during the build process
      */
-    protected abstract I build(QName dataType, JAXBContext context, ClassLoader classLoader) throws TransformingBuilderException;
+    protected abstract I build(String encoding, JAXBContext context, ClassLoader classLoader) throws TransformingBuilderException;
 
     /**
      * Constructs a JAXB context by introspecting a set of classnames

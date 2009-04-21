@@ -34,30 +34,27 @@
  */
 package org.fabric3.binding.jms.introspection;
 
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
+import org.w3c.dom.Document;
 
 import org.fabric3.binding.jms.common.HeadersDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.model.type.PolicyAware;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.jaxb.control.api.JAXBTransformationService;
-import org.fabric3.model.type.PolicyAware;
-import org.w3c.dom.Document;
 
 public class JMSBindingLoaderTestCase extends TestCase {
     public void testLoaderJMSBindingElement() throws Exception {
@@ -104,13 +101,7 @@ public class JMSBindingLoaderTestCase extends TestCase {
 			}
         	
         };
-        JAXBTransformationService mock = new JAXBTransformationService() {
-
-            public void registerBinding(QName name, QName dataType) {
-
-            }
-        };
-        JmsBindingLoader loader = new JmsBindingLoader(loaderHelper, mock);
+        JmsBindingLoader loader = new JmsBindingLoader(loaderHelper);
         InputStream inputStream = JmsBindingLoader.class
                 .getResourceAsStream("JMSBindingLoaderTest.xml");
         XMLInputFactory factory = XMLInputFactory.newInstance();

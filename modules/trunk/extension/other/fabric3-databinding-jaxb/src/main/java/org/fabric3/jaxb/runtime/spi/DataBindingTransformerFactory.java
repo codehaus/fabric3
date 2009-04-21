@@ -17,7 +17,6 @@
 package org.fabric3.jaxb.runtime.spi;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.namespace.QName;
 
 import org.fabric3.spi.transform.PullTransformer;
 
@@ -27,13 +26,6 @@ import org.fabric3.spi.transform.PullTransformer;
  * @version $Revision$ $Date$
  */
 public interface DataBindingTransformerFactory<TYPE> {
-
-    /**
-     * The data type the factory creates transformers for.
-     *
-     * @return the data type
-     */
-    QName getDataType();
 
     /**
      * Creates a transformer from the data type to a JAXB type.

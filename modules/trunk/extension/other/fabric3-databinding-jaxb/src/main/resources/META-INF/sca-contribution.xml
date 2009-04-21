@@ -25,7 +25,6 @@
     <import.java package="javax.xml.bind.helpers" version="1.1"/>
     <import.java package="javax.xml.bind.util" version="1.1"/>
 
-    <export.java package="org.fabric3.jaxb.control.api" version="1.1"/>
     <deployable composite="ns:DataBindingJAXBExtension"/>
     <f3-core:provides name="jaxb"/>    
 </contribution>

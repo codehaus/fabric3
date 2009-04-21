@@ -57,7 +57,6 @@ import org.fabric3.binding.jms.common.OperationPropertiesDefinition;
 import org.fabric3.binding.jms.common.PropertyAwareObject;
 import org.fabric3.binding.jms.common.ResponseDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
-import org.fabric3.jaxb.control.api.JAXBTransformationService;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
@@ -98,12 +97,10 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     /**
      * Constructor.
      *
-     * @param loaderHelper          the loaderHelper
-     * @param transformationService the JAXB transformation service
+     * @param loaderHelper the loaderHelper
      */
-    public JmsBindingLoader(@Reference LoaderHelper loaderHelper, @Reference JAXBTransformationService transformationService) {
+    public JmsBindingLoader(@Reference LoaderHelper loaderHelper) {
         this.loaderHelper = loaderHelper;
-        transformationService.registerBinding(JmsBindingDefinition.BINDING_QNAME, JAXBTransformationService.DATATYPE_XML);
     }
 
     public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {

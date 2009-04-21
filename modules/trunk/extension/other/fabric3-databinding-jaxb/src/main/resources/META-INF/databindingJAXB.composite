@@ -44,7 +44,7 @@
         <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.ServiceTransformingInterceptorBuilder"/>
     </component>
 
-    <component name="XmlDataBindingTransformerFactory" f3-core:key="f3-policy:dataType.xml">
+    <component name="XmlDataBindingTransformerFactory" f3-core:key="ascii">
         <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.XmlDataBindingTransformerFactory"/>
     </component>
 

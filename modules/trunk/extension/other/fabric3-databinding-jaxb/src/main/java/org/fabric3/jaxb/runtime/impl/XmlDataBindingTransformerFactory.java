@@ -17,11 +17,9 @@
 package org.fabric3.jaxb.runtime.impl;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.host.Namespaces;
 import org.fabric3.jaxb.runtime.spi.DataBindingTransformerFactory;
 import org.fabric3.spi.transform.PullTransformer;
 
@@ -32,11 +30,6 @@ import org.fabric3.spi.transform.PullTransformer;
  */
 @EagerInit
 public class XmlDataBindingTransformerFactory implements DataBindingTransformerFactory<String> {
-    private static final QName DATATYPE_XML = new QName(Namespaces.CORE, "dataType.xml");
-
-    public QName getDataType() {
-        return DATATYPE_XML;
-    }
 
     public PullTransformer<String, Object> createToJAXBTransformer(JAXBContext context) {
         return new Xml2JAXBTransformer(context);

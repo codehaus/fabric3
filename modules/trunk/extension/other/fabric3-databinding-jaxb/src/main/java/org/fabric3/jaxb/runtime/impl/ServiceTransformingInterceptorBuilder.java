@@ -18,7 +18,6 @@ package org.fabric3.jaxb.runtime.impl;
 
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -34,23 +33,23 @@ import org.fabric3.spi.transform.PullTransformer;
  */
 public class ServiceTransformingInterceptorBuilder
         extends AbstractTransformingInterceptorBuilder<ServiceTransformingInterceptorDefinition, TransformingInterceptor<?, ?>> {
-    private Map<QName, DataBindingTransformerFactory<?>> factories;
+    private Map<String, DataBindingTransformerFactory<?>> factories;
 
     public ServiceTransformingInterceptorBuilder(@Reference ClassLoaderRegistry classLoaderRegistry) {
         super(classLoaderRegistry);
     }
 
     @Reference
-    public void setFactories(Map<QName, DataBindingTransformerFactory<?>> factories) {
+    public void setFactories(Map<String, DataBindingTransformerFactory<?>> factories) {
         this.factories = factories;
     }
 
     @SuppressWarnings({"unchecked"})
-    protected TransformingInterceptor<?, ?> build(QName dataType, JAXBContext context, ClassLoader classLoader)
+    protected TransformingInterceptor<?, ?> build(String encoding, JAXBContext context, ClassLoader classLoader)
             throws TransformingBuilderException {
-        DataBindingTransformerFactory<?> factory = factories.get(dataType);
+        DataBindingTransformerFactory<?> factory = factories.get(encoding);
         if (factory == null) {
-            throw new TransformingBuilderException("No DataBindingTransformerFactory found for: " + dataType);
+            throw new TransformingBuilderException("No DataBindingTransformerFactory found for: " + encoding);
         }
         PullTransformer<?, Object> inTransformer = factory.createToJAXBTransformer(context);
         PullTransformer<Object, ?> outTransformer = factory.createFromJAXBTransformer(context);
