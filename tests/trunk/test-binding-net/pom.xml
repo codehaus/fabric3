@@ -79,6 +79,16 @@
                             <artifactId>fabric3-databinding-json</artifactId>
                             <version>1.1-SNAPSHOT</version>
                         </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-databinding-jaxb</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jaxb</artifactId>
+                            <version>1.1-SNAPSHOT</version>
+                        </dependency>
                     </extensions>
                 </configuration>
                 <executions>

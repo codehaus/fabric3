@@ -40,28 +40,36 @@
     <component name="EchoTest">
         <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
         <reference name="service" target="EchoService">
-            <binding.http uri="/echoService"/>
+            <binding.http uri="/echoService">
+                <wireFormat.json/>
+            </binding.http>
         </reference>
     </component>
 
     <component name="EchoOneWayTest">
         <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>
         <reference name="service" target="OneWayEchoService">
-            <binding.http uri="/oneWayEchoService"/>
+            <binding.http uri="/oneWayEchoService">
+                <wireFormat.json/>
+            </binding.http>
         </reference>
     </component>
 
     <component name="EchoService">
         <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
         <service name="EchoService">
-            <binding.http uri="/echoService"/>
+            <binding.http uri="/echoService">
+                <wireFormat.json/>
+            </binding.http>
         </service>
     </component>
 
     <component name="OneWayEchoService">
         <implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>
         <service name="OneWayEchoService">
-            <binding.http uri="/oneWayEchoService"/>
+            <binding.http uri="/oneWayEchoService">
+                <wireFormat.json/>
+            </binding.http>
         </service>
     </component>
 
