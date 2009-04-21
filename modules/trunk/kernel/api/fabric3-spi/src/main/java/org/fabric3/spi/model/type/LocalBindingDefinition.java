@@ -18,8 +18,7 @@ package org.fabric3.spi.model.type;
 
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
-
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
@@ -33,7 +32,7 @@ public final class LocalBindingDefinition extends BindingDefinition {
     public static final LocalBindingDefinition INSTANCE = new LocalBindingDefinition();
 
     private LocalBindingDefinition() {
-        super(null, new QName(Constants.SCA_NS, "binding.local"), null);
+        super(null, new QName(Namespaces.CORE, "binding.local"), null);
     }
 
 
