@@ -25,8 +25,11 @@ import org.oasisopen.sca.Constants;
 import org.w3c.dom.Document;
 
 import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.Encodings;
 
 /**
+ * Represents a binding.http configuration.
+ *
  * @version $Revision$ $Date$
  */
 public class HttpBindingDefinition extends BindingDefinition {
@@ -133,5 +136,10 @@ public class HttpBindingDefinition extends BindingDefinition {
 
     public void setOperationProperties(List<OperationProperty> operationProperties) {
         this.operationProperties = operationProperties;
+    }
+
+    @Override
+    public String getEncoding() {
+        return Encodings.ASCII;
     }
 }

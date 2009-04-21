@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-net</artifactId>
-    <packaging>jar</packaging>
+    <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 Network Binding</name>
     <description>Fabric3 WS Network Binding.</description>
 
@@ -70,6 +70,16 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+            </plugin>
+        </plugins>
+    </build>
+
     <repositories>
         <repository>
             <id>repository.jboss.org</id>
@@ -79,6 +89,7 @@
             </snapshots>
         </repository>
     </repositories>
+
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-net</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-net</developerConnection>

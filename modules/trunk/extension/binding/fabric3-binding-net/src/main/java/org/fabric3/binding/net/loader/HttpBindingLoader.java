@@ -18,14 +18,17 @@ package org.fabric3.binding.net.loader;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.model.HttpBindingDefinition;
+import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
@@ -34,10 +37,14 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
 /**
+ * Loader for binding.http.
+ *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
     private final LoaderHelper loaderHelper;
+    private static final QName JSON_POLICY = new QName(Namespaces.POLICY, "dataBinding.json");
 
     /**
      * Constructor.
@@ -60,6 +67,11 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
             switch (reader.next()) {
             case XMLStreamConstants.END_ELEMENT:
                 if ("binding.http".equals(reader.getName().getLocalPart())) {
+                    if (definition.getWireFormat() == null) {
+                        // make JSON the default serialization
+                        // TODO make this configurable
+                        definition.addIntent(JSON_POLICY);
+                    }
                     return definition;
                 }
                 break;
@@ -99,18 +111,22 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
 
     private void parseBindingAttributes(XMLStreamReader reader, HttpBindingDefinition definition, IntrospectionContext context) {
         String readTimeout = reader.getAttributeValue(null, "readTimeout");
-        definition.setReadTimeout(readTimeout);
+        if (readTimeout != null) {
+            definition.setReadTimeout(readTimeout);
+        }
         String numberOfRetries = reader.getAttributeValue(null, "numberOfRetries");
-        try {
-            definition.setNumberOfRetries(Integer.parseInt(numberOfRetries));
-        } catch (NumberFormatException e) {
-            InvalidValue failure = new InvalidValue("Invalid number of retries value ", reader);
-            context.addError(failure);
+        if (numberOfRetries != null) {
+            try {
+                definition.setNumberOfRetries(Integer.parseInt(numberOfRetries));
+            } catch (NumberFormatException e) {
+                InvalidValue failure = new InvalidValue("Invalid number of retries value ", reader);
+                context.addError(failure);
+            }
         }
         // validate
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"readTimeout".equals(name) || !"numberOfRetries".equals(name)) {
+            if (!"uri".equals(name) && !"readTimeout".equals(name) && !"numberOfRetries".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
@@ -153,12 +169,5 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
         definition.setAuthenticationType(auth);
 
     }
-
-    private static final String XML = "<binding.http readTimeout='10000' numberOfRetries='1' uri ='TestComponent'>" +
-            "<wireFormat type='testFormat'/>" +
-            "<responseWireFormat type='testFormat'/>" +
-            "<sslSettings alias='sslSettings'/>" +
-            "<authentication type='basic'/>" +
-            "</binding.http>";
 
 }
