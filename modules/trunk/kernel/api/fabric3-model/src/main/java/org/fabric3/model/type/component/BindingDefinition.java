@@ -55,6 +55,7 @@ public abstract class BindingDefinition extends AbstractPolicyAware implements C
     private URI targetUri;
     private QName type;
     private Document key;
+
     private Set<String> requiredCapabilities = new HashSet<String>();
 
     public BindingDefinition(URI targetUri, QName type, Document key) {
@@ -83,4 +84,12 @@ public abstract class BindingDefinition extends AbstractPolicyAware implements C
         requiredCapabilities.add(capability);
     }
 
+    /**
+     * Returns the encoding type required by the binding.  Standard encoding types are defined by {@link Encodings}.
+     *
+     * @return the encoding type required by the binding.
+     */
+    public String getEncoding() {
+        return Encodings.JAVA;
+    }
 }
