@@ -16,35 +16,18 @@
  */
 package org.fabric3.tests.binding.harness;
 
-import java.util.List;
-
-import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.OneWay;
 
 /**
+ * Simple interface that echos a basic type.
+ *
  * @version $Rev$ $Date$
  */
-public class EchoTest extends TestCase {
+public interface OneWayEchoService {
 
-    @Reference protected List<EchoService> service;
+    @OneWay
+    void echoString(String message);
 
-    public void testString() {
-    	int i = 0;
-    	for (EchoService echoService : service) {
-    		assertEquals("Hello", echoService.echoString("Hello"));
-    	}
-    }
+    void await() throws InterruptedException;
 
-    public void testInt() {
-        assertEquals(123, service.get(0).echoInt(123));
-    }
-
-    public void testFault() {
-        try {
-        	service.get(0).echoFault();
-            fail();
-        } catch (EchoFault echoFault) {
-            // OK
-        }
-    }
 }
