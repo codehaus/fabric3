@@ -21,6 +21,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.List;
+import javax.xml.namespace.QName;
+
+import org.oasisopen.sca.Constants;
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
@@ -30,17 +34,27 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
  * @version $Revision$ $Date$
  */
 public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
+    private static final QName ONEWAY = new QName(SCA_NS, "oneWay");
+    private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");
 
     @SuppressWarnings({"unchecked"})
-    public PhysicalOperationDefinition map(Operation o) {
+    public <T> PhysicalOperationDefinition map(Operation<T> o) {
 
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName(o.getName());
         operation.setEndsConversation(o.getConversationSequence() == Operation.CONVERSATION_END);
+        if (o.getIntents().contains(ONEWAY) || o.getIntents().contains(OASIS_ONEWAY)) {
+            operation.setOneWay(true);
+        }
         Type returnType = o.getOutputType().getPhysical();
         operation.setReturnType(getClassName(returnType));
 
-        DataType<List<? extends DataType<?>>> params = o.getInputType();
+        for (DataType<T> fault : o.getFaultTypes()) {
+            Type faultType = fault.getPhysical();
+            operation.addFaultType(getClassName(faultType));
+        }
+
+        DataType<List<DataType<T>>> params = o.getInputType();
         for (DataType<?> param : params.getLogical()) {
             Type paramType = param.getPhysical();
             operation.addParameter(getClassName(paramType));

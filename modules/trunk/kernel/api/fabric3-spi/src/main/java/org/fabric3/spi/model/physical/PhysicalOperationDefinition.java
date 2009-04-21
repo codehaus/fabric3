@@ -44,25 +44,18 @@ import java.util.Set;
  * Represents an operation.
  *
  * @version $Revision$ $Date$
- *          <p/>
- *          TODO Discuss with Jeremy/Jim on how to model MEPs, INOUT parameters, faults etc
  */
 public class PhysicalOperationDefinition implements Serializable {
     private static final long serialVersionUID = -4270990709748460450L;
 
-    // Parameters
     private List<String> parameterTypes = new LinkedList<String>();
-
-    // Return
+    private List<String> faultTypes = new LinkedList<String>();
     private String returnType;
-
-    // Name of the operation
     private String name;
-
-    // Callback
     private boolean callback;
-
+    private boolean oneWay;
     private boolean endsConversation;
+
 
     // Interceptors defined against the operation
     private Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
@@ -182,5 +175,41 @@ public class PhysicalOperationDefinition implements Serializable {
      */
     public void setEndsConversation(boolean endsConversation) {
         this.endsConversation = endsConversation;
+    }
+
+    /**
+     * Returns true if the operation is non-blocking.
+     *
+     * @return true if the operation is non-blocking
+     */
+    public boolean isOneWay() {
+        return oneWay;
+    }
+
+    /**
+     * Sets if the operation is non-blocking.
+     *
+     * @param oneWay true if the operation is non-blocking
+     */
+    public void setOneWay(boolean oneWay) {
+        this.oneWay = oneWay;
+    }
+
+    /**
+     * Returns the fault types.
+     *
+     * @return the fault types
+     */
+    public List<String> getFaultTypes() {
+        return faultTypes;
+    }
+
+    /**
+     * Adds a fault type.
+     *
+     * @param name the type
+     */
+    public void addFaultType(String name) {
+        faultTypes.add(name);
     }
 }
