@@ -52,9 +52,20 @@ public class JsonInterceptorDefinitionGenerator implements InterceptorDefinition
         List<String> faultClassNames = calculateFaultClassNames(operation);
 
         if (logicalBinding.getParent() instanceof LogicalService) {
-            return new JsonServiceInterceptorDefinition(parameterClassNames, returnClassNames, faultClassNames);
+            if (logicalBinding.isCallback()) {
+                // callbacks on the service side of a wire take a reference interceptor since the callback invocation originates there
+                return new JsonReferenceInterceptorDefinition(parameterClassNames, returnClassNames, faultClassNames);
+
+            } else {
+                return new JsonServiceInterceptorDefinition(parameterClassNames, returnClassNames, faultClassNames);
+            }
         } else {
-            return new JsonReferenceInterceptorDefinition(parameterClassNames, returnClassNames, faultClassNames);
+            if (logicalBinding.isCallback()) {
+                // callbacks on the reference side of a wire take a service interceptor since the callback is received there
+                return new JsonServiceInterceptorDefinition(parameterClassNames, returnClassNames, faultClassNames);
+            } else {
+                return new JsonReferenceInterceptorDefinition(parameterClassNames, returnClassNames, faultClassNames);
+            }
         }
     }
 
