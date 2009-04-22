@@ -61,4 +61,14 @@ public interface BindingProvider {
      * @throws BindingSelectionException if some error is encountered that inhibits binding configuration from being generated
      */
     void bind(LogicalReference source, LogicalService target) throws BindingSelectionException;
+
+    /**
+     * Configures callback binding information for the source reference and target service.
+     *
+     * @param source the source reference
+     * @param target the target service
+     * @throws BindingSelectionException if some error is encountered that inhibits callback binding configuration from being generated
+     */
+//    void createCallbackBinding(LogicalReference source, LogicalService target) throws BindingSelectionException;
+
 }

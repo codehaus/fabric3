@@ -82,6 +82,9 @@ public abstract class Bindable extends LogicalAttachPoint {
      */
     public final void overrideCallbackBindings(List<LogicalBinding<?>> bindings) {
         this.callbackBindings.clear();
+        for (LogicalBinding<?> binding : bindings) {
+            binding.setCallback(true);
+        }
         this.callbackBindings.addAll(bindings);
     }
 
@@ -118,6 +121,7 @@ public abstract class Bindable extends LogicalAttachPoint {
      * @param binding Binding to be added to the service or the reference.
      */
     public final void addCallbackBinding(LogicalBinding<?> binding) {
+        binding.setCallback(true);
         callbackBindings.add(binding);
     }
 

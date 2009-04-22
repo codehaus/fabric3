@@ -54,6 +54,7 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     private LogicalState state = LogicalState.NEW;
     private QName deployable;
     private boolean assigned;
+    private boolean callback;
 
     public LogicalBinding(BD definition, Bindable parent) {
         super(null, parent, TYPE);
@@ -130,5 +131,23 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
      */
     public void setAssigned(boolean assigned) {
         this.assigned = assigned;
+    }
+
+    /**
+     * True if this binding is a callback.
+     *
+     * @return true if this binding is a callback
+     */
+    public boolean isCallback() {
+        return callback;
+    }
+
+    /**
+     * Sets if this binding is a callback
+     *
+     * @param callback true if this binding is a callback
+     */
+    public void setCallback(boolean callback) {
+        this.callback = callback;
     }
 }
