@@ -21,6 +21,7 @@
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="SyncAsyncComposite" autowire="false">
 
+    <!-- JSON tests -->
     <component name="EchoTest">
         <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
         <reference name="service" target="EchoService">
@@ -29,6 +30,7 @@
             </binding.http>
         </reference>
     </component>
+
 
     <component name="EchoOneWayTest">
         <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>
@@ -56,5 +58,5 @@
             </binding.http>
         </service>
     </component>
-
+    <!-- end JSON tests -->
 </composite>
