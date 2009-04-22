@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.json;
+package org.fabric3.json.runtime;
 
 import java.net.URI;
 import java.util.List;
@@ -27,6 +27,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.util.ParamTypes;
+import org.fabric3.json.provision.JsonServiceInterceptorDefinition;
 
 /**
  * Creates JsonServiceInterceptor instances.

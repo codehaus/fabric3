@@ -24,15 +24,15 @@
            xmlns:f3-binding="urn:org.fabric3:binding">
 
     <component name="JsonInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}jsonPolicy">
-        <f3-impl:implementation.system class="org.fabric3.json.JsonInterceptorDefinitionGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.json.generator.JsonInterceptorDefinitionGenerator"/>
     </component>
 
-    <component name="JsonServiceInterceptorBuilder" f3-core:key="org.fabric3.json.JsonServiceInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.json.JsonServiceInterceptorBuilder"/>
+    <component name="JsonServiceInterceptorBuilder" f3-core:key="org.fabric3.json.provision.JsonServiceInterceptorDefinition">
+        <f3-impl:implementation.system class="org.fabric3.json.runtime.JsonServiceInterceptorBuilder"/>
     </component>
 
-    <component name="JsonReferenceInterceptorBuilder" f3-core:key="org.fabric3.json.JsonReferenceInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.json.JsonReferenceInterceptorBuilder"/>
+    <component name="JsonReferenceInterceptorBuilder" f3-core:key="org.fabric3.json.provision.JsonReferenceInterceptorDefinition">
+        <f3-impl:implementation.system class="org.fabric3.json.runtime.JsonReferenceInterceptorBuilder"/>
     </component>
 
 

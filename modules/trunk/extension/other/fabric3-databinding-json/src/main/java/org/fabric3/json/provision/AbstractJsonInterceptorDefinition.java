@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.json;
+package org.fabric3.json.provision;
 
 import java.util.List;
 

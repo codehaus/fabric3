@@ -14,19 +14,20 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.json;
+package org.fabric3.json.provision;
 
 import java.util.List;
 
 /**
- * Transforms from JSON to Java types. Placed on the reference side of the wire.
+ * An interceptor definition for a wire that requires transformation of data types from JSON to Java. The interceptor is placed on the service side of
+ * a wire.
  *
  * @version $Revision$ $Date$
  */
-public class JsonReferenceInterceptorDefinition extends AbstractJsonInterceptorDefinition {
-    private static final long serialVersionUID = -150370986016398221L;
+public class JsonServiceInterceptorDefinition extends AbstractJsonInterceptorDefinition {
+    private static final long serialVersionUID = 2773730543286556507L;
 
-    public JsonReferenceInterceptorDefinition(List<String> parameterTypes, String returnType, List<String> faultTypes) {
+    public JsonServiceInterceptorDefinition(List<String> parameterTypes, String returnType, List<String> faultTypes) {
         super(parameterTypes, returnType, faultTypes);
     }
 }

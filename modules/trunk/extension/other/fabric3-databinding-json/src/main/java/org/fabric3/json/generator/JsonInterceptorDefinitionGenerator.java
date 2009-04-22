@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.json;
+package org.fabric3.json.generator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,8 @@ import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.fabric3.json.provision.JsonReferenceInterceptorDefinition;
+import org.fabric3.json.provision.JsonServiceInterceptorDefinition;
 
 /**
  * Generates interceptor definitions for operations marked with the JSON intent.

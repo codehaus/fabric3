@@ -28,6 +28,7 @@ import org.oasisopen.sca.ServiceRuntimeException;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.json.runtime.JsonReferenceInterceptor;
 
 /**
  * @version $Revision$ $Date$
