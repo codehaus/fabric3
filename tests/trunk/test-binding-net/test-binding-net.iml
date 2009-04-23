@@ -16,6 +16,19 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library name="javax.xml.bind:jaxb-api:2.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.2">
         <CLASSES>

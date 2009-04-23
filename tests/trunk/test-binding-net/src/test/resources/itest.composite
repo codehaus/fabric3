@@ -33,9 +33,9 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" name="HessianTestComposite">
 
-    <!--<include name="SyncAsyncComposite"/>-->
+    <include name="SyncAsyncComposite"/>
     <include name="CallbackComposite"/>
     <include name="ConversationComposite"/>
-    <!--<include name="ScopeComposite"/>-->
+    <include name="ScopeComposite"/>
 
 </composite>
