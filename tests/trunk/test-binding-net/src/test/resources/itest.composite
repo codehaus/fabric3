@@ -35,7 +35,7 @@
 
     <!--<include name="SyncAsyncComposite"/>-->
     <include name="CallbackComposite"/>
-    <!--<include name="ConversationComposite"/>-->
+    <include name="ConversationComposite"/>
     <!--<include name="ScopeComposite"/>-->
 
 </composite>
