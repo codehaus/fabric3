@@ -28,10 +28,11 @@ public interface NetRequestHandler {
     /**
      * Registers a wire for a request path, i.e. the path of the service URI.
      *
-     * @param path the path part of the service URI
-     * @param wire the wire
+     * @param path        the path part of the service URI
+     * @param callbackUri the callback URI associated with the wire or null if it is unidirectional
+     * @param wire        the wire
      */
-    void register(String path, Wire wire);
+    void register(String path, String callbackUri, Wire wire);
 
     /**
      * Unregisters a wire for a request path, i.e. the path of the service URI.

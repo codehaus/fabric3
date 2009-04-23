@@ -40,7 +40,12 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
     }
 
     public void attachToSource(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        service.register(TransportType.HTTP, source.getUri().toString(), wire);
+        String sourceUri = source.getUri().toString();
+        String callbackUri = null;
+        if (target.getCallbackUri() != null) {
+            callbackUri = target.getCallbackUri().toString();
+        }
+        service.register(TransportType.HTTP, sourceUri, callbackUri, wire);
     }
 
     public void detachFromSource(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {

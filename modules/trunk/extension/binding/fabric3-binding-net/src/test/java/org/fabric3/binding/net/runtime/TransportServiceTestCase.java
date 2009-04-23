@@ -107,7 +107,7 @@ public class TransportServiceTestCase extends TestCase {
         EasyMock.expect(wire.getInvocationChains()).andReturn(chains).atLeastOnce();
         EasyMock.replay(wire);
 
-        service.register(TransportType.HTTP, "/service", wire);
+        service.register(TransportType.HTTP, "/service", null, wire);
     }
 
 }

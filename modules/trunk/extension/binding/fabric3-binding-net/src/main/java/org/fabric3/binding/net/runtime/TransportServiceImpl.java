@@ -93,10 +93,10 @@ public class TransportServiceImpl implements TransportService {
 //        }
 //    }
 
-    public void register(TransportType type, String path, Wire wire) {
+    public void register(TransportType type, String path, String callbackUri, Wire wire) {
         switch (type) {
         case HTTP:
-            httpRequestHandler.register(path, wire);
+            httpRequestHandler.register(path, callbackUri, wire);
             break;
         case HTTPS:
             throw new UnsupportedOperationException();

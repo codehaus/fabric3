@@ -44,11 +44,13 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_0;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+import org.osoa.sca.Conversation;
 
 import org.fabric3.binding.net.provision.NetConstants;
 import static org.fabric3.binding.net.provision.NetConstants.OPERATION_NAME;
 import org.fabric3.binding.net.runtime.NetRequestHandler;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
@@ -66,11 +68,12 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
     private String contentType = "text/plain; charset=UTF-8";
     private volatile HttpRequest request;
     private volatile boolean readingChunks;
-    private Map<String, Wire> wires = new ConcurrentHashMap<String, Wire>();
+    private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
     private StringBuilder requestContent = new StringBuilder();
 
-    public void register(String path, Wire wire) {
-        wires.put(path, wire);
+    public void register(String path, String callbackUri, Wire wire) {
+        Holder holder = new Holder (callbackUri, wire);
+        wires.put(path, holder);
     }
 
     public void unregister(String path) {
@@ -104,12 +107,29 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
 
     @SuppressWarnings({"unchecked"})
     private void invoke(HttpRequest request, String content, MessageEvent event) throws IOException, ClassNotFoundException {
+        Holder holder = wires.get(request.getUri());
+        if (holder == null) {
+            // FIXME
+            throw new AssertionError();
+        }
+        Wire wire = holder.getWire();
+        String callbackUri = holder.getCallbackUri();
         String routing = request.getHeader(NetConstants.ROUTING);
         WorkContext context = new WorkContext();
         if (routing != null) {
             ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(Base64.decode(routing)));
             List<CallFrame> stack = (List<CallFrame>) stream.readObject();
             context.addCallFrames(stack);
+            CallFrame previous = context.peekCallFrame();
+            // Copy correlation and conversation information from incoming frame to new frame
+            // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
+            // bidirectional service
+            Object id = previous.getCorrelationId(Object.class);
+            ConversationContext conversationContext = previous.getConversationContext();
+            Conversation conversation = previous.getConversation();
+            CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
+            context.addCallFrame(frame);
+
         } else {
             //TODO FIXME
             context.addCallFrames(new ArrayList<CallFrame>());
@@ -117,11 +137,6 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
         Message message = new MessageImpl();
         message.setWorkContext(context);
         message.setBody(content);
-        Wire wire = wires.get(request.getUri());
-        if (wire == null) {
-            // FIXME
-            throw new AssertionError();
-        }
         Interceptor interceptor = selectOperation(request, wire);
         Message response = interceptor.invoke(message);
         writeResponse(event, response);
@@ -184,4 +199,26 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
             future.addListener(ChannelFutureListener.CLOSE);
         }
     }
+
+    private class Holder {
+        private String callbackUri;
+        private Wire wire;
+
+        public Holder(String callbackUri, Wire wire) {
+            this.callbackUri = callbackUri;
+            this.wire = wire;
+        }
+
+
+        public String getCallbackUri() {
+            return callbackUri;
+        }
+
+        public Wire getWire() {
+            return wire;
+        }
+    }
+
+
+
 }

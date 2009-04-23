@@ -20,14 +20,28 @@ import org.fabric3.binding.net.provision.TransportType;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Manages creation of transport channels.
+ * Registers wires for services with an transport channel.
  *
  * @version $Revision$ $Date$
  */
 public interface TransportService {
 
-    void register(TransportType type, String path, Wire wire);
+    /**
+     * Register the wire.
+     *
+     * @param type        the transport channel type
+     * @param path        the service path which is its relative URI
+     * @param callbackUri the callback URI or null if the service is unidirectional
+     * @param wire        the wire
+     */
+    void register(TransportType type, String path, String callbackUri, Wire wire);
 
+    /**
+     * Unregister the wire.
+     *
+     * @param type the transport channel type
+     * @param path the service path which is its relative URI
+     */
     void unregister(TransportType type, String path);
 
 }
