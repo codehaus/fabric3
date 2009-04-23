@@ -89,8 +89,18 @@ public class HttpRequestResponseInterceptor implements Interceptor {
         }
         Object body = msg.getBody();
         if (body != null) {
-            ChannelBuffer buf = ChannelBuffers.copiedBuffer(body.toString(), "UTF-8");
-            request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(body.toString().length()));
+            String str;
+            if (body.getClass().isArray()) {
+                Object[] payload = (Object[]) body;
+                if (payload.length > 1) {
+                    throw new UnsupportedOperationException("Multiple paramters not supported");
+                }
+                str = payload[0].toString();
+            } else {
+                str = body.toString();
+            }
+            request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(str.length()));
+            ChannelBuffer buf = ChannelBuffers.copiedBuffer(str, "UTF-8");
             request.setContent(buf);
         }
         channel.write(request);
