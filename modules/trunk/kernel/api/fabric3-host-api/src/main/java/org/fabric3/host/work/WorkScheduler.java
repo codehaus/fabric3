@@ -34,6 +34,8 @@
  */
 package org.fabric3.host.work;
 
+import java.util.concurrent.ExecutorService;
+
 /**
  * Defines the contract for scheduling asychronous units of work.
  * 
@@ -46,7 +48,7 @@ package org.fabric3.host.work;
  * </p>
  *
  */
-public interface WorkScheduler {
+public interface WorkScheduler extends ExecutorService {
     
     /**
      * Schedules a unit of work for future execution. The notification listener 

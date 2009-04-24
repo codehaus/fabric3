@@ -17,6 +17,9 @@
 package org.fabric3.threadpool;
 
 import java.util.Set;
+import java.util.List;
+import java.util.Collections;
+import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,20 +29,21 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.PausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.management.WorkSchedulerMBean;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
 
 /**
  * Thread pool based implementation of the work scheduler.
  *
  */
 @EagerInit
-public class ThreadPoolWorkScheduler implements WorkScheduler, WorkSchedulerMBean {
+public class ThreadPoolWorkScheduler extends AbstractExecutorService implements WorkScheduler, WorkSchedulerMBean {
 
     private ThreadPoolExecutor executor;
     private final Set<DefaultPausableWork> workInProgress = new CopyOnWriteArraySet<DefaultPausableWork>();
@@ -91,7 +95,34 @@ public class ThreadPoolWorkScheduler implements WorkScheduler, WorkSchedulerMBea
 		}
         
 	}
-	
+
+    public void execute(final Runnable runnable) {
+        scheduleWork(new DefaultPausableWork() {
+        	public void execute() {
+        		runnable.run();
+        	}
+        });
+    }
+
+    public void shutdown() {
+    }
+
+    public List<Runnable> shutdownNow() {
+        return Collections.emptyList();
+    }
+
+    public boolean isShutdown() {
+        return false;
+    }
+
+    public boolean isTerminated() {
+        return false;
+    }
+
+    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        return false;
+    }
+
 	private class DecoratingWork implements Runnable {
 
 		private DefaultPausableWork work;

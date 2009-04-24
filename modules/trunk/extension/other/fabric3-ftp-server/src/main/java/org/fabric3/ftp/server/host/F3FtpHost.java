@@ -19,7 +19,6 @@ package org.fabric3.ftp.server.host;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutorService;
 
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
@@ -61,7 +60,6 @@ public class F3FtpHost implements FtpHost {
      */
     @Init
     public void start() throws IOException {
-        ExecutorService filterExecutor = new F3ExecutorService(workScheduler);
         InetSocketAddress socketAddress;
         if (listenAddress == null) {
             socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
@@ -71,7 +69,7 @@ public class F3FtpHost implements FtpHost {
         acceptor = new NioSocketAcceptor();
         SocketSessionConfig config = acceptor.getSessionConfig();
         config.setIdleTime(IdleStatus.BOTH_IDLE, idleTimeout);
-        acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(filterExecutor));
+        acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(workScheduler));
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(codecFactory));
         acceptor.setHandler(ftpHandler);
         monitor.extensionStarted();

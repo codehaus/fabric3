@@ -18,6 +18,12 @@ package org.fabric3.timer.quartz;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+import java.util.List;
+import java.util.Collection;
 
 import javax.transaction.TransactionManager;
 
@@ -45,6 +51,59 @@ public class QuartzTimerServiceTestCase extends TestCase {
         WorkScheduler workScheduler = new WorkScheduler() {
             public <T extends DefaultPausableWork> void scheduleWork(T work) {
                 work.run();
+            }
+
+            public void shutdown() {
+
+            }
+
+            public List<Runnable> shutdownNow() {
+                return null;
+            }
+
+            public boolean isShutdown() {
+                return false;
+            }
+
+            public boolean isTerminated() {
+                return false;
+            }
+
+            public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+                return false;
+            }
+
+            public <T> Future<T> submit(Callable<T> task) {
+                return null;
+            }
+
+            public <T> Future<T> submit(Runnable task, T result) {
+                return null;
+            }
+
+            public Future<?> submit(Runnable task) {
+                return null;
+            }
+
+            public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks) throws InterruptedException {
+                return null;
+            }
+
+            public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
+                return null;
+            }
+
+            public <T> T invokeAny(Collection<Callable<T>> tasks) throws InterruptedException, ExecutionException {
+                return null;
+            }
+
+            public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
+                    throws InterruptedException, ExecutionException, TimeoutException {
+                return null;
+            }
+
+            public void execute(Runnable command) {
+
             }
         };
         timerService = new QuartzTimerService(workScheduler, tm);
