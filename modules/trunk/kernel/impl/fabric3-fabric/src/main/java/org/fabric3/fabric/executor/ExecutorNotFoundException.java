@@ -42,10 +42,6 @@ import org.fabric3.spi.executor.ExecutionException;
  * @version $Rev$ $Date$
  */
 public class ExecutorNotFoundException extends ExecutionException {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 2564999535495010867L;
 
     public ExecutorNotFoundException(String message, String identifier) {
