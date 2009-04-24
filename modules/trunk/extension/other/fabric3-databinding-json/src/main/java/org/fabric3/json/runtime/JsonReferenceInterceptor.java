@@ -83,9 +83,9 @@ public class JsonReferenceInterceptor implements Interceptor {
             mapper.writeValue(writer, body[0]);
         } else {
             // TODO support multiple params
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Multiple paramters not supported");
         }
-        msg.setBody(writer.toString());
+        body[0] = writer.toString();
     }
 
     private void read(Message msg) throws IOException {

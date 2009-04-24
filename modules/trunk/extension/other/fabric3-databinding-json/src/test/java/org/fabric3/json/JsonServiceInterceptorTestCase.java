@@ -16,16 +16,14 @@
  */
 package org.fabric3.json;
 
-import java.io.StringWriter;
-
 import junit.framework.TestCase;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.EasyMock;
 
+import org.fabric3.json.runtime.JsonServiceInterceptor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.json.runtime.JsonServiceInterceptor;
 
 /**
  * @version $Revision$ $Date$
@@ -51,9 +49,7 @@ public class JsonServiceInterceptorTestCase extends TestCase {
         Interceptor next = EasyMock.createMock(Interceptor.class);
         MessageImpl ret = new MessageImpl();
         IllegalArgumentException exception = new IllegalArgumentException();
-        StringWriter writer = new StringWriter();
-        mapper.writeValue(writer, exception);
-        ret.setBodyWithFault(writer.toString());
+        ret.setBodyWithFault(exception);
         EasyMock.expect(next.invoke(EasyMock.isA(Message.class))).andReturn(ret);
         EasyMock.replay(next);
         interceptor.setNext(next);
