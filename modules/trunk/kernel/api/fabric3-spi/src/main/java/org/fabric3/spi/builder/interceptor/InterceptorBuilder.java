@@ -43,7 +43,7 @@ import org.fabric3.spi.wire.Interceptor;
  *
  * @version $Rev$ $Date$
  */
-public interface InterceptorBuilder<PID extends PhysicalInterceptorDefinition, I extends Interceptor> {
+public interface InterceptorBuilder<PID extends PhysicalInterceptorDefinition> {
 
     /**
      * Return an interceptor for the given interceptor definition metadata
@@ -52,6 +52,6 @@ public interface InterceptorBuilder<PID extends PhysicalInterceptorDefinition, I
      * @return the interceptor
      * @throws BuilderException if an error ocurrs returning the interceptor
      */
-    I build(PID definition) throws BuilderException;
-    
+    Interceptor build(PID definition) throws BuilderException;
+
 }

@@ -32,15 +32,14 @@ import org.fabric3.spi.wire.Interceptor;
  *
  * @version $Revision$ $Date$
  */
-public abstract class AbstractTransformingInterceptorBuilder<T extends AbstractTransformingInterceptorDefinition, I extends Interceptor>
-        implements InterceptorBuilder<T, I> {
+public abstract class AbstractTransformingInterceptorBuilder<T extends AbstractTransformingInterceptorDefinition> implements InterceptorBuilder<T> {
     private ClassLoaderRegistry classLoaderRegistry;
 
     public AbstractTransformingInterceptorBuilder(ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public I build(T definition) throws BuilderException {
+    public Interceptor build(T definition) throws BuilderException {
         URI classLoaderId = definition.getWireClassLoaderId();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
         String encoding = definition.getEncoding();
@@ -65,7 +64,7 @@ public abstract class AbstractTransformingInterceptorBuilder<T extends AbstractT
      * @return the transforming interceptor
      * @throws TransformingBuilderException if an error occurs during the build process
      */
-    protected abstract I build(String encoding, JAXBContext context, ClassLoader classLoader) throws TransformingBuilderException;
+    protected abstract Interceptor build(String encoding, JAXBContext context, ClassLoader classLoader) throws TransformingBuilderException;
 
     /**
      * Constructs a JAXB context by introspecting a set of classnames

@@ -33,7 +33,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianServiceInterceptorBuilder implements InterceptorBuilder<HessianServiceInterceptorDefinition, HessianServiceInterceptor> {
+public class HessianServiceInterceptorBuilder implements InterceptorBuilder<HessianServiceInterceptorDefinition> {
     private ClassLoaderRegistry registry;
     private SerializerFactory serializerFactory;
 

@@ -60,7 +60,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $$Rev$$ $$Date$$
  */
 public class ConnectorImpl implements Connector {
-    private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>> interceptorBuilders;
+    private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?>> interceptorBuilders;
     private Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers;
     private Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers;
 
@@ -68,7 +68,7 @@ public class ConnectorImpl implements Connector {
     }
 
     @Reference
-    public void setInterceptorBuilders(Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>> interceptorBuilders) {
+    public void setInterceptorBuilders(Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?>> interceptorBuilders) {
         this.interceptorBuilders = interceptorBuilders;
     }
 
@@ -131,7 +131,7 @@ public class ConnectorImpl implements Connector {
         for (PhysicalOperationDefinition operation : definition.getOperations()) {
             InvocationChain chain = new InvocationChainImpl(operation);
             for (PhysicalInterceptorDefinition interceptorDefinition : operation.getInterceptors()) {
-                InterceptorBuilder<? super PhysicalInterceptorDefinition, ?> builder = getBuilder(interceptorDefinition);
+                InterceptorBuilder<? super PhysicalInterceptorDefinition> builder = getBuilder(interceptorDefinition);
                 Interceptor interceptor = builder.build(interceptorDefinition);
                 chain.addInterceptor(interceptor);
             }
@@ -142,8 +142,8 @@ public class ConnectorImpl implements Connector {
 
 
     @SuppressWarnings("unchecked")
-    protected <PID extends PhysicalInterceptorDefinition> InterceptorBuilder<PID, ?> getBuilder(PID definition) {
-        return (InterceptorBuilder<PID, ?>) interceptorBuilders.get(definition.getClass());
+    protected <PID extends PhysicalInterceptorDefinition> InterceptorBuilder<PID> getBuilder(PID definition) {
+        return (InterceptorBuilder<PID>) interceptorBuilders.get(definition.getClass());
 
     }
 

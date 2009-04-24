@@ -32,11 +32,12 @@ import org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * @version $Revision$ $Date$
  */
-public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbInterceptorDefinition, JaxbInterceptor> {
+public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbInterceptorDefinition> {
 
     private ClassLoaderRegistry classLoaderRegistry;
 
@@ -44,7 +45,7 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public JaxbInterceptor build(JaxbInterceptorDefinition definition) throws BuilderException {
+    public Interceptor build(JaxbInterceptorDefinition definition) throws BuilderException {
 
         URI classLoaderId = definition.getWireClassLoaderId();
 

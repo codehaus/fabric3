@@ -20,6 +20,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Builder for the authorization interceptor. The builde is injected with the authorization 
@@ -33,7 +34,7 @@ import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
  * @version $Revision$ $Date$
  *
  */
-public class AuthorizationInterceptorBuilder implements InterceptorBuilder<AuthorizationInterceptorDefinition, AuthorizationInterceptor> {
+public class AuthorizationInterceptorBuilder implements InterceptorBuilder<AuthorizationInterceptorDefinition> {
     
     private AuthorizationService authorizationService;
 
@@ -52,7 +53,7 @@ public class AuthorizationInterceptorBuilder implements InterceptorBuilder<Autho
      * @param definition Authorization interceptor definition.
      * @return An instance of the authorization interceptor.
      */
-    public AuthorizationInterceptor build(AuthorizationInterceptorDefinition definition) throws BuilderException {
+    public Interceptor build(AuthorizationInterceptorDefinition definition) throws BuilderException {
         return new AuthorizationInterceptor(definition.getRoles(), authorizationService);
     }
 

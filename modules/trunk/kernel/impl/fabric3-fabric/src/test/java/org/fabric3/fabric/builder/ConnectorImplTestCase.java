@@ -59,13 +59,14 @@ public class ConnectorImplTestCase extends TestCase {
     private PhysicalWireDefinition definition;
     private PhysicalOperationDefinition operation;
     private PhysicalOperationDefinition callback;
-    private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>> builders;
+    private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?>> builders;
 
     public void testCreateWire() throws Exception {
         Wire wire = connector.createWire(definition);
         assertEquals(2, wire.getInvocationChains().size());
     }
 
+    @SuppressWarnings({"unchecked"})
     public void testDispatchToBuilder() throws Exception {
         InterceptorBuilder builder = EasyMock.createMock(InterceptorBuilder.class);
         EasyMock.expect(builder.build(EasyMock.isA(PhysicalInterceptorDefinition.class))).andReturn(null).times(2);
@@ -83,7 +84,7 @@ public class ConnectorImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         connector = new ConnectorImpl();
-        builders = new HashMap<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>>();
+        builders = new HashMap<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?>>();
         connector.setInterceptorBuilders(builders);
 
         PhysicalWireSourceDefinition sourceDefinition = new PhysicalWireSourceDefinition();

@@ -28,6 +28,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.util.ParamTypes;
+import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.json.provision.JsonReferenceInterceptorDefinition;
 
 /**
@@ -36,7 +37,7 @@ import org.fabric3.json.provision.JsonReferenceInterceptorDefinition;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JsonReferenceInterceptorBuilder implements InterceptorBuilder<JsonReferenceInterceptorDefinition, JsonReferenceInterceptor> {
+public class JsonReferenceInterceptorBuilder implements InterceptorBuilder<JsonReferenceInterceptorDefinition> {
     private ClassLoaderRegistry registry;
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -44,7 +45,7 @@ public class JsonReferenceInterceptorBuilder implements InterceptorBuilder<JsonR
         this.registry = registry;
     }
 
-    public JsonReferenceInterceptor build(JsonReferenceInterceptorDefinition definition) throws BuilderException {
+    public Interceptor build(JsonReferenceInterceptorDefinition definition) throws BuilderException {
         URI classloaderId = definition.getWireClassLoaderId();
         ClassLoader loader = registry.getClassLoader(classloaderId);
         List<String> list = definition.getFaultTypes();

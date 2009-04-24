@@ -26,6 +26,7 @@ import org.fabric3.hessian.provision.HessianReferenceInterceptorDefinition;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Creates HessianReferenceInterceptor instances.
@@ -33,7 +34,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianReferenceInterceptorBuilder implements InterceptorBuilder<HessianReferenceInterceptorDefinition, HessianReferenceInterceptor> {
+public class HessianReferenceInterceptorBuilder implements InterceptorBuilder<HessianReferenceInterceptorDefinition> {
     private ClassLoaderRegistry registry;
     private SerializerFactory serializerFactory;
 
@@ -42,7 +43,7 @@ public class HessianReferenceInterceptorBuilder implements InterceptorBuilder<He
         this.serializerFactory = new SerializerFactory();
     }
 
-    public HessianReferenceInterceptor build(HessianReferenceInterceptorDefinition definition) throws BuilderException {
+    public Interceptor build(HessianReferenceInterceptorDefinition definition) throws BuilderException {
         URI classloaderId = definition.getWireClassLoaderId();
         ClassLoader loader = registry.getClassLoader(classloaderId);
         return new HessianReferenceInterceptor(serializerFactory, loader);

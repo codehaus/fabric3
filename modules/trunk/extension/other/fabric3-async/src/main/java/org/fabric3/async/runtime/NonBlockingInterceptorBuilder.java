@@ -23,13 +23,14 @@ import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Creates a non-blocking interceptor
  *
  * @version $Rev$ $Date$
  */
-public class NonBlockingInterceptorBuilder implements InterceptorBuilder<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
+public class NonBlockingInterceptorBuilder implements InterceptorBuilder<NonBlockingInterceptorDefinition> {
     private WorkScheduler scheduler;
     private NonBlockingInvocationMonitor monitor;
 
@@ -38,7 +39,7 @@ public class NonBlockingInterceptorBuilder implements InterceptorBuilder<NonBloc
         this.monitor = monitor;
     }
 
-    public NonBlockingInterceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
+    public Interceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
         return new NonBlockingInterceptor(scheduler, monitor);
     }
 

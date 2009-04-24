@@ -30,7 +30,7 @@ import org.fabric3.spi.wire.Interceptor;
  *
  * @version $Revision$ $Date$
  */
-public class SimpleInterceptorBuilder implements InterceptorBuilder<SimpleInterceptorDefinition, Interceptor> {
+public class SimpleInterceptorBuilder implements InterceptorBuilder<SimpleInterceptorDefinition> {
     private ClassLoaderRegistry registry;
 
     public SimpleInterceptorBuilder(@Reference ClassLoaderRegistry registry) {

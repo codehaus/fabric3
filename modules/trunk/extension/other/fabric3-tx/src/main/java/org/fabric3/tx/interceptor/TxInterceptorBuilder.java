@@ -23,11 +23,12 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * @version $Revision$ $Date$
  */
-public class TxInterceptorBuilder implements InterceptorBuilder<TxInterceptorDefinition, TxInterceptor> {
+public class TxInterceptorBuilder implements InterceptorBuilder<TxInterceptorDefinition> {
 
     private TransactionManager transactionManager;
     private TxMonitor monitor;
@@ -37,7 +38,7 @@ public class TxInterceptorBuilder implements InterceptorBuilder<TxInterceptorDef
         this.monitor = monitor;
     }
 
-    public TxInterceptor build(TxInterceptorDefinition interceptorDefinition) throws BuilderException {
+    public Interceptor build(TxInterceptorDefinition interceptorDefinition) throws BuilderException {
         return new TxInterceptor(transactionManager, interceptorDefinition.getAction(), monitor);
     }
 

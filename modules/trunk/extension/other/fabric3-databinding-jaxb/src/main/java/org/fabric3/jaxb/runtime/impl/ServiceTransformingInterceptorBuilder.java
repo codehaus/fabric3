@@ -25,14 +25,14 @@ import org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition;
 import org.fabric3.jaxb.runtime.spi.DataBindingTransformerFactory;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Builds a transforming interceptor for the service side of a wire.
  *
  * @version $Revision$ $Date$
  */
-public class ServiceTransformingInterceptorBuilder
-        extends AbstractTransformingInterceptorBuilder<ServiceTransformingInterceptorDefinition, TransformingInterceptor<?, ?>> {
+public class ServiceTransformingInterceptorBuilder extends AbstractTransformingInterceptorBuilder<ServiceTransformingInterceptorDefinition> {
     private Map<String, DataBindingTransformerFactory<?>> factories;
 
     public ServiceTransformingInterceptorBuilder(@Reference ClassLoaderRegistry classLoaderRegistry) {
@@ -45,8 +45,7 @@ public class ServiceTransformingInterceptorBuilder
     }
 
     @SuppressWarnings({"unchecked"})
-    protected TransformingInterceptor<?, ?> build(String encoding, JAXBContext context, ClassLoader classLoader)
-            throws TransformingBuilderException {
+    protected Interceptor build(String encoding, JAXBContext context, ClassLoader classLoader) throws TransformingBuilderException {
         DataBindingTransformerFactory<?> factory = factories.get(encoding);
         if (factory == null) {
             throw new TransformingBuilderException("No DataBindingTransformerFactory found for: " + encoding);

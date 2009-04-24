@@ -27,6 +27,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.util.ParamTypes;
+import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.json.provision.JsonServiceInterceptorDefinition;
 
 /**
@@ -35,7 +36,7 @@ import org.fabric3.json.provision.JsonServiceInterceptorDefinition;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JsonServiceInterceptorBuilder implements InterceptorBuilder<JsonServiceInterceptorDefinition, JsonServiceInterceptor> {
+public class JsonServiceInterceptorBuilder implements InterceptorBuilder<JsonServiceInterceptorDefinition> {
     private ClassLoaderRegistry registry;
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -43,7 +44,7 @@ public class JsonServiceInterceptorBuilder implements InterceptorBuilder<JsonSer
         this.registry = registry;
     }
 
-    public JsonServiceInterceptor build(JsonServiceInterceptorDefinition definition) throws BuilderException {
+    public Interceptor build(JsonServiceInterceptorDefinition definition) throws BuilderException {
         URI classloaderId = definition.getWireClassLoaderId();
         ClassLoader loader = registry.getClassLoader(classloaderId);
         List<String> list = definition.getParameterTypes();
