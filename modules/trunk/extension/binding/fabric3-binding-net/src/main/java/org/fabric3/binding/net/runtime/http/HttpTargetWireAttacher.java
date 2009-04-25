@@ -24,13 +24,15 @@ import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.oasisopen.sca.annotation.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
+import org.fabric3.binding.net.runtime.OneWayClientHandler;
+import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -45,9 +47,14 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
+    private CommunicationsMonitor monitor;
     private ChannelFactory factory;
     private String httpAddress = "127.0.0.1";
     private int httpPort = 8282;
+
+    public HttpTargetWireAttacher(@Monitor CommunicationsMonitor monitor) {
+        this.monitor = monitor;
+    }
 
     // FIXME this should be configured to same value as TransportServiceImpl
     @Property(required = false)
@@ -98,7 +105,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
             throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
-        SimpleChannelHandler handler = new SimpleChannelHandler();
+        OneWayClientHandler handler = new OneWayClientHandler(monitor);
         HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler);
         bootstrap.setPipelineFactory(pipeline);
 
@@ -108,7 +115,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         InetSocketAddress address = new InetSocketAddress(httpAddress, httpPort);
         // TODO support method overloading
         String name = operation.getName();
-        HttpOneWayInterceptor interceptor = new HttpOneWayInterceptor(path, name, bootstrap, address);
+        HttpOneWayInterceptor interceptor = new HttpOneWayInterceptor(path, name, bootstrap, address, monitor);
         chain.addInterceptor(interceptor);
     }
 

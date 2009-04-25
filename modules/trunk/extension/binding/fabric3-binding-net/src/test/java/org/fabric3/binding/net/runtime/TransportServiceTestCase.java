@@ -79,7 +79,7 @@ public class TransportServiceTestCase extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TransportServiceMonitor monitor = EasyMock.createNiceMock(TransportServiceMonitor.class);
+        CommunicationsMonitor monitor = EasyMock.createNiceMock(CommunicationsMonitor.class);
         TransportServiceImpl service = new TransportServiceImpl(new MockScheduler(), monitor);
         service.setHttpPort(8989);
         service.init();

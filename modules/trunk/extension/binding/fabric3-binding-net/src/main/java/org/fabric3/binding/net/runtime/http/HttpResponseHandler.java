@@ -24,8 +24,10 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
+import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.oasisopen.sca.ServiceRuntimeException;
 
 /**
  * Handles HTTP responses on the client side for request-response style interactions. This handler is placed on the reference side of an invocation
@@ -77,4 +79,12 @@ public class HttpResponseHandler extends SimpleChannelHandler {
         }
         return null;
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+        ctx.getChannel().close();
+        // report error to the client as this is a blocking operation
+        throw new ServiceRuntimeException(e.getCause());
+    }
+
 }

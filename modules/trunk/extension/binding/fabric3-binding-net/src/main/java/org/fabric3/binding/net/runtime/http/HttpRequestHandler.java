@@ -30,6 +30,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
+import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
@@ -46,9 +47,11 @@ import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_0;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import org.osoa.sca.Conversation;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.provision.NetConstants;
 import static org.fabric3.binding.net.provision.NetConstants.OPERATION_NAME;
 import org.fabric3.binding.net.runtime.NetRequestHandler;
+import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -65,14 +68,19 @@ import org.fabric3.spi.wire.Wire;
  */
 @ChannelPipelineCoverage("one")
 public class HttpRequestHandler extends SimpleChannelHandler implements NetRequestHandler {
+    private CommunicationsMonitor monitor;
     private String contentType = "text/plain; charset=UTF-8";
     private volatile HttpRequest request;
     private volatile boolean readingChunks;
     private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
     private StringBuilder requestContent = new StringBuilder();
 
+    public HttpRequestHandler(@Monitor CommunicationsMonitor monitor) {
+        this.monitor = monitor;
+    }
+
     public void register(String path, String callbackUri, Wire wire) {
-        Holder holder = new Holder (callbackUri, wire);
+        Holder holder = new Holder(callbackUri, wire);
         wires.put(path, holder);
     }
 
@@ -109,8 +117,7 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
     private void invoke(HttpRequest request, String content, MessageEvent event) throws IOException, ClassNotFoundException {
         Holder holder = wires.get(request.getUri());
         if (holder == null) {
-            // FIXME
-            throw new AssertionError();
+            throw new AssertionError("Holder not found for request:" + request.getUri());
         }
         Wire wire = holder.getWire();
         String callbackUri = holder.getCallbackUri();
@@ -131,7 +138,7 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
             context.addCallFrame(frame);
 
         } else {
-            //TODO FIXME
+            // Tolerate and empty callframe
             context.addCallFrames(new ArrayList<CallFrame>());
         }
         Message message = new MessageImpl();
@@ -200,6 +207,13 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
         }
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
+            throws Exception {
+        monitor.error(e.getCause());
+        e.getChannel().close();
+    }
+
     private class Holder {
         private String callbackUri;
         private Wire wire;
@@ -218,7 +232,6 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
             return wire;
         }
     }
-
 
 
 }

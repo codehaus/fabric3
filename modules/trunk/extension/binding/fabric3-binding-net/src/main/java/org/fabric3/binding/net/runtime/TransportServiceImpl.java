@@ -38,7 +38,7 @@ import org.fabric3.spi.wire.Wire;
  */
 public class TransportServiceImpl implements TransportService {
     private final WorkScheduler scheduler;
-    private TransportServiceMonitor monitor;
+    private CommunicationsMonitor monitor;
     private ChannelFactory factory;
     private Channel httpChannel;
 
@@ -47,7 +47,7 @@ public class TransportServiceImpl implements TransportService {
     private int httpPort = 8282;
     private HttpRequestHandler httpRequestHandler;
 
-    public TransportServiceImpl(@Reference WorkScheduler scheduler, @Monitor TransportServiceMonitor monitor) {
+    public TransportServiceImpl(@Reference WorkScheduler scheduler, @Monitor CommunicationsMonitor monitor) {
         this.scheduler = scheduler;
         this.monitor = monitor;
     }
@@ -117,7 +117,7 @@ public class TransportServiceImpl implements TransportService {
     private void createHttpChannel() {
         // FIXME use WorkManager thread pooling
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
-        httpRequestHandler = new HttpRequestHandler();
+        httpRequestHandler = new HttpRequestHandler(monitor);
         HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);

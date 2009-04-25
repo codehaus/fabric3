@@ -34,6 +34,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import org.fabric3.binding.net.provision.NetConstants;
+import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -50,13 +51,15 @@ public class HttpOneWayInterceptor implements Interceptor {
     private String operationName;
     private ClientBootstrap boostrap;
     private SocketAddress address;
+    private CommunicationsMonitor monitor;
     private String url;
 
-    public HttpOneWayInterceptor(String url, String operationName, ClientBootstrap boostrap, SocketAddress address) {
+    public HttpOneWayInterceptor(String url, String operationName, ClientBootstrap boostrap, SocketAddress address, CommunicationsMonitor monitor) {
         this.url = url;
         this.operationName = operationName;
         this.boostrap = boostrap;
         this.address = address;
+        this.monitor = monitor;
     }
 
     public Message invoke(final Message msg) {
@@ -66,7 +69,8 @@ public class HttpOneWayInterceptor implements Interceptor {
             public void operationComplete(ChannelFuture future) throws Exception {
                 Channel channel = future.getChannel();
                 if (!future.isSuccess()) {
-                    // TODO log error
+                    monitor.error(future.getCause());
+                    return;
                 }
                 HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, url);
 
@@ -105,7 +109,8 @@ public class HttpOneWayInterceptor implements Interceptor {
 
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (!future.isSuccess()) {
-                            // TODO log error
+                            monitor.error(future.getCause());
+                            return;
                         }
                         future.getChannel().close();
 

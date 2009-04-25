@@ -16,13 +16,29 @@
  */
 package org.fabric3.binding.net.runtime;
 
-import org.fabric3.api.annotation.logging.Severe;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelPipelineCoverage;
+import org.jboss.netty.channel.ExceptionEvent;
+import org.jboss.netty.channel.SimpleChannelHandler;
+
+import org.fabric3.api.annotation.Monitor;
 
 /**
+ * Client-side handler for one-way operations. This handler only logs errors and closes the channel.
+ *
  * @version $Revision$ $Date$
  */
-public interface TransportServiceMonitor {
+@ChannelPipelineCoverage("all")
+public class OneWayClientHandler extends SimpleChannelHandler {
+    private CommunicationsMonitor monitor;
 
-    @Severe
-    void error(String msg, Throwable cause);
+    public OneWayClientHandler(@Monitor CommunicationsMonitor monitor) {
+        this.monitor = monitor;
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+        monitor.error(e.getCause());
+        ctx.getChannel().close();
+    }
 }

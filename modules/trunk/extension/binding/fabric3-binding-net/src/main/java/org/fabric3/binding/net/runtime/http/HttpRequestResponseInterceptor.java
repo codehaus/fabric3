@@ -27,12 +27,15 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.oasisopen.sca.ServiceRuntimeException;
 import org.oasisopen.sca.ServiceUnavailableException;
 
 import org.fabric3.binding.net.provision.NetConstants;
@@ -84,7 +87,7 @@ public class HttpRequestResponseInterceptor implements Interceptor {
                 String routing = Base64.encode(bas.toByteArray());
                 request.addHeader(NetConstants.ROUTING, routing);
             } catch (IOException e) {
-                // TODO log
+                throw new ServiceRuntimeException(e);
             }
         }
         Object body = msg.getBody();
@@ -126,4 +129,6 @@ public class HttpRequestResponseInterceptor implements Interceptor {
     public Interceptor getNext() {
         return null;
     }
+
+
 }
