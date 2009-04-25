@@ -21,7 +21,9 @@ import java.net.InetSocketAddress;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFactory;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -73,22 +75,19 @@ public class TransportServiceImpl implements TransportService {
         createHttpChannel();
     }
 
-//    @Destroy
-//    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
-//    public void destroy() {
-//        if (httpChannel != null) {
-//            ChannelFuture future = httpChannel.disconnect();
-//            future.awaitUninterruptibly(closeTimeout);
-//            if (!future.isSuccess()) {
-//                monitor.error("Error disconnecting channel", future.getCause());
-//            }
-//            future = httpChannel.close();
-//            future.awaitUninterruptibly();
-//            if (!future.isSuccess()) {
-//                monitor.error("Error closing channel", future.getCause());
-//            }
-//        }
-//    }
+    @Destroy
+    @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+    public void destroy() {
+        if (httpChannel != null) {
+            ChannelFuture future = httpChannel.close();
+            future.awaitUninterruptibly();
+            if (!future.isSuccess()) {
+                monitor.error(future.getCause());
+            }
+            // Don't release resources as it waits for the core threadpool to cease operations
+            // factory.releaseExternalResources();
+        }
+    }
 
     public void register(TransportType type, String path, String callbackUri, Wire wire) {
         switch (type) {
