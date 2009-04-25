@@ -17,8 +17,6 @@
 package org.fabric3.binding.net.runtime;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
@@ -71,8 +69,7 @@ public class TransportServiceImpl implements TransportService {
 
     @Init
     public void init() {
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        factory = new NioServerSocketChannelFactory(executorService, executorService);
+        factory = new NioServerSocketChannelFactory(scheduler, scheduler);
         createHttpChannel();
     }
 

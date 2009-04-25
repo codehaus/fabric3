@@ -21,7 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.AbstractExecutorService;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -33,6 +36,8 @@ import org.fabric3.binding.net.provision.TransportType;
 import org.fabric3.binding.net.runtime.http.HttpClientPipelineFactory;
 import org.fabric3.binding.net.runtime.http.HttpRequestResponseInterceptor;
 import org.fabric3.binding.net.runtime.http.HttpResponseHandler;
+import org.fabric3.host.work.DefaultPausableWork;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -48,16 +53,6 @@ import org.fabric3.spi.wire.Wire;
 public class TransportServiceTestCase extends TestCase {
 
     public void testServiceDispatch() throws Exception {
-//        URLConnection connection = new URL("http://localhost:8989/service").openConnection();
-//        connection.setDoOutput(true);
-//        connection.setDoInput(true);
-//        OutputStream os = connection.getOutputStream();
-//        os.write("test".getBytes());
-//        os.flush();
-//        os.close();
-//        InputStream is = connection.getInputStream();
-//
-
         ChannelFactory factory =
                 new NioClientSocketChannelFactory(
                         Executors.newCachedThreadPool(),
@@ -85,7 +80,7 @@ public class TransportServiceTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         TransportServiceMonitor monitor = EasyMock.createNiceMock(TransportServiceMonitor.class);
-        TransportServiceImpl service = new TransportServiceImpl(null, monitor);
+        TransportServiceImpl service = new TransportServiceImpl(new MockScheduler(), monitor);
         service.setHttpPort(8989);
         service.init();
 
@@ -108,6 +103,38 @@ public class TransportServiceTestCase extends TestCase {
         EasyMock.replay(wire);
 
         service.register(TransportType.HTTP, "/service", null, wire);
+    }
+
+    private class MockScheduler extends AbstractExecutorService implements WorkScheduler {
+        private ExecutorService executor = Executors.newCachedThreadPool();
+
+        public void shutdown() {
+            executor.shutdown();
+        }
+
+        public List<Runnable> shutdownNow() {
+            return executor.shutdownNow();
+        }
+
+        public boolean isShutdown() {
+            return executor.isShutdown();
+        }
+
+        public boolean isTerminated() {
+            return executor.isTerminated();
+        }
+
+        public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+            return executor.awaitTermination(timeout, unit);
+        }
+
+        public void execute(Runnable command) {
+            executor.execute(command);
+        }
+
+        public <T extends DefaultPausableWork> void scheduleWork(T work) {
+
+        }
     }
 
 }
