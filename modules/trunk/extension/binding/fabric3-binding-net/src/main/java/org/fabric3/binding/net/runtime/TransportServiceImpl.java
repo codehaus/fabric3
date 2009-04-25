@@ -114,13 +114,14 @@ public class TransportServiceImpl implements TransportService {
     }
 
     private void createHttpChannel() {
-        // FIXME use WorkManager thread pooling
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
         httpRequestHandler = new HttpRequestHandler(monitor);
         HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
         bootstrap.setOption("child.keepAlive", true);
+        // TODO  configure following integer vals:
+        // receiveBufferSize, sendBufferSize, writeBufferHighWaterMark, writeBufferLowWaterMark, writeSpinCount, receiveBufferSizePredictor
 
         // Bind and start to accept incoming connections.
         InetSocketAddress socketAddress = new InetSocketAddress(httpAddress, httpPort);
