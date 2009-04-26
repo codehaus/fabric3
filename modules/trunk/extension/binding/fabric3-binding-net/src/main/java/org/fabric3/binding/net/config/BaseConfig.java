@@ -27,7 +27,7 @@ import java.util.List;
  */
 public abstract class BaseConfig implements Serializable {
     private static final long serialVersionUID = -7562937002327535329L;
-    private String readTimeout;
+    private long readTimeout;
     private int numberOfRetries;
     private List<String> methods = new ArrayList<String>();
     private String wireFormat;
@@ -35,11 +35,11 @@ public abstract class BaseConfig implements Serializable {
     private String sslSettings;
 
 
-    public String getReadTimeout() {
+    public long getReadTimeout() {
         return readTimeout;
     }
 
-    public void setReadTimeout(String readTimeout) {
+    public void setReadTimeout(long readTimeout) {
         this.readTimeout = readTimeout;
     }
 

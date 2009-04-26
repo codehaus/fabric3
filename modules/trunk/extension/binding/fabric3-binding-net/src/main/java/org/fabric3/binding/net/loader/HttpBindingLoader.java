@@ -131,7 +131,12 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
     private void parseBindingAttributes(XMLStreamReader reader, HttpBindingDefinition definition, IntrospectionContext context) {
         String readTimeout = reader.getAttributeValue(null, "readTimeout");
         if (readTimeout != null) {
-            definition.getConfig().setReadTimeout(readTimeout);
+            try {
+                long timeout = Long.parseLong(readTimeout);
+                definition.getConfig().setReadTimeout(timeout);
+            } catch (NumberFormatException e) {
+                context.addError(new InvalidValue("Invalid timeout: " + readTimeout, reader, e));
+            }
         }
         String numberOfRetries = reader.getAttributeValue(null, "numberOfRetries");
         if (numberOfRetries != null) {
