@@ -67,7 +67,7 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
             switch (reader.next()) {
             case XMLStreamConstants.END_ELEMENT:
                 if ("binding.http".equals(reader.getName().getLocalPart())) {
-                    String wireFormat = definition.getWireFormat();
+                    String wireFormat = definition.getConfig().getWireFormat();
                     if (wireFormat == null) {
                         // make JSON the default serialization
                         // TODO make this configurable
@@ -131,12 +131,12 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
     private void parseBindingAttributes(XMLStreamReader reader, HttpBindingDefinition definition, IntrospectionContext context) {
         String readTimeout = reader.getAttributeValue(null, "readTimeout");
         if (readTimeout != null) {
-            definition.setReadTimeout(readTimeout);
+            definition.getConfig().setReadTimeout(readTimeout);
         }
         String numberOfRetries = reader.getAttributeValue(null, "numberOfRetries");
         if (numberOfRetries != null) {
             try {
-                definition.setNumberOfRetries(Integer.parseInt(numberOfRetries));
+                definition.getConfig().setNumberOfRetries(Integer.parseInt(numberOfRetries));
             } catch (NumberFormatException e) {
                 InvalidValue failure = new InvalidValue("Invalid number of retries value ", reader);
                 context.addError(failure);
@@ -162,9 +162,9 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
         String format = name.substring(11); //wireFormat.
 
         if (response) {
-            definition.setResponseWireFormat(format);
+            definition.getConfig().setResponseWireFormat(format);
         } else {
-            definition.setWireFormat(format);
+            definition.getConfig().setWireFormat(format);
         }
 
     }
@@ -176,7 +176,7 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
             context.addError(failure);
             return;
         }
-        definition.setSslSettings(alias);
+        definition.getConfig().setSslSettings(alias);
 
     }
 
@@ -187,7 +187,7 @@ public class HttpBindingLoader implements TypeLoader<HttpBindingDefinition> {
             context.addError(failure);
             return;
         }
-        definition.setAuthenticationType(auth);
+        definition.getConfig().setAuthenticationType(auth);
 
     }
 

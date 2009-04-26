@@ -16,6 +16,7 @@
  */
 package org.fabric3.binding.net.provision;
 
+import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -25,15 +26,15 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  */
 public class HttpWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = 3519868912711758321L;
+    private HttpConfig config;
 
-    private String wireFormat;
 
-    public String getWireFormat() {
-        return wireFormat;
+    public HttpConfig getConfig() {
+        return config;
     }
 
-    public void setWireFormat(String wireFormat) {
-        this.wireFormat = wireFormat;
+    public void setConfig(HttpConfig config) {
+        this.config = config;
     }
 
 }

@@ -17,6 +17,7 @@
 package org.fabric3.binding.net.provision;
 
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.binding.net.config.HttpConfig;
 
 /**
  * Target definition for binding.http.
@@ -25,14 +26,13 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  */
 public class HttpWireTargetDefinition extends PhysicalWireTargetDefinition {
     private static final long serialVersionUID = -1496341521233245378L;
+    private HttpConfig config;
 
-    private String wireFormat;
-
-    public String getWireFormat() {
-        return wireFormat;
+    public HttpConfig getConfig() {
+        return config;
     }
 
-    public void setWireFormat(String wireFormat) {
-        this.wireFormat = wireFormat;
+    public void setConfig(HttpConfig config) {
+        this.config = config;
     }
 }

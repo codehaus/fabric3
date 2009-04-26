@@ -14,8 +14,9 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.model;
+package org.fabric3.binding.net.config;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +24,14 @@ import java.util.Map;
 /**
  * @version $Revision$ $Date$
  */
-public class OperationProperty {
+public class OperationProperty implements Serializable {
+    private static final long serialVersionUID = 7634535043051781256L;
     private String name;
     private String selectedOperation;
     private List<String> methods;
     private String contextPath;
     private Map<String, String> properties = new HashMap<String, String>();
-    private Headers headers;
+    private HttpHeaders headers;
 
     public String getName() {
         return name;
@@ -71,11 +73,11 @@ public class OperationProperty {
         this.properties = properties;
     }
 
-    public Headers getHeaders() {
+    public HttpHeaders getHeaders() {
         return headers;
     }
 
-    public void setHeaders(Headers headers) {
+    public void setHeaders(HttpHeaders headers) {
         this.headers = headers;
     }
 }

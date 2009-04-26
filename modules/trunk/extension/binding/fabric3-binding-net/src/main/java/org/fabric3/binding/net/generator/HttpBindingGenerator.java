@@ -31,7 +31,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * Generates source and target wire definitions for the HTTP binding. If no wire format is specified, JSON will be used by default.
+ * Generates source and target wire definitions for the HTTP binding.
  *
  * @version $Revision$ $Date$
  */
@@ -43,11 +43,7 @@ public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinit
                                                            Policy policy) throws GenerationException {
         HttpWireSourceDefinition sourceDefinition = new HttpWireSourceDefinition();
         HttpBindingDefinition bindingDefinition = binding.getDefinition();
-        String format = bindingDefinition.getWireFormat();
-        if (format == null) {
-            format = "json";
-        }
-        sourceDefinition.setWireFormat(format);
+        sourceDefinition.setConfig(bindingDefinition.getConfig());
         sourceDefinition.setUri(bindingDefinition.getTargetUri());
         return sourceDefinition;
     }
@@ -58,8 +54,7 @@ public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinit
                                                            Policy policy) throws GenerationException {
         HttpWireTargetDefinition targetDefinition = new HttpWireTargetDefinition();
         HttpBindingDefinition bindingDefinition = binding.getDefinition();
-        String format = bindingDefinition.getWireFormat();
-        targetDefinition.setWireFormat(format);
+        targetDefinition.setConfig(bindingDefinition.getConfig());
         targetDefinition.setUri(binding.getDefinition().getTargetUri());
         return targetDefinition;
     }

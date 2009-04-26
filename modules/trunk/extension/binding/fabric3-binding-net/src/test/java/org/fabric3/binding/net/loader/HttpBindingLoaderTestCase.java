@@ -61,9 +61,9 @@ public class HttpBindingLoaderTestCase extends TestCase {
         assertEquals("binding.http", reader.getName().getLocalPart());
 
         // verify parsing
-        assertEquals("testResponseFormat", definition.getResponseWireFormat());
-        assertEquals("sslSettings", definition.getSslSettings());
-        assertEquals("basic", definition.getAuthenticationType());
+        assertEquals("testResponseFormat", definition.getConfig().getResponseWireFormat());
+        assertEquals("sslSettings", definition.getConfig().getSslSettings());
+        assertEquals("basic", definition.getConfig().getAuthenticationType());
 
     }
 
