@@ -25,14 +25,16 @@ import java.util.concurrent.Executors;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.handler.timeout.HashedWheelTimer;
+import org.jboss.netty.handler.timeout.Timer;
 import org.oasisopen.sca.annotation.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
-import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -47,13 +49,21 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
+    private long closeTimeout = 10000;
     private CommunicationsMonitor monitor;
     private ChannelFactory factory;
     private String httpAddress = "127.0.0.1";
     private int httpPort = 8282;
+    private Timer timer;
 
     public HttpTargetWireAttacher(@Monitor CommunicationsMonitor monitor) {
         this.monitor = monitor;
+    }
+
+    // FIXME this should be configured to same value as TransportServiceImpl
+    @Property(required = false)
+    public void setCloseTimeout(long timeout) {
+        this.closeTimeout = timeout;
     }
 
     // FIXME this should be configured to same value as TransportServiceImpl
@@ -73,6 +83,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         ExecutorService executorService = Executors.newCachedThreadPool();
         // TODO integrate with server thread pooling
         factory = new NioClientSocketChannelFactory(executorService, executorService);
+        timer = new HashedWheelTimer();
     }
 
     @Destroy
@@ -106,7 +117,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         OneWayClientHandler handler = new OneWayClientHandler(monitor);
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler);
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, closeTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -124,8 +135,8 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
                                        InvocationChain chain) throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
-        HttpResponseHandler handler = new HttpResponseHandler();
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler);
+        HttpResponseHandler handler = new HttpResponseHandler(closeTimeout, monitor);
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, closeTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();

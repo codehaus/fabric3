@@ -23,6 +23,8 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.jboss.netty.handler.timeout.HashedWheelTimer;
+import org.jboss.netty.handler.timeout.Timer;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -48,6 +50,7 @@ public class TransportServiceImpl implements TransportService {
     private String httpAddress = "127.0.0.1";
     private int httpPort = 8282;
     private HttpRequestHandler httpRequestHandler;
+    private Timer timer;
 
     public TransportServiceImpl(@Reference WorkScheduler scheduler, @Monitor CommunicationsMonitor monitor) {
         this.scheduler = scheduler;
@@ -72,6 +75,7 @@ public class TransportServiceImpl implements TransportService {
     @Init
     public void init() {
         factory = new NioServerSocketChannelFactory(scheduler, scheduler);
+        timer = new HashedWheelTimer();
         createHttpChannel();
     }
 
@@ -116,7 +120,7 @@ public class TransportServiceImpl implements TransportService {
     private void createHttpChannel() {
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
         httpRequestHandler = new HttpRequestHandler(monitor);
-        HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler);
+        HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler, timer, closeTimeout);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
         bootstrap.setOption("child.keepAlive", true);

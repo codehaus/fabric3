@@ -31,6 +31,8 @@ import org.easymock.EasyMock;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.handler.timeout.HashedWheelTimer;
+import org.jboss.netty.handler.timeout.Timer;
 
 import org.fabric3.binding.net.provision.TransportType;
 import org.fabric3.binding.net.runtime.http.HttpClientPipelineFactory;
@@ -51,6 +53,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class TransportServiceTestCase extends TestCase {
+    private CommunicationsMonitor monitor;
 
     public void testServiceDispatch() throws Exception {
         ChannelFactory factory =
@@ -60,8 +63,9 @@ public class TransportServiceTestCase extends TestCase {
 
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
-        HttpResponseHandler handler = new HttpResponseHandler();
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler);
+        HttpResponseHandler handler = new HttpResponseHandler(10, monitor);
+        Timer timer = new HashedWheelTimer();
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, 10);
         bootstrap.setPipelineFactory(pipeline);
 
         HttpRequestResponseInterceptor interceptor =
@@ -79,7 +83,7 @@ public class TransportServiceTestCase extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        CommunicationsMonitor monitor = EasyMock.createNiceMock(CommunicationsMonitor.class);
+        monitor = EasyMock.createNiceMock(CommunicationsMonitor.class);
         TransportServiceImpl service = new TransportServiceImpl(new MockScheduler(), monitor);
         service.setHttpPort(8989);
         service.init();

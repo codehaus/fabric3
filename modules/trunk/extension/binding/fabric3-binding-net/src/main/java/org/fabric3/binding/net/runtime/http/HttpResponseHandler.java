@@ -18,16 +18,19 @@ package org.fabric3.binding.net.runtime.http;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipelineCoverage;
+import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
-import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.oasisopen.sca.ServiceRuntimeException;
+
+import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 
 /**
  * Handles HTTP responses on the client side for request-response style interactions. This handler is placed on the reference side of an invocation
@@ -35,11 +38,19 @@ import org.oasisopen.sca.ServiceRuntimeException;
  */
 @ChannelPipelineCoverage("one")
 public class HttpResponseHandler extends SimpleChannelHandler {
+    private long responseWait;
+    private CommunicationsMonitor monitor;
+
     private volatile boolean readingChunks;
     private StringBuilder body = new StringBuilder();
 
     // queue used by clients to block on awaiting a response
     private BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<Response>();
+
+    public HttpResponseHandler(long responseWait, CommunicationsMonitor monitor) {
+        this.responseWait = responseWait;
+        this.monitor = monitor;
+    }
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
@@ -69,22 +80,25 @@ public class HttpResponseHandler extends SimpleChannelHandler {
      * Blocks on a response.
      *
      * @return the response or null
+     * @throws ServiceRuntimeException if waiting on the response times out
      */
-    public Response getResponse() {
+    public Response getResponse() throws ServiceRuntimeException {
         try {
-            // TODO specify a timeout
-            return responseQueue.take();
+            Response response = responseQueue.poll(responseWait, TimeUnit.MILLISECONDS);
+            if (response == null) {
+                // timed out waiting for a response, throw exception back to the client since this is a blocking operation
+                throw new ServiceRuntimeException("Timeout waiting on response");
+            }
+            return response;
         } catch (InterruptedException e) {
-            // ignore
+            throw new ServiceRuntimeException(e);
         }
-        return null;
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         ctx.getChannel().close();
-        // report error to the client as this is a blocking operation
-        throw new ServiceRuntimeException(e.getCause());
+        monitor.error(e.getCause());
     }
 
 }

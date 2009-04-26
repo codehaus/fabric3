@@ -16,12 +16,18 @@
  */
 package org.fabric3.binding.net.runtime.http;
 
+import java.util.concurrent.TimeUnit;
+
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import static org.jboss.netty.channel.Channels.pipeline;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
+import org.jboss.netty.handler.timeout.IdleStateHandler;
+import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
+import org.jboss.netty.handler.timeout.Timer;
+import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 
 /**
  * Creates a pipeline for an HTTP client.
@@ -30,9 +36,13 @@ import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
  */
 public class HttpClientPipelineFactory implements ChannelPipelineFactory {
     private final ChannelHandler handler;
+    private Timer timer;
+    private long timeout;
 
-    public HttpClientPipelineFactory(ChannelHandler handler) {
+    public HttpClientPipelineFactory(ChannelHandler handler, Timer timer, long timeout) {
         this.handler = handler;
+        this.timer = timer;
+        this.timeout = timeout;
     }
 
     public ChannelPipeline getPipeline() throws Exception {
@@ -40,6 +50,11 @@ public class HttpClientPipelineFactory implements ChannelPipelineFactory {
         ChannelPipeline pipeline = pipeline();
         pipeline.addLast("decoder", new HttpResponseDecoder());
         pipeline.addLast("encoder", new HttpRequestEncoder());
+        int secondsTimeout = (int) (timeout / 10);
+        pipeline.addLast("idlehandler", new IdleStateHandler(timer, secondsTimeout, secondsTimeout, secondsTimeout));
+        pipeline.addLast("readTimeout", new ReadTimeoutHandler(timer, timeout, TimeUnit.MILLISECONDS));
+        pipeline.addLast("writeTimeout", new WriteTimeoutHandler(timer, timeout, TimeUnit.MILLISECONDS));
+
         pipeline.addLast("handler", handler);
         return pipeline;
     }
