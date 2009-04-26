@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class OperationProperty {
     private String name;
-    private String selectedOperaiton;
+    private String selectedOperation;
     private List<String> methods;
     private String contextPath;
     private Map<String, String> properties = new HashMap<String, String>();
@@ -39,12 +39,12 @@ public class OperationProperty {
         this.name = name;
     }
 
-    public String getSelectedOperaiton() {
-        return selectedOperaiton;
+    public String getSelectedOperation() {
+        return selectedOperation;
     }
 
-    public void setSelectedOperaiton(String selectedOperaiton) {
-        this.selectedOperaiton = selectedOperaiton;
+    public void setSelectedOperation(String selectedOperation) {
+        this.selectedOperation = selectedOperation;
     }
 
     public List<String> getMethods() {
