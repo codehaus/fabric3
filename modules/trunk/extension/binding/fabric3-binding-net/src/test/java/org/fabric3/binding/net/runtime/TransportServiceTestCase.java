@@ -65,7 +65,7 @@ public class TransportServiceTestCase extends TestCase {
 
         HttpResponseHandler handler = new HttpResponseHandler(10, monitor);
         Timer timer = new HashedWheelTimer();
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, 10);
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, 10000);
         bootstrap.setPipelineFactory(pipeline);
 
         HttpRequestResponseInterceptor interceptor =
