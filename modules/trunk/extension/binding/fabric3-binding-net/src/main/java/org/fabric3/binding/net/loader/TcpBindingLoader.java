@@ -26,12 +26,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.binding.net.config.HttpConfig;
-import org.fabric3.binding.net.model.HttpBindingDefinition;
+import org.fabric3.binding.net.config.TcpConfig;
+import org.fabric3.binding.net.model.TcpBindingDefinition;
 import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.MissingAttribute;
 
 /**
  * Loader for binding.http.
@@ -39,36 +38,36 @@ import org.fabric3.spi.introspection.xml.MissingAttribute;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HttpBindingLoader extends AbstractBindingLoader<HttpBindingDefinition> {
+public class TcpBindingLoader extends AbstractBindingLoader<TcpBindingDefinition> {
     private final LoaderHelper loaderHelper;
-    private static final QName JAXB_POLICY = new QName(Namespaces.POLICY, "dataBinding.jaxb");
+    private static final QName HESSIAN_POLICY = new QName(Namespaces.POLICY, "dataBinding.hessian");
 
     /**
      * Constructor.
      *
      * @param loaderHelper the policy helper
      */
-    public HttpBindingLoader(@Reference LoaderHelper loaderHelper) {
+    public TcpBindingLoader(@Reference LoaderHelper loaderHelper) {
         this.loaderHelper = loaderHelper;
     }
 
-    public HttpBindingDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+    public TcpBindingDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         URI uri = parseUri(reader, context);
         Document key = loaderHelper.loadKey(reader);
-        HttpBindingDefinition definition = new HttpBindingDefinition(uri, key);
-        HttpConfig config = definition.getConfig();
+        TcpBindingDefinition definition = new TcpBindingDefinition(uri, key);
+        TcpConfig config = definition.getConfig();
         loaderHelper.loadPolicySetsAndIntents(definition, reader, context);
         parseBindingAttributes(reader, config, context);
         while (true) {
             switch (reader.next()) {
             case XMLStreamConstants.END_ELEMENT:
-                if ("binding.http".equals(reader.getName().getLocalPart())) {
+                if ("binding.tcp".equals(reader.getName().getLocalPart())) {
                     String wireFormat = definition.getConfig().getWireFormat();
                     if (wireFormat == null) {
-                        // make JSON the default serialization
+                        // make Hessian the default serialization
                         // TODO make this configurable
-                        definition.addIntent(JAXB_POLICY);
+                        definition.addIntent(HESSIAN_POLICY);
                     } else {
                         definition.addIntent(new QName(Namespaces.POLICY, "dataBinding." + wireFormat));
                     }
@@ -83,24 +82,11 @@ public class HttpBindingLoader extends AbstractBindingLoader<HttpBindingDefiniti
                     parseResponse(reader, config, context);
                 } else if ("sslSettings".equals(name)) {
                     parseSslSettings(reader, config, context);
-                } else if ("authentication".equals(name)) {
-                    parseAuthentication(reader, config, context);
                 }
                 break;
             }
 
         }
-    }
-
-    private void parseAuthentication(XMLStreamReader reader, HttpConfig config, IntrospectionContext context) {
-        String auth = reader.getAttributeValue(null, "type");
-        if (auth == null) {
-            MissingAttribute failure = new MissingAttribute("An authentication type must be specified ", reader);
-            context.addError(failure);
-            return;
-        }
-        config.setAuthenticationType(auth);
-
     }
 
 }
