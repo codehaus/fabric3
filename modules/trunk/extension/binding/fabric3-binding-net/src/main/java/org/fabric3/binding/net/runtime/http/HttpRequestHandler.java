@@ -125,7 +125,7 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
         WorkContext context = new WorkContext();
         message.setWorkContext(context);
         if (routing != null) {
-            List<CallFrame> frames = serializer.deserialize(List.class, Base64.decode(routing));
+            List<CallFrame> frames = (List<CallFrame>) serializer.deserialize(Object.class, Base64.decode(routing));
             context.addCallFrames(frames);
             CallFrame previous = context.peekCallFrame();
             // Copy correlation and conversation information from incoming frame to new frame

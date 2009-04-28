@@ -51,7 +51,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
-    private long closeTimeout = 10000;
+    private long connectTimeout = 10000;
     private String httpWireFormat = "jdk";
     private CommunicationsMonitor monitor;
     private Map<String, Serializer> serializers;
@@ -69,8 +69,8 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
 
     // FIXME this should be configured to same value as TransportServiceImpl
     @Property(required = false)
-    public void setCloseTimeout(long timeout) {
-        this.closeTimeout = timeout;
+    public void setConnectTimeout(long timeout) {
+        this.connectTimeout = timeout;
     }
 
     // FIXME this should be configured to same value as TransportServiceImpl
@@ -117,7 +117,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         OneWayClientHandler handler = new OneWayClientHandler(monitor);
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, closeTimeout);
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -140,8 +140,8 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
                                        InvocationChain chain) throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
-        HttpResponseHandler handler = new HttpResponseHandler(closeTimeout, monitor);
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, closeTimeout);
+        HttpResponseHandler handler = new HttpResponseHandler(connectTimeout, monitor);
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();

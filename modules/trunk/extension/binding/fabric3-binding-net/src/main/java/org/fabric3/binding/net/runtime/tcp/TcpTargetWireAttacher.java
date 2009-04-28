@@ -51,7 +51,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDefinition> {
-    private long closeTimeout = 10000;
+    private long connectTimeout = 10000;
     private CommunicationsMonitor monitor;
     private ChannelFactory factory;
     private Timer timer;
@@ -69,8 +69,8 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
 
     // FIXME this should be configured to same value as TransportServiceImpl
     @Property(required = false)
-    public void setCloseTimeout(long timeout) {
-        this.closeTimeout = timeout;
+    public void setConnectTimeout(long timeout) {
+        this.connectTimeout = timeout;
     }
 
     @Property(required = false)
@@ -116,7 +116,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         OneWayClientHandler handler = new OneWayClientHandler(monitor);
-        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, closeTimeout);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -142,8 +142,8 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         if (serializer == null) {
             throw new WiringException("Serializer not found for: " + tcpWireFormat);
         }
-        TcpResponseHandler handler = new TcpResponseHandler(serializer, closeTimeout, monitor);
-        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, closeTimeout);
+        TcpResponseHandler handler = new TcpResponseHandler(serializer, connectTimeout, monitor);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();

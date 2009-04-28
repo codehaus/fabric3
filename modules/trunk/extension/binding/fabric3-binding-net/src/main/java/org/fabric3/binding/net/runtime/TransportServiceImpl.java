@@ -49,7 +49,7 @@ public class TransportServiceImpl implements TransportService {
     private final WorkScheduler scheduler;
     private CommunicationsMonitor monitor;
 
-    private long closeTimeout = 10000;
+    private long connectTimeout = 10000;
     private String ipAddress = "127.0.0.1";
 
     private int httpPort = 8282;
@@ -77,8 +77,8 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Property(required = false)
-    public void setCloseTimeout(long timeout) {
-        this.closeTimeout = timeout;
+    public void setConnectTimeout(long timeout) {
+        this.connectTimeout = timeout;
     }
 
     @Property(required = false)
@@ -170,7 +170,7 @@ public class TransportServiceImpl implements TransportService {
             throw new WiringException("Serializer not found for: " + tcpWireFormat);
         }
         httpRequestHandler = new HttpRequestHandler(serializer, monitor);
-        HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler, timer, closeTimeout);
+        HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
         bootstrap.setOption("child.keepAlive", true);
@@ -189,7 +189,7 @@ public class TransportServiceImpl implements TransportService {
             throw new WiringException("Serializer not found for: " + tcpWireFormat);
         }
         tcpRequestHandler = new TcpRequestHandler(serializer, monitor);
-        TcpPipelineFactory pipeline = new TcpPipelineFactory(tcpRequestHandler, timer, closeTimeout);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(tcpRequestHandler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
         bootstrap.setOption("child.keepAlive", true);
