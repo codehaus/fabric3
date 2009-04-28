@@ -142,4 +142,8 @@
     <!-- reinjects the metadata store after runtime bootstrap -->
     <wire source="MetaDataStore/processorRegistry" target="ProcessorRegistry"/>
 
+    <component name="JDKSerializer" f3-core:key="jdk">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.serializer.JDKSerializer"/>
+    </component>
+
 </composite>
