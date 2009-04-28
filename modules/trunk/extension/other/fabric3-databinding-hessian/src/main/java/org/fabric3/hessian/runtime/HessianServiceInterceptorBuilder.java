@@ -23,6 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.hessian.provision.HessianServiceInterceptorDefinition;
+import org.fabric3.hessian.provision.Encoding;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -46,6 +47,7 @@ public class HessianServiceInterceptorBuilder implements InterceptorBuilder<Hess
     public HessianServiceInterceptor build(HessianServiceInterceptorDefinition definition) throws BuilderException {
         URI classloaderId = definition.getWireClassLoaderId();
         ClassLoader loader = registry.getClassLoader(classloaderId);
-        return new HessianServiceInterceptor(serializerFactory, loader);
+        Encoding encoding = definition.getEncoding();
+        return new HessianServiceInterceptor(encoding, serializerFactory, loader);
     }
 }

@@ -25,6 +25,7 @@ import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
 import org.oasisopen.sca.ServiceRuntimeException;
 
+import org.fabric3.hessian.provision.Encoding;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
@@ -37,9 +38,11 @@ import org.fabric3.spi.wire.Interceptor;
 public class HessianServiceInterceptor implements Interceptor {
     private Interceptor next;
     private ClassLoader classLoader;
+    private Encoding encoding;
     private SerializerFactory serializerFactory;
 
-    public HessianServiceInterceptor(SerializerFactory serializerFactory, ClassLoader classLoader) {
+    public HessianServiceInterceptor(Encoding encoding, SerializerFactory serializerFactory, ClassLoader classLoader) {
+        this.encoding = encoding;
         this.serializerFactory = serializerFactory;
         this.classLoader = classLoader;
     }
@@ -73,13 +76,21 @@ public class HessianServiceInterceptor implements Interceptor {
             out.completeReply();
             out.close();
             byte[] data = bos.toByteArray();
-            msg.setBodyWithFault(Base64.encode(data));
+            if (encoding == Encoding.ASCII) {
+                msg.setBodyWithFault(Base64.encode(data));
+            } else {
+                msg.setBodyWithFault(data);
+            }
         } else {
             out.writeObject(msg.getBody());
             out.completeReply();
             out.close();
             byte[] data = bos.toByteArray();
-            msg.setBody(Base64.encode(data));
+            if (encoding == Encoding.ASCII) {
+                msg.setBody(Base64.encode(data));
+            } else {
+                msg.setBody(data);
+            }
         }
     }
 
@@ -87,17 +98,24 @@ public class HessianServiceInterceptor implements Interceptor {
         if (msg.getBody() == null) {
             return;
         }
-        if (!(msg.getBody() instanceof String)) {
+        if (encoding == Encoding.ASCII && !(msg.getBody() instanceof String)) {
             throw new AssertionError("Type must be encoded as a Hessian string:" + msg.getBody());
         }
-        String body = (String) msg.getBody();
-        if (body.length() == 0) {
-            msg.setBody(null);
-            return;
+        ByteArrayInputStream bin;
+        if (encoding == Encoding.ASCII) {
+            String body = (String) msg.getBody();
+            if (body.length() == 0) {
+                msg.setBody(null);
+                return;
+            }
+            bin = new ByteArrayInputStream(Base64.decode(body));
+        } else {
+            byte[] body = (byte[]) msg.getBody();
+            msg.setBody(body);
+            bin = new ByteArrayInputStream(body);
         }
 
 
-        ByteArrayInputStream bin = new ByteArrayInputStream(Base64.decode(body));
         Hessian2Input in = new Hessian2Input(bin);
         in.setSerializerFactory(serializerFactory);
 

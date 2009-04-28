@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.hessian;
+package org.fabric3.hessian.runtime;
 
 import java.io.ByteArrayOutputStream;
 
@@ -23,7 +23,7 @@ import com.caucho.hessian.io.SerializerFactory;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.hessian.runtime.HessianReferenceInterceptor;
+import org.fabric3.hessian.provision.Encoding;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.util.Base64;
@@ -112,7 +112,7 @@ public class HessianReferenceInterceptorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SerializerFactory factory = new SerializerFactory();
-        interceptor = new HessianReferenceInterceptor(factory, getClass().getClassLoader());
+        interceptor = new HessianReferenceInterceptor(Encoding.ASCII, factory, getClass().getClassLoader());
 
     }
 

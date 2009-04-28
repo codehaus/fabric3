@@ -35,5 +35,9 @@
         <f3-impl:implementation.system class="org.fabric3.hessian.runtime.HessianReferenceInterceptorBuilder"/>
     </component>
 
+    <component name="HessianSerializer" f3-core:key="hessian">
+        <f3-impl:implementation.system class="org.fabric3.hessian.serializer.HessianSerializer"/>
+    </component>
+
 
 </composite>
