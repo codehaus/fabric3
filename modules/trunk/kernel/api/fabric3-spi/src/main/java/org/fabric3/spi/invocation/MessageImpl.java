@@ -40,6 +40,7 @@ package org.fabric3.spi.invocation;
  * @version $Rev $Date
  */
 public class MessageImpl implements Message {
+    private static final long serialVersionUID = 3774985131149736175L;
     private Object body;
     private boolean isFault;
     private WorkContext workContext;

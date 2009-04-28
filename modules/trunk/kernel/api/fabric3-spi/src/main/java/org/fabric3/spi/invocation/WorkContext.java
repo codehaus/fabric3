@@ -34,6 +34,7 @@
  */
 package org.fabric3.spi.invocation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,8 @@ import javax.security.auth.Subject;
  *
  * @version $Rev$ $Date$
  */
-public class WorkContext {
+public class WorkContext implements Serializable {
+    private static final long serialVersionUID = 9108092492339191639L;
     private Subject subject;
     private List<CallFrame> callStack;
     private Map<String, Object> headers;

@@ -34,12 +34,14 @@
  */
 package org.fabric3.spi.invocation;
 
+import java.io.Serializable;
+
 /**
  * Represents a request, response, or exception flowing through a wire
  *
  * @version $Rev $Date
  */
-public interface Message {
+public interface Message extends Serializable {
 
     /**
      * Returns the body of the message, which will be the payload or parameters associated with the wire.
