@@ -17,6 +17,7 @@
 package org.fabric3.binding.net.runtime;
 
 import org.fabric3.binding.net.provision.TransportType;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -33,8 +34,9 @@ public interface TransportService {
      * @param path        the service path which is its relative URI
      * @param callbackUri the callback URI or null if the service is unidirectional
      * @param wire        the wire
+     * @throws WiringException if an exception registering the wire occurs
      */
-    void register(TransportType type, String path, String callbackUri, Wire wire);
+    void register(TransportType type, String path, String callbackUri, Wire wire) throws WiringException;
 
     /**
      * Unregister the wire.

@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime.http;
+package org.fabric3.binding.net.runtime.tcp;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,24 +22,22 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import static org.jboss.netty.channel.Channels.pipeline;
-import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
-import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.handler.timeout.Timer;
 import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 
 /**
- * Creates a service-side HTTP channel pipeline.
+ * Creates a TCP channel pipeline for both clients and service providers.
  *
  * @version $Revision$ $Date$
  */
-public class HttpServerPipelineFactory implements ChannelPipelineFactory {
+public class TcpPipelineFactory implements ChannelPipelineFactory {
     private final ChannelHandler handler;
     private Timer timer;
     private long timeout;
 
-    public HttpServerPipelineFactory(HttpRequestHandler handler, Timer timer, long timeout) {
+    public TcpPipelineFactory(ChannelHandler handler, Timer timer, long timeout) {
         this.handler = handler;
         this.timer = timer;
         this.timeout = timeout;
@@ -48,8 +46,6 @@ public class HttpServerPipelineFactory implements ChannelPipelineFactory {
     public ChannelPipeline getPipeline() throws Exception {
         // Create a default pipeline implementation.
         ChannelPipeline pipeline = pipeline();
-        pipeline.addLast("decoder", new HttpRequestDecoder());
-        pipeline.addLast("encoder", new HttpResponseEncoder());
         int secondsTimeout = (int) (timeout / 10);
         pipeline.addLast("idlehandler", new IdleStateHandler(timer, secondsTimeout, secondsTimeout, secondsTimeout));
         pipeline.addLast("readTimeout", new ReadTimeoutHandler(timer, timeout, TimeUnit.MILLISECONDS));

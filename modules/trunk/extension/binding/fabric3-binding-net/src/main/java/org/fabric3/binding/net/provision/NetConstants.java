@@ -23,8 +23,19 @@ package org.fabric3.binding.net.provision;
  */
 public interface NetConstants {
 
+    /**
+     * Header name for holding CallFrame and WorkContext information.
+     */
     String ROUTING = "f3.routing";
 
+    /**
+     * The name of the operation being invoked.
+     */
     String OPERATION_NAME = "scaOperationName";
+
+    /**
+     * The target service URI.
+     */
+    String TARGET_URI = "f3.targetUri";
 
 }

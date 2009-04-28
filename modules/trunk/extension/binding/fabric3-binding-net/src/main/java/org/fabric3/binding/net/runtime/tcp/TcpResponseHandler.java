@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime.http;
+package org.fabric3.binding.net.runtime.tcp;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,53 +26,38 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
-import org.jboss.netty.handler.codec.http.HttpChunk;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.services.serializer.Serializer;
 
 /**
- * Handles responses over an HTTP channel on the client side for request-response style interactions. This handler is placed on the reference side of
- * an invocation chain.
+ * Handles TCP responses on the client side for request-response style interactions. This handler is placed on the reference side of an invocation
+ * chain.
  */
 @ChannelPipelineCoverage("one")
-public class HttpResponseHandler extends SimpleChannelHandler {
+public class TcpResponseHandler extends SimpleChannelHandler {
+    private Serializer serializer;
     private long responseWait;
     private CommunicationsMonitor monitor;
 
-    private volatile boolean readingChunks;
-    private StringBuilder body = new StringBuilder();
-
     // queue used by clients to block on awaiting a response
-    private BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<Response>();
+    private BlockingQueue<Message> responseQueue = new LinkedBlockingQueue<Message>();
 
-    public HttpResponseHandler(long responseWait, CommunicationsMonitor monitor) {
+    public TcpResponseHandler(Serializer serializer, long responseWait, CommunicationsMonitor monitor) {
+        this.serializer = serializer;
         this.responseWait = responseWait;
         this.monitor = monitor;
     }
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        if (!readingChunks) {
-            HttpResponse response = (HttpResponse) e.getMessage();
-
-            if (response.getStatus().getCode() == 200 && response.isChunked()) {
-                readingChunks = true;
-            } else {
-                ChannelBuffer content = response.getContent();
-                if (content.readable()) {
-                    responseQueue.offer(new Response(response.getStatus().getCode(), content.toString("UTF-8")));
-                }
-            }
-        } else {
-            HttpChunk chunk = (HttpChunk) e.getMessage();
-            if (chunk.isLast()) {
-                readingChunks = false;
-                responseQueue.offer(new Response(200, body.toString()));
-            } else {
-                body.append(chunk.getContent().toString("UTF-8"));
-            }
+        ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
+        if (buffer.readable()) {
+            byte[] bytes = buffer.toByteBuffer().array();
+            Message message = serializer.deserialize(Message.class, bytes);
+            responseQueue.offer(message);
         }
     }
 
@@ -82,9 +67,9 @@ public class HttpResponseHandler extends SimpleChannelHandler {
      * @return the response or null
      * @throws ServiceRuntimeException if waiting on the response times out
      */
-    public Response getResponse() throws ServiceRuntimeException {
+    public Message getResponse() throws ServiceRuntimeException {
         try {
-            Response response = responseQueue.poll(responseWait, TimeUnit.MILLISECONDS);
+            Message response = responseQueue.poll(responseWait, TimeUnit.MILLISECONDS);
             if (response == null) {
                 // timed out waiting for a response, throw exception back to the client since this is a blocking operation
                 throw new ServiceRuntimeException("Timeout waiting on response");

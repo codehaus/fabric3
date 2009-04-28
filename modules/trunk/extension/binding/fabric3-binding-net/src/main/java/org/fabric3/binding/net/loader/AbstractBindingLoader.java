@@ -33,7 +33,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
 /**
- * Loader for binding.http.
+ * Base binding loader.
  *
  * @version $Revision$ $Date$
  */
@@ -67,7 +67,7 @@ public abstract class AbstractBindingLoader<T extends BindingDefinition> impleme
         try {
             return new URI(uriString);
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("The HTTP binding URI is not valid: " + uriString, reader);
+            InvalidValue failure = new InvalidValue("The binding URI is not valid: " + uriString, reader);
             context.addError(failure);
             return null;
         }

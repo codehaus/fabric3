@@ -30,7 +30,7 @@ import org.jboss.netty.handler.timeout.Timer;
 import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 
 /**
- * Creates a pipeline for an HTTP client.
+ * Creates a client-side HTTP channel pipeline.
  *
  * @version $Revision$ $Date$
  */

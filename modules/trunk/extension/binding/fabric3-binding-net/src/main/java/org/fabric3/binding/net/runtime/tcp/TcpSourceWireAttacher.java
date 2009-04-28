@@ -14,13 +14,13 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime.http;
+package org.fabric3.binding.net.runtime.tcp;
 
 import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.net.provision.HttpWireSourceDefinition;
+import org.fabric3.binding.net.provision.TcpWireSourceDefinition;
 import org.fabric3.binding.net.provision.TransportType;
 import org.fabric3.binding.net.runtime.TransportService;
 import org.fabric3.spi.ObjectFactory;
@@ -30,18 +30,18 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Attaches services to an HTTP channel.
+ * Attaches services to the transport channel and handler pipeline configured to use the TCP binding.
  *
  * @version $Revision$ $Date$
  */
-public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSourceDefinition> {
+public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDefinition> {
     private TransportService service;
 
-    public HttpSourceWireAttacher(@Reference TransportService service) {
+    public TcpSourceWireAttacher(@Reference TransportService service) {
         this.service = service;
     }
 
-    public void attachToSource(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
         URI uri = source.getUri();
         if (uri.getScheme() != null) {
             throw new WiringException("Absolute URIs not supported: " + uri);
@@ -51,19 +51,19 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
         if (target.getCallbackUri() != null) {
             callbackUri = target.getCallbackUri().toString();
         }
-        service.register(TransportType.HTTP, sourceUri, callbackUri, wire);
+        service.register(TransportType.TCP, sourceUri, callbackUri, wire);
     }
 
-    public void detachFromSource(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        service.unregister(TransportType.HTTP, source.getUri().toString());
+    public void detachFromSource(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        service.unregister(TransportType.TCP, source.getUri().toString());
     }
 
-    public void attachObjectFactory(HttpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(TcpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
             throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachObjectFactory(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

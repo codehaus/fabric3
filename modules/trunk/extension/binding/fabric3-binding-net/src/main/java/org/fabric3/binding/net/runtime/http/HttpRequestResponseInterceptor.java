@@ -16,9 +16,6 @@
  */
 package org.fabric3.binding.net.runtime.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.SocketAddress;
 import java.util.List;
 
@@ -40,24 +37,28 @@ import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Makes a blocking request-response style invocation over the HTTP channel. This interceptor is placed on the reference side of an invocation chain.
+ * Makes a blocking request-response style invocation over an HTTP channel. This interceptor is placed on the reference side of an invocation chain.
  *
  * @version $Revision$ $Date$
  */
 public class HttpRequestResponseInterceptor implements Interceptor {
     private String operationName;
+    private Serializer serializer;
     private ClientBootstrap boostrap;
     private SocketAddress address;
     private String path;
 
-    public HttpRequestResponseInterceptor(String path, String operationName, ClientBootstrap boostrap, SocketAddress address) {
+    public HttpRequestResponseInterceptor(String path, String operationName, Serializer serializer, ClientBootstrap boostrap, SocketAddress address) {
         this.path = path;
         // TODO support name mangling
         this.operationName = operationName;
+        this.serializer = serializer;
         this.boostrap = boostrap;
         this.address = address;
     }
@@ -77,14 +78,10 @@ public class HttpRequestResponseInterceptor implements Interceptor {
         List<CallFrame> stack = msg.getWorkContext().getCallFrameStack();
         if (!stack.isEmpty()) {
             try {
-                ByteArrayOutputStream bas = new ByteArrayOutputStream();
-                ObjectOutputStream stream = new ObjectOutputStream(bas);
-                stream.writeObject(stack);
-                stream.flush();
-                stream.close();
-                String routing = Base64.encode(bas.toByteArray());
+                byte[] serialized = serializer.serialize(stack);
+                String routing = Base64.encode(serialized);
                 request.addHeader(NetConstants.ROUTING, routing);
-            } catch (IOException e) {
+            } catch (SerializationException e) {
                 throw new ServiceRuntimeException(e);
             }
         }

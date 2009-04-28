@@ -30,6 +30,7 @@ import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.binding.net.model.HttpBindingDefinition;
 import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 
@@ -55,6 +56,11 @@ public class HttpBindingLoader extends AbstractBindingLoader<HttpBindingDefiniti
     public HttpBindingDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         URI uri = parseUri(reader, context);
+        String scheme = uri.getScheme();
+        if (scheme != null && !"http".equalsIgnoreCase(scheme) && !"http".equalsIgnoreCase(scheme)) {
+            InvalidValue failure = new InvalidValue("Absolute binding URIs must use HTTP or HTTPS as the scheme", reader);
+            context.addError(failure);
+        }
         Document key = loaderHelper.loadKey(reader);
         HttpBindingDefinition definition = new HttpBindingDefinition(uri, key);
         HttpConfig config = definition.getConfig();

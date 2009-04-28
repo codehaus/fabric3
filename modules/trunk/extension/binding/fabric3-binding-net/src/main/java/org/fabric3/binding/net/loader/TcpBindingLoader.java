@@ -30,6 +30,7 @@ import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.binding.net.model.TcpBindingDefinition;
 import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 
 /**
@@ -54,6 +55,11 @@ public class TcpBindingLoader extends AbstractBindingLoader<TcpBindingDefinition
     public TcpBindingDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         URI uri = parseUri(reader, context);
+        String scheme = uri.getScheme();
+        if (scheme != null && !"tcp".equalsIgnoreCase(scheme)) {
+            InvalidValue failure = new InvalidValue("Absolute binding URIs must use TCP as the scheme", reader);
+            context.addError(failure);
+        }
         Document key = loaderHelper.loadKey(reader);
         TcpBindingDefinition definition = new TcpBindingDefinition(uri, key);
         TcpConfig config = definition.getConfig();

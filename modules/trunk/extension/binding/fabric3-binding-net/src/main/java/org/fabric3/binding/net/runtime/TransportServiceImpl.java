@@ -17,6 +17,7 @@
 package org.fabric3.binding.net.runtime;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
@@ -34,7 +35,11 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.provision.TransportType;
 import org.fabric3.binding.net.runtime.http.HttpRequestHandler;
 import org.fabric3.binding.net.runtime.http.HttpServerPipelineFactory;
+import org.fabric3.binding.net.runtime.tcp.TcpPipelineFactory;
+import org.fabric3.binding.net.runtime.tcp.TcpRequestHandler;
 import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -43,18 +48,32 @@ import org.fabric3.spi.wire.Wire;
 public class TransportServiceImpl implements TransportService {
     private final WorkScheduler scheduler;
     private CommunicationsMonitor monitor;
-    private ChannelFactory factory;
-    private Channel httpChannel;
 
     private long closeTimeout = 10000;
-    private String httpAddress = "127.0.0.1";
+    private String ipAddress = "127.0.0.1";
+
     private int httpPort = 8282;
-    private HttpRequestHandler httpRequestHandler;
+    private int tcpPort = 8383;
+    private String httpWireFormat = "jdk";
+    private String tcpWireFormat = "jdk";
+    private Map<String, Serializer> serializers;
+
+
     private Timer timer;
+    private ChannelFactory factory;
+    private Channel httpChannel;
+    private Channel tcpChannel;
+    private HttpRequestHandler httpRequestHandler;
+    private TcpRequestHandler tcpRequestHandler;
 
     public TransportServiceImpl(@Reference WorkScheduler scheduler, @Monitor CommunicationsMonitor monitor) {
         this.scheduler = scheduler;
         this.monitor = monitor;
+    }
+
+    @Reference
+    public void setSerializers(Map<String, Serializer> serializers) {
+        this.serializers = serializers;
     }
 
     @Property(required = false)
@@ -63,8 +82,8 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Property(required = false)
-    public void setHttpAddress(String httpAddress) {
-        this.httpAddress = httpAddress;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     @Property(required = false)
@@ -72,11 +91,25 @@ public class TransportServiceImpl implements TransportService {
         this.httpPort = httpPort;
     }
 
+    @Property(required = false)
+    public void setTcpPort(int tcpPort) {
+        this.tcpPort = tcpPort;
+    }
+
+    @Property(required = false)
+    public void setTcpWireFormat(String tcpWireFormat) {
+        this.tcpWireFormat = tcpWireFormat;
+    }
+
+    @Property(required = false)
+    public void setHttpWireFormat(String httpWireFormat) {
+        this.httpWireFormat = httpWireFormat;
+    }
+
     @Init
     public void init() {
         factory = new NioServerSocketChannelFactory(scheduler, scheduler);
         timer = new HashedWheelTimer();
-        createHttpChannel();
     }
 
     @Destroy
@@ -91,17 +124,30 @@ public class TransportServiceImpl implements TransportService {
             // Don't release resources as it waits for the core threadpool to cease operations
             // factory.releaseExternalResources();
         }
+        if (tcpChannel != null) {
+            ChannelFuture future = tcpChannel.close();
+            future.awaitUninterruptibly();
+            if (!future.isSuccess()) {
+                monitor.error(future.getCause());
+            }
+        }
     }
 
-    public void register(TransportType type, String path, String callbackUri, Wire wire) {
+    public void register(TransportType type, String path, String callbackUri, Wire wire) throws WiringException {
         switch (type) {
         case HTTP:
+            if (httpRequestHandler == null) {
+                createHttpChannel();
+            }
             httpRequestHandler.register(path, callbackUri, wire);
             break;
         case HTTPS:
             throw new UnsupportedOperationException();
         case TCP:
-            throw new UnsupportedOperationException();
+            if (tcpRequestHandler == null) {
+                createTcpChannel();
+            }
+            tcpRequestHandler.register(path, callbackUri, wire);
         }
     }
 
@@ -113,13 +159,17 @@ public class TransportServiceImpl implements TransportService {
         case HTTPS:
             throw new UnsupportedOperationException();
         case TCP:
-            throw new UnsupportedOperationException();
+            tcpRequestHandler.unregister(path);
         }
     }
 
-    private void createHttpChannel() {
+    private void createHttpChannel() throws WiringException {
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
-        httpRequestHandler = new HttpRequestHandler(monitor);
+        Serializer serializer = serializers.get(httpWireFormat);
+        if (serializer == null) {
+            throw new WiringException("Serializer not found for: " + tcpWireFormat);
+        }
+        httpRequestHandler = new HttpRequestHandler(serializer, monitor);
         HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler, timer, closeTimeout);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
@@ -128,8 +178,27 @@ public class TransportServiceImpl implements TransportService {
         // receiveBufferSize, sendBufferSize, writeBufferHighWaterMark, writeBufferLowWaterMark, writeSpinCount, receiveBufferSizePredictor
 
         // Bind and start to accept incoming connections.
-        InetSocketAddress socketAddress = new InetSocketAddress(httpAddress, httpPort);
+        InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, httpPort);
         httpChannel = bootstrap.bind(socketAddress);
+    }
+
+    private void createTcpChannel() throws WiringException {
+        ServerBootstrap bootstrap = new ServerBootstrap(factory);
+        Serializer serializer = serializers.get(tcpWireFormat);
+        if (serializer == null) {
+            throw new WiringException("Serializer not found for: " + tcpWireFormat);
+        }
+        tcpRequestHandler = new TcpRequestHandler(serializer, monitor);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(tcpRequestHandler, timer, closeTimeout);
+        bootstrap.setPipelineFactory(pipeline);
+        bootstrap.setOption("child.tcpNoDelay", true);
+        bootstrap.setOption("child.keepAlive", true);
+        // TODO  configure following integer vals:
+        // receiveBufferSize, sendBufferSize, writeBufferHighWaterMark, writeBufferLowWaterMark, writeSpinCount, receiveBufferSizePredictor
+
+        // Bind and start to accept incoming connections.
+        InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, tcpPort);
+        tcpChannel = bootstrap.bind(socketAddress);
     }
 
 }

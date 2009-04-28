@@ -14,10 +14,9 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime.http;
+package org.fabric3.binding.net.runtime.tcp;
 
 import java.net.SocketAddress;
-import java.util.List;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -25,44 +24,37 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
-import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
-import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.serializer.Serializer;
-import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Propagates non-blocking invocations made by a client over an HTTP channel. This interceptor is placed on the reference side of an invocation
- * chain.
+ * Propagates non-blocking invocations made by a client over a TCP channel. This interceptor is placed on the reference side of an invocation chain.
  *
  * @version $Revision$ $Date$
  */
-public class HttpOneWayInterceptor implements Interceptor {
+public class TcpOneWayInterceptor implements Interceptor {
     private static final Message MESSAGE = new MessageImpl();
-    private String operationName;
+    private String targetUri;
     private ClientBootstrap boostrap;
     private SocketAddress address;
     private Serializer serializer;
     private CommunicationsMonitor monitor;
-    private String url;
+    private String operationName;
 
-    public HttpOneWayInterceptor(String url,
-                                 String operationName,
-                                 ClientBootstrap boostrap,
-                                 SocketAddress address,
-                                 Serializer serializer,
-                                 CommunicationsMonitor monitor) {
-        this.url = url;
+    public TcpOneWayInterceptor(String targetUri,
+                                String operationName,
+                                ClientBootstrap boostrap,
+                                SocketAddress address,
+                                Serializer serializer,
+                                CommunicationsMonitor monitor) {
         this.operationName = operationName;
+        this.targetUri = targetUri;
         this.boostrap = boostrap;
         this.address = address;
         this.serializer = serializer;
@@ -79,35 +71,15 @@ public class HttpOneWayInterceptor implements Interceptor {
                     monitor.error(future.getCause());
                     return;
                 }
-                HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, url);
+                WorkContext workContext = msg.getWorkContext();
+                // set the target uri and operation names
+                workContext.setHeader(NetConstants.TARGET_URI, targetUri);
+                workContext.setHeader(NetConstants.OPERATION_NAME, operationName);
 
-                request.addHeader(NetConstants.OPERATION_NAME, operationName);
+                byte[] serialized = serializer.serialize(msg);
 
-                List<CallFrame> stack = msg.getWorkContext().getCallFrameStack();
-                if (!stack.isEmpty()) {
-                    byte[] serialized = serializer.serialize(stack);
-                    String routing = Base64.encode(serialized);
-                    request.addHeader(NetConstants.ROUTING, routing);
-                }
-                Object body = msg.getBody();
-
-                if (body != null) {
-                    String str;
-                    if (body.getClass().isArray()) {
-                        Object[] payload = (Object[]) body;
-                        if (payload.length > 1) {
-                            throw new UnsupportedOperationException("Multiple paramters not supported");
-                        }
-                        str = payload[0].toString();
-                    } else {
-                        str = body.toString();
-                    }
-                    request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(str.length()));
-                    ChannelBuffer buf = ChannelBuffers.copiedBuffer(str, "UTF-8");
-                    request.setContent(buf);
-                }
-
-                ChannelFuture writeFuture = channel.write(request);
+                ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(serialized);
+                ChannelFuture writeFuture = channel.write(buffer);
                 writeFuture.addListener(new ChannelFutureListener() {
 
                     public void operationComplete(ChannelFuture future) throws Exception {

@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime.http;
+package org.fabric3.binding.net.runtime.tcp;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
+import org.fabric3.binding.net.provision.TcpWireTargetDefinition;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
@@ -46,19 +46,19 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Attaches references to an HTTP channel.
+ * Attaches references configured to use the TCP binding to the channel and handler pipeline.
  *
  * @version $Revision$ $Date$
  */
-public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
+public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDefinition> {
     private long closeTimeout = 10000;
-    private String httpWireFormat = "jdk";
     private CommunicationsMonitor monitor;
-    private Map<String, Serializer> serializers;
     private ChannelFactory factory;
     private Timer timer;
+    private Map<String, Serializer> serializers;
+    private String tcpWireFormat = "jdk";
 
-    public HttpTargetWireAttacher(@Monitor CommunicationsMonitor monitor) {
+    public TcpTargetWireAttacher(@Monitor CommunicationsMonitor monitor) {
         this.monitor = monitor;
     }
 
@@ -73,10 +73,9 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         this.closeTimeout = timeout;
     }
 
-    // FIXME this should be configured to same value as TransportServiceImpl
     @Property(required = false)
-    public void setHttpWireFormat(String httpWireFormat) {
-        this.httpWireFormat = httpWireFormat;
+    public void setTcpWireFormat(String tcpWireFormat) {
+        this.tcpWireFormat = tcpWireFormat;
     }
 
     @Init
@@ -93,7 +92,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         }
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, HttpWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, TcpWireTargetDefinition target, Wire wire) throws WiringException {
 
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             if (entry.getKey().isOneWay()) {
@@ -104,20 +103,20 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         }
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, HttpWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalWireSourceDefinition source, TcpWireTargetDefinition target) throws WiringException {
         // no-op
     }
 
-    public ObjectFactory<?> createObjectFactory(HttpWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(TcpWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(HttpWireTargetDefinition target, PhysicalOperationDefinition operation, InvocationChain chain)
+    private void attachOneWay(TcpWireTargetDefinition target, PhysicalOperationDefinition operation, InvocationChain chain)
             throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         OneWayClientHandler handler = new OneWayClientHandler(monitor);
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, closeTimeout);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, closeTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -126,22 +125,25 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
         String name = operation.getName();
-        Serializer serializer = serializers.get(httpWireFormat);
+        Serializer serializer = serializers.get(tcpWireFormat);
         if (serializer == null) {
-            throw new WiringException("Serializer not found for: " + httpWireFormat);
+            throw new WiringException("Serializer not found for: " + tcpWireFormat);
         }
-
-        HttpOneWayInterceptor interceptor = new HttpOneWayInterceptor(path, name, bootstrap, address, serializer, monitor);
+        TcpOneWayInterceptor interceptor = new TcpOneWayInterceptor(path, name, bootstrap, address, serializer, monitor);
         chain.addInterceptor(interceptor);
     }
 
-    private void attachRequestResponse(HttpWireTargetDefinition target,
+    private void attachRequestResponse(TcpWireTargetDefinition target,
                                        PhysicalOperationDefinition operation,
                                        InvocationChain chain) throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
-        HttpResponseHandler handler = new HttpResponseHandler(closeTimeout, monitor);
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, closeTimeout);
+        Serializer serializer = serializers.get(tcpWireFormat);
+        if (serializer == null) {
+            throw new WiringException("Serializer not found for: " + tcpWireFormat);
+        }
+        TcpResponseHandler handler = new TcpResponseHandler(serializer, closeTimeout, monitor);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, closeTimeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -150,11 +152,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
         String name = operation.getName();
-        Serializer serializer = serializers.get(httpWireFormat);
-        if (serializer == null) {
-            throw new WiringException("Serializer not found for: " + httpWireFormat);
-        }
-        HttpRequestResponseInterceptor interceptor = new HttpRequestResponseInterceptor(path, name, serializer, bootstrap, address);
+        TcpRequestResponseInterceptor interceptor = new TcpRequestResponseInterceptor(path, name, serializer, bootstrap, address);
         chain.addInterceptor(interceptor);
     }
 

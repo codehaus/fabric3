@@ -16,10 +16,6 @@
  */
 package org.fabric3.binding.net.runtime.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,27 +43,29 @@ import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_0;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import org.osoa.sca.Conversation;
 
-import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.provision.NetConstants;
 import static org.fabric3.binding.net.provision.NetConstants.OPERATION_NAME;
-import org.fabric3.binding.net.runtime.NetRequestHandler;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.runtime.NetRequestHandler;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Handles incoming requests from a channel. This is placed on the service side of an invocation chain.
+ * Handles incoming requests from an HTTP channel. This is placed on the service side of an invocation chain.
  */
 @ChannelPipelineCoverage("one")
 public class HttpRequestHandler extends SimpleChannelHandler implements NetRequestHandler {
+    private Serializer serializer;
     private CommunicationsMonitor monitor;
     private String contentType = "text/plain; charset=UTF-8";
     private volatile HttpRequest request;
@@ -75,7 +73,8 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
     private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
     private StringBuilder requestContent = new StringBuilder();
 
-    public HttpRequestHandler(@Monitor CommunicationsMonitor monitor) {
+    public HttpRequestHandler(Serializer serializer, CommunicationsMonitor monitor) {
+        this.serializer = serializer;
         this.monitor = monitor;
     }
 
@@ -114,7 +113,7 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
     }
 
     @SuppressWarnings({"unchecked"})
-    private void invoke(HttpRequest request, String content, MessageEvent event) throws IOException, ClassNotFoundException {
+    private void invoke(HttpRequest request, String content, MessageEvent event) throws SerializationException, ClassNotFoundException {
         Holder holder = wires.get(request.getUri());
         if (holder == null) {
             throw new AssertionError("Holder not found for request:" + request.getUri());
@@ -122,11 +121,12 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
         Wire wire = holder.getWire();
         String callbackUri = holder.getCallbackUri();
         String routing = request.getHeader(NetConstants.ROUTING);
+        Message message = new MessageImpl();
         WorkContext context = new WorkContext();
+        message.setWorkContext(context);
         if (routing != null) {
-            ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(Base64.decode(routing)));
-            List<CallFrame> stack = (List<CallFrame>) stream.readObject();
-            context.addCallFrames(stack);
+            List<CallFrame> frames = serializer.deserialize(List.class, Base64.decode(routing));
+            context.addCallFrames(frames);
             CallFrame previous = context.peekCallFrame();
             // Copy correlation and conversation information from incoming frame to new frame
             // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
@@ -136,13 +136,7 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
             Conversation conversation = previous.getConversation();
             CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
             context.addCallFrame(frame);
-
-        } else {
-            // Tolerate and empty callframe
-            context.addCallFrames(new ArrayList<CallFrame>());
         }
-        Message message = new MessageImpl();
-        message.setWorkContext(context);
         message.setBody(content);
         Interceptor interceptor = selectOperation(request, wire);
         Message response = interceptor.invoke(message);
@@ -208,8 +202,7 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
-            throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         monitor.error(e.getCause());
         e.getChannel().close();
     }
