@@ -24,7 +24,6 @@ import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
 
-import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.services.serializer.SerializationException;
 import org.fabric3.spi.services.serializer.Serializer;
 
@@ -57,7 +56,7 @@ public class HessianSerializer implements Serializer {
             Hessian2Input in = new Hessian2Input(bis);
             in.setSerializerFactory(factory);
             in.startMessage();
-            Object ret = in.readObject(Message.class);
+            Object ret = in.readObject(clazz);
             in.completeMessage();
             in.close();
             return clazz.cast(ret);
