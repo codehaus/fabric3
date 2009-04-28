@@ -29,7 +29,7 @@
     <component name="AsyncClientService">
         <implementation.java class="org.fabric3.tests.binding.harness.callback.AsyncClientServiceImpl"/>
         <reference name="service">
-            <binding.http uri="/asyncForwardService">
+            <binding.http uri="http://127.0.0.1:8282/asyncForwardService">
                 <wireFormat.json/>
             </binding.http>
             <callback>
@@ -47,7 +47,7 @@
                 <wireFormat.json/>
             </binding.http>
             <callback>
-                <binding.http uri="/asyncClientServiceCallback">
+                <binding.http uri="http://127.0.0.1:8282/asyncClientServiceCallback">
                     <wireFormat.json/>
                 </binding.http>
             </callback>
