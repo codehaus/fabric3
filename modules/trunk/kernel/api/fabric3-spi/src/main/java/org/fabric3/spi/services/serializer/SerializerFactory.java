@@ -16,21 +16,23 @@
  */
 package org.fabric3.spi.services.serializer;
 
-import org.fabric3.host.Fabric3Exception;
+import java.util.Set;
 
 /**
- * Denotes a general serialization exception.
+ * Creates or returns Serializer instances.
  *
  * @version $Revision$ $Date$
  */
-public class SerializationException extends Fabric3Exception {
-    private static final long serialVersionUID = -8851706178703876467L;
+public interface SerializerFactory {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Create or return a Serializer  instance.
+     *
+     * @param types      the types the Serializer will serialize and deserialize
+     * @param faultTypes the fault types the Serializer will serialize and deserialize
+     * @return a Serializer instance
+     * @throws SerializationException if an exception occurs creating or returning a Serializer
+     */
+    Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException;
 
-    public SerializationException(String message) {
-        super(message);
-    }
 }

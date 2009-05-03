@@ -31,13 +31,13 @@ import org.fabric3.spi.invocation.WorkContext;
 /**
  * @version $Revision$ $Date$
  */
-public class JDKSerializerTestCase extends TestCase {
-    private JDKSerializer serializer = new JDKSerializer();
+public class JDKSerializerFactoryTestCase extends TestCase {
+    private JDKSerializerFactory serializerFactory = new JDKSerializerFactory();
     private Message message;
 
     public void testRountTrip() throws Exception {
-        byte[] bytes = serializer.serialize(message);
-        Message msg = serializer.deserialize(Message.class, bytes);
+        byte[] bytes = serializerFactory.serialize(byte[].class, message);
+        Message msg = serializerFactory.deserialize(Message.class, bytes);
         assertEquals(1, msg.getWorkContext().getCallFrameStack().size());
     }
 

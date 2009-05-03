@@ -26,21 +26,41 @@ public interface Serializer {
     /**
      * Serializes an object.
      *
+     * @param clazz   the Java type to serialize to, e.g. a String or byte array
      * @param message the message to serialize
      * @return the serialized bytes
      * @throws SerializationException if a serialization error occurs
      */
-    byte[] serialize(Object message) throws SerializationException;
+    <T> T serialize(Class<T> clazz, Object message) throws SerializationException;
 
     /**
-     * Deserializes a byte array.
+     * Serializes a fault.
      *
-     * @param clazz the class of the expected type
-     * @param bytes the bytes to deserialize
-     * @param <T>   the expected type
-     * @return a deserialized object
+     * @param clazz     the Java type to serialize to, e.g. a String or byte array
+     * @param exception the fault instance
+     * @return the serialized bytes
+     * @throws SerializationException if a serialization error occurs
+     */
+    <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException;
+
+    /**
+     * Deserializes an object.
+     *
+     * @param clazz      the class representing the expected type
+     * @param serialized the object to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
+     * @param <T>        the expected type
+     * @return the deserialized object
      * @throws SerializationException if a deserialization error occurs
      */
-    <T> T deserialize(Class<T> clazz, byte[] bytes) throws SerializationException;
+    <T> T deserialize(Class<T> clazz, Object serialized) throws SerializationException;
+
+    /**
+     * Deserializes a an object.
+     *
+     * @param serialized the fault to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
+     * @return the deserialized fault
+     * @throws SerializationException if a deserialization error occurs
+     */
+    Throwable deserializeFault(Object serialized) throws SerializationException;
 
 }

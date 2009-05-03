@@ -16,21 +16,19 @@
  */
 package org.fabric3.spi.services.serializer;
 
-import org.fabric3.host.Fabric3Exception;
-
 /**
- * Denotes a general serialization exception.
+ * Raised when an attempt to serialize or deserialize an unsupported type is made.
  *
  * @version $Revision$ $Date$
  */
-public class SerializationException extends Fabric3Exception {
-    private static final long serialVersionUID = -8851706178703876467L;
+public class UnsupportedTypesException extends SerializationException {
+    private static final long serialVersionUID = 4607391693877849373L;
 
-    public SerializationException(Throwable cause) {
+    public UnsupportedTypesException(Throwable cause) {
         super(cause);
     }
 
-    public SerializationException(String message) {
+    public UnsupportedTypesException(String message) {
         super(message);
     }
 }
