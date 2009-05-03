@@ -36,7 +36,6 @@ package org.fabric3.fabric.generator.context;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +79,7 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
 
     public Map<String, List<Command>> generate(List<LogicalComponent<?>> components, CommandMap map, boolean incremental) throws GenerationException {
         Map<String, List<Command>> commands = new HashMap<String, List<Command>>();
+        List<QName> deployables = new ArrayList<QName>();
         for (LogicalComponent<?> component : components) {
             if (component.getState() == LogicalState.NEW || !incremental) {
                 StartContextCommand command = new StartContextCommand(component.getDeployable());
@@ -87,10 +87,11 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
                 if (!list.contains(command)) {
                     list.add(command);
                 }
+                deployables.add(component.getDeployable());
             }
         }
         try {
-            sort(commands, map);
+            sort(commands, map, deployables);
         } catch (GraphException e) {
             throw new GenerationException(e);
         }
@@ -117,18 +118,20 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
     /**
      * Sorts the start context commands by the order of the deployable contexts.
      *
-     * @param commands the start context commands
-     * @param map      the sorted map of zone id to ordered list of start context commands
+     * @param commands    the start context commands
+     * @param map         the sorted map of zone id to ordered list of start context commands
+     * @param deployables the list of deployables
      * @throws GraphException if an error occurs building the graph used to calculatre order occurs
      */
-    private void sort(Map<String, List<Command>> commands, CommandMap map) throws GraphException {
+    private void sort(Map<String, List<Command>> commands, CommandMap map, List<QName> deployables) throws GraphException {
         for (Map.Entry<String, List<Command>> entry : map.getCommands().entrySet()) {
-            Map<QName, Integer> order = calculateDeployableOrder(entry.getValue());
+            Map<QName, Integer> order = calculateDeployableOrder(entry.getValue(), deployables);
             if (order.isEmpty()) {
                 return;
             }
             ContextComparator comparator = new ContextComparator(order);
-            Collections.sort(commands.get(entry.getKey()), comparator);
+            List<Command> list = commands.get(entry.getKey());
+            Collections.sort(list, comparator);
         }
     }
 
@@ -138,11 +141,12 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
      * commands for a zone. This DAG is then sorted and the reverse topological order representing the deployable context dependencies is returned.
      * Callback wires are ignored as depenency ordering is done in the forward direction.
      *
-     * @param commands the list of commands
+     * @param commands    the list of commands
+     * @param deployables the list of deployables
      * @return a map of deplopyable contexts and their relative ordering
      * @throws GraphException if an error building the graph is raised
      */
-    private Map<QName, Integer> calculateDeployableOrder(List<Command> commands) throws GraphException {
+    private Map<QName, Integer> calculateDeployableOrder(List<Command> commands, List<QName> deployables) throws GraphException {
         DirectedGraph<QName> dag = new DirectedGraphImpl<QName>();
         // add the contributions as vertices
         for (Command command : commands) {
@@ -179,9 +183,19 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
         }
         List<Vertex<QName>> vertices = sorter.reverseSort(dag);
         Map<QName, Integer> deployableOrder = new HashMap<QName, Integer>(vertices.size());
-        for (int i = 0; i < vertices.size(); i++) {
+        int i = 0;
+        while (i < vertices.size()) {
             Vertex<QName> vertex = vertices.get(i);
             deployableOrder.put(vertex.getEntity(), i);
+            i++;
+        }
+        // The deployables calculated from the graph of wires may not be all of the deployables since a composite may contain components with no wires
+        // Add the rest of the deployables to the end of the list
+        for (QName deployable : deployables) {
+            if (!deployableOrder.containsKey(deployable)) {
+                deployableOrder.put(deployable, i);
+                i++;
+            }
         }
         return deployableOrder;
 
@@ -194,33 +208,6 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
             }
         }
         return null;
-    }
-
-
-    private class ContextComparator implements Comparator<Command> {
-        private Map<QName, Integer> deployableOrder;
-
-        private ContextComparator(Map<QName, Integer> deployableOrder) {
-            this.deployableOrder = deployableOrder;
-        }
-
-        public int compare(Command first, Command second) {
-            if (!(first instanceof StartContextCommand) || !(second instanceof StartContextCommand)) {
-                return 0;
-            }
-            QName firstDeployable = ((StartContextCommand) first).getDeployable();
-            Integer firstPos = deployableOrder.get(firstDeployable);
-            if (firstPos == null) {
-                return 0;
-            }
-            QName secondDeployable = ((StartContextCommand) second).getDeployable();
-            Integer secondPos = deployableOrder.get(secondDeployable);
-            if (secondPos == null) {
-                return 0;
-                //throw new AssertionError("Deployable not found:" + secondDeployable);
-            }
-            return firstPos - secondPos;
-        }
     }
 
 
