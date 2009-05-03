@@ -17,6 +17,8 @@
 package org.fabric3.binding.net.runtime;
 
 import java.net.InetSocketAddress;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -32,14 +34,16 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.net.provision.TransportType;
 import org.fabric3.binding.net.runtime.http.HttpRequestHandler;
 import org.fabric3.binding.net.runtime.http.HttpServerPipelineFactory;
+import org.fabric3.binding.net.runtime.http.WireHolder;
 import org.fabric3.binding.net.runtime.tcp.TcpPipelineFactory;
 import org.fabric3.binding.net.runtime.tcp.TcpRequestHandler;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.services.serializer.SerializationException;
 import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.services.serializer.SerializerFactory;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -56,7 +60,7 @@ public class TransportServiceImpl implements TransportService {
     private int tcpPort = 8383;
     private String httpWireFormat = "jdk";
     private String tcpWireFormat = "jdk";
-    private Map<String, Serializer> serializers;
+    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
 
 
     private Timer timer;
@@ -72,8 +76,8 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Reference
-    public void setSerializers(Map<String, Serializer> serializers) {
-        this.serializers = serializers;
+    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
+        this.serializerFactories = serializerFactories;
     }
 
     @Property(required = false)
@@ -133,42 +137,32 @@ public class TransportServiceImpl implements TransportService {
         }
     }
 
-    public void register(TransportType type, String path, String callbackUri, Wire wire) throws WiringException {
-        switch (type) {
-        case HTTP:
-            if (httpRequestHandler == null) {
-                createHttpChannel();
-            }
-            httpRequestHandler.register(path, callbackUri, wire);
-            break;
-        case HTTPS:
-            throw new UnsupportedOperationException();
-        case TCP:
-            if (tcpRequestHandler == null) {
-                createTcpChannel();
-            }
-            tcpRequestHandler.register(path, callbackUri, wire);
+    public void registerHttp(String path, WireHolder wireHolder) throws WiringException {
+        if (httpRequestHandler == null) {
+            createHttpChannel();
         }
+        httpRequestHandler.register(path, wireHolder);
     }
 
-    public void unregister(TransportType type, String path) {
-        switch (type) {
-        case HTTP:
-            httpRequestHandler.unregister(path);
-            break;
-        case HTTPS:
-            throw new UnsupportedOperationException();
-        case TCP:
-            tcpRequestHandler.unregister(path);
+    public void registerTcp(String path, String callbackUri, Wire wire) throws WiringException {
+        if (tcpRequestHandler == null) {
+            createTcpChannel();
         }
+        tcpRequestHandler.register(path, callbackUri, wire);
+
+    }
+
+    public void unregisterHttp(String path) {
+        httpRequestHandler.unregister(path);
+    }
+
+    public void unregisterTcp(String path) {
+        tcpRequestHandler.unregister(path);
     }
 
     private void createHttpChannel() throws WiringException {
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
-        Serializer serializer = serializers.get(httpWireFormat);
-        if (serializer == null) {
-            throw new WiringException("Serializer not found for: " + tcpWireFormat);
-        }
+        Serializer serializer = getSerializer(httpWireFormat);
         httpRequestHandler = new HttpRequestHandler(serializer, monitor);
         HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
@@ -184,10 +178,7 @@ public class TransportServiceImpl implements TransportService {
 
     private void createTcpChannel() throws WiringException {
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
-        Serializer serializer = serializers.get(tcpWireFormat);
-        if (serializer == null) {
-            throw new WiringException("Serializer not found for: " + tcpWireFormat);
-        }
+        Serializer serializer = getSerializer(tcpWireFormat);
         tcpRequestHandler = new TcpRequestHandler(serializer, monitor);
         TcpPipelineFactory pipeline = new TcpPipelineFactory(tcpRequestHandler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
@@ -201,4 +192,17 @@ public class TransportServiceImpl implements TransportService {
         tcpChannel = bootstrap.bind(socketAddress);
     }
 
+    //FIXME get rid of this method and replace with header serializer type
+    private Serializer getSerializer(String wireFormat) throws WiringException {
+        SerializerFactory factory = serializerFactories.get(wireFormat);
+        if (factory == null) {
+            throw new WiringException("Serializer not found for: " + wireFormat);
+        }
+        try {
+            return factory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        } catch (SerializationException e) {
+            throw new WiringException(e);
+        }
+
+    }
 }

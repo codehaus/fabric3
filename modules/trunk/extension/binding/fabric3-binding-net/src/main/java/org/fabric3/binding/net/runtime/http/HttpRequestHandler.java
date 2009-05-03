@@ -46,7 +46,6 @@ import org.osoa.sca.Conversation;
 import org.fabric3.binding.net.provision.NetConstants;
 import static org.fabric3.binding.net.provision.NetConstants.OPERATION_NAME;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
-import org.fabric3.binding.net.runtime.NetRequestHandler;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -57,34 +56,48 @@ import org.fabric3.spi.services.serializer.SerializationException;
 import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Handles incoming requests from an HTTP channel. This is placed on the service side of an invocation chain.
  */
 @ChannelPipelineCoverage("one")
-public class HttpRequestHandler extends SimpleChannelHandler implements NetRequestHandler {
-    private Serializer serializer;
+public class HttpRequestHandler extends SimpleChannelHandler {
+    private Serializer headerSerializer;
     private CommunicationsMonitor monitor;
     private String contentType = "text/plain; charset=UTF-8";
     private volatile HttpRequest request;
     private volatile boolean readingChunks;
-    private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
+    private Map<String, WireHolder> pathToHolders = new ConcurrentHashMap<String, WireHolder>();
     private StringBuilder requestContent = new StringBuilder();
 
-    public HttpRequestHandler(Serializer serializer, CommunicationsMonitor monitor) {
-        this.serializer = serializer;
+    /**
+     * Constructor.
+     *
+     * @param headerSerializer serialzes header information
+     * @param monitor          event monitor
+     */
+    public HttpRequestHandler(Serializer headerSerializer, CommunicationsMonitor monitor) {
+        this.headerSerializer = headerSerializer;
         this.monitor = monitor;
     }
 
-    public void register(String path, String callbackUri, Wire wire) {
-        Holder holder = new Holder(callbackUri, wire);
-        wires.put(path, holder);
+    /**
+     * Registers a wire for a request path, i.e. the path of the service URI.
+     *
+     * @param path   the path part of the service URI
+     * @param holder the wire holder containing the wire and serializers to perform an invocation for the path
+     */
+    public void register(String path, WireHolder holder) {
+        pathToHolders.put(path, holder);
     }
 
+    /**
+     * Unregisters a wire for a request path, i.e. the path of the service URI.
+     *
+     * @param path the path part of the service URI
+     */
     public void unregister(String path) {
-        wires.remove(path);
+        pathToHolders.remove(path);
     }
 
     @Override
@@ -114,18 +127,17 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
 
     @SuppressWarnings({"unchecked"})
     private void invoke(HttpRequest request, String content, MessageEvent event) throws SerializationException, ClassNotFoundException {
-        Holder holder = wires.get(request.getUri());
+        WireHolder holder = pathToHolders.get(request.getUri());
         if (holder == null) {
             throw new AssertionError("Holder not found for request:" + request.getUri());
         }
-        Wire wire = holder.getWire();
         String callbackUri = holder.getCallbackUri();
         String routing = request.getHeader(NetConstants.ROUTING);
         Message message = new MessageImpl();
         WorkContext context = new WorkContext();
         message.setWorkContext(context);
         if (routing != null) {
-            List<CallFrame> frames = serializer.deserialize(List.class, Base64.decode(routing));
+            List<CallFrame> frames = headerSerializer.deserialize(List.class, Base64.decode(routing));
             context.addCallFrames(frames);
             CallFrame previous = context.peekCallFrame();
             // Copy correlation and conversation information from incoming frame to new frame
@@ -137,28 +149,31 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
             CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
             context.addCallFrame(frame);
         }
-        message.setBody(content);
-        Interceptor interceptor = selectOperation(request, wire);
+        InvocationChainHolder chainHolder = selectOperation(request, holder);
+        Interceptor interceptor = chainHolder.getChain().getHeadInterceptor();
+        Serializer inputSerializer = chainHolder.getInputSerializer();
+        Serializer outputSerializer = chainHolder.getOutputSerializer();
+        Object body = inputSerializer.deserialize(Object.class, content);
+        if (body == null) {
+            // TODO distinguish passing null objects
+            // no params
+            message.setBody(null);
+        } else {
+            message.setBody(new Object[]{body});
+        }
         Message response = interceptor.invoke(message);
-        writeResponse(event, response);
+        writeResponse(event, response, outputSerializer);
     }
 
-    private Interceptor selectOperation(HttpRequest request, Wire wire) {
-        if (wire.getInvocationChains().size() == 1) {
-            // only one operation, select it
-            return wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
-        }
+    private InvocationChainHolder selectOperation(HttpRequest request, WireHolder wireHolder) {
+        List<InvocationChainHolder> chainHolders = wireHolder.getInvocationChains();
         String operationName = request.getHeader(OPERATION_NAME);
         if (operationName != null) {
-            InvocationChain chain = null;
-            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-                PhysicalOperationDefinition definition = entry.getKey();
+            for (InvocationChainHolder chainHolder : chainHolders) {
+                PhysicalOperationDefinition definition = chainHolder.getChain().getPhysicalOperation();
                 if (definition.getName().equals(operationName)) {
-                    chain = entry.getValue();
+                    return chainHolder;
                 }
-            }
-            if (chain != null) {
-                return chain.getHeadInterceptor();
             }
         }
         // TODO should select from HTTP Method name
@@ -166,7 +181,7 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
     }
 
 
-    private void writeResponse(MessageEvent event, Message msg) {
+    private void writeResponse(MessageEvent event, Message msg, Serializer serializer) {
         // reuse buffer
         requestContent.setLength(0);
 
@@ -175,23 +190,34 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
         boolean close = CLOSE.equalsIgnoreCase(header) || request.getProtocolVersion().equals(HTTP_1_0) && !KEEP_ALIVE.equalsIgnoreCase(header);
 
         HttpResponseStatus status;
+        String body;
         if (msg.isFault()) {
+            // FIXME should return a different 40X error
             status = HttpResponseStatus.INTERNAL_SERVER_ERROR;
+            try {
+                Throwable throwable = (Throwable) msg.getBody();
+                body = serializer.serializeFault(String.class, throwable);
+            } catch (SerializationException e) {
+                // FIXME
+                monitor.error(e);
+                return;
+            }
         } else {
             status = HttpResponseStatus.OK;
+            try {
+                Object content = msg.getBody();
+                body = serializer.serialize(String.class, content);
+            } catch (SerializationException e) {
+                // FIXME
+                monitor.error(e);
+                return;
+            }
         }
         HttpResponse response = new DefaultHttpResponse(HTTP_1_1, status);
-        String content = (String) msg.getBody();
 
-        if (content != null) {
-            ChannelBuffer buf = ChannelBuffers.copiedBuffer(content, "UTF-8");
-            response.setContent(buf);
-            response.setHeader(CONTENT_LENGTH, String.valueOf(buf.readableBytes()));
-        } else {
-            // FIXME should not have to do ths but otherwise it thinks the response is chunked
-            response.setHeader(CONTENT_LENGTH, "1");
-            response.setContent(ChannelBuffers.copiedBuffer(" ", "UTF-8"));
-        }
+        ChannelBuffer buf = ChannelBuffers.copiedBuffer(body, "UTF-8");
+        response.setContent(buf);
+        response.setHeader(CONTENT_LENGTH, String.valueOf(buf.readableBytes()));
         response.setHeader(CONTENT_TYPE, contentType);
 
         // Write the response
@@ -205,25 +231,6 @@ public class HttpRequestHandler extends SimpleChannelHandler implements NetReque
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         monitor.error(e.getCause());
         e.getChannel().close();
-    }
-
-    private class Holder {
-        private String callbackUri;
-        private Wire wire;
-
-        public Holder(String callbackUri, Wire wire) {
-            this.callbackUri = callbackUri;
-            this.wire = wire;
-        }
-
-
-        public String getCallbackUri() {
-            return callbackUri;
-        }
-
-        public Wire getWire() {
-            return wire;
-        }
     }
 
 

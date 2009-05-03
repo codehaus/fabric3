@@ -44,7 +44,16 @@ public class TcpRequestResponseInterceptor implements Interceptor {
     private SocketAddress address;
     private String path;
 
-    public TcpRequestResponseInterceptor(String path, String operationName, Serializer serializer, ClientBootstrap boostrap, SocketAddress address) {
+    /**
+     * Constructor.
+     *
+     * @param path          the path part of the target service URI
+     * @param operationName the name of the operation being invoked
+     * @param address       the target service address
+     * @param serializer    message serializer
+     * @param boostrap      the Netty ClientBootstrap instance for sending invocations
+     */
+    public TcpRequestResponseInterceptor(String path, String operationName, Serializer serializer, SocketAddress address, ClientBootstrap boostrap) {
         this.path = path;
         // TODO support name mangling
         this.operationName = operationName;
@@ -69,7 +78,7 @@ public class TcpRequestResponseInterceptor implements Interceptor {
 
         byte[] serialized;
         try {
-            serialized = serializer.serialize(msg);
+            serialized = serializer.serialize(byte[].class, msg);
         } catch (SerializationException e) {
             throw new ServiceUnavailableException(e);
         }

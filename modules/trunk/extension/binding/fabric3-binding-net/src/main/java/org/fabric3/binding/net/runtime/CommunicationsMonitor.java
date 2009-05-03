@@ -19,10 +19,16 @@ package org.fabric3.binding.net.runtime;
 import org.fabric3.api.annotation.logging.Severe;
 
 /**
+ * Monitor for communications events.
+ *
  * @version $Revision$ $Date$
  */
 public interface CommunicationsMonitor {
 
     @Severe
     void error(Throwable e);
+
+    @Severe
+    void errorMessage(String msg);
+
 }

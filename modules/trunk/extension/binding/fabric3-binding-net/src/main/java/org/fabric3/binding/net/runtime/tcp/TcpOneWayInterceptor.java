@@ -47,11 +47,21 @@ public class TcpOneWayInterceptor implements Interceptor {
     private CommunicationsMonitor monitor;
     private String operationName;
 
+    /**
+     * Constructor.
+     *
+     * @param targetUri     the target service URI
+     * @param operationName the name of the operation being invoked
+     * @param address       the target service address
+     * @param serializer    serializes the invocation message
+     * @param boostrap      the Netty ClientBootstrap instance for sending invocations
+     * @param monitor       the event monitor
+     */
     public TcpOneWayInterceptor(String targetUri,
                                 String operationName,
-                                ClientBootstrap boostrap,
                                 SocketAddress address,
                                 Serializer serializer,
+                                ClientBootstrap boostrap,
                                 CommunicationsMonitor monitor) {
         this.operationName = operationName;
         this.targetUri = targetUri;
@@ -76,7 +86,7 @@ public class TcpOneWayInterceptor implements Interceptor {
                 workContext.setHeader(NetConstants.TARGET_URI, targetUri);
                 workContext.setHeader(NetConstants.OPERATION_NAME, operationName);
 
-                byte[] serialized = serializer.serialize(msg);
+                byte[] serialized = serializer.serialize(byte[].class, msg);
 
                 ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(serialized);
                 ChannelFuture writeFuture = channel.write(buffer);

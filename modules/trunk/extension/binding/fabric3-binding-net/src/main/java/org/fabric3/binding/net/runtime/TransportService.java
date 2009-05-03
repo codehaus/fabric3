@@ -16,7 +16,7 @@
  */
 package org.fabric3.binding.net.runtime;
 
-import org.fabric3.binding.net.provision.TransportType;
+import org.fabric3.binding.net.runtime.http.WireHolder;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.wire.Wire;
 
@@ -28,22 +28,35 @@ import org.fabric3.spi.wire.Wire;
 public interface TransportService {
 
     /**
-     * Register the wire.
+     * Register the wire with the HTTP channel.
      *
-     * @param type        the transport channel type
+     * @param path       the service path which is its relative URI
+     * @param wireHolder the WireHolder containing the Wire and serializers for dispatching to the service at the path
+     * @throws WiringException if an exception registering the wire occurs
+     */
+    void registerHttp(String path, WireHolder wireHolder) throws WiringException;
+
+    /**
+     * Register the wire with the default TCP channel.
+     *
      * @param path        the service path which is its relative URI
      * @param callbackUri the callback URI or null if the service is unidirectional
      * @param wire        the wire
      * @throws WiringException if an exception registering the wire occurs
      */
-    void register(TransportType type, String path, String callbackUri, Wire wire) throws WiringException;
+    void registerTcp(String path, String callbackUri, Wire wire) throws WiringException;
 
     /**
-     * Unregister the wire.
+     * Unregisters a service bound over HTTP.
      *
-     * @param type the transport channel type
-     * @param path the service path which is its relative URI
+     * @param path the service path
      */
-    void unregister(TransportType type, String path);
+    void unregisterHttp(String path);
 
+    /**
+     * Unregisters a service bound over TCP.
+     *
+     * @param path the service path
+     */
+    void unregisterTcp(String path);
 }

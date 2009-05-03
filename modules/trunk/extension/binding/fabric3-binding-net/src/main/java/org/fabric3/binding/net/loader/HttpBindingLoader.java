@@ -17,7 +17,6 @@
 package org.fabric3.binding.net.loader;
 
 import java.net.URI;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -28,7 +27,6 @@ import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.binding.net.model.HttpBindingDefinition;
-import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
@@ -42,7 +40,6 @@ import org.fabric3.spi.introspection.xml.MissingAttribute;
 @EagerInit
 public class HttpBindingLoader extends AbstractBindingLoader<HttpBindingDefinition> {
     private final LoaderHelper loaderHelper;
-    private static final QName JAXB_POLICY = new QName(Namespaces.POLICY, "dataBinding.jaxb");
 
     /**
      * Constructor.
@@ -70,14 +67,6 @@ public class HttpBindingLoader extends AbstractBindingLoader<HttpBindingDefiniti
             switch (reader.next()) {
             case XMLStreamConstants.END_ELEMENT:
                 if ("binding.http".equals(reader.getName().getLocalPart())) {
-                    String wireFormat = definition.getConfig().getWireFormat();
-                    if (wireFormat == null) {
-                        // make JSON the default serialization
-                        // TODO make this configurable
-                        definition.addIntent(JAXB_POLICY);
-                    } else {
-                        definition.addIntent(new QName(Namespaces.POLICY, "dataBinding." + wireFormat));
-                    }
                     return definition;
                 }
                 break;

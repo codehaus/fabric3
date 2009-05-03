@@ -21,7 +21,6 @@ import java.net.URI;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.net.provision.TcpWireSourceDefinition;
-import org.fabric3.binding.net.provision.TransportType;
 import org.fabric3.binding.net.runtime.TransportService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -51,11 +50,11 @@ public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDe
         if (target.getCallbackUri() != null) {
             callbackUri = target.getCallbackUri().toString();
         }
-        service.register(TransportType.TCP, sourceUri, callbackUri, wire);
+        service.registerTcp(sourceUri, callbackUri, wire);
     }
 
     public void detachFromSource(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        service.unregister(TransportType.TCP, source.getUri().toString());
+        service.unregisterTcp(source.getUri().toString());
     }
 
     public void attachObjectFactory(TcpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)

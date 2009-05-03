@@ -14,30 +14,35 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime;
+package org.fabric3.binding.net.runtime.http;
 
-import org.fabric3.spi.wire.Wire;
+import java.util.List;
 
 /**
- * Receives requests from a channel and passes them to the appropriate wire invocation chain.
+ * Holder for Wires and required metadata for performing an invocation.
  *
  * @version $Revision$ $Date$
  */
-public interface NetRequestHandler {
+public class WireHolder {
+    private List<InvocationChainHolder> chains;
+    private String callbackUri;
 
     /**
-     * Registers a wire for a request path, i.e. the path of the service URI.
+     * Constructor.
      *
-     * @param path        the path part of the service URI
-     * @param callbackUri the callback URI associated with the wire or null if it is unidirectional
-     * @param wire        the wire
+     * @param chains      InvocationChains contained by the wire
+     * @param callbackUri the callback URI or null if the wire is unidirectional
      */
-    void register(String path, String callbackUri, Wire wire);
+    public WireHolder(List<InvocationChainHolder> chains, String callbackUri) {
+        this.chains = chains;
+        this.callbackUri = callbackUri;
+    }
 
-    /**
-     * Unregisters a wire for a request path, i.e. the path of the service URI.
-     *
-     * @param path the path part of the service URI
-     */
-    void unregister(String path);
+    public String getCallbackUri() {
+        return callbackUri;
+    }
+
+    public List<InvocationChainHolder> getInvocationChains() {
+        return chains;
+    }
 }

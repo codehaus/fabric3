@@ -32,7 +32,6 @@ import org.osoa.sca.Conversation;
 
 import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
-import org.fabric3.binding.net.runtime.NetRequestHandler;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -48,21 +47,39 @@ import org.fabric3.spi.wire.Wire;
  * Handles incoming requests from a TCP channel. This is placed on the service side of an invocation chain.
  */
 @ChannelPipelineCoverage("one")
-public class TcpRequestHandler extends SimpleChannelHandler implements NetRequestHandler {
+public class TcpRequestHandler extends SimpleChannelHandler {
     private Serializer serializer;
     private CommunicationsMonitor monitor;
     private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
 
+    /**
+     * Constructor.
+     *
+     * @param serializer serializes messages
+     * @param monitor    the event monitor
+     */
     public TcpRequestHandler(Serializer serializer, CommunicationsMonitor monitor) {
         this.serializer = serializer;
         this.monitor = monitor;
     }
 
+    /**
+     * Registers a wire for a request path, i.e. the path of the service URI.
+     *
+     * @param path        the path part of the service URI
+     * @param callbackUri the callback URI associated with the wire or null if it is unidirectional
+     * @param wire        the wire
+     */
     public void register(String path, String callbackUri, Wire wire) {
         Holder holder = new Holder(callbackUri, wire);
         wires.put(path, holder);
     }
 
+    /**
+     * Unregisters a wire for a request path, i.e. the path of the service URI.
+     *
+     * @param path the path part of the service URI
+     */
     public void unregister(String path) {
         wires.remove(path);
     }
@@ -121,7 +138,7 @@ public class TcpRequestHandler extends SimpleChannelHandler implements NetReques
 
 
     private void writeResponse(MessageEvent event, Message msg) throws SerializationException {
-        byte[] serialized = serializer.serialize(msg);
+        byte[] serialized = serializer.serialize(byte[].class, msg);
         ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(serialized);
         ChannelFuture future = event.getChannel().write(buffer);
         future.addListener(ChannelFutureListener.CLOSE);

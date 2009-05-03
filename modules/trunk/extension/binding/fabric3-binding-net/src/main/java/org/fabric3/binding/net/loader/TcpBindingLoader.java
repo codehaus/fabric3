@@ -17,7 +17,6 @@
 package org.fabric3.binding.net.loader;
 
 import java.net.URI;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -28,7 +27,6 @@ import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.binding.net.model.TcpBindingDefinition;
-import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
@@ -41,7 +39,6 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 @EagerInit
 public class TcpBindingLoader extends AbstractBindingLoader<TcpBindingDefinition> {
     private final LoaderHelper loaderHelper;
-    private static final QName HESSIAN_POLICY = new QName(Namespaces.POLICY, "dataBinding.hessian");
 
     /**
      * Constructor.
@@ -69,14 +66,6 @@ public class TcpBindingLoader extends AbstractBindingLoader<TcpBindingDefinition
             switch (reader.next()) {
             case XMLStreamConstants.END_ELEMENT:
                 if ("binding.tcp".equals(reader.getName().getLocalPart())) {
-                    String wireFormat = definition.getConfig().getWireFormat();
-                    if (wireFormat == null) {
-                        // make Hessian the default serialization
-                        // TODO make this configurable
-                        definition.addIntent(HESSIAN_POLICY);
-                    } else {
-                        definition.addIntent(new QName(Namespaces.POLICY, "dataBinding." + wireFormat));
-                    }
                     return definition;
                 }
                 break;

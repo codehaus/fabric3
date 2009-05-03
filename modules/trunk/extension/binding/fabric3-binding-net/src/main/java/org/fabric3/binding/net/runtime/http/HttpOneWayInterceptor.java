@@ -37,7 +37,6 @@ import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.services.serializer.Serializer;
-import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -51,21 +50,35 @@ public class HttpOneWayInterceptor implements Interceptor {
     private String operationName;
     private ClientBootstrap boostrap;
     private SocketAddress address;
-    private Serializer serializer;
+    private Serializer headerSerializer;
+    private Serializer inputSerializer;
     private CommunicationsMonitor monitor;
     private String url;
 
+    /**
+     * Constructor.
+     *
+     * @param url              the target service URL
+     * @param operationName    the name of the operation being invoked
+     * @param address          the target service address
+     * @param headerSerializer serializes header information
+     * @param inputSerializer  serializes input parameters
+     * @param boostrap         the Netty ClientBootstrap instance for sending invocations
+     * @param monitor          the event monitor
+     */
     public HttpOneWayInterceptor(String url,
                                  String operationName,
-                                 ClientBootstrap boostrap,
                                  SocketAddress address,
-                                 Serializer serializer,
+                                 Serializer headerSerializer,
+                                 Serializer inputSerializer,
+                                 ClientBootstrap boostrap,
                                  CommunicationsMonitor monitor) {
         this.url = url;
         this.operationName = operationName;
         this.boostrap = boostrap;
         this.address = address;
-        this.serializer = serializer;
+        this.headerSerializer = headerSerializer;
+        this.inputSerializer = inputSerializer;
         this.monitor = monitor;
     }
 
@@ -85,9 +98,8 @@ public class HttpOneWayInterceptor implements Interceptor {
 
                 List<CallFrame> stack = msg.getWorkContext().getCallFrameStack();
                 if (!stack.isEmpty()) {
-                    byte[] serialized = serializer.serialize(stack);
-                    String routing = Base64.encode(serialized);
-                    request.addHeader(NetConstants.ROUTING, routing);
+                    String serialized = headerSerializer.serialize(String.class, stack);
+                    request.addHeader(NetConstants.ROUTING, serialized);
                 }
                 Object body = msg.getBody();
 
@@ -98,9 +110,9 @@ public class HttpOneWayInterceptor implements Interceptor {
                         if (payload.length > 1) {
                             throw new UnsupportedOperationException("Multiple paramters not supported");
                         }
-                        str = payload[0].toString();
+                        str = inputSerializer.serialize(String.class, payload[0]);
                     } else {
-                        str = body.toString();
+                        str = inputSerializer.serialize(String.class, body);
                     }
                     request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(str.length()));
                     ChannelBuffer buf = ChannelBuffers.copiedBuffer(str, "UTF-8");

@@ -18,7 +18,9 @@ package org.fabric3.binding.net.runtime.http;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,9 +41,13 @@ import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.util.OperationTypeHelper;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.services.serializer.SerializationException;
 import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.services.serializer.SerializerFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -53,18 +59,20 @@ import org.fabric3.spi.wire.Wire;
 public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
     private long connectTimeout = 10000;
     private String httpWireFormat = "jdk";
+    private ClassLoaderRegistry classLoaderRegistry;
     private CommunicationsMonitor monitor;
-    private Map<String, Serializer> serializers;
     private ChannelFactory factory;
     private Timer timer;
+    private Map<String, SerializerFactory> serializerFactories;
 
-    public HttpTargetWireAttacher(@Monitor CommunicationsMonitor monitor) {
+    public HttpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor CommunicationsMonitor monitor) {
+        this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
     }
 
     @Reference
-    public void setSerializers(Map<String, Serializer> serializers) {
-        this.serializers = serializers;
+    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
+        this.serializerFactories = serializerFactories;
     }
 
     // FIXME this should be configured to same value as TransportServiceImpl
@@ -126,18 +134,16 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
         String name = operation.getName();
-        Serializer serializer = serializers.get(httpWireFormat);
-        if (serializer == null) {
-            throw new WiringException("Serializer not found for: " + httpWireFormat);
-        }
 
-        HttpOneWayInterceptor interceptor = new HttpOneWayInterceptor(path, name, bootstrap, address, serializer, monitor);
+        Serializer headerSerializer = getHeaderSerializer();
+        Serializer inputSerializer = getInputSerializer(target, operation);
+        HttpOneWayInterceptor interceptor = new HttpOneWayInterceptor(path, name, address, headerSerializer, inputSerializer, bootstrap, monitor);
         chain.addInterceptor(interceptor);
     }
 
-    private void attachRequestResponse(HttpWireTargetDefinition target,
-                                       PhysicalOperationDefinition operation,
-                                       InvocationChain chain) throws WiringException {
+
+    private void attachRequestResponse(HttpWireTargetDefinition target, PhysicalOperationDefinition operation, InvocationChain chain)
+            throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         HttpResponseHandler handler = new HttpResponseHandler(connectTimeout, monitor);
@@ -150,13 +156,64 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
         String name = operation.getName();
-        Serializer serializer = serializers.get(httpWireFormat);
-        if (serializer == null) {
-            throw new WiringException("Serializer not found for: " + httpWireFormat);
-        }
-        HttpRequestResponseInterceptor interceptor = new HttpRequestResponseInterceptor(path, name, serializer, bootstrap, address);
+        Serializer headerSerializer = getHeaderSerializer();
+        Serializer inputSerializer = getInputSerializer(target, operation);
+        Serializer outputSerializer = getOutputSerializer(target, operation);
+        HttpRequestResponseInterceptor interceptor =
+                new HttpRequestResponseInterceptor(path, name, headerSerializer, inputSerializer, outputSerializer, address, bootstrap);
         chain.addInterceptor(interceptor);
     }
 
+    private Serializer getHeaderSerializer() throws WiringException {
+        SerializerFactory headerSerializerFactory = serializerFactories.get(httpWireFormat);
+        if (headerSerializerFactory == null) {
+            throw new WiringException("Header serializer not found for: " + httpWireFormat);
+        }
+        try {
+            // TODO FIXME
+            return headerSerializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        } catch (SerializationException e) {
+            throw new WiringException(e);
+        }
+    }
+
+    private Serializer getInputSerializer(HttpWireTargetDefinition target, PhysicalOperationDefinition operation) throws WiringException {
+        try {
+            String wireFormat = target.getConfig().getWireFormat();
+            if (wireFormat == null) {
+                wireFormat = "jaxb";
+            }
+            SerializerFactory messageSerializerFactory = serializerFactories.get(wireFormat);
+            if (messageSerializerFactory == null) {
+                throw new WiringException("Serializer not found for: " + wireFormat);
+            }
+            ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
+            Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(operation, loader);
+            return messageSerializerFactory.getInstance(inputTypes, Collections.<Class<?>>emptySet());
+        } catch (SerializationException e) {
+            throw new WiringException(e);
+        }
+
+    }
+
+    private Serializer getOutputSerializer(HttpWireTargetDefinition target, PhysicalOperationDefinition operation) throws WiringException {
+        try {
+            String wireFormat = target.getConfig().getWireFormat();
+            if (wireFormat == null) {
+                wireFormat = "jaxb";
+            }
+            SerializerFactory messageSerializerFactory = serializerFactories.get(wireFormat);
+            if (messageSerializerFactory == null) {
+                throw new WiringException("Serializer not found for: " + wireFormat);
+            }
+            ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
+            Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(operation, loader);
+            Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(operation, loader);
+            return messageSerializerFactory.getInstance(outputTypes, faultTypes);
+        } catch (SerializationException e) {
+            throw new WiringException(e);
+        }
+
+    }
 
 }
