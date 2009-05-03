@@ -19,24 +19,33 @@ package org.fabric3.hessian.serializer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.services.serializer.SerializationException;
 import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.services.serializer.UnsupportedTypesException;
+import org.fabric3.spi.util.Base64;
 
 /**
- * Serializer that uses Hessian serialization.
+ * Serializer that uses Hessian for reading and writing data.
  *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class HessianSerializer implements Serializer {
     private SerializerFactory factory = new SerializerFactory();
 
-    public byte[] serialize(Object o) throws SerializationException {
+    public <T> T serialize(Class<T> clazz, Object o) throws SerializationException {
         try {
+            boolean isString = String.class.equals(clazz);
+            if (!isString && !Byte.TYPE.equals(clazz.getComponentType())) {
+                throw new UnsupportedTypesException("This implementation only supports serialization to bytes and strings");
+            }
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             Hessian2Output out = new Hessian2Output(bos);
             out.setSerializerFactory(factory);
@@ -44,16 +53,34 @@ public class HessianSerializer implements Serializer {
             out.writeObject(o);
             out.completeMessage();
             out.close();
-            return bos.toByteArray();
+            if (isString) {
+                return clazz.cast(Base64.encode(bos.toByteArray()));
+            } else {
+                return clazz.cast(bos.toByteArray());
+            }
         } catch (IOException e) {
             throw new SerializationException(e);
         }
     }
 
-    public <T> T deserialize(Class<T> clazz, byte[] bytes) throws SerializationException {
+    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
+        return serialize(clazz, exception);
+    }
+
+    public <T> T deserialize(Class<T> clazz, Object object) throws SerializationException {
         try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            Hessian2Input in = new Hessian2Input(bis);
+            boolean isString = String.class.equals(object.getClass());
+            if (!isString && !Byte.TYPE.equals(object.getClass().getComponentType())) {
+                throw new UnsupportedTypesException("This implementation only supports serialization from bytes or strings");
+            }
+            InputStream is;
+            if (isString) {
+                is = new ByteArrayInputStream(Base64.decode((String) object));
+            } else {
+                byte[] bytes = (byte[]) object;
+                is = new ByteArrayInputStream(bytes);
+            }
+            Hessian2Input in = new Hessian2Input(is);
             in.setSerializerFactory(factory);
             in.startMessage();
             Object ret = in.readObject(clazz);
@@ -65,4 +92,9 @@ public class HessianSerializer implements Serializer {
         }
 
     }
+
+    public Throwable deserializeFault(Object serialized) throws SerializationException {
+        return deserialize(Throwable.class, serialized);
+    }
+
 }

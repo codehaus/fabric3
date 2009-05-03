@@ -23,21 +23,8 @@
            autowire="true"
            xmlns:f3-binding="urn:org.fabric3:binding">
 
-    <component name="HessianInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}hessianPolicy">
-        <f3-impl:implementation.system class="org.fabric3.hessian.generator.HessianInterceptorDefinitionGenerator"/>
+    <component name="HessianSerializerFactory" f3-core:key="hessian">
+        <f3-impl:implementation.system class="org.fabric3.hessian.serializer.HessianSerializerFactory"/>
     </component>
-
-    <component name="HessianServiceInterceptorBuilder" f3-core:key="org.fabric3.hessian.provision.HessianServiceInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.hessian.runtime.HessianServiceInterceptorBuilder"/>
-    </component>
-
-    <component name="HessianReferenceInterceptorBuilder" f3-core:key="org.fabric3.hessian.provision.HessianReferenceInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.hessian.runtime.HessianReferenceInterceptorBuilder"/>
-    </component>
-
-    <component name="HessianSerializer" f3-core:key="hessian">
-        <f3-impl:implementation.system class="org.fabric3.hessian.serializer.HessianSerializer"/>
-    </component>
-
 
 </composite>

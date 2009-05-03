@@ -14,17 +14,26 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.hessian.provision;
+package org.fabric3.hessian.serializer;
+
+import java.util.Set;
+
+import org.osoa.sca.annotations.EagerInit;
+
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.services.serializer.SerializerFactory;
 
 /**
- * Transforms from Hessian to Java types. Placed on the reference side of the wire.
+ * Creates serializer instances that use Hessian.
  *
  * @version $Revision$ $Date$
  */
-public class HessianReferenceInterceptorDefinition extends AbstractHessianInterceptorDefinition {
-    private static final long serialVersionUID = -150370986016398221L;
+@EagerInit
+public class HessianSerializerFactory implements SerializerFactory {
 
-    public HessianReferenceInterceptorDefinition(Encoding encoding) {
-        super(encoding);
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException {
+        return new HessianSerializer();
     }
+
 }
