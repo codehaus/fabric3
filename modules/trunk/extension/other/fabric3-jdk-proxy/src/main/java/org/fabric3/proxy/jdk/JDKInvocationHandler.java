@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.oasisopen.sca.ServiceReference;
+import org.oasisopen.sca.ServiceRuntimeException;
 import org.oasisopen.sca.ServiceUnavailableException;
 import org.osoa.sca.Conversation;
 
@@ -146,6 +147,9 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
                 resp = headInterceptor.invoke(msg);
             } catch (ServiceUnavailableException e) {
                 // simply rethrow ServiceUnavailableExceptions
+                throw e;
+            } catch (ServiceRuntimeException e) {
+                // simply rethrow ServiceRuntimeException
                 throw e;
             } catch (org.osoa.sca.ServiceUnavailableException e) {
                 // rethrow OSOA ServiceUnavailableExceptions
