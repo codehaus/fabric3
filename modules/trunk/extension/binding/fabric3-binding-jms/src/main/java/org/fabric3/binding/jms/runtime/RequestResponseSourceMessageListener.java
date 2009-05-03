@@ -35,9 +35,6 @@
 package org.fabric3.binding.jms.runtime;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -51,71 +48,56 @@ import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.InvocationChain;
 
 /**
- * Message listener for service requests.
+ * Message listener for request-response service requests.
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class RequestResponseSourceMessageListener implements SourceMessageListener {
+public class RequestResponseSourceMessageListener extends AbstractSourceMessageListener {
 
-    private Map<String, ChainHolder> operations;
-    private final CorrelationScheme correlationScheme;
-    private final TransactionType transactionType;
-
-    private final String callbackUri;
-
-    /**
-     * @param chains            map of operations to interceptor chains.
-     * @param correlationScheme correlation scheme.
-     * @param messageTypes      the JMS message type used to enqueue service invocations keyed by operation name
-     * @param transactionType   the type of transaction
-     * @param callbackUri       the callback service uri
-     */
-    public RequestResponseSourceMessageListener(Map<PhysicalOperationDefinition, InvocationChain> chains,
-                                       CorrelationScheme correlationScheme,
-                                       Map<String, PayloadType> messageTypes,
-                                       TransactionType transactionType,
-                                       String callbackUri) {
-        this.operations = new HashMap<String, ChainHolder>();
-        for (Entry<PhysicalOperationDefinition, InvocationChain> entry : chains.entrySet()) {
-            String name = entry.getKey().getName();
-            PayloadType type = messageTypes.get(name);
-            if (type == null) {
-                throw new IllegalArgumentException("No message type for operation: " + name);
-            }
-            this.operations.put(name, new ChainHolder(type, entry.getValue()));
-        }
-        this.correlationScheme = correlationScheme;
-        this.transactionType = transactionType;
-        this.callbackUri = callbackUri;
+    public RequestResponseSourceMessageListener(WireHolder wireHolder) {
+        super(wireHolder);
     }
 
-    @SuppressWarnings({"unchecked"})
     public void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException {
-
         try {
-
             String opName = request.getStringProperty("scaOperationName");
-            ChainHolder holder = getInterceptorHolder(opName);
-            Interceptor interceptor = holder.getHeadInterceptor();
-            PayloadType payloadType = holder.getType();
+            InvocationChainHolder holder = getInvocationChainHolder(opName);
+            Interceptor interceptor = holder.getChain().getHeadInterceptor();
+            PayloadType payloadType = holder.getPayloadType();
             Object payload = MessageHelper.getPayload(request, payloadType);
             if (payloadType != PayloadType.OBJECT) {
+                Serializer serializer = holder.getInputSerializer();
+                if (serializer != null) {
+                    try {
+                        payload = serializer.deserialize(Object.class, payload);
+                    } catch (SerializationException e) {
+                        throw new JmsOperationException(e);
+                    }
+                }
                 payload = new Object[]{payload};
             }
 
-            WorkContext workContext = JmsHelper.createWorkContext(request, callbackUri);
+            WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
 
             org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
 
             Object responsePayload = outMessage.getBody();
+            Serializer serializer = holder.getOutputSerializer();
+            if (serializer != null) {
+                try {
+                    responsePayload = serializer.serialize(String.class, responsePayload);
+                } catch (SerializationException e) {
+                    throw new JmsOperationException(e);
+                }
+            }
             Message response = createMessage(responsePayload, responseSession, payloadType);
-
+            CorrelationScheme correlationScheme = wireHolder.getCorrelationScheme();
             switch (correlationScheme) {
             case RequestCorrelIDToCorrelID: {
                 response.setJMSCorrelationID(request.getJMSCorrelationID());
@@ -128,7 +110,7 @@ public class RequestResponseSourceMessageListener implements SourceMessageListen
             }
             MessageProducer producer = responseSession.createProducer(responseDestination);
             producer.send(response);
-
+            TransactionType transactionType = wireHolder.getTransactionType();
             if (transactionType == TransactionType.LOCAL) {
                 responseSession.commit();
             }
@@ -142,24 +124,6 @@ public class RequestResponseSourceMessageListener implements SourceMessageListen
         }
 
     }
-
-    /*
-     * Finds the matching interceptor holder.
-     */
-    private ChainHolder getInterceptorHolder(String opName) {
-
-        if (operations.size() == 1) {
-            return operations.values().iterator().next();
-        } else if (opName != null && operations.containsKey(opName)) {
-            return operations.get(opName);
-        } else if (operations.containsKey("onMessage")) {
-            return operations.get("onMessage");
-        } else {
-            throw new Fabric3JmsException("Unable to match operation on the service contract");
-        }
-
-    }
-
 
     private Message createMessage(Object payload, Session session, PayloadType payloadType) throws JMSException {
         switch (payloadType) {
@@ -179,24 +143,6 @@ public class RequestResponseSourceMessageListener implements SourceMessageListen
             return session.createObjectMessage((Serializable) payload);
         default:
             return MessageHelper.createBytesMessage(session, payload, payloadType);
-        }
-    }
-
-    private class ChainHolder {
-        private PayloadType type;
-        private InvocationChain chain;
-
-        private ChainHolder(PayloadType type, InvocationChain chain) {
-            this.type = type;
-            this.chain = chain;
-        }
-
-        public PayloadType getType() {
-            return type;
-        }
-
-        public Interceptor getHeadInterceptor() {
-            return chain.getHeadInterceptor();
         }
     }
 

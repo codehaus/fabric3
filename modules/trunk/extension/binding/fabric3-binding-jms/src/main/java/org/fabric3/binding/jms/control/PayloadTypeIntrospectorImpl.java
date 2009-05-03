@@ -39,10 +39,7 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 
@@ -50,7 +47,7 @@ import org.fabric3.model.type.service.Operation;
  * Default implementation of the PayloadTypeIntrospector. Message types are determined as follows:
  * <pre>
  * <ul>
- * <li>If the operation has a JAXB databinding intent, a text type is returned
+ * <li>If the operation has a JAXB databinding, a text type is returned
  * <li>If the parameters are Serializable, an object message is returned
  * <li>If the parameters are primitives, the specific primitive type is returned
  * <li>If the parameters are a stream, a stream message is returned
@@ -60,11 +57,10 @@ import org.fabric3.model.type.service.Operation;
  * @version $Revision$ $Date$
  */
 public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
-    private static final QName DATABINDING_INTENT = new QName(Namespaces.POLICY, "dataBinding.jaxb");
 
     public <T> PayloadType introspect(Operation<T> operation) throws JmsGenerationException {
         // TODO perform error checking, e.g. mixing of databindings
-        if (operation.getIntents().contains(DATABINDING_INTENT)) {
+        if ("jaxb".equals(operation.getDatabinding())) {
             return PayloadType.TEXT;
         }
         DataType<List<DataType<T>>> inputType = operation.getInputType();

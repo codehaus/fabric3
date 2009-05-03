@@ -35,9 +35,13 @@
 package org.fabric3.binding.jms.runtime;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
@@ -57,9 +61,13 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.services.serializer.SerializerFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -69,61 +77,28 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDefinition>, JmsSourceWireAttacherMBean {
-
     private JmsHost jmsHost;
     private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
     private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
     private ClassLoaderRegistry classLoaderRegistry;
     private TransactionHandler transactionHandler;
+    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
 
-    /**
-     * Injects the transaction handler.
-     *
-     * @param transactionHandler Transaction handler.
-     */
-    @Reference
-    public void setTransactionHandler(TransactionHandler transactionHandler) {
+    public JmsSourceWireAttacher(@Reference TransactionHandler transactionHandler,
+                                 @Reference ClassLoaderRegistry classLoaderRegistry,
+                                 @Reference JmsHost jmsHost,
+                                 @Reference Map<CreateOption, DestinationStrategy> destinationStrategies,
+                                 @Reference Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies) {
         this.transactionHandler = transactionHandler;
-    }
-
-    /**
-     * Injects the destination strategies.
-     *
-     * @param strategies Destination strategies.
-     */
-    @Reference
-    public void setDestinationStrategies(Map<CreateOption, DestinationStrategy> strategies) {
-        this.destinationStrategies = strategies;
-    }
-
-    /**
-     * Injects the connection factory strategies.
-     *
-     * @param strategies Connection factory strategies.
-     */
-    @Reference
-    public void setConnectionFactoryStrategies(Map<CreateOption, ConnectionFactoryStrategy> strategies) {
-        this.connectionFactoryStrategies = strategies;
-    }
-
-    /**
-     * Injects the classloader registry.
-     *
-     * @param classLoaderRegistry Classloader registry.
-     */
-    @Reference
-    public void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
+        this.jmsHost = jmsHost;
+        this.destinationStrategies = destinationStrategies;
+        this.connectionFactoryStrategies = connectionFactoryStrategies;
     }
 
-    /**
-     * Injected JMS host.
-     *
-     * @param jmsHost JMS Host to use.
-     */
-    @Reference
-    public void setJmsHost(JmsHost jmsHost) {
-        this.jmsHost = jmsHost;
+    @Reference(required = false)
+    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
+        this.serializerFactories = serializerFactories;
     }
 
     public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
@@ -153,15 +128,15 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
             callbackUri = target.getCallbackUri().toString();
         }
 
-        Map<String, PayloadType> messageTypes = source.getPayloadTypes();
-        Map<PhysicalOperationDefinition, InvocationChain> operations = wire.getInvocationChains();
+        Map<String, PayloadType> payloadTypes = source.getPayloadTypes();
+
+        WireHolder wireHolder = createWireHolder(wire, payloadTypes, correlationScheme, transactionType, callbackUri, cl);
 
         SourceMessageListener messageListener;
-
         if (metadata.noResponse()) {
-            messageListener = new OneWaySourceMessageListener(operations, messageTypes, callbackUri);
+            messageListener = new OneWaySourceMessageListener(wireHolder);
         } else {
-            messageListener = new RequestResponseSourceMessageListener(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+            messageListener = new RequestResponseSourceMessageListener(wireHolder);
         }
         if (jmsHost.isRegistered(serviceUri)) {
             // the wire has changed and it is being reprovisioned
@@ -189,6 +164,42 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         throw new AssertionError();
     }
 
+    private WireHolder createWireHolder(Wire wire,
+                                        Map<String, PayloadType> payloadTypes,
+                                        CorrelationScheme correlationScheme,
+                                        TransactionType transactionType,
+                                        String callbackUri,
+                                        ClassLoader cl) throws WiringException {
+        List<InvocationChainHolder> chainHolders = new ArrayList<InvocationChainHolder>();
+        for (InvocationChain chain : wire.getInvocationChains().values()) {
+            PhysicalOperationDefinition definition = chain.getPhysicalOperation();
+            String dataBinding = definition.getDatabinding();
+            Serializer inputSerializer = null;
+            Serializer outputSerializer = null;
+            if (dataBinding != null) {
+                SerializerFactory factory = serializerFactories.get(dataBinding);
+                if (factory == null) {
+                    throw new WiringException("Serializer factory not found for: " + dataBinding);
+                }
+                Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(definition, cl);
+                Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(definition, cl);
+                Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(definition, cl);
+                try {
+                    inputSerializer = factory.getInstance(inputTypes, Collections.<Class<?>>emptySet());
+                    outputSerializer = factory.getInstance(outputTypes, faultTypes);
+                } catch (SerializationException e) {
+                    throw new WiringException(e);
+                }
+            }
+            PayloadType payloadType = payloadTypes.get(definition.getName());
+            if (payloadType == null) {
+                throw new WiringException("Payload type not found for operation: " + definition.getName());
+            }
+            chainHolders.add(new InvocationChainHolder(chain, inputSerializer, outputSerializer, payloadType));
+        }
+        return new WireHolder(chainHolders, callbackUri, correlationScheme, transactionType);
+    }
+
     private JMSObjectFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
                                                 DestinationDefinition destinationDefinition,
                                                 Hashtable<String, String> env) {
@@ -201,6 +212,5 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         Destination reqDestination = destinationStrategy.getDestination(destinationDefinition, connectionFactory, env);
         return new JMSObjectFactory(connectionFactory, reqDestination, 1);
     }
-
 
 }

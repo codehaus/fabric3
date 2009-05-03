@@ -34,9 +34,6 @@
  */
 package org.fabric3.binding.jms.runtime;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -47,58 +44,41 @@ import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.InvocationChain;
 
 /**
- * Message listener for service requests.
+ * Message listener for one-way service requests.
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class OneWaySourceMessageListener implements SourceMessageListener {
+public class OneWaySourceMessageListener extends AbstractSourceMessageListener {
 
-    private Map<String, ChainHolder> operations;
-    private String callbackUri;
-
-
-    /**
-     * @param chains       map of operations to interceptor chains.
-     * @param messageTypes the JMS message type used to enqueue service invocations keyed by operation name
-     * @param callbackUri  the callback URI of the client wired to the service this listener is created for. If the service is not bidirectional, the
-     *                     URI will be null.
-     */
-    public OneWaySourceMessageListener(Map<PhysicalOperationDefinition, InvocationChain> chains,
-                                       Map<String, PayloadType> messageTypes,
-                                       String callbackUri) {
-        this.callbackUri = callbackUri;
-
-        this.operations = new HashMap<String, ChainHolder>();
-        for (Entry<PhysicalOperationDefinition, InvocationChain> entry : chains.entrySet()) {
-            String name = entry.getKey().getName();
-            PayloadType type = messageTypes.get(name);
-            if (type == null) {
-                throw new IllegalArgumentException("No message type for operation: " + name);
-            }
-            this.operations.put(name, new ChainHolder(type, entry.getValue()));
-        }
+    public OneWaySourceMessageListener(WireHolder wireHolder) {
+        super(wireHolder);
     }
 
     public void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException {
-
         try {
-
             String opName = request.getStringProperty("scaOperationName");
-            ChainHolder holder = getInterceptorHolder(opName);
-            Interceptor interceptor = holder.getHeadInterceptor();
-            PayloadType payloadType = holder.getType();
+            InvocationChainHolder holder = getInvocationChainHolder(opName);
+            Interceptor interceptor = holder.getChain().getHeadInterceptor();
+            PayloadType payloadType = holder.getPayloadType();
             Object payload = MessageHelper.getPayload(request, payloadType);
             if (payloadType != PayloadType.OBJECT) {
+                Serializer serializer = holder.getInputSerializer();
+                if (serializer != null) {
+                    try {
+                        payload = serializer.deserialize(Object.class, payload);
+                    } catch (SerializationException e) {
+                        throw new JmsOperationException(e);
+                    }
+                }
                 payload = new Object[]{payload};
             }
 
-            WorkContext workContext = JmsHelper.createWorkContext(request, callbackUri);
-
+            WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
             org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
             if (outMessage.isFault()) {
@@ -110,42 +90,5 @@ public class OneWaySourceMessageListener implements SourceMessageListener {
         }
 
     }
-
-    /*
-    * Finds the matching interceptor holder.
-    */
-    private ChainHolder getInterceptorHolder(String opName) {
-
-        if (operations.size() == 1) {
-            return operations.values().iterator().next();
-        } else if (opName != null && operations.containsKey(opName)) {
-            return operations.get(opName);
-        } else if (operations.containsKey("onMessage")) {
-            return operations.get("onMessage");
-        } else {
-            throw new Fabric3JmsException("Unable to match operation on the service contract");
-        }
-
-    }
-
-
-    private class ChainHolder {
-        private PayloadType type;
-        private InvocationChain chain;
-
-        private ChainHolder(PayloadType type, InvocationChain chain) {
-            this.type = type;
-            this.chain = chain;
-        }
-
-        public PayloadType getType() {
-            return type;
-        }
-
-        public Interceptor getHeadInterceptor() {
-            return chain.getHeadInterceptor();
-        }
-    }
-
 
 }

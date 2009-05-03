@@ -45,6 +45,8 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
+import org.oasisopen.sca.ServiceRuntimeException;
+
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.provision.PayloadType;
@@ -52,8 +54,10 @@ import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.util.Base64;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Dispatches a service invocation to a JMS queue.
@@ -61,41 +65,15 @@ import org.fabric3.spi.util.Base64;
  * @version $Revision$ $Date$
  */
 public class JmsTargetInterceptor implements Interceptor {
-
-    /**
-     * Next interceptor in the chain.
-     */
     private Interceptor next;
-
-    /**
-     * Method name
-     */
     private String methodName;
-
     private PayloadType payloadType;
-    /**
-     * Request destination.
-     */
     private Destination destination;
-
-    /**
-     * Request connection factory.
-     */
     private ConnectionFactory connectionFactory;
-
-    /**
-     * Correlation scheme.
-     */
     private CorrelationScheme correlationScheme;
-
-    /**
-     * Message receiver.
-     */
     private JmsTargetMessageListener messageReceiver;
-
-    /**
-     * Classloader to use.
-     */
+    private Serializer inputSerializer;
+    private Serializer outputSerializer;
     private ClassLoader cl;
 
     /**
@@ -105,6 +83,8 @@ public class JmsTargetInterceptor implements Interceptor {
      * @param connectionFactory Request connection factory.
      * @param correlationScheme Correlation scheme.
      * @param messageReceiver   Message receiver for response.
+     * @param inputSerializer   The serializer or null of input payload transformation is not required
+     * @param outputSerializer  The serializer or null of output payload transformation is not required
      * @param cl                the classloader for loading parameter types.
      */
     public JmsTargetInterceptor(String methodName,
@@ -113,6 +93,8 @@ public class JmsTargetInterceptor implements Interceptor {
                                 ConnectionFactory connectionFactory,
                                 CorrelationScheme correlationScheme,
                                 JmsTargetMessageListener messageReceiver,
+                                Serializer inputSerializer,
+                                Serializer outputSerializer,
                                 ClassLoader cl) {
         this.methodName = methodName;
         this.payloadType = payloadType;
@@ -120,6 +102,8 @@ public class JmsTargetInterceptor implements Interceptor {
         this.connectionFactory = connectionFactory;
         this.correlationScheme = correlationScheme;
         this.messageReceiver = messageReceiver;
+        this.inputSerializer = inputSerializer;
+        this.outputSerializer = outputSerializer;
         this.cl = cl;
     }
 
@@ -153,7 +137,16 @@ public class JmsTargetInterceptor implements Interceptor {
             if (messageReceiver != null) {
                 javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
                 Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
-                response.setBody(responseMessage);
+                if (inputSerializer != null) {
+                    try {
+                        Object deserialized = outputSerializer.deserialize(Object.class, responseMessage);
+                        response.setBody(deserialized);
+                    } catch (SerializationException e) {
+                        throw new ServiceRuntimeException(e);
+                    }
+                } else {
+                    response.setBody(responseMessage);
+                }
             }
 
             return response;
@@ -188,7 +181,15 @@ public class JmsTargetInterceptor implements Interceptor {
             if (payload.length != 1) {
                 throw new UnsupportedOperationException("Only single parameter operations are supported");
             }
-            jmsMessage = session.createTextMessage((String) payload[0]);
+            if (inputSerializer != null) {
+                try {
+                    jmsMessage = session.createTextMessage(inputSerializer.serialize(String.class, payload[0]));
+                } catch (SerializationException e) {
+                    throw new ServiceRuntimeException(e);
+                }
+            } else {
+                jmsMessage = session.createTextMessage((String) payload[0]);
+            }
             break;
         default:
             if (payload.length != 1) {

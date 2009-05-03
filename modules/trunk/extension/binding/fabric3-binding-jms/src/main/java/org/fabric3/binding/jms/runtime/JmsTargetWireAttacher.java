@@ -34,9 +34,11 @@
  */
 package org.fabric3.binding.jms.runtime;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
@@ -54,77 +56,48 @@ import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.util.OperationTypeHelper;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.services.serializer.SerializerFactory;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
  * Attaches the reference end of a wire to a JMS queue.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDefinition> {
-    /**
-     * Destination strategies.
-     */
     private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
-
-    /**
-     * Connection factory strategies.
-     */
     private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
-
-    /**
-     * Classloader registry.
-     */
+    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
     private ClassLoaderRegistry classLoaderRegistry;
 
-    /**
-     * Injects the wire attacher registries.
-     */
-    public JmsTargetWireAttacher() {
-    }
-
-    /**
-     * Injects the destination strategies.
-     * 
-     * @param strategies Destination strategies.
-     */
-    @Reference
-    public void setDestinationStrategies(Map<CreateOption, DestinationStrategy> strategies) {
-        this.destinationStrategies = strategies;
-    }
-
-    /**
-     * Injects the connection factory strategies.
-     * 
-     * @param strategies Connection factory strategies.
-     */
-    @Reference
-    public void setConnectionFactoryStrategies(Map<CreateOption, ConnectionFactoryStrategy> strategies) {
-        this.connectionFactoryStrategies = strategies;
-    }
-
-    /**
-     * Injects the classloader registry.
-     * 
-     * @param classLoaderRegistry Classloader registry.
-     */
-    @Reference
-    public void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
+    public JmsTargetWireAttacher(@Reference Map<CreateOption, DestinationStrategy> destinationStrategies,
+                                 @Reference Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies,
+                                 @Reference ClassLoaderRegistry classLoaderRegistry) {
+        this.destinationStrategies = destinationStrategies;
+        this.connectionFactoryStrategies = connectionFactoryStrategies;
         this.classLoaderRegistry = classLoaderRegistry;
+    }
+
+    @Reference(required = false)
+    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
+        this.serializerFactories = serializerFactories;
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JmsWireTargetDefinition targetDefinition, Wire wire)
             throws WiringException {
-  
-        JmsTargetMessageListener messageReceiver = null;
+
+        JmsTargetMessageListener receiver = null;
         Destination resDestination = null;
         ConnectionFactory resCf = null;
-        
+
         ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassLoaderId());
 
         JmsBindingMetadata metadata = targetDefinition.getMetadata();
@@ -156,17 +129,40 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
             PhysicalOperationDefinition op = entry.getKey();
             InvocationChain chain = entry.getValue();
-            
-            if(resDestination != null && resCf != null){
-                messageReceiver = new JmsTargetMessageListener(resDestination, resCf);
+
+            if (resDestination != null && resCf != null) {
+                receiver = new JmsTargetMessageListener(resDestination, resCf);
             }
             String operationName = op.getName();
             PayloadType payloadType = payloadTypes.get(operationName);
-            Interceptor interceptor = new JmsTargetInterceptor(operationName, payloadType, reqDestination, reqCf, correlationScheme, messageReceiver,
-                    cl);
-
+            String dataBinding = op.getDatabinding();
+            Serializer inputSerializer = null;
+            Serializer outputSerializer = null;
+            if (dataBinding != null) {
+                SerializerFactory factory = serializerFactories.get(dataBinding);
+                if (factory == null) {
+                    throw new WiringException("Serializer factory not found for: " + dataBinding);
+                }
+                Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(op, cl);
+                Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(op, cl);
+                Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(op, cl);
+                try {
+                    inputSerializer = factory.getInstance(inputTypes, Collections.<Class<?>>emptySet());
+                    outputSerializer = factory.getInstance(outputTypes, faultTypes);
+                } catch (SerializationException e) {
+                    throw new WiringException(e);
+                }
+            }
+            Interceptor interceptor = new JmsTargetInterceptor(operationName,
+                                                               payloadType,
+                                                               reqDestination,
+                                                               reqCf,
+                                                               correlationScheme,
+                                                               receiver,
+                                                               inputSerializer,
+                                                               outputSerializer,
+                                                               cl);
             chain.addInterceptor(interceptor);
-
         }
 
     }
@@ -178,4 +174,5 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
     public ObjectFactory<?> createObjectFactory(JmsWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
+
 }

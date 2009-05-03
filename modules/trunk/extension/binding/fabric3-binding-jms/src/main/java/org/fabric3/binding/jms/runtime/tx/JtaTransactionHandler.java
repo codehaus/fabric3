@@ -56,17 +56,11 @@ public class JtaTransactionHandler implements TransactionHandler {
         this.transactionManager = transactionManager;
     }
 
-    /**
-     * @see org.fabric3.binding.jms.runtime.tx.TransactionHandler#begin(javax.jms.Session)
-     */
     public void enlist(Session session) throws JmsTxException {
-        
         if(transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");
         }
-        
         try {
-            
             Transaction transaction = transactionManager.getTransaction();
             if(transaction == null) {
                 transactionManager.begin();
@@ -84,12 +78,8 @@ public class JtaTransactionHandler implements TransactionHandler {
         } catch (Exception e) {
             throw new JmsTxException(e);
         }
-        
     }
 
-    /**
-     * @see org.fabric3.binding.jms.runtime.tx.TransactionHandler#commit(javax.jms.Session)
-     */
     public void commit() throws JmsTxException {
         
         if(transactionManager == null) {
@@ -101,33 +91,21 @@ public class JtaTransactionHandler implements TransactionHandler {
         } catch (Exception e) {
             throw new JmsTxException(e);
         }
-        
-        
     }
 
-    /**
-     * @see org.fabric3.binding.jms.runtime.tx.TransactionHandler#rollback(javax.jms.Session)
-     */
     public void rollback() throws JmsTxException {
-        
         if(transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");
         }
-        
         try {
             transactionManager.rollback();
         } catch (Exception e) {
             throw new JmsTxException(e);
         }
-        
     }
 
-    /**
-     * @see org.fabric3.binding.jms.runtime.tx.TransactionHandler#createSession(javax.jms.Connection)
-     */
     public Session createSession(Connection con) throws JmsTxException {
-        
-        try {   
+        try {
             return con.createSession(false, Session.SESSION_TRANSACTED);
         } catch(JMSException e) {
             throw new JmsTxException(e);
