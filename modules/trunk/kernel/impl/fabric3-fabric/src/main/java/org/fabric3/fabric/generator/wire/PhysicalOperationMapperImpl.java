@@ -59,6 +59,7 @@ public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
             Type paramType = param.getPhysical();
             operation.addParameter(getClassName(paramType));
         }
+        operation.setDatabinding(o.getDatabinding());
         return operation;
 
     }
