@@ -31,8 +31,6 @@
 
 	<modules>
 		<module>fabric3-binding-test-harness</module>
-		<module>fabric3-binding-burlap</module>
-		<module>fabric3-binding-hessian</module>
 		<module>fabric3-binding-jms</module>
 		<module>fabric3-binding-test</module>
 		<module>fabric3-binding-ws</module>
@@ -41,6 +39,5 @@
         <module>fabric3-binding-ftp</module>
         <module>fabric3-binding-net</module>
         <module>fabric3-activemq</module>
-        <module>fabric3-binding-tcp</module>
 	</modules>
 </project>
