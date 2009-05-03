@@ -60,6 +60,7 @@ public class Operation<T> extends AbstractPolicyAware {
     private DataType<List<DataType<T>>> inputType;
     private List<DataType<T>> faultTypes;
     private int conversationSequence = NO_CONVERSATION;
+    private String databinding;
     private Map<QName, Map<String, String>> info;
 
     /**
@@ -80,12 +81,12 @@ public class Operation<T> extends AbstractPolicyAware {
     /**
      * Construct an operation
      *
-     * @param name        the name of the operation
-     * @param inputType   the data types of parameters passed to the operation
-     * @param outputType  the data type returned by the operation
-     * @param faultTypes  the data type of faults raised by the operation
-     * @param sequence    the conversational attributes of the operation, {@link #NO_CONVERSATION}, {@link #CONVERSATION_CONTINUE}, {@link
-*                    #CONVERSATION_CONTINUE}
+     * @param name       the name of the operation
+     * @param inputType  the data types of parameters passed to the operation
+     * @param outputType the data type returned by the operation
+     * @param faultTypes the data type of faults raised by the operation
+     * @param sequence   the conversational attributes of the operation, {@link #NO_CONVERSATION}, {@link #CONVERSATION_CONTINUE}, {@link
+     *                   #CONVERSATION_CONTINUE}
      */
     public Operation(final String name,
                      final DataType<List<DataType<T>>> inputType,
@@ -159,34 +160,52 @@ public class Operation<T> extends AbstractPolicyAware {
     public void setConversationSequence(int conversationSequence) {
         this.conversationSequence = conversationSequence;
     }
-    
+
     /**
      * Add additional info related to Operation
-     * 
+     *
      * @param qName QName info need to be keyed on.
      * @param key   Name of the parameter
      * @param value Value of the parameter
      */
     public void addInfo(QName qName, String key, String value) {
-    	if(info == null) {//Lazy loading
-    	    info = new HashMap<QName, Map<String,String>>();
-    	    info.put(qName, new HashMap<String, String>());
-    	}
-    	
-    	info.get(qName).put(key, value);
+        if (info == null) {//Lazy loading
+            info = new HashMap<QName, Map<String, String>>();
+            info.put(qName, new HashMap<String, String>());
+        }
+
+        info.get(qName).put(key, value);
     }
-    
+
     /**
      * Retrieve info set on the Operation
-     * 
+     *
      * @param qName QName as key to retrieve the info
      * @return Map containing key-value info
      */
     public Map<String, String> getInfo(QName qName) {
-    	if(info != null) {
-    	    return info.get(qName);
-    	}
-    	return null;
+        if (info != null) {
+            return info.get(qName);
+        }
+        return null;
+    }
+
+    /**
+     * Returns the required databinding type or null if none is specified.
+     *
+     * @return the required databinding type or null if none is specified
+     */
+    public String getDatabinding() {
+        return databinding;
+    }
+
+    /**
+     * Sets the required databinding for the operation.
+     *
+     * @param databinding the databinding
+     */
+    public void setDatabinding(String databinding) {
+        this.databinding = databinding;
     }
 
     public String toString() {
