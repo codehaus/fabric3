@@ -23,17 +23,8 @@
            autowire="true"
            xmlns:f3-binding="urn:org.fabric3:binding">
 
-    <component name="JsonInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}jsonPolicy">
-        <f3-impl:implementation.system class="org.fabric3.json.generator.JsonInterceptorDefinitionGenerator"/>
+    <component name="JsonSerializerFactory" f3-core:key="json">
+        <f3-impl:implementation.system class="org.fabric3.json.serializer.JsonSerializerFactory"/>
     </component>
-
-    <component name="JsonServiceInterceptorBuilder" f3-core:key="org.fabric3.json.provision.JsonServiceInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.json.runtime.JsonServiceInterceptorBuilder"/>
-    </component>
-
-    <component name="JsonReferenceInterceptorBuilder" f3-core:key="org.fabric3.json.provision.JsonReferenceInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.json.runtime.JsonReferenceInterceptorBuilder"/>
-    </component>
-
 
 </composite>

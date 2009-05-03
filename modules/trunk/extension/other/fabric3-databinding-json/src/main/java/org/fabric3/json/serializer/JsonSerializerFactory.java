@@ -14,19 +14,25 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.json.provision;
+package org.fabric3.json.serializer;
 
-import java.util.List;
+import java.util.Set;
+
+import org.osoa.sca.annotations.EagerInit;
+
+import org.fabric3.spi.services.serializer.SerializationException;
+import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.services.serializer.SerializerFactory;
 
 /**
- * Transforms from JSON to Java types. Placed on the reference side of the wire.
+ * Creates serializer instances that use JSON.
  *
  * @version $Revision$ $Date$
  */
-public class JsonReferenceInterceptorDefinition extends AbstractJsonInterceptorDefinition {
-    private static final long serialVersionUID = -150370986016398221L;
+@EagerInit
+public class JsonSerializerFactory implements SerializerFactory {
 
-    public JsonReferenceInterceptorDefinition(List<String> parameterTypes, String returnType, List<String> faultTypes) {
-        super(parameterTypes, returnType, faultTypes);
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException {
+        return new JsonSerializer(types, faultTypes);
     }
 }
