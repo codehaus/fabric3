@@ -59,8 +59,8 @@
         </service>
     </component>
     <!-- end JSON tests -->
-
-    <!-- Hessian tests -->
+                    
+     <!--Hessian tests-->
     <component name="HessianEchoTest">
         <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
         <reference name="service">
@@ -97,9 +97,9 @@
             </binding.http>
         </service>
     </component>
-    <!-- end Hessian tests -->
+     <!--end Hessian tests-->
 
-    <!-- TCP/Hessian tests -->
+     <!--TCP/Hessian tests -->
 
     <component name="TcpHessianEchoOneWayTest">
         <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>
