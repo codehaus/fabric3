@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.jaxb.runtime;
+package org.fabric3.jaxb.serializer;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

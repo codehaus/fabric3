@@ -28,24 +28,12 @@
         <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
+    <component name="JAXBSerializerFactory" f3-core:key="jaxb">
+        <f3-impl:implementation.system class="org.fabric3.jaxb.serializer.JAXBSerializerFactory"/>
+    </component>
+
     <component name="JAXBTypeIntrospector">
         <f3-impl:implementation.system class="org.fabric3.jaxb.introspection.JAXBTypeIntrospector"/>
-    </component>
-
-    <component name="TransformingInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}jaxbPolicy">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.control.impl.TransformingInterceptorDefinitionGenerator"/>
-    </component>
-
-    <component name="ReferenceTransformingInterceptorBuilder" f3-core:key="org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.ReferenceTransformingInterceptorBuilder"/>
-    </component>
-
-    <component name="ServiceTransformingInterceptorBuilder" f3-core:key="org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.ServiceTransformingInterceptorBuilder"/>
-    </component>
-
-    <component name="XmlDataBindingTransformerFactory" f3-core:key="ascii">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.XmlDataBindingTransformerFactory"/>
     </component>
 
 </composite>

@@ -21,7 +21,6 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.fabric3.jaxb.provision.JAXBConstants;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -39,7 +38,7 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
         DataType<List<DataType<T>>> inputType = operation.getInputType();
         for (DataType<?> type : inputType.getLogical()) {
             if (isJAXB(type)) {
-                operation.addIntent(JAXBConstants.DATABINDING_INTENT);
+                operation.setDatabinding("jaxb");
                 return;
             }
         }

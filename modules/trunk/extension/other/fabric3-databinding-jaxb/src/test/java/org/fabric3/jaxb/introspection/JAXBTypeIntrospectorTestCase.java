@@ -23,7 +23,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import junit.framework.TestCase;
 
-import org.fabric3.jaxb.provision.JAXBConstants;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 
@@ -36,13 +35,13 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
     public void testJAXBIntrospection() throws Exception {
         Operation<Type> jaxbOperation = createOperation("jaxbMethod", Param.class);
         introspector.introspect(jaxbOperation, Contract.class.getMethod("jaxbMethod", Param.class), null);
-        assertTrue(jaxbOperation.getIntents().contains(JAXBConstants.DATABINDING_INTENT));
+        assertEquals("jaxb", jaxbOperation.getDatabinding());
     }
 
     public void testNoJAXBIntrospection() throws Exception {
         Operation<Type> nonJaxbOperation = createOperation("nonJaxbMethod", String.class);
         introspector.introspect(nonJaxbOperation, Contract.class.getMethod("nonJaxbMethod", String.class), null);
-        assertFalse(nonJaxbOperation.getIntents().contains(JAXBConstants.DATABINDING_INTENT));
+        assertNull(nonJaxbOperation.getDatabinding());
     }
 
     protected void setUp() throws Exception {

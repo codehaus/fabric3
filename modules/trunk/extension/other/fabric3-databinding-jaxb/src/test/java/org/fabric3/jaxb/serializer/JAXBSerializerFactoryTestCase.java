@@ -14,28 +14,28 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.jaxb.runtime.impl;
+package org.fabric3.jaxb.serializer;
 
-import javax.xml.bind.JAXBContext;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
+import junit.framework.TestCase;
 
-import org.fabric3.jaxb.runtime.spi.DataBindingTransformerFactory;
-import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.services.serializer.Serializer;
 
 /**
- * DataBindingTransformerFactory for converting between JAXB and XML string representations.
- *
  * @version $Revision$ $Date$
  */
-@EagerInit
-public class XmlDataBindingTransformerFactory implements DataBindingTransformerFactory<String> {
+public class JAXBSerializerFactoryTestCase extends TestCase {
 
-    public PullTransformer<String, Object> createToJAXBTransformer(JAXBContext context) {
-        return new Xml2JAXBTransformer(context);
+    public void testSerializeDeserialize() throws Exception {
+        JAXBSerializerFactory factory = new JAXBSerializerFactory();
+        Set<Class<?>> types = new HashSet<Class<?>>();
+        types.add(Foo.class);
+        Serializer serializer = factory.getInstance(types, Collections.<Class<?>>emptySet());
+        String serialized = serializer.serialize(String.class, new Foo());
+        assertNotNull(serializer.deserialize(Foo.class, serialized));
     }
 
-    public PullTransformer<Object, String> createFromJAXBTransformer(JAXBContext context) {
-        return new JAXB2XmlTransformer(context);
-    }
 }
