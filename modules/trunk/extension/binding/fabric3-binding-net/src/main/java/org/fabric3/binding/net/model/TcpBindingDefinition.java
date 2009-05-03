@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.model.type.component.Encodings;
 
 /**
  * Represents a binding.http configuration.
@@ -44,8 +43,4 @@ public class TcpBindingDefinition extends BindingDefinition {
         return config;
     }
 
-    @Override
-    public String getEncoding() {
-        return Encodings.BINARY;
-    }
 }
