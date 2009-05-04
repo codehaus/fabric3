@@ -103,11 +103,11 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
 
     public void attachToTarget(PhysicalWireSourceDefinition source, HttpWireTargetDefinition target, Wire wire) throws WiringException {
 
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            if (entry.getKey().isOneWay()) {
-                attachOneWay(target, entry.getKey(), entry.getValue());
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            if (chain.getPhysicalOperation().isOneWay()) {
+                attachOneWay(target, chain);
             } else {
-                attachRequestResponse(target, entry.getKey(), entry.getValue());
+                attachRequestResponse(target, chain);
             }
         }
     }
@@ -120,7 +120,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(HttpWireTargetDefinition target, PhysicalOperationDefinition operation, InvocationChain chain)
+    private void attachOneWay(HttpWireTargetDefinition target, InvocationChain chain)
             throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
@@ -133,6 +133,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
 
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
+        PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         String name = operation.getName();
 
         Serializer headerSerializer = getHeaderSerializer();
@@ -142,7 +143,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
     }
 
 
-    private void attachRequestResponse(HttpWireTargetDefinition target, PhysicalOperationDefinition operation, InvocationChain chain)
+    private void attachRequestResponse(HttpWireTargetDefinition target, InvocationChain chain)
             throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
@@ -155,6 +156,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
 
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
+        PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         String name = operation.getName();
         Serializer headerSerializer = getHeaderSerializer();
         Serializer inputSerializer = getInputSerializer(target, operation);

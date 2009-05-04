@@ -50,7 +50,6 @@ import org.fabric3.binding.ws.axis2.runtime.servlet.F3AxisServlet;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.InvocationChain;
@@ -58,9 +57,8 @@ import org.fabric3.spi.wire.Wire;
 
 /**
  * Axis2 Service provisioner.
- * 
+ *
  * @version $Revision$ $Date$
- * 
  */
 @EagerInit
 public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
@@ -144,14 +142,14 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             setMessageReceivers(wire, axisService);
             // Reset the name
             axisService.setName(uri);
-            
+
             configurationContext.getAxisConfiguration().addService(axisService);
 
             applyPolicies(pwsd, axisService);
-            
+
             axisServlet.registerClassLoader("/" + servicePath + "/" + uri, classLoader);
             monitor.endpointProvisioned("/" + servicePath + "/" + uri);
-            
+
         } catch (Exception e) {
             throw new WiringException(e);
         }
@@ -198,8 +196,8 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     private void setMessageReceivers(Wire wire, AxisService axisService) throws Exception {
 
         Map<String, InvocationChain> interceptors = new HashMap<String, InvocationChain>();
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            interceptors.put(entry.getKey().getName(), entry.getValue());
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            interceptors.put(chain.getPhysicalOperation().getName(), chain);
         }
 
         Utils.fillAxisService(axisService, configurationContext.getAxisConfiguration(), null, null);
@@ -207,11 +205,11 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
             AxisOperation axisOp = (AxisOperation) i.next();
             InvocationChain invocationChain = interceptors.get(axisOp.getName().getLocalPart());
-            
+
             MessageReceiver messageReceiver = null;
-            if (WSDL2Constants.MEP_URI_IN_ONLY.equals(axisOp.getMessageExchangePattern()) || 
-                WSDL2Constants.MEP_URI_ROBUST_IN_ONLY.equals(axisOp.getMessageExchangePattern())) {
-                messageReceiver = new InOnlyServiceProxyHandler(invocationChain);        	
+            if (WSDL2Constants.MEP_URI_IN_ONLY.equals(axisOp.getMessageExchangePattern()) ||
+                    WSDL2Constants.MEP_URI_ROBUST_IN_ONLY.equals(axisOp.getMessageExchangePattern())) {
+                messageReceiver = new InOnlyServiceProxyHandler(invocationChain);
             } else {//Default MEP is IN-OUT for backward compatibility
                 messageReceiver = new InOutServiceProxyHandler(invocationChain);
             }

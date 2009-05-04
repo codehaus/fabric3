@@ -38,7 +38,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -52,10 +51,9 @@ import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -87,7 +85,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
 
             Class<?> sei = classLoader.loadClass(interfaze);
-            
+
             // Metro requires library classes to be visibile to the application classloader. If executing in an environment that supports classloader
             // isolation, dynamically update the application classloader by setting a parent to the Metro classloader.
             ClassLoader seiClassLoader = sei.getClassLoader();
@@ -100,16 +98,16 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             }
             Method[] methods = sei.getDeclaredMethods();
 
-            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+            for (InvocationChain chain : wire.getInvocationChains()) {
                 Method method = null;
                 for (Method meth : methods) {
-                    if (entry.getKey().getName().equals(meth.getName())) {
+                    if (chain.getPhysicalOperation().getName().equals(meth.getName())) {
                         method = meth;
                         break;
                     }
                 }
                 TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls, seiClassLoader, method, features);
-                entry.getValue().addInterceptor(targetInterceptor);
+                chain.addInterceptor(targetInterceptor);
             }
 
         } catch (ClassNotFoundException e) {

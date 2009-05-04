@@ -19,13 +19,12 @@ package org.fabric3.groovy.runtime;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
-import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.component.InvokerInterceptor;
+import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -64,9 +63,8 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTa
         Class<?> implementationClass = target.getImplementationClass();
         ClassLoader loader = implementationClass.getClassLoader();
         // attach the invoker interceptor to forward invocation chains
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            PhysicalOperationDefinition operation = entry.getKey();
-            InvocationChain chain = entry.getValue();
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
             List<String> params = operation.getParameters();
             Class<?>[] paramTypes = new Class<?>[params.size()];
             assert loader != null;

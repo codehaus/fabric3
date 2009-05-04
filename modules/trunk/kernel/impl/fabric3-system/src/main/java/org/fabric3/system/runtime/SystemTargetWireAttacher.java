@@ -34,26 +34,25 @@
  */
 package org.fabric3.system.runtime;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.List;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.List;
 
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Wire;
 import org.fabric3.system.provision.SystemWireTargetDefinition;
 
 /**
@@ -79,9 +78,8 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTa
         Class<?> implementationClass = targetComponent.getImplementationClass();
         ClassLoader loader = implementationClass.getClassLoader();
 
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            PhysicalOperationDefinition operation = entry.getKey();
-            InvocationChain chain = entry.getValue();
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
 
             List<String> params = operation.getParameters();
             Class<?>[] paramTypes = new Class<?>[params.size()];

@@ -135,7 +135,7 @@ public class ConnectorImpl implements Connector {
                 Interceptor interceptor = builder.build(interceptorDefinition);
                 chain.addInterceptor(interceptor);
             }
-            wire.addInvocationChain(operation, chain);
+            wire.addInvocationChain(chain);
         }
         return wire;
     }

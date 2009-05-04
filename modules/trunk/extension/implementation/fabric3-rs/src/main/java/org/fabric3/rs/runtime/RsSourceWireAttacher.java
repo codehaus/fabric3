@@ -132,8 +132,9 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
 
         Map<String, InvocationChain> invocationChains = new HashMap<String, InvocationChain>();
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            invocationChains.put(entry.getKey().getName(), entry.getValue());
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
+            invocationChains.put(operation.getName(), chain);
         }
 
         MethodInterceptor methodInterceptor = new RsMethodInterceptor(invocationChains);

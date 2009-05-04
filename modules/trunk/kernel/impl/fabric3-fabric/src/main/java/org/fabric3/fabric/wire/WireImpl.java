@@ -34,10 +34,9 @@
  */
 package org.fabric3.fabric.wire;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -47,14 +46,13 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public class WireImpl implements Wire {
-    private final Map<PhysicalOperationDefinition, InvocationChain> chains =
-            new HashMap<PhysicalOperationDefinition, InvocationChain>();
+    private final List<InvocationChain> chains = new ArrayList<InvocationChain>();
 
-    public void addInvocationChain(PhysicalOperationDefinition operation, InvocationChain chain) {
-        chains.put(operation, chain);
+    public void addInvocationChain(InvocationChain chain) {
+        chains.add(chain);
     }
 
-    public Map<PhysicalOperationDefinition, InvocationChain> getInvocationChains() {
+    public List<InvocationChain> getInvocationChains() {
         return chains;
     }
 

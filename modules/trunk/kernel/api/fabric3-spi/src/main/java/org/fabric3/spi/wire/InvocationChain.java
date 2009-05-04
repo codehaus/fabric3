@@ -39,7 +39,7 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 /**
  * A wire consists of 1..n invocation chains associated with the operations of its source service contract.
  * <p/>
- * Invocation chains may contain </ode>Interceptors</code> that process invocations in an around-style manner.
+ * Invocation chains contain <code>Interceptors</code> that process invocations in an around-style manner.
  *
  * @version $Rev$ $Date$
  */

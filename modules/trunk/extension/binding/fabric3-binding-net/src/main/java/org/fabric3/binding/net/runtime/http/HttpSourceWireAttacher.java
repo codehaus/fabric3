@@ -101,7 +101,7 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
     private WireHolder createWireHolder(Wire wire, String callbackUri, SerializerFactory serializerFactory, ClassLoader loader)
             throws WiringException {
         List<InvocationChainHolder> invocationChainHolders = new ArrayList<InvocationChainHolder>();
-        for (InvocationChain chain : wire.getInvocationChains().values()) {
+        for (InvocationChain chain : wire.getInvocationChains()) {
             try {
                 PhysicalOperationDefinition operation = chain.getPhysicalOperation();
                 Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(operation, loader);

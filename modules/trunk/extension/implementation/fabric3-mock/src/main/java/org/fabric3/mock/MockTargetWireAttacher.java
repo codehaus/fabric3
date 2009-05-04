@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.easymock.IMocksControl;
 import org.osoa.sca.annotations.Reference;
@@ -31,11 +30,11 @@ import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -60,13 +59,12 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockWireTarget
         Class<?> mockedInterface = loadInterface(wireTargetDefinition);
         Object mock = createMock(mockedInterface);
 
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            PhysicalOperationDefinition op = entry.getKey();
-            InvocationChain chain = entry.getValue();
- 
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
+
             //Each invocation chain has a single physical operation associated with it. This physical operation needs a
             //single interceptor to re-direct the invocation to the mock 
-            Method operationMethod = getOperationMethod(mockedInterface, op, wireSourceDefinition, wireTargetDefinition);
+            Method operationMethod = getOperationMethod(mockedInterface, operation, wireSourceDefinition, wireTargetDefinition);
             chain.addInterceptor(new MockTargetInterceptor(mock, operationMethod));
         }
 
@@ -80,29 +78,32 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockWireTarget
         Class<?> mockedInterface = loadInterface(target);
         Object mock = createMock(mockedInterface);
         return new SingletonObjectFactory<Object>(mock);
-    }    
+    }
 
-    private Method getOperationMethod(Class<?> mockedInterface, PhysicalOperationDefinition op, 
-                                            PhysicalWireSourceDefinition wireSourceDefinition, 
-                                            MockWireTargetDefinition wireTargetDefinition) throws WireAttachException {
+    private Method getOperationMethod(Class<?> mockedInterface, PhysicalOperationDefinition op,
+                                      PhysicalWireSourceDefinition wireSourceDefinition,
+                                      MockWireTargetDefinition wireTargetDefinition) throws WireAttachException {
         List<String> parameters = op.getParameters();
         for (Method method : mockedInterface.getMethods()) {
-            if(method.getName().equals(op.getName())) {                    
+            if (method.getName().equals(op.getName())) {
                 Class<?>[] parameterTypes = method.getParameterTypes();
-                if(parameterTypes.length == parameters.size()) {
-                    List<String> methodParameters = new ArrayList<String>(); 
+                if (parameterTypes.length == parameters.size()) {
+                    List<String> methodParameters = new ArrayList<String>();
                     for (Class<?> parameter : parameterTypes) {
                         methodParameters.add(parameter.getName());
                     }
-                    
-                    if(parameters.equals(methodParameters)) {
+
+                    if (parameters.equals(methodParameters)) {
                         return method;
                     }
                 }
             }
         }
-        
-        throw new WireAttachException("Failed to match method: " + op.getName() + " " + op.getParameters()  , wireSourceDefinition.getUri(), wireTargetDefinition.getUri(), null);
+
+        throw new WireAttachException("Failed to match method: " + op.getName() + " " + op.getParameters(),
+                                      wireSourceDefinition.getUri(),
+                                      wireTargetDefinition.getUri(),
+                                      null);
     }
 
     private Object createMock(Class<?> mockedInterface) {

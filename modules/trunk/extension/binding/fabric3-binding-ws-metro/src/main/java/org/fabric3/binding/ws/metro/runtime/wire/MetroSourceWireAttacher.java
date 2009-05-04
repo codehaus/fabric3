@@ -37,7 +37,6 @@ package org.fabric3.binding.ws.metro.runtime.wire;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -55,11 +54,10 @@ import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -104,7 +102,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
 
             URI servicePath = source.getServicePath();
             WsdlElement wsdlElement = source.getWsdlElement();
-            Map<PhysicalOperationDefinition, InvocationChain> invocationChains = wire.getInvocationChains();
+            List<InvocationChain> invocationChains = wire.getInvocationChains();
             URI classLoaderId = source.getClassLoaderId();
             String interfaze = source.getInterfaze();
             URL wsdlUrl = source.getWsdlUrl();

@@ -66,7 +66,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
     private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
     private ClassLoaderRegistry classLoaderRegistry;
 
-    public TcpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,@Monitor CommunicationsMonitor monitor) {
+    public TcpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor CommunicationsMonitor monitor) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
     }
@@ -104,11 +104,11 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
 
     public void attachToTarget(PhysicalWireSourceDefinition source, TcpWireTargetDefinition target, Wire wire) throws WiringException {
 
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            if (entry.getKey().isOneWay()) {
-                attachOneWay(target, entry.getKey(), entry.getValue());
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            if (chain.getPhysicalOperation().isOneWay()) {
+                attachOneWay(target, chain);
             } else {
-                attachRequestResponse(target, entry.getKey(), entry.getValue());
+                attachRequestResponse(target, chain);
             }
         }
     }
@@ -121,8 +121,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(TcpWireTargetDefinition target, PhysicalOperationDefinition operation, InvocationChain chain)
-            throws WiringException {
+    private void attachOneWay(TcpWireTargetDefinition target, InvocationChain chain) throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         OneWayClientHandler handler = new OneWayClientHandler(monitor);
@@ -134,6 +133,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
 
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
+        PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         String name = operation.getName();
 
         Serializer serializer = getMessageSerializer(target, operation);
@@ -141,10 +141,9 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         chain.addInterceptor(interceptor);
     }
 
-    private void attachRequestResponse(TcpWireTargetDefinition target, PhysicalOperationDefinition operation, InvocationChain chain)
-            throws WiringException {
+    private void attachRequestResponse(TcpWireTargetDefinition target, InvocationChain chain) throws WiringException {
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
-
+        PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         Serializer serializer = getMessageSerializer(target, operation);
         TcpResponseHandler handler = new TcpResponseHandler(serializer, connectTimeout, monitor);
         TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, connectTimeout);

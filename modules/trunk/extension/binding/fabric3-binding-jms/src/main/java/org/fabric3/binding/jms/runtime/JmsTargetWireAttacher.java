@@ -125,10 +125,9 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         }
 
         Map<String, PayloadType> payloadTypes = targetDefinition.getPayloadTypes();
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+        for (InvocationChain chain : wire.getInvocationChains()) {
 
-            PhysicalOperationDefinition op = entry.getKey();
-            InvocationChain chain = entry.getValue();
+            PhysicalOperationDefinition op = chain.getPhysicalOperation();
 
             if (resDestination != null && resCf != null) {
                 receiver = new JmsTargetMessageListener(resDestination, resCf);

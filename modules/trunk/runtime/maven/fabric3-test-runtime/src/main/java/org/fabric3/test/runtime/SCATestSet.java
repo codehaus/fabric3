@@ -34,8 +34,6 @@
  */
 package org.fabric3.test.runtime;
 
-import java.util.Map;
-
 import org.apache.maven.surefire.report.PojoStackTraceWriter;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterManager;
@@ -47,7 +45,6 @@ import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -64,8 +61,8 @@ public class SCATestSet implements SurefireTestSet {
     }
 
     public void execute(ReporterManager reporterManager, ClassLoader loader) throws TestSetFailedException {
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            String operationName = entry.getKey().getName();
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            String operationName = chain.getPhysicalOperation().getName();
             reporterManager.testStarting(new ReportEntry(this, operationName, name));
             try {
                 WorkContext workContext = new WorkContext();
@@ -74,7 +71,7 @@ public class SCATestSet implements SurefireTestSet {
 
                 MessageImpl msg = new MessageImpl();
                 msg.setWorkContext(workContext);
-                Message response = entry.getValue().getHeadInterceptor().invoke(msg);
+                Message response = chain.getHeadInterceptor().invoke(msg);
                 if (response.isFault()) {
                     throw new TestSetFailedException(operationName, (Throwable) response.getBody());
                 }

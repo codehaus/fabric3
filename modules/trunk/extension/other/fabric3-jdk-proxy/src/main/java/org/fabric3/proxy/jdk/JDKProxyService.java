@@ -149,14 +149,14 @@ public class JDKProxyService implements ProxyService {
 
     private Map<Method, InvocationChain> createInterfaceToWireMapping(Class<?> interfaze, Wire wire) throws NoMethodForOperationException {
 
-        Map<PhysicalOperationDefinition, InvocationChain> invocationChains = wire.getInvocationChains();
+        List<InvocationChain> invocationChains = wire.getInvocationChains();
 
         Map<Method, InvocationChain> chains = new HashMap<Method, InvocationChain>(invocationChains.size());
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : invocationChains.entrySet()) {
-            PhysicalOperationDefinition operation = entry.getKey();
+        for (InvocationChain chain : invocationChains) {
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
             try {
                 Method method = findMethod(interfaze, operation);
-                chains.put(method, entry.getValue());
+                chains.put(method, chain);
             } catch (NoSuchMethodException e) {
                 throw new NoMethodForOperationException(operation.getName());
             } catch (ClassNotFoundException e) {

@@ -34,9 +34,7 @@
  */
 package org.fabric3.spi.wire;
 
-import java.util.Map;
-
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import java.util.List;
 
 /**
  * Wires connect references and services via a collection of invocation chains. An invocation chain corresponds to a service operation.
@@ -47,16 +45,15 @@ public interface Wire {
     /**
      * Adds the invocation chain associated with the given operation
      *
-     * @param operation the service operation
-     * @param chain     the invocation chain
+     * @param chain the invocation chain
      */
-    void addInvocationChain(PhysicalOperationDefinition operation, InvocationChain chain);
+    void addInvocationChain(InvocationChain chain);
 
     /**
      * Returns the collection of invocation chains for the wire.
      *
      * @return the collection of invocation chains for the wire
      */
-    Map<PhysicalOperationDefinition, InvocationChain> getInvocationChains();
+    List<InvocationChain> getInvocationChains();
 
 }

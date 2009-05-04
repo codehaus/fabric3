@@ -41,7 +41,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
@@ -56,16 +55,20 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTargetDefinition> {
-    
-    @Reference protected PolicyApplier policyApplier;
-    @Reference protected F3Configurator f3Configurator;
-    @Reference protected ExpressionExpander expander;
-    @Reference protected ClassLoaderRegistry classLoaderRegistry;
+
+    @Reference
+    protected PolicyApplier policyApplier;
+    @Reference
+    protected F3Configurator f3Configurator;
+    @Reference
+    protected ExpressionExpander expander;
+    @Reference
+    protected ClassLoaderRegistry classLoaderRegistry;
 
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire) throws WiringException {
 
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
-        
+
         List<String> endpointUris = new LinkedList<String>();
         String endpointUri = expandUri(target.getUri());
         StringTokenizer tok = new StringTokenizer(endpointUri);
@@ -73,24 +76,24 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             endpointUris.add(tok.nextToken().trim());
         }
         AxisService axisService = createAxisClientService(target, classLoader);
-        
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
-            String operation = entry.getKey().getName();
+        for (InvocationChain chain : wire.getInvocationChains()) {
+
+            String operation = chain.getPhysicalOperation().getName();
 
             Set<AxisPolicy> policies = target.getPolicies(operation);
             Map<String, String> opInfo = target.getOperationInfo() != null ? target.getOperationInfo().get(operation) : null;
 
-            Interceptor interceptor = new Axis2TargetInterceptor(endpointUris, 
-                                                                 operation, 
-                                                                 policies, 
-                                                                 opInfo, 
-                                                                 target.getConfig(), 
-                                                                 f3Configurator, 
-                                                                 policyApplier, 
+            Interceptor interceptor = new Axis2TargetInterceptor(endpointUris,
+                                                                 operation,
+                                                                 policies,
+                                                                 opInfo,
+                                                                 target.getConfig(),
+                                                                 f3Configurator,
+                                                                 policyApplier,
                                                                  axisService,
                                                                  classLoader);
-            entry.getValue().addInterceptor(interceptor);
+            chain.addInterceptor(interceptor);
         }
 
     }
@@ -121,25 +124,25 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             throw new WiringException(e);
         }
     }
-    
+
     private URL getWsdlURL(String wsdlLocation, ClassLoader classLoader) {
         if (wsdlLocation == null) {
             return null;
-        }        
+        }
         try {
             return new URL(wsdlLocation);
         } catch (MalformedURLException e) {
             return classLoader.getResource(wsdlLocation);
-        }        
+        }
     }
-    
+
     /*
-     * Create instance of client side Axis2 service to get info about the Webservice
-     */
-    private AxisService createAxisClientService(Axis2WireTargetDefinition target, ClassLoader classLoader) throws WiringException{
-        
-        URL wsdlURL = getWsdlURL(target.getWsdlLocation(), classLoader);    
-        if(wsdlURL != null) {
+    * Create instance of client side Axis2 service to get info about the Webservice
+    */
+    private AxisService createAxisClientService(Axis2WireTargetDefinition target, ClassLoader classLoader) throws WiringException {
+
+        URL wsdlURL = getWsdlURL(target.getWsdlLocation(), classLoader);
+        if (wsdlURL != null) {
             try {
                 return AxisService.createClientSideAxisService(wsdlURL,
                                                                target.getWsdlElement().getServiceName(),

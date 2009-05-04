@@ -29,7 +29,6 @@ import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -51,9 +50,9 @@ public class BindingChannelImpl implements BindingChannel {
         }
         Wire wire = holder.getWire();
         InvocationChain chain = null;
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            if (entry.getKey().getName().equals(operation)) {
-                chain = entry.getValue();
+        for (InvocationChain invocationChain : wire.getInvocationChains()) {
+            if (invocationChain.getPhysicalOperation().getName().equals(operation)) {
+                chain = invocationChain;
             }
         }
         if (chain == null) {

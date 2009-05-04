@@ -124,10 +124,10 @@ public class TcpRequestHandler extends SimpleChannelHandler {
 
     private Interceptor selectOperation(String operationName, Wire wire) {
         InvocationChain chain = null;
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            PhysicalOperationDefinition definition = entry.getKey();
+        for (InvocationChain invocationChain : wire.getInvocationChains()) {
+            PhysicalOperationDefinition definition = invocationChain.getPhysicalOperation();
             if (definition.getName().equals(operationName)) {
-                chain = entry.getValue();
+                chain = invocationChain;
             }
         }
         if (chain != null) {

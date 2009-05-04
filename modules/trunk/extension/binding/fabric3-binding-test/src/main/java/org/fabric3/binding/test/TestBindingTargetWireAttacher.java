@@ -17,7 +17,6 @@
 package org.fabric3.binding.test;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -25,8 +24,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -43,16 +42,17 @@ public class TestBindingTargetWireAttacher implements TargetWireAttacher<TestBin
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, TestBindingTargetDefinition target, Wire wire) throws WiringException {
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+        for (InvocationChain chain : wire.getInvocationChains()) {
             URI destination;
             if (target.isCallback()) {
                 destination = target.getCallbackUri();
             } else {
                 destination = target.getUri();
             }
-            String name = entry.getKey().getName();
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
+            String name = operation.getName();
             Interceptor interceptor = new TestBindingInterceptor(channel, destination, name);
-            entry.getValue().addInterceptor(interceptor);
+            chain.addInterceptor(interceptor);
         }
     }
 

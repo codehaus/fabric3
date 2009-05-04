@@ -171,7 +171,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
                                         String callbackUri,
                                         ClassLoader cl) throws WiringException {
         List<InvocationChainHolder> chainHolders = new ArrayList<InvocationChainHolder>();
-        for (InvocationChain chain : wire.getInvocationChains().values()) {
+        for (InvocationChain chain : wire.getInvocationChains()) {
             PhysicalOperationDefinition definition = chain.getPhysicalOperation();
             String dataBinding = definition.getDatabinding();
             Serializer inputSerializer = null;

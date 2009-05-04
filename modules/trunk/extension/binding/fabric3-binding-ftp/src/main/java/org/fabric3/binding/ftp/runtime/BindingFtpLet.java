@@ -60,7 +60,7 @@ public class BindingFtpLet implements FtpLet {
     private Interceptor getInterceptor() {
         // lazy load the interceptor as it may not have been added when the instance was created in the wire attacher
         if (interceptor == null) {
-            interceptor = wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
+            interceptor = wire.getInvocationChains().iterator().next().getHeadInterceptor();
         }
         return interceptor;
     }
