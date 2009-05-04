@@ -19,7 +19,7 @@ package org.fabric3.ftp.server.protocol;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
 
-import org.fabric3.api.ftp.FtpConstants;
+import org.fabric3.ftp.api.FtpConstants;
 import org.fabric3.ftp.server.data.DataConnection;
 import org.fabric3.ftp.server.security.User;
 

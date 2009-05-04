@@ -14,28 +14,22 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.api.ftp;
-
-import java.io.InputStream;
+package org.fabric3.ftp.api;
 
 /**
- * Interface for receiving FTP callbacks.
- * <p/>
- * Note: The concept is borrowed from Apache MINA FTP Server.
- *
  * @version $Revision$ $Date$
  */
-public interface FtpLet {
-
+public interface FtpConstants {
     /**
-     * Callback when data is uploaded by the remote FTP client.
-     *
-     * @param fileName    Name of the file being uploaded.
-     * @param contentType the type of data (e.g. binary or text) being uploaded
-     * @param uploadData  Stream of data that is being uploaded.
-     * @return true if the operation completed
-     * @throws Exception If unable to handle the data.
+     * Header name for the file content type.
      */
-    boolean onUpload(String fileName, String contentType, InputStream uploadData) throws Exception;
-
+    String HEADER_CONTENT_TYPE = "f3.contentType";
+    /**
+     * Header value for binary transfers.
+     */
+    String BINARY_TYPE = "BINARY";
+    /**
+     * Header value for ASCI transfers.
+     */
+    String TEXT_TYPE = "TEXT";
 }

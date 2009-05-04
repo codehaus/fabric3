@@ -16,7 +16,7 @@
  */
 package org.fabric3.ftp.spi;
 
-import org.fabric3.api.ftp.FtpLet;
+import org.fabric3.ftp.api.FtpLet;
 
 /**
  * SPI for the FTP let container.

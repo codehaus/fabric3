@@ -27,7 +27,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.oasisopen.sca.ServiceUnavailableException;
 
-import org.fabric3.api.ftp.FtpConstants;
+import org.fabric3.ftp.api.FtpConstants;
 import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;

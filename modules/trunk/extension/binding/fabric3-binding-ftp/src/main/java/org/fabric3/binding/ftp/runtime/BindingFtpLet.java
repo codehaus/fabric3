@@ -18,8 +18,8 @@ package org.fabric3.binding.ftp.runtime;
 
 import java.io.InputStream;
 
-import org.fabric3.api.ftp.FtpConstants;
-import org.fabric3.api.ftp.FtpLet;
+import org.fabric3.ftp.api.FtpConstants;
+import org.fabric3.ftp.api.FtpLet;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
