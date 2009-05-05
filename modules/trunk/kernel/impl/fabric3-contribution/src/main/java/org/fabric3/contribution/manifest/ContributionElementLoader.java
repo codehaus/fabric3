@@ -185,6 +185,8 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                     runtimeModes.add(RuntimeMode.CONTROLLER);
                 } else if ("participant".equals(mode)) {
                     runtimeModes.add(RuntimeMode.PARTICIPANT);
+                } else if ("vm".equals(mode)) {
+                    runtimeModes.add(RuntimeMode.VM);
                 } else {
                     runtimeModes = Deployable.DEFAULT_MODES;
                     InvalidValue error = new InvalidValue("Invalid mode attrbiute: " + modeAttr, reader);
