@@ -16,17 +16,14 @@
  */
 package org.fabric3.spi.component;
 
+import java.io.Serializable;
+
+import org.osoa.sca.Conversation;
+
 /**
- * Implementations receive notifications of a conversation having expired.
+ * Used internally to represent a conversation.
  *
  * @version $Revision$ $Date$
  */
-public interface ConversationExpirationCallback {
-
-    /**
-     * Invoked when a conversation has expired.
-     *
-     * @param conversation the conversation that has expired
-     */
-    void expire(F3Conversation conversation);
+public interface F3Conversation extends Conversation, Serializable {
 }

@@ -52,7 +52,7 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 public class CompositeScopeContainerTestCase<T> extends TestCase {
     protected IMocksControl control;
-    protected ScopeContainer<QName> scopeContainer;
+    protected ScopeContainer scopeContainer;
     protected QName deployable;
     protected AtomicComponent<T> component;
     protected InstanceWrapper<T> wrapper;

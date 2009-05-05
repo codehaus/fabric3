@@ -16,11 +16,9 @@
  */
 package org.fabric3.hessian.serializer;
 
-import java.io.Serializable;
+import org.fabric3.spi.component.F3Conversation;
 
-import org.osoa.sca.Conversation;
-
-public class MockConversation implements Conversation, Serializable {
+public class MockConversation implements F3Conversation {
     private static final long serialVersionUID = 3868053094430618625L;
 
     public Object getConversationID() {

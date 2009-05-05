@@ -70,7 +70,7 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 @EagerInit
 @Service(ScopeContainer.class)
-public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
+public class CompositeScopeContainer extends AbstractScopeContainer {
     private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers;
 
     // The map of InstanceWrappers to destroy keyed by the deployable composite the component was deployed with.

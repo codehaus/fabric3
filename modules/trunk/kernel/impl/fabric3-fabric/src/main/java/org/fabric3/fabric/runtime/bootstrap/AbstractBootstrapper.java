@@ -106,7 +106,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     private LogicalCompositeComponent domain;
     private LogicalComponentManager logicalComponetManager;
     private ComponentManager componentManager;
-    private ScopeContainer<?> scopeContainer;
+    private ScopeContainer scopeContainer;
 
     private XMLFactory xmlFactory;
 

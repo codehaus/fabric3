@@ -37,6 +37,7 @@ package org.fabric3.binding.jms.runtime.helper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.List;
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -45,9 +46,8 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import org.osoa.sca.Conversation;
-
 import org.fabric3.binding.jms.common.Fabric3JmsException;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.WorkContext;
@@ -91,9 +91,9 @@ public class JmsHelper {
             // Copy correlation and conversation information from incoming frame to new frame
             // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
             // bidirectional service
-            Object id = previous.getCorrelationId(Object.class);
+            Serializable id = previous.getCorrelationId(Serializable.class);
             ConversationContext context = previous.getConversationContext();
-            Conversation conversation = previous.getConversation();
+            F3Conversation conversation = previous.getConversation();
             CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
             stack.add(frame);
             return workContext;

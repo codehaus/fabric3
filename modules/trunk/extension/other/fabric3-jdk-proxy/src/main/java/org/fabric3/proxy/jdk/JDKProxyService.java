@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.oasisopen.sca.ServiceReference;
-import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
@@ -67,7 +66,7 @@ import org.fabric3.spi.wire.Wire;
 public class JDKProxyService implements ProxyService {
     private ClassLoaderRegistry classLoaderRegistry;
     private ScopeRegistry scopeRegistry;
-    private ScopeContainer<Conversation> conversationalContainer;
+    private ScopeContainer conversationalContainer;
 
     public JDKProxyService() {
     }
@@ -112,7 +111,7 @@ public class JDKProxyService implements ProxyService {
         JDKInvocationHandler<T> handler;
         if (InteractionType.CONVERSATIONAL == type || InteractionType.PROPAGATES_CONVERSATION == type) {
             // create a conversational proxy
-            ScopeContainer<Conversation> scopeContainer = getContainer();
+            ScopeContainer scopeContainer = getContainer();
             handler = new JDKInvocationHandler<T>(interfaze, type, callbackUri, mappings, scopeContainer);
         } else {
             // create a non-conversational proxy
@@ -127,7 +126,7 @@ public class JDKProxyService implements ProxyService {
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 
-    public <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping, ScopeContainer<?> container) {
+    public <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping, ScopeContainer container) {
         ClassLoader cl = interfaze.getClassLoader();
         StatefulCallbackInvocationHandler<T> handler = new StatefulCallbackInvocationHandler<T>(interfaze, container, mapping);
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
@@ -185,7 +184,7 @@ public class JDKProxyService implements ProxyService {
         return clazz.getMethod(name, types);
     }
 
-    private ScopeContainer<Conversation> getContainer() {
+    private ScopeContainer getContainer() {
         if (conversationalContainer == null) {
             conversationalContainer = scopeRegistry.getScopeContainer(Scope.CONVERSATION);
         }

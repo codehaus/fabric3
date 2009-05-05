@@ -61,7 +61,7 @@ import org.fabric3.spi.invocation.WorkContext;
 public abstract class PojoComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
     private final URI uri;
     private final InstanceFactoryProvider<T> provider;
-    private final ScopeContainer<?> scopeContainer;
+    private final ScopeContainer scopeContainer;
     private final QName deployable;
     private final int initLevel;
     private final long maxIdleTime;
@@ -71,7 +71,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
-                         ScopeContainer<?> scopeContainer,
+                         ScopeContainer scopeContainer,
                          QName deployable,
                          int initLevel,
                          long maxIdleTime,
@@ -144,7 +144,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     public void setDefaultPropertyValues(Map<String, PropertyValue> defaultPropertyValues) {
     }
 
-    public ScopeContainer<?> getScopeContainer() {
+    public ScopeContainer getScopeContainer() {
         return scopeContainer;
     }
 

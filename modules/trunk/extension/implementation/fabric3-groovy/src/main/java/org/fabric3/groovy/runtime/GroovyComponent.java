@@ -32,7 +32,7 @@ import org.fabric3.spi.component.ScopeContainer;
 public class GroovyComponent<T> extends PojoComponent<T> {
     public GroovyComponent(URI componentId,
                            InstanceFactoryProvider<T> instanceFactoryProvider,
-                           ScopeContainer<?> scopeContainer,
+                           ScopeContainer scopeContainer,
                            QName deployable,
                            int initLevel,
                            long maxIdleTime,

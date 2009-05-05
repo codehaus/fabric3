@@ -16,10 +16,7 @@
  */
 package org.fabric3.pojo.component;
 
-import java.io.Serializable;
-
-import org.osoa.sca.Conversation;
-
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
@@ -30,10 +27,10 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
  *
  * @version $Rev: 2939 $ $Date: 2008-02-28 23:03:30 -0800 (Thu, 28 Feb 2008) $
  */
-public class ConversationImpl implements Conversation, Serializable {
+public class ConversationImpl implements F3Conversation {
     private static final long serialVersionUID = 8249514203064252385L;
     private final Object conversationId;
-    private transient ScopeContainer<Conversation> scopeContainer;
+    private transient ScopeContainer scopeContainer;
 
     /**
      * Constructor defining the conversation id.
@@ -41,7 +38,7 @@ public class ConversationImpl implements Conversation, Serializable {
      * @param conversationID the conversation id
      * @param scopeContainer the scope container that manages instances associated with this conversation
      */
-    public ConversationImpl(Object conversationID, ScopeContainer<Conversation> scopeContainer) {
+    public ConversationImpl(Object conversationID, ScopeContainer scopeContainer) {
         this.conversationId = conversationID;
         this.scopeContainer = scopeContainer;
     }

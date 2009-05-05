@@ -57,7 +57,7 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 @EagerInit
 @Service(ScopeContainer.class)
-public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
+public class StatelessScopeContainer extends AbstractScopeContainer {
 
     public StatelessScopeContainer(@Monitor ScopeContainerMonitor monitor) {
         super(Scope.STATELESS, monitor);

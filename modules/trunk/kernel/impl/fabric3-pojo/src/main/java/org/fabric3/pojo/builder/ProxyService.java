@@ -127,7 +127,7 @@ public interface ProxyService {
      * @param container the scope container that manages the implementation instance the proxy is injected on
      * @return the proxy instance
      */
-    <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping, ScopeContainer<?> container);
+    <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping, ScopeContainer container);
 
     /**
      * Cast a proxy to a ServiceReference.

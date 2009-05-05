@@ -74,7 +74,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTa
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         SystemComponent<?> targetComponent = (SystemComponent<?>) manager.getComponent(targetId);
 
-        ScopeContainer<?> scopeContainer = targetComponent.getScopeContainer();
+        ScopeContainer scopeContainer = targetComponent.getScopeContainer();
         Class<?> implementationClass = targetComponent.getImplementationClass();
         ClassLoader loader = implementationClass.getClassLoader();
 
@@ -110,7 +110,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTa
         throw new AssertionError();
     }
 
-    <T> SystemInvokerInterceptor<T> createInterceptor(Method method, SystemComponent<T> component, ScopeContainer<?> scopeContainer) {
+    <T> SystemInvokerInterceptor<T> createInterceptor(Method method, SystemComponent<T> component, ScopeContainer scopeContainer) {
         return new SystemInvokerInterceptor<T>(method, scopeContainer, component);
     }
 

@@ -104,7 +104,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     /**
      * The ScopeContainer used to managed system component instances.
      */
-    private ScopeContainer<?> scopeContainer;
+    private ScopeContainer scopeContainer;
 
     /**
      * The ClassLoaderRegristy that manages all runtime classloaders.
@@ -242,7 +242,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         return componentManager;
     }
 
-    public ScopeContainer<?> getScopeContainer() {
+    public ScopeContainer getScopeContainer() {
         return scopeContainer;
     }
 

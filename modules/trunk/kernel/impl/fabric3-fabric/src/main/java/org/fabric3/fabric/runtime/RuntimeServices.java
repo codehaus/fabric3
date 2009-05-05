@@ -58,7 +58,7 @@ public interface RuntimeServices {
      *
      * @return the ScopeContainer used to manage runtime component instances
      */
-    ScopeContainer<?> getScopeContainer();
+    ScopeContainer getScopeContainer();
 
     /**
      * Returns the ClassLoaderRegistry used to manage runtime classloaders.

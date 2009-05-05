@@ -34,7 +34,7 @@ import org.fabric3.spi.wire.InvocationChain;
  * @version $Rev: 3150 $ $Date: 2008-03-21 14:12:51 -0700 (Fri, 21 Mar 2008) $
  */
 public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
-    private ScopeContainer<?> container;
+    private ScopeContainer container;
     private ProxyService proxyService;
     private Map<String, Map<Method, InvocationChain>> mappings;
     private Class<T> interfaze;
@@ -48,7 +48,7 @@ public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
      * @param mappings     the callback URI to invocation chain mappings
      */
     public CallbackWireObjectFactory(Class<T> interfaze,
-                                     ScopeContainer<?> container,
+                                     ScopeContainer container,
                                      ProxyService proxyService,
                                      Map<String, Map<Method, InvocationChain>> mappings) {
         this.interfaze = interfaze;

@@ -37,9 +37,9 @@ package org.fabric3.fabric.component.scope;
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
-import org.osoa.sca.Conversation;
 
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
@@ -53,8 +53,8 @@ import org.fabric3.spi.invocation.WorkContext;
 public class ConversationalScopeContainerTestCase extends TestCase {
     private ConversationalScopeContainer container;
     private IMocksControl control;
-    private InstanceWrapperStore<Conversation> store;
-    private Conversation conversation;
+    private InstanceWrapperStore<F3Conversation> store;
+    private F3Conversation conversation;
     private WorkContext workContext;
     private AtomicComponent<Object> component;
     private InstanceWrapper<Object> wrapper;
@@ -94,7 +94,7 @@ public class ConversationalScopeContainerTestCase extends TestCase {
         control = EasyMock.createControl();
         store = control.createMock(InstanceWrapperStore.class);
         container = new ConversationalScopeContainer(null, store);
-        conversation = EasyMock.createMock(Conversation.class);
+        conversation = EasyMock.createMock(F3Conversation.class);
         workContext = new WorkContext();
         CallFrame frame = new CallFrame(null, null, conversation, ConversationContext.NEW);
         workContext.addCallFrame(frame);

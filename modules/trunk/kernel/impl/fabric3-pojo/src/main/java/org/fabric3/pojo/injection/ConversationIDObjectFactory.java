@@ -16,12 +16,11 @@
  */
 package org.fabric3.pojo.injection;
 
-import org.osoa.sca.Conversation;
-
-import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 
 public class ConversationIDObjectFactory implements ObjectFactory<String> {
 
@@ -31,7 +30,7 @@ public class ConversationIDObjectFactory implements ObjectFactory<String> {
     public String getInstance() {
         WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
         CallFrame frame = workContext.peekCallFrame();
-        Conversation conversation = frame.getConversation();
+        F3Conversation conversation = frame.getConversation();
         if (conversation == null) {
             return null;
         }

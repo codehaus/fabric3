@@ -19,7 +19,7 @@ package org.fabric3.jpa.runtime;
 import javax.persistence.EntityManager;
 import javax.transaction.Transaction;
 
-import org.osoa.sca.Conversation;
+import org.fabric3.spi.component.F3Conversation;
 
 /**
  * Responsible for returning an EntityManager with a persitence context tied to an execution context.
@@ -48,6 +48,6 @@ public interface EntityManagerService {
      * @return the EntityManager
      * @throws EntityManagerCreationException if an error creating the EntityManager is encountered
      */
-    EntityManager getEntityManager(String unitName, EntityManagerProxy proxy, Conversation conversation) throws EntityManagerCreationException;
+    EntityManager getEntityManager(String unitName, EntityManagerProxy proxy, F3Conversation conversation) throws EntityManagerCreationException;
 
 }

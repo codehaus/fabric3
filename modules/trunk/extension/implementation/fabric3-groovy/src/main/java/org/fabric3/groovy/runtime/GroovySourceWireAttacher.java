@@ -76,7 +76,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         }
         if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
             URI callbackUri = targetDefinition.getUri();
-            ScopeContainer<?> container = source.getScopeContainer();
+            ScopeContainer container = source.getScopeContainer();
             ObjectFactory<?> factory = source.getObjectFactory(injectableAttribute);
             if (factory == null) {
                 factory = proxyService.createCallbackObjectFactory(type, container, callbackUri, wire);

@@ -18,7 +18,7 @@ package org.fabric3.spi.invocation;
 
 import java.io.Serializable;
 
-import org.osoa.sca.Conversation;
+import org.fabric3.spi.component.F3Conversation;
 
 /**
  * Encapsulates information for a specific invocation that is made as part of a request entering the domain. Requests may have multiple associated
@@ -35,9 +35,9 @@ public class CallFrame implements Serializable {
     private static final long serialVersionUID = -6108279393891496098L;
 
     private String callbackUri;
-    private Object correlationId;
+    private Serializable correlationId;
     private ConversationContext conversationContext;
-    private Conversation conversation;
+    private F3Conversation conversation;
 
     /**
      * Default constructor. Creates a CallFrame for an invocation on a stateless, unidirectional service.
@@ -50,7 +50,7 @@ public class CallFrame implements Serializable {
      *
      * @param correlationId the correlation id
      */
-    public CallFrame(Object correlationId) {
+    public CallFrame(Serializable correlationId) {
         this(null, correlationId, null, null);
     }
 
@@ -63,7 +63,7 @@ public class CallFrame implements Serializable {
      * @param conversation        the conversaation associated with the invocation or null
      * @param conversationContext the type of conversational context
      */
-    public CallFrame(String callbackUri, Object correlationId, Conversation conversation, ConversationContext conversationContext) {
+    public CallFrame(String callbackUri, Serializable correlationId, F3Conversation conversation, ConversationContext conversationContext) {
         this.callbackUri = callbackUri;
         this.correlationId = correlationId;
         this.conversation = conversation;
@@ -85,7 +85,7 @@ public class CallFrame implements Serializable {
      * @param type the correlation id type.
      * @return the correlation id or null.
      */
-    public <T> T getCorrelationId(Class<T> type) {
+    public <T extends Serializable> T getCorrelationId(Class<T> type) {
         return type.cast(correlationId);
     }
 
@@ -94,7 +94,7 @@ public class CallFrame implements Serializable {
      *
      * @return the conversation associated with this CallFrame or null if the invocation is non-conversational
      */
-    public Conversation getConversation() {
+    public F3Conversation getConversation() {
         return conversation;
     }
 

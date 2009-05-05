@@ -59,7 +59,7 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTa
         assert component instanceof GroovyComponent;
         GroovyComponent<?> target = (GroovyComponent) component;
 
-        ScopeContainer<?> scopeContainer = target.getScopeContainer();
+        ScopeContainer scopeContainer = target.getScopeContainer();
         Class<?> implementationClass = target.getImplementationClass();
         ClassLoader loader = implementationClass.getClassLoader();
         // attach the invoker interceptor to forward invocation chains
@@ -92,7 +92,7 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTa
                 // callbacks do not expire the client (i.e. the callback target); they expire the forward implementation instance
                 endsConversation = false;
             }
-            InvokerInterceptor<?, ?> interceptor = createInterceptor(method, callback, endsConversation, target, scopeContainer);
+            InvokerInterceptor<?> interceptor = createInterceptor(method, callback, endsConversation, target, scopeContainer);
             chain.addInterceptor(interceptor);
         }
 
@@ -103,12 +103,12 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTa
         // no-op
     }
 
-    <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
-                                                                  boolean callback,
-                                                                  boolean endsConvesation,
-                                                                  AtomicComponent<T> component,
-                                                                  ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConvesation, component, scopeContainer);
+    <T> InvokerInterceptor<T> createInterceptor(Method method,
+                                                boolean callback,
+                                                boolean endsConvesation,
+                                                AtomicComponent<T> component,
+                                                ScopeContainer scopeContainer) {
+        return new InvokerInterceptor<T>(method, callback, endsConvesation, component, scopeContainer);
     }
 
     public ObjectFactory<?> createObjectFactory(GroovyWireTargetDefinition target) throws WiringException {

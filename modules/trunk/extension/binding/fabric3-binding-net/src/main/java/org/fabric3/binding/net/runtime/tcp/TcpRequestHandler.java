@@ -16,6 +16,7 @@
  */
 package org.fabric3.binding.net.runtime.tcp;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,10 +29,10 @@ import org.jboss.netty.channel.ChannelPipelineCoverage;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
-import org.osoa.sca.Conversation;
 
 import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -111,9 +112,9 @@ public class TcpRequestHandler extends SimpleChannelHandler {
         // Copy correlation and conversation information from incoming frame to new frame
         // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
         // bidirectional service
-        Object id = previous.getCorrelationId(Object.class);
+        Serializable id = previous.getCorrelationId(Serializable.class);
         ConversationContext conversationContext = previous.getConversationContext();
-        Conversation conversation = previous.getConversation();
+        F3Conversation conversation = previous.getConversation();
         CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
         workContext.addCallFrame(frame);
 

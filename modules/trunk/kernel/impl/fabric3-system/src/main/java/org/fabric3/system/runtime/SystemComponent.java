@@ -49,7 +49,7 @@ import org.fabric3.spi.component.ScopeContainer;
 public class SystemComponent<T> extends PojoComponent<T> {
     public SystemComponent(URI componentId,
                            InstanceFactoryProvider<T> provider,
-                           ScopeContainer<?> scopeContainer,
+                           ScopeContainer scopeContainer,
                            QName deployable,
                            int initLevel,
                            int maxIdleTime,

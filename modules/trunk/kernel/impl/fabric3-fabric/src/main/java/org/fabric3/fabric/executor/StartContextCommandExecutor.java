@@ -59,7 +59,7 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 @EagerInit
 public class StartContextCommandExecutor implements CommandExecutor<StartContextCommand> {
-    private ScopeContainer<QName> container;
+    private ScopeContainer container;
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor

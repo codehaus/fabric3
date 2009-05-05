@@ -60,12 +60,11 @@ import org.fabric3.spi.wire.InvocationRuntimeException;
  *
  * @version $Rev$ $Date$
  * @param <T> the implementation class for the component being invoked
- * @param <CONTEXT> the type of context id used by the ScopeContainer
  */
-public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
+public class InvokerInterceptor<T> implements Interceptor {
     private Method operation;
     private AtomicComponent<T> component;
-    private ScopeContainer<CONTEXT> scopeContainer;
+    private ScopeContainer scopeContainer;
     private ClassLoader targetTCCLClassLoader;
     private boolean callback;
     private boolean endConversation;
@@ -84,7 +83,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                               boolean callback,
                               boolean endConversation,
                               AtomicComponent<T> component,
-                              ScopeContainer<CONTEXT> scopeContainer) {
+                              ScopeContainer scopeContainer) {
         this.operation = operation;
         this.callback = callback;
         this.endConversation = endConversation;
@@ -107,7 +106,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                               boolean callback,
                               boolean endConversation,
                               AtomicComponent<T> component,
-                              ScopeContainer<CONTEXT> scopeContainer,
+                              ScopeContainer scopeContainer,
                               ClassLoader targetTCCLClassLoader) {
         this.operation = operation;
         this.callback = callback;

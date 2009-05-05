@@ -32,7 +32,7 @@ import org.fabric3.spi.wire.InvocationRuntimeException;
  */
 public class TimerComponentInvoker<T> implements Runnable {
     private TimerComponent<T> component;
-    private ScopeContainer<?> scopeContainer;
+    private ScopeContainer scopeContainer;
 
     public TimerComponentInvoker(TimerComponent<T> component) {
         this.component = component;

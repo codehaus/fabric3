@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-import org.osoa.sca.Conversation;
 
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -46,7 +46,7 @@ public class JDKSerializerFactoryTestCase extends TestCase {
         super.setUp();
         message = new MessageImpl();
         List<CallFrame> frames = new ArrayList<CallFrame>();
-        Conversation conversation = new MockConversation();
+        F3Conversation conversation = new MockConversation();
         CallFrame frame = new CallFrame("callbackUri", "correlationId", conversation, ConversationContext.PROPAGATE);
         frames.add(frame);
         WorkContext context = new WorkContext();

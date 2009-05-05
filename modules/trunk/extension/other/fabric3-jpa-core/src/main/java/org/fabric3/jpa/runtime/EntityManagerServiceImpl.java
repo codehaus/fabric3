@@ -26,11 +26,11 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.component.ConversationExpirationCallback;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 
@@ -47,7 +47,7 @@ public class EntityManagerServiceImpl implements EntityManagerService {
     private Map<Transaction, Object> joinedTransaction = new ConcurrentHashMap<Transaction, Object>();
     private EmfCache emfCache;
     private TransactionManager tm;
-    private ScopeContainer<Conversation> scopeContainer;
+    private ScopeContainer scopeContainer;
 
     public EntityManagerServiceImpl(@Reference EmfCache emfCache, @Reference TransactionManager tm, @Reference ScopeRegistry registry) {
         this.emfCache = emfCache;
@@ -81,7 +81,7 @@ public class EntityManagerServiceImpl implements EntityManagerService {
         return em;
     }
 
-    public EntityManager getEntityManager(String unitName, EntityManagerProxy proxy, Conversation conversation)
+    public EntityManager getEntityManager(String unitName, EntityManagerProxy proxy, F3Conversation conversation)
             throws EntityManagerCreationException {
         // synchronize on the conversation since multiple request threads may be active
         synchronized (conversation) {
@@ -222,7 +222,7 @@ public class EntityManagerServiceImpl implements EntityManagerService {
             this.joined = joined;
         }
 
-        public void expire(Conversation conversation) {
+        public void expire(F3Conversation conversation) {
             synchronized (conversation) {
                 if (joined) {
                     joinedTransaction.remove(transaction);

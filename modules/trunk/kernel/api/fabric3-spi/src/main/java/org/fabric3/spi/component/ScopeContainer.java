@@ -36,7 +36,6 @@ package org.fabric3.spi.component;
 
 import java.util.List;
 
-import org.osoa.sca.Conversation;
 import org.osoa.sca.ConversationEndedException;
 
 import org.fabric3.model.type.component.Scope;
@@ -49,17 +48,15 @@ import org.fabric3.spi.invocation.WorkContext;
  * Manages the lifecycle and visibility of instances associated with a an {@link AtomicComponent}.
  *
  * @version $Rev$ $Date$
- * @param <KEY> the type of IDs that this container uses to identify its contexts. For example, for COMPOSITE scope this could be the URI of the
- * composite component, or for HTTP Session scope it might be the HTTP session ID.
  */
-public interface ScopeContainer<KEY> extends Lifecycle {
+public interface ScopeContainer extends Lifecycle {
 
     /**
      * Returns the Scope that this container supports.
      *
      * @return the Scope that this container supports
      */
-    Scope<KEY> getScope();
+    Scope<?> getScope();
 
     /**
      * Registers a component with the scope.
@@ -81,7 +78,7 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @param conversation the conversation to listen to
      * @param callback     the callback instance that receives notifications
      */
-    void registerCallback(Conversation conversation, ConversationExpirationCallback callback);
+    void registerCallback(F3Conversation conversation, ConversationExpirationCallback callback);
 
     /**
      * Start a new, non-expiring context. The context will remain active until explicitly stopped.

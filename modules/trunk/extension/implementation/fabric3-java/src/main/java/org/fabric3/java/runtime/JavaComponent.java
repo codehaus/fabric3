@@ -49,7 +49,7 @@ public class JavaComponent<T> extends PojoComponent<T> {
      */
     public JavaComponent(URI componentId,
                          InstanceFactoryProvider<T> instanceFactoryProvider,
-                         ScopeContainer<?> scopeContainer,
+                         ScopeContainer scopeContainer,
                          QName deployable,
                          int initLevel,
                          long maxIdleTime,

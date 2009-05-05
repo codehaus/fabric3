@@ -43,10 +43,10 @@ import java.util.UUID;
 import org.oasisopen.sca.ServiceReference;
 import org.oasisopen.sca.ServiceRuntimeException;
 import org.oasisopen.sca.ServiceUnavailableException;
-import org.osoa.sca.Conversation;
 
 import org.fabric3.pojo.component.ConversationImpl;
 import org.fabric3.spi.component.ConversationExpirationCallback;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
@@ -71,9 +71,9 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
     private final B proxy;
     private final InteractionType type;
     private final Map<Method, InvocationChain> chains;
-    private final ScopeContainer<Conversation> scopeContainer;
+    private final ScopeContainer scopeContainer;
 
-    private Conversation conversation;
+    private F3Conversation conversation;
     private String callbackUri;
 
     /**
@@ -102,7 +102,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
                                 InteractionType type,
                                 String callbackUri,
                                 Map<Method, InvocationChain> mapping,
-                                ScopeContainer<Conversation> scopeContainer) throws NoMethodForOperationException {
+                                ScopeContainer scopeContainer) throws NoMethodForOperationException {
         this.callbackUri = callbackUri;
         assert mapping != null;
         this.businessInterface = interfaze;
@@ -114,7 +114,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
     }
 
 
-    public void expire(Conversation conversation) {
+    public void expire(F3Conversation conversation) {
         this.conversation = null;
     }
 
@@ -203,7 +203,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
             frame = new CallFrame(callbackUri, null, conversation, ConversationContext.NEW);
             workContext.addCallFrame(frame);
         } else if (InteractionType.PROPAGATES_CONVERSATION == type && conversation == null) {
-            Conversation propagated = workContext.peekCallFrame().getConversation();
+            F3Conversation propagated = workContext.peekCallFrame().getConversation();
             frame = new CallFrame(callbackUri, null, propagated, ConversationContext.PROPAGATE);
             workContext.addCallFrame(frame);
         } else if (InteractionType.CONVERSATIONAL == type) {

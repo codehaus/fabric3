@@ -26,8 +26,8 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.oasisopen.sca.ServiceRuntimeException;
-import org.osoa.sca.Conversation;
 
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.WorkContextTunnel;
 
@@ -182,7 +182,7 @@ public class StatefulEntityManagerProxy implements EntityManagerProxy {
         if (extended) {
             // an extended persistence context, associate it with the current conversation
             WorkContext context = WorkContextTunnel.getThreadWorkContext();
-            Conversation conversation = context.peekCallFrame().getConversation();
+            F3Conversation conversation = context.peekCallFrame().getConversation();
             if (conversation == null) {
                 throw new IllegalStateException("No conversational context associated with the current component");
             }

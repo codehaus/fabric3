@@ -35,7 +35,6 @@
 package org.fabric3.pojo.component;
 
 import java.lang.reflect.Method;
-import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
@@ -61,7 +60,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     private IMocksControl control;
     private WorkContext workContext;
-    private ScopeContainer<QName> scopeContainer;
+    private ScopeContainer scopeContainer;
     private InstanceWrapper<TestBean> wrapper;
     private AtomicComponent<TestBean> component;
     private Message message;
@@ -70,8 +69,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         String value = "foo";
         mockCall(new Object[]{value}, value);
         control.replay();
-        InvokerInterceptor<TestBean, QName> invoker =
-                new InvokerInterceptor<TestBean, QName>(echoMethod, false, false, component, scopeContainer);
+        InvokerInterceptor<TestBean> invoker =
+                new InvokerInterceptor<TestBean>(echoMethod, false, false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
@@ -81,8 +80,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         Integer value = 1;
         mockCall(new Object[]{value}, value);
         control.replay();
-        InvokerInterceptor<TestBean, QName> invoker =
-                new InvokerInterceptor<TestBean, QName>(primitiveMethod, false, false, component, scopeContainer);
+        InvokerInterceptor<TestBean> invoker =
+                new InvokerInterceptor<TestBean>(primitiveMethod, false, false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
@@ -92,8 +91,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         String[] value = new String[]{"foo", "bar"};
         mockCall(new Object[]{value}, value);
         control.replay();
-        InvokerInterceptor<TestBean, QName> invoker =
-                new InvokerInterceptor<TestBean, QName>(arrayMethod, false, false, component, scopeContainer);
+        InvokerInterceptor<TestBean> invoker =
+                new InvokerInterceptor<TestBean>(arrayMethod, false, false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
@@ -102,8 +101,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     public void testEmptyInvoke() throws Throwable {
         mockCall(new Object[]{}, "foo");
         control.replay();
-        InvokerInterceptor<TestBean, QName> invoker =
-                new InvokerInterceptor<TestBean, QName>(nullParamMethod, false, false, component, scopeContainer);
+        InvokerInterceptor<TestBean> invoker =
+                new InvokerInterceptor<TestBean>(nullParamMethod, false, false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
@@ -112,8 +111,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     public void testNullInvoke() throws Throwable {
         mockCall(null, "foo");
         control.replay();
-        InvokerInterceptor<TestBean, QName> invoker =
-                new InvokerInterceptor<TestBean, QName>(nullParamMethod, false, false, component, scopeContainer);
+        InvokerInterceptor<TestBean> invoker =
+                new InvokerInterceptor<TestBean>(nullParamMethod, false, false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
@@ -122,8 +121,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     public void testInvokeCheckedException() throws Throwable {
         mockFaultCall(null, TestException.class);
         control.replay();
-        InvokerInterceptor<TestBean, QName> invoker =
-                new InvokerInterceptor<TestBean, QName>(checkedMethod, false, false, component, scopeContainer);
+        InvokerInterceptor<TestBean> invoker =
+                new InvokerInterceptor<TestBean>(checkedMethod, false, false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
@@ -132,15 +131,16 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     public void testInvokeRuntimeException() throws Throwable {
         mockFaultCall(null, TestRuntimeException.class);
         control.replay();
-        InvokerInterceptor<TestBean, QName> invoker =
-                new InvokerInterceptor<TestBean, QName>(runtimeMethod, false, false, component, scopeContainer);
+        InvokerInterceptor<TestBean> invoker =
+                new InvokerInterceptor<TestBean>(runtimeMethod, false, false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testFailureGettingWrapperThrowsException() {
-        EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
+        scopeContainer.getScope();
+        EasyMock.expectLastCall().andReturn(Scope.COMPOSITE);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         InstanceLifecycleException ex = new InstanceLifecycleException(null);
         try {
@@ -150,8 +150,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         }
         control.replay();
         try {
-            InvokerInterceptor<TestBean, QName> invoker =
-                    new InvokerInterceptor<TestBean, QName>(echoMethod, false, false, component, scopeContainer);
+            InvokerInterceptor<TestBean> invoker =
+                    new InvokerInterceptor<TestBean>(echoMethod, false, false, component, scopeContainer);
             invoker.invoke(message);
             fail();
         } catch (InvocationRuntimeException e) {
@@ -161,7 +161,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     }
 
     private void mockCall(Object value, Object body) throws Exception {
-        EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
+        scopeContainer.getScope();
+        EasyMock.expectLastCall().andReturn(Scope.COMPOSITE);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);
@@ -171,7 +172,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     }
 
     private void mockFaultCall(Object value, Class<? extends Exception> fault) throws Exception {
-        EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
+        scopeContainer.getScope();
+        EasyMock.expectLastCall().andReturn(Scope.COMPOSITE);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);

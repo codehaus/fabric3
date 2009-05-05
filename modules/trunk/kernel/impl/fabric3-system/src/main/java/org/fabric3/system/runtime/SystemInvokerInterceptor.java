@@ -54,10 +54,10 @@ import org.fabric3.spi.wire.InvocationRuntimeException;
 public class SystemInvokerInterceptor<T> implements Interceptor {
 
     private final Method operation;
-    private final ScopeContainer<?> scopeContainer;
+    private final ScopeContainer scopeContainer;
     private final AtomicComponent<T> component;
 
-    public SystemInvokerInterceptor(Method operation, ScopeContainer<?> scopeContainer, AtomicComponent<T> component) {
+    public SystemInvokerInterceptor(Method operation, ScopeContainer scopeContainer, AtomicComponent<T> component) {
         this.operation = operation;
         this.scopeContainer = scopeContainer;
         this.component = component;

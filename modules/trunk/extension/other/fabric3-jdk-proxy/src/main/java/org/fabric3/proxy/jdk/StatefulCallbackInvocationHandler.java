@@ -53,7 +53,7 @@ public class StatefulCallbackInvocationHandler<T> extends AbstractCallbackInvoca
      * @param scopeContainer the conversational scope container
      * @param chains         the invocation chain mappings for the callback wire
      */
-    public StatefulCallbackInvocationHandler(Class<T> interfaze, ScopeContainer<?> scopeContainer, Map<Method, InvocationChain> chains) {
+    public StatefulCallbackInvocationHandler(Class<T> interfaze, ScopeContainer scopeContainer, Map<Method, InvocationChain> chains) {
         super(interfaze);
         this.scopeContainer = scopeContainer;
         this.chains = chains;

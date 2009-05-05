@@ -38,7 +38,6 @@ package org.fabric3.fabric.component.scope;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -47,6 +46,7 @@ import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ConversationExpirationCallback;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceWrapper;
@@ -58,14 +58,13 @@ import org.fabric3.spi.invocation.WorkContext;
  * Implements functionality common to scope containers.
  *
  * @version $Rev$ $Date$
- * @param <KEY> the type of identifier used to identify instances associated with this scope
  */
-public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle implements ScopeContainer<KEY> {
-    private final Scope<KEY> scope;
+public abstract class AbstractScopeContainer extends AbstractLifecycle implements ScopeContainer {
+    private final Scope<?> scope;
     protected final ScopeContainerMonitor monitor;
     private ScopeRegistry scopeRegistry;
 
-    public AbstractScopeContainer(Scope<KEY> scope, ScopeContainerMonitor monitor) {
+    public AbstractScopeContainer(Scope<?> scope, ScopeContainerMonitor monitor) {
         this.scope = scope;
         this.monitor = monitor;
     }
@@ -103,7 +102,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         throw new UnsupportedOperationException();
     }
 
-    public Scope<KEY> getScope() {
+    public Scope<?> getScope() {
         return scope;
     }
 
@@ -115,7 +114,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         checkInit();
     }
 
-    public void registerCallback(Conversation conversation, ConversationExpirationCallback callback) {
+    public void registerCallback(F3Conversation conversation, ConversationExpirationCallback callback) {
         throw new UnsupportedOperationException();
     }
 
@@ -145,7 +144,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
      * Shut down an ordered list of instances. The list passed to this method is treated as a live, mutable list so any instances added to this list
      * as shutdown is occuring will also be shut down.
      *
-     * @param instances the list of instances to shutdown
+     * @param instances   the list of instances to shutdown
      * @param workContext the current work context
      */
     protected void destroyInstances(List<InstanceWrapper<?>> instances, WorkContext workContext) {

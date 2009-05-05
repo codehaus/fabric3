@@ -45,11 +45,11 @@ import org.fabric3.spi.component.InstanceLifecycleException;
 /**
  * @version $Rev$ $Date$
  */
-public class ComponentObjectFactory<T, CONTEXT> implements ObjectFactory<T> {
+public class ComponentObjectFactory<T> implements ObjectFactory<T> {
     private final AtomicComponent<T> component;
-    private final ScopeContainer<CONTEXT> scopeContainer;
+    private final ScopeContainer scopeContainer;
 
-    public ComponentObjectFactory(AtomicComponent<T> component, ScopeContainer<CONTEXT> scopeContainer) {
+    public ComponentObjectFactory(AtomicComponent<T> component, ScopeContainer scopeContainer) {
         this.component = component;
         this.scopeContainer = scopeContainer;
     }

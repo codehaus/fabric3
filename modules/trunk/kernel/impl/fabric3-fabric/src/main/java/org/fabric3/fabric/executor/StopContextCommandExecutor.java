@@ -35,7 +35,7 @@ import org.fabric3.spi.invocation.WorkContext;
 @EagerInit
 public class StopContextCommandExecutor implements CommandExecutor<StopContextCommand> {
 
-    private ScopeContainer<QName> container;
+    private ScopeContainer container;
     private CommandExecutorRegistry commandExecutorRegistry;
 
 

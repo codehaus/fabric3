@@ -56,21 +56,19 @@ public interface ScopeRegistry {
      * @param scope the scope
      * @return the scope container for the given scope or null if one not found
      */
-    <T> ScopeContainer<T> getScopeContainer(Scope<T> scope);
+    ScopeContainer getScopeContainer(Scope<?> scope);
 
     /**
      * Register a scope container with this registry.
      *
      * @param container the container to register
-     * @param <T>       the type of identifiers used by the scope
      */
-    <T> void register(ScopeContainer<T> container);
+    void register(ScopeContainer container);
 
     /**
      * Unregister a scope container from this registry.
      *
      * @param container the container to unregister
-     * @param <T>       the type of identifiers used by the scope
      */
-    <T> void unregister(ScopeContainer<T> container);
+    void unregister(ScopeContainer container);
 }

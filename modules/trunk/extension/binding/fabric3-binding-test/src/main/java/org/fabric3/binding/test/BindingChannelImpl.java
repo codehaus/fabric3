@@ -16,15 +16,16 @@
  */
 package org.fabric3.binding.test;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.oasisopen.sca.ServiceRuntimeException;
 import org.oasisopen.sca.ServiceUnavailableException;
-import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -62,9 +63,9 @@ public class BindingChannelImpl implements BindingChannel {
         try {
             CallFrame previous = workContext.peekCallFrame();
             // copy correlation information from incoming frame
-            Object id = previous.getCorrelationId(Object.class);
+            Serializable id = previous.getCorrelationId(Serializable.class);
             ConversationContext context = previous.getConversationContext();
-            Conversation conversation = previous.getConversation();
+            F3Conversation conversation = previous.getConversation();
             String callbackUri = holder.getCallbackUri();
             CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
             workContext.addCallFrame(frame);
