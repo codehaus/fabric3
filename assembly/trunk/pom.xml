@@ -38,5 +38,6 @@
         <module>profile-jpa</module>
         <module>profile-jms</module>
         <module>profile-ftp</module>
+        <module>profile-net</module>
     </modules>
 </project>
