@@ -19,7 +19,6 @@ package org.fabric3.binding.net.model;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.oasisopen.sca.Constants;
 import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.HttpConfig;
@@ -32,10 +31,11 @@ import org.fabric3.model.type.component.BindingDefinition;
  */
 public class HttpBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 1035192281713003125L;
+    public static final QName HTTP_BINDING = new QName(org.osoa.sca.Constants.SCA_NS, "binding.http");
     private HttpConfig config;
 
     public HttpBindingDefinition(URI targetUri, Document key) {
-        super(targetUri, new QName(Constants.SCA_NS, "binding.http"), key);
+        super(targetUri, HTTP_BINDING, key);
         config = new HttpConfig();
     }
 

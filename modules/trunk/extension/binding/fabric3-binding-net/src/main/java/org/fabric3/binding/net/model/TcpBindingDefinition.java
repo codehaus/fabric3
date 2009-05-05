@@ -23,6 +23,7 @@ import org.oasisopen.sca.Constants;
 import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.TcpConfig;
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
@@ -32,6 +33,7 @@ import org.fabric3.model.type.component.BindingDefinition;
  */
 public class TcpBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 1035192281713003125L;
+    public static final QName TCP_BINDING = new QName(Namespaces.BINDING, "binding.tcp");
     private TcpConfig config;
 
     public TcpBindingDefinition(URI targetUri, Document key) {

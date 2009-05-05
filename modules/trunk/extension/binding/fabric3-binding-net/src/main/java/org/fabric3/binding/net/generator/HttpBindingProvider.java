@@ -20,8 +20,8 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.net.model.HttpBindingDefinition;
 import org.fabric3.spi.binding.provider.BindingMatchResult;
@@ -141,7 +141,7 @@ public class HttpBindingProvider implements BindingProvider {
         if (sourceBaseUrl == null) {
             throw new BindingSelectionException("Source HTTP information not found");
         }
-
+        sourceBaseUrl = "http://" + sourceBaseUrl;
         // configure the callback service on the source side
         String endpointName = target.getUri().getPath() + "/" + source.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
