@@ -52,6 +52,11 @@
         <property name="retries" source="$systemConfig//net.binding/@numberOfRetries"/>
     </component>
 
+    <component name="HttpBindingProvider">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.generator.HttpBindingProvider"/>
+    </component>
+
+
     <!-- TCP channel infrastructure -->
     <component name="TcpBindingLoader" f3-core:key="sca:binding.tcp">
         <f3-impl:implementation.system class="org.fabric3.binding.net.loader.TcpBindingLoader"/>
