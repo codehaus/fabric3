@@ -36,6 +36,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.binding.net.provision.TcpWireTargetDefinition;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
@@ -59,6 +60,7 @@ import org.fabric3.spi.wire.Wire;
  */
 public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDefinition> {
     private long connectTimeout = 10000;
+    private int retries = 0;
     private CommunicationsMonitor monitor;
     private ChannelFactory factory;
     private Timer timer;
@@ -76,8 +78,6 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         this.serializerFactories = serializerFactories;
     }
 
-
-    // FIXME this should be configured to same value as TransportServiceImpl
     @Property(required = false)
     public void setConnectTimeout(long timeout) {
         this.connectTimeout = timeout;
@@ -86,6 +86,11 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
     @Property(required = false)
     public void setTcpWireFormat(String tcpWireFormat) {
         this.tcpWireFormat = tcpWireFormat;
+    }
+
+    @Property(required = false)
+    public void setRetries(int retries) {
+        this.retries = retries;
     }
 
     @Init
@@ -122,10 +127,21 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
     }
 
     private void attachOneWay(TcpWireTargetDefinition target, InvocationChain chain) throws WiringException {
+        TcpConfig config = target.getConfig();
+        int retryCount = this.retries;
+        if (config.getNumberOfRetries() > -1) {
+            retryCount = config.getNumberOfRetries();
+        }
+
+        long timeout = connectTimeout;
+        if (config.getReadTimeout() > -1) {
+            timeout = config.getReadTimeout();
+        }
+
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         OneWayClientHandler handler = new OneWayClientHandler(monitor);
-        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, connectTimeout);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, timeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -137,16 +153,27 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         String name = operation.getName();
 
         Serializer serializer = getMessageSerializer(target, operation);
-        TcpOneWayInterceptor interceptor = new TcpOneWayInterceptor(path, name, address, serializer, bootstrap, monitor);
+        TcpOneWayInterceptor interceptor = new TcpOneWayInterceptor(path, name, address, serializer, bootstrap, retryCount, monitor);
         chain.addInterceptor(interceptor);
     }
 
     private void attachRequestResponse(TcpWireTargetDefinition target, InvocationChain chain) throws WiringException {
+        TcpConfig config = target.getConfig();
+        int retryCount = this.retries;
+        if (config.getNumberOfRetries() > -1) {
+            retryCount = config.getNumberOfRetries();
+        }
+
+        long timeout = connectTimeout;
+        if (config.getReadTimeout() > -1) {
+            timeout = config.getReadTimeout();
+        }
+
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
         PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         Serializer serializer = getMessageSerializer(target, operation);
         TcpResponseHandler handler = new TcpResponseHandler(serializer, connectTimeout, monitor);
-        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, connectTimeout);
+        TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, timeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -155,7 +182,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
         String name = operation.getName();
-        TcpRequestResponseInterceptor interceptor = new TcpRequestResponseInterceptor(path, name, serializer, address, bootstrap);
+        TcpRequestResponseInterceptor interceptor = new TcpRequestResponseInterceptor(path, name, serializer, address, bootstrap, retryCount);
         chain.addInterceptor(interceptor);
     }
 

@@ -27,8 +27,8 @@ import java.util.List;
  */
 public abstract class BaseConfig implements Serializable {
     private static final long serialVersionUID = -7562937002327535329L;
-    private long readTimeout;
-    private int numberOfRetries;
+    private long readTimeout = -1;
+    private int numberOfRetries = -1;
     private List<String> methods = new ArrayList<String>();
     private String wireFormat;
     private String responseWireFormat;

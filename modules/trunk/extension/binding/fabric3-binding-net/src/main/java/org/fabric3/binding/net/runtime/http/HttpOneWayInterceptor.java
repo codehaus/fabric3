@@ -17,23 +17,11 @@
 package org.fabric3.binding.net.runtime.http;
 
 import java.net.SocketAddress;
-import java.util.List;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
-import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
-import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.services.serializer.Serializer;
@@ -48,10 +36,11 @@ import org.fabric3.spi.wire.Interceptor;
 public class HttpOneWayInterceptor implements Interceptor {
     private static final Message MESSAGE = new MessageImpl();
     private String operationName;
-    private ClientBootstrap boostrap;
+    private ClientBootstrap bootstrap;
     private SocketAddress address;
     private Serializer headerSerializer;
     private Serializer inputSerializer;
+    private int retries;
     private CommunicationsMonitor monitor;
     private String url;
 
@@ -63,7 +52,8 @@ public class HttpOneWayInterceptor implements Interceptor {
      * @param address          the target service address
      * @param headerSerializer serializes header information
      * @param inputSerializer  serializes input parameters
-     * @param boostrap         the Netty ClientBootstrap instance for sending invocations
+     * @param bootstrap        the Netty ClientBootstrap instance for sending invocations
+     * @param retries          the number of times to retry failed communications operations
      * @param monitor          the event monitor
      */
     public HttpOneWayInterceptor(String url,
@@ -71,68 +61,31 @@ public class HttpOneWayInterceptor implements Interceptor {
                                  SocketAddress address,
                                  Serializer headerSerializer,
                                  Serializer inputSerializer,
-                                 ClientBootstrap boostrap,
+                                 ClientBootstrap bootstrap,
+                                 int retries,
                                  CommunicationsMonitor monitor) {
         this.url = url;
         this.operationName = operationName;
-        this.boostrap = boostrap;
+        this.bootstrap = bootstrap;
         this.address = address;
         this.headerSerializer = headerSerializer;
         this.inputSerializer = inputSerializer;
+        this.retries = retries;
         this.monitor = monitor;
     }
 
     public Message invoke(final Message msg) {
-        ChannelFuture future = boostrap.connect(address);
-        future.addListener(new ChannelFutureListener() {
-
-            public void operationComplete(ChannelFuture future) throws Exception {
-                Channel channel = future.getChannel();
-                if (!future.isSuccess()) {
-                    monitor.error(future.getCause());
-                    return;
-                }
-                HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, url);
-
-                request.addHeader(NetConstants.OPERATION_NAME, operationName);
-
-                List<CallFrame> stack = msg.getWorkContext().getCallFrameStack();
-                if (!stack.isEmpty()) {
-                    String serialized = headerSerializer.serialize(String.class, stack);
-                    request.addHeader(NetConstants.ROUTING, serialized);
-                }
-                Object body = msg.getBody();
-
-                if (body != null) {
-                    String str;
-                    if (body.getClass().isArray()) {
-                        Object[] payload = (Object[]) body;
-                        if (payload.length > 1) {
-                            throw new UnsupportedOperationException("Multiple paramters not supported");
-                        }
-                        str = inputSerializer.serialize(String.class, payload[0]);
-                    } else {
-                        str = inputSerializer.serialize(String.class, body);
-                    }
-                    request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(str.length()));
-                    ChannelBuffer buf = ChannelBuffers.copiedBuffer(str, "UTF-8");
-                    request.setContent(buf);
-                }
-
-                ChannelFuture writeFuture = channel.write(request);
-                writeFuture.addListener(new ChannelFutureListener() {
-
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        if (!future.isSuccess()) {
-                            monitor.error(future.getCause());
-                            return;
-                        }
-                        future.getChannel().close();
-
-                    }
-                });
-            }
-        });
+        ChannelFuture future = bootstrap.connect(address);
+        HttpRetryConnectListener listener = new HttpRetryConnectListener(msg,
+                                                                         url,
+                                                                         address,
+                                                                         operationName,
+                                                                         headerSerializer,
+                                                                         inputSerializer,
+                                                                         bootstrap,
+                                                                         retries,
+                                                                         monitor);
+        future.addListener(listener);
         return MESSAGE;
     }
 

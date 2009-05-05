@@ -19,17 +19,11 @@ package org.fabric3.binding.net.runtime.tcp;
 import java.net.SocketAddress;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 
-import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
 
@@ -46,6 +40,7 @@ public class TcpOneWayInterceptor implements Interceptor {
     private Serializer serializer;
     private CommunicationsMonitor monitor;
     private String operationName;
+    private int maxRetry;
 
     /**
      * Constructor.
@@ -55,6 +50,7 @@ public class TcpOneWayInterceptor implements Interceptor {
      * @param address       the target service address
      * @param serializer    serializes the invocation message
      * @param boostrap      the Netty ClientBootstrap instance for sending invocations
+     * @param maxRetry      the number of times to retry an operation
      * @param monitor       the event monitor
      */
     public TcpOneWayInterceptor(String targetUri,
@@ -62,47 +58,22 @@ public class TcpOneWayInterceptor implements Interceptor {
                                 SocketAddress address,
                                 Serializer serializer,
                                 ClientBootstrap boostrap,
+                                int maxRetry,
                                 CommunicationsMonitor monitor) {
         this.operationName = operationName;
         this.targetUri = targetUri;
         this.boostrap = boostrap;
         this.address = address;
         this.serializer = serializer;
+        this.maxRetry = maxRetry;
         this.monitor = monitor;
     }
 
-    public Message invoke(final Message msg) {
+    public Message invoke(Message msg) {
         ChannelFuture future = boostrap.connect(address);
-        future.addListener(new ChannelFutureListener() {
-
-            public void operationComplete(ChannelFuture future) throws Exception {
-                Channel channel = future.getChannel();
-                if (!future.isSuccess()) {
-                    monitor.error(future.getCause());
-                    return;
-                }
-                WorkContext workContext = msg.getWorkContext();
-                // set the target uri and operation names
-                workContext.setHeader(NetConstants.TARGET_URI, targetUri);
-                workContext.setHeader(NetConstants.OPERATION_NAME, operationName);
-
-                byte[] serialized = serializer.serialize(byte[].class, msg);
-
-                ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(serialized);
-                ChannelFuture writeFuture = channel.write(buffer);
-                writeFuture.addListener(new ChannelFutureListener() {
-
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        if (!future.isSuccess()) {
-                            monitor.error(future.getCause());
-                            return;
-                        }
-                        future.getChannel().close();
-
-                    }
-                });
-            }
-        });
+        TcpRetryConnectListener listener =
+                new TcpRetryConnectListener(msg, targetUri, address, operationName, serializer, boostrap, maxRetry, monitor);
+        future.addListener(listener);
         return MESSAGE;
     }
 

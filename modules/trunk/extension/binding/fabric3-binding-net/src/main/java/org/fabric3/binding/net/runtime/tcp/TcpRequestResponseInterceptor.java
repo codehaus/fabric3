@@ -17,6 +17,7 @@
 package org.fabric3.binding.net.runtime.tcp;
 
 import java.net.SocketAddress;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -42,34 +43,50 @@ public class TcpRequestResponseInterceptor implements Interceptor {
     private Serializer serializer;
     private ClientBootstrap boostrap;
     private SocketAddress address;
+    private int maxRetry;
     private String path;
+    private AtomicInteger retryCount;
 
     /**
      * Constructor.
      *
      * @param path          the path part of the target service URI
      * @param operationName the name of the operation being invoked
-     * @param address       the target service address
      * @param serializer    message serializer
+     * @param address       the target service address
      * @param boostrap      the Netty ClientBootstrap instance for sending invocations
+     * @param maxRetry      the number of times to retry an operation
      */
-    public TcpRequestResponseInterceptor(String path, String operationName, Serializer serializer, SocketAddress address, ClientBootstrap boostrap) {
+    public TcpRequestResponseInterceptor(String path,
+                                         String operationName,
+                                         Serializer serializer,
+                                         SocketAddress address,
+                                         ClientBootstrap boostrap,
+                                         int maxRetry) {
         this.path = path;
         // TODO support name mangling
         this.operationName = operationName;
         this.serializer = serializer;
         this.boostrap = boostrap;
         this.address = address;
+        this.maxRetry = maxRetry;
+        this.retryCount = new AtomicInteger(0);
     }
 
     @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
     public Message invoke(final Message msg) {
-        ChannelFuture future = boostrap.connect(address);
-        future.awaitUninterruptibly();
-        Channel channel = future.getChannel();
-        if (!future.isSuccess()) {
-            throw new ServiceUnavailableException("Error connecting to path:" + path, future.getCause());
+        Channel channel;
+        while (true) {
+            ChannelFuture future = boostrap.connect(address);
+            future.awaitUninterruptibly();
+            channel = future.getChannel();
+            if (future.isSuccess()) {
+                break;
+            } else if (!future.isSuccess() && retryCount.getAndIncrement() >= maxRetry) {
+                throw new ServiceUnavailableException("Error connecting to path:" + path, future.getCause());
+            }
         }
+
         WorkContext workContext = msg.getWorkContext();
 
         // set the target uri and operation names

@@ -49,6 +49,7 @@
         <!-- set optional configuration from the system configuration domain property -->
         <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>
         <property name="httpWireFormat" source="$systemConfig//net.binding/@httpWireFormat"/>
+        <property name="retries" source="$systemConfig//net.binding/@retries"/>
     </component>
 
     <!-- TCP channel infrastructure -->
@@ -69,6 +70,7 @@
         <!-- set optional configuration from the system configuration domain property -->
         <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>
         <property name="tcpWireFormat" source="$systemConfig//net.binding/@tcpWireFormat"/>
+        <property name="retries" source="$systemConfig//net.binding/@retries"/>
     </component>
 
 </composite>

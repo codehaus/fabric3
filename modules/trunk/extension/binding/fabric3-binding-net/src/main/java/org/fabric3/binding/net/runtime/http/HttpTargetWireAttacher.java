@@ -35,6 +35,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
@@ -58,6 +59,7 @@ import org.fabric3.spi.wire.Wire;
  */
 public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
     private long connectTimeout = 10000;
+    private int retries = 0;
     private String httpWireFormat = "jdk";
     private ClassLoaderRegistry classLoaderRegistry;
     private CommunicationsMonitor monitor;
@@ -75,16 +77,19 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         this.serializerFactories = serializerFactories;
     }
 
-    // FIXME this should be configured to same value as TransportServiceImpl
     @Property(required = false)
     public void setConnectTimeout(long timeout) {
         this.connectTimeout = timeout;
     }
 
-    // FIXME this should be configured to same value as TransportServiceImpl
     @Property(required = false)
     public void setHttpWireFormat(String httpWireFormat) {
         this.httpWireFormat = httpWireFormat;
+    }
+
+    @Property(required = false)
+    public void setRetries(int retries) {
+        this.retries = retries;
     }
 
     @Init
@@ -120,12 +125,22 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(HttpWireTargetDefinition target, InvocationChain chain)
-            throws WiringException {
-        ClientBootstrap bootstrap = new ClientBootstrap(factory);
+    private void attachOneWay(HttpWireTargetDefinition target, InvocationChain chain) throws WiringException {
 
+        HttpConfig config = target.getConfig();
+        int retryCount = this.retries;
+        if (config.getNumberOfRetries() > -1) {
+            retryCount = config.getNumberOfRetries();
+        }
+
+        long timeout = connectTimeout;
+        if (config.getReadTimeout() > -1) {
+            timeout = config.getReadTimeout();
+        }
+
+        ClientBootstrap bootstrap = new ClientBootstrap(factory);
         OneWayClientHandler handler = new OneWayClientHandler(monitor);
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, connectTimeout);
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, timeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -136,19 +151,31 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         String name = operation.getName();
 
+
         Serializer headerSerializer = getHeaderSerializer();
         Serializer inputSerializer = getInputSerializer(target, operation);
-        HttpOneWayInterceptor interceptor = new HttpOneWayInterceptor(path, name, address, headerSerializer, inputSerializer, bootstrap, monitor);
+        HttpOneWayInterceptor interceptor =
+                new HttpOneWayInterceptor(path, name, address, headerSerializer, inputSerializer, bootstrap, retryCount, monitor);
         chain.addInterceptor(interceptor);
     }
 
 
-    private void attachRequestResponse(HttpWireTargetDefinition target, InvocationChain chain)
-            throws WiringException {
-        ClientBootstrap bootstrap = new ClientBootstrap(factory);
+    private void attachRequestResponse(HttpWireTargetDefinition target, InvocationChain chain) throws WiringException {
 
+        HttpConfig config = target.getConfig();
+        int retryCount = this.retries;
+        if (config.getNumberOfRetries() > -1) {
+            retryCount = config.getNumberOfRetries();
+        }
+
+        long timeout = connectTimeout;
+        if (config.getReadTimeout() > -1) {
+            timeout = config.getReadTimeout();
+        }
+
+        ClientBootstrap bootstrap = new ClientBootstrap(factory);
         HttpResponseHandler handler = new HttpResponseHandler(connectTimeout, monitor);
-        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, connectTimeout);
+        HttpClientPipelineFactory pipeline = new HttpClientPipelineFactory(handler, timer, timeout);
         bootstrap.setPipelineFactory(pipeline);
 
         URI uri = target.getUri();
@@ -162,7 +189,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         Serializer inputSerializer = getInputSerializer(target, operation);
         Serializer outputSerializer = getOutputSerializer(target, operation);
         HttpRequestResponseInterceptor interceptor =
-                new HttpRequestResponseInterceptor(path, name, headerSerializer, inputSerializer, outputSerializer, address, bootstrap);
+                new HttpRequestResponseInterceptor(path, name, headerSerializer, inputSerializer, outputSerializer, address, bootstrap, retryCount);
         chain.addInterceptor(interceptor);
     }
 
