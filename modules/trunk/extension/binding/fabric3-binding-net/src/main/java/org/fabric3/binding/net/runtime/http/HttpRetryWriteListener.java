@@ -22,7 +22,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 
 /**
  * Listens for the completion of an HTTP channel write operation and retries the specified number of times if the operation failed.
@@ -31,7 +31,7 @@ import org.fabric3.binding.net.runtime.CommunicationsMonitor;
  */
 public class HttpRetryWriteListener implements ChannelFutureListener {
     private HttpRequest request;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private int maxRetry;
     private AtomicInteger retryCount;
 
@@ -42,7 +42,7 @@ public class HttpRetryWriteListener implements ChannelFutureListener {
      * @param maxRetry the maximum number of times to retry on failure
      * @param monitor  the communications monitor
      */
-    public HttpRetryWriteListener(HttpRequest request, int maxRetry, CommunicationsMonitor monitor) {
+    public HttpRetryWriteListener(HttpRequest request, int maxRetry, NetBindingMonitor monitor) {
         this.request = request;
         this.monitor = monitor;
         this.maxRetry = maxRetry;

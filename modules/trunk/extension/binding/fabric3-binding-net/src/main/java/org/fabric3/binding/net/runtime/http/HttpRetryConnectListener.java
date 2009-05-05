@@ -33,7 +33,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.binding.serializer.Serializer;
@@ -52,7 +52,7 @@ public class HttpRetryConnectListener implements ChannelFutureListener {
     private Serializer inputSerializer;
     private ClientBootstrap bootstrap;
     private int maxRetry;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private AtomicInteger retryCount;
 
     public HttpRetryConnectListener(Message msg,
@@ -63,7 +63,7 @@ public class HttpRetryConnectListener implements ChannelFutureListener {
                                     Serializer inputSerializer,
                                     ClientBootstrap bootstrap,
                                     int maxRetry,
-                                    CommunicationsMonitor monitor) {
+                                    NetBindingMonitor monitor) {
         this.msg = msg;
         this.url = url;
         this.address = address;

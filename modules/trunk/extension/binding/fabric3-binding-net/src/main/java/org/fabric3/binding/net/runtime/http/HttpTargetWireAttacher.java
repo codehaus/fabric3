@@ -37,7 +37,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.serializer.SerializationException;
@@ -62,12 +62,12 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
     private int retries = 0;
     private String httpWireFormat = "jdk";
     private ClassLoaderRegistry classLoaderRegistry;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private ChannelFactory factory;
     private Timer timer;
     private Map<String, SerializerFactory> serializerFactories;
 
-    public HttpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor CommunicationsMonitor monitor) {
+    public HttpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor NetBindingMonitor monitor) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
     }

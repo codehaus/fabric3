@@ -38,7 +38,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.binding.net.provision.TcpWireTargetDefinition;
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.serializer.SerializationException;
@@ -61,14 +61,14 @@ import org.fabric3.spi.wire.Wire;
 public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDefinition> {
     private long connectTimeout = 10000;
     private int retries = 0;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private ChannelFactory factory;
     private Timer timer;
     private String tcpWireFormat = "jdk";
     private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
     private ClassLoaderRegistry classLoaderRegistry;
 
-    public TcpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor CommunicationsMonitor monitor) {
+    public TcpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor NetBindingMonitor monitor) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
     }

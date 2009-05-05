@@ -45,7 +45,7 @@ import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import org.fabric3.binding.net.provision.NetConstants;
 import static org.fabric3.binding.net.provision.NetConstants.OPERATION_NAME;
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
@@ -64,7 +64,7 @@ import org.fabric3.spi.wire.Interceptor;
 @ChannelPipelineCoverage("one")
 public class HttpRequestHandler extends SimpleChannelHandler {
     private Serializer headerSerializer;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private String contentType = "text/plain; charset=UTF-8";
     private volatile HttpRequest request;
     private volatile boolean readingChunks;
@@ -77,7 +77,7 @@ public class HttpRequestHandler extends SimpleChannelHandler {
      * @param headerSerializer serialzes header information
      * @param monitor          event monitor
      */
-    public HttpRequestHandler(Serializer headerSerializer, CommunicationsMonitor monitor) {
+    public HttpRequestHandler(Serializer headerSerializer, NetBindingMonitor monitor) {
         this.headerSerializer = headerSerializer;
         this.monitor = monitor;
     }

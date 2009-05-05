@@ -34,16 +34,17 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.runtime.http.HttpRequestHandler;
 import org.fabric3.binding.net.runtime.http.HttpServerPipelineFactory;
 import org.fabric3.binding.net.runtime.http.WireHolder;
 import org.fabric3.binding.net.runtime.tcp.TcpPipelineFactory;
 import org.fabric3.binding.net.runtime.tcp.TcpRequestHandler;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.binding.serializer.SerializationException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.SerializerFactory;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -51,7 +52,7 @@ import org.fabric3.spi.wire.Wire;
  */
 public class TransportServiceImpl implements TransportService {
     private final WorkScheduler scheduler;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
 
     private long connectTimeout = 10000;
     private String ipAddress = "127.0.0.1";
@@ -70,7 +71,7 @@ public class TransportServiceImpl implements TransportService {
     private HttpRequestHandler httpRequestHandler;
     private TcpRequestHandler tcpRequestHandler;
 
-    public TransportServiceImpl(@Reference WorkScheduler scheduler, @Monitor CommunicationsMonitor monitor) {
+    public TransportServiceImpl(@Reference WorkScheduler scheduler, @Monitor NetBindingMonitor monitor) {
         this.scheduler = scheduler;
         this.monitor = monitor;
     }
@@ -174,6 +175,7 @@ public class TransportServiceImpl implements TransportService {
         // Bind and start to accept incoming connections.
         InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, httpPort);
         httpChannel = bootstrap.bind(socketAddress);
+        monitor.startHttpListener(httpPort);
     }
 
     private void createTcpChannel() throws WiringException {
@@ -190,6 +192,7 @@ public class TransportServiceImpl implements TransportService {
         // Bind and start to accept incoming connections.
         InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, tcpPort);
         tcpChannel = bootstrap.bind(socketAddress);
+        monitor.startTcpListener(tcpPort);
     }
 
     //FIXME get rid of this method and replace with header serializer type

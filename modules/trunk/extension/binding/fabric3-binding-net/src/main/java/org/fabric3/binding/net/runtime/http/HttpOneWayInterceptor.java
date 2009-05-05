@@ -21,7 +21,7 @@ import java.net.SocketAddress;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFuture;
 
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.binding.serializer.Serializer;
@@ -41,7 +41,7 @@ public class HttpOneWayInterceptor implements Interceptor {
     private Serializer headerSerializer;
     private Serializer inputSerializer;
     private int retries;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private String url;
 
     /**
@@ -63,7 +63,7 @@ public class HttpOneWayInterceptor implements Interceptor {
                                  Serializer inputSerializer,
                                  ClientBootstrap bootstrap,
                                  int retries,
-                                 CommunicationsMonitor monitor) {
+                                 NetBindingMonitor monitor) {
         this.url = url;
         this.operationName = operationName;
         this.bootstrap = bootstrap;

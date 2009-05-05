@@ -27,7 +27,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
 import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.binding.serializer.Serializer;
@@ -45,7 +45,7 @@ public class TcpRetryConnectListener implements ChannelFutureListener {
     private Serializer serializer;
     private ClientBootstrap bootstrap;
     private int maxRetry;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private AtomicInteger retryCount;
 
     public TcpRetryConnectListener(Message msg,
@@ -55,7 +55,7 @@ public class TcpRetryConnectListener implements ChannelFutureListener {
                                    Serializer serializer,
                                    ClientBootstrap bootstrap,
                                    int maxRetry,
-                                   CommunicationsMonitor monitor) {
+                                   NetBindingMonitor monitor) {
         this.msg = msg;
         this.targetUri = targetUri;
         this.address = address;

@@ -14,16 +14,32 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime;
+package org.fabric3.binding.net;
 
 import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * Monitor for communications events.
  *
  * @version $Revision$ $Date$
  */
-public interface CommunicationsMonitor {
+public interface NetBindingMonitor {
+
+    @Info
+    void extensionStarted();
+
+    @Info
+    void extensionStopped();
+
+    @Info
+    void startHttpListener(int port);
+
+    @Info
+    void startHttpsListener(int port);
+
+    @Info
+    void startTcpListener(int port);
 
     @Severe
     void error(Throwable e);

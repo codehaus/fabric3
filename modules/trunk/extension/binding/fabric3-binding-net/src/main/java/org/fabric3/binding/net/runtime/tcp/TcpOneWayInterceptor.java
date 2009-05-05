@@ -21,7 +21,7 @@ import java.net.SocketAddress;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFuture;
 
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.binding.serializer.Serializer;
@@ -38,7 +38,7 @@ public class TcpOneWayInterceptor implements Interceptor {
     private ClientBootstrap boostrap;
     private SocketAddress address;
     private Serializer serializer;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private String operationName;
     private int maxRetry;
 
@@ -59,7 +59,7 @@ public class TcpOneWayInterceptor implements Interceptor {
                                 Serializer serializer,
                                 ClientBootstrap boostrap,
                                 int maxRetry,
-                                CommunicationsMonitor monitor) {
+                                NetBindingMonitor monitor) {
         this.operationName = operationName;
         this.targetUri = targetUri;
         this.boostrap = boostrap;

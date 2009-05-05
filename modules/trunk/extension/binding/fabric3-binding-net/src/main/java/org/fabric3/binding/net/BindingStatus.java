@@ -14,32 +14,36 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime;
+package org.fabric3.binding.net;
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipelineCoverage;
-import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.SimpleChannelHandler;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.net.NetBindingMonitor;
+import org.fabric3.spi.services.VoidService;
 
 /**
- * Client-side handler for one-way operations. This handler only logs errors and closes the channel.
+ * Reports the status of the binding extension.
  *
  * @version $Revision$ $Date$
  */
-@ChannelPipelineCoverage("all")
-public class OneWayClientHandler extends SimpleChannelHandler {
+@EagerInit
+public class BindingStatus implements VoidService {
     private NetBindingMonitor monitor;
 
-    public OneWayClientHandler(@Monitor NetBindingMonitor monitor) {
+    public BindingStatus(@Monitor NetBindingMonitor monitor) {
         this.monitor = monitor;
     }
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-        monitor.error(e.getCause());
-        ctx.getChannel().close();
+    @Init
+    public void init() {
+        monitor.extensionStarted();
+    }
+
+
+    @Destroy
+    public void destroy() {
+        monitor.extensionStopped();
     }
 }

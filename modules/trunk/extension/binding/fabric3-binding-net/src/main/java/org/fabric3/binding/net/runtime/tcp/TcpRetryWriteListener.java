@@ -22,7 +22,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 
 /**
  * Listens for the completion of a channel write operation to a TCP socketand retries the specified number of times if the operation failed.
@@ -31,7 +31,7 @@ import org.fabric3.binding.net.runtime.CommunicationsMonitor;
  */
 public class TcpRetryWriteListener implements ChannelFutureListener {
     private ChannelBuffer buffer;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private int maxRetry;
     private AtomicInteger retryCount;
 
@@ -42,7 +42,7 @@ public class TcpRetryWriteListener implements ChannelFutureListener {
      * @param maxRetry the maximum number of times to retry on failure
      * @param monitor  the communications monitor
      */
-    public TcpRetryWriteListener(ChannelBuffer buffer, int maxRetry, CommunicationsMonitor monitor) {
+    public TcpRetryWriteListener(ChannelBuffer buffer, int maxRetry, NetBindingMonitor monitor) {
         this.buffer = buffer;
         this.monitor = monitor;
         this.maxRetry = maxRetry;

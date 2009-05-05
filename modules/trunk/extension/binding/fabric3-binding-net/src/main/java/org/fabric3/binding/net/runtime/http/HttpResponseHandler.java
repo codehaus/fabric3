@@ -30,7 +30,7 @@ import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.oasisopen.sca.ServiceRuntimeException;
 
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 
 /**
  * Handles responses over an HTTP channel on the client side for request-response style interactions. This handler is placed on the reference side of
@@ -39,7 +39,7 @@ import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 @ChannelPipelineCoverage("one")
 public class HttpResponseHandler extends SimpleChannelHandler {
     private long responseWait;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
 
     private volatile boolean readingChunks;
     private StringBuilder body = new StringBuilder();
@@ -47,7 +47,7 @@ public class HttpResponseHandler extends SimpleChannelHandler {
     // queue used by clients to block on awaiting a response
     private BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<Response>();
 
-    public HttpResponseHandler(long responseWait, CommunicationsMonitor monitor) {
+    public HttpResponseHandler(long responseWait, NetBindingMonitor monitor) {
         this.responseWait = responseWait;
         this.monitor = monitor;
     }

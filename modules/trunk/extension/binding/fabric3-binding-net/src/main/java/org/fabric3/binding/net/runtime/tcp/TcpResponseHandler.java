@@ -28,7 +28,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.oasisopen.sca.ServiceRuntimeException;
 
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.binding.serializer.Serializer;
 
@@ -40,12 +40,12 @@ import org.fabric3.spi.binding.serializer.Serializer;
 public class TcpResponseHandler extends SimpleChannelHandler {
     private Serializer serializer;
     private long responseWait;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
 
     // queue used by clients to block on awaiting a response
     private BlockingQueue<Message> responseQueue = new LinkedBlockingQueue<Message>();
 
-    public TcpResponseHandler(Serializer serializer, long responseWait, CommunicationsMonitor monitor) {
+    public TcpResponseHandler(Serializer serializer, long responseWait, NetBindingMonitor monitor) {
         this.serializer = serializer;
         this.responseWait = responseWait;
         this.monitor = monitor;

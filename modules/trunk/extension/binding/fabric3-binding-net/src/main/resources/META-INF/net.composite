@@ -78,4 +78,9 @@
         <property name="retries" source="$systemConfig//net.binding/@numberOfRetries"/>
     </component>
 
+
+    <component name="BindingStatus">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.BindingStatus"/>
+    </component>
+
 </composite>

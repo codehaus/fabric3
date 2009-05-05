@@ -31,7 +31,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
 import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.binding.net.runtime.CommunicationsMonitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
@@ -50,7 +50,7 @@ import org.fabric3.spi.wire.Wire;
 @ChannelPipelineCoverage("one")
 public class TcpRequestHandler extends SimpleChannelHandler {
     private Serializer serializer;
-    private CommunicationsMonitor monitor;
+    private NetBindingMonitor monitor;
     private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
 
     /**
@@ -59,7 +59,7 @@ public class TcpRequestHandler extends SimpleChannelHandler {
      * @param serializer serializes messages
      * @param monitor    the event monitor
      */
-    public TcpRequestHandler(Serializer serializer, CommunicationsMonitor monitor) {
+    public TcpRequestHandler(Serializer serializer, NetBindingMonitor monitor) {
         this.serializer = serializer;
         this.monitor = monitor;
     }
