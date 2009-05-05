@@ -25,8 +25,8 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.spi.binding.BindingProvider;
-import org.fabric3.spi.binding.BindingSelectionStrategy;
+import org.fabric3.spi.binding.provider.BindingProvider;
+import org.fabric3.spi.binding.provider.BindingSelectionStrategy;
 
 /**
  * A BindingSelectionStrategy that makes a selection based on an ordered list of bindings. This list is provided via a property which can be sourced

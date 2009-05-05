@@ -24,10 +24,10 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.binding.BindingMatchResult;
-import org.fabric3.spi.binding.BindingProvider;
-import org.fabric3.spi.binding.BindingSelectionException;
-import org.fabric3.spi.binding.BindingSelectionStrategy;
+import org.fabric3.spi.binding.provider.BindingMatchResult;
+import org.fabric3.spi.binding.provider.BindingProvider;
+import org.fabric3.spi.binding.provider.BindingSelectionException;
+import org.fabric3.spi.binding.provider.BindingSelectionStrategy;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;

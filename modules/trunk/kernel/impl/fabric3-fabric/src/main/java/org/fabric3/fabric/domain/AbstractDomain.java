@@ -45,7 +45,7 @@ import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
-import org.fabric3.spi.binding.BindingSelectionException;
+import org.fabric3.spi.binding.provider.BindingSelectionException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionState;

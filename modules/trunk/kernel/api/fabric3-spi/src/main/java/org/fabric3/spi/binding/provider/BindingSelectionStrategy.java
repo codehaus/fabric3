@@ -14,41 +14,16 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.binding;
+package org.fabric3.spi.binding.provider;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.xml.namespace.QName;
 
 /**
- * Result for a binding match operation.
+ * Implementations select a BindingProvider based on some criteria such as a weighting algorithm.
  *
  * @version $Revision$ $Date$
  */
-public class BindingMatchResult {
-    private boolean match;
-    private QName type;
-    private List<String> reasons = new ArrayList<String>();
+public interface BindingSelectionStrategy {
 
-    public BindingMatchResult(boolean match, QName type) {
-        this.match = match;
-        this.type = type;
-    }
-
-    public boolean isMatch() {
-        return match;
-    }
-
-    public QName getType() {
-        return type;
-    }
-
-    public List<String> getReasons() {
-        return reasons;
-    }
-
-    public void addReason(String reason) {
-        reasons.add(reason);
-    }
-
+    void order(List<BindingProvider> providers);
 }

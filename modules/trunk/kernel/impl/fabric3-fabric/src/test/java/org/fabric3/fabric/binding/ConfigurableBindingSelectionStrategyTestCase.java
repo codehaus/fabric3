@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.spi.binding.BindingProvider;
+import org.fabric3.spi.binding.provider.BindingProvider;
 
 /**
  * @version $Revision$ $Date$

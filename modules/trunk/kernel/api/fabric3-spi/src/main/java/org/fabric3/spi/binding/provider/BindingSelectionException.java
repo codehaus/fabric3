@@ -14,16 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.binding;
+package org.fabric3.spi.binding.provider;
 
-import java.util.List;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Implementations select a BindingProvider based on some criteria such as a weighting algorithm.
+ * General error denoting an exception configuring a binding.
  *
  * @version $Revision$ $Date$
  */
-public interface BindingSelectionStrategy {
+public class BindingSelectionException extends Fabric3Exception {
+    private static final long serialVersionUID = -8232393072665476184L;
 
-    void order(List<BindingProvider> providers);
+    public BindingSelectionException(String message) {
+        super(message);
+    }
+
+    public BindingSelectionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

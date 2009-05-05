@@ -14,23 +14,41 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.binding;
+package org.fabric3.spi.binding.provider;
 
-import org.fabric3.host.Fabric3Exception;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.namespace.QName;
 
 /**
- * General error denoting an exception configuring a binding.
+ * Result for a binding match operation.
  *
  * @version $Revision$ $Date$
  */
-public class BindingSelectionException extends Fabric3Exception {
-    private static final long serialVersionUID = -8232393072665476184L;
+public class BindingMatchResult {
+    private boolean match;
+    private QName type;
+    private List<String> reasons = new ArrayList<String>();
 
-    public BindingSelectionException(String message) {
-        super(message);
+    public BindingMatchResult(boolean match, QName type) {
+        this.match = match;
+        this.type = type;
     }
 
-    public BindingSelectionException(String message, Throwable cause) {
-        super(message, cause);
+    public boolean isMatch() {
+        return match;
     }
+
+    public QName getType() {
+        return type;
+    }
+
+    public List<String> getReasons() {
+        return reasons;
+    }
+
+    public void addReason(String reason) {
+        reasons.add(reason);
+    }
+
 }

@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.binding;
 
-import org.fabric3.spi.binding.BindingSelectionException;
+import org.fabric3.spi.binding.provider.BindingSelectionException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**

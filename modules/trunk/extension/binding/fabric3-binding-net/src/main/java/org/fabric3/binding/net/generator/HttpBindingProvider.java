@@ -20,9 +20,9 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
 
-import org.fabric3.spi.binding.BindingMatchResult;
-import org.fabric3.spi.binding.BindingProvider;
-import org.fabric3.spi.binding.BindingSelectionException;
+import org.fabric3.spi.binding.provider.BindingMatchResult;
+import org.fabric3.spi.binding.provider.BindingProvider;
+import org.fabric3.spi.binding.provider.BindingSelectionException;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
