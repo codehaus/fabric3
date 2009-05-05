@@ -21,7 +21,7 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.Serializer;
 
 /**
  * @version $Revision$ $Date$

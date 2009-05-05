@@ -29,15 +29,15 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.net.provision.HttpWireSourceDefinition;
 import org.fabric3.binding.net.runtime.TransportService;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.binding.serializer.SerializationException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.services.serializer.SerializationException;
-import org.fabric3.spi.services.serializer.Serializer;
-import org.fabric3.spi.services.serializer.SerializerFactory;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 

@@ -20,9 +20,9 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.services.serializer.SerializationException;
-import org.fabric3.spi.services.serializer.Serializer;
-import org.fabric3.spi.services.serializer.SerializerFactory;
+import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.SerializerFactory;
 
 /**
  * Creates serializer instances that use Hessian.

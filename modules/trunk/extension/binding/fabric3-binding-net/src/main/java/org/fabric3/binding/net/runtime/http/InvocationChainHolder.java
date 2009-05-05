@@ -16,7 +16,7 @@
  */
 package org.fabric3.binding.net.runtime.http;
 
-import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.InvocationChain;
 
 /**

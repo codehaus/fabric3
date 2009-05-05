@@ -44,8 +44,8 @@ import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.services.serializer.SerializationException;
-import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
 
 /**

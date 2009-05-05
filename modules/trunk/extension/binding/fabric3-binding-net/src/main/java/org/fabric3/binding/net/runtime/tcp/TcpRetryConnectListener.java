@@ -30,7 +30,7 @@ import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.Serializer;
 
 /**
  * Listens for a channel connection event for a TCP socket, retrying a specified number of times if the operation failed.

@@ -41,9 +41,9 @@ import org.fabric3.binding.net.runtime.tcp.TcpPipelineFactory;
 import org.fabric3.binding.net.runtime.tcp.TcpRequestHandler;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.services.serializer.SerializationException;
-import org.fabric3.spi.services.serializer.Serializer;
-import org.fabric3.spi.services.serializer.SerializerFactory;
+import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.wire.Wire;
 
 /**

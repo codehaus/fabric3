@@ -27,9 +27,9 @@ import java.util.Set;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.oasisopen.sca.ServiceRuntimeException;
 
-import org.fabric3.spi.services.serializer.SerializationException;
-import org.fabric3.spi.services.serializer.Serializer;
-import org.fabric3.spi.services.serializer.UnsupportedTypesException;
+import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
 
 /**
  * Serializer that reads and writes data using JSON. Note this implementation only encodes type information for faults, wrapping them in {@link

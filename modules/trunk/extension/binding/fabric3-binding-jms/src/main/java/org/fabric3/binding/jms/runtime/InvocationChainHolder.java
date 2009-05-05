@@ -17,7 +17,7 @@
 package org.fabric3.binding.jms.runtime;
 
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.InvocationChain;
 
 /**

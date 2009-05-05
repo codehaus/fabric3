@@ -23,9 +23,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.fabric3.spi.services.serializer.SerializationException;
-import org.fabric3.spi.services.serializer.Serializer;
-import org.fabric3.spi.services.serializer.UnsupportedTypesException;
+import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
 
 /**
  * Serializes JAXB objects to XML. Currently, only string-based serialization is supported but enhancements to support alternative formats such as

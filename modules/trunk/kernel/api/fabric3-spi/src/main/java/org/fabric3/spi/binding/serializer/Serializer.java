@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.serializer;
+package org.fabric3.spi.binding.serializer;
 
 /**
  * Provides serialization and deserialization operations for sending data over a remote transport.

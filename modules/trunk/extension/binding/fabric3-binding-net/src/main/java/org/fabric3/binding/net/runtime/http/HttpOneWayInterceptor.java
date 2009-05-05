@@ -24,7 +24,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.fabric3.binding.net.runtime.CommunicationsMonitor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.services.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
