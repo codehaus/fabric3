@@ -153,7 +153,7 @@ public class HttpBindingProvider implements BindingProvider {
 
         URI callbackUri = URI.create(sourceBaseUrl + endpointName);
         HttpBindingDefinition targetCallbackDefinition = new HttpBindingDefinition(callbackUri, null);
-        LogicalBinding<HttpBindingDefinition> targetBinding = new LogicalBinding<HttpBindingDefinition>(targetCallbackDefinition, source);
+        LogicalBinding<HttpBindingDefinition> targetBinding = new LogicalBinding<HttpBindingDefinition>(targetCallbackDefinition, target);
         targetBinding.setAssigned(true);
         target.addCallbackBinding(targetBinding);
     }

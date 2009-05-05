@@ -58,6 +58,7 @@ public class TransportServiceImpl implements TransportService {
     private String ipAddress = "127.0.0.1";
 
     private int httpPort = 8282;
+    private int httpsPort = 8484;
     private int tcpPort = 8383;
     private String httpWireFormat = "jdk";
     private String tcpWireFormat = "jdk";
@@ -94,6 +95,11 @@ public class TransportServiceImpl implements TransportService {
     @Property(required = false)
     public void setHttpPort(int httpPort) {
         this.httpPort = httpPort;
+    }
+
+    @Property(required = false)
+    public void setHttpsPort(int httpsPort) {
+        this.httpsPort = httpsPort;
     }
 
     @Property(required = false)

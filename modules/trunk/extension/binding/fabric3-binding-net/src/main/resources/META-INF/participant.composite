@@ -23,26 +23,44 @@
            autowire="true"
            xmlns:f3-binding="urn:org.fabric3:binding">
 
+    <component name="TransportService">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.TransportServiceImpl"/>
+        <!-- set optional configuration from the system configuration domain property -->
+        <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>
+        <property name="httpWireFormat" source="$systemConfig//net.binding/@httpWireFormat"/>
+        <property name="tcpWireFormat" source="$systemConfig//net.binding/@tcpWireFormat"/>
+        <property name="httpPort" source="$systemConfig//net.binding/@httpPort"/>
+        <property name="httpsPort" source="$systemConfig//net.binding/@httpsPort"/>
+        <property name="tcpPort" source="$systemConfig//net.binding/@tcp"/>
+        <property name="ipAddress" source="$systemConfig//net.binding/@ipAddress"/>
+    </component>
+
     <!-- HTTP channel infrastructure -->
-    <component name="HttpBindingLoader" f3-core:key="sca:binding.http">
-        <f3-impl:implementation.system class="org.fabric3.binding.net.loader.HttpBindingLoader"/>
+
+    <component name="HttpSourceWireAttacher" f3-core:key="org.fabric3.binding.net.provision.HttpWireSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.http.HttpSourceWireAttacher"/>
     </component>
 
-    <component name="HttpBindingGenerator" f3-core:key="org.fabric3.binding.net.model.HttpBindingDefinition">
-        <f3-impl:implementation.system class="org.fabric3.binding.net.generator.HttpBindingGenerator"/>
-    </component>
-
-    <component name="HttpBindingProvider">
-        <f3-impl:implementation.system class="org.fabric3.binding.net.generator.HttpBindingProvider"/>
+    <component name="HttpTargetWireAttacher" f3-core:key="org.fabric3.binding.net.provision.HttpWireTargetDefinition">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.http.HttpTargetWireAttacher"/>
+        <!-- set optional configuration from the system configuration domain property -->
+        <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>
+        <property name="httpWireFormat" source="$systemConfig//net.binding/@httpWireFormat"/>
+        <property name="retries" source="$systemConfig//net.binding/@numberOfRetries"/>
     </component>
 
     <!-- TCP channel infrastructure -->
-    <component name="TcpBindingLoader" f3-core:key="sca:binding.tcp">
-        <f3-impl:implementation.system class="org.fabric3.binding.net.loader.TcpBindingLoader"/>
+
+    <component name="TcpSourceWireAttacher" f3-core:key="org.fabric3.binding.net.provision.TcpWireSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.tcp.TcpSourceWireAttacher"/>
     </component>
 
-    <component name="TcpBindingGenerator" f3-core:key="org.fabric3.binding.net.model.TcpBindingDefinition">
-        <f3-impl:implementation.system class="org.fabric3.binding.net.generator.TcpBindingGenerator"/>
+    <component name="TcpTargetWireAttacher" f3-core:key="org.fabric3.binding.net.provision.TcpWireTargetDefinition">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.tcp.TcpTargetWireAttacher"/>
+        <!-- set optional configuration from the system configuration domain property -->
+        <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>
+        <property name="tcpWireFormat" source="$systemConfig//net.binding/@tcpWireFormat"/>
+        <property name="retries" source="$systemConfig//net.binding/@numberOfRetries"/>
     </component>
 
 </composite>
