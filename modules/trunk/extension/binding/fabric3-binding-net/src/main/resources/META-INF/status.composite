@@ -13,14 +13,15 @@
  This software is distributed in conjunction with other software licensed under
  different terms.  See the separate licenses for those programs included in the
  distribution for the permitted and restricted uses of such software.
-
-    $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
-    <import.java package="org.fabric3.spi.*" version="1.1"/>
-    <deployable composite="ns:NetBindingControllerExtension" modes="controller vm"/>
-    <deployable composite="ns:NetBindingParticipantExtension" modes="participant vm"/>
-    <deployable composite="ns:NetBindingStatus"/>
-    <f3-core:provides name="binding.net"/>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="NetBindingStatus"
+           autowire="true">
 
-</contribution>
+    <component name="BindingStatus">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.BindingStatus"/>
+    </component>
+
+</composite>
