@@ -21,6 +21,7 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.binding.net.model.HttpBindingDefinition;
 import org.fabric3.spi.binding.provider.BindingMatchResult;
@@ -37,6 +38,7 @@ import org.fabric3.spi.topology.DomainManager;
  *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class HttpBindingProvider implements BindingProvider {
     public static final QName HTTP_BINDING = new QName(Constants.SCA_NS, "binding.http");
 
