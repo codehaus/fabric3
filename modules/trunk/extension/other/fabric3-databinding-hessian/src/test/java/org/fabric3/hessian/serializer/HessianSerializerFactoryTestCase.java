@@ -18,6 +18,7 @@ package org.fabric3.hessian.serializer;
 
 import java.io.Serializable;
 import java.util.Collections;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
@@ -45,6 +46,14 @@ public class HessianSerializerFactoryTestCase extends TestCase {
         byte[] serialized = serializer.serialize(byte[].class, foo);
         Foo deserialized = serializer.deserialize(Foo.class, serialized);
         assertEquals("test", deserialized.getName());
+    }
+
+    public void testSerializeQName() throws Exception {
+        QName name = new QName("foo", "bar");
+        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        byte[] serialized = serializer.serialize(byte[].class, name);
+        QName deserialized = serializer.deserialize(QName.class, serialized);
+        assertEquals("bar", deserialized.getLocalPart());
     }
 
     public void testSerializeNull() throws Exception {

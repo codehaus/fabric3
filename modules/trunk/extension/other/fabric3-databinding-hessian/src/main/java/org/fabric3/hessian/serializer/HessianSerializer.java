@@ -38,9 +38,16 @@ import org.fabric3.spi.util.Base64;
  */
 @EagerInit
 public class HessianSerializer implements Serializer {
-    private SerializerFactory factory = new SerializerFactory();
+    private SerializerFactory factory;
+
+    public HessianSerializer() {
+        factory = new SerializerFactory();
+        // add custom serializers
+        factory.addFactory(new QNameSerializerFactory());
+    }
 
     public <T> T serialize(Class<T> clazz, Object o) throws SerializationException {
+
         try {
             boolean isString = String.class.equals(clazz);
             if (!isString && !Byte.TYPE.equals(clazz.getComponentType())) {
@@ -68,6 +75,7 @@ public class HessianSerializer implements Serializer {
     }
 
     public <T> T deserialize(Class<T> clazz, Object object) throws SerializationException {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             boolean isString = String.class.equals(object.getClass());
             if (!isString && !Byte.TYPE.equals(object.getClass().getComponentType())) {
@@ -80,6 +88,7 @@ public class HessianSerializer implements Serializer {
                 byte[] bytes = (byte[]) object;
                 is = new ByteArrayInputStream(bytes);
             }
+            Thread.currentThread().setContextClassLoader(clazz.getClassLoader());
             Hessian2Input in = new Hessian2Input(is);
             in.setSerializerFactory(factory);
             in.startMessage();
@@ -89,7 +98,10 @@ public class HessianSerializer implements Serializer {
             return clazz.cast(ret);
         } catch (IOException e) {
             throw new SerializationException(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
         }
+
 
     }
 
