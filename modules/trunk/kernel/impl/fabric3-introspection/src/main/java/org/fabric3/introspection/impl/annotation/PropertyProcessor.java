@@ -37,21 +37,21 @@ package org.fabric3.introspection.impl.annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.java.ConstructorInjectionSite;
+import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -74,7 +74,10 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
     }
 
     public void visitMethod(org.osoa.sca.annotations.Property annotation, Method method, I implementation, IntrospectionContext context) {
-        validate(annotation, method, context);
+        boolean result = validate(annotation, method, context);
+        if (!result) {
+            return;
+        }
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
@@ -99,22 +102,6 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         }
     }
 
-    private void validate(org.osoa.sca.annotations.Property annotation, Method method, IntrospectionContext context) {
-        if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
-            Class<?> clazz = method.getDeclaringClass();
-            if (annotation.required()) {
-                InvalidAccessor error =
-                        new InvalidAccessor("Invalid required property. The method " + method
-                                + " is annotated with @Property and must be public or protected.", clazz);
-                context.addError(error);
-            } else {
-                InvalidAccessor warning =
-                        new InvalidAccessor("Ignoring " + method + " annotated with @Property. Property " + "must be public or protected.", clazz);
-                context.addWarning(warning);
-            }
-        }
-    }
-
     public void visitConstructorParameter(org.osoa.sca.annotations.Property annotation,
                                           Constructor<?> constructor,
                                           int index,
@@ -127,7 +114,31 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         implementation.getComponentType().add(property, site);
     }
 
-    Property createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) {
+    private boolean validate(org.osoa.sca.annotations.Property annotation, Method method, IntrospectionContext context) {
+        if (method.getParameterTypes().length != 1) {
+            InvalidMethod error = new InvalidMethod("Setter methods for properties must have a single parameter: " + method);
+            context.addError(error);
+            return false;
+        }
+        if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
+            Class<?> clazz = method.getDeclaringClass();
+            if (annotation.required()) {
+                InvalidAccessor error =
+                        new InvalidAccessor("Invalid required property. The method " + method
+                                + " is annotated with @Property and must be public or protected.", clazz);
+                context.addError(error);
+                return false;
+            } else {
+                InvalidAccessor warning =
+                        new InvalidAccessor("Ignoring " + method + " annotated with @Property. Property " + "must be public or protected.", clazz);
+                context.addWarning(warning);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Property createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) {
         Property property = new Property();
         property.setName(name);
         property.setRequired(required);

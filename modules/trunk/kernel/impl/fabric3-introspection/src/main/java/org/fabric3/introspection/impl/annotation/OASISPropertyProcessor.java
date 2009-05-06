@@ -75,7 +75,10 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
     }
 
     public void visitMethod(org.oasisopen.sca.annotation.Property annotation, Method method, I implementation, IntrospectionContext context) {
-        validate(annotation, method, context);
+        boolean result = validate(annotation, method, context);
+        if (!result) {
+            return;
+        }
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
@@ -100,7 +103,12 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         }
     }
 
-    private void validate(org.oasisopen.sca.annotation.Property annotation, Method method, IntrospectionContext context) {
+    private boolean validate(org.oasisopen.sca.annotation.Property annotation, Method method, IntrospectionContext context) {
+        if (method.getParameterTypes().length != 1) {
+            InvalidMethod error = new InvalidMethod("Setter methods for properties must have a single parameter: " + method);
+            context.addError(error);
+            return false;
+        }
         if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
             Class<?> clazz = method.getDeclaringClass();
             if (annotation.required()) {
@@ -108,12 +116,15 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
                         new InvalidAccessor("Invalid required property. The method " + method
                                 + " is annotated with @Property and must be public or protected.", clazz);
                 context.addError(error);
+                return false;
             } else {
                 InvalidAccessor warning =
                         new InvalidAccessor("Ignoring " + method + " annotated with @Property. Property " + "must be public or protected.", clazz);
                 context.addWarning(warning);
+                return false;
             }
         }
+        return true;
     }
 
     public void visitConstructorParameter(org.oasisopen.sca.annotation.Property annotation,

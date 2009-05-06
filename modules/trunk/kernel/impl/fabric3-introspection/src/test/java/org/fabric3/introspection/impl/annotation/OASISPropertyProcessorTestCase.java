@@ -77,7 +77,24 @@ public class OASISPropertyProcessorTestCase extends TestCase {
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }
 
+    public void testInvalidParameters() throws Exception {
+        Method method = TestPrivateClass.class.getDeclaredMethod("setNoParamsProperty");
+        Property annotation = method.getAnnotation(Property.class);
+        TypeMapping mapping = new TypeMapping();
+        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+
+        processor.visitMethod(annotation, method, new TestImplementation(), context);
+        assertEquals(1, context.getErrors().size());
+        assertTrue(context.getErrors().get(0) instanceof InvalidMethod);
+    }
+
     public static class TestPrivateClass {
+
+        @Property
+        private void setNoParamsProperty() {
+
+        }
+
         @Property
         private void setProperty(String clazz) {
 
