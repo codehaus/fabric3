@@ -227,7 +227,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     private void updateZoneMetaData() throws FederationCallbackException {
-        String zoneName = federationService.getRuntimeName();
+        String zoneName = federationService.getZoneName();
         try {
             federationService.getDomainGMS().updateMemberDetails(zoneName, ZONE_TRANSPORT_INFO, (Serializable) transportMetadata);
         } catch (GMSException e) {
