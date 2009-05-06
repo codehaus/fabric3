@@ -131,6 +131,10 @@ public class StartContextCommandGeneratorImpl implements StartContextCommandGene
             }
             ContextComparator comparator = new ContextComparator(order);
             List<Command> list = commands.get(entry.getKey());
+            if (list == null) {
+                // no commands for zone
+                return;
+            }
             Collections.sort(list, comparator);
         }
     }
