@@ -19,7 +19,6 @@ package org.fabric3.binding.net.model;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.oasisopen.sca.Constants;
 import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.TcpConfig;
@@ -37,7 +36,7 @@ public class TcpBindingDefinition extends BindingDefinition {
     private TcpConfig config;
 
     public TcpBindingDefinition(URI targetUri, Document key) {
-        super(targetUri, new QName(Constants.SCA_NS, "binding.tcp"), key);
+        super(targetUri, TCP_BINDING, key);
         config = new TcpConfig();
     }
 
