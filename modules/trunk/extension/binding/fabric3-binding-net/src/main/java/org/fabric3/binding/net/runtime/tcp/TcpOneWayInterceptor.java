@@ -17,14 +17,20 @@
 package org.fabric3.binding.net.runtime.tcp;
 
 import java.net.SocketAddress;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFuture;
 
 import org.fabric3.binding.net.NetBindingMonitor;
+import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -71,6 +77,27 @@ public class TcpOneWayInterceptor implements Interceptor {
 
     public Message invoke(Message msg) {
         ChannelFuture future = boostrap.connect(address);
+        // Copy the work context since the binding write operation is performed asynchronously in a different thread and may occur after this
+        // invocation has returned. Copying avoids the possibility of another operation modifying the work context before it is accessed by
+        // this write.
+        WorkContext workContext = msg.getWorkContext();
+        List<CallFrame> newStack = null;
+        List<CallFrame> stack = workContext.getCallFrameStack();
+        if (stack != null && !stack.isEmpty()) {
+            // clone the callstack to avoid multiple threads seeing changes
+            newStack = new ArrayList<CallFrame>(stack);
+        }
+        msg.setWorkContext(null);
+        Map<String, Object> newHeaders = null;
+        Map<String, Object> headers = workContext.getHeaders();
+        if (headers != null && !headers.isEmpty()) {
+            // clone the headers to avoid multiple threads seeing changes
+            newHeaders = new HashMap<String, Object>(headers);
+        }
+        WorkContext context = new WorkContext();
+        context.addCallFrames(newStack);
+        context.addHeaders(newHeaders);
+        msg.setWorkContext(context);
         TcpRetryConnectListener listener =
                 new TcpRetryConnectListener(msg, targetUri, address, operationName, serializer, boostrap, maxRetry, monitor);
         future.addListener(listener);
