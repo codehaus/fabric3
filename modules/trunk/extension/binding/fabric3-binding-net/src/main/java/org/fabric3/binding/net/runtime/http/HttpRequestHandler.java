@@ -193,7 +193,7 @@ public class HttpRequestHandler extends SimpleChannelHandler {
         HttpResponseStatus status;
         String body;
         if (msg.isFault()) {
-            // FIXME should return a different 40X error
+            // Return a 500 response
             status = HttpResponseStatus.INTERNAL_SERVER_ERROR;
             try {
                 Throwable throwable = (Throwable) msg.getBody();

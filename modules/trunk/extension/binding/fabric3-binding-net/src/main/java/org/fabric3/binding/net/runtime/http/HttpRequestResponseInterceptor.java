@@ -148,7 +148,7 @@ public class HttpRequestResponseInterceptor implements Interceptor {
 
         channel.close();
         MessageImpl ret = new MessageImpl();
-        if (response.getCode() != 200) {
+        if (response.getCode() >= 400) {
             try {
                 Throwable deserialized = outputSerializer.deserializeFault(response.getContent());
                 ret.setBodyWithFault(deserialized);
