@@ -37,6 +37,7 @@ public class HttpBindingDefinition extends BindingDefinition {
     public HttpBindingDefinition(URI targetUri, Document key) {
         super(targetUri, HTTP_BINDING, key);
         config = new HttpConfig();
+        addRequiredCapability("binding.net");
     }
 
     public HttpConfig getConfig() {

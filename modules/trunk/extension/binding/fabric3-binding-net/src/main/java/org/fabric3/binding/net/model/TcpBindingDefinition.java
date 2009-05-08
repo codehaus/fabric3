@@ -38,6 +38,7 @@ public class TcpBindingDefinition extends BindingDefinition {
     public TcpBindingDefinition(URI targetUri, Document key) {
         super(targetUri, TCP_BINDING, key);
         config = new TcpConfig();
+        addRequiredCapability("binding.net");
     }
 
     public TcpConfig getConfig() {
