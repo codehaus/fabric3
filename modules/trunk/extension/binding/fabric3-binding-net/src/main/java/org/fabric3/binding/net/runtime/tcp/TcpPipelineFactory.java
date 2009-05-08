@@ -22,6 +22,8 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import static org.jboss.netty.channel.Channels.pipeline;
+import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
+import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
 import org.jboss.netty.handler.timeout.Timer;
@@ -50,6 +52,8 @@ public class TcpPipelineFactory implements ChannelPipelineFactory {
         pipeline.addLast("idlehandler", new IdleStateHandler(timer, secondsTimeout, secondsTimeout, secondsTimeout));
         pipeline.addLast("readTimeout", new ReadTimeoutHandler(timer, timeout, TimeUnit.MILLISECONDS));
         pipeline.addLast("writeTimeout", new WriteTimeoutHandler(timer, timeout, TimeUnit.MILLISECONDS));
+        pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
+        pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
         pipeline.addLast("handler", handler);
         return pipeline;
     }
