@@ -66,6 +66,11 @@ public class TcpBindingLoader extends AbstractBindingLoader<TcpBindingDefinition
             switch (reader.next()) {
             case XMLStreamConstants.END_ELEMENT:
                 if ("binding.tcp".equals(reader.getName().getLocalPart())) {
+                    String wireFormat = definition.getConfig().getWireFormat();
+                    if (wireFormat != null && !"jdk".equals(wireFormat)) {
+                        // record the wire format requirement so the extension can be provisioned
+                        definition.addRequiredCapability(wireFormat);
+                    }
                     return definition;
                 }
                 break;
