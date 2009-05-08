@@ -42,6 +42,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -72,7 +73,6 @@ import org.fabric3.spi.invocation.WorkContext;
 @Service(ScopeContainer.class)
 public class CompositeScopeContainer extends AbstractScopeContainer {
     private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers;
-
     // The map of InstanceWrappers to destroy keyed by the deployable composite the component was deployed with.
     // The queues of InstanceWrappers are ordered by the sequence in which the deployables were deployed.
     // The InstanceWrappers themselves are ordered by the sequence in which they were instantiated.
@@ -81,9 +81,13 @@ public class CompositeScopeContainer extends AbstractScopeContainer {
     // the queue of components to eagerly initialize in each group
     private final Map<QName, List<AtomicComponent<?>>> initQueues = new HashMap<QName, List<AtomicComponent<?>>>();
 
+    // components that are in the process of being created
+    private final Map<AtomicComponent<?>, CountDownLatch> pending;
+
     public CompositeScopeContainer(@Monitor ScopeContainerMonitor monitor) {
         super(Scope.COMPOSITE, monitor);
         instanceWrappers = new ConcurrentHashMap<AtomicComponent<?>, InstanceWrapper<?>>();
+        pending = new ConcurrentHashMap<AtomicComponent<?>, CountDownLatch>();
         destroyQueues = new LinkedHashMap<QName, List<InstanceWrapper<?>>>();
     }
 
@@ -177,35 +181,56 @@ public class CompositeScopeContainer extends AbstractScopeContainer {
         instanceWrappers.clear();
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({"unchecked", "SynchronizationOnLocalVariableOrMethodParameter"})
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
         InstanceWrapper<T> wrapper = (InstanceWrapper<T>) instanceWrappers.get(component);
         if (wrapper != EMPTY) {
             return wrapper;
         }
-
-        // FIXME is there a potential race condition here that may result in two instances being created
+        CountDownLatch latch;
+        // Avoid race condition where two or more threads attempt to initialize the component instance concurrently.
+        // Pending component instantiations are tracked and threads block on a latch until they are complete.
+        synchronized (component) {
+            latch = pending.get(component);
+            if (latch != null) {
+                try {
+                    // wait on the instantiation
+                    latch.await();
+                } catch (InterruptedException e) {
+                    String uri = component.getUri().toString();
+                    throw new InstanceLifecycleException("Error initializing: " + uri, uri, e);
+                }
+                // an instance wrapper is now available as the instantiation has completed
+                return (InstanceWrapper<T>) instanceWrappers.get(component);
+            } else {
+                latch = new CountDownLatch(1);
+                pending.put(component, latch);
+            }
+        }
         try {
             wrapper = component.createInstanceWrapper(workContext);
+            // some component instances such as system singletons may already be started
+            if (!wrapper.isStarted()) {
+                wrapper.start(workContext);
+                List<InstanceWrapper<?>> queue;
+                QName deployable = component.getDeployable();
+                synchronized (destroyQueues) {
+                    queue = destroyQueues.get(deployable);
+                }
+                if (queue == null) {
+                    throw new IllegalStateException("Context not started: " + deployable);
+                }
+                queue.add(wrapper);
+            }
+            instanceWrappers.put(component, wrapper);
+            latch.countDown();
+            return wrapper;
         } catch (ObjectCreationException e) {
             String uri = component.getUri().toString();
             throw new InstanceLifecycleException("Error initializing: " + uri, uri, e);
+        } finally {
+            pending.remove(component);
         }
-        // some component instances such as system singletons may already be started
-        if (!wrapper.isStarted()) {
-            wrapper.start(workContext);
-            List<InstanceWrapper<?>> queue;
-            QName deployable = component.getDeployable();
-            synchronized (destroyQueues) {
-                queue = destroyQueues.get(deployable);
-            }
-            if (queue == null) {
-                throw new IllegalStateException("Context not started: " + deployable);
-            }
-            queue.add(wrapper);
-        }
-        instanceWrappers.put(component, wrapper);
-        return wrapper;
     }
 
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
