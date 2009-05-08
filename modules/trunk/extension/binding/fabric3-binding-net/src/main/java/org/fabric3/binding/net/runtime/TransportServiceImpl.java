@@ -156,6 +156,7 @@ public class TransportServiceImpl implements TransportService {
             createHttpChannel();
         }
         httpRequestHandler.register(path, wireHolder);
+        monitor.httpEndpointProvisioned(ipAddress, httpPort, path);
     }
 
     public void registerTcp(String path, String callbackUri, Wire wire) throws WiringException {
@@ -163,15 +164,17 @@ public class TransportServiceImpl implements TransportService {
             createTcpChannel();
         }
         tcpRequestHandler.register(path, callbackUri, wire);
-
+        monitor.tcpEndpointProvisioned(ipAddress, tcpPort, path);
     }
 
     public void unregisterHttp(String path) {
         httpRequestHandler.unregister(path);
+        monitor.httpEndpointRemoved(ipAddress, httpPort, path);
     }
 
     public void unregisterTcp(String path) {
         tcpRequestHandler.unregister(path);
+        monitor.tcpEndpointRemoved(ipAddress, tcpPort, path);
     }
 
     private void createHttpChannel() throws WiringException {

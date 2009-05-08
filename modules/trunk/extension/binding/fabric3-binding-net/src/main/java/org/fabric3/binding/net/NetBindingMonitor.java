@@ -16,8 +16,8 @@
  */
 package org.fabric3.binding.net;
 
-import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * Monitor for communications events.
@@ -40,6 +40,18 @@ public interface NetBindingMonitor {
 
     @Info
     void startTcpListener(int port);
+
+    @Info
+    void httpEndpointProvisioned(String ipAddress, int httpPort, String path);
+
+    @Info
+    void tcpEndpointProvisioned(String ipAddress, int tcpPort, String path);
+
+    @Info
+    void httpEndpointRemoved(String ipAddress, int httpPort, String path);
+
+    @Info
+    void tcpEndpointRemoved(String ipAddress, int tcpPort, String path);
 
     @Severe
     void error(Throwable e);
