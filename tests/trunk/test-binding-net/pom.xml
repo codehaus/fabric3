@@ -104,7 +104,7 @@
                     <systemConfig>
                         <![CDATA[
                          <config>
-                             <net.binding tcpWireFormat="hessian"/>
+                             <net.binding tcpPort="8484" connectTimeout="100000"  tcpWireFormat="jdk"/>
                          </config>
                          ]]>
                     </systemConfig>
