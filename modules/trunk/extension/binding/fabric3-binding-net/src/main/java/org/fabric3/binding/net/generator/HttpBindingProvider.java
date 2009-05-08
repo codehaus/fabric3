@@ -21,9 +21,12 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.net.model.HttpBindingDefinition;
+import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.binding.provider.BindingMatchResult;
 import org.fabric3.spi.binding.provider.BindingProvider;
 import org.fabric3.spi.binding.provider.BindingSelectionException;
@@ -40,9 +43,11 @@ import org.fabric3.spi.topology.DomainManager;
  */
 @EagerInit
 public class HttpBindingProvider implements BindingProvider {
-    public static final QName HTTP_BINDING = new QName(Constants.SCA_NS, "binding.http");
+    private static final QName HTTP_BINDING = new QName(Constants.SCA_NS, "binding.http");
+    private static final BindingMatchResult NO_MATCH = new BindingMatchResult(false, HTTP_BINDING);
 
     private DomainManager domainManager;
+    private boolean enabled = true;
 
     /**
      * Injects the domain manager. This reference is optional so the extension can be loaded on non-controller instances.
@@ -54,11 +59,37 @@ public class HttpBindingProvider implements BindingProvider {
         this.domainManager = domainManager;
     }
 
+    @Property(required = false)
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public QName getType() {
         return HTTP_BINDING;
     }
 
     public BindingMatchResult canBind(LogicalReference source, LogicalService target) {
+        if (!enabled) {
+            return NO_MATCH;
+        }
+        ServiceContract<?> contract = source.getDefinition().getServiceContract();
+        for (Operation<?> operation : contract.getOperations()) {
+            if (operation.getInputType().getLogical().size() > 1) {
+                BindingMatchResult result = new BindingMatchResult(false, HTTP_BINDING);
+                result.addReason("Operations with more than one parameter not supported");
+                return result;
+            }
+        }
+        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        if (callbackContract != null) {
+            for (Operation<?> operation : callbackContract.getOperations()) {
+                if (operation.getInputType().getLogical().size() > 1) {
+                    BindingMatchResult result = new BindingMatchResult(false, HTTP_BINDING);
+                    result.addReason("Operations with more than one parameter not supported");
+                    return result;
+                }
+            }
+        }
         return new BindingMatchResult(true, HTTP_BINDING);
     }
 
