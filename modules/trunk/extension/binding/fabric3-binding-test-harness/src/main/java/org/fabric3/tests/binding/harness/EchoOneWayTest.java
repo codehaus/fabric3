@@ -28,7 +28,13 @@ public class EchoOneWayTest extends TestCase {
     protected OneWayEchoService service;
 
     public void testInvoke() throws Exception {
-        service.echoString("Hello");
+        // fill a message with 2000 chars to test buffers
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i <= 2000; i++) {
+            b.append("z");
+        }
+        service.echoString(b.toString());
         service.await();
     }
+
 }
