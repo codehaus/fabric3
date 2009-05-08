@@ -105,10 +105,10 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
             try {
                 PhysicalOperationDefinition operation = chain.getPhysicalOperation();
                 Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(operation, loader);
-                Serializer inputSerializer = serializerFactory.getInstance(inputTypes, Collections.<Class<?>>emptySet());
+                Serializer inputSerializer = serializerFactory.getInstance(inputTypes, Collections.<Class<?>>emptySet(), loader);
                 Set<Class<?>> returnTypes = OperationTypeHelper.loadOutputTypes(operation, loader);
                 Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(operation, loader);
-                Serializer outputSerializer = serializerFactory.getInstance(returnTypes, faultTypes);
+                Serializer outputSerializer = serializerFactory.getInstance(returnTypes, faultTypes, loader);
                 InvocationChainHolder holder = new InvocationChainHolder(chain, inputSerializer, outputSerializer);
                 invocationChainHolders.add(holder);
             } catch (SerializationException e) {

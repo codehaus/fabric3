@@ -29,6 +29,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.spi.binding.serializer.SerializationException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.util.Base64;
 
 /**
@@ -39,8 +40,15 @@ import org.fabric3.spi.util.Base64;
 @EagerInit
 public class HessianSerializer implements Serializer {
     private SerializerFactory factory;
+    private ClassLoader loader;
 
-    public HessianSerializer() {
+    /**
+     * Constructor.
+     *
+     * @param loader the classloader for deserializing parameter and fault types. Hessian requires this classloader to be set as the TCCL.
+     */
+    public HessianSerializer(ClassLoader loader) {
+        this.loader = loader;
         factory = new SerializerFactory();
         // add custom serializers
         factory.addFactory(new QNameSerializerFactory());
@@ -74,7 +82,15 @@ public class HessianSerializer implements Serializer {
         return serialize(clazz, exception);
     }
 
+    public Message deserializeMessage(Object serialized) throws SerializationException {
+        return deserialize(Message.class, serialized, Message.class.getClassLoader());
+    }
+
     public <T> T deserialize(Class<T> clazz, Object object) throws SerializationException {
+        return deserialize(clazz, object, loader);
+    }
+
+    private <T> T deserialize(Class<T> clazz, Object object, ClassLoader classLoader) throws SerializationException {
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             boolean isString = String.class.equals(object.getClass());
@@ -88,7 +104,7 @@ public class HessianSerializer implements Serializer {
                 byte[] bytes = (byte[]) object;
                 is = new ByteArrayInputStream(bytes);
             }
-            Thread.currentThread().setContextClassLoader(clazz.getClassLoader());
+            Thread.currentThread().setContextClassLoader(classLoader);
             Hessian2Input in = new Hessian2Input(is);
             in.setSerializerFactory(factory);
             in.startMessage();

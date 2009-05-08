@@ -33,7 +33,8 @@ public class HessianSerializerFactoryTestCase extends TestCase {
     public void testSerializeObjectToString() throws Exception {
         Foo foo = new Foo();
         foo.setName("test");
-        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        ClassLoader loader = getClass().getClassLoader();
+        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), loader);
         String serialized = serializer.serialize(String.class, foo);
         Foo deserialized = serializer.deserialize(Foo.class, serialized);
         assertEquals("test", deserialized.getName());
@@ -42,7 +43,8 @@ public class HessianSerializerFactoryTestCase extends TestCase {
     public void testSerializeObjectToBytes() throws Exception {
         Foo foo = new Foo();
         foo.setName("test");
-        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        ClassLoader loader = getClass().getClassLoader();
+        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), loader);
         byte[] serialized = serializer.serialize(byte[].class, foo);
         Foo deserialized = serializer.deserialize(Foo.class, serialized);
         assertEquals("test", deserialized.getName());
@@ -50,14 +52,16 @@ public class HessianSerializerFactoryTestCase extends TestCase {
 
     public void testSerializeQName() throws Exception {
         QName name = new QName("foo", "bar");
-        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        ClassLoader loader = getClass().getClassLoader();
+        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), loader);
         byte[] serialized = serializer.serialize(byte[].class, name);
         QName deserialized = serializer.deserialize(QName.class, serialized);
         assertEquals("bar", deserialized.getLocalPart());
     }
 
     public void testSerializeNull() throws Exception {
-        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        ClassLoader loader = getClass().getClassLoader();
+        Serializer serializer = serializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), loader);
         byte[] serialized = serializer.serialize(byte[].class, null);
         assertNull(serializer.deserialize(Foo.class, serialized));
     }

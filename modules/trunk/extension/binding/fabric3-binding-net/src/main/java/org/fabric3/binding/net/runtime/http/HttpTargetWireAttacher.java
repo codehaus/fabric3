@@ -35,20 +35,20 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
-import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -200,7 +200,8 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         }
         try {
             // TODO FIXME
-            return headerSerializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+            ClassLoader loader = getClass().getClassLoader();
+            return headerSerializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), loader);
         } catch (SerializationException e) {
             throw new WiringException(e);
         }
@@ -218,7 +219,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
             }
             ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
             Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(operation, loader);
-            return messageSerializerFactory.getInstance(inputTypes, Collections.<Class<?>>emptySet());
+            return messageSerializerFactory.getInstance(inputTypes, Collections.<Class<?>>emptySet(), loader);
         } catch (SerializationException e) {
             throw new WiringException(e);
         }
@@ -238,7 +239,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
             ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
             Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(operation, loader);
             Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(operation, loader);
-            return messageSerializerFactory.getInstance(outputTypes, faultTypes);
+            return messageSerializerFactory.getInstance(outputTypes, faultTypes, loader);
         } catch (SerializationException e) {
             throw new WiringException(e);
         }

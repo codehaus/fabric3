@@ -16,21 +16,25 @@
  */
 package org.fabric3.binding.net.runtime.tcp;
 
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBufferFactory;
+import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.oasisopen.sca.ServiceRuntimeException;
 import org.oasisopen.sca.ServiceUnavailableException;
 
 import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.binding.serializer.SerializationException;
 import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -87,28 +91,41 @@ public class TcpRequestResponseInterceptor implements Interceptor {
             }
         }
 
-        WorkContext workContext = msg.getWorkContext();
-
-        // set the target uri and operation names
-        workContext.setHeader(NetConstants.TARGET_URI, path);
-        workContext.setHeader(NetConstants.OPERATION_NAME, operationName);
-
-        byte[] serialized;
         try {
-            serialized = serializer.serialize(byte[].class, msg);
+            WorkContext workContext = msg.getWorkContext();
+
+            // set the target uri and operation names
+            workContext.setHeader(NetConstants.TARGET_URI, path);
+            workContext.setHeader(NetConstants.OPERATION_NAME, operationName);
+
+            byte[] serialized = serializer.serialize(byte[].class, msg);
+
+            ChannelBufferFactory bufferFactory = channel.getConfig().getBufferFactory();
+            ChannelBuffer dynamicBuffer = ChannelBuffers.dynamicBuffer(serialized.length, bufferFactory);
+            ChannelBufferOutputStream bout = new ChannelBufferOutputStream(dynamicBuffer);
+            // write the length of the stream
+            bout.writeInt(serialized.length);
+            // write contents to the buffer
+            bout.write(serialized);
+            ChannelBuffer buffer = bout.buffer();
+            // write to the channel
+            channel.write(buffer);
+
+            // retrieve the last handler and block on the response
+            TcpResponseHandler handler = (TcpResponseHandler) channel.getPipeline().getLast();
+            Message response = handler.getResponse();
+            Object body = response.getBody();
+            if (body != null) {
+                Object deserialized = serializer.deserialize(Object.class, body);
+                response.setBody(deserialized);
+            }
+            channel.close();
+            return response;
         } catch (SerializationException e) {
             throw new ServiceUnavailableException(e);
+        } catch (IOException e) {
+            throw new ServiceRuntimeException(e);
         }
-
-        ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(serialized);
-        channel.write(buffer);
-
-        TcpResponseHandler handler = (TcpResponseHandler) channel.getPipeline().getLast();
-
-        // block on the response
-        Message response = handler.getResponse();
-        channel.close();
-        return response;
     }
 
     public void setNext(Interceptor next) {

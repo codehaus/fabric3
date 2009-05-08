@@ -33,7 +33,7 @@ public class JAXBSerializerFactoryTestCase extends TestCase {
         JAXBSerializerFactory factory = new JAXBSerializerFactory();
         Set<Class<?>> types = new HashSet<Class<?>>();
         types.add(Foo.class);
-        Serializer serializer = factory.getInstance(types, Collections.<Class<?>>emptySet());
+        Serializer serializer = factory.getInstance(types, Collections.<Class<?>>emptySet(), getClass().getClassLoader());
         String serialized = serializer.serialize(String.class, new Foo());
         assertNotNull(serializer.deserialize(Foo.class, serialized));
     }

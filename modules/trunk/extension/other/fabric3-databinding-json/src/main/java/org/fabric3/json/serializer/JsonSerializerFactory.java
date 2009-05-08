@@ -32,7 +32,7 @@ import org.fabric3.spi.binding.serializer.SerializerFactory;
 @EagerInit
 public class JsonSerializerFactory implements SerializerFactory {
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException {
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws SerializationException {
         return new JsonSerializer(types, faultTypes);
     }
 }

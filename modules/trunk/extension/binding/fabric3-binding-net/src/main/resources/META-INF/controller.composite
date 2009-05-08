@@ -34,6 +34,7 @@
 
     <component name="HttpBindingProvider">
         <f3-impl:implementation.system class="org.fabric3.binding.net.generator.HttpBindingProvider"/>
+        <property name="enabled" source="$systemConfig//net.binding/@httpBindingProvider"/>
     </component>
 
     <!-- TCP channel infrastructure -->
@@ -44,4 +45,10 @@
     <component name="TcpBindingGenerator" f3-core:key="org.fabric3.binding.net.model.TcpBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.net.generator.TcpBindingGenerator"/>
     </component>
+
+    <component name="TcpBindingProvider">
+        <f3-impl:implementation.system class="org.fabric3.binding.net.generator.TcpBindingProvider"/>
+        <property name="enabled" source="$systemConfig//net.binding/@tcpBindingProvider"/>
+    </component>
+
 </composite>

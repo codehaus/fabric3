@@ -29,8 +29,8 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.net.NetBindingMonitor;
-import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.invocation.Message;
 
 /**
  * Handles TCP responses on the client side for request-response style interactions. This handler is placed on the reference side of an invocation
@@ -56,7 +56,13 @@ public class TcpResponseHandler extends SimpleChannelHandler {
         ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
         if (buffer.readable()) {
             byte[] bytes = buffer.toByteBuffer().array();
-            Message message = serializer.deserialize(Message.class, bytes);
+            Message message = serializer.deserializeMessage(bytes);
+            // deserialize the body
+            Object body = message.getBody();
+            if (body != null) {
+                Object deserialized = serializer.deserialize(Object.class, body);
+                message.setBody(deserialized);
+            }
             responseQueue.offer(message);
         }
     }

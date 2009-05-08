@@ -36,20 +36,20 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.binding.net.provision.TcpWireTargetDefinition;
-import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -198,7 +198,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
             }
             ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
             Set<Class<?>> types = OperationTypeHelper.loadInParameterTypes(operation, loader);
-            return messageSerializerFactory.getInstance(types, Collections.<Class<?>>emptySet());
+            return messageSerializerFactory.getInstance(types, Collections.<Class<?>>emptySet(), loader);
         } catch (SerializationException e) {
             throw new WiringException(e);
         }

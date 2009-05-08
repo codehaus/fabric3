@@ -17,10 +17,12 @@
 package org.fabric3.binding.net.runtime.tcp;
 
 import java.io.Serializable;
+import java.io.StreamCorruptedException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -30,16 +32,16 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
-import org.fabric3.binding.net.provision.NetConstants;
 import org.fabric3.binding.net.NetBindingMonitor;
+import org.fabric3.binding.net.provision.NetConstants;
+import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -52,15 +54,18 @@ public class TcpRequestHandler extends SimpleChannelHandler {
     private Serializer serializer;
     private NetBindingMonitor monitor;
     private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
+    private long maxObjectSize;
 
     /**
      * Constructor.
      *
-     * @param serializer serializes messages
-     * @param monitor    the event monitor
+     * @param serializer    serializes messages
+     * @param maxObjectSize the maximum object size to handle in bytes. Objects larger than this will be rejected.
+     * @param monitor       the event monitor
      */
-    public TcpRequestHandler(Serializer serializer, NetBindingMonitor monitor) {
+    public TcpRequestHandler(Serializer serializer, long maxObjectSize, NetBindingMonitor monitor) {
         this.serializer = serializer;
+        this.maxObjectSize = maxObjectSize;
         this.monitor = monitor;
     }
 
@@ -88,9 +93,31 @@ public class TcpRequestHandler extends SimpleChannelHandler {
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
         ChannelBuffer buffer = (ChannelBuffer) event.getMessage();
-        byte[] bytes = buffer.toByteBuffer().array();
-        // deserialize the message
-        Message msg = serializer.deserialize(Message.class, bytes);
+        if (buffer.readableBytes() < 4) {
+            return;
+        }
+
+        int dataLen = buffer.getInt(buffer.readerIndex());
+        if (dataLen <= 0) {
+            throw new StreamCorruptedException("Invalid data length: " + dataLen);
+        }
+        if (dataLen > maxObjectSize) {
+            throw new StreamCorruptedException("Exceeded max configured data length: " + dataLen + " Max: " + maxObjectSize);
+        }
+
+        if (buffer.readableBytes() < dataLen + 4) {
+            return;
+        }
+
+        // advance past initial size bytes
+        buffer.readBytes(4);
+
+        ChannelBufferInputStream stream = new ChannelBufferInputStream(buffer, dataLen);
+        byte[] bytes = new byte[dataLen];
+        stream.read(bytes);
+
+        // deserialize the message envelope
+        Message msg = serializer.deserializeMessage(bytes);
         WorkContext workContext = msg.getWorkContext();
         String targetUri = workContext.getHeader(String.class, NetConstants.TARGET_URI);
         if (targetUri == null) {
@@ -118,6 +145,12 @@ public class TcpRequestHandler extends SimpleChannelHandler {
         CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
         workContext.addCallFrame(frame);
 
+        // deserialize the body
+        Object body = msg.getBody();
+        if (body != null) {
+            Object deserialized = serializer.deserialize(Object.class, body);
+            msg.setBody(deserialized);
+        }
         Interceptor interceptor = selectOperation(operationName, wire);
         Message response = interceptor.invoke(msg);
         writeResponse(event, response);
@@ -169,6 +202,5 @@ public class TcpRequestHandler extends SimpleChannelHandler {
             return wire;
         }
     }
-
 
 }

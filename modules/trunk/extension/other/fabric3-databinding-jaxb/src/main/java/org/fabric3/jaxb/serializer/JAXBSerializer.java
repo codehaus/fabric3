@@ -26,6 +26,7 @@ import javax.xml.bind.Unmarshaller;
 import org.fabric3.spi.binding.serializer.SerializationException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
+import org.fabric3.spi.invocation.Message;
 
 /**
  * Serializes JAXB objects to XML. Currently, only string-based serialization is supported but enhancements to support alternative formats such as
@@ -36,6 +37,11 @@ import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
 public class JAXBSerializer implements Serializer {
     private JAXBContext jaxbContext;
 
+    /**
+     * Constructor.
+     *
+     * @param jaxbContext the JAXBContext to use for de/serialization.
+     */
     public JAXBSerializer(JAXBContext jaxbContext) {
         this.jaxbContext = jaxbContext;
     }
@@ -56,6 +62,10 @@ public class JAXBSerializer implements Serializer {
 
     public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
         return serialize(clazz, exception);
+    }
+
+    public Message deserializeMessage(Object serialized) {
+        throw new UnsupportedOperationException();
     }
 
     public <T> T deserialize(Class<T> clazz, Object serialized) throws SerializationException {

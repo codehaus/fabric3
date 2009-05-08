@@ -16,6 +16,8 @@
  */
 package org.fabric3.spi.binding.serializer;
 
+import org.fabric3.spi.invocation.Message;
+
 /**
  * Provides serialization and deserialization operations for sending data over a remote transport.
  *
@@ -44,11 +46,19 @@ public interface Serializer {
     <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException;
 
     /**
+     * Deserializes a message.
+     *
+     * @param serialized the serialized message
+     * @return the message
+     * @throws SerializationException if a serialization error occurs
+     */
+    Message deserializeMessage(Object serialized) throws SerializationException;
+
+    /**
      * Deserializes an object.
      *
      * @param clazz      the class representing the expected type
      * @param serialized the object to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
-     * @param <T>        the expected type
      * @return the deserialized object
      * @throws SerializationException if a deserialization error occurs
      */

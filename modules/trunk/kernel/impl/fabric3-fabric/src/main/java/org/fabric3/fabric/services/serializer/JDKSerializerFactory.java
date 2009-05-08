@@ -30,6 +30,7 @@ import org.fabric3.spi.binding.serializer.SerializationException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.util.Base64;
 
 /**
@@ -41,19 +42,21 @@ import org.fabric3.spi.util.Base64;
 @EagerInit
 public class JDKSerializerFactory implements SerializerFactory, Serializer {
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException {
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader classLoader) throws SerializationException {
         return this;
     }
 
     public <T> T serialize(Class<T> clazz, Object o) throws SerializationException {
+        ObjectOutputStream stream = null;
         try {
             boolean isString = String.class.equals(clazz);
             if (!Byte.TYPE.equals(clazz.getComponentType()) && !isString) {
                 throw new UnsupportedTypesException("This implementation only supports serialization to bytes or Strings");
             }
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream stream = new ObjectOutputStream(bos);
+            stream = new ObjectOutputStream(bos);
             stream.writeObject(o);
+            stream.flush();
             byte[] bytes = bos.toByteArray();
             if (isString) {
                 return clazz.cast(Base64.encode(bytes));
@@ -62,6 +65,14 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
             }
         } catch (IOException e) {
             throw new SerializationException(e);
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -69,7 +80,13 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
         return serialize(clazz, exception);
     }
 
+    public Message deserializeMessage(Object serialized) throws SerializationException {
+        return deserialize(Message.class, serialized);
+    }
+
     public <T> T deserialize(Class<T> clazz, Object object) throws SerializationException {
+        ByteArrayInputStream bis = null;
+        ObjectInputStream stream = null;
         try {
             boolean isString = String.class.equals(clazz);
             if (!Byte.TYPE.equals(object.getClass().getComponentType()) && isString) {
@@ -81,13 +98,24 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
             } else {
                 bytes = (byte[]) object;
             }
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream stream = new ObjectInputStream(bis);
+            bis = new ByteArrayInputStream(bytes);
+            stream = new ObjectInputStream(bis);
             return clazz.cast(stream.readObject());
         } catch (IOException e) {
             throw new SerializationException(e);
         } catch (ClassNotFoundException e) {
             throw new SerializationException(e);
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+                if (bis != null) {
+                    bis.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

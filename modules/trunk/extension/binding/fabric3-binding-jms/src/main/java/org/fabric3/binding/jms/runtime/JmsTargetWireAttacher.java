@@ -54,15 +54,15 @@ import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -146,8 +146,8 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
                 Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(op, cl);
                 Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(op, cl);
                 try {
-                    inputSerializer = factory.getInstance(inputTypes, Collections.<Class<?>>emptySet());
-                    outputSerializer = factory.getInstance(outputTypes, faultTypes);
+                    inputSerializer = factory.getInstance(inputTypes, Collections.<Class<?>>emptySet(), cl);
+                    outputSerializer = factory.getInstance(outputTypes, faultTypes, cl);
                 } catch (SerializationException e) {
                     throw new WiringException(e);
                 }

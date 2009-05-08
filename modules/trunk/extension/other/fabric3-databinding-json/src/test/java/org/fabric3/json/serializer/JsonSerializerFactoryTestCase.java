@@ -33,14 +33,14 @@ public class JsonSerializerFactoryTestCase extends TestCase {
         JsonSerializerFactory factory = new JsonSerializerFactory();
         Set<Class<?>> types = new HashSet<Class<?>>();
         types.add(String.class);
-        Serializer serializer = factory.getInstance(types, Collections.<Class<?>>emptySet());
+        Serializer serializer = factory.getInstance(types, Collections.<Class<?>>emptySet(), getClass().getClassLoader());
         String serialized = serializer.serialize(String.class, "test");
         assertEquals("test", serializer.deserialize(String.class, serialized));
     }
 
     public void testSerializeDeserializeNull() throws Exception {
         JsonSerializerFactory factory = new JsonSerializerFactory();
-        Serializer serializer = factory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+        Serializer serializer = factory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), getClass().getClassLoader());
         String serialized = serializer.serialize(String.class, null);
         assertNull(serializer.deserialize(Object.class, serialized));
     }
@@ -49,7 +49,7 @@ public class JsonSerializerFactoryTestCase extends TestCase {
         JsonSerializerFactory factory = new JsonSerializerFactory();
         Set<Class<?>> types = new HashSet<Class<?>>();
         types.add(Foo.class);
-        Serializer serializer = factory.getInstance(types, Collections.<Class<?>>emptySet());
+        Serializer serializer = factory.getInstance(types, Collections.<Class<?>>emptySet(), getClass().getClassLoader());
         Foo foo = new Foo();
         foo.setName("test");
         String serialized = serializer.serialize(String.class, foo);
@@ -61,7 +61,7 @@ public class JsonSerializerFactoryTestCase extends TestCase {
         JsonSerializerFactory factory = new JsonSerializerFactory();
         Set<Class<?>> faults = new HashSet<Class<?>>();
         faults.add(FooException.class);
-        Serializer serializer = factory.getInstance(Collections.<Class<?>>emptySet(), faults);
+        Serializer serializer = factory.getInstance(Collections.<Class<?>>emptySet(), faults, getClass().getClassLoader());
         FooException fault = new FooException("test");
         String serialized = serializer.serializeFault(String.class, fault);
         Throwable deserialized = serializer.deserializeFault(serialized);

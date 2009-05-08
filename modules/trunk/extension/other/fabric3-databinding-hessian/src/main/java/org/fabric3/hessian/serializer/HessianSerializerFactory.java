@@ -32,8 +32,8 @@ import org.fabric3.spi.binding.serializer.SerializerFactory;
 @EagerInit
 public class HessianSerializerFactory implements SerializerFactory {
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException {
-        return new HessianSerializer();
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws SerializationException {
+        return new HessianSerializer(loader);
     }
 
 }

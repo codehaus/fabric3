@@ -62,6 +62,8 @@ public class TransportServiceImpl implements TransportService {
     private int tcpPort = 8383;
     private String httpWireFormat = "jdk";
     private String tcpWireFormat = "jdk";
+    private long maxObjectSize = 2000000;
+
     private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
 
 
@@ -115,6 +117,11 @@ public class TransportServiceImpl implements TransportService {
     @Property(required = false)
     public void setHttpWireFormat(String httpWireFormat) {
         this.httpWireFormat = httpWireFormat;
+    }
+
+    @Property(required = false)
+    public void setMaxObjectSize(long maxObjectSize) {
+        this.maxObjectSize = maxObjectSize;
     }
 
     @Init
@@ -187,7 +194,7 @@ public class TransportServiceImpl implements TransportService {
     private void createTcpChannel() throws WiringException {
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
         Serializer serializer = getSerializer(tcpWireFormat);
-        tcpRequestHandler = new TcpRequestHandler(serializer, monitor);
+        tcpRequestHandler = new TcpRequestHandler(serializer, maxObjectSize, monitor);
         TcpPipelineFactory pipeline = new TcpPipelineFactory(tcpRequestHandler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
@@ -208,7 +215,7 @@ public class TransportServiceImpl implements TransportService {
             throw new WiringException("Serializer not found for: " + wireFormat);
         }
         try {
-            return factory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet());
+            return factory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), getClass().getClassLoader());
         } catch (SerializationException e) {
             throw new WiringException(e);
         }

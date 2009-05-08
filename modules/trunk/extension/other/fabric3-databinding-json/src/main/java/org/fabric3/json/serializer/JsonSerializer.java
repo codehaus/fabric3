@@ -30,6 +30,7 @@ import org.oasisopen.sca.ServiceRuntimeException;
 import org.fabric3.spi.binding.serializer.SerializationException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
+import org.fabric3.spi.invocation.Message;
 
 /**
  * Serializer that reads and writes data using JSON. Note this implementation only encodes type information for faults, wrapping them in {@link
@@ -127,5 +128,7 @@ public class JsonSerializer implements Serializer {
         }
     }
 
-
+    public Message deserializeMessage(Object serialized) throws SerializationException {
+        throw new UnsupportedOperationException();
+    }
 }

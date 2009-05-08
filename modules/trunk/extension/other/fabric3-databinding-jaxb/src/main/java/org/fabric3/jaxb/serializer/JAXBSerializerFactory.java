@@ -34,9 +34,9 @@ import org.fabric3.spi.binding.serializer.SerializerFactory;
 @EagerInit
 public class JAXBSerializerFactory implements SerializerFactory {
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException {
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws SerializationException {
         try {
-            JAXBContext jaxbContext = getJAXBContext(types, faultTypes);
+            JAXBContext jaxbContext = createJAXBContext(types, faultTypes);
             return new JAXBSerializer(jaxbContext);
         } catch (JAXBException e) {
             throw new SerializationException(e);
@@ -51,7 +51,7 @@ public class JAXBSerializerFactory implements SerializerFactory {
      * @return a JAXB context
      * @throws JAXBException if an error occurs creating the JAXB context
      */
-    private JAXBContext getJAXBContext(Set<Class<?>> types, Set<Class<?>> faultTypes) throws JAXBException {
+    private JAXBContext createJAXBContext(Set<Class<?>> types, Set<Class<?>> faultTypes) throws JAXBException {
         Class<?>[] classes = new Class<?>[types.size() + faultTypes.size()];
         int i = 0;
         for (Class<?> type : types) {

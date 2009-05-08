@@ -30,9 +30,10 @@ public interface SerializerFactory {
      *
      * @param types      the types the Serializer will serialize and deserialize
      * @param faultTypes the fault types the Serializer will serialize and deserialize
+     * @param loader     the classloader to load custom parameter types
      * @return a Serializer instance
      * @throws SerializationException if an exception occurs creating or returning a Serializer
      */
-    Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException;
+    Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws SerializationException;
 
 }
