@@ -139,7 +139,7 @@ public class JmsTargetInterceptor implements Interceptor {
                 Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
                 if (inputSerializer != null) {
                     try {
-                        Object deserialized = outputSerializer.deserialize(Object.class, responseMessage);
+                        Object deserialized = outputSerializer.deserializeResponse(Object.class, responseMessage);
                         response.setBody(deserialized);
                     } catch (SerializationException e) {
                         throw new ServiceRuntimeException(e);

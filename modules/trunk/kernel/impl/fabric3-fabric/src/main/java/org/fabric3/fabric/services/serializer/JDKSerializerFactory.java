@@ -76,6 +76,10 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
         }
     }
 
+    public <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException {
+        return serialize(clazz, message);
+    }
+
     public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
         return serialize(clazz, exception);
     }
@@ -117,6 +121,10 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
                 e.printStackTrace();
             }
         }
+    }
+
+    public <T> T deserializeResponse(Class<T> clazz, Object object) throws SerializationException {
+        return deserialize(clazz, object);
     }
 
     public Throwable deserializeFault(Object serialized) throws SerializationException {

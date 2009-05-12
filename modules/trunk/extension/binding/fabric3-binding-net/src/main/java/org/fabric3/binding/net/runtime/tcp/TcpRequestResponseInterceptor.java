@@ -114,11 +114,6 @@ public class TcpRequestResponseInterceptor implements Interceptor {
             // retrieve the last handler and block on the response
             TcpResponseHandler handler = (TcpResponseHandler) channel.getPipeline().getLast();
             Message response = handler.getResponse();
-            Object body = response.getBody();
-            if (body != null) {
-                Object deserialized = serializer.deserialize(Object.class, body);
-                response.setBody(deserialized);
-            }
             channel.close();
             return response;
         } catch (SerializationException e) {

@@ -60,7 +60,7 @@ public class TcpResponseHandler extends SimpleChannelHandler {
             // deserialize the body
             Object body = message.getBody();
             if (body != null) {
-                Object deserialized = serializer.deserialize(Object.class, body);
+                Object deserialized = serializer.deserializeResponse(Object.class, body);
                 message.setBody(deserialized);
             }
             responseQueue.offer(message);

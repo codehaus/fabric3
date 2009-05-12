@@ -5,6 +5,7 @@
     <federation>
         <transport>
             <http>localhost:8181</http>
+            <binding.net.http>localhost:8282</binding.net.http>
         </transport>
     </federation>
 </config>

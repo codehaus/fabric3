@@ -172,7 +172,7 @@ public class TcpRequestHandler extends SimpleChannelHandler {
 
 
     private void writeResponse(MessageEvent event, Message msg) throws SerializationException {
-        byte[] serialized = serializer.serialize(byte[].class, msg);
+        byte[] serialized = serializer.serializeResponse(byte[].class, msg);
         ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(serialized);
         ChannelFuture future = event.getChannel().write(buffer);
         future.addListener(ChannelFutureListener.CLOSE);

@@ -26,7 +26,7 @@ import org.fabric3.spi.invocation.Message;
 public interface Serializer {
 
     /**
-     * Serializes an object.
+     * Serializes an object representing the parameters for an invocation.
      *
      * @param clazz   the Java type to serialize to, e.g. a String or byte array
      * @param message the message to serialize
@@ -34,6 +34,16 @@ public interface Serializer {
      * @throws SerializationException if a serialization error occurs
      */
     <T> T serialize(Class<T> clazz, Object message) throws SerializationException;
+
+    /**
+     * Serializes an object representing a response for an invocation.
+     *
+     * @param clazz   the Java type to serialize to, e.g. a String or byte array
+     * @param message the message to serialize
+     * @return the serialized bytes
+     * @throws SerializationException if a serialization error occurs
+     */
+    <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException;
 
     /**
      * Serializes a fault.
@@ -55,7 +65,7 @@ public interface Serializer {
     Message deserializeMessage(Object serialized) throws SerializationException;
 
     /**
-     * Deserializes an object.
+     * Deserializes the parameters for an invocation.
      *
      * @param clazz      the class representing the expected type
      * @param serialized the object to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
@@ -63,6 +73,16 @@ public interface Serializer {
      * @throws SerializationException if a deserialization error occurs
      */
     <T> T deserialize(Class<T> clazz, Object serialized) throws SerializationException;
+
+    /**
+     * Deserializes the parameters for an invocation response.
+     *
+     * @param clazz      the class representing the expected type
+     * @param serialized the object to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
+     * @return the deserialized object
+     * @throws SerializationException if a deserialization error occurs
+     */
+    <T> T deserializeResponse(Class<T> clazz, Object serialized) throws SerializationException;
 
     /**
      * Deserializes a an object.

@@ -207,7 +207,7 @@ public class HttpRequestHandler extends SimpleChannelHandler {
             status = HttpResponseStatus.OK;
             try {
                 Object content = msg.getBody();
-                body = serializer.serialize(String.class, content);
+                body = serializer.serializeResponse(String.class, content);
             } catch (SerializationException e) {
                 // FIXME
                 monitor.error(e);

@@ -157,7 +157,7 @@ public class HttpRequestResponseInterceptor implements Interceptor {
             }
         } else {
             try {
-                Object deserialized = outputSerializer.deserialize(Object.class, response.getContent());
+                Object deserialized = outputSerializer.deserializeResponse(Object.class, response.getContent());
                 ret.setBody(deserialized);
             } catch (SerializationException e) {
                 throw new ServiceRuntimeException(e);

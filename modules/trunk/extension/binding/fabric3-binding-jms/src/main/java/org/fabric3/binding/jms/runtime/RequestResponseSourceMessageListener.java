@@ -91,7 +91,7 @@ public class RequestResponseSourceMessageListener extends AbstractSourceMessageL
             Serializer serializer = holder.getOutputSerializer();
             if (serializer != null) {
                 try {
-                    responsePayload = serializer.serialize(String.class, responsePayload);
+                    responsePayload = serializer.serializeResponse(String.class, responsePayload);
                 } catch (SerializationException e) {
                     throw new JmsOperationException(e);
                 }

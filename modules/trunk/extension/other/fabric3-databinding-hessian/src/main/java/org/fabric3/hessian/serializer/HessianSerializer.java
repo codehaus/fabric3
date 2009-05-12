@@ -78,6 +78,10 @@ public class HessianSerializer implements Serializer {
         }
     }
 
+    public <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException {
+        return serialize(clazz, message);
+    }
+
     public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
         return serialize(clazz, exception);
     }
@@ -87,6 +91,10 @@ public class HessianSerializer implements Serializer {
     }
 
     public <T> T deserialize(Class<T> clazz, Object object) throws SerializationException {
+        return deserialize(clazz, object, loader);
+    }
+
+    public <T> T deserializeResponse(Class<T> clazz, Object object) throws SerializationException {
         return deserialize(clazz, object, loader);
     }
 

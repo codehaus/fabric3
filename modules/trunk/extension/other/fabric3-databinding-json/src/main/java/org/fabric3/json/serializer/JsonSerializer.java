@@ -79,6 +79,10 @@ public class JsonSerializer implements Serializer {
         return clazz.cast(writer.toString());
     }
 
+    public <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException {
+        return serialize(clazz, message);
+    }
+
     public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
         ApplicationFault fault = new ApplicationFault();
         fault.setMessage(exception.getMessage());
@@ -98,6 +102,10 @@ public class JsonSerializer implements Serializer {
         } catch (IOException e) {
             throw new SerializationException(e);
         }
+    }
+
+    public <T> T deserializeResponse(Class<T> clazz, Object object) throws SerializationException {
+        return deserialize(clazz, object);
     }
 
     public Throwable deserializeFault(Object serialized) throws SerializationException {
