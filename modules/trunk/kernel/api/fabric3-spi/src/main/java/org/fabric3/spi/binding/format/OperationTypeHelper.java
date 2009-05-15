@@ -14,12 +14,11 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.builder.util;
+package org.fabric3.spi.binding.format;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.util.ParamTypes;
 
@@ -38,9 +37,9 @@ public class OperationTypeHelper {
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
-     * @throws WiringException if an error occurs loading the types
+     * @throws EncoderException if an error occurs loading the types
      */
-    public static Set<Class<?>> loadInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws WiringException {
+    public static Set<Class<?>> loadInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws EncoderException {
         Set<Class<?>> types = new HashSet<Class<?>>();
         for (String param : operation.getParameters()) {
             Class<?> clazz = loadClass(param, loader);
@@ -55,9 +54,9 @@ public class OperationTypeHelper {
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
-     * @throws WiringException if an error occurs loading the types
+     * @throws EncoderException if an error occurs loading the types
      */
-    public static Set<Class<?>> loadFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws WiringException {
+    public static Set<Class<?>> loadFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws EncoderException {
         Set<Class<?>> types = new HashSet<Class<?>>();
         for (String param : operation.getFaultTypes()) {
             Class<?> clazz = loadClass(param, loader);
@@ -67,19 +66,16 @@ public class OperationTypeHelper {
     }
 
     /**
-     * Loads output parameter types.
+     * Loads output parameter type.
      *
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
-     * @throws WiringException if an error occurs loading the types
+     * @throws EncoderException if an error occurs loading the types
      */
-    public static Set<Class<?>> loadOutputTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws WiringException {
-        Set<Class<?>> types = new HashSet<Class<?>>();
+    public static Class<?> loadOutputType(PhysicalOperationDefinition operation, ClassLoader loader) throws EncoderException {
         // currently only one type is supported although WSDL allows multiple
-        Class<?> clazz = loadClass(operation.getReturnType(), loader);
-        types.add(clazz);
-        return types;
+        return loadClass(operation.getReturnType(), loader);
     }
 
     /**
@@ -88,16 +84,16 @@ public class OperationTypeHelper {
      * @param name   the class name
      * @param loader the classloader to use for loading
      * @return the class
-     * @throws WiringException if an error occurs loading the class
+     * @throws EncoderException if an error occurs loading the class
      */
-    private static Class<?> loadClass(String name, ClassLoader loader) throws WiringException {
+    private static Class<?> loadClass(String name, ClassLoader loader) throws EncoderException {
         Class<?> clazz;
         clazz = ParamTypes.PRIMITIVES_TYPES.get(name);
         if (clazz == null) {
             try {
                 clazz = loader.loadClass(name);
             } catch (ClassNotFoundException e) {
-                throw new WiringException(e);
+                throw new EncoderException(e);
             }
         }
         return clazz;

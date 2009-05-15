@@ -14,23 +14,25 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.binding.serializer;
+package org.fabric3.spi.binding.format;
 
-import org.fabric3.host.Fabric3Exception;
+import org.fabric3.spi.wire.Wire;
 
 /**
- * Denotes a general serialization exception.
+ * Creates or returns ParameterEncoder instances.
  *
  * @version $Revision$ $Date$
  */
-public class SerializationException extends Fabric3Exception {
-    private static final long serialVersionUID = -8851706178703876467L;
+public interface ParameterEncoderFactory {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Create or return a ParameterEncoder for a wire.
+     *
+     * @param wire   the wire
+     * @param loader the classloader to load custom parameter types
+     * @return a ParameterEncoder instance
+     * @throws EncoderException if an exception occurs creating or returning a ParameterEncoder
+     */
+    ParameterEncoder getInstance(Wire wire, ClassLoader loader) throws EncoderException;
 
-    public SerializationException(String message) {
-        super(message);
-    }
 }

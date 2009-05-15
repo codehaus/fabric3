@@ -26,7 +26,7 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
@@ -42,11 +42,11 @@ import org.fabric3.spi.util.Base64;
 @EagerInit
 public class JDKSerializerFactory implements SerializerFactory, Serializer {
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader classLoader) throws SerializationException {
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader classLoader) throws EncoderException {
         return this;
     }
 
-    public <T> T serialize(Class<T> clazz, Object o) throws SerializationException {
+    public <T> T serialize(Class<T> clazz, Object o) throws EncoderException {
         ObjectOutputStream stream = null;
         try {
             boolean isString = String.class.equals(clazz);
@@ -64,7 +64,7 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
                 return clazz.cast(bytes);
             }
         } catch (IOException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         } finally {
             try {
                 if (stream != null) {
@@ -76,19 +76,19 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
         }
     }
 
-    public <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException {
+    public <T> T serializeResponse(Class<T> clazz, Object message) throws EncoderException {
         return serialize(clazz, message);
     }
 
-    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
+    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws EncoderException {
         return serialize(clazz, exception);
     }
 
-    public Message deserializeMessage(Object serialized) throws SerializationException {
+    public Message deserializeMessage(Object serialized) throws EncoderException {
         return deserialize(Message.class, serialized);
     }
 
-    public <T> T deserialize(Class<T> clazz, Object object) throws SerializationException {
+    public <T> T deserialize(Class<T> clazz, Object object) throws EncoderException {
         ByteArrayInputStream bis = null;
         ObjectInputStream stream = null;
         try {
@@ -106,9 +106,9 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
             stream = new ObjectInputStream(bis);
             return clazz.cast(stream.readObject());
         } catch (IOException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         } catch (ClassNotFoundException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         } finally {
             try {
                 if (stream != null) {
@@ -123,11 +123,11 @@ public class JDKSerializerFactory implements SerializerFactory, Serializer {
         }
     }
 
-    public <T> T deserializeResponse(Class<T> clazz, Object object) throws SerializationException {
+    public <T> T deserializeResponse(Class<T> clazz, Object object) throws EncoderException {
         return deserialize(clazz, object);
     }
 
-    public Throwable deserializeFault(Object serialized) throws SerializationException {
+    public Throwable deserializeFault(Object serialized) throws EncoderException {
         return deserialize(Throwable.class, serialized);
     }
 

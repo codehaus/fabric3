@@ -17,6 +17,7 @@
 package org.fabric3.spi.binding.serializer;
 
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.binding.format.EncoderException;
 
 /**
  * Provides serialization and deserialization operations for sending data over a remote transport.
@@ -31,9 +32,9 @@ public interface Serializer {
      * @param clazz   the Java type to serialize to, e.g. a String or byte array
      * @param message the message to serialize
      * @return the serialized bytes
-     * @throws SerializationException if a serialization error occurs
+     * @throws EncoderException if a serialization error occurs
      */
-    <T> T serialize(Class<T> clazz, Object message) throws SerializationException;
+    <T> T serialize(Class<T> clazz, Object message) throws EncoderException;
 
     /**
      * Serializes an object representing a response for an invocation.
@@ -41,9 +42,9 @@ public interface Serializer {
      * @param clazz   the Java type to serialize to, e.g. a String or byte array
      * @param message the message to serialize
      * @return the serialized bytes
-     * @throws SerializationException if a serialization error occurs
+     * @throws EncoderException if a serialization error occurs
      */
-    <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException;
+    <T> T serializeResponse(Class<T> clazz, Object message) throws EncoderException;
 
     /**
      * Serializes a fault.
@@ -51,18 +52,18 @@ public interface Serializer {
      * @param clazz     the Java type to serialize to, e.g. a String or byte array
      * @param exception the fault instance
      * @return the serialized bytes
-     * @throws SerializationException if a serialization error occurs
+     * @throws EncoderException if a serialization error occurs
      */
-    <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException;
+    <T> T serializeFault(Class<T> clazz, Throwable exception) throws EncoderException;
 
     /**
      * Deserializes a message.
      *
      * @param serialized the serialized message
      * @return the message
-     * @throws SerializationException if a serialization error occurs
+     * @throws EncoderException if a serialization error occurs
      */
-    Message deserializeMessage(Object serialized) throws SerializationException;
+    Message deserializeMessage(Object serialized) throws EncoderException;
 
     /**
      * Deserializes the parameters for an invocation.
@@ -70,9 +71,9 @@ public interface Serializer {
      * @param clazz      the class representing the expected type
      * @param serialized the object to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
      * @return the deserialized object
-     * @throws SerializationException if a deserialization error occurs
+     * @throws EncoderException if a deserialization error occurs
      */
-    <T> T deserialize(Class<T> clazz, Object serialized) throws SerializationException;
+    <T> T deserialize(Class<T> clazz, Object serialized) throws EncoderException;
 
     /**
      * Deserializes the parameters for an invocation response.
@@ -80,17 +81,17 @@ public interface Serializer {
      * @param clazz      the class representing the expected type
      * @param serialized the object to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
      * @return the deserialized object
-     * @throws SerializationException if a deserialization error occurs
+     * @throws EncoderException if a deserialization error occurs
      */
-    <T> T deserializeResponse(Class<T> clazz, Object serialized) throws SerializationException;
+    <T> T deserializeResponse(Class<T> clazz, Object serialized) throws EncoderException;
 
     /**
      * Deserializes a an object.
      *
      * @param serialized the fault to deserialize. Implementations may support different formats such as base-64 encoded strings or byte arrays.
      * @return the deserialized fault
-     * @throws SerializationException if a deserialization error occurs
+     * @throws EncoderException if a deserialization error occurs
      */
-    Throwable deserializeFault(Object serialized) throws SerializationException;
+    Throwable deserializeFault(Object serialized) throws EncoderException;
 
 }

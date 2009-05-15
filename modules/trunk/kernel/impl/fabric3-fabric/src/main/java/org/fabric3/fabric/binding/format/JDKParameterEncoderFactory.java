@@ -14,28 +14,24 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.binding.serializer;
+package org.fabric3.fabric.binding.format;
 
-import java.util.Set;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.wire.Wire;
 
 /**
- * Creates or returns Serializer instances.
+ * Creates JDKParameterEncoder instances.
  *
  * @version $Revision$ $Date$
  */
-public interface SerializerFactory {
+@EagerInit
+public class JDKParameterEncoderFactory implements ParameterEncoderFactory {
 
-    /**
-     * Create or return a Serializer  instance.
-     *
-     * @param types      the types the Serializer will serialize and deserialize
-     * @param faultTypes the fault types the Serializer will serialize and deserialize
-     * @param loader     the classloader to load custom parameter types
-     * @return a Serializer instance
-     * @throws EncoderException if an exception occurs creating or returning a Serializer
-     */
-    Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws EncoderException;
-
+    public ParameterEncoder getInstance(Wire wire, ClassLoader loader) throws EncoderException {
+        return new JDKParameterEncoder(loader);
+    }
 }

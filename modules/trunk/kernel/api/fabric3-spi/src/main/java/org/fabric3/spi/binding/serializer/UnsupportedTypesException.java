@@ -16,12 +16,14 @@
  */
 package org.fabric3.spi.binding.serializer;
 
+import org.fabric3.spi.binding.format.EncoderException;
+
 /**
  * Raised when an attempt to serialize or deserialize an unsupported type is made.
  *
  * @version $Revision$ $Date$
  */
-public class UnsupportedTypesException extends SerializationException {
+public class UnsupportedTypesException extends EncoderException {
     private static final long serialVersionUID = 4607391693877849373L;
 
     public UnsupportedTypesException(Throwable cause) {
