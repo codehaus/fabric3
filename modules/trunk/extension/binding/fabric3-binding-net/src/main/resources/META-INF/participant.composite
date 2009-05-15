@@ -30,10 +30,10 @@
         <property name="ipAddress" source="$systemConfig//net.binding/@ipAddress"/>
         <property name="httpPort" source="$systemConfig//net.binding/@httpPort"/>
         <property name="httpsPort" source="$systemConfig//net.binding/@httpsPort"/>
-        <property name="httpWireFormat" source="$systemConfig//net.binding/@httpWireFormat"/>
         <property name="tcpPort" source="$systemConfig//net.binding/@tcpPort"/>
-        <property name="tcpWireFormat" source="$systemConfig//net.binding/@tcpWireFormat"/>
         <property name="maxObjectSize" source="$systemConfig//net.binding/@tcpMaxObjectSize"/>
+        <property name="httpMessageFormat" source="$systemConfig//net.binding/@httpMessageFormat"/>
+        <property name="tcpMessageFormat" source="$systemConfig//net.binding/@tcpMessageFormat"/>
     </component>
 
     <!-- HTTP channel infrastructure -->
@@ -61,6 +61,7 @@
         <!-- set optional configuration from the system configuration domain property -->
         <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>
         <property name="tcpWireFormat" source="$systemConfig//net.binding/@tcpWireFormat"/>
+        <property name="tcpMessageFormat" source="$systemConfig//net.binding/@tcpMessageFormat"/>
         <property name="retries" source="$systemConfig//net.binding/@numberOfRetries"/>
     </component>
 

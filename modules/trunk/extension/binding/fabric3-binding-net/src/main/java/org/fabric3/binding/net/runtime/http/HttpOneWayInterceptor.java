@@ -20,11 +20,18 @@ import java.net.SocketAddress;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
+import org.jboss.netty.handler.codec.http.HttpMethod;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.net.NetBindingMonitor;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -36,10 +43,10 @@ import org.fabric3.spi.wire.Interceptor;
 public class HttpOneWayInterceptor implements Interceptor {
     private static final Message MESSAGE = new MessageImpl();
     private String operationName;
+    private MessageEncoder messageEncoder;
+    private ParameterEncoder parameterEncoder;
     private ClientBootstrap bootstrap;
     private SocketAddress address;
-    private Serializer headerSerializer;
-    private Serializer inputSerializer;
     private int retries;
     private NetBindingMonitor monitor;
     private String url;
@@ -50,8 +57,8 @@ public class HttpOneWayInterceptor implements Interceptor {
      * @param url              the target service URL
      * @param operationName    the name of the operation being invoked
      * @param address          the target service address
-     * @param headerSerializer serializes header information
-     * @param inputSerializer  serializes input parameters
+     * @param messageEncoder   encoder for message envelopers
+     * @param parameterEncoder encoder for parameters
      * @param bootstrap        the Netty ClientBootstrap instance for sending invocations
      * @param retries          the number of times to retry failed communications operations
      * @param monitor          the event monitor
@@ -59,34 +66,40 @@ public class HttpOneWayInterceptor implements Interceptor {
     public HttpOneWayInterceptor(String url,
                                  String operationName,
                                  SocketAddress address,
-                                 Serializer headerSerializer,
-                                 Serializer inputSerializer,
+                                 MessageEncoder messageEncoder,
+                                 ParameterEncoder parameterEncoder,
                                  ClientBootstrap bootstrap,
                                  int retries,
                                  NetBindingMonitor monitor) {
         this.url = url;
         this.operationName = operationName;
+        this.messageEncoder = messageEncoder;
+        this.parameterEncoder = parameterEncoder;
         this.bootstrap = bootstrap;
         this.address = address;
-        this.headerSerializer = headerSerializer;
-        this.inputSerializer = inputSerializer;
         this.retries = retries;
         this.monitor = monitor;
     }
 
     public Message invoke(final Message msg) {
-        ChannelFuture future = bootstrap.connect(address);
-        HttpRetryConnectListener listener = new HttpRetryConnectListener(msg,
-                                                                         url,
-                                                                         address,
-                                                                         operationName,
-                                                                         headerSerializer,
-                                                                         inputSerializer,
-                                                                         bootstrap,
-                                                                         retries,
-                                                                         monitor);
-        future.addListener(listener);
-        return MESSAGE;
+        try {
+            // connection succeeded, write data
+            HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, url);
+            String serialized = parameterEncoder.encodeText(msg);
+            if (msg.isFault()) {
+                msg.setBodyWithFault(serialized);
+            } else {
+                msg.setBody(serialized);
+            }
+            HttpCallback callback = new HttpCallback(request);
+            String encodedMessage = messageEncoder.encodeText(operationName, msg, callback);
+            ChannelFuture future = bootstrap.connect(address);
+            HttpRetryConnectListener listener = new HttpRetryConnectListener(request, encodedMessage, address, bootstrap, retries, monitor);
+            future.addListener(listener);
+            return MESSAGE;
+        } catch (EncoderException e) {
+            throw new ServiceRuntimeException(e);
+        }
     }
 
     public void setNext(Interceptor next) {

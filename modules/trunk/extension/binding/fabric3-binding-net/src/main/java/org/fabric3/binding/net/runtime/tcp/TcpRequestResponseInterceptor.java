@@ -31,8 +31,10 @@ import org.oasisopen.sca.ServiceRuntimeException;
 import org.oasisopen.sca.ServiceUnavailableException;
 
 import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.spi.binding.format.EncodeCallback;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
@@ -43,8 +45,10 @@ import org.fabric3.spi.wire.Interceptor;
  * @version $Revision$ $Date$
  */
 public class TcpRequestResponseInterceptor implements Interceptor {
+    private static final EncodeCallback CALLBACK = new TcpRequestResponseCallback();
     private String operationName;
-    private Serializer serializer;
+    private MessageEncoder messageEncoder;
+    private ParameterEncoder parameterEncoder;
     private ClientBootstrap boostrap;
     private SocketAddress address;
     private int maxRetry;
@@ -54,23 +58,26 @@ public class TcpRequestResponseInterceptor implements Interceptor {
     /**
      * Constructor.
      *
-     * @param path          the path part of the target service URI
-     * @param operationName the name of the operation being invoked
-     * @param serializer    message serializer
-     * @param address       the target service address
-     * @param boostrap      the Netty ClientBootstrap instance for sending invocations
-     * @param maxRetry      the number of times to retry an operation
+     * @param path             the path part of the target service URI
+     * @param operationName    the name of the operation being invoked
+     * @param messageEncoder   encodes the message envelope
+     * @param parameterEncoder encodes parameter data
+     * @param address          the target service address
+     * @param boostrap         the Netty ClientBootstrap instance for sending invocations
+     * @param maxRetry         the number of times to retry an operation
      */
     public TcpRequestResponseInterceptor(String path,
                                          String operationName,
-                                         Serializer serializer,
+                                         MessageEncoder messageEncoder,
+                                         ParameterEncoder parameterEncoder,
                                          SocketAddress address,
                                          ClientBootstrap boostrap,
                                          int maxRetry) {
         this.path = path;
         // TODO support name mangling
         this.operationName = operationName;
-        this.serializer = serializer;
+        this.messageEncoder = messageEncoder;
+        this.parameterEncoder = parameterEncoder;
         this.boostrap = boostrap;
         this.address = address;
         this.maxRetry = maxRetry;
@@ -98,15 +105,18 @@ public class TcpRequestResponseInterceptor implements Interceptor {
             workContext.setHeader(NetConstants.TARGET_URI, path);
             workContext.setHeader(NetConstants.OPERATION_NAME, operationName);
 
-            byte[] serialized = serializer.serialize(byte[].class, msg);
+            byte[] serialized = parameterEncoder.encodeBytes(msg);
+            msg.setBody(serialized);
+            byte[] serializedMessage = messageEncoder.encodeBytes(operationName, msg, CALLBACK);
+            int size = serializedMessage.length;
 
             ChannelBufferFactory bufferFactory = channel.getConfig().getBufferFactory();
-            ChannelBuffer dynamicBuffer = ChannelBuffers.dynamicBuffer(serialized.length, bufferFactory);
+            ChannelBuffer dynamicBuffer = ChannelBuffers.dynamicBuffer(size, bufferFactory);
             ChannelBufferOutputStream bout = new ChannelBufferOutputStream(dynamicBuffer);
             // write the length of the stream
-            bout.writeInt(serialized.length);
+            bout.writeInt(size);
             // write contents to the buffer
-            bout.write(serialized);
+            bout.write(serializedMessage);
             ChannelBuffer buffer = bout.buffer();
             // write to the channel
             channel.write(buffer);
@@ -114,9 +124,11 @@ public class TcpRequestResponseInterceptor implements Interceptor {
             // retrieve the last handler and block on the response
             TcpResponseHandler handler = (TcpResponseHandler) channel.getPipeline().getLast();
             Message response = handler.getResponse();
+
+            // close the channel
             channel.close();
             return response;
-        } catch (SerializationException e) {
+        } catch (EncoderException e) {
             throw new ServiceUnavailableException(e);
         } catch (IOException e) {
             throw new ServiceRuntimeException(e);
@@ -131,5 +143,24 @@ public class TcpRequestResponseInterceptor implements Interceptor {
         return null;
     }
 
+    private static class TcpRequestResponseCallback implements EncodeCallback {
+
+        public void encodeContentLengthHeader(long length) {
+            // no-op
+        }
+
+        public void encodeOperationHeader(String name) {
+            // no-op
+        }
+
+        public void encodeRoutingHeader(String header) {
+            // no-op
+        }
+
+        public void encodeRoutingHeader(byte[] header) {
+            // no-op
+        }
+
+    }
 
 }

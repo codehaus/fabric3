@@ -14,9 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.binding.net.runtime.http;
+package org.fabric3.binding.net.runtime;
 
 import java.util.List;
+
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.wire.InvocationChain;
 
 /**
  * Holder for Wires and required metadata for performing an invocation.
@@ -24,17 +27,20 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public class WireHolder {
-    private List<InvocationChainHolder> chains;
+    private ParameterEncoder parameterEncoder;
     private String callbackUri;
+    private List<InvocationChain> chains;
 
     /**
      * Constructor.
      *
-     * @param chains      InvocationChains contained by the wire
-     * @param callbackUri the callback URI or null if the wire is unidirectional
+     * @param chains           InvocationChains contained by the wire
+     * @param parameterEncoder the ParameterEncoder for encoding and decoding parameters
+     * @param callbackUri      the callback URI or null if the wire is unidirectional
      */
-    public WireHolder(List<InvocationChainHolder> chains, String callbackUri) {
+    public WireHolder(List<InvocationChain> chains, ParameterEncoder parameterEncoder, String callbackUri) {
         this.chains = chains;
+        this.parameterEncoder = parameterEncoder;
         this.callbackUri = callbackUri;
     }
 
@@ -42,7 +48,11 @@ public class WireHolder {
         return callbackUri;
     }
 
-    public List<InvocationChainHolder> getInvocationChains() {
+    public ParameterEncoder getParameterEncoder() {
+        return parameterEncoder;
+    }
+
+    public List<InvocationChain> getInvocationChains() {
         return chains;
     }
 }

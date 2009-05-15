@@ -17,27 +17,23 @@
 package org.fabric3.binding.net.runtime.http;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.net.provision.HttpWireSourceDefinition;
 import org.fabric3.binding.net.runtime.TransportService;
+import org.fabric3.binding.net.runtime.WireHolder;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -49,7 +45,7 @@ import org.fabric3.spi.wire.Wire;
 public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSourceDefinition> {
     private TransportService service;
     private ClassLoaderRegistry classLoaderRegistry;
-    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
+    private Map<String, ParameterEncoderFactory> formatterFactories = new HashMap<String, ParameterEncoderFactory>();
 
     public HttpSourceWireAttacher(@Reference TransportService service, @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.service = service;
@@ -57,8 +53,8 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
     }
 
     @Reference
-    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
-        this.serializerFactories = serializerFactories;
+    public void setFormatterFactories(Map<String, ParameterEncoderFactory> formatterFactories) {
+        this.formatterFactories = formatterFactories;
     }
 
     public void attachToSource(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
@@ -75,13 +71,13 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
         if (wireFormat == null) {
             wireFormat = "jaxb";
         }
-        SerializerFactory serializerFactory = serializerFactories.get(wireFormat);
-        if (serializerFactory == null) {
-            throw new WiringException("SerializerFactory not found for: " + wireFormat);
+        ParameterEncoderFactory formatterFactory = formatterFactories.get(wireFormat);
+        if (formatterFactory == null) {
+            throw new WiringException("WireFormatterFactory not found for: " + wireFormat);
         }
         URI id = source.getClassLoaderId();
         ClassLoader loader = classLoaderRegistry.getClassLoader(id);
-        WireHolder wireHolder = createWireHolder(wire, callbackUri, serializerFactory, loader);
+        WireHolder wireHolder = createWireHolder(wire, callbackUri, formatterFactory, loader);
         service.registerHttp(sourceUri, wireHolder);
     }
 
@@ -98,24 +94,15 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
         throw new UnsupportedOperationException();
     }
 
-    private WireHolder createWireHolder(Wire wire, String callbackUri, SerializerFactory serializerFactory, ClassLoader loader)
+    private WireHolder createWireHolder(Wire wire, String callbackUri, ParameterEncoderFactory formatterFactory, ClassLoader loader)
             throws WiringException {
-        List<InvocationChainHolder> invocationChainHolders = new ArrayList<InvocationChainHolder>();
-        for (InvocationChain chain : wire.getInvocationChains()) {
-            try {
-                PhysicalOperationDefinition operation = chain.getPhysicalOperation();
-                Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(operation, loader);
-                Serializer inputSerializer = serializerFactory.getInstance(inputTypes, Collections.<Class<?>>emptySet(), loader);
-                Set<Class<?>> returnTypes = OperationTypeHelper.loadOutputTypes(operation, loader);
-                Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(operation, loader);
-                Serializer outputSerializer = serializerFactory.getInstance(returnTypes, faultTypes, loader);
-                InvocationChainHolder holder = new InvocationChainHolder(chain, inputSerializer, outputSerializer);
-                invocationChainHolders.add(holder);
-            } catch (SerializationException e) {
-                throw new WiringException(e);
-            }
+        try {
+            List<InvocationChain> chains = wire.getInvocationChains();
+            ParameterEncoder formatter = formatterFactory.getInstance(wire, loader);
+            return new WireHolder(chains, formatter, callbackUri);
+        } catch (EncoderException e) {
+            throw new WiringException(e);
         }
-        return new WireHolder(invocationChainHolders, callbackUri);
     }
 
 }

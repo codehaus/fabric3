@@ -18,9 +18,8 @@ package org.fabric3.binding.net.runtime.http;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,12 +39,12 @@ import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -60,12 +59,14 @@ import org.fabric3.spi.wire.Wire;
 public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
     private long connectTimeout = 10000;
     private int retries = 0;
-    private String httpWireFormat = "jdk";
+    private String httpWireFormat = "jaxb";
     private ClassLoaderRegistry classLoaderRegistry;
     private NetBindingMonitor monitor;
     private ChannelFactory factory;
     private Timer timer;
-    private Map<String, SerializerFactory> serializerFactories;
+    private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
+    private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
+
 
     public HttpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor NetBindingMonitor monitor) {
         this.classLoaderRegistry = classLoaderRegistry;
@@ -73,8 +74,13 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
     }
 
     @Reference
-    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
-        this.serializerFactories = serializerFactories;
+    public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) {
+        this.parameterEncoderFactories = parameterEncoderFactories;
+    }
+
+    @Reference
+    public void setMessageFormatters(Map<String, MessageEncoder> messageFormatters) {
+        this.messageFormatters = messageFormatters;
     }
 
     @Property(required = false)
@@ -107,12 +113,12 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, HttpWireTargetDefinition target, Wire wire) throws WiringException {
-
+        ParameterEncoder parameterEncoder = getWireFormatter(target, wire);
         for (InvocationChain chain : wire.getInvocationChains()) {
             if (chain.getPhysicalOperation().isOneWay()) {
-                attachOneWay(target, chain);
+                attachOneWay(target, parameterEncoder, chain);
             } else {
-                attachRequestResponse(target, chain);
+                attachRequestResponse(target, parameterEncoder, chain);
             }
         }
     }
@@ -125,7 +131,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(HttpWireTargetDefinition target, InvocationChain chain) throws WiringException {
+    private void attachOneWay(HttpWireTargetDefinition target, ParameterEncoder parameterEncoder, InvocationChain chain) throws WiringException {
 
         HttpConfig config = target.getConfig();
         int retryCount = this.retries;
@@ -151,16 +157,18 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         String name = operation.getName();
 
+        MessageEncoder messageEncoder = messageFormatters.get(httpWireFormat);
+        if (messageEncoder == null) {
+            throw new WiringException("Message formatter not found:" + httpWireFormat);
+        }
 
-        Serializer headerSerializer = getHeaderSerializer();
-        Serializer inputSerializer = getInputSerializer(target, operation);
         HttpOneWayInterceptor interceptor =
-                new HttpOneWayInterceptor(path, name, address, headerSerializer, inputSerializer, bootstrap, retryCount, monitor);
+                new HttpOneWayInterceptor(path, name, address, messageEncoder, parameterEncoder, bootstrap, retryCount, monitor);
         chain.addInterceptor(interceptor);
     }
 
 
-    private void attachRequestResponse(HttpWireTargetDefinition target, InvocationChain chain) throws WiringException {
+    private void attachRequestResponse(HttpWireTargetDefinition target, ParameterEncoder parameterEncoder, InvocationChain chain) throws WiringException {
 
         HttpConfig config = target.getConfig();
         int retryCount = this.retries;
@@ -185,62 +193,29 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         // TODO support method overloading
         PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         String name = operation.getName();
-        Serializer headerSerializer = getHeaderSerializer();
-        Serializer inputSerializer = getInputSerializer(target, operation);
-        Serializer outputSerializer = getOutputSerializer(target, operation);
+        MessageEncoder messageEncoder = messageFormatters.get(httpWireFormat);
+        if (messageEncoder == null) {
+            throw new WiringException("Message formatter not found:" + httpWireFormat);
+        }
+
         HttpRequestResponseInterceptor interceptor =
-                new HttpRequestResponseInterceptor(path, name, headerSerializer, inputSerializer, outputSerializer, address, bootstrap, retryCount);
+                new HttpRequestResponseInterceptor(path, name, messageEncoder, parameterEncoder, address, bootstrap, retryCount);
         chain.addInterceptor(interceptor);
     }
 
-    private Serializer getHeaderSerializer() throws WiringException {
-        SerializerFactory headerSerializerFactory = serializerFactories.get(httpWireFormat);
-        if (headerSerializerFactory == null) {
-            throw new WiringException("Header serializer not found for: " + httpWireFormat);
-        }
-        try {
-            // TODO FIXME
-            ClassLoader loader = getClass().getClassLoader();
-            return headerSerializerFactory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), loader);
-        } catch (SerializationException e) {
-            throw new WiringException(e);
-        }
-    }
-
-    private Serializer getInputSerializer(HttpWireTargetDefinition target, PhysicalOperationDefinition operation) throws WiringException {
+    private ParameterEncoder getWireFormatter(HttpWireTargetDefinition target, Wire wire) throws WiringException {
         try {
             String wireFormat = target.getConfig().getWireFormat();
             if (wireFormat == null) {
-                wireFormat = "jaxb";
+                wireFormat = httpWireFormat;
             }
-            SerializerFactory messageSerializerFactory = serializerFactories.get(wireFormat);
-            if (messageSerializerFactory == null) {
-                throw new WiringException("Serializer not found for: " + wireFormat);
-            }
-            ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
-            Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(operation, loader);
-            return messageSerializerFactory.getInstance(inputTypes, Collections.<Class<?>>emptySet(), loader);
-        } catch (SerializationException e) {
-            throw new WiringException(e);
-        }
-
-    }
-
-    private Serializer getOutputSerializer(HttpWireTargetDefinition target, PhysicalOperationDefinition operation) throws WiringException {
-        try {
-            String wireFormat = target.getConfig().getWireFormat();
-            if (wireFormat == null) {
-                wireFormat = "jaxb";
-            }
-            SerializerFactory messageSerializerFactory = serializerFactories.get(wireFormat);
-            if (messageSerializerFactory == null) {
-                throw new WiringException("Serializer not found for: " + wireFormat);
+            ParameterEncoderFactory factory = parameterEncoderFactories.get(wireFormat);
+            if (factory == null) {
+                throw new WiringException("Wire format factory not found for: " + wireFormat);
             }
             ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
-            Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(operation, loader);
-            Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(operation, loader);
-            return messageSerializerFactory.getInstance(outputTypes, faultTypes, loader);
-        } catch (SerializationException e) {
+            return factory.getInstance(wire, loader);
+        } catch (EncoderException e) {
             throw new WiringException(e);
         }
 

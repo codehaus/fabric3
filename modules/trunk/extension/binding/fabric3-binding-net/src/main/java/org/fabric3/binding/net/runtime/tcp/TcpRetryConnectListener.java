@@ -16,6 +16,7 @@
  */
 package org.fabric3.binding.net.runtime.tcp;
 
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,10 +30,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
 import org.fabric3.binding.net.NetBindingMonitor;
-import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.binding.format.EncoderException;
 
 /**
  * Listens for a channel connection event for a TCP socket, retrying a specified number of times if the operation failed.
@@ -40,30 +38,20 @@ import org.fabric3.spi.invocation.WorkContext;
  * @version $Revision$ $Date$
  */
 public class TcpRetryConnectListener implements ChannelFutureListener {
-    private Message msg;
-    private String targetUri;
     private SocketAddress address;
-    private String operationName;
-    private Serializer serializer;
+    private byte[] serializedMessage;
     private ClientBootstrap bootstrap;
     private int maxRetry;
     private NetBindingMonitor monitor;
     private AtomicInteger retryCount;
-    private int estimatedLength = 1024;
 
-    public TcpRetryConnectListener(Message msg,
-                                   String targetUri,
+    public TcpRetryConnectListener(byte[] serializedMessage,
                                    SocketAddress address,
-                                   String operationName,
-                                   Serializer serializer,
                                    ClientBootstrap bootstrap,
                                    int maxRetry,
                                    NetBindingMonitor monitor) {
-        this.msg = msg;
-        this.targetUri = targetUri;
+        this.serializedMessage = serializedMessage;
         this.address = address;
-        this.operationName = operationName;
-        this.serializer = serializer;
         this.bootstrap = bootstrap;
         this.maxRetry = maxRetry;
         this.monitor = monitor;
@@ -85,30 +73,25 @@ public class TcpRetryConnectListener implements ChannelFutureListener {
             return;
         }
         // connection succeeded, write data
-
-        WorkContext workContext = msg.getWorkContext();
-        // set the target uri and operation names
-        workContext.setHeader(NetConstants.TARGET_URI, targetUri);
-        workContext.setHeader(NetConstants.OPERATION_NAME, operationName);
-        Object body = msg.getBody();
-        if (body != null) {
-            msg.setBody(serializer.serialize(byte[].class, body));
+        int size = serializedMessage.length;
+        try {
+            ChannelBufferFactory bufferFactory = channel.getConfig().getBufferFactory();
+            ChannelBuffer dynamicBuffer = ChannelBuffers.dynamicBuffer(size, bufferFactory);
+            ChannelBufferOutputStream bout = new ChannelBufferOutputStream(dynamicBuffer);
+            // write the length of the stream
+            bout.writeInt(size);
+            // write contents to the buffer
+            bout.write(serializedMessage);
+            bout.flush();
+            ChannelBuffer buffer = bout.buffer();
+            // write to the channel
+            ChannelFuture writeFuture = channel.write(buffer);
+            // set the retry listener
+            TcpRetryWriteListener listener = new TcpRetryWriteListener(buffer, maxRetry, monitor);
+            writeFuture.addListener(listener);
+        } catch (IOException e) {
+            throw new EncoderException(e);
         }
-        byte[] serialized = serializer.serialize(byte[].class, msg);
-
-        ChannelBufferFactory bufferFactory = channel.getConfig().getBufferFactory();
-        ChannelBuffer dynamicBuffer = ChannelBuffers.dynamicBuffer(serialized.length, bufferFactory);
-        ChannelBufferOutputStream bout = new ChannelBufferOutputStream(dynamicBuffer);
-
-        // write the length of the stream
-        bout.writeInt(serialized.length);
-        // write contents to the buffer
-        bout.write(serialized);
-        bout.flush();
-        ChannelBuffer buffer = bout.buffer();
-        // write to the channel
-        ChannelFuture writeFuture = channel.write(buffer);
-        writeFuture.addListener(new TcpRetryWriteListener(buffer, maxRetry, monitor));
     }
 
 }

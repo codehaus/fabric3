@@ -33,8 +33,6 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpChunk;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONNECTION;
-import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_LENGTH;
-import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Values.CLOSE;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Values.KEEP_ALIVE;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -43,29 +41,29 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_0;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-import org.fabric3.binding.net.provision.NetConstants;
-import static org.fabric3.binding.net.provision.NetConstants.OPERATION_NAME;
 import org.fabric3.binding.net.NetBindingMonitor;
+import static org.fabric3.binding.net.provision.NetConstants.OPERATION_NAME;
+import org.fabric3.binding.net.runtime.WireHolder;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ResponseEncodeCallback;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
 
 /**
  * Handles incoming requests from an HTTP channel. This is placed on the service side of an invocation chain.
  */
 @ChannelPipelineCoverage("one")
 public class HttpRequestHandler extends SimpleChannelHandler {
-    private Serializer headerSerializer;
+    private MessageEncoder messageEncoder;
     private NetBindingMonitor monitor;
-    private String contentType = "text/plain; charset=UTF-8";
     private volatile HttpRequest request;
     private volatile boolean readingChunks;
     private Map<String, WireHolder> pathToHolders = new ConcurrentHashMap<String, WireHolder>();
@@ -74,11 +72,11 @@ public class HttpRequestHandler extends SimpleChannelHandler {
     /**
      * Constructor.
      *
-     * @param headerSerializer serialzes header information
-     * @param monitor          event monitor
+     * @param messageEncoder the message encoder
+     * @param monitor        event monitor
      */
-    public HttpRequestHandler(Serializer headerSerializer, NetBindingMonitor monitor) {
-        this.headerSerializer = headerSerializer;
+    public HttpRequestHandler(MessageEncoder messageEncoder, NetBindingMonitor monitor) {
+        this.messageEncoder = messageEncoder;
         this.monitor = monitor;
     }
 
@@ -127,53 +125,64 @@ public class HttpRequestHandler extends SimpleChannelHandler {
     }
 
     @SuppressWarnings({"unchecked"})
-    private void invoke(HttpRequest request, String content, MessageEvent event) throws SerializationException, ClassNotFoundException {
-        WireHolder holder = pathToHolders.get(request.getUri());
-        if (holder == null) {
+    private void invoke(HttpRequest request, String content, MessageEvent event) throws EncoderException, ClassNotFoundException {
+        WireHolder wireHolder = pathToHolders.get(request.getUri());
+        if (wireHolder == null) {
             throw new AssertionError("Holder not found for request:" + request.getUri());
         }
-        String callbackUri = holder.getCallbackUri();
-        String routing = request.getHeader(NetConstants.ROUTING);
-        Message message = new MessageImpl();
-        WorkContext context = new WorkContext();
-        message.setWorkContext(context);
-        if (routing != null) {
-            List<CallFrame> frames = headerSerializer.deserialize(List.class, Base64.decode(routing));
-            context.addCallFrames(frames);
-            CallFrame previous = context.peekCallFrame();
-            // Copy correlation and conversation information from incoming frame to new frame
-            // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
-            // bidirectional service
-            Serializable id = previous.getCorrelationId(Serializable.class);
-            ConversationContext conversationContext = previous.getConversationContext();
-            F3Conversation conversation = previous.getConversation();
-            CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
-            context.addCallFrame(frame);
-        }
-        InvocationChainHolder chainHolder = selectOperation(request, holder);
-        Interceptor interceptor = chainHolder.getChain().getHeadInterceptor();
-        Serializer inputSerializer = chainHolder.getInputSerializer();
-        Serializer outputSerializer = chainHolder.getOutputSerializer();
-        Object body = inputSerializer.deserialize(Object.class, content);
+
+        HttpRequestContext context = new HttpRequestContext(request);
+        Message message = messageEncoder.decode(content, context);
+
+        WorkContext workContext = message.getWorkContext();
+        String callbackUri = wireHolder.getCallbackUri();
+        CallFrame previous = workContext.peekCallFrame();
+        // Copy correlation and conversation information from incoming frame to new frame
+        // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
+        // bidirectional service
+        Serializable id = previous.getCorrelationId(Serializable.class);
+        ConversationContext conversationContext = previous.getConversationContext();
+        F3Conversation conversation = previous.getConversation();
+        CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
+        workContext.addCallFrame(frame);
+
+        ParameterEncoder parameterEncoder = wireHolder.getParameterEncoder();
+        String operationName = request.getHeader(OPERATION_NAME);
+
+        String header = request.getHeader(CONNECTION);
+
+        Object body = parameterEncoder.decode(operationName, (String) message.getBody());
         if (body == null) {
-            // TODO distinguish passing null objects
             // no params
             message.setBody(null);
         } else {
             message.setBody(new Object[]{body});
         }
+
+        InvocationChain chain = selectOperation(operationName, wireHolder);
+        Interceptor interceptor = chain.getHeadInterceptor();
         Message response = interceptor.invoke(message);
-        writeResponse(event, response, outputSerializer);
+        boolean close = CLOSE.equalsIgnoreCase(header) || request.getProtocolVersion().equals(HTTP_1_0) && !KEEP_ALIVE.equalsIgnoreCase(header);
+        writeResponse(operationName, response, wireHolder, event, close);
+
+        // reuse buffer
+        requestContent.setLength(0);
     }
 
-    private InvocationChainHolder selectOperation(HttpRequest request, WireHolder wireHolder) {
-        List<InvocationChainHolder> chainHolders = wireHolder.getInvocationChains();
-        String operationName = request.getHeader(OPERATION_NAME);
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+        monitor.error(e.getCause());
+        e.getChannel().close();
+    }
+
+    private InvocationChain selectOperation(String operationName, WireHolder wireHolder) {
+        List<InvocationChain> chains = wireHolder.getInvocationChains();
         if (operationName != null) {
-            for (InvocationChainHolder chainHolder : chainHolders) {
-                PhysicalOperationDefinition definition = chainHolder.getChain().getPhysicalOperation();
+            for (InvocationChain chain : chains) {
+                PhysicalOperationDefinition definition = chain.getPhysicalOperation();
                 if (definition.getName().equals(operationName)) {
-                    return chainHolder;
+                    return chain;
                 }
             }
         }
@@ -181,57 +190,34 @@ public class HttpRequestHandler extends SimpleChannelHandler {
         throw new AssertionError();
     }
 
-
-    private void writeResponse(MessageEvent event, Message msg, Serializer serializer) {
-        // reuse buffer
-        requestContent.setLength(0);
-
-        // Determine if the connection should be closed
-        String header = request.getHeader(CONNECTION);
-        boolean close = CLOSE.equalsIgnoreCase(header) || request.getProtocolVersion().equals(HTTP_1_0) && !KEEP_ALIVE.equalsIgnoreCase(header);
-
+    private void writeResponse(String operationName, Message msg, WireHolder wireHolder, MessageEvent event, boolean close) {
         HttpResponseStatus status;
-        String body;
         if (msg.isFault()) {
             // Return a 500 response
             status = HttpResponseStatus.INTERNAL_SERVER_ERROR;
-            try {
-                Throwable throwable = (Throwable) msg.getBody();
-                body = serializer.serializeFault(String.class, throwable);
-            } catch (SerializationException e) {
-                // FIXME
-                monitor.error(e);
-                return;
-            }
         } else {
             status = HttpResponseStatus.OK;
-            try {
-                Object content = msg.getBody();
-                body = serializer.serializeResponse(String.class, content);
-            } catch (SerializationException e) {
-                // FIXME
-                monitor.error(e);
-                return;
-            }
         }
         HttpResponse response = new DefaultHttpResponse(HTTP_1_1, status);
+        try {
+            ParameterEncoder parameterEncoder = wireHolder.getParameterEncoder();
+            String serialized = parameterEncoder.encodeText(msg);
+            msg.setBody(serialized);
+            ResponseEncodeCallback callback = new HttpResponseCallback(response);
+            String serializedMessage = messageEncoder.encodeResponseText(operationName, msg, callback);
 
-        ChannelBuffer buf = ChannelBuffers.copiedBuffer(body, "UTF-8");
-        response.setContent(buf);
-        response.setHeader(CONTENT_LENGTH, String.valueOf(buf.readableBytes()));
-        response.setHeader(CONTENT_TYPE, contentType);
+            ChannelBuffer buf = ChannelBuffers.copiedBuffer(serializedMessage, "UTF-8");
+            response.setContent(buf);
 
-        // Write the response
-        ChannelFuture future = event.getChannel().write(response);
-        if (close) {
-            future.addListener(ChannelFutureListener.CLOSE);
+            // Write the response
+            ChannelFuture future = event.getChannel().write(response);
+            if (close) {
+                future.addListener(ChannelFutureListener.CLOSE);
+            }
+
+        } catch (EncoderException e) {
+            monitor.error(e);
         }
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-        monitor.error(e.getCause());
-        e.getChannel().close();
     }
 
 

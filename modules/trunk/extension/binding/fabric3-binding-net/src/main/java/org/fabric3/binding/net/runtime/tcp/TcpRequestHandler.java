@@ -18,6 +18,7 @@ package org.fabric3.binding.net.runtime.tcp;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,8 +35,11 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 
 import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.binding.net.runtime.WireHolder;
+import org.fabric3.spi.binding.format.HeaderContext;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ResponseEncodeCallback;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
@@ -44,27 +48,28 @@ import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Handles incoming requests from a TCP channel. This is placed on the service side of an invocation chain.
  */
 @ChannelPipelineCoverage("one")
 public class TcpRequestHandler extends SimpleChannelHandler {
-    private Serializer serializer;
+    private static final HeaderContext CONTEXT = new TcpHeaderContext();
+    private static final ResponseEncodeCallback CALLBACK = new TcpResponseCallback();
     private NetBindingMonitor monitor;
-    private Map<String, Holder> wires = new ConcurrentHashMap<String, Holder>();
+    private Map<String, WireHolder> wires = new ConcurrentHashMap<String, WireHolder>();
+    private MessageEncoder messageEncoder;
     private long maxObjectSize;
 
     /**
      * Constructor.
      *
-     * @param serializer    serializes messages
-     * @param maxObjectSize the maximum object size to handle in bytes. Objects larger than this will be rejected.
-     * @param monitor       the event monitor
+     * @param messageEncoder the encoder for decoding message envelopes
+     * @param maxObjectSize  the maximum object size to handle in bytes. Objects larger than this will be rejected.
+     * @param monitor        the event monitor
      */
-    public TcpRequestHandler(Serializer serializer, long maxObjectSize, NetBindingMonitor monitor) {
-        this.serializer = serializer;
+    public TcpRequestHandler(MessageEncoder messageEncoder, long maxObjectSize, NetBindingMonitor monitor) {
+        this.messageEncoder = messageEncoder;
         this.maxObjectSize = maxObjectSize;
         this.monitor = monitor;
     }
@@ -72,12 +77,10 @@ public class TcpRequestHandler extends SimpleChannelHandler {
     /**
      * Registers a wire for a request path, i.e. the path of the service URI.
      *
-     * @param path        the path part of the service URI
-     * @param callbackUri the callback URI associated with the wire or null if it is unidirectional
-     * @param wire        the wire
+     * @param path   the path part of the service URI
+     * @param holder the wire holder
      */
-    public void register(String path, String callbackUri, Wire wire) {
-        Holder holder = new Holder(callbackUri, wire);
+    public void register(String path, WireHolder holder) {
         wires.put(path, holder);
     }
 
@@ -116,8 +119,9 @@ public class TcpRequestHandler extends SimpleChannelHandler {
         byte[] bytes = new byte[dataLen];
         stream.read(bytes);
 
-        // deserialize the message envelope
-        Message msg = serializer.deserializeMessage(bytes);
+        // decode the message  and its contents
+        Message msg = messageEncoder.decode(bytes, CONTEXT);
+
         WorkContext workContext = msg.getWorkContext();
         String targetUri = workContext.getHeader(String.class, NetConstants.TARGET_URI);
         if (targetUri == null) {
@@ -129,11 +133,11 @@ public class TcpRequestHandler extends SimpleChannelHandler {
             // programming error
             throw new AssertionError("Operation not specified in message");
         }
-        Holder holder = wires.get(targetUri);
+        WireHolder holder = wires.get(targetUri);
         if (holder == null) {
             throw new AssertionError("Holder not found for request:" + targetUri);
         }
-        Wire wire = holder.getWire();
+
         String callbackUri = holder.getCallbackUri();
         CallFrame previous = workContext.peekCallFrame();
         // Copy correlation and conversation information from incoming frame to new frame
@@ -145,20 +149,37 @@ public class TcpRequestHandler extends SimpleChannelHandler {
         CallFrame frame = new CallFrame(callbackUri, id, conversation, conversationContext);
         workContext.addCallFrame(frame);
 
-        // deserialize the body
-        Object body = msg.getBody();
-        if (body != null) {
-            Object deserialized = serializer.deserialize(Object.class, body);
-            msg.setBody(deserialized);
+        ParameterEncoder parameterEncoder = holder.getParameterEncoder();
+        Object deserialized = parameterEncoder.decode(operationName, (byte[]) msg.getBody());
+        if (deserialized == null) {
+            // no params
+            msg.setBody(null);
+        } else {
+            msg.setBody(new Object[]{deserialized});
+
         }
-        Interceptor interceptor = selectOperation(operationName, wire);
+
+        // invoke the service
+        List<InvocationChain> chains = holder.getInvocationChains();
+        Interceptor interceptor = selectOperation(operationName, chains);
         Message response = interceptor.invoke(msg);
-        writeResponse(event, response);
+
+        // write out the response
+        byte[] serialized = parameterEncoder.encodeBytes(response);
+        if (response.isFault()) {
+            response.setBodyWithFault(serialized);
+        } else {
+            response.setBody(serialized);
+        }
+        byte[] serializedMessage = messageEncoder.encodeResponseBytes(operationName, response, CALLBACK);
+        ChannelBuffer responseBuffer = ChannelBuffers.wrappedBuffer(serializedMessage);
+        ChannelFuture future = event.getChannel().write(responseBuffer);
+        future.addListener(ChannelFutureListener.CLOSE);
     }
 
-    private Interceptor selectOperation(String operationName, Wire wire) {
+    private Interceptor selectOperation(String operationName, List<InvocationChain> chains) {
         InvocationChain chain = null;
-        for (InvocationChain invocationChain : wire.getInvocationChains()) {
+        for (InvocationChain invocationChain : chains) {
             PhysicalOperationDefinition definition = invocationChain.getPhysicalOperation();
             if (definition.getName().equals(operationName)) {
                 chain = invocationChain;
@@ -170,36 +191,35 @@ public class TcpRequestHandler extends SimpleChannelHandler {
         throw new AssertionError("Invalid operation name: " + operationName);
     }
 
-
-    private void writeResponse(MessageEvent event, Message msg) throws SerializationException {
-        byte[] serialized = serializer.serializeResponse(byte[].class, msg);
-        ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(serialized);
-        ChannelFuture future = event.getChannel().write(buffer);
-        future.addListener(ChannelFutureListener.CLOSE);
-    }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         monitor.error(e.getCause());
         e.getChannel().close();
     }
 
-    private class Holder {
-        private String callbackUri;
-        private Wire wire;
+    private static class TcpHeaderContext implements HeaderContext {
 
-        public Holder(String callbackUri, Wire wire) {
-            this.callbackUri = callbackUri;
-            this.wire = wire;
+        public long getContentLength() {
+            throw new UnsupportedOperationException();
         }
 
-
-        public String getCallbackUri() {
-            return callbackUri;
+        public String getOperationName() {
+            throw new UnsupportedOperationException();
         }
 
-        public Wire getWire() {
-            return wire;
+        public String getRoutingText() {
+            throw new UnsupportedOperationException();
+        }
+
+        public byte[] getRoutingBytes() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private static class TcpResponseCallback implements ResponseEncodeCallback {
+
+        public void encodeContentLengthHeader(long length) {
+            // no-op
         }
     }
 

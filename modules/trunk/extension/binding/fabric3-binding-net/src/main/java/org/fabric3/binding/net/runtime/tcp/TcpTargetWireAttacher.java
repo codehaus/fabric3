@@ -18,10 +18,8 @@ package org.fabric3.binding.net.runtime.tcp;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,12 +39,12 @@ import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.binding.net.provision.TcpWireTargetDefinition;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -64,8 +62,10 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
     private NetBindingMonitor monitor;
     private ChannelFactory factory;
     private Timer timer;
-    private String tcpWireFormat = "jdk";
-    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
+    private String tcpWireFormat = "jdk.wrapped";
+    private String tcpMessageFormat = "jdk.wrapped";
+    private Map<String, ParameterEncoderFactory> formatterFactories = new HashMap<String, ParameterEncoderFactory>();
+    private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
     private ClassLoaderRegistry classLoaderRegistry;
 
     public TcpTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Monitor NetBindingMonitor monitor) {
@@ -74,8 +74,13 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
     }
 
     @Reference
-    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
-        this.serializerFactories = serializerFactories;
+    public void setFormatterFactories(Map<String, ParameterEncoderFactory> formatterFactories) {
+        this.formatterFactories = formatterFactories;
+    }
+
+    @Reference
+    public void setMessageFormatters(Map<String, MessageEncoder> messageFormatters) {
+        this.messageFormatters = messageFormatters;
     }
 
     @Property(required = false)
@@ -86,6 +91,11 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
     @Property(required = false)
     public void setTcpWireFormat(String tcpWireFormat) {
         this.tcpWireFormat = tcpWireFormat;
+    }
+
+    @Property(required = false)
+    public void setTcpMessageFormat(String tcpMessageFormat) {
+        this.tcpMessageFormat = tcpMessageFormat;
     }
 
     @Property(required = false)
@@ -108,12 +118,21 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, TcpWireTargetDefinition target, Wire wire) throws WiringException {
-
+        String wireFormat = target.getConfig().getWireFormat();
+        if (wireFormat == null) {
+            wireFormat = tcpWireFormat;
+        }
+        MessageEncoder messageEncoder = messageFormatters.get(tcpMessageFormat);
+        if (messageEncoder == null) {
+            throw new WiringException("Message formatter not found:" + tcpMessageFormat);
+        }
+        ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
+        ParameterEncoder parameterEncoder = getWireFormatter(wireFormat, wire, loader);
         for (InvocationChain chain : wire.getInvocationChains()) {
             if (chain.getPhysicalOperation().isOneWay()) {
-                attachOneWay(target, chain);
+                attachOneWay(target, chain, messageEncoder, parameterEncoder);
             } else {
-                attachRequestResponse(target, chain);
+                attachRequestResponse(target, chain, messageEncoder, parameterEncoder);
             }
         }
     }
@@ -126,7 +145,8 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(TcpWireTargetDefinition target, InvocationChain chain) throws WiringException {
+    private void attachOneWay(TcpWireTargetDefinition target, InvocationChain chain, MessageEncoder messageEncoder, ParameterEncoder parameterEncoder)
+            throws WiringException {
         TcpConfig config = target.getConfig();
         int retryCount = this.retries;
         if (config.getNumberOfRetries() > -1) {
@@ -152,12 +172,15 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         PhysicalOperationDefinition operation = chain.getPhysicalOperation();
         String name = operation.getName();
 
-        Serializer serializer = getMessageSerializer(target, operation);
-        TcpOneWayInterceptor interceptor = new TcpOneWayInterceptor(path, name, address, serializer, bootstrap, retryCount, monitor);
+        TcpOneWayInterceptor interceptor =
+                new TcpOneWayInterceptor(path, name, address, messageEncoder, parameterEncoder, bootstrap, retryCount, monitor);
         chain.addInterceptor(interceptor);
     }
 
-    private void attachRequestResponse(TcpWireTargetDefinition target, InvocationChain chain) throws WiringException {
+    private void attachRequestResponse(TcpWireTargetDefinition target,
+                                       InvocationChain chain,
+                                       MessageEncoder messageEncoder,
+                                       ParameterEncoder parameterEncoder) throws WiringException {
         TcpConfig config = target.getConfig();
         int retryCount = this.retries;
         if (config.getNumberOfRetries() > -1) {
@@ -171,8 +194,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
 
         ClientBootstrap bootstrap = new ClientBootstrap(factory);
         PhysicalOperationDefinition operation = chain.getPhysicalOperation();
-        Serializer serializer = getMessageSerializer(target, operation);
-        TcpResponseHandler handler = new TcpResponseHandler(serializer, connectTimeout, monitor);
+        TcpResponseHandler handler = new TcpResponseHandler(messageEncoder, parameterEncoder, connectTimeout, monitor);
         TcpPipelineFactory pipeline = new TcpPipelineFactory(handler, timer, timeout);
         bootstrap.setPipelineFactory(pipeline);
 
@@ -182,24 +204,19 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         InetSocketAddress address = new InetSocketAddress(uri.getHost(), uri.getPort());
         // TODO support method overloading
         String name = operation.getName();
-        TcpRequestResponseInterceptor interceptor = new TcpRequestResponseInterceptor(path, name, serializer, address, bootstrap, retryCount);
+        TcpRequestResponseInterceptor interceptor =
+                new TcpRequestResponseInterceptor(path, name, messageEncoder, parameterEncoder, address, bootstrap, retryCount);
         chain.addInterceptor(interceptor);
     }
 
-    private Serializer getMessageSerializer(TcpWireTargetDefinition target, PhysicalOperationDefinition operation) throws WiringException {
+    private ParameterEncoder getWireFormatter(String wireFormat, Wire wire, ClassLoader loader) throws WiringException {
         try {
-            String wireFormat = target.getConfig().getWireFormat();
-            if (wireFormat == null) {
-                wireFormat = tcpWireFormat;
+            ParameterEncoderFactory factory = formatterFactories.get(wireFormat);
+            if (factory == null) {
+                throw new WiringException("Wire formatter not found for: " + wireFormat);
             }
-            SerializerFactory messageSerializerFactory = serializerFactories.get(wireFormat);
-            if (messageSerializerFactory == null) {
-                throw new WiringException("Serializer not found for: " + wireFormat);
-            }
-            ClassLoader loader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
-            Set<Class<?>> types = OperationTypeHelper.loadInParameterTypes(operation, loader);
-            return messageSerializerFactory.getInstance(types, Collections.<Class<?>>emptySet(), loader);
-        } catch (SerializationException e) {
+            return factory.getInstance(wire, loader);
+        } catch (EncoderException e) {
             throw new WiringException(e);
         }
 

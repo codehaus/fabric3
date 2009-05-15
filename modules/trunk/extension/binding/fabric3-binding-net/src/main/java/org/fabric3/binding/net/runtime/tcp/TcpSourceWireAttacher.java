@@ -17,15 +17,24 @@
 package org.fabric3.binding.net.runtime.tcp;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.net.provision.TcpWireSourceDefinition;
 import org.fabric3.binding.net.runtime.TransportService;
+import org.fabric3.binding.net.runtime.WireHolder;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -35,10 +44,19 @@ import org.fabric3.spi.wire.Wire;
  */
 public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDefinition> {
     private TransportService service;
+    private Map<String, ParameterEncoderFactory> formatterFactories = new HashMap<String, ParameterEncoderFactory>();
+    private ClassLoaderRegistry classLoaderRegistry;
 
-    public TcpSourceWireAttacher(@Reference TransportService service) {
+    public TcpSourceWireAttacher(@Reference TransportService service, @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.service = service;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
+
+    @Reference
+    public void setFormatterFactories(Map<String, ParameterEncoderFactory> formatterFactories) {
+        this.formatterFactories = formatterFactories;
+    }
+
 
     public void attachToSource(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
         URI uri = source.getUri();
@@ -50,7 +68,18 @@ public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDe
         if (target.getCallbackUri() != null) {
             callbackUri = target.getCallbackUri().toString();
         }
-        service.registerTcp(sourceUri, callbackUri, wire);
+        String wireFormat = source.getConfig().getWireFormat();
+        if (wireFormat == null) {
+            wireFormat = "jdk.wrapped";
+        }
+        ParameterEncoderFactory formatterFactory = formatterFactories.get(wireFormat);
+        if (formatterFactory == null) {
+            throw new WiringException("WireFormatterFactory not found for: " + wireFormat);
+        }
+        URI id = source.getClassLoaderId();
+        ClassLoader loader = classLoaderRegistry.getClassLoader(id);
+        WireHolder wireHolder = createWireHolder(wire, callbackUri, formatterFactory, loader);
+        service.registerTcp(sourceUri, wireHolder);
     }
 
     public void detachFromSource(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
@@ -66,5 +95,15 @@ public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDe
         throw new UnsupportedOperationException();
     }
 
+    private WireHolder createWireHolder(Wire wire, String callbackUri, ParameterEncoderFactory formatterFactory, ClassLoader loader)
+            throws WiringException {
+        try {
+            List<InvocationChain> chains = wire.getInvocationChains();
+            ParameterEncoder formatter = formatterFactory.getInstance(wire, loader);
+            return new WireHolder(chains, formatter, callbackUri);
+        } catch (EncoderException e) {
+            throw new WiringException(e);
+        }
+    }
 
 }

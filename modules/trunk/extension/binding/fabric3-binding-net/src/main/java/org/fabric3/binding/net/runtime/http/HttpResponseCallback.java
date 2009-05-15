@@ -16,34 +16,30 @@
  */
 package org.fabric3.binding.net.runtime.http;
 
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.wire.InvocationChain;
+import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_LENGTH;
+import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
+import org.jboss.netty.handler.codec.http.HttpResponse;
+
+import org.fabric3.spi.binding.format.ResponseEncodeCallback;
 
 /**
- * Holder for an InvocationChain and the serializers necessary to dispatch an invocation or return value.
+ * ResponseEncodeCallback for an HTTP response.
  *
  * @version $Revision$ $Date$
  */
-public class InvocationChainHolder {
-    private InvocationChain chain;
-    private Serializer inputSerializer;
-    private Serializer outputSerializer;
+public class HttpResponseCallback implements ResponseEncodeCallback {
+    private HttpResponse response;
+    // TODO add as callback
+    private String contentType = "text/plain; charset=UTF-8";
 
-    public InvocationChainHolder(InvocationChain chain, Serializer inputSerializer, Serializer outputSerializer) {
-        this.chain = chain;
-        this.inputSerializer = inputSerializer;
-        this.outputSerializer = outputSerializer;
+    public HttpResponseCallback(HttpResponse response) {
+        this.response = response;
     }
 
-    public InvocationChain getChain() {
-        return chain;
+    public void encodeContentLengthHeader(long length) {
+        response.setHeader(CONTENT_LENGTH, String.valueOf(length));
+        // TODO FIXME make a callback event
+        response.setHeader(CONTENT_TYPE, contentType);
     }
 
-    public Serializer getInputSerializer() {
-        return inputSerializer;
-    }
-
-    public Serializer getOutputSerializer() {
-        return outputSerializer;
-    }
 }

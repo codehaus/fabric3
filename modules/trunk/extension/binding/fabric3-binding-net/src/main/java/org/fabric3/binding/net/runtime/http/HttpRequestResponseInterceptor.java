@@ -17,7 +17,6 @@
 package org.fabric3.binding.net.runtime.http;
 
 import java.net.SocketAddress;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
@@ -26,19 +25,16 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.oasisopen.sca.ServiceRuntimeException;
 import org.oasisopen.sca.ServiceUnavailableException;
 
-import org.fabric3.binding.net.provision.NetConstants;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -48,42 +44,38 @@ import org.fabric3.spi.wire.Interceptor;
  */
 public class HttpRequestResponseInterceptor implements Interceptor {
     private String operationName;
-    private Serializer headerSerializer;
-    private Serializer inputSerializer;
-    private Serializer outputSerializer;
+    private ParameterEncoder parameterEncoder;
     private ClientBootstrap boostrap;
     private SocketAddress address;
     private int maxRetry;
     private String path;
 
     private AtomicInteger retryCount;
+    private MessageEncoder messageEncoder;
 
     /**
      * Constructor.
      *
      * @param path             the path part of the target service URI
      * @param operationName    the name of the operation being invoked
-     * @param headerSerializer serializes header information
-     * @param inputSerializer  serializes input parameters
-     * @param outputSerializer serializes output parameters
+     * @param messageEncoder   the message envelope encoder
+     * @param parameterEncoder the parameter encoder
      * @param address          the target service address
      * @param boostrap         the Netty ClientBootstrap instance for sending invocations
      * @param maxRetry         the number of times to retry an operation
      */
     public HttpRequestResponseInterceptor(String path,
                                           String operationName,
-                                          Serializer headerSerializer,
-                                          Serializer inputSerializer,
-                                          Serializer outputSerializer,
+                                          MessageEncoder messageEncoder,
+                                          ParameterEncoder parameterEncoder,
                                           SocketAddress address,
                                           ClientBootstrap boostrap,
                                           int maxRetry) {
         this.path = path;
         // TODO support name mangling
         this.operationName = operationName;
-        this.headerSerializer = headerSerializer;
-        this.inputSerializer = inputSerializer;
-        this.outputSerializer = outputSerializer;
+        this.messageEncoder = messageEncoder;
+        this.parameterEncoder = parameterEncoder;
         this.boostrap = boostrap;
         this.address = address;
         this.maxRetry = maxRetry;
@@ -104,66 +96,51 @@ public class HttpRequestResponseInterceptor implements Interceptor {
             }
         }
 
-        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, path);
-
-        request.addHeader(NetConstants.OPERATION_NAME, operationName);
-
-        List<CallFrame> stack = msg.getWorkContext().getCallFrameStack();
-        if (!stack.isEmpty()) {
-            try {
-                String serialized = headerSerializer.serialize(String.class, stack);
-                request.addHeader(NetConstants.ROUTING, serialized);
-            } catch (SerializationException e) {
-                // TODO this message is not thrown to the client
-                throw new ServiceRuntimeException(e);
-            }
-        }
-        Object body = msg.getBody();
         try {
-            String str;
-            if (body != null) {
-                if (body.getClass().isArray()) {
-                    Object[] payload = (Object[]) body;
-                    if (payload.length > 1) {
-                        throw new UnsupportedOperationException("Multiple paramters not supported");
-                    }
-                    str = inputSerializer.serialize(String.class, payload[0]);
-                } else {
-                    str = inputSerializer.serialize(String.class, body);
-                }
+            String serialized = parameterEncoder.encodeText(msg);
+            if (msg.isFault()) {
+                msg.setBodyWithFault(serialized);
             } else {
-                str = inputSerializer.serialize(String.class, null);
+                msg.setBody(serialized);
             }
-            request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(str.length()));
-            ChannelBuffer buf = ChannelBuffers.copiedBuffer(str, "UTF-8");
+
+            HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, path);
+            HttpCallback callback = new HttpCallback(request);
+            String message = messageEncoder.encodeText(operationName, msg, callback);
+            ChannelBuffer buf = ChannelBuffers.copiedBuffer(message, "UTF-8");
             request.setContent(buf);
-        } catch (SerializationException e) {
+
+            channel.write(request);
+        } catch (EncoderException e) {
             throw new ServiceRuntimeException(e);
         }
-        channel.write(request);
+
+
         HttpResponseHandler handler = (HttpResponseHandler) channel.getPipeline().getLast();
 
         // block on the response
         Response response = handler.getResponse();
 
         channel.close();
-        MessageImpl ret = new MessageImpl();
         if (response.getCode() >= 400) {
             try {
-                Throwable deserialized = outputSerializer.deserializeFault(response.getContent());
+                Message ret = messageEncoder.decodeFault(response.getContent());
+                Throwable deserialized = parameterEncoder.decodeFault(operationName, (String) ret.getBody());
                 ret.setBodyWithFault(deserialized);
-            } catch (SerializationException e) {
+                return ret;
+            } catch (EncoderException e) {
                 throw new ServiceRuntimeException(e);
             }
         } else {
             try {
-                Object deserialized = outputSerializer.deserializeResponse(Object.class, response.getContent());
+                Message ret = messageEncoder.decodeResponse(response.getContent());
+                Object deserialized = parameterEncoder.decodeResponse(operationName, (String) ret.getBody());
                 ret.setBody(deserialized);
-            } catch (SerializationException e) {
+                return ret;
+            } catch (EncoderException e) {
                 throw new ServiceRuntimeException(e);
             }
         }
-        return ret;
     }
 
     public void setNext(Interceptor next) {

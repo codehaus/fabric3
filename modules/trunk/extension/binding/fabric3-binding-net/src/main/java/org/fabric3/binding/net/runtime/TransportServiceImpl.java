@@ -17,7 +17,6 @@
 package org.fabric3.binding.net.runtime;
 
 import java.net.InetSocketAddress;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,15 +36,11 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.runtime.http.HttpRequestHandler;
 import org.fabric3.binding.net.runtime.http.HttpServerPipelineFactory;
-import org.fabric3.binding.net.runtime.http.WireHolder;
 import org.fabric3.binding.net.runtime.tcp.TcpPipelineFactory;
 import org.fabric3.binding.net.runtime.tcp.TcpRequestHandler;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
+import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Revision$ $Date$
@@ -53,6 +48,7 @@ import org.fabric3.spi.wire.Wire;
 public class TransportServiceImpl implements TransportService {
     private final WorkScheduler scheduler;
     private NetBindingMonitor monitor;
+    private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
     private long connectTimeout = 10000;
     private String ipAddress = "127.0.0.1";
@@ -60,12 +56,10 @@ public class TransportServiceImpl implements TransportService {
     private int httpPort = 8282;
     private int httpsPort = 8484;
     private int tcpPort = 8383;
-    private String httpWireFormat = "jdk";
-    private String tcpWireFormat = "jdk";
     private long maxObjectSize = 2000000;
-
-    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
-
+    private String tcpMessageFormat = "jdk.wrapped";
+    // FIXME HTTP message format should be part of WireHolder and created in source attacher, not here. However, for tcp, it is fixed here
+    private String httpMessageFormat = "jdk";
 
     private Timer timer;
     private ChannelFactory factory;
@@ -79,9 +73,9 @@ public class TransportServiceImpl implements TransportService {
         this.monitor = monitor;
     }
 
-    @Reference
-    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
-        this.serializerFactories = serializerFactories;
+    @Reference(required = false)
+    public void setMessageFormatters(Map<String, MessageEncoder> messageFormatters) {
+        this.messageFormatters = messageFormatters;
     }
 
     @Property(required = false)
@@ -110,18 +104,18 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Property(required = false)
-    public void setTcpWireFormat(String tcpWireFormat) {
-        this.tcpWireFormat = tcpWireFormat;
-    }
-
-    @Property(required = false)
-    public void setHttpWireFormat(String httpWireFormat) {
-        this.httpWireFormat = httpWireFormat;
-    }
-
-    @Property(required = false)
     public void setMaxObjectSize(long maxObjectSize) {
         this.maxObjectSize = maxObjectSize;
+    }
+
+    @Property(required = false)
+    public void setTcpMessageFormat(String tcpMessageFormat) {
+        this.tcpMessageFormat = tcpMessageFormat;
+    }
+
+    @Property(required = false)
+    public void setHttpMessageFormat(String httpMessageFormat) {
+        this.httpMessageFormat = httpMessageFormat;
     }
 
     @Init
@@ -159,11 +153,11 @@ public class TransportServiceImpl implements TransportService {
         monitor.httpEndpointProvisioned(ipAddress, httpPort, path);
     }
 
-    public void registerTcp(String path, String callbackUri, Wire wire) throws WiringException {
+    public void registerTcp(String path, WireHolder wireHolder) throws WiringException {
         if (tcpRequestHandler == null) {
             createTcpChannel();
         }
-        tcpRequestHandler.register(path, callbackUri, wire);
+        tcpRequestHandler.register(path, wireHolder);
         monitor.tcpEndpointProvisioned(ipAddress, tcpPort, path);
     }
 
@@ -179,8 +173,11 @@ public class TransportServiceImpl implements TransportService {
 
     private void createHttpChannel() throws WiringException {
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
-        Serializer serializer = getSerializer(httpWireFormat);
-        httpRequestHandler = new HttpRequestHandler(serializer, monitor);
+        MessageEncoder messageEncoder = messageFormatters.get(httpMessageFormat);
+        if (messageEncoder == null) {
+            throw new WiringException("Message formatter not found:" + httpMessageFormat);
+        }
+        httpRequestHandler = new HttpRequestHandler(messageEncoder, monitor);
         HttpServerPipelineFactory pipeline = new HttpServerPipelineFactory(httpRequestHandler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
@@ -196,8 +193,11 @@ public class TransportServiceImpl implements TransportService {
 
     private void createTcpChannel() throws WiringException {
         ServerBootstrap bootstrap = new ServerBootstrap(factory);
-        Serializer serializer = getSerializer(tcpWireFormat);
-        tcpRequestHandler = new TcpRequestHandler(serializer, maxObjectSize, monitor);
+        MessageEncoder messageEncoder = messageFormatters.get(tcpMessageFormat);
+        if (messageEncoder == null) {
+            throw new WiringException("Message formatter not found:" + tcpMessageFormat);
+        }
+        tcpRequestHandler = new TcpRequestHandler(messageEncoder, maxObjectSize, monitor);
         TcpPipelineFactory pipeline = new TcpPipelineFactory(tcpRequestHandler, timer, connectTimeout);
         bootstrap.setPipelineFactory(pipeline);
         bootstrap.setOption("child.tcpNoDelay", true);
@@ -211,17 +211,5 @@ public class TransportServiceImpl implements TransportService {
         monitor.startTcpListener(tcpPort);
     }
 
-    //FIXME get rid of this method and replace with header serializer type
-    private Serializer getSerializer(String wireFormat) throws WiringException {
-        SerializerFactory factory = serializerFactories.get(wireFormat);
-        if (factory == null) {
-            throw new WiringException("Serializer not found for: " + wireFormat);
-        }
-        try {
-            return factory.getInstance(Collections.<Class<?>>emptySet(), Collections.<Class<?>>emptySet(), getClass().getClassLoader());
-        } catch (SerializationException e) {
-            throw new WiringException(e);
-        }
 
-    }
 }

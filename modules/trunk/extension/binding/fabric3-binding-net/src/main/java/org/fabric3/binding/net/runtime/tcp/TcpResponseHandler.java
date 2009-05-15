@@ -29,7 +29,10 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.net.NetBindingMonitor;
-import org.fabric3.spi.binding.serializer.Serializer;
+import org.fabric3.binding.net.provision.NetConstants;
+import org.fabric3.spi.binding.format.HeaderContext;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.Message;
 
 /**
@@ -38,15 +41,18 @@ import org.fabric3.spi.invocation.Message;
  */
 @ChannelPipelineCoverage("one")
 public class TcpResponseHandler extends SimpleChannelHandler {
-    private Serializer serializer;
+    private static final HeaderContext CONTEXT = new TcpResponseHeaderContext();
+    private MessageEncoder messageEncoder;
+    private ParameterEncoder parameterEncoder;
     private long responseWait;
     private NetBindingMonitor monitor;
 
     // queue used by clients to block on awaiting a response
     private BlockingQueue<Message> responseQueue = new LinkedBlockingQueue<Message>();
 
-    public TcpResponseHandler(Serializer serializer, long responseWait, NetBindingMonitor monitor) {
-        this.serializer = serializer;
+    public TcpResponseHandler(MessageEncoder messageEncoder, ParameterEncoder parameterEncoder, long responseWait, NetBindingMonitor monitor) {
+        this.messageEncoder = messageEncoder;
+        this.parameterEncoder = parameterEncoder;
         this.responseWait = responseWait;
         this.monitor = monitor;
     }
@@ -56,11 +62,13 @@ public class TcpResponseHandler extends SimpleChannelHandler {
         ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
         if (buffer.readable()) {
             byte[] bytes = buffer.toByteBuffer().array();
-            Message message = serializer.deserializeMessage(bytes);
-            // deserialize the body
-            Object body = message.getBody();
-            if (body != null) {
-                Object deserialized = serializer.deserializeResponse(Object.class, body);
+            Message message = messageEncoder.decode(bytes, CONTEXT);
+            String operationName = message.getWorkContext().getHeader(String.class, NetConstants.OPERATION_NAME);
+            if (message.isFault()) {
+                Throwable fault = parameterEncoder.decodeFault(operationName, (byte[]) message.getBody());
+                message.setBodyWithFault(fault);
+            } else {
+                Object deserialized = parameterEncoder.decodeResponse(operationName, (byte[]) message.getBody());
                 message.setBody(deserialized);
             }
             responseQueue.offer(message);
@@ -90,6 +98,25 @@ public class TcpResponseHandler extends SimpleChannelHandler {
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         ctx.getChannel().close();
         monitor.error(e.getCause());
+    }
+
+    private static class TcpResponseHeaderContext implements HeaderContext {
+
+        public long getContentLength() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getOperationName() {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getRoutingText() {
+            throw new UnsupportedOperationException();
+        }
+
+        public byte[] getRoutingBytes() {
+            throw new UnsupportedOperationException();
+        }
     }
 
 }
