@@ -42,10 +42,11 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -65,30 +66,70 @@ public class OneWaySourceMessageListener extends AbstractSourceMessageListener {
             InvocationChainHolder holder = getInvocationChainHolder(opName);
             Interceptor interceptor = holder.getChain().getHeadInterceptor();
             PayloadType payloadType = holder.getPayloadType();
+            
             Object payload = MessageHelper.getPayload(request, payloadType);
-            if (payloadType != PayloadType.OBJECT) {
-                Serializer serializer = holder.getInputSerializer();
-                if (serializer != null) {
-                    try {
-                        payload = serializer.deserialize(Object.class, payload);
-                    } catch (SerializationException e) {
-                        throw new JmsOperationException(e);
-                    }
-                }
+
+            switch (payloadType) {
+
+            case OBJECT:
                 payload = new Object[]{payload};
+                invoke(request, interceptor, payload);
+                break;
+            case TEXT:
+                MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
+                if (messageEncoder != null) {
+                    decodeAndInvoke(request, opName, interceptor, payload, messageEncoder);
+                } else {
+                    // non-encoded text
+                    payload = new Object[]{payload};
+                    invoke(request, interceptor, payload);
+                }
+                break;
+            case STREAM:
+                throw new UnsupportedOperationException();
+            default:
+                payload = new Object[]{payload};
+                invoke(request, interceptor, payload);
+                break;
             }
 
-            WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
-            org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
-            org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
-            if (outMessage.isFault()) {
-                throw new JmsOperationException((Throwable) outMessage.getBody());
-            }
 
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to send response", ex);
         }
 
+    }
+
+    private void decodeAndInvoke(Message request, String opName, Interceptor interceptor, Object payload, MessageEncoder messageEncoder)
+            throws JmsOperationException {
+        try {
+            JMSHeaderContext context = new JMSHeaderContext(request);
+            org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
+            ParameterEncoder parameterEncoder = wireHolder.getParameterEncoder();
+            Object deserialized = parameterEncoder.decode(opName, (String) inMessage.getBody());
+            if (deserialized == null) {
+                inMessage.setBody(null);
+            } else {
+                inMessage.setBody(new Object[]{deserialized});
+            }
+            String callbackUri = wireHolder.getCallbackUri();
+            JmsHelper.addCallFrame(inMessage, callbackUri);
+            org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
+            if (outMessage.isFault()) {
+                throw new JmsOperationException((Throwable) outMessage.getBody());
+            }
+        } catch (EncoderException e) {
+            throw new JmsOperationException(e);
+        }
+    }
+
+    private void invoke(Message request, Interceptor interceptor, Object payload) throws JmsOperationException {
+        WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
+        org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
+        org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
+        if (outMessage.isFault()) {
+            throw new JmsOperationException((Throwable) outMessage.getBody());
+        }
     }
 
 }

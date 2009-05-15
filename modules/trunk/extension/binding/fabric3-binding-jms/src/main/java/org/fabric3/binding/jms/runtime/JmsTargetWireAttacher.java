@@ -34,11 +34,9 @@
  */
 package org.fabric3.binding.jms.runtime;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Set;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
@@ -54,12 +52,12 @@ import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -75,8 +73,9 @@ import org.fabric3.spi.wire.Wire;
 public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDefinition> {
     private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
     private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
-    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
     private ClassLoaderRegistry classLoaderRegistry;
+    private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
+    private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
     public JmsTargetWireAttacher(@Reference Map<CreateOption, DestinationStrategy> destinationStrategies,
                                  @Reference Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies,
@@ -86,9 +85,14 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    @Reference(required = false)
-    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
-        this.serializerFactories = serializerFactories;
+    @Reference
+    public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) {
+        this.parameterEncoderFactories = parameterEncoderFactories;
+    }
+
+    @Reference
+    public void setMessageFormatters(Map<String, MessageEncoder> messageFormatters) {
+        this.messageFormatters = messageFormatters;
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JmsWireTargetDefinition targetDefinition, Wire wire)
@@ -125,6 +129,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         }
 
         Map<String, PayloadType> payloadTypes = targetDefinition.getPayloadTypes();
+
         for (InvocationChain chain : wire.getInvocationChains()) {
 
             PhysicalOperationDefinition op = chain.getPhysicalOperation();
@@ -135,31 +140,34 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
             String operationName = op.getName();
             PayloadType payloadType = payloadTypes.get(operationName);
             String dataBinding = op.getDatabinding();
-            Serializer inputSerializer = null;
-            Serializer outputSerializer = null;
+
+            MessageEncoder messageEncoder = null;
+            ParameterEncoder parameterEncoder = null;
+
             if (dataBinding != null) {
-                SerializerFactory factory = serializerFactories.get(dataBinding);
+                ParameterEncoderFactory factory = parameterEncoderFactories.get(dataBinding);
                 if (factory == null) {
-                    throw new WiringException("Serializer factory not found for: " + dataBinding);
+                    throw new WiringException("Parameter encoder factory not found for: " + dataBinding);
                 }
-                Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(op, cl);
-                Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(op, cl);
-                Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(op, cl);
                 try {
-                    inputSerializer = factory.getInstance(inputTypes, Collections.<Class<?>>emptySet(), cl);
-                    outputSerializer = factory.getInstance(outputTypes, faultTypes, cl);
-                } catch (SerializationException e) {
+                    parameterEncoder = factory.getInstance(wire, cl);
+                } catch (EncoderException e) {
                     throw new WiringException(e);
                 }
+                messageEncoder = messageFormatters.get(dataBinding);
+                if (messageEncoder == null) {
+                    throw new WiringException("Message encoder not found for: " + dataBinding);
+                }
             }
+
             Interceptor interceptor = new JmsTargetInterceptor(operationName,
                                                                payloadType,
                                                                reqDestination,
                                                                reqCf,
                                                                correlationScheme,
                                                                receiver,
-                                                               inputSerializer,
-                                                               outputSerializer,
+                                                               messageEncoder,
+                                                               parameterEncoder,
                                                                cl);
             chain.addInterceptor(interceptor);
         }

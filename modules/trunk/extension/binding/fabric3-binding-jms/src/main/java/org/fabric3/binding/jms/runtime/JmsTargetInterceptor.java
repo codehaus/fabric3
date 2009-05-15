@@ -44,6 +44,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.oasisopen.sca.ServiceRuntimeException;
 
@@ -51,11 +52,13 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
+import org.fabric3.spi.binding.format.EncodeCallback;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.util.Base64;
 import org.fabric3.spi.wire.Interceptor;
 
@@ -72,19 +75,19 @@ public class JmsTargetInterceptor implements Interceptor {
     private ConnectionFactory connectionFactory;
     private CorrelationScheme correlationScheme;
     private JmsTargetMessageListener messageReceiver;
-    private Serializer inputSerializer;
-    private Serializer outputSerializer;
+    private MessageEncoder messageEncoder;
+    private ParameterEncoder parameterEncoder;
     private ClassLoader cl;
 
     /**
      * @param methodName        Method name.
      * @param payloadType       the type of JMS message to send
      * @param destination       Request destination.
-     * @param connectionFactory Request connection factory.
+     * @param connectionFactory Request connection factory
      * @param correlationScheme Correlation scheme.
-     * @param messageReceiver   Message receiver for response.
-     * @param inputSerializer   The serializer or null of input payload transformation is not required
-     * @param outputSerializer  The serializer or null of output payload transformation is not required
+     * @param messageReceiver   Message receiver for response
+     * @param messageEncoder    Message encoder or null if encoding is not required
+     * @param parameterEncoder  Parameter encoder or null if encoding is not required
      * @param cl                the classloader for loading parameter types.
      */
     public JmsTargetInterceptor(String methodName,
@@ -93,8 +96,8 @@ public class JmsTargetInterceptor implements Interceptor {
                                 ConnectionFactory connectionFactory,
                                 CorrelationScheme correlationScheme,
                                 JmsTargetMessageListener messageReceiver,
-                                Serializer inputSerializer,
-                                Serializer outputSerializer,
+                                MessageEncoder messageEncoder,
+                                ParameterEncoder parameterEncoder,
                                 ClassLoader cl) {
         this.methodName = methodName;
         this.payloadType = payloadType;
@@ -102,8 +105,8 @@ public class JmsTargetInterceptor implements Interceptor {
         this.connectionFactory = connectionFactory;
         this.correlationScheme = correlationScheme;
         this.messageReceiver = messageReceiver;
-        this.inputSerializer = inputSerializer;
-        this.outputSerializer = outputSerializer;
+        this.messageEncoder = messageEncoder;
+        this.parameterEncoder = parameterEncoder;
         this.cl = cl;
     }
 
@@ -119,10 +122,10 @@ public class JmsTargetInterceptor implements Interceptor {
             Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
 
             MessageProducer producer = session.createProducer(destination);
-            Object[] payload = (Object[]) message.getBody();
 
-            javax.jms.Message jmsMessage = createMessage(message, session, payload);
+            javax.jms.Message jmsMessage = createMessage(message, session);
 
+            // enqueue the message
             producer.send(jmsMessage);
 
             String correlationId = null;
@@ -135,20 +138,9 @@ public class JmsTargetInterceptor implements Interceptor {
             }
             session.commit();
             if (messageReceiver != null) {
-                javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
-                Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
-                if (inputSerializer != null) {
-                    try {
-                        Object deserialized = outputSerializer.deserializeResponse(Object.class, responseMessage);
-                        response.setBody(deserialized);
-                    } catch (SerializationException e) {
-                        throw new ServiceRuntimeException(e);
-                    }
-                } else {
-                    response.setBody(responseMessage);
-                }
+                // request-response, block on response
+                receive(response, correlationId);
             }
-
             return response;
 
         } catch (JMSException ex) {
@@ -169,7 +161,48 @@ public class JmsTargetInterceptor implements Interceptor {
         this.next = next;
     }
 
-    private javax.jms.Message createMessage(Message message, Session session, Object[] payload) throws JMSException, IOException {
+    private void receive(Message response, String correlationId) throws JMSException {
+        javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
+        Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
+        if (messageEncoder != null) {
+            decode(response, responseMessage);
+        } else {
+            response.setBody(responseMessage);
+        }
+    }
+
+    private void decode(Message response, Object responseMessage) {
+        try {
+            if (responseMessage == null) {
+                throw new ServiceRuntimeException("Response type was null");
+            } else if (String.class.equals(responseMessage.getClass())) {
+                Message ret = messageEncoder.decodeResponse((String) responseMessage);
+                if (ret.isFault()) {
+                    Throwable deserialized = parameterEncoder.decodeFault(methodName, (String) ret.getBody());
+                    response.setBodyWithFault(deserialized);
+                } else {
+                    Object deserialized = parameterEncoder.decodeResponse(methodName, (String) ret.getBody());
+                    response.setBody(deserialized);
+                }
+            } else if (byte[].class.equals(responseMessage.getClass())) {
+                Message ret = messageEncoder.decodeResponse((byte[]) responseMessage);
+                if (ret.isFault()) {
+                    Throwable deserialized = parameterEncoder.decodeFault(methodName, (byte[]) ret.getBody());
+                    response.setBodyWithFault(deserialized);
+                } else {
+                    Object deserialized = parameterEncoder.decodeResponse(methodName, (byte[]) ret.getBody());
+                    response.setBody(deserialized);
+                }
+            } else {
+                throw new ServiceRuntimeException("Unnown response type: " + responseMessage.getClass().getName());
+            }
+        } catch (EncoderException e) {
+            throw new ServiceRuntimeException(e);
+        }
+    }
+
+    private javax.jms.Message createMessage(Message message, Session session) throws JMSException, IOException {
+        Object[] payload = (Object[]) message.getBody();
         javax.jms.Message jmsMessage;
         switch (payloadType) {
         case OBJECT:
@@ -181,10 +214,16 @@ public class JmsTargetInterceptor implements Interceptor {
             if (payload.length != 1) {
                 throw new UnsupportedOperationException("Only single parameter operations are supported");
             }
-            if (inputSerializer != null) {
+            if (messageEncoder != null) {
                 try {
-                    jmsMessage = session.createTextMessage(inputSerializer.serialize(String.class, payload[0]));
-                } catch (SerializationException e) {
+                    String serialied = parameterEncoder.encodeText(message);
+                    message.setBody(serialied);
+                    TextMessage textMessage = session.createTextMessage();
+                    EncodeCallback callback = new JMSEncodeCallback(textMessage);
+                    String serializedMessage = messageEncoder.encodeText(methodName, message, callback);
+                    textMessage.setText(serializedMessage);
+                    return textMessage;
+                } catch (EncoderException e) {
                     throw new ServiceRuntimeException(e);
                 }
             } else {

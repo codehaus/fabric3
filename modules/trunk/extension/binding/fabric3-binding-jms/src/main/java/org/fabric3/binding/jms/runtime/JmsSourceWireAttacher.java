@@ -36,12 +36,10 @@ package org.fabric3.binding.jms.runtime;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
@@ -59,12 +57,12 @@ import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactor
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.util.OperationTypeHelper;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -82,7 +80,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
     private ClassLoaderRegistry classLoaderRegistry;
     private TransactionHandler transactionHandler;
-    private Map<String, SerializerFactory> serializerFactories = new HashMap<String, SerializerFactory>();
+    private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
+    private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
     public JmsSourceWireAttacher(@Reference TransactionHandler transactionHandler,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
@@ -96,9 +95,14 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         this.connectionFactoryStrategies = connectionFactoryStrategies;
     }
 
-    @Reference(required = false)
-    public void setSerializerFactories(Map<String, SerializerFactory> serializerFactories) {
-        this.serializerFactories = serializerFactories;
+    @Reference
+    public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) {
+        this.parameterEncoderFactories = parameterEncoderFactories;
+    }
+
+    @Reference
+    public void setMessageFormatters(Map<String, MessageEncoder> messageFormatters) {
+        this.messageFormatters = messageFormatters;
     }
 
     public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
@@ -171,33 +175,37 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
                                         String callbackUri,
                                         ClassLoader cl) throws WiringException {
         List<InvocationChainHolder> chainHolders = new ArrayList<InvocationChainHolder>();
+        MessageEncoder messageEncoder = null;
+        ParameterEncoder parameterEncoder = null;
+        String dataBinding = null;
+        // FIXME terrible hack to set databinding from operation to wire level
         for (InvocationChain chain : wire.getInvocationChains()) {
             PhysicalOperationDefinition definition = chain.getPhysicalOperation();
-            String dataBinding = definition.getDatabinding();
-            Serializer inputSerializer = null;
-            Serializer outputSerializer = null;
-            if (dataBinding != null) {
-                SerializerFactory factory = serializerFactories.get(dataBinding);
-                if (factory == null) {
-                    throw new WiringException("Serializer factory not found for: " + dataBinding);
-                }
-                Set<Class<?>> inputTypes = OperationTypeHelper.loadInParameterTypes(definition, cl);
-                Set<Class<?>> faultTypes = OperationTypeHelper.loadFaultTypes(definition, cl);
-                Set<Class<?>> outputTypes = OperationTypeHelper.loadOutputTypes(definition, cl);
-                try {
-                    inputSerializer = factory.getInstance(inputTypes, Collections.<Class<?>>emptySet(), cl);
-                    outputSerializer = factory.getInstance(outputTypes, faultTypes, cl);
-                } catch (SerializationException e) {
-                    throw new WiringException(e);
-                }
+            if (definition.getDatabinding() != null) {
+                dataBinding = definition.getDatabinding();
             }
             PayloadType payloadType = payloadTypes.get(definition.getName());
             if (payloadType == null) {
                 throw new WiringException("Payload type not found for operation: " + definition.getName());
             }
-            chainHolders.add(new InvocationChainHolder(chain, inputSerializer, outputSerializer, payloadType));
+            chainHolders.add(new InvocationChainHolder(chain, payloadType));
         }
-        return new WireHolder(chainHolders, callbackUri, correlationScheme, transactionType);
+        if (dataBinding != null) {
+            ParameterEncoderFactory factory = parameterEncoderFactories.get(dataBinding);
+            if (factory == null) {
+                throw new WiringException("Parameter encoder factory not found for: " + dataBinding);
+            }
+            try {
+                parameterEncoder = factory.getInstance(wire, cl);
+            } catch (EncoderException e) {
+                throw new WiringException(e);
+            }
+            messageEncoder = messageFormatters.get(dataBinding);
+            if (messageEncoder == null) {
+                throw new WiringException("Message encoder not found for: " + dataBinding);
+            }
+        }
+        return new WireHolder(chainHolders, callbackUri, correlationScheme, transactionType, messageEncoder, parameterEncoder);
     }
 
     private JMSObjectFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,

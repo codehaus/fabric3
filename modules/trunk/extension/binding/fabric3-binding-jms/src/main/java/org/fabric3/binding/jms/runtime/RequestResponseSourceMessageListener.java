@@ -46,10 +46,12 @@ import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
+import org.fabric3.spi.binding.format.EncodeCallback;
+import org.fabric3.spi.binding.format.EncoderException;
+import org.fabric3.spi.binding.format.MessageEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.binding.serializer.SerializationException;
-import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -58,6 +60,7 @@ import org.fabric3.spi.wire.Interceptor;
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
 public class RequestResponseSourceMessageListener extends AbstractSourceMessageListener {
+    public static final EncodeCallback CALLBACK = new ReturnEncodeCallback();
 
     public RequestResponseSourceMessageListener(WireHolder wireHolder) {
         super(wireHolder);
@@ -69,60 +72,118 @@ public class RequestResponseSourceMessageListener extends AbstractSourceMessageL
             InvocationChainHolder holder = getInvocationChainHolder(opName);
             Interceptor interceptor = holder.getChain().getHeadInterceptor();
             PayloadType payloadType = holder.getPayloadType();
+
             Object payload = MessageHelper.getPayload(request, payloadType);
-            if (payloadType != PayloadType.OBJECT) {
-                Serializer serializer = holder.getInputSerializer();
-                if (serializer != null) {
-                    try {
-                        payload = serializer.deserialize(Object.class, payload);
-                    } catch (SerializationException e) {
-                        throw new JmsOperationException(e);
-                    }
+            switch (payloadType) {
+            //
+            case OBJECT:
+                if (payload == null || !payload.getClass().isArray()) {
+                    payload = new Object[]{payload};
                 }
+                invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
+                break;
+            case TEXT:
+                MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
+                if (messageEncoder != null) {
+                    decodeAndInvoke(request, opName, interceptor, payload, payloadType, messageEncoder, responseSession, responseDestination);
+                } else {
+                    // non-encoded text
+                    payload = new Object[]{payload};
+                    invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
+                }
+                break;
+            case STREAM:
+                throw new UnsupportedOperationException();
+            default:
                 payload = new Object[]{payload};
-            }
-
-            WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
-
-            org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
-            org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
-
-            Object responsePayload = outMessage.getBody();
-            Serializer serializer = holder.getOutputSerializer();
-            if (serializer != null) {
-                try {
-                    responsePayload = serializer.serializeResponse(String.class, responsePayload);
-                } catch (SerializationException e) {
-                    throw new JmsOperationException(e);
-                }
-            }
-            Message response = createMessage(responsePayload, responseSession, payloadType);
-            CorrelationScheme correlationScheme = wireHolder.getCorrelationScheme();
-            switch (correlationScheme) {
-            case RequestCorrelIDToCorrelID: {
-                response.setJMSCorrelationID(request.getJMSCorrelationID());
+                invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
                 break;
-            }
-            case RequestMsgIDToCorrelID: {
-                response.setJMSCorrelationID(request.getJMSMessageID());
-                break;
-            }
-            }
-            MessageProducer producer = responseSession.createProducer(responseDestination);
-            producer.send(response);
-            TransactionType transactionType = wireHolder.getTransactionType();
-            if (transactionType == TransactionType.LOCAL) {
-                responseSession.commit();
-            }
-            if (outMessage.isFault()) {
-                // throw the original exception
-                throw new JmsOperationException((Throwable) outMessage.getBody());
             }
 
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to send response", ex);
         }
 
+    }
+
+    private void decodeAndInvoke(Message request,
+                                 String opName,
+                                 Interceptor interceptor,
+                                 Object payload,
+                                 PayloadType payloadType,
+                                 MessageEncoder messageEncoder,
+                                 Session responseSession,
+                                 Destination responseDestination) throws JMSException, JmsOperationException {
+        try {
+            JMSHeaderContext context = new JMSHeaderContext(request);
+            org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
+            ParameterEncoder parameterEncoder = wireHolder.getParameterEncoder();
+            Object deserialized = parameterEncoder.decode(opName, (String) inMessage.getBody());
+            if (deserialized == null) {
+                inMessage.setBody(null);
+            } else {
+                inMessage.setBody(new Object[]{deserialized});
+            }
+            String callbackUri = wireHolder.getCallbackUri();
+            JmsHelper.addCallFrame(inMessage, callbackUri);
+            org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
+            String serialized = parameterEncoder.encodeText(outMessage);
+            if (outMessage.isFault()) {
+                outMessage.setBodyWithFault(serialized);
+            } else {
+                outMessage.setBody(serialized);
+            }
+
+            String serializedMessage = messageEncoder.encodeText(opName, outMessage, CALLBACK);
+
+            Message response = createMessage(serializedMessage, responseSession, payloadType);
+            sendResponse(request, responseSession, responseDestination, outMessage, response);
+        } catch (EncoderException e) {
+            throw new JmsOperationException(e);
+        }
+    }
+
+    private void invoke(Message request,
+                        Interceptor interceptor,
+                        Object payload,
+                        PayloadType payloadType,
+                        Session responseSession,
+                        Destination responseDestination) throws JmsOperationException, JMSException {
+        WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
+        org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
+        org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
+
+        Object responsePayload = outMessage.getBody();
+        Message response = createMessage(responsePayload, responseSession, payloadType);
+        sendResponse(request, responseSession, responseDestination, outMessage, response);
+    }
+
+    private void sendResponse(Message request,
+                              Session responseSession,
+                              Destination responseDestination,
+                              org.fabric3.spi.invocation.Message outMessage,
+                              Message response) throws JMSException, JmsOperationException {
+        CorrelationScheme correlationScheme = wireHolder.getCorrelationScheme();
+        switch (correlationScheme) {
+        case RequestCorrelIDToCorrelID: {
+            response.setJMSCorrelationID(request.getJMSCorrelationID());
+            break;
+        }
+        case RequestMsgIDToCorrelID: {
+            response.setJMSCorrelationID(request.getJMSMessageID());
+            break;
+        }
+        }
+        MessageProducer producer = responseSession.createProducer(responseDestination);
+        producer.send(response);
+        TransactionType transactionType = wireHolder.getTransactionType();
+        if (transactionType == TransactionType.LOCAL) {
+            responseSession.commit();
+        }
+        if (outMessage.isFault()) {
+            // throw the original exception
+            throw new JmsOperationException((Throwable) outMessage.getBody());
+        }
     }
 
     private Message createMessage(Object payload, Session session, PayloadType payloadType) throws JMSException {
@@ -146,5 +207,22 @@ public class RequestResponseSourceMessageListener extends AbstractSourceMessageL
         }
     }
 
+    private static class ReturnEncodeCallback implements EncodeCallback {
 
+        public void encodeContentLengthHeader(long length) {
+            // no op
+        }
+
+        public void encodeOperationHeader(String name) {
+            // no op
+        }
+
+        public void encodeRoutingHeader(String header) {
+            // no op
+        }
+
+        public void encodeRoutingHeader(byte[] header) {
+            // no op
+        }
+    }
 }

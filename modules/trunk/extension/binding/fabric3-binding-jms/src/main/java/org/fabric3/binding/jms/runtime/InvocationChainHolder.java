@@ -17,7 +17,6 @@
 package org.fabric3.binding.jms.runtime;
 
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.wire.InvocationChain;
 
 /**
@@ -27,27 +26,15 @@ import org.fabric3.spi.wire.InvocationChain;
  */
 public class InvocationChainHolder {
     private InvocationChain chain;
-    private Serializer inputSerializer;
-    private Serializer outputSerializer;
     private PayloadType payloadType;
 
-    public InvocationChainHolder(InvocationChain chain, Serializer inputSerializer, Serializer outputSerializer, PayloadType payloadType) {
+    public InvocationChainHolder(InvocationChain chain, PayloadType payloadType) {
         this.chain = chain;
-        this.inputSerializer = inputSerializer;
-        this.outputSerializer = outputSerializer;
         this.payloadType = payloadType;
     }
 
     public InvocationChain getChain() {
         return chain;
-    }
-
-    public Serializer getInputSerializer() {
-        return inputSerializer;
-    }
-
-    public Serializer getOutputSerializer() {
-        return outputSerializer;
     }
 
     public PayloadType getPayloadType() {

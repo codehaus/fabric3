@@ -106,6 +106,20 @@ public class JmsHelper {
         }
     }
 
+    public static void addCallFrame(org.fabric3.spi.invocation.Message message, String callbackUri) throws Fabric3JmsException {
+        WorkContext workContext = message.getWorkContext();
+        CallFrame previous = workContext.peekCallFrame();
+        // Copy correlation and conversation information from incoming frame to new frame
+        // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
+        // bidirectional service
+        Serializable id = previous.getCorrelationId(Serializable.class);
+        ConversationContext context = previous.getConversationContext();
+        F3Conversation conversation = previous.getConversation();
+        CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
+        workContext.addCallFrame(frame);
+    }
+
+
     /**
      * Closes connections quietly.
      *
