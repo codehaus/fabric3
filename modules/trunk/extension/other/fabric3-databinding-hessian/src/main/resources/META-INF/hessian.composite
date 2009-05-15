@@ -23,11 +23,7 @@
            autowire="true"
            xmlns:f3-binding="urn:org.fabric3:binding">
 
-    <component name="HessianSerializerFactory" f3-core:key="hessian">
-        <f3-impl:implementation.system class="org.fabric3.hessian.serializer.HessianSerializerFactory"/>
-    </component>
-
-    <component name="HessianWireFormatterFactory" f3-core:key="hessian">
+    <component name="HessianParameterEncoderFactory" f3-core:key="hessian">
         <f3-impl:implementation.system class="org.fabric3.hessian.format.HessianParameterEncoderFactory"/>
     </component>
 

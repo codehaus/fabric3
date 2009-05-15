@@ -14,26 +14,18 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.hessian.serializer;
+package org.fabric3.hessian.format;
 
-import java.util.Set;
+import org.fabric3.spi.component.F3Conversation;
 
-import org.osoa.sca.annotations.EagerInit;
+public class MockConversation implements F3Conversation {
+    private static final long serialVersionUID = 3868053094430618625L;
 
-import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
-
-/**
- * Creates serializer instances that use Hessian.
- *
- * @version $Revision$ $Date$
- */
-@EagerInit
-public class HessianSerializerFactory implements SerializerFactory {
-
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws EncoderException {
-        return new HessianSerializer(loader);
+    public Object getConversationID() {
+        return null;
     }
 
+    public void end() {
+
+    }
 }
