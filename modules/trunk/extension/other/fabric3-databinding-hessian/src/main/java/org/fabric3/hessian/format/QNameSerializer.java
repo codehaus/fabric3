@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.hessian.serializer;
+package org.fabric3.hessian.format;
 
 import java.io.IOException;
 import javax.xml.namespace.QName;

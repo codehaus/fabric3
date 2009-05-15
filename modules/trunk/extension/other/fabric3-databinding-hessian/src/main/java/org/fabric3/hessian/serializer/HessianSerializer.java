@@ -26,11 +26,12 @@ import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.util.Base64;
+import org.fabric3.hessian.format.QNameSerializerFactory;
 
 /**
  * Serializer that uses Hessian for reading and writing data.
@@ -54,7 +55,7 @@ public class HessianSerializer implements Serializer {
         factory.addFactory(new QNameSerializerFactory());
     }
 
-    public <T> T serialize(Class<T> clazz, Object o) throws SerializationException {
+    public <T> T serialize(Class<T> clazz, Object o) throws EncoderException {
 
         try {
             boolean isString = String.class.equals(clazz);
@@ -74,31 +75,31 @@ public class HessianSerializer implements Serializer {
                 return clazz.cast(bos.toByteArray());
             }
         } catch (IOException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         }
     }
 
-    public <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException {
+    public <T> T serializeResponse(Class<T> clazz, Object message) throws EncoderException {
         return serialize(clazz, message);
     }
 
-    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
+    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws EncoderException {
         return serialize(clazz, exception);
     }
 
-    public Message deserializeMessage(Object serialized) throws SerializationException {
+    public Message deserializeMessage(Object serialized) throws EncoderException {
         return deserialize(Message.class, serialized, Message.class.getClassLoader());
     }
 
-    public <T> T deserialize(Class<T> clazz, Object object) throws SerializationException {
+    public <T> T deserialize(Class<T> clazz, Object object) throws EncoderException {
         return deserialize(clazz, object, loader);
     }
 
-    public <T> T deserializeResponse(Class<T> clazz, Object object) throws SerializationException {
+    public <T> T deserializeResponse(Class<T> clazz, Object object) throws EncoderException {
         return deserialize(clazz, object, loader);
     }
 
-    private <T> T deserialize(Class<T> clazz, Object object, ClassLoader classLoader) throws SerializationException {
+    private <T> T deserialize(Class<T> clazz, Object object, ClassLoader classLoader) throws EncoderException {
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             boolean isString = String.class.equals(object.getClass());
@@ -121,7 +122,7 @@ public class HessianSerializer implements Serializer {
             in.close();
             return clazz.cast(ret);
         } catch (IOException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         } finally {
             Thread.currentThread().setContextClassLoader(old);
         }
@@ -129,7 +130,7 @@ public class HessianSerializer implements Serializer {
 
     }
 
-    public Throwable deserializeFault(Object serialized) throws SerializationException {
+    public Throwable deserializeFault(Object serialized) throws EncoderException {
         return deserialize(Throwable.class, serialized);
     }
 

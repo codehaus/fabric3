@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.json.serializer;
+package org.fabric3.json.format;
 
 /**
  * Wrapper for a declared fault thrown by application code. This wrapper is used to serialize fault information to a client.

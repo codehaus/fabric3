@@ -27,4 +27,12 @@
         <f3-impl:implementation.system class="org.fabric3.json.serializer.JsonSerializerFactory"/>
     </component>
 
+    <component name="JsonWireFormatterFactory" f3-core:key="json">
+        <f3-impl:implementation.system class="org.fabric3.json.format.JsonParameterEncoderFactory"/>
+    </component>
+
+    <component name="JsonUnwrappedMessageFormatter" f3-core:key="json">
+        <f3-impl:implementation.system class="org.fabric3.spi.binding.format.JDKUnwrappedMessageEncoder"/>
+    </component>
+
 </composite>

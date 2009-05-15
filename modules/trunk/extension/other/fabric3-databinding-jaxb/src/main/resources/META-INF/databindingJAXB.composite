@@ -32,6 +32,14 @@
         <f3-impl:implementation.system class="org.fabric3.jaxb.serializer.JAXBSerializerFactory"/>
     </component>
 
+    <component name="JAXBWireFormatterFactory" f3-core:key="jaxb">
+        <f3-impl:implementation.system class="org.fabric3.jaxb.format.JAXBParameterEncoderFactory"/>
+    </component>
+
+    <component name="JAXBUnwrappedMessageFormatter" f3-core:key="jaxb">
+        <f3-impl:implementation.system class="org.fabric3.spi.binding.format.JDKUnwrappedMessageEncoder"/>
+    </component>
+
     <component name="JAXBTypeIntrospector">
         <f3-impl:implementation.system class="org.fabric3.jaxb.introspection.JAXBTypeIntrospector"/>
     </component>

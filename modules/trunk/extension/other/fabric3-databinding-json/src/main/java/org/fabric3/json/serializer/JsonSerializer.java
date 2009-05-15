@@ -27,10 +27,11 @@ import java.util.Set;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.oasisopen.sca.ServiceRuntimeException;
 
-import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.json.format.ApplicationFault;
 
 /**
  * Serializer that reads and writes data using JSON. Note this implementation only encodes type information for faults, wrapping them in {@link
@@ -43,7 +44,7 @@ public class JsonSerializer implements Serializer {
     private Class<?> inType;
     private Map<String, Constructor<?>> faultCtors;
 
-    public JsonSerializer(Set<Class<?>> types, Set<Class<?>> faultTypes) throws SerializationException {
+    public JsonSerializer(Set<Class<?>> types, Set<Class<?>> faultTypes) throws EncoderException {
         if (types.size() > 1) {
             throw new UnsupportedTypesException("Only single parameters are supported");
         } else if (types.size() == 1) {
@@ -60,13 +61,13 @@ public class JsonSerializer implements Serializer {
                 Constructor<?> ctor = faultType.getConstructor(String.class);
                 faultCtors.put(faultType.getSimpleName(), ctor);
             } catch (NoSuchMethodException e) {
-                throw new SerializationException("Fault type must contain a public constructor taking a String message: " + faultType.getName());
+                throw new EncoderException("Fault type must contain a public constructor taking a String message: " + faultType.getName());
             }
         }
         this.mapper = new ObjectMapper();
     }
 
-    public <T> T serialize(Class<T> clazz, Object message) throws SerializationException {
+    public <T> T serialize(Class<T> clazz, Object message) throws EncoderException {
         if (!String.class.equals(clazz)) {
             throw new UnsupportedTypesException("This implementation only supports serialization to Strings");
         }
@@ -74,41 +75,41 @@ public class JsonSerializer implements Serializer {
         try {
             mapper.writeValue(writer, message);
         } catch (IOException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         }
         return clazz.cast(writer.toString());
     }
 
-    public <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException {
+    public <T> T serializeResponse(Class<T> clazz, Object message) throws EncoderException {
         return serialize(clazz, message);
     }
 
-    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
+    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws EncoderException {
         ApplicationFault fault = new ApplicationFault();
         fault.setMessage(exception.getMessage());
         fault.setType(exception.getClass().getSimpleName());
         return serialize(clazz, fault);
     }
 
-    public <T> T deserialize(Class<T> clazz, Object serialized) throws SerializationException {
+    public <T> T deserialize(Class<T> clazz, Object serialized) throws EncoderException {
         if (!String.class.equals(serialized.getClass())) {
             throw new UnsupportedTypesException("This implementation only supports serialization from Strings");
         }
         try {
             if (!Void.class.equals(inType) && !clazz.isAssignableFrom(inType) && !inType.isPrimitive()) {
-                throw new SerializationException("Invalid expected type: " + clazz.getName() + ". Type must be compatible with " + inType);
+                throw new EncoderException("Invalid expected type: " + clazz.getName() + ". Type must be compatible with " + inType);
             }
             return clazz.cast(mapper.readValue((String) serialized, inType));
         } catch (IOException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         }
     }
 
-    public <T> T deserializeResponse(Class<T> clazz, Object object) throws SerializationException {
+    public <T> T deserializeResponse(Class<T> clazz, Object object) throws EncoderException {
         return deserialize(clazz, object);
     }
 
-    public Throwable deserializeFault(Object serialized) throws SerializationException {
+    public Throwable deserializeFault(Object serialized) throws EncoderException {
         if (!String.class.equals(serialized.getClass())) {
             throw new UnsupportedTypesException("This implementation only supports serialization from Strings");
         }
@@ -116,7 +117,7 @@ public class JsonSerializer implements Serializer {
         try {
             fault = mapper.readValue((String) serialized, ApplicationFault.class);
         } catch (IOException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         }
 
         Constructor<?> ctor = faultCtors.get(fault.getType());
@@ -128,15 +129,15 @@ public class JsonSerializer implements Serializer {
         try {
             return (Throwable) ctor.newInstance(fault.getMessage());
         } catch (InstantiationException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         } catch (IllegalAccessException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         } catch (InvocationTargetException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         }
     }
 
-    public Message deserializeMessage(Object serialized) throws SerializationException {
+    public Message deserializeMessage(Object serialized) throws EncoderException {
         throw new UnsupportedOperationException();
     }
 }

@@ -27,4 +27,12 @@
         <f3-impl:implementation.system class="org.fabric3.hessian.serializer.HessianSerializerFactory"/>
     </component>
 
+    <component name="HessianWireFormatterFactory" f3-core:key="hessian">
+        <f3-impl:implementation.system class="org.fabric3.hessian.format.HessianParameterEncoderFactory"/>
+    </component>
+
+    <component name="HessianUnwrappedMessageFormatter" f3-core:key="hessian">
+        <f3-impl:implementation.system class="org.fabric3.spi.binding.format.JDKUnwrappedMessageEncoder"/>
+    </component>
+
 </composite>

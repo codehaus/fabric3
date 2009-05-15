@@ -14,26 +14,24 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.hessian.serializer;
-
-import java.util.Set;
+package org.fabric3.hessian.format;
 
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.wire.Wire;
 
 /**
- * Creates serializer instances that use Hessian.
+ * Creates HessianParameterEncoder instances.
  *
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianSerializerFactory implements SerializerFactory {
+public class HessianParameterEncoderFactory implements ParameterEncoderFactory {
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws EncoderException {
-        return new HessianSerializer(loader);
+    public ParameterEncoder getInstance(Wire wire, ClassLoader loader) throws EncoderException {
+        return new HessianParameterEncoder(loader);
     }
-
 }

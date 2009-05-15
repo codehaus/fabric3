@@ -23,7 +23,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
 import org.fabric3.spi.invocation.Message;
@@ -46,7 +46,7 @@ public class JAXBSerializer implements Serializer {
         this.jaxbContext = jaxbContext;
     }
 
-    public <T> T serialize(Class<T> clazz, Object message) throws SerializationException {
+    public <T> T serialize(Class<T> clazz, Object message) throws EncoderException {
         if (!String.class.equals(clazz)) {
             throw new UnsupportedTypesException("This implementation only supports serialization to Strings");
         }
@@ -56,15 +56,15 @@ public class JAXBSerializer implements Serializer {
             marshaller.marshal(message, writer);
             return clazz.cast(writer.toString());
         } catch (JAXBException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         }
     }
 
-    public <T> T serializeResponse(Class<T> clazz, Object message) throws SerializationException {
+    public <T> T serializeResponse(Class<T> clazz, Object message) throws EncoderException {
         return serialize(clazz, message);
     }
 
-    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws SerializationException {
+    public <T> T serializeFault(Class<T> clazz, Throwable exception) throws EncoderException {
         return serialize(clazz, exception);
     }
 
@@ -72,7 +72,7 @@ public class JAXBSerializer implements Serializer {
         throw new UnsupportedOperationException();
     }
 
-    public <T> T deserialize(Class<T> clazz, Object serialized) throws SerializationException {
+    public <T> T deserialize(Class<T> clazz, Object serialized) throws EncoderException {
         if (!String.class.equals(serialized.getClass())) {
             throw new UnsupportedTypesException("This implementation only supports serialization from Strings");
         }
@@ -80,15 +80,15 @@ public class JAXBSerializer implements Serializer {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             return clazz.cast(unmarshaller.unmarshal(new StringReader((String) serialized)));
         } catch (JAXBException e) {
-            throw new SerializationException(e);
+            throw new EncoderException(e);
         }
     }
 
-    public <T> T deserializeResponse(Class<T> clazz, Object object) throws SerializationException {
+    public <T> T deserializeResponse(Class<T> clazz, Object object) throws EncoderException {
         return deserialize(clazz, object);
     }
 
-    public Throwable deserializeFault(Object serialized) throws SerializationException {
+    public Throwable deserializeFault(Object serialized) throws EncoderException {
         return deserialize(Throwable.class, serialized);
     }
 }

@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.binding.serializer.SerializationException;
+import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.serializer.Serializer;
 import org.fabric3.spi.binding.serializer.SerializerFactory;
 
@@ -32,7 +32,7 @@ import org.fabric3.spi.binding.serializer.SerializerFactory;
 @EagerInit
 public class JsonSerializerFactory implements SerializerFactory {
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws SerializationException {
+    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws EncoderException {
         return new JsonSerializer(types, faultTypes);
     }
 }

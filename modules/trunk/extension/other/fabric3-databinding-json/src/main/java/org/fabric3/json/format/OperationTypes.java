@@ -14,26 +14,35 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.hessian.serializer;
+package org.fabric3.json.format;
 
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-
-import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.serializer.Serializer;
-import org.fabric3.spi.binding.serializer.SerializerFactory;
-
 /**
- * Creates serializer instances that use Hessian.
+ * Holder for for operation type information.
  *
  * @version $Revision$ $Date$
  */
-@EagerInit
-public class HessianSerializerFactory implements SerializerFactory {
+public class OperationTypes {
+    private Class<?> inParameterType;
+    private Class<?> outParameterType;
+    private Set<Class<?>> faultTypes;
 
-    public Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws EncoderException {
-        return new HessianSerializer(loader);
+    public OperationTypes(Class<?> inParameterType, Class<?> outParameterType, Set<Class<?>> faultTypes) {
+        this.inParameterType = inParameterType;
+        this.outParameterType = outParameterType;
+        this.faultTypes = faultTypes;
     }
 
+    public Class<?> getInParameterType() {
+        return inParameterType;
+    }
+
+    public Class<?> getOutParameterType() {
+        return outParameterType;
+    }
+
+    public Set<Class<?>> getFaultTypes() {
+        return faultTypes;
+    }
 }
