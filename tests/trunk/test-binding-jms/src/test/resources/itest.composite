@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -74,8 +74,6 @@
                 </response>
             </binding.jms>
         </reference>
-        <!-- verifies the JAXB transformer interceptor is not applied for wires where the source and target are collocated-->
-        <reference name="collocatedWeatherService" target="VMJAXBWeatherService"/>
     </component>
 
     <component name="JAXBWeatherService">
@@ -94,10 +92,6 @@
                 </response>
             </binding.jms>
         </service>
-    </component>
-
-    <component name="VMJAXBWeatherService">
-        <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
     </component>
 
     <component name="PrimitiveTest">

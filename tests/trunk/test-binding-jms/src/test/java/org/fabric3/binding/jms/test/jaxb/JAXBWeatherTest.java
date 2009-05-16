@@ -26,16 +26,10 @@ import org.oasisopen.sca.annotation.Reference;
  */
 public class JAXBWeatherTest extends TestCase {
     private WeatherService weatherService;
-    private WeatherService collocatedWeatherService;
 
     @Reference
     public void setWeatherService(WeatherService service) {
         this.weatherService = service;
-    }
-
-    @Reference
-    public void setCollocatedWeatherService(WeatherService service) {
-        this.collocatedWeatherService = service;
     }
 
     public void testWeather() {
@@ -45,20 +39,6 @@ public class JAXBWeatherTest extends TestCase {
         weatherRequest.setDate(new Date());
 
         WeatherResponse weatherResponse = weatherService.getWeather(weatherRequest);
-
-        assertEquals(WeatherCondition.SUNNY, weatherResponse.getCondition());
-        assertEquals(25.0, weatherResponse.getTemperatureMinimum());
-        assertEquals(40.0, weatherResponse.getTemperatureMaximum());
-
-    }
-
-    public void testCollocatedWeather() {
-
-        WeatherRequest weatherRequest = new WeatherRequest();
-        weatherRequest.setCity("London");
-        weatherRequest.setDate(new Date());
-
-        WeatherResponse weatherResponse = collocatedWeatherService.getWeather(weatherRequest);
 
         assertEquals(WeatherCondition.SUNNY, weatherResponse.getCondition());
         assertEquals(25.0, weatherResponse.getTemperatureMinimum());
