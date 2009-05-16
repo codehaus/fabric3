@@ -207,7 +207,8 @@ public class JmsTargetInterceptor implements Interceptor {
         switch (payloadType) {
         case OBJECT:
             jmsMessage = session.createObjectMessage(payload);
-            break;
+            setRoutingHeaders(message, jmsMessage);
+            return jmsMessage;
         case STREAM:
             throw new UnsupportedOperationException("Not yet implemented");
         case TEXT:
@@ -228,14 +229,20 @@ public class JmsTargetInterceptor implements Interceptor {
                 }
             } else {
                 jmsMessage = session.createTextMessage((String) payload[0]);
+                setRoutingHeaders(message, jmsMessage);
+                return jmsMessage;
             }
-            break;
         default:
             if (payload.length != 1) {
                 throw new AssertionError("Bytes messages must have a single parameter");
             }
             jmsMessage = MessageHelper.createBytesMessage(session, payload[0], payloadType);
+            setRoutingHeaders(message, jmsMessage);
+            return jmsMessage;
         }
+    }
+
+    private void setRoutingHeaders(Message message, javax.jms.Message jmsMessage) throws JMSException, IOException {
         // add the operation name being invoked
         jmsMessage.setObjectProperty("scaOperationName", methodName);
 
@@ -247,8 +254,6 @@ public class JmsTargetInterceptor implements Interceptor {
         stream.close();
         String encoded = Base64.encode(bas.toByteArray());
         jmsMessage.setStringProperty("f3Context", encoded);
-
-        return jmsMessage;
     }
 
 }
