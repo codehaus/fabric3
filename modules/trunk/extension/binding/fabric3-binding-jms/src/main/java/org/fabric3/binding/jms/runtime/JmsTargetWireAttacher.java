@@ -158,7 +158,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
             Interceptor interceptor;
             if (metadata.isResponse()) {
                 // setup a request-response interceptor
-                JmsTargetMessageListener receiver = new JmsTargetMessageListener(responseDestination, responseConnectionFactory);
+                JmsResponseMessageListener receiver = new JmsResponseMessageListener(responseDestination, responseConnectionFactory);
                 interceptor = new JmsInterceptor(operationName,
                                                  payloadType,
                                                  reqDestination,

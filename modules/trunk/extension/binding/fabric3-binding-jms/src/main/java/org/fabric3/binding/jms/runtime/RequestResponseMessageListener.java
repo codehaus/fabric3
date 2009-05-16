@@ -55,14 +55,14 @@ import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Message listener for request-response service requests.
+ * Listens for requests sent to a destination and dispatches them to a service, returning a response to the response destination.
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class RequestResponseSourceMessageListener extends AbstractSourceMessageListener {
+public class RequestResponseMessageListener extends AbstractSourceMessageListener {
     public static final EncodeCallback CALLBACK = new ReturnEncodeCallback();
 
-    public RequestResponseSourceMessageListener(WireHolder wireHolder) {
+    public RequestResponseMessageListener(WireHolder wireHolder) {
         super(wireHolder);
     }
 

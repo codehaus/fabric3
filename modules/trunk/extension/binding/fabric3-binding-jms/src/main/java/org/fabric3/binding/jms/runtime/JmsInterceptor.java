@@ -74,7 +74,7 @@ public class JmsInterceptor implements Interceptor {
     private Destination destination;
     private ConnectionFactory connectionFactory;
     private CorrelationScheme correlationScheme;
-    private JmsTargetMessageListener messageReceiver;
+    private JmsResponseMessageListener messageReceiver;
     private MessageEncoder messageEncoder;
     private ParameterEncoder parameterEncoder;
     private ClassLoader cl;
@@ -120,7 +120,7 @@ public class JmsInterceptor implements Interceptor {
                           Destination destination,
                           ConnectionFactory connectionFactory,
                           CorrelationScheme correlationScheme,
-                          JmsTargetMessageListener messageReceiver,
+                          JmsResponseMessageListener messageReceiver,
                           MessageEncoder messageEncoder,
                           ParameterEncoder parameterEncoder,
                           ClassLoader cl) {

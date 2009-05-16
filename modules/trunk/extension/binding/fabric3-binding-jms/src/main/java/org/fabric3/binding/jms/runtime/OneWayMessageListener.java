@@ -50,13 +50,13 @@ import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Message listener for one-way service requests.
+ * Listens for one-way requests sent to a destination and dispatches them to a service.
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class OneWaySourceMessageListener extends AbstractSourceMessageListener {
+public class OneWayMessageListener extends AbstractSourceMessageListener {
 
-    public OneWaySourceMessageListener(WireHolder wireHolder) {
+    public OneWayMessageListener(WireHolder wireHolder) {
         super(wireHolder);
     }
 

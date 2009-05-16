@@ -138,9 +138,9 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
         SourceMessageListener messageListener;
         if (metadata.isResponse()) {
-            messageListener = new RequestResponseSourceMessageListener(wireHolder);
+            messageListener = new RequestResponseMessageListener(wireHolder);
         } else {
-            messageListener = new OneWaySourceMessageListener(wireHolder);
+            messageListener = new OneWayMessageListener(wireHolder);
         }
         if (jmsHost.isRegistered(serviceUri)) {
             // the wire has changed and it is being reprovisioned
