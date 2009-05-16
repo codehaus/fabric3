@@ -130,35 +130,31 @@
         </service>
     </component>
 
-    <component name="OneWayServiceTest">
-        <f3-impl:junit class="org.fabric3.binding.jms.test.oneway.OneWayServiceTest"/>
+    <component name="EchoOneWayTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>
         <reference name="service">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
-                <destination name="onewayServiceQueue" type="queue" create="always"/>
+            <binding.jms>
+                <destination name="oneWayEchoServiceQueue" type="queue" create="always"/>
                 <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
                     <property name="brokerURL">vm://broker</property>
                 </connectionFactory>
             </binding.jms>
         </reference>
-        <reference name="parameterHolder" target="ParameterHolder"/>
     </component>
 
-    <!--  Common service -->
-    <component name="ParameterHolder">
-        <implementation.java class="org.fabric3.binding.jms.test.oneway.ParameterHolderImpl"/>
-    </component>
-
-    <component name="OneWayService">
-        <implementation.java class="org.fabric3.binding.jms.test.oneway.OneWayServiceImpl"/>
-        <service name="OneWayService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="onewayServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
+    <component name="OneWayEchoService">
+        <implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>
+        <service name="OneWayEchoService">
+            <binding.jms>
+                <destination name="oneWayEchoServiceQueue" type="queue" create="always"/>
+                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
                     <property name="brokerURL">vm://broker</property>
                 </connectionFactory>
             </binding.jms>
         </service>
-        <reference name="parameterHolder" target="ParameterHolder"/>
     </component>
-    
+
+
+
+
 </composite>
