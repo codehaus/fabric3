@@ -18,109 +18,12 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:f3-impl="urn:fabric3.org:implementation"           
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="JMSTestComposite">
 
-    <component name="ObjectWeatherTest">
-        <f3-impl:junit class="org.fabric3.binding.jms.test.object.ObjectWeatherTest"/>
-        <reference name="weatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
-                <destination name="objectServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-                <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
-                </response>
-            </binding.jms>
-        </reference>
-    </component>
-
-    <component name="ObjectWeatherService">
-        <implementation.java class="org.fabric3.binding.jms.test.object.WeatherServiceImpl"/>
-        <service name="WeatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="objectServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-                <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
-                </response>
-            </binding.jms>
-        </service>
-    </component>
-
-
-    <component name="PrimitiveTest">
-        <f3-impl:junit class="org.fabric3.binding.jms.test.primitives.PrimitiveTest"/>
-        <reference name="service">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
-                <destination name="primitiveServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-                <response>
-                    <destination name="primitiveResponseQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
-                </response>
-            </binding.jms>
-        </reference>
-    </component>
-
-    <component name="PrimitveService">
-        <implementation.java class="org.fabric3.binding.jms.test.primitives.PrimitiveServiceImpl"/>
-        <service name="PrimitiveService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="primitiveServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-                <response>
-                    <destination name="primitiveResponseQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
-                </response>
-            </binding.jms>
-        </service>
-    </component>
-
-    <component name="EchoOneWayTest">
-        <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>
-        <reference name="service">
-            <binding.jms>
-                <destination name="oneWayEchoServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-            </binding.jms>
-        </reference>
-    </component>
-
-    <component name="OneWayEchoService">
-        <implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>
-        <service name="OneWayEchoService">
-            <binding.jms>
-                <destination name="oneWayEchoServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-            </binding.jms>
-        </service>
-    </component>
-
-
-    <include name="CallbackComposite"/>
-    <include name="ScopeComposite"/>
+    <include name="JMSTypesComposite"/>
+    <include name="JMSCallbackComposite"/>
+    <include name="JMSScopeComposite"/>
     <include name="JMSJAXBComposite"/>
 
 
