@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-binding="urn:fabric3.org:binding"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           name="JMSJAXBComposite" autowire="false">
+
+    <component name="JAXBWeatherTest">
+        <f3-impl:junit class="org.fabric3.binding.jms.test.jaxb.JAXBWeatherTest"/>
+        <reference name="weatherService">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+                <destination name="jaxbServiceQueue" type="queue" create="always"/>
+                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
+                    <property name="brokerURL">vm://broker</property>
+                </connectionFactory>
+                <response>
+                    <destination name="clientQueue" type="queue" create="always"/>
+                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
+                        <property name="brokerURL">vm://broker</property>
+                    </connectionFactory>
+                </response>
+            </binding.jms>
+        </reference>
+    </component>
+
+    <component name="JAXBWeatherService">
+        <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
+        <service name="WeatherService">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
+                <destination name="jaxbServiceQueue" type="queue" create="always"/>
+                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
+                    <property name="brokerURL">vm://broker</property>
+                </connectionFactory>
+                <response>
+                    <destination name="clientQueue" type="queue" create="always"/>
+                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
+                        <property name="brokerURL">vm://broker</property>
+                    </connectionFactory>
+                </response>
+            </binding.jms>
+        </service>
+    </component>
+
+
+
+</composite>

@@ -58,42 +58,6 @@
     </component>
 
 
-    <component name="JAXBWeatherTest">
-        <f3-impl:junit class="org.fabric3.binding.jms.test.jaxb.JAXBWeatherTest"/>
-        <reference name="weatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
-                <destination name="jaxbServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-                <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
-                </response>
-            </binding.jms>
-        </reference>
-    </component>
-
-    <component name="JAXBWeatherService">
-        <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
-        <service name="WeatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="jaxbServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
-                <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
-                </response>
-            </binding.jms>
-        </service>
-    </component>
-
     <component name="PrimitiveTest">
         <f3-impl:junit class="org.fabric3.binding.jms.test.primitives.PrimitiveTest"/>
         <reference name="service">
@@ -157,6 +121,7 @@
 
     <include name="CallbackComposite"/>
     <include name="ScopeComposite"/>
+    <include name="JMSJAXBComposite"/>
 
 
 </composite>
