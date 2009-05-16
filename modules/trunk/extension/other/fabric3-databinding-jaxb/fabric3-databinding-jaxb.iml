@@ -40,6 +40,17 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-jaxb" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
 

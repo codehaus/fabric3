@@ -28,11 +28,7 @@
         <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="JAXBSerializerFactory" f3-core:key="jaxb">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.serializer.JAXBSerializerFactory"/>
-    </component>
-
-    <component name="JAXBWireFormatterFactory" f3-core:key="jaxb">
+    <component name="JAXBParameterEncoderFactory" f3-core:key="jaxb">
         <f3-impl:implementation.system class="org.fabric3.jaxb.format.JAXBParameterEncoderFactory"/>
     </component>
 
