@@ -155,6 +155,7 @@
     </component>
 
 
+    <include name="CallbackComposite"/>
 
 
 </composite>
