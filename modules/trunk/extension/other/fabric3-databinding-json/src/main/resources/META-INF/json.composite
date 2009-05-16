@@ -23,11 +23,7 @@
            autowire="true"
            xmlns:f3-binding="urn:org.fabric3:binding">
 
-    <component name="JsonSerializerFactory" f3-core:key="json">
-        <f3-impl:implementation.system class="org.fabric3.json.serializer.JsonSerializerFactory"/>
-    </component>
-
-    <component name="JsonWireFormatterFactory" f3-core:key="json">
+    <component name="JsonParameterEncoderFactory" f3-core:key="json">
         <f3-impl:implementation.system class="org.fabric3.json.format.JsonParameterEncoderFactory"/>
     </component>
 
