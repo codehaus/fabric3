@@ -23,7 +23,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-import org.fabric3.spi.binding.serializer.UnsupportedTypesException;
+import org.fabric3.spi.binding.format.UnsupportedTypesException;
 import org.fabric3.spi.classloader.ClassLoaderObjectInputStream;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;

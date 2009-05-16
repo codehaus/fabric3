@@ -14,28 +14,21 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.binding.serializer;
-
-import java.util.Set;
-
-import org.fabric3.spi.binding.format.EncoderException;
+package org.fabric3.spi.binding.format;
 
 /**
- * Creates or returns Serializer instances.
+ * Raised when an attempt to serialize or deserialize an unsupported type is made.
  *
  * @version $Revision$ $Date$
  */
-public interface SerializerFactory {
+public class UnsupportedTypesException extends EncoderException {
+    private static final long serialVersionUID = 4607391693877849373L;
 
-    /**
-     * Create or return a Serializer  instance.
-     *
-     * @param types      the types the Serializer will serialize and deserialize
-     * @param faultTypes the fault types the Serializer will serialize and deserialize
-     * @param loader     the classloader to load custom parameter types
-     * @return a Serializer instance
-     * @throws EncoderException if an exception occurs creating or returning a Serializer
-     */
-    Serializer getInstance(Set<Class<?>> types, Set<Class<?>> faultTypes, ClassLoader loader) throws EncoderException;
+    public UnsupportedTypesException(Throwable cause) {
+        super(cause);
+    }
 
+    public UnsupportedTypesException(String message) {
+        super(message);
+    }
 }
