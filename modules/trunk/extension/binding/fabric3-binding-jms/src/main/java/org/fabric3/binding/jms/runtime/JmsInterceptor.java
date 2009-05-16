@@ -67,7 +67,7 @@ import org.fabric3.spi.wire.Interceptor;
  *
  * @version $Revision$ $Date$
  */
-public class JmsTargetInterceptor implements Interceptor {
+public class JmsInterceptor implements Interceptor {
     private Interceptor next;
     private String methodName;
     private PayloadType payloadType;
@@ -80,6 +80,31 @@ public class JmsTargetInterceptor implements Interceptor {
     private ClassLoader cl;
 
     /**
+     * Constructor that sets up an interceptor for one-way operations.
+     *
+     * @param methodName        Method name.
+     * @param payloadType       the type of JMS message to send
+     * @param destination       Request destination.
+     * @param connectionFactory Request connection factory
+     * @param correlationScheme Correlation scheme.
+     * @param messageEncoder    Message encoder or null if encoding is not required
+     * @param parameterEncoder  Parameter encoder or null if encoding is not required
+     * @param cl                the classloader for loading parameter types.
+     */
+    public JmsInterceptor(String methodName,
+                          PayloadType payloadType,
+                          Destination destination,
+                          ConnectionFactory connectionFactory,
+                          CorrelationScheme correlationScheme,
+                          MessageEncoder messageEncoder,
+                          ParameterEncoder parameterEncoder,
+                          ClassLoader cl) {
+        this(methodName, payloadType, destination, connectionFactory, correlationScheme, null, messageEncoder, parameterEncoder, cl);
+    }
+
+    /**
+     * Constructor that sets up an interceptor for request-response operations.
+     *
      * @param methodName        Method name.
      * @param payloadType       the type of JMS message to send
      * @param destination       Request destination.
@@ -90,15 +115,15 @@ public class JmsTargetInterceptor implements Interceptor {
      * @param parameterEncoder  Parameter encoder or null if encoding is not required
      * @param cl                the classloader for loading parameter types.
      */
-    public JmsTargetInterceptor(String methodName,
-                                PayloadType payloadType,
-                                Destination destination,
-                                ConnectionFactory connectionFactory,
-                                CorrelationScheme correlationScheme,
-                                JmsTargetMessageListener messageReceiver,
-                                MessageEncoder messageEncoder,
-                                ParameterEncoder parameterEncoder,
-                                ClassLoader cl) {
+    public JmsInterceptor(String methodName,
+                          PayloadType payloadType,
+                          Destination destination,
+                          ConnectionFactory connectionFactory,
+                          CorrelationScheme correlationScheme,
+                          JmsTargetMessageListener messageReceiver,
+                          MessageEncoder messageEncoder,
+                          ParameterEncoder parameterEncoder,
+                          ClassLoader cl) {
         this.methodName = methodName;
         this.payloadType = payloadType;
         this.destination = destination;

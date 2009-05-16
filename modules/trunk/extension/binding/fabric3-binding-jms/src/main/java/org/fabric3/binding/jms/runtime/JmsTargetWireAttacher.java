@@ -98,10 +98,6 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JmsWireTargetDefinition targetDefinition, Wire wire)
             throws WiringException {
 
-        JmsTargetMessageListener receiver = null;
-        Destination responseDestination = null;
-        ConnectionFactory responseConnectionFactory = null;
-
         ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassLoaderId());
 
         JmsBindingMetadata metadata = targetDefinition.getMetadata();
@@ -118,6 +114,8 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         create = destinationDefinition.getCreate();
         Destination reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
 
+        Destination responseDestination = null;
+        ConnectionFactory responseConnectionFactory = null;
         if (metadata.isResponse()) {
             connectionFactoryDefinition = metadata.getResponseConnectionFactory();
             create = connectionFactoryDefinition.getCreate();
@@ -134,9 +132,6 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
             PhysicalOperationDefinition op = chain.getPhysicalOperation();
 
-            if (metadata.isResponse()) {
-                receiver = new JmsTargetMessageListener(responseDestination, responseConnectionFactory);
-            }
             String operationName = op.getName();
             PayloadType payloadType = payloadTypes.get(operationName);
             String dataBinding = op.getDatabinding();
@@ -160,15 +155,30 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
                 }
             }
 
-            Interceptor interceptor = new JmsTargetInterceptor(operationName,
-                                                               payloadType,
-                                                               reqDestination,
-                                                               reqCf,
-                                                               correlationScheme,
-                                                               receiver,
-                                                               messageEncoder,
-                                                               parameterEncoder,
-                                                               cl);
+            Interceptor interceptor;
+            if (metadata.isResponse()) {
+                // setup a request-response interceptor
+                JmsTargetMessageListener receiver = new JmsTargetMessageListener(responseDestination, responseConnectionFactory);
+                interceptor = new JmsInterceptor(operationName,
+                                                 payloadType,
+                                                 reqDestination,
+                                                 reqCf,
+                                                 correlationScheme,
+                                                 receiver,
+                                                 messageEncoder,
+                                                 parameterEncoder,
+                                                 cl);
+            } else {
+                // setup a one-way interceptor
+                interceptor = new JmsInterceptor(operationName,
+                                                 payloadType,
+                                                 reqDestination,
+                                                 reqCf,
+                                                 correlationScheme,
+                                                 messageEncoder,
+                                                 parameterEncoder,
+                                                 cl);
+            }
             chain.addInterceptor(interceptor);
         }
 
