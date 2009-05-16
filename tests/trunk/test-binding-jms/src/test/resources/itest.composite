@@ -156,6 +156,7 @@
 
 
     <include name="CallbackComposite"/>
+    <include name="ScopeComposite"/>
 
 
 </composite>
