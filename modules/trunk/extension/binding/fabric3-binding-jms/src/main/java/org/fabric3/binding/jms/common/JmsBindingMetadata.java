@@ -43,10 +43,9 @@ import javax.naming.Context;
 import org.fabric3.model.type.ModelObject;
 
 /**
- * Logical model object for JMS binding definition. TODO Support for overriding
- * request connection, response connection and operation properties from a
- * definition document as well as activation spec and resource adaptor.
- * 
+ * Logical model object for JMS binding definition. TODO Support for overriding request connection, response connection and operation properties from
+ * a definition document as well as activation spec and resource adaptor.
+ *
  * @version $Revision$ $Date$
  */
 public class JmsBindingMetadata extends ModelObject {
@@ -68,8 +67,7 @@ public class JmsBindingMetadata extends ModelObject {
     private String jndiUrl;
 
     /**
-     * Destination used for receiving service requests and dispatching reference
-     * invocations.
+     * Destination used for receiving service requests and dispatching reference invocations.
      */
     private DestinationDefinition destination;
 
@@ -91,7 +89,7 @@ public class JmsBindingMetadata extends ModelObject {
     /**
      * operation properties
      */
-    private Map<String,OperationPropertiesDefinition> operationProperties;
+    private Map<String, OperationPropertiesDefinition> operationProperties;
 
     /**
      * @return the connectionFactory
@@ -164,7 +162,7 @@ public class JmsBindingMetadata extends ModelObject {
     }
 
     /**
-     * @return Definition fro sending responses.
+     * @return Definition for sending responses.
      */
     public ResponseDefinition getResponse() {
         return response;
@@ -176,37 +174,37 @@ public class JmsBindingMetadata extends ModelObject {
     public void setResponse(ResponseDefinition response) {
         this.response = response;
     }
-    
+
     /**
      * @return Response destination definition.
      */
     public DestinationDefinition getResponseDestination() {
         return response.getDestination();
     }
-    
+
     /**
      * @return Response destination definition.
      */
     public ConnectionFactoryDefinition getResponseConnectionFactory() {
         return response.getConnectionFactory();
     }
-    
+
     /**
      * @return The JNDI environment to use.
      */
     public Hashtable<String, String> getEnv() {
-        
+
         Hashtable<String, String> props = new Hashtable<String, String>();
-        
-        if(jndiUrl != null) {
+
+        if (jndiUrl != null) {
             props.put(Context.PROVIDER_URL, getJndiUrl());
         }
-        if(initialContextFactory != null) {
+        if (initialContextFactory != null) {
             props.put(Context.INITIAL_CONTEXT_FACTORY, getInitialContextFactory());
         }
-        
+
         return props;
-        
+
     }
 
     public HeadersDefinition getHeaders() {
@@ -217,26 +215,28 @@ public class JmsBindingMetadata extends ModelObject {
         this.headers = headers;
     }
 
-    public Map<String,OperationPropertiesDefinition> getOperationProperties() {
-        if(operationProperties==null){
+    public Map<String, OperationPropertiesDefinition> getOperationProperties() {
+        if (operationProperties == null) {
             return Collections.emptyMap();
-        }else{
+        } else {
             return operationProperties;
         }
     }
 
     public void addOperationProperties(String name, OperationPropertiesDefinition operationProperties) {
-        if(this.operationProperties==null){
+        if (this.operationProperties == null) {
             this.operationProperties = new HashMap<String, OperationPropertiesDefinition>();
         }
         this.operationProperties.put(name, operationProperties);
     }
-    
+
     /**
-     * @return there is No response in the Meta data
+     * Returns if the binding is configured with a response destination.Ê
+     *
+     * @return true if the binding is configured with a response destination
      */
-    public boolean noResponse(){
-        return response == null;
+    public boolean isResponse() {
+        return response != null;
     }
 
 }

@@ -99,8 +99,8 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
             throws WiringException {
 
         JmsTargetMessageListener receiver = null;
-        Destination resDestination = null;
-        ConnectionFactory resCf = null;
+        Destination responseDestination = null;
+        ConnectionFactory responseConnectionFactory = null;
 
         ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassLoaderId());
 
@@ -118,14 +118,14 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         create = destinationDefinition.getCreate();
         Destination reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
 
-        if (!metadata.noResponse()) {
+        if (metadata.isResponse()) {
             connectionFactoryDefinition = metadata.getResponseConnectionFactory();
             create = connectionFactoryDefinition.getCreate();
-            resCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+            responseConnectionFactory = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
 
             destinationDefinition = metadata.getResponseDestination();
             create = destinationDefinition.getCreate();
-            resDestination = destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
+            responseDestination = destinationStrategies.get(create).getDestination(destinationDefinition, responseConnectionFactory, env);
         }
 
         Map<String, PayloadType> payloadTypes = targetDefinition.getPayloadTypes();
@@ -134,8 +134,8 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
             PhysicalOperationDefinition op = chain.getPhysicalOperation();
 
-            if (resDestination != null && resCf != null) {
-                receiver = new JmsTargetMessageListener(resDestination, resCf);
+            if (metadata.isResponse()) {
+                receiver = new JmsTargetMessageListener(responseDestination, responseConnectionFactory);
             }
             String operationName = op.getName();
             PayloadType payloadType = payloadTypes.get(operationName);

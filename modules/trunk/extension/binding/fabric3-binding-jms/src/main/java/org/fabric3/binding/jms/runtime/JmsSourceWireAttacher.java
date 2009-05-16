@@ -121,7 +121,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         DestinationDefinition destination = metadata.getDestination();
         JMSObjectFactory requestJMSObjectFactory = buildObjectFactory(connectionFactory, destination, env);
 
-        if (!metadata.noResponse()) {
+        if (metadata.isResponse()) {
             ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
             DestinationDefinition responseDestination = metadata.getResponseDestination();
             responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
@@ -137,10 +137,10 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         WireHolder wireHolder = createWireHolder(wire, payloadTypes, correlationScheme, transactionType, callbackUri, cl);
 
         SourceMessageListener messageListener;
-        if (metadata.noResponse()) {
-            messageListener = new OneWaySourceMessageListener(wireHolder);
-        } else {
+        if (metadata.isResponse()) {
             messageListener = new RequestResponseSourceMessageListener(wireHolder);
+        } else {
+            messageListener = new OneWaySourceMessageListener(wireHolder);
         }
         if (jmsHost.isRegistered(serviceUri)) {
             // the wire has changed and it is being reprovisioned
