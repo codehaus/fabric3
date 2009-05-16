@@ -142,19 +142,15 @@
     <!-- reinjects the metadata store after runtime bootstrap -->
     <wire source="MetaDataStore/processorRegistry" target="ProcessorRegistry"/>
 
-    <component name="JDKSerializerFactory" f3-core:key="jdk">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.serializer.JDKSerializerFactory"/>
-    </component>
-
-    <component name="JDKWireFormatterFactory" f3-core:key="jdk">
+    <component name="JDKParameterEncoderFactory" f3-core:key="jdk">
         <f3-impl:implementation.system class="org.fabric3.fabric.binding.format.JDKParameterEncoderFactory"/>
     </component>
 
-    <component name="JDKUnwrappedMessageFormatter" f3-core:key="jdk">
+    <component name="JDKUnwrappedMessageEncoder" f3-core:key="jdk">
         <f3-impl:implementation.system class="org.fabric3.spi.binding.format.JDKUnwrappedMessageEncoder"/>
     </component>
 
-    <component name="JDKWrappedWireFormatterFactory" f3-core:key="jdk.wrapped">
+    <component name="JDKWrappedParameterEncoderFactory" f3-core:key="jdk.wrapped">
         <f3-impl:implementation.system class="org.fabric3.fabric.binding.format.JDKParameterEncoderFactory"/>
     </component>
 
