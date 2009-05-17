@@ -41,7 +41,7 @@ public class JMSEncodeCallback implements EncodeCallback {
 
     public void encodeOperationHeader(String name) {
         try {
-            jmsMessage.setStringProperty("scaOperationName", name);
+            jmsMessage.setStringProperty(JmsConstants.OPERATION_HEADER, name);
         } catch (JMSException e) {
             // this exception is thrown synchronously so it will be bubbled up to the client
             throw new ServiceRuntimeException(e);
@@ -50,7 +50,7 @@ public class JMSEncodeCallback implements EncodeCallback {
 
     public void encodeRoutingHeader(String header) {
         try {
-            jmsMessage.setStringProperty("f3Context", header);
+            jmsMessage.setStringProperty(JmsConstants.ROUTING_HEADER, header);
         } catch (JMSException e) {
             // this exception is thrown synchronously so it will be bubbled up to the client
             throw new ServiceRuntimeException(e);
