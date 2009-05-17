@@ -42,20 +42,20 @@ public abstract class AbstractSourceMessageListener implements SourceMessageList
         }
     }
 
-    protected InvocationChainHolder getInvocationChainHolder(String opName) {
+    protected InvocationChainHolder getInvocationChainHolder(String opName) throws JmsBadMessageException {
         List<InvocationChainHolder> chainHolders = wireHolder.getInvocationChains();
         if (chainHolders.size() == 1) {
             return chainHolders.get(0);
         } else if (opName != null) {
             InvocationChainHolder chainHolder = invocationChainMap.get(opName);
             if (chainHolder == null) {
-                throw new Fabric3JmsException("Unable to match operation on the service contract: " + opName);
+                throw new JmsBadMessageException("Unable to match operation on the service contract: " + opName);
             }
             return chainHolder;
         } else if (onMessageHolder != null) {
             return onMessageHolder;
         } else {
-            throw new Fabric3JmsException("Unable to match operation on the service contract");
+            throw new JmsBadMessageException("Unable to match operation on the service contract");
         }
 
     }
