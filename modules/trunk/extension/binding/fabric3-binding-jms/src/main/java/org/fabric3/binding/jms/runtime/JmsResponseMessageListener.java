@@ -42,6 +42,8 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
+import org.oasisopen.sca.ServiceRuntimeException;
+
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 
 /**
@@ -88,7 +90,8 @@ public class JmsResponseMessageListener {
             session.commit();
             return message;
         } catch (JMSException ex) {
-            throw new Fabric3JmsException("Unable to receive response", ex);
+            // bubble exception to the client
+            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, ex);
         } finally {
             JmsHelper.closeQuietly(connection);
         }
