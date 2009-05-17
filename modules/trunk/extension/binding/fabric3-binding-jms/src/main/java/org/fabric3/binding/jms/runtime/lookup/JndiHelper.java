@@ -40,8 +40,6 @@ import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
-
 /**
  * Helper class for JNDI lookup.
  */
@@ -67,7 +65,7 @@ public class JndiHelper {
             ctx = new InitialContext(env);
             return ctx.lookup(name);
         } catch (NamingException ex) {
-            throw new Fabric3JmsException("Unable to lookup administered object", ex);
+            throw new JmsLookupException("Unable to lookup administered object", ex);
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
             try {
