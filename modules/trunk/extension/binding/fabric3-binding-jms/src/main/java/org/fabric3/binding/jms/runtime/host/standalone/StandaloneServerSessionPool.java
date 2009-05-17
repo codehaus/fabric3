@@ -35,7 +35,6 @@
 package org.fabric3.binding.jms.runtime.host.standalone;
 
 import java.util.Stack;
-
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.ServerSession;
@@ -66,21 +65,27 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
     private final WorkScheduler workScheduler;
 
     /**
-     * Initializes the server sessions.
+     * Constructor.
+     *
+     * @param jmsObjectFactory
+     * @param transactionHandler
+     * @param listener
+     * @param transactionType
      * @param workScheduler
-     * @param serverSessions Server sessions.
+     * @param receiverCount
+     * @param listener
      */
     public StandaloneServerSessionPool(JMSObjectFactory jmsObjectFactory,
-            TransactionHandler transactionHandler,
-            MessageListener listener,
-            TransactionType transactionType,
-            WorkScheduler workScheduler,
-            int receiverCount) {
+                                       TransactionHandler transactionHandler,
+                                       MessageListener listener,
+                                       TransactionType transactionType,
+                                       WorkScheduler workScheduler,
+                                       int receiverCount) {
         this.jmsObjectFactory = jmsObjectFactory;
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
         this.workScheduler = workScheduler;
-        this.poolSize =receiverCount;
+        this.poolSize = receiverCount;
         initSessions(listener);
     }
 
@@ -92,24 +97,22 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
                 ServerSession serverSession = new StandaloneServerSession(session, this);
                 serverSessions.add(serverSession);
             } catch (JMSException e) {
-                throw new Fabric3JmsException("Error when initialize ServerSessionPool",e);
+                throw new Fabric3JmsException("Error when initialize ServerSessionPool", e);
             }
         }
     }
 
     /**
      * Closes the underlying sessions.
+     * @throws JMSException if there is an error closing the session
      */
     public void stop() throws JMSException {
-        ServerSession serverSession = null;
+        ServerSession serverSession;
         while ((serverSession = getServerSession()) != null) {
             JmsHelper.closeQuietly(serverSession.getSession());
         }
     }
 
-    /**
-     * @see javax.jms.ServerSessionPool#getServerSession()
-     */
     public ServerSession getServerSession() throws JMSException {
         synchronized (serverSessions) {
             while (serverSessions.isEmpty()) {
@@ -125,6 +128,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
 
     /**
      * Returns the session to the pool.
+     *
      * @param serverSession Server session to be returned.
      */
     protected void returnSession(ServerSession serverSession) {
@@ -133,11 +137,13 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
             serverSessions.notify();
         }
     }
+
     /**
      * Start a JMS Session asynchronously.
-     * @param serverSessions
+     *
+     * @param serverSession the session
      */
-    public void StartServerSession(final ServerSession serverSession){
+    public void startServerSession(final ServerSession serverSession) {
         workScheduler.scheduleWork(new DefaultPausableWork() {
             public void execute() {
                 try {
@@ -150,7 +156,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
                         session.commit();
                     }
                 } catch (Exception jmse) {
-                    throw new Fabric3JmsException("Error when start ServerSession",jmse);
+                    throw new Fabric3JmsException("Error when start ServerSession", jmse);
                 } finally {
                     returnSession(serverSession);
                 }

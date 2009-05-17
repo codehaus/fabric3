@@ -72,7 +72,7 @@ public class StandaloneServerSession implements ServerSession {
      * @see javax.jms.ServerSession#start()
      */
     public void start() throws JMSException {
-        serverSessionPool.StartServerSession(this);
+        serverSessionPool.startServerSession(this);
     }
 
 }
