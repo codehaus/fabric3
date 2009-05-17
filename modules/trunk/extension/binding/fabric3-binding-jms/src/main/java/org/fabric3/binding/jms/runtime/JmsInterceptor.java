@@ -168,9 +168,9 @@ public class JmsInterceptor implements Interceptor {
             return response;
 
         } catch (JMSException ex) {
-            throw new Fabric3JmsException("Unable to receive response", ex);
+            throw new ServiceRuntimeException("Unable to receive response", ex);
         } catch (IOException ex) {
-            throw new Fabric3JmsException("Error serializing callframe", ex);
+            throw new ServiceRuntimeException("Error serializing callframe", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
             Thread.currentThread().setContextClassLoader(oldCl);
