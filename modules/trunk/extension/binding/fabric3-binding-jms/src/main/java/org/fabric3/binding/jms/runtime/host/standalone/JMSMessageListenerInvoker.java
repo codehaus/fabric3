@@ -45,8 +45,10 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsOperationException;
 import org.fabric3.binding.jms.runtime.SourceMessageListener;
+import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
 
@@ -54,42 +56,28 @@ import org.fabric3.host.work.WorkScheduler;
  * A container class used to support MessageListener with ServerSessionPool.
  */
 public class JMSMessageListenerInvoker implements MessageListener {
-    /**
-     * Request JMS object factory
-     */
     private JMSObjectFactory requestJMSObjectFactory = null;
-    /**
-     * Response JMS object factory
-     */
     private JMSObjectFactory responseJMSObjectFactory;
-    /**
-     * ResponseMessageListenerImpl invoked by this invoker
-     */
     private SourceMessageListener messageListener = null;
-    /**
-     * Transaction Type
-     */
     private TransactionType transactionType;
-    /**
-     * Transaction Handler
-     */
     private TransactionHandler transactionHandler;
-    /**
-     * WorkScheduler passed to serverSessionPool
-     */
     private WorkScheduler workScheduler;
+    private JMSRuntimeMonitor monitor;
 
     public JMSMessageListenerInvoker(JMSObjectFactory requestJMSObjectFactory,
                                      JMSObjectFactory responseJMSObjectFactory,
                                      SourceMessageListener messageListener,
                                      TransactionType transactionType,
-                                     TransactionHandler transactionHandler, WorkScheduler workScheduler) {
+                                     TransactionHandler transactionHandler,
+                                     WorkScheduler workScheduler,
+                                     JMSRuntimeMonitor monitor) {
         this.requestJMSObjectFactory = requestJMSObjectFactory;
         this.responseJMSObjectFactory = responseJMSObjectFactory;
         this.messageListener = messageListener;
         this.transactionType = transactionType;
         this.transactionHandler = transactionHandler;
         this.workScheduler = workScheduler;
+        this.monitor = monitor;
     }
 
     public void start(int receiverCount) {
@@ -140,9 +128,19 @@ public class JMSMessageListenerInvoker implements MessageListener {
             } catch (Exception ne) {
                 //ignore
             }
+            monitor.jmsListenerError(e);
             throw e;
         } catch (JmsOperationException e) {
             throw new Fabric3JmsException("Error when invoking Listener", e.getCause());
+        } catch (JmsTxException e) {
+            try {
+                if (transactionType == TransactionType.GLOBAL) {
+                    transactionHandler.rollback();
+                }
+            } catch (Exception ne) {
+                //ignore
+            }
+            monitor.jmsListenerError(e);
         }
     }
 

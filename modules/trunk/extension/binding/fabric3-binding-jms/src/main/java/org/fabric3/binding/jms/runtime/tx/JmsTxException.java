@@ -34,12 +34,12 @@
  */
 package org.fabric3.binding.jms.runtime.tx;
 
-import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3Exception;
 
 /**
  * @version $Revision$ $Date$
  */
-public class JmsTxException extends Fabric3RuntimeException {
+public class JmsTxException extends Fabric3Exception {
     private static final long serialVersionUID = -1184454615953550937L;
 
     public JmsTxException(String message) {

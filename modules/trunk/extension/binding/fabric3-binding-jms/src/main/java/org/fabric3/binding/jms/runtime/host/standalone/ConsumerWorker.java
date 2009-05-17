@@ -144,8 +144,14 @@ public class ConsumerWorker extends DefaultPausableWork {
             }
         } catch (JMSException ex) {
             if (transactionType == TransactionType.GLOBAL) {
-                transactionHandler.rollback();
+                try {
+                    transactionHandler.rollback();
+                } catch (JmsTxException e) {
+                    monitor.jmsListenerError(e);
+                }
             }
+        } catch (JmsTxException e) {
+            monitor.jmsListenerError(e);
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
         }

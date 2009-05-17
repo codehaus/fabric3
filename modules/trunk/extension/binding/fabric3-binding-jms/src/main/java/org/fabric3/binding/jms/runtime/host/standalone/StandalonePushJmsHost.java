@@ -131,8 +131,13 @@ public class StandalonePushJmsHost implements JmsHost {
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl,
                                          URI serviceUri) {
-        JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(
-                requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, workScheduler);
+        JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(requestJMSObjectFactory,
+                                                                          responseJMSObjectFactory,
+                                                                          messageListener,
+                                                                          transactionType,
+                                                                          transactionHandler,
+                                                                          workScheduler,
+                                                                          monitor);
         invoker.start(receiverCount);
         jmsMessageListenerInvokers.put(serviceUri, invoker);
 
