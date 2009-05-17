@@ -35,7 +35,6 @@
 package org.fabric3.binding.jms.runtime.lookup.destination;
 
 import java.util.Hashtable;
-
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -50,41 +49,29 @@ import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 
 /**
  * The destination is never looked up, it is always created.
- *
  */
 public class AlwaysDestinationStrategy implements DestinationStrategy {
 
-    /**
-     * @see org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.common.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
-     */
-    public Destination getDestination(DestinationDefinition definition,
-                                      ConnectionFactory cf,
-                                      Hashtable<String, String> env) {
-        
+    public Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env) {
         Connection connection = null;
-        
         try {
-            
             String name = definition.getName();
             connection = cf.createConnection();
-            
-            switch(definition.getDestinationType()) {
-                case queue:
-                    QueueConnection qc = (QueueConnection) connection;
-                    return qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);
-                case topic:
-                    TopicConnection tc = (TopicConnection) connection;
-                    return tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);
-                default:
-                    throw new IllegalArgumentException("Unknown destination type");
+
+            switch (definition.getDestinationType()) {
+            case queue:
+                QueueConnection qc = (QueueConnection) connection;
+                return qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);
+            case topic:
+                TopicConnection tc = (TopicConnection) connection;
+                return tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);
+            default:
+                throw new IllegalArgumentException("Unknown destination type");
             }
-            
-        } catch(JMSException ex) {
+        } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to create destination", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
         }
-        
     }
-
 }
