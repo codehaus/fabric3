@@ -39,8 +39,8 @@ import org.fabric3.host.Fabric3RuntimeException;
 /**
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("serial")
 public class JmsTxException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = -1184454615953550937L;
 
     public JmsTxException(String message) {
         super(message);
