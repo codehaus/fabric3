@@ -48,11 +48,9 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class JtaTransactionHandler implements TransactionHandler {
-
     private TransactionManager transactionManager;
 
-    @Reference
-    public void setTransactionManager(TransactionManager transactionManager) {
+    public JtaTransactionHandler(@Reference TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
