@@ -37,6 +37,8 @@ package org.fabric3.binding.jms.runtime.tx;
 import org.fabric3.host.Fabric3Exception;
 
 /**
+ * Denotes an exception performing a transaction operation such as commit or enlist.
+ *
  * @version $Revision$ $Date$
  */
 public class JmsTxException extends Fabric3Exception {
