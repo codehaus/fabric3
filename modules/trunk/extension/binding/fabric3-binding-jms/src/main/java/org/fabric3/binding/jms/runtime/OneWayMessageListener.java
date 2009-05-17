@@ -62,7 +62,7 @@ public class OneWayMessageListener extends AbstractSourceMessageListener {
 
     public void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException {
         try {
-            String opName = request.getStringProperty("scaOperationName");
+            String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
             InvocationChainHolder holder = getInvocationChainHolder(opName);
             Interceptor interceptor = holder.getChain().getHeadInterceptor();
             PayloadType payloadType = holder.getPayloadType();
