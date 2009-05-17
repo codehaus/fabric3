@@ -46,7 +46,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
+import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
@@ -71,10 +71,10 @@ public class JmsHelper {
      * @param callbackUri if the destination service for the message is bidirectional, the callback URI is the URI of the callback service for the
      *                    client that is wired to it. Otherwise, it is null.
      * @return the work context
-     * @throws Fabric3JmsException if an error is encountered deserializing the callframe
+     * @throws JmsBadMessageException if an error is encountered deserializing the callframe
      */
     @SuppressWarnings({"unchecked"})
-    public static WorkContext createWorkContext(Message request, String callbackUri) throws Fabric3JmsException {
+    public static WorkContext createWorkContext(Message request, String callbackUri) throws JmsBadMessageException {
         try {
             WorkContext workContext = new WorkContext();
             String encoded = request.getStringProperty("f3Context");
@@ -98,15 +98,15 @@ public class JmsHelper {
             stack.add(frame);
             return workContext;
         } catch (JMSException ex) {
-            throw new Fabric3JmsException("Error deserializing callframe", ex);
+            throw new JmsBadMessageException("Error deserializing callframe", ex);
         } catch (IOException ex) {
-            throw new Fabric3JmsException("Error deserializing callframe", ex);
+            throw new JmsBadMessageException("Error deserializing callframe", ex);
         } catch (ClassNotFoundException ex) {
-            throw new Fabric3JmsException("Error deserializing callframe", ex);
+            throw new JmsBadMessageException("Error deserializing callframe", ex);
         }
     }
 
-    public static void addCallFrame(org.fabric3.spi.invocation.Message message, String callbackUri) throws Fabric3JmsException {
+    public static void addCallFrame(org.fabric3.spi.invocation.Message message, String callbackUri) {
         WorkContext workContext = message.getWorkContext();
         CallFrame previous = workContext.peekCallFrame();
         // Copy correlation and conversation information from incoming frame to new frame

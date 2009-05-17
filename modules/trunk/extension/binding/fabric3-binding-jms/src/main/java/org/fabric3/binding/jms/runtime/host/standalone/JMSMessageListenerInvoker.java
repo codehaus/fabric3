@@ -46,6 +46,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 import org.fabric3.binding.jms.runtime.JmsOperationException;
 import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
@@ -104,43 +105,56 @@ public class JMSMessageListenerInvoker implements MessageListener {
     }
 
     public void onMessage(Message message) {
+        Session responseSession = null;
         try {
-            Session responseSession = responseJMSObjectFactory.createSession();
+            responseSession = responseJMSObjectFactory.createSession();
             if (transactionType == TransactionType.GLOBAL) {
                 transactionHandler.enlist(responseSession);
             }
             Destination responseDestination = responseJMSObjectFactory
                     .getDestination();
             messageListener.onMessage(message, responseSession, responseDestination);
-            if (transactionType == TransactionType.GLOBAL) {
-                transactionHandler.commit();
-            } else if (transactionType == TransactionType.LOCAL) {
-                responseSession.commit();
-            }
+            commit(responseSession);
             responseJMSObjectFactory.recycle();
         } catch (JMSException e) {
             throw new Fabric3JmsException("Error when invoking Listener", e);
         } catch (RuntimeException e) {
-            try {
-                if (transactionType == TransactionType.GLOBAL) {
-                    transactionHandler.rollback();
-                }
-            } catch (Exception ne) {
-                //ignore
-            }
+            rollback();
             monitor.jmsListenerError(e);
             throw e;
         } catch (JmsOperationException e) {
             throw new Fabric3JmsException("Error when invoking Listener", e.getCause());
         } catch (JmsTxException e) {
-            try {
-                if (transactionType == TransactionType.GLOBAL) {
-                    transactionHandler.rollback();
-                }
-            } catch (Exception ne) {
-                //ignore
-            }
+            rollback();
             monitor.jmsListenerError(e);
+        } catch (JmsBadMessageException e) {
+            // Bad message. Do not rollback since the message should not be redelivered. Just log the exception for now.
+            monitor.jmsListenerError(e);
+            try {
+                commit(responseSession);
+            } catch (JmsTxException e2) {
+                rollback();
+            } catch (JMSException e1) {
+
+            }
+        }
+    }
+
+    private void commit(Session responseSession) throws JmsTxException, JMSException {
+        if (transactionType == TransactionType.GLOBAL) {
+            transactionHandler.commit();
+        } else if (transactionType == TransactionType.LOCAL) {
+            responseSession.commit();
+        }
+    }
+
+    private void rollback() {
+        try {
+            if (transactionType == TransactionType.GLOBAL) {
+                transactionHandler.rollback();
+            }
+        } catch (Exception ne) {
+            //ignore
         }
     }
 

@@ -59,7 +59,8 @@ public class OneWayMessageListener extends AbstractSourceMessageListener {
         super(wireHolder);
     }
 
-    public void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException {
+    public void onMessage(Message request, Session responseSession, Destination responseDestination)
+            throws JmsOperationException, JmsBadMessageException {
         try {
             String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
             InvocationChainHolder holder = getInvocationChainHolder(opName);
@@ -122,7 +123,7 @@ public class OneWayMessageListener extends AbstractSourceMessageListener {
         }
     }
 
-    private void invoke(Message request, Interceptor interceptor, Object payload) throws JmsOperationException {
+    private void invoke(Message request, Interceptor interceptor, Object payload) throws JmsOperationException, JmsBadMessageException {
         WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);

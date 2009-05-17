@@ -50,8 +50,10 @@ public interface SourceMessageListener {
      * @param request             the message passed to the listener
      * @param responseSession     the JMSSession object which is used to send response message
      * @param responseDestination JMSDestination to which the response is sent
-     * @throws JmsOperationException if there is an error invoking the service bound to the JMS destination
+     * @throws JmsOperationException  if there is an error invoking the service bound to the JMS destination
+     * @throws JmsBadMessageException if a message is received that cannot be processed
      */
-    public abstract void onMessage(Message request, Session responseSession, Destination responseDestination) throws JmsOperationException;
+    public abstract void onMessage(Message request, Session responseSession, Destination responseDestination)
+            throws JmsOperationException, JmsBadMessageException;
 
 }

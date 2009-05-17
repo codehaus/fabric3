@@ -44,6 +44,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 import org.fabric3.binding.jms.runtime.JmsOperationException;
 import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
@@ -118,12 +119,7 @@ public class ConsumerWorker extends DefaultPausableWork {
                         responseDestination = responseJMSObjectFactory.getDestination();
                     }
                     listener.onMessage(message, responseSession, responseDestination);
-                    if (transactionType == TransactionType.GLOBAL) {
-                        transactionHandler.commit();
-                        transactionHandler.enlist(session);
-                    } else {
-                        session.commit();
-                    }
+                    commit();
                 }
             } catch (Fabric3JmsException e) {
                 monitor.jmsListenerError(e);
@@ -131,16 +127,11 @@ public class ConsumerWorker extends DefaultPausableWork {
                 // Exception was thrown by the service invocation, log the root cause
                 monitor.jmsListenerError(e.getCause());
             } catch (JmsTxException e) {
-                if (transactionType == TransactionType.GLOBAL) {
-                    transactionHandler.rollback();
-                } else {
-                    try {
-                        session.rollback();
-                    } catch (JMSException ne) {
-                        monitor.jmsListenerError(e);
-                    }
-                    monitor.jmsListenerError(e);
-                }
+                rollback(e);
+            } catch (JmsBadMessageException e) {
+                // Bad message. Do not rollback since the message should not be redelivered. Just log the exception for now.
+                monitor.jmsListenerError(e);
+                commit();
             }
         } catch (JMSException ex) {
             if (transactionType == TransactionType.GLOBAL) {
@@ -156,6 +147,28 @@ public class ConsumerWorker extends DefaultPausableWork {
             Thread.currentThread().setContextClassLoader(oldCl);
         }
 
+    }
+
+    private void rollback(JmsTxException e) throws JmsTxException {
+        if (transactionType == TransactionType.GLOBAL) {
+            transactionHandler.rollback();
+        } else {
+            try {
+                session.rollback();
+            } catch (JMSException ne) {
+                monitor.jmsListenerError(e);
+            }
+            monitor.jmsListenerError(e);
+        }
+    }
+
+    private void commit() throws JmsTxException, JMSException {
+        if (transactionType == TransactionType.GLOBAL) {
+            transactionHandler.commit();
+            transactionHandler.enlist(session);
+        } else {
+            session.commit();
+        }
     }
 
 
