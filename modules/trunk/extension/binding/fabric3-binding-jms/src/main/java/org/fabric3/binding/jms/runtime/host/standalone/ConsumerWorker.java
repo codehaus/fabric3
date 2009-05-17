@@ -165,7 +165,7 @@ public class ConsumerWorker extends DefaultPausableWork {
     private void commit() throws JmsTxException, JMSException {
         if (transactionType == TransactionType.GLOBAL) {
             transactionHandler.commit();
-            transactionHandler.enlist(session);
+//            transactionHandler.enlist(session);
         } else {
             session.commit();
         }
