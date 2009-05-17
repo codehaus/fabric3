@@ -47,7 +47,7 @@ public class JMSHeaderContext implements HeaderContext {
 
     public String getRoutingText() {
         try {
-            return jmsMessage.getStringProperty("f3Context");
+            return jmsMessage.getStringProperty(JmsConstants.ROUTING_HEADER);
         } catch (JMSException e) {
             throw new ServiceRuntimeException(e);
         }
