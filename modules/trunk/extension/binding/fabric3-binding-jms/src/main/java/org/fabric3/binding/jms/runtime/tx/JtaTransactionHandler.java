@@ -104,9 +104,9 @@ public class JtaTransactionHandler implements TransactionHandler {
         }
     }
 
-    public Session createSession(Connection con) throws JmsTxException {
+    public Session createSession(Connection connection) throws JmsTxException {
         try {
-            return con.createSession(false, Session.SESSION_TRANSACTED);
+            return connection.createSession(false, Session.SESSION_TRANSACTED);
         } catch (JMSException e) {
             throw new JmsTxException(e);
         }

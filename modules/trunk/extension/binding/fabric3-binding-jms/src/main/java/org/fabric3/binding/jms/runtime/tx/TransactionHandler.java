@@ -38,16 +38,41 @@ import javax.jms.Connection;
 import javax.jms.Session;
 
 /**
+ * Manages global transactions for a JMS session.
+ *
  * @version $Revision$ $Date$
  */
 public interface TransactionHandler {
 
+    /**
+     * Enlists the session in a globabl transaction.
+     *
+     * @param session the session
+     * @throws JmsTxException if there is an error performing the enlistment
+     */
     void enlist(Session session) throws JmsTxException;
 
+    /**
+     * Commits the current globabl transaction.
+     *
+     * @throws JmsTxException if there is an error performing the commit
+     */
     void commit() throws JmsTxException;
 
+    /**
+     * Rolls back the current globabl transaction.
+     *
+     * @throws JmsTxException if there is an error performing the rollback
+     */
     void rollback() throws JmsTxException;
 
-    Session createSession(Connection con) throws JmsTxException;
+    /**
+     * Creates a JMS session using the given connection.
+     *
+     * @param connection the connection
+     * @return the JMS session
+     * @throws JmsTxException if there is an error creating the session
+     */
+    Session createSession(Connection connection) throws JmsTxException;
 
 }
