@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.runtime.helper;
+package org.fabric3.binding.jms.runtime.lookup;
 
 import java.util.Hashtable;
 import javax.naming.Context;
@@ -47,31 +47,25 @@ import org.fabric3.binding.jms.runtime.Fabric3JmsException;
  */
 public class JndiHelper {
 
-    /**
-     * Utility class constructor.
-     */
     private JndiHelper() {
     }
 
-    /*
-     * Looks up the administered object.
+    /**
+     * Looks up the administered object in JNDI.
+     *
+     * @param name the object name
+     * @param env  environment properties
+     * @return the object
+     * @throws NameNotFoundException if the object was not found
+     * @throws JmsLookupException    if there was an error looking up the object
      */
-    public static Object lookup(String name, Hashtable<String, String> env) throws NameNotFoundException {
-
+    public static Object lookup(String name, Hashtable<String, String> env) throws NameNotFoundException, JmsLookupException {
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-
         Context ctx = null;
-
         try {
-
             Thread.currentThread().setContextClassLoader(JndiHelper.class.getClassLoader());
-
             ctx = new InitialContext(env);
-
             return ctx.lookup(name);
-
-        } catch (NameNotFoundException ex) {
-            throw ex;
         } catch (NamingException ex) {
             throw new Fabric3JmsException("Unable to lookup administered object", ex);
         } finally {
@@ -81,10 +75,8 @@ public class JndiHelper {
                     ctx.close();
                 }
             } catch (NamingException ex) {
-                throw new Fabric3JmsException("Unable to lookup administered object", ex);
+                throw new JmsLookupException("Unable to lookup administered object", ex);
             }
         }
-
     }
-
 }

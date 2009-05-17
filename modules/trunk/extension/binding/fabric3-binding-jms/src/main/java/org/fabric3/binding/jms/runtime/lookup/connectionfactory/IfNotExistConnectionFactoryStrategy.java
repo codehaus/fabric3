@@ -39,7 +39,7 @@ import javax.jms.ConnectionFactory;
 import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.runtime.helper.JndiHelper;
+import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
