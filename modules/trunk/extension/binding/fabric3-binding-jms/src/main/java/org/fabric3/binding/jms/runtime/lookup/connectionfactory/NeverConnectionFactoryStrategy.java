@@ -39,23 +39,19 @@ import javax.jms.ConnectionFactory;
 import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.helper.JndiHelper;
+import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
- * The connection factory is always looked up and never created.
+ * Implementation that attempts to resolve a connection factory in JNDI.
  */
 public class NeverConnectionFactoryStrategy implements ConnectionFactoryStrategy {
 
-    /**
-     * @see org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.common.ConnectionFactoryDefinition,
-     *      java.util.Hashtable)
-     */
-    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
+    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException {
         try {
             return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
         } catch (NameNotFoundException ex) {
-            throw new Fabric3JmsException(definition.getName() + " not found", ex);
+            throw new JmsLookupException(definition.getName() + " not found", ex);
         }
     }
 

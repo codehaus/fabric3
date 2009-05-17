@@ -44,19 +44,18 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
+import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
- * The connection factory is never looked up, it is always created.
+ * Implementation that always attempts to create a connection factory.
  *
  * @version $Revision$ $Date$
  */
 public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrategy {
 
-    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
+    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException {
 
         try {
-
             ConnectionFactory cf = (ConnectionFactory) Class.forName(definition.getName()).newInstance();
             Map<String, String> props = definition.getProperties();
             // TODO We may need to factor this into provider specific classes rather than making the general assumption on bean style props
@@ -68,19 +67,17 @@ public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrateg
                     writeMethod.invoke(cf, propValue);
                 }
             }
-
             return cf;
-
         } catch (InstantiationException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
+            throw new JmsLookupException("Unable to create connection factory", ex);
         } catch (IllegalAccessException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
+            throw new JmsLookupException("Unable to create connection factory", ex);
         } catch (ClassNotFoundException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
+            throw new JmsLookupException("Unable to create connection factory", ex);
         } catch (IntrospectionException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
+            throw new JmsLookupException("Unable to create connection factory", ex);
         } catch (InvocationTargetException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
+            throw new JmsLookupException("Unable to create connection factory", ex);
         }
 
     }

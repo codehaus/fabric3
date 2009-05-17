@@ -49,6 +49,7 @@ import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.spi.ObjectFactory;
@@ -107,25 +108,29 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
         ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
         CreateOption create = connectionFactoryDefinition.getCreate();
-
-        ConnectionFactory reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
-
-        DestinationDefinition destinationDefinition = metadata.getDestination();
-        create = destinationDefinition.getCreate();
-        Destination reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
-
         Destination responseDestination = null;
+        Destination reqDestination;
         ConnectionFactory responseConnectionFactory = null;
-        if (metadata.isResponse()) {
-            connectionFactoryDefinition = metadata.getResponseConnectionFactory();
-            create = connectionFactoryDefinition.getCreate();
-            responseConnectionFactory = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+        ConnectionFactory reqCf;
+        try {
+            reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
 
-            destinationDefinition = metadata.getResponseDestination();
+            DestinationDefinition destinationDefinition = metadata.getDestination();
             create = destinationDefinition.getCreate();
-            responseDestination = destinationStrategies.get(create).getDestination(destinationDefinition, responseConnectionFactory, env);
-        }
+            reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
 
+            if (metadata.isResponse()) {
+                connectionFactoryDefinition = metadata.getResponseConnectionFactory();
+                create = connectionFactoryDefinition.getCreate();
+                responseConnectionFactory = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+
+                destinationDefinition = metadata.getResponseDestination();
+                create = destinationDefinition.getCreate();
+                responseDestination = destinationStrategies.get(create).getDestination(destinationDefinition, responseConnectionFactory, env);
+            }
+        } catch (JmsLookupException e) {
+            throw new WiringException(e);
+        }
         Map<String, PayloadType> payloadTypes = targetDefinition.getPayloadTypes();
 
         for (InvocationChain chain : wire.getInvocationChains()) {

@@ -40,15 +40,12 @@ import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.runtime.helper.JndiHelper;
+import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
- * The destination is looked up, if not found it is created.
+ * Implementation that attempts to resolve a destination in JNDI, and create the destination if it is not found.
  */
 public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStrategy {
-
-    /**
-     * Always strategy.
-     */
     private ConnectionFactoryStrategy always;
 
     public IfNotExistConnectionFactoryStrategy() {
@@ -56,7 +53,7 @@ public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStr
     }
 
 
-    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
+    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException {
         try {
             return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
         } catch (NameNotFoundException ex) {

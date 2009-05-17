@@ -39,6 +39,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
 import org.fabric3.binding.jms.common.DestinationDefinition;
+import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
  * Strategy for looking up destinations.
@@ -54,7 +55,8 @@ public interface DestinationStrategy {
      * @param cf         Connection factory.
      * @param env        JNDI environment.
      * @return Lokked up or created destination.
+     * @throws JmsLookupException if there is an error looking up the destination
      */
-    Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env);
+    Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env) throws JmsLookupException;
 
 }

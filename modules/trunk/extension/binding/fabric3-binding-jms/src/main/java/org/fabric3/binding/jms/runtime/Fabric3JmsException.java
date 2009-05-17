@@ -40,10 +40,6 @@ package org.fabric3.binding.jms.runtime;
  * @version $Revision$ $Date$
  */
 public class Fabric3JmsException extends RuntimeException {
-
-    /**
-     * Serial version UID.
-     */
     private static final long serialVersionUID = -1584475278512639999L;
 
     /**

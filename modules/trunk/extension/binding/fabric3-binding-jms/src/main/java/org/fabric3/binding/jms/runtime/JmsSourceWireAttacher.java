@@ -53,6 +53,7 @@ import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -119,12 +120,16 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
         ConnectionFactoryDefinition connectionFactory = metadata.getConnectionFactory();
         DestinationDefinition destination = metadata.getDestination();
-        JMSObjectFactory requestJMSObjectFactory = buildObjectFactory(connectionFactory, destination, env);
-
-        if (metadata.isResponse()) {
-            ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
-            DestinationDefinition responseDestination = metadata.getResponseDestination();
-            responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
+        JMSObjectFactory requestJMSObjectFactory = null;
+        try {
+            requestJMSObjectFactory = buildObjectFactory(connectionFactory, destination, env);
+            if (metadata.isResponse()) {
+                ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
+                DestinationDefinition responseDestination = metadata.getResponseDestination();
+                responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
+            }
+        } catch (JmsLookupException e) {
+            throw new WiringException(e);
         }
 
         String callbackUri = null;
@@ -210,7 +215,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
     private JMSObjectFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
                                                 DestinationDefinition destinationDefinition,
-                                                Hashtable<String, String> env) {
+                                                Hashtable<String, String> env) throws JmsLookupException {
 
         CreateOption create = connectionFactoryDefinition.getCreate();
         ConnectionFactoryStrategy connectionStrategy = connectionFactoryStrategies.get(create);

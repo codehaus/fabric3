@@ -44,15 +44,16 @@ import javax.jms.Session;
 import javax.jms.TopicConnection;
 
 import org.fabric3.binding.jms.common.DestinationDefinition;
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
+import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
- * The destination is never looked up, it is always created.
+ * Implementation that attempts to resolve the destination in JNDI.
  */
 public class AlwaysDestinationStrategy implements DestinationStrategy {
 
-    public Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env) {
+    public Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env)
+            throws JmsLookupException {
         Connection connection = null;
         try {
             String name = definition.getName();
@@ -69,7 +70,7 @@ public class AlwaysDestinationStrategy implements DestinationStrategy {
                 throw new IllegalArgumentException("Unknown destination type");
             }
         } catch (JMSException ex) {
-            throw new Fabric3JmsException("Unable to create destination", ex);
+            throw new JmsLookupException("Unable to create destination", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
         }
