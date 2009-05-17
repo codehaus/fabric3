@@ -49,7 +49,6 @@ import javax.jms.TextMessage;
 import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
-import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.binding.format.EncodeCallback;

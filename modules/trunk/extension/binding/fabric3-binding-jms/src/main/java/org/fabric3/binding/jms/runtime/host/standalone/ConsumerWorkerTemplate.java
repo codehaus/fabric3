@@ -116,5 +116,5 @@ public class ConsumerWorkerTemplate {
     public JMSObjectFactory getRequestJMSObjectFactory() {
         return requestJMSObjectFactory;
     }
-    
+
 }

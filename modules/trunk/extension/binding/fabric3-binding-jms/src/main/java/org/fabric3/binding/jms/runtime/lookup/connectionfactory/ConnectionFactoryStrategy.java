@@ -35,24 +35,22 @@
 package org.fabric3.binding.jms.runtime.lookup.connectionfactory;
 
 import java.util.Hashtable;
-
 import javax.jms.ConnectionFactory;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 
 /**
  * Strategy for looking up connection factories.
- * 
- * @version $Revsion$ $Date$
  *
+ * @version $Revsion$ $Date$
  */
 public interface ConnectionFactoryStrategy {
 
     /**
      * Gets the connection factory based on SCA JMS binding rules.
-     * 
+     *
      * @param definition Connection factory definition.
-     * @param env JNDI environment.
+     * @param env        JNDI environment.
      * @return Lokked up or created destination.
      */
     ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env);

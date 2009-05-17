@@ -41,8 +41,8 @@ import javax.jms.ServerSession;
 import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -104,6 +104,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
 
     /**
      * Closes the underlying sessions.
+     *
      * @throws JMSException if there is an error closing the session
      */
     public void stop() throws JMSException {

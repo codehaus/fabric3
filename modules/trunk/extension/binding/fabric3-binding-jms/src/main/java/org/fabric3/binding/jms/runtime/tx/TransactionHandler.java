@@ -41,13 +41,13 @@ import javax.jms.Session;
  * @version $Revision$ $Date$
  */
 public interface TransactionHandler {
-    
+
     void enlist(Session session) throws JmsTxException;
-    
+
     void commit() throws JmsTxException;
-    
+
     void rollback() throws JmsTxException;
-    
+
     Session createSession(Connection con) throws JmsTxException;
 
 }

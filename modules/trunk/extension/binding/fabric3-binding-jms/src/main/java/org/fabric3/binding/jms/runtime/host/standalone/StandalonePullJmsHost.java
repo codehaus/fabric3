@@ -48,8 +48,8 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsHost;

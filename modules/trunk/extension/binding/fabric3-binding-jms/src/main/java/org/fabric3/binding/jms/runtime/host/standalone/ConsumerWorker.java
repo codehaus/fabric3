@@ -40,8 +40,8 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsOperationException;

@@ -45,23 +45,26 @@ import org.fabric3.api.annotation.Management;
  */
 @Management
 public interface StandalonePullJmsHostMBean {
-    
+
     /**
      * Gets the number of services for a destination.
+     *
      * @param destination String representation of the service.
      * @return Receiver count.
      */
     int getReceiverCount(String service);
-    
+
     /**
      * Sets the number of services for a destination.
-     * @param destination String representation of the service.
+     *
+     * @param destination   String representation of the service.
      * @param receiverCount Receiver count.
      */
     void setReceiverCount(String service, int receiverCount);
-    
+
     /**
      * Returns the list of current services.
+     *
      * @return All the current services.
      */
     List<String> getReceivers();

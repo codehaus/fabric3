@@ -35,7 +35,6 @@
 package org.fabric3.binding.jms.runtime.lookup.destination;
 
 import java.util.Hashtable;
-
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
@@ -43,18 +42,17 @@ import org.fabric3.binding.jms.common.DestinationDefinition;
 
 /**
  * Strategy for looking up destinations.
- * 
- * @version $Revsion$ $Date$
  *
+ * @version $Revsion$ $Date$
  */
 public interface DestinationStrategy {
 
     /**
      * Gets the destination based on SCA JMS binding rules.
-     * 
+     *
      * @param definition Destination definition.
-     * @param cf Connection factory.
-     * @param env JNDI environment.
+     * @param cf         Connection factory.
+     * @param env        JNDI environment.
      * @return Lokked up or created destination.
      */
     Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env);

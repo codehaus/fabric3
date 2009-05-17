@@ -46,7 +46,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.common.Fabric3JmsException;
+import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;

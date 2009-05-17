@@ -48,31 +48,31 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class JtaTransactionHandler implements TransactionHandler {
-    
+
     private TransactionManager transactionManager;
-    
+
     @Reference
     public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
     public void enlist(Session session) throws JmsTxException {
-        if(transactionManager == null) {
+        if (transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");
         }
         try {
             Transaction transaction = transactionManager.getTransaction();
-            if(transaction == null) {
+            if (transaction == null) {
                 transactionManager.begin();
             }
-            
-            if(!(session instanceof XASession)) {
+
+            if (!(session instanceof XASession)) {
                 throw new JmsTxException("XA session required for global transactions");
             }
-            
+
             XASession xaSession = (XASession) session;
             XAResource xaResource = xaSession.getXAResource();
-            
+
             transactionManager.getTransaction().enlistResource(xaResource);
 
         } catch (Exception e) {
@@ -81,11 +81,11 @@ public class JtaTransactionHandler implements TransactionHandler {
     }
 
     public void commit() throws JmsTxException {
-        
-        if(transactionManager == null) {
+
+        if (transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");
         }
-        
+
         try {
             transactionManager.commit();
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class JtaTransactionHandler implements TransactionHandler {
     }
 
     public void rollback() throws JmsTxException {
-        if(transactionManager == null) {
+        if (transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");
         }
         try {
@@ -107,10 +107,10 @@ public class JtaTransactionHandler implements TransactionHandler {
     public Session createSession(Connection con) throws JmsTxException {
         try {
             return con.createSession(false, Session.SESSION_TRANSACTED);
-        } catch(JMSException e) {
+        } catch (JMSException e) {
             throw new JmsTxException(e);
         }
-        
+
     }
 
 }

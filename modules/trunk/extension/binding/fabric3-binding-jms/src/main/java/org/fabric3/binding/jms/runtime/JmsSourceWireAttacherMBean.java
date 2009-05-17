@@ -37,7 +37,6 @@ package org.fabric3.binding.jms.runtime;
 import org.fabric3.api.annotation.Management;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 @Management

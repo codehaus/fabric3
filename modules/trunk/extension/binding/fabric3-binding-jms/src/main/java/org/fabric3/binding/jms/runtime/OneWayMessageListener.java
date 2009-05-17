@@ -39,7 +39,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.binding.format.EncoderException;
@@ -66,7 +65,7 @@ public class OneWayMessageListener extends AbstractSourceMessageListener {
             InvocationChainHolder holder = getInvocationChainHolder(opName);
             Interceptor interceptor = holder.getChain().getHeadInterceptor();
             PayloadType payloadType = holder.getPayloadType();
-            
+
             Object payload = MessageHelper.getPayload(request, payloadType);
 
             switch (payloadType) {

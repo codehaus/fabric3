@@ -52,8 +52,8 @@ public class StandaloneServerSession implements ServerSession {
     /**
      * Initializes the server session.
      *
-     * @param session Underlying JMS session.
-     * @param serverSessionPool Server session pool.
+     * @param session            Underlying JMS session.
+     * @param serverSessionPool  Server session pool.
      * @param transactionHandler Transaction handler (XA or Local)
      */
     public StandaloneServerSession(Session session, StandaloneServerSessionPool serverSessionPool) {

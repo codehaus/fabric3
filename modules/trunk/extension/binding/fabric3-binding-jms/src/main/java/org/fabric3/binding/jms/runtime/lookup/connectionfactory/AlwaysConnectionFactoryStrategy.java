@@ -44,7 +44,7 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.common.Fabric3JmsException;
+import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 
 /**
  * The connection factory is never looked up, it is always created.

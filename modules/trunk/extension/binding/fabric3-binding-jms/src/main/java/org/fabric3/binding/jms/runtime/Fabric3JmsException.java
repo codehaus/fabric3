@@ -32,11 +32,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.common;
+package org.fabric3.binding.jms.runtime;
 
 /**
  * Runtime exception thrown with unexpected JMS errors.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class Fabric3JmsException extends RuntimeException {
@@ -48,9 +48,9 @@ public class Fabric3JmsException extends RuntimeException {
 
     /**
      * Initializes the message and the cause.
-     * 
+     *
      * @param message Message for the exception.
-     * @param cause Cause for the exception.
+     * @param cause   Cause for the exception.
      */
     public Fabric3JmsException(String message, Throwable cause) {
         super(message, cause);
@@ -58,7 +58,7 @@ public class Fabric3JmsException extends RuntimeException {
 
     /**
      * Initializes the message.
-     * 
+     *
      * @param message Message for the exception.
      */
     public Fabric3JmsException(String message) {

@@ -35,27 +35,26 @@
 package org.fabric3.binding.jms.runtime.lookup.connectionfactory;
 
 import java.util.Hashtable;
-
 import javax.jms.ConnectionFactory;
 import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.common.Fabric3JmsException;
+import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.helper.JndiHelper;
 
 /**
  * The connection factory is always looked up and never created.
- *
  */
 public class NeverConnectionFactoryStrategy implements ConnectionFactoryStrategy {
 
     /**
-     * @see org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.common.ConnectionFactoryDefinition, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.common.ConnectionFactoryDefinition,
+     *      java.util.Hashtable)
      */
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
         try {
             return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
-        } catch(NameNotFoundException ex) {
+        } catch (NameNotFoundException ex) {
             throw new Fabric3JmsException(definition.getName() + " not found", ex);
         }
     }

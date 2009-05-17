@@ -35,7 +35,6 @@
 package org.fabric3.binding.jms.runtime.lookup.destination;
 
 import java.util.Hashtable;
-
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.naming.NameNotFoundException;
@@ -45,25 +44,27 @@ import org.fabric3.binding.jms.runtime.helper.JndiHelper;
 
 /**
  * The destination is looked up, if not found it is created.
- *
  */
 public class IfNotExistDestinationStrategy implements DestinationStrategy {
-    
-    /** Always strategy. */
+
+    /**
+     * Always strategy.
+     */
     private DestinationStrategy always = new AlwaysDestinationStrategy();
 
     /**
-     * @see org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.common.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.common.DestinationDefinition,
+     *      javax.jms.ConnectionFactory, java.util.Hashtable)
      */
     public Destination getDestination(DestinationDefinition definition,
                                       ConnectionFactory cf,
                                       Hashtable<String, String> env) {
         try {
             return (Destination) JndiHelper.lookup(definition.getName(), env);
-        } catch(NameNotFoundException ex) {
+        } catch (NameNotFoundException ex) {
             return always.getDestination(definition, cf, env);
         }
-        
+
     }
 
 }
