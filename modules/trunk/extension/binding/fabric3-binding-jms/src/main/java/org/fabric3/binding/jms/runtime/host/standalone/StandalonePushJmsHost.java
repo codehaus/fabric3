@@ -57,7 +57,7 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
- * Service handler for JMS.
+ * A JmsHost implementation that uses the JMS ServerSessionPool API.
  *
  * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
  */
@@ -70,22 +70,14 @@ public class StandalonePushJmsHost implements JmsHost {
     private Map<URI, JMSMessageListenerInvoker> jmsMessageListenerInvokers = new HashMap<URI, JMSMessageListenerInvoker>();
 
     /**
-     * Injects the monitor.
+     * Constructor.
      *
-     * @param monitor Monitor to be injected.
+     * @param workScheduler the work scheduler
+     * @param monitor       Monitor to be injected.
      */
-    public StandalonePushJmsHost(@Monitor JMSRuntimeMonitor monitor) {
-        this.monitor = monitor;
-    }
-
-    /**
-     * Injects the work scheduler.
-     *
-     * @param workScheduler Work scheduler to be used.
-     */
-    @Reference
-    public void setWorkScheduler(WorkScheduler workScheduler) {
+    public StandalonePushJmsHost(@Reference WorkScheduler workScheduler, @Monitor JMSRuntimeMonitor monitor) {
         this.workScheduler = workScheduler;
+        this.monitor = monitor;
     }
 
     /**

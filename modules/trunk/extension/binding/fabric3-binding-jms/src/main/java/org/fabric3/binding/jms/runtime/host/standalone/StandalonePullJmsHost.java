@@ -59,12 +59,12 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
- * Service handler for JMS.
+ * A JmsHost implementation that initializes one or more message consumers per service that receive and dispatch messages in separate threads. The
+ * message consumers are registered with the kernel WorkScheduler.
  *
  * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
  */
 public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBean {
-
     private WorkScheduler workScheduler;
     private long readTimeout = 30000L;
     private JMSRuntimeMonitor monitor;
@@ -74,11 +74,13 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     private Map<URI, ConsumerWorkerTemplate> templateMap = new HashMap<URI, ConsumerWorkerTemplate>();
 
     /**
-     * Injects the monitor.
+     * Constructor.
      *
-     * @param monitor Monitor used for logging.
+     * @param workScheduler the work scheduler
+     * @param monitor       Monitor used for logging.
      */
-    public StandalonePullJmsHost(@Monitor JMSRuntimeMonitor monitor) {
+    public StandalonePullJmsHost(@Reference WorkScheduler workScheduler, @Monitor JMSRuntimeMonitor monitor) {
+        this.workScheduler = workScheduler;
         this.monitor = monitor;
     }
 
@@ -100,16 +102,6 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     @Property
     public void setReadTimeout(long readTimeout) {
         this.readTimeout = readTimeout;
-    }
-
-    /**
-     * Injects the work scheduler.
-     *
-     * @param workScheduler Work scheduler to be used.
-     */
-    @Reference
-    public void setWorkScheduler(WorkScheduler workScheduler) {
-        this.workScheduler = workScheduler;
     }
 
     /**
