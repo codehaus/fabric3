@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.runtime;
+package org.fabric3.binding.jms.runtime.helper;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
