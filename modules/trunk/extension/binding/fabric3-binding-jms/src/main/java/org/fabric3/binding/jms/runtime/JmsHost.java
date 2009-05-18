@@ -55,28 +55,30 @@ public interface JmsHost {
     boolean isRegistered(URI serviceUri);
 
     /**
-     * Register a ResponseMessageListener which handle inbound message and send response.
+     * Register a ResponseMessageListener which dispatches inbound JMS messages to a service.
      *
-     * @param requestJMSObjectFactory  Factory for creating JMS objects for request.
-     * @param responseJMSObjectFactory Factory for creating JMS objects for response.
-     * @param messageListener          Message listener.
-     * @param transactionType          Transaction type.
-     * @param transactionHandler       Transaction handler.
-     * @param cl                       Classloader to use.
-     * @param serviceUri               URI of the service to which the binding is attached.
+     * @param requestFactory  factory for creating JMS request objects
+     * @param responseFactory Factory for creating JMS response objects
+     * @param messageListener          the message listener
+     * @param transactionType          the transaction type
+     * @param transactionHandler       the transaction handler
+     * @param cl                       the target service classloader
+     * @param serviceUri               URI of the service to which the binding is attached
+     * @throws JmsHostException if an error registering the listener is encountered
      */
-    void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
-                                  JMSObjectFactory responseJMSObjectFactory,
+    void registerResponseListener(JMSObjectFactory requestFactory,
+                                  JMSObjectFactory responseFactory,
                                   ServiceMessageListener messageListener,
                                   TransactionType transactionType,
                                   TransactionHandler transactionHandler,
                                   ClassLoader cl,
-                                  URI serviceUri);
+                                  URI serviceUri) throws JmsHostException;
 
     /**
-     * Unregister the message listener at the endpoint at serviceUri
+     * Unregister the message listener for the given service
      *
-     * @param serviceUri URI of the service to which the binding is attached.
+     * @param serviceUri the service URI
+     * @throws JmsHostException if an error unregistering the listener is encountered
      */
-    void unregisterListener(URI serviceUri);
+    void unregisterListener(URI serviceUri) throws JmsHostException;
 }

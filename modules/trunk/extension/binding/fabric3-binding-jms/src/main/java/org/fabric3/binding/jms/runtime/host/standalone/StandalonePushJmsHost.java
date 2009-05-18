@@ -50,6 +50,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsHost;
+import org.fabric3.binding.jms.runtime.JmsHostException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -124,21 +125,25 @@ public class StandalonePushJmsHost implements JmsHost {
         return jmsMessageListenerInvokers.containsKey(serviceUri);
     }
 
-    public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
-                                         JMSObjectFactory responseJMSObjectFactory,
+    public void registerResponseListener(JMSObjectFactory requestFactory,
+                                         JMSObjectFactory responseFactory,
                                          ServiceMessageListener messageListener,
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl,
-                                         URI serviceUri) {
-        JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(requestJMSObjectFactory,
-                                                                          responseJMSObjectFactory,
+                                         URI serviceUri) throws JmsHostException {
+        JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(requestFactory,
+                                                                          responseFactory,
                                                                           messageListener,
                                                                           transactionType,
                                                                           transactionHandler,
                                                                           workScheduler,
                                                                           monitor);
-        invoker.start(receiverCount);
+        try {
+            invoker.start(receiverCount);
+        } catch (JMSException e) {
+            throw new JmsHostException("Unable to register service listener for: " + serviceUri, e);
+        }
         jmsMessageListenerInvokers.put(serviceUri, invoker);
 
     }

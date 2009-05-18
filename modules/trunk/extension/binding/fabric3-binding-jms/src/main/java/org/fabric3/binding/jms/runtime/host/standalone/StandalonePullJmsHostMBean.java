@@ -47,20 +47,21 @@ import org.fabric3.api.annotation.Management;
 public interface StandalonePullJmsHostMBean {
 
     /**
-     * Gets the number of services for a destination.
+     * Gets the number of listeners for a service.
      *
-     * @param destination String representation of the service.
-     * @return Receiver count.
+     * @param service the service URI.
+     * @return listener count.
      */
     int getReceiverCount(String service);
 
     /**
-     * Sets the number of services for a destination.
+     * Sets the number of listeners for a service.
      *
-     * @param destination   String representation of the service.
-     * @param receiverCount Receiver count.
+     * @param service the service URI.
+     * @param count   the listener count.
+     * @throws ConfigurationUpdateException if there was an error setting the receiver count
      */
-    void setReceiverCount(String service, int receiverCount);
+    void setReceiverCount(String service, int count) throws ConfigurationUpdateException;
 
     /**
      * Returns the list of current services.

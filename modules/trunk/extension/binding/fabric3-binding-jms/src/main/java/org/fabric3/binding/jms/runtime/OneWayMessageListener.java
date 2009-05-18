@@ -60,8 +60,7 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
     }
 
     public void onMessage(Message request, Session responseSession, Destination responseDestination)
-            throws JmsServiceException, JmsBadMessageException {
-        try {
+            throws JmsServiceException, JmsBadMessageException, JMSException {
             String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
             InvocationChainHolder holder = getInvocationChainHolder(opName);
             Interceptor interceptor = holder.getChain().getHeadInterceptor();
@@ -93,10 +92,6 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
                 break;
             }
 
-
-        } catch (JMSException ex) {
-            throw new Fabric3JmsException("Unable to send response", ex);
-        }
 
     }
 

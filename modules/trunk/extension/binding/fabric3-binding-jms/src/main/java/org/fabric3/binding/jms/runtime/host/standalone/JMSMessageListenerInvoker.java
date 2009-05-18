@@ -43,7 +43,6 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
@@ -81,22 +80,18 @@ public class JMSMessageListenerInvoker implements MessageListener {
         this.monitor = monitor;
     }
 
-    public void start(int receiverCount) {
-        ServerSessionPool serverSessionPool = createServerSessionPool(receiverCount);
-        try {
-            Connection connection = requestJMSObjectFactory.getConnection();
-            connection.createConnectionConsumer(requestJMSObjectFactory
-                    .getDestination(), null, serverSessionPool, 1);
-            connection.start();
-        } catch (JMSException e) {
-            throw new Fabric3JmsException("Error when register Listener", e);
-
-        }
-    }
-
-    private StandaloneServerSessionPool createServerSessionPool(int receiverCount) {
-        return new StandaloneServerSessionPool(requestJMSObjectFactory,
-                                               transactionHandler, this, transactionType, workScheduler, receiverCount);
+    public void start(int receiverCount) throws JMSException {
+        ServerSessionPool serverSessionPool = new StandaloneServerSessionPool(requestJMSObjectFactory,
+                                                                              transactionHandler,
+                                                                              this,
+                                                                              transactionType,
+                                                                              workScheduler,
+                                                                              receiverCount,
+                                                                              monitor);
+        Connection connection = requestJMSObjectFactory.getConnection();
+        Destination destination = requestJMSObjectFactory.getDestination();
+        connection.createConnectionConsumer(destination, null, serverSessionPool, 1);
+        connection.start();
     }
 
     public void stop() {
@@ -117,13 +112,22 @@ public class JMSMessageListenerInvoker implements MessageListener {
             commit(responseSession);
             responseJMSObjectFactory.recycle();
         } catch (JMSException e) {
-            throw new Fabric3JmsException("Error when invoking Listener", e);
+            rollback();
+            monitor.jmsListenerError(e);
         } catch (RuntimeException e) {
             rollback();
             monitor.jmsListenerError(e);
             throw e;
         } catch (JmsServiceException e) {
-            throw new Fabric3JmsException("Error when invoking Listener", e.getCause());
+            // FIXME
+            monitor.jmsListenerError(e);
+            try {
+                commit(responseSession);
+            } catch (JmsTxException e1) {
+                monitor.jmsListenerError(e1);
+            } catch (JMSException e1) {
+                monitor.jmsListenerError(e1);
+            }
         } catch (JmsTxException e) {
             rollback();
             monitor.jmsListenerError(e);

@@ -49,10 +49,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsHost;
+import org.fabric3.binding.jms.runtime.JmsHostException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -154,24 +154,24 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         monitor.unRegisterListener(serviceUri);
     }
 
-    public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
-                                         JMSObjectFactory responseJMSObjectFactory,
+    public void registerResponseListener(JMSObjectFactory requestFactory,
+                                         JMSObjectFactory responseFactory,
                                          ServiceMessageListener messageListener,
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl,
-                                         URI serviceUri) {
+                                         URI serviceUri) throws JmsHostException {
 
         try {
 
-            Connection connection = requestJMSObjectFactory.getConnection();
+            Connection connection = requestFactory.getConnection();
             List<ConsumerWorker> consumerWorkers = new ArrayList<ConsumerWorker>();
 
             ConsumerWorkerTemplate template = new ConsumerWorkerTemplate(transactionHandler,
                                                                          transactionType,
                                                                          messageListener,
-                                                                         responseJMSObjectFactory,
-                                                                         requestJMSObjectFactory,
+                                                                         responseFactory,
+                                                                         requestFactory,
                                                                          readTimeout,
                                                                          cl,
                                                                          monitor);
@@ -188,7 +188,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
             consumerWorkerMap.put(serviceUri, consumerWorkers);
 
         } catch (JMSException ex) {
-            throw new Fabric3JmsException("Unable to activate service", ex);
+            throw new JmsHostException("Unable to register service listener for: " + serviceUri, ex);
         }
 
         monitor.registerListener(serviceUri);
@@ -208,7 +208,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     }
 
-    public void setReceiverCount(String service, int receiverCount) {
+    public void setReceiverCount(String service, int receiverCount) throws ConfigurationUpdateException {
 
         URI serviceUri = URI.create(service);
         List<ConsumerWorker> consumerWorkers = consumerWorkerMap.get(serviceUri);
@@ -227,9 +227,13 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         consumerWorkers.clear();
 
         for (int i = 0; i < receiverCount; i++) {
-            ConsumerWorker consumerWorker = new ConsumerWorker(template);
-            workScheduler.scheduleWork(consumerWorker);
-            consumerWorkers.add(consumerWorker);
+            try {
+                ConsumerWorker consumerWorker = new ConsumerWorker(template);
+                workScheduler.scheduleWork(consumerWorker);
+                consumerWorkers.add(consumerWorker);
+            } catch (JMSException e) {
+                throw new ConfigurationUpdateException("Error setting listener count for service: " + service, e);
+            }
         }
 
     }

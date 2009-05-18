@@ -147,21 +147,29 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         } else {
             messageListener = new OneWayMessageListener(wireHolder);
         }
-        if (jmsHost.isRegistered(serviceUri)) {
-            // the wire has changed and it is being reprovisioned
-            jmsHost.unregisterListener(serviceUri);
+        try {
+            if (jmsHost.isRegistered(serviceUri)) {
+                // the wire has changed and it is being reprovisioned
+                jmsHost.unregisterListener(serviceUri);
+            }
+            jmsHost.registerResponseListener(requestJMSObjectFactory,
+                                             responseJMSObjectFactory,
+                                             messageListener,
+                                             transactionType,
+                                             transactionHandler,
+                                             cl,
+                                             serviceUri);
+        } catch (JmsHostException e) {
+            throw new WiringException(e);
         }
-        jmsHost.registerResponseListener(requestJMSObjectFactory,
-                                         responseJMSObjectFactory,
-                                         messageListener,
-                                         transactionType,
-                                         transactionHandler,
-                                         cl,
-                                         serviceUri);
     }
 
     public void detachFromSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
-        jmsHost.unregisterListener(target.getUri());
+        try {
+            jmsHost.unregisterListener(target.getUri());
+        } catch (JmsHostException e) {
+            throw new WiringException(e);
+        }
     }
 
     public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)

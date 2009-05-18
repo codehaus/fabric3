@@ -37,6 +37,7 @@ package org.fabric3.binding.jms.runtime;
 import javax.jms.Destination;
 import javax.jms.Message;
 import javax.jms.Session;
+import javax.jms.JMSException;
 
 /**
  * Dispatches an asynchronously received message to a service. Implementations support request-response and one-way operations. For request-response
@@ -53,8 +54,9 @@ public interface ServiceMessageListener {
      * @throws JmsServiceException    thrown if the service throws an exception. For request-response operations, the exception cause will be sent as
      *                                a fault response prior to it being thrown.
      * @throws JmsBadMessageException if a message is received that cannot be processed and should be redelivered
+     * @throws JMSException
      */
     public abstract void onMessage(Message request, Session responseSession, Destination responseDestination)
-            throws JmsServiceException, JmsBadMessageException;
+            throws JmsServiceException, JmsBadMessageException, JMSException;
 
 }

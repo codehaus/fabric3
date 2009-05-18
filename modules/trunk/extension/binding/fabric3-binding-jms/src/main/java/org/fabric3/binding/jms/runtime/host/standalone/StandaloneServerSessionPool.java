@@ -42,9 +42,10 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
+import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
@@ -62,6 +63,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
     private final TransactionHandler transactionHandler;
     private final TransactionType transactionType;
     private int poolSize = 3; //default value
+    private JMSRuntimeMonitor monitor;
     private final WorkScheduler workScheduler;
 
     /**
@@ -80,25 +82,23 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
                                        MessageListener listener,
                                        TransactionType transactionType,
                                        WorkScheduler workScheduler,
-                                       int receiverCount) {
+                                       int receiverCount,
+                                       JMSRuntimeMonitor monitor) throws JMSException {
         this.jmsObjectFactory = jmsObjectFactory;
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
         this.workScheduler = workScheduler;
         this.poolSize = receiverCount;
+        this.monitor = monitor;
         initSessions(listener);
     }
 
-    private void initSessions(MessageListener listener) throws Fabric3JmsException {
+    private void initSessions(MessageListener listener) throws JMSException {
         for (int i = 0; i < poolSize; i++) {
-            try {
-                Session session = jmsObjectFactory.createSession();
-                session.setMessageListener(listener);
-                ServerSession serverSession = new StandaloneServerSession(session, this);
-                serverSessions.add(serverSession);
-            } catch (JMSException e) {
-                throw new Fabric3JmsException("Error when initialize ServerSessionPool", e);
-            }
+            Session session = jmsObjectFactory.createSession();
+            session.setMessageListener(listener);
+            ServerSession serverSession = new StandaloneServerSession(session, this);
+            serverSessions.add(serverSession);
         }
     }
 
@@ -156,8 +156,10 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
                     if (transactionType == TransactionType.LOCAL) {
                         session.commit();
                     }
-                } catch (Exception jmse) {
-                    throw new Fabric3JmsException("Error when start ServerSession", jmse);
+                } catch (JMSException e) {
+                    monitor.jmsListenerError(e);
+                } catch (JmsTxException e) {
+                    monitor.jmsListenerError(e);
                 } finally {
                     returnSession(serverSession);
                 }

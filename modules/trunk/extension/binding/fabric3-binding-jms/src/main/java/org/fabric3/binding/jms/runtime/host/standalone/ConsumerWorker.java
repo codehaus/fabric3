@@ -41,7 +41,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
@@ -66,108 +65,125 @@ public class ConsumerWorker extends DefaultPausableWork {
     private final TransactionType transactionType;
     private final ClassLoader cl;
     private final JMSObjectFactory responseJMSObjectFactory;
-    private final JMSObjectFactory requestJMSObjectFactory;
     private JMSRuntimeMonitor monitor;
 
     /**
      * Constructor.
      *
      * @param template the ConsumerWorkerTemplate  to use with this worker.
+     * @throws JMSException if an error occurs initializing JMS objects required by the worker
      */
-    public ConsumerWorker(ConsumerWorkerTemplate template) {
-
+    public ConsumerWorker(ConsumerWorkerTemplate template) throws JMSException {
         super(true);
-
-        try {
-
-            transactionHandler = template.getTransactionHandler();
-            transactionType = template.getTransactionType();
-            listener = template.getListener();
-            responseJMSObjectFactory = template.getResponseJMSObjectFactory();
-            requestJMSObjectFactory = template.getRequestJMSObjectFactory();
-            session = requestJMSObjectFactory.createSession();
-            consumer = session.createConsumer(requestJMSObjectFactory.getDestination());
-            readTimeout = template.getReadTimeout();
-            cl = template.getCl();
-            monitor = template.getMonitor();
-
-        } catch (JMSException e) {
-            throw new Fabric3JmsException("Unale to create consumer", e);
-        }
-
+        transactionHandler = template.getTransactionHandler();
+        transactionType = template.getTransactionType();
+        listener = template.getListener();
+        responseJMSObjectFactory = template.getResponseJMSObjectFactory();
+        JMSObjectFactory requestJMSObjectFactory = template.getRequestJMSObjectFactory();
+        session = requestJMSObjectFactory.createSession();
+        consumer = session.createConsumer(requestJMSObjectFactory.getDestination());
+        readTimeout = template.getReadTimeout();
+        cl = template.getCl();
+        monitor = template.getMonitor();
     }
 
     public void execute() {
-        Session responseSession = null;
-        Destination responseDestination = null;
-
-        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
-
-            Thread.currentThread().setContextClassLoader(cl);
             if (transactionType == TransactionType.GLOBAL) {
+                // enlist the session in global transaction
                 transactionHandler.enlist(session);
-            }
-            Message message = consumer.receive(readTimeout);
-            try {
-                if (message != null) {
-                    if (responseJMSObjectFactory != null) {
-                        responseSession = responseJMSObjectFactory.createSession();
-                        if (transactionType == TransactionType.GLOBAL) {
-                            transactionHandler.enlist(responseSession);
-                        }
-                        responseDestination = responseJMSObjectFactory.getDestination();
-                    }
-                    listener.onMessage(message, responseSession, responseDestination);
-                    commit();
-                }
-            } catch (Fabric3JmsException e) {
-                monitor.jmsListenerError(e);
-            } catch (JmsTxException e) {
-                rollback(e);
-            } catch (JmsServiceException e) {
-                // Exception was thrown by the service, log the root cause but do not roll back
-                monitor.jmsListenerError(e.getCause());
-            } catch (JmsBadMessageException e) {
-                // Bad message. Do not rollback since the message should not be redelivered. Just log the exception for now.
-                monitor.jmsListenerError(e);
-                commit();
-            }
-        } catch (JMSException ex) {
-            monitor.jmsListenerError(ex);
-            if (transactionType == TransactionType.GLOBAL) {
-                try {
-                    transactionHandler.rollback();
-                } catch (JmsTxException e) {
-                    monitor.jmsListenerError(e);
-                }
             }
         } catch (JmsTxException e) {
             monitor.jmsListenerError(e);
+            return;
+        }
+
+        Session responseSession = null;
+        Destination responseDestination = null;
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        try {
+            Message message = consumer.receive(readTimeout);
+            // set the TCCL to the target service classloader
+            Thread.currentThread().setContextClassLoader(cl);
+            if (message != null) {
+                if (responseJMSObjectFactory != null) {
+                    // invocation is request-response, resolve the response destination
+                    responseSession = responseJMSObjectFactory.createSession();
+                    if (transactionType == TransactionType.GLOBAL) {
+                        transactionHandler.enlist(responseSession);
+                    }
+                    responseDestination = responseJMSObjectFactory.getDestination();
+                }
+                // dispatch the message
+                listener.onMessage(message, responseSession, responseDestination);
+                commit();
+            }
+        } catch (JmsServiceException e) {
+            // exception was thrown by the service, log the root cause but do not roll back
+            monitor.jmsListenerError(e.getCause());
+            commit();
+        } catch (JmsBadMessageException e) {
+            // Bad message. Do not rollback since the message should not be redelivered. Just log the exception for now.
+            monitor.jmsListenerError(e);
+            commit();
+        } catch (JmsTxException e) {
+            // error performing a transaction operation.
+            monitor.jmsListenerError(e);
+            rollback();
+        } catch (JMSException ex) {
+            // error raised by the JMS provider
+            monitor.jmsListenerError(ex);
+            rollback();
+        } catch (RuntimeException e) {
+            // an unexpected error thrown during message dispatch
+            monitor.jmsListenerError(e);
+            rollback();
+            throw e;
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
         }
 
     }
 
-    private void rollback(JmsTxException e) throws JmsTxException {
+    private void rollback() {
         if (transactionType == TransactionType.GLOBAL) {
-            transactionHandler.rollback();
+            try {
+                transactionHandler.rollback();
+            } catch (JmsTxException e) {
+                monitor.jmsListenerError(e);
+            }
         } else {
+            // local transaction
             try {
                 session.rollback();
-            } catch (JMSException ne) {
+            } catch (JMSException e) {
                 monitor.jmsListenerError(e);
             }
         }
     }
 
-    private void commit() throws JmsTxException, JMSException {
+    private void commit() {
         if (transactionType == TransactionType.GLOBAL) {
-            transactionHandler.commit();
-//            transactionHandler.enlist(session);
+            try {
+                transactionHandler.commit();
+            } catch (JmsTxException e) {
+                try {
+                    transactionHandler.rollback();
+                } catch (JmsTxException e1) {
+                    monitor.jmsListenerError(e);
+                }
+            }
         } else {
-            session.commit();
+            // local transaction
+            try {
+                session.commit();
+            } catch (JMSException e) {
+                try {
+                    session.rollback();
+                } catch (JMSException e1) {
+                    monitor.jmsListenerError(e);
+                }
+            }
         }
     }
 
