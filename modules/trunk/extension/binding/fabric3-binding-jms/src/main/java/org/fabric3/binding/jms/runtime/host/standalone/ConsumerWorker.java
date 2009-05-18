@@ -45,7 +45,7 @@ import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
-import org.fabric3.binding.jms.runtime.JmsOperationException;
+import org.fabric3.binding.jms.runtime.JmsServiceException;
 import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -123,11 +123,11 @@ public class ConsumerWorker extends DefaultPausableWork {
                 }
             } catch (Fabric3JmsException e) {
                 monitor.jmsListenerError(e);
-            } catch (JmsOperationException e) {
-                // Exception was thrown by the service invocation, log the root cause
-                monitor.jmsListenerError(e.getCause());
             } catch (JmsTxException e) {
                 rollback(e);
+            } catch (JmsServiceException e) {
+                // Exception was thrown by the service, log the root cause but do not roll back
+                monitor.jmsListenerError(e.getCause());
             } catch (JmsBadMessageException e) {
                 // Bad message. Do not rollback since the message should not be redelivered. Just log the exception for now.
                 monitor.jmsListenerError(e);

@@ -60,7 +60,7 @@ public class OneWayMessageListener extends AbstractSourceMessageListener {
     }
 
     public void onMessage(Message request, Session responseSession, Destination responseDestination)
-            throws JmsOperationException, JmsBadMessageException {
+            throws JmsServiceException, JmsBadMessageException {
         try {
             String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
             InvocationChainHolder holder = getInvocationChainHolder(opName);
@@ -101,7 +101,7 @@ public class OneWayMessageListener extends AbstractSourceMessageListener {
     }
 
     private void decodeAndInvoke(Message request, String opName, Interceptor interceptor, Object payload, MessageEncoder messageEncoder)
-            throws JmsOperationException {
+            throws JmsServiceException {
         try {
             JMSHeaderContext context = new JMSHeaderContext(request);
             org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
@@ -116,19 +116,19 @@ public class OneWayMessageListener extends AbstractSourceMessageListener {
             JmsHelper.addCallFrame(inMessage, callbackUri);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
             if (outMessage.isFault()) {
-                throw new JmsOperationException((Throwable) outMessage.getBody());
+                throw new JmsServiceException((Throwable) outMessage.getBody());
             }
         } catch (EncoderException e) {
-            throw new JmsOperationException(e);
+            throw new JmsServiceException(e);
         }
     }
 
-    private void invoke(Message request, Interceptor interceptor, Object payload) throws JmsOperationException, JmsBadMessageException {
+    private void invoke(Message request, Interceptor interceptor, Object payload) throws JmsServiceException, JmsBadMessageException {
         WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
         if (outMessage.isFault()) {
-            throw new JmsOperationException((Throwable) outMessage.getBody());
+            throw new JmsServiceException((Throwable) outMessage.getBody());
         }
     }
 

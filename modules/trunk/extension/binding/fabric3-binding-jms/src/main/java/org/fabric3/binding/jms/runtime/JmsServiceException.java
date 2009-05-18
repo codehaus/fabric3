@@ -19,14 +19,16 @@ package org.fabric3.binding.jms.runtime;
 import org.fabric3.host.Fabric3Exception;
 
 /**
- * Denotes an exception invoking a service operation.
+ * Wraps an exception thrown by a service (user application code). For request-response invocations, the exception will be returned as a fault to the
+ * client. For one-way invocations, the exception will be logged. Since this exception does not represent an error at the binding level, if the
+ * invocation message is transacted, this exception will <strong>not</strong> result in the transaction being rolled back.
  *
  * @version $Revision$ $Date$
  */
-public class JmsOperationException extends Fabric3Exception {
+public class JmsServiceException extends Fabric3Exception {
     private static final long serialVersionUID = -6821325841475500514L;
 
-    public JmsOperationException(Throwable cause) {
+    public JmsServiceException(Throwable cause) {
         super(cause);
     }
 }

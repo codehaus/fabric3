@@ -66,7 +66,7 @@ public class RequestResponseMessageListener extends AbstractSourceMessageListene
     }
 
     public void onMessage(Message request, Session responseSession, Destination responseDestination)
-            throws JmsOperationException, JmsBadMessageException {
+            throws JmsServiceException, JmsBadMessageException {
         try {
             String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
             InvocationChainHolder holder = getInvocationChainHolder(opName);
@@ -113,7 +113,7 @@ public class RequestResponseMessageListener extends AbstractSourceMessageListene
                                  PayloadType payloadType,
                                  MessageEncoder messageEncoder,
                                  Session responseSession,
-                                 Destination responseDestination) throws JMSException, JmsOperationException {
+                                 Destination responseDestination) throws JMSException, JmsServiceException {
         try {
             JMSHeaderContext context = new JMSHeaderContext(request);
             org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
@@ -139,7 +139,7 @@ public class RequestResponseMessageListener extends AbstractSourceMessageListene
             Message response = createMessage(serializedMessage, responseSession, payloadType);
             sendResponse(request, responseSession, responseDestination, outMessage, response);
         } catch (EncoderException e) {
-            throw new JmsOperationException(e);
+            throw new JmsServiceException(e);
         }
     }
 
@@ -148,7 +148,7 @@ public class RequestResponseMessageListener extends AbstractSourceMessageListene
                         Object payload,
                         PayloadType payloadType,
                         Session responseSession,
-                        Destination responseDestination) throws JmsOperationException, JMSException, JmsBadMessageException {
+                        Destination responseDestination) throws JmsServiceException, JMSException, JmsBadMessageException {
         WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
@@ -162,7 +162,7 @@ public class RequestResponseMessageListener extends AbstractSourceMessageListene
                               Session responseSession,
                               Destination responseDestination,
                               org.fabric3.spi.invocation.Message outMessage,
-                              Message response) throws JMSException, JmsOperationException {
+                              Message response) throws JMSException, JmsServiceException {
         CorrelationScheme correlationScheme = wireHolder.getCorrelationScheme();
         switch (correlationScheme) {
         case RequestCorrelIDToCorrelID: {
@@ -181,8 +181,8 @@ public class RequestResponseMessageListener extends AbstractSourceMessageListene
             responseSession.commit();
         }
         if (outMessage.isFault()) {
-            // throw the original exception
-            throw new JmsOperationException((Throwable) outMessage.getBody());
+            // report the service exception so it can be logged but do not roll back the transaction since the message was successfully processed
+            throw new JmsServiceException((Throwable) outMessage.getBody());
         }
     }
 

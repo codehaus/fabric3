@@ -47,7 +47,7 @@ import org.fabric3.binding.jms.runtime.Fabric3JmsException;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
-import org.fabric3.binding.jms.runtime.JmsOperationException;
+import org.fabric3.binding.jms.runtime.JmsServiceException;
 import org.fabric3.binding.jms.runtime.SourceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -122,7 +122,7 @@ public class JMSMessageListenerInvoker implements MessageListener {
             rollback();
             monitor.jmsListenerError(e);
             throw e;
-        } catch (JmsOperationException e) {
+        } catch (JmsServiceException e) {
             throw new Fabric3JmsException("Error when invoking Listener", e.getCause());
         } catch (JmsTxException e) {
             rollback();

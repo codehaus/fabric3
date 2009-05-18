@@ -39,21 +39,22 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 /**
- * Receives an asynchronously delivered message and optionally sends a response. Implementations support different invocation types such as
- * request-response and one-way.
+ * Dispatches an asynchronously received message to a service. Implementations support request-response and one-way operations. For request-response
+ * operations, responses will be enqueued using the response session and destination.
  */
 public interface SourceMessageListener {
 
     /**
-     * Passes a message to the listener.
+     * Dispatch a received message to a service.
      *
      * @param request             the message passed to the listener
-     * @param responseSession     the JMSSession object which is used to send response message
-     * @param responseDestination JMSDestination to which the response is sent
-     * @throws JmsOperationException  if there is an error invoking the service bound to the JMS destination
-     * @throws JmsBadMessageException if a message is received that cannot be processed
+     * @param responseSession     the JMSSession object which is used to send response message or null if the operation is one-way
+     * @param responseDestination JMSDestination to which the response is sent or null if the operation is one-way
+     * @throws JmsServiceException    thrown if the service throws an exception. For request-response operations, the exception cause will be sent as
+     *                                a fault response prior to it being thrown.
+     * @throws JmsBadMessageException if a message is received that cannot be processed and should be redelivered
      */
     public abstract void onMessage(Message request, Session responseSession, Destination responseDestination)
-            throws JmsOperationException, JmsBadMessageException;
+            throws JmsServiceException, JmsBadMessageException;
 
 }
