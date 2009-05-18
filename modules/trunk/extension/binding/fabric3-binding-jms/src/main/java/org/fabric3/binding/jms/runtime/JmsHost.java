@@ -67,7 +67,7 @@ public interface JmsHost {
      */
     void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
                                   JMSObjectFactory responseJMSObjectFactory,
-                                  SourceMessageListener messageListener,
+                                  ServiceMessageListener messageListener,
                                   TransactionType transactionType,
                                   TransactionHandler transactionHandler,
                                   ClassLoader cl,

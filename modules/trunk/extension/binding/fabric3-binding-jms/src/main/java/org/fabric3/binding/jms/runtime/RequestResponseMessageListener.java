@@ -58,7 +58,7 @@ import org.fabric3.spi.wire.Interceptor;
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class RequestResponseMessageListener extends AbstractSourceMessageListener {
+public class RequestResponseMessageListener extends AbstractServiceMessageListener {
     public static final EncodeCallback CALLBACK = new ReturnEncodeCallback();
 
     public RequestResponseMessageListener(WireHolder wireHolder) {

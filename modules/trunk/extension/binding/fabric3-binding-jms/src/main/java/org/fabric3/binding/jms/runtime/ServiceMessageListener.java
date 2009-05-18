@@ -42,7 +42,7 @@ import javax.jms.Session;
  * Dispatches an asynchronously received message to a service. Implementations support request-response and one-way operations. For request-response
  * operations, responses will be enqueued using the response session and destination.
  */
-public interface SourceMessageListener {
+public interface ServiceMessageListener {
 
     /**
      * Dispatch a received message to a service.

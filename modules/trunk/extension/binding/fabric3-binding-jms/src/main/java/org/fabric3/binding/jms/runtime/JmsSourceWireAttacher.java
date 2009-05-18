@@ -141,7 +141,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
         WireHolder wireHolder = createWireHolder(wire, payloadTypes, correlationScheme, transactionType, callbackUri, cl);
 
-        SourceMessageListener messageListener;
+        ServiceMessageListener messageListener;
         if (metadata.isResponse()) {
             messageListener = new RequestResponseMessageListener(wireHolder);
         } else {

@@ -25,12 +25,12 @@ import java.util.Map;
  *
  * @version $Revision$ $Date$
  */
-public abstract class AbstractSourceMessageListener implements SourceMessageListener {
+public abstract class AbstractServiceMessageListener implements ServiceMessageListener {
     protected WireHolder wireHolder;
     protected Map<String, InvocationChainHolder> invocationChainMap;
     protected InvocationChainHolder onMessageHolder;
 
-    public AbstractSourceMessageListener(WireHolder wireHolder) {
+    public AbstractServiceMessageListener(WireHolder wireHolder) {
         this.wireHolder = wireHolder;
         invocationChainMap = new HashMap<String, InvocationChainHolder>();
         for (InvocationChainHolder chainHolder : wireHolder.getInvocationChains()) {
