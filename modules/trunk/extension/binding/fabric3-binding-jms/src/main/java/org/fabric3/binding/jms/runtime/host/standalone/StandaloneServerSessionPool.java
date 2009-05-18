@@ -42,7 +42,7 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
@@ -59,7 +59,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
 
     // Available server sessions
     private Stack<ServerSession> serverSessions = new Stack<ServerSession>();
-    private final JMSObjectFactory jmsObjectFactory;
+    private final JmsFactory jmsFactory;
     private final TransactionHandler transactionHandler;
     private final TransactionType transactionType;
     private int poolSize = 3; //default value
@@ -69,7 +69,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
     /**
      * Constructor.
      *
-     * @param jmsObjectFactory
+     * @param jmsFactory
      * @param transactionHandler
      * @param listener
      * @param transactionType
@@ -77,14 +77,14 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
      * @param receiverCount
      * @param listener
      */
-    public StandaloneServerSessionPool(JMSObjectFactory jmsObjectFactory,
+    public StandaloneServerSessionPool(JmsFactory jmsFactory,
                                        TransactionHandler transactionHandler,
                                        MessageListener listener,
                                        TransactionType transactionType,
                                        WorkScheduler workScheduler,
                                        int receiverCount,
                                        JMSRuntimeMonitor monitor) throws JMSException {
-        this.jmsObjectFactory = jmsObjectFactory;
+        this.jmsFactory = jmsFactory;
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
         this.workScheduler = workScheduler;
@@ -95,7 +95,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
 
     private void initSessions(MessageListener listener) throws JMSException {
         for (int i = 0; i < poolSize; i++) {
-            Session session = jmsObjectFactory.createSession();
+            Session session = jmsFactory.createTransactedSession();
             session.setMessageListener(listener);
             ServerSession serverSession = new StandaloneServerSession(session, this);
             serverSessions.add(serverSession);

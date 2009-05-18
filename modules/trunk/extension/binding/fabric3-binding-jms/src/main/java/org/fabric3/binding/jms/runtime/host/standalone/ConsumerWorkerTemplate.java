@@ -35,7 +35,7 @@
 package org.fabric3.binding.jms.runtime.host.standalone;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -52,8 +52,8 @@ public class ConsumerWorkerTemplate {
     private final long readTimeout;
     private final TransactionType transactionType;
     private final ClassLoader cl;
-    private final JMSObjectFactory responseJMSObjectFactory;
-    private final JMSObjectFactory requestJMSObjectFactory;
+    private final JmsFactory responseJmsFactory;
+    private final JmsFactory requestJmsFactory;
     private JMSRuntimeMonitor monitor;
 
     /**
@@ -62,7 +62,7 @@ public class ConsumerWorkerTemplate {
      * @param transactionType
      * @param consumer
      * @param listener
-     * @param responseJMSObjectFactory
+     * @param responseJmsFactory
      * @param readTimeout
      * @param cl
      * @param monitor
@@ -70,16 +70,16 @@ public class ConsumerWorkerTemplate {
     public ConsumerWorkerTemplate(TransactionHandler transactionHandler,
                                   TransactionType transactionType,
                                   ServiceMessageListener listener,
-                                  JMSObjectFactory responseJMSObjectFactory,
-                                  JMSObjectFactory requestJMSObjectFactory,
+                                  JmsFactory responseJmsFactory,
+                                  JmsFactory requestJmsFactory,
                                   long readTimeout,
                                   ClassLoader cl,
                                   JMSRuntimeMonitor monitor) {
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
         this.listener = listener;
-        this.responseJMSObjectFactory = responseJMSObjectFactory;
-        this.requestJMSObjectFactory = requestJMSObjectFactory;
+        this.responseJmsFactory = responseJmsFactory;
+        this.requestJmsFactory = requestJmsFactory;
         this.readTimeout = readTimeout;
         this.cl = cl;
         this.monitor = monitor;
@@ -105,16 +105,16 @@ public class ConsumerWorkerTemplate {
         return cl;
     }
 
-    public JMSObjectFactory getResponseJMSObjectFactory() {
-        return responseJMSObjectFactory;
+    public JmsFactory getResponseJMSObjectFactory() {
+        return responseJmsFactory;
     }
 
     public JMSRuntimeMonitor getMonitor() {
         return monitor;
     }
 
-    public JMSObjectFactory getRequestJMSObjectFactory() {
-        return requestJMSObjectFactory;
+    public JmsFactory getRequestJMSObjectFactory() {
+        return requestJmsFactory;
     }
 
 }

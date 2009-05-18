@@ -43,7 +43,7 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
@@ -56,23 +56,23 @@ import org.fabric3.host.work.WorkScheduler;
  * A container class used to support MessageListener with ServerSessionPool.
  */
 public class JMSMessageListenerInvoker implements MessageListener {
-    private JMSObjectFactory requestJMSObjectFactory = null;
-    private JMSObjectFactory responseJMSObjectFactory;
+    private JmsFactory requestJmsFactory = null;
+    private JmsFactory responseJmsFactory;
     private ServiceMessageListener messageListener = null;
     private TransactionType transactionType;
     private TransactionHandler transactionHandler;
     private WorkScheduler workScheduler;
     private JMSRuntimeMonitor monitor;
 
-    public JMSMessageListenerInvoker(JMSObjectFactory requestJMSObjectFactory,
-                                     JMSObjectFactory responseJMSObjectFactory,
+    public JMSMessageListenerInvoker(JmsFactory requestJmsFactory,
+                                     JmsFactory responseJmsFactory,
                                      ServiceMessageListener messageListener,
                                      TransactionType transactionType,
                                      TransactionHandler transactionHandler,
                                      WorkScheduler workScheduler,
                                      JMSRuntimeMonitor monitor) {
-        this.requestJMSObjectFactory = requestJMSObjectFactory;
-        this.responseJMSObjectFactory = responseJMSObjectFactory;
+        this.requestJmsFactory = requestJmsFactory;
+        this.responseJmsFactory = responseJmsFactory;
         this.messageListener = messageListener;
         this.transactionType = transactionType;
         this.transactionHandler = transactionHandler;
@@ -81,36 +81,36 @@ public class JMSMessageListenerInvoker implements MessageListener {
     }
 
     public void start(int receiverCount) throws JMSException {
-        ServerSessionPool serverSessionPool = new StandaloneServerSessionPool(requestJMSObjectFactory,
+        ServerSessionPool serverSessionPool = new StandaloneServerSessionPool(requestJmsFactory,
                                                                               transactionHandler,
                                                                               this,
                                                                               transactionType,
                                                                               workScheduler,
                                                                               receiverCount,
                                                                               monitor);
-        Connection connection = requestJMSObjectFactory.getConnection();
-        Destination destination = requestJMSObjectFactory.getDestination();
+        Connection connection = requestJmsFactory.getConnection();
+        Destination destination = requestJmsFactory.getDestination();
         connection.createConnectionConsumer(destination, null, serverSessionPool, 1);
         connection.start();
     }
 
     public void stop() {
-        requestJMSObjectFactory.close();
-        responseJMSObjectFactory.close();
+        requestJmsFactory.close();
+        responseJmsFactory.close();
     }
 
     public void onMessage(Message message) {
         Session responseSession = null;
         try {
-            responseSession = responseJMSObjectFactory.createSession();
+            responseSession = responseJmsFactory.createTransactedSession();
             if (transactionType == TransactionType.GLOBAL) {
                 transactionHandler.enlist(responseSession);
             }
-            Destination responseDestination = responseJMSObjectFactory
+            Destination responseDestination = responseJmsFactory
                     .getDestination();
             messageListener.onMessage(message, responseSession, responseDestination);
             commit(responseSession);
-            responseJMSObjectFactory.recycle();
+            responseJmsFactory.recycle();
         } catch (JMSException e) {
             rollback();
             monitor.jmsListenerError(e);

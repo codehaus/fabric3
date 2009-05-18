@@ -49,7 +49,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
@@ -146,8 +146,8 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         monitor.unRegisterListener(serviceUri);
     }
 
-    public void registerResponseListener(JMSObjectFactory requestFactory,
-                                         JMSObjectFactory responseFactory,
+    public void registerResponseListener(JmsFactory requestFactory,
+                                         JmsFactory responseFactory,
                                          ServiceMessageListener messageListener,
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,

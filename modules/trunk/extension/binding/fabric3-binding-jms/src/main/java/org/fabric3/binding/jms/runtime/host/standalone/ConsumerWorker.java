@@ -41,7 +41,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSObjectFactory;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
@@ -64,7 +64,7 @@ public class ConsumerWorker extends DefaultPausableWork {
     private final long readTimeout;
     private final TransactionType transactionType;
     private final ClassLoader cl;
-    private final JMSObjectFactory responseJMSObjectFactory;
+    private final JmsFactory responseJmsFactory;
     private JMSRuntimeMonitor monitor;
 
     /**
@@ -78,10 +78,10 @@ public class ConsumerWorker extends DefaultPausableWork {
         transactionHandler = template.getTransactionHandler();
         transactionType = template.getTransactionType();
         listener = template.getListener();
-        responseJMSObjectFactory = template.getResponseJMSObjectFactory();
-        JMSObjectFactory requestJMSObjectFactory = template.getRequestJMSObjectFactory();
-        session = requestJMSObjectFactory.createSession();
-        consumer = session.createConsumer(requestJMSObjectFactory.getDestination());
+        responseJmsFactory = template.getResponseJMSObjectFactory();
+        JmsFactory requestJmsFactory = template.getRequestJMSObjectFactory();
+        session = requestJmsFactory.createTransactedSession();
+        consumer = session.createConsumer(requestJmsFactory.getDestination());
         readTimeout = template.getReadTimeout();
         cl = template.getCl();
         monitor = template.getMonitor();
@@ -106,13 +106,13 @@ public class ConsumerWorker extends DefaultPausableWork {
             // set the TCCL to the target service classloader
             Thread.currentThread().setContextClassLoader(cl);
             if (message != null) {
-                if (responseJMSObjectFactory != null) {
+                if (responseJmsFactory != null) {
                     // invocation is request-response, resolve the response destination
-                    responseSession = responseJMSObjectFactory.createSession();
+                    responseSession = responseJmsFactory.createTransactedSession();
                     if (transactionType == TransactionType.GLOBAL) {
                         transactionHandler.enlist(responseSession);
                     }
-                    responseDestination = responseJMSObjectFactory.getDestination();
+                    responseDestination = responseJmsFactory.getDestination();
                 }
                 // dispatch the message
                 listener.onMessage(message, responseSession, responseDestination);

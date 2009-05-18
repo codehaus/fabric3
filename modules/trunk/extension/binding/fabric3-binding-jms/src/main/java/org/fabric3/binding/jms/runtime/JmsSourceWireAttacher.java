@@ -108,7 +108,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
     public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
 
-        JMSObjectFactory responseJMSObjectFactory = null;
+        JmsFactory responseJmsFactory = null;
         URI serviceUri = target.getUri();
 
         ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
@@ -120,13 +120,13 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
         ConnectionFactoryDefinition connectionFactory = metadata.getConnectionFactory();
         DestinationDefinition destination = metadata.getDestination();
-        JMSObjectFactory requestJMSObjectFactory = null;
+        JmsFactory requestJmsFactory;
         try {
-            requestJMSObjectFactory = buildObjectFactory(connectionFactory, destination, env);
+            requestJmsFactory = buildObjectFactory(connectionFactory, destination, env);
             if (metadata.isResponse()) {
                 ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
                 DestinationDefinition responseDestination = metadata.getResponseDestination();
-                responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
+                responseJmsFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
             }
         } catch (JmsLookupException e) {
             throw new WiringException(e);
@@ -152,8 +152,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
                 // the wire has changed and it is being reprovisioned
                 jmsHost.unregisterListener(serviceUri);
             }
-            jmsHost.registerResponseListener(requestJMSObjectFactory,
-                                             responseJMSObjectFactory,
+            jmsHost.registerResponseListener(requestJmsFactory,
+                                             responseJmsFactory,
                                              messageListener,
                                              transactionType,
                                              transactionHandler,
@@ -221,9 +221,9 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         return new WireHolder(chainHolders, callbackUri, correlationScheme, transactionType, messageEncoder, parameterEncoder);
     }
 
-    private JMSObjectFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
-                                                DestinationDefinition destinationDefinition,
-                                                Hashtable<String, String> env) throws JmsLookupException {
+    private JmsFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
+                                          DestinationDefinition destinationDefinition,
+                                          Hashtable<String, String> env) throws JmsLookupException {
 
         CreateOption create = connectionFactoryDefinition.getCreate();
         ConnectionFactoryStrategy connectionStrategy = connectionFactoryStrategies.get(create);
@@ -231,7 +231,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         create = destinationDefinition.getCreate();
         DestinationStrategy destinationStrategy = destinationStrategies.get(create);
         Destination reqDestination = destinationStrategy.getDestination(destinationDefinition, connectionFactory, env);
-        return new JMSObjectFactory(connectionFactory, reqDestination, 1);
+        return new JmsFactory(connectionFactory, reqDestination, 1);
     }
 
 }

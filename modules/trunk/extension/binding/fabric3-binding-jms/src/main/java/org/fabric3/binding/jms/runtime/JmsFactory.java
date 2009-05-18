@@ -43,13 +43,19 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 
 /**
- * This is a factory class handling cache, recover. etc for a connectionFactory/destination pair related JMS objects.
+ * Factory for providing connections, sessions and destinations.
  */
-public class JMSObjectFactory {
+public class JmsFactory {
+    private static final int CACHE_CONNECTION = 1;
+    private static final int CACHE_SESSION = 2;
+
+    private final ConnectionFactory connectionFactory;
+
     /**
      * Cache level
      */
-    private int cache_level = 1;
+    private int cacheLevel = 1;
+
     /**
      * JMS connection shared by session
      */
@@ -59,38 +65,23 @@ public class JMSObjectFactory {
      */
     private Session sharedSession;
     /**
-     * JMS Connection Factory
-     */
-    private final ConnectionFactory connectionFactory;
-    /**
      * JMS destination
      */
     private final Destination destination;
 
-    private static final int CACHE_CONNECTION = 1;
 
-    private static final int CACHE_SESSION = 2;
-
-    public JMSObjectFactory(ConnectionFactory connectionFactory, Destination destination, int cacheLevel) {
+    public JmsFactory(ConnectionFactory connectionFactory, Destination destination, int cacheLevel) {
         this.connectionFactory = connectionFactory;
         this.destination = destination;
-        this.cache_level = cacheLevel;
-    }
-
-    public ConnectionFactory getConnectionFactory() {
-        return connectionFactory;
+        this.cacheLevel = cacheLevel;
     }
 
     public Connection getConnection() throws JMSException {
         if (sharedConnection == null) {
-            sharedConnection = createConnection();
+            sharedConnection = connectionFactory.createConnection();
         }
         //TODO check connection
         return sharedConnection;
-    }
-
-    private Connection createConnection() throws JMSException {
-        return getConnectionFactory().createConnection();
     }
 
     public Destination getDestination() {
@@ -99,27 +90,27 @@ public class JMSObjectFactory {
 
     public Session getSession() throws JMSException {
         if (sharedSession == null) {
-            sharedSession = createSession();
+            sharedSession = createTransactedSession();
         }
         //TODO check session
         return sharedSession;
     }
 
-    public Session createSession() throws JMSException {
+    public Session createTransactedSession() throws JMSException {
         return getConnection().createSession(true, Session.SESSION_TRANSACTED);
     }
 
     /**
-     * Destroy object corresponding to cache_level
+     * Recycles shared connections and sessions.
      */
     public void recycle() {
-        if (cache_level < CACHE_CONNECTION) {
+        if (cacheLevel < CACHE_CONNECTION) {
             if (sharedConnection != null) {
                 JmsHelper.closeQuietly(sharedConnection);
                 sharedConnection = null;
             }
         }
-        if (cache_level < CACHE_SESSION) {
+        if (cacheLevel < CACHE_SESSION) {
             if (sharedSession != null) {
                 //already closed by connection.
                 sharedSession = null;
@@ -128,7 +119,7 @@ public class JMSObjectFactory {
     }
 
     /**
-     * Close any disposable resources.
+     * Closes shared resources.
      */
     public void close() {
         if (sharedConnection != null) {

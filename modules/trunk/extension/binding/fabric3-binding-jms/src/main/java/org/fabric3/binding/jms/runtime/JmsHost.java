@@ -57,17 +57,17 @@ public interface JmsHost {
     /**
      * Register a ResponseMessageListener which dispatches inbound JMS messages to a service.
      *
-     * @param requestFactory  factory for creating JMS request objects
-     * @param responseFactory Factory for creating JMS response objects
-     * @param messageListener          the message listener
-     * @param transactionType          the transaction type
-     * @param transactionHandler       the transaction handler
-     * @param cl                       the target service classloader
-     * @param serviceUri               URI of the service to which the binding is attached
+     * @param requestFactory     factory for creating JMS request objects
+     * @param responseFactory    factory for creating JMS response objects
+     * @param messageListener    the message listener
+     * @param transactionType    the transaction type
+     * @param transactionHandler the transaction handler
+     * @param cl                 the target service classloader
+     * @param serviceUri         URI of the service to which the binding is attached
      * @throws JmsHostException if an error registering the listener is encountered
      */
-    void registerResponseListener(JMSObjectFactory requestFactory,
-                                  JMSObjectFactory responseFactory,
+    void registerResponseListener(JmsFactory requestFactory,
+                                  JmsFactory responseFactory,
                                   ServiceMessageListener messageListener,
                                   TransactionType transactionType,
                                   TransactionHandler transactionHandler,
