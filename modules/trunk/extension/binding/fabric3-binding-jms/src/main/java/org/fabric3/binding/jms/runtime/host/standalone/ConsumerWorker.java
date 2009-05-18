@@ -134,6 +134,7 @@ public class ConsumerWorker extends DefaultPausableWork {
                 commit();
             }
         } catch (JMSException ex) {
+            monitor.jmsListenerError(ex);
             if (transactionType == TransactionType.GLOBAL) {
                 try {
                     transactionHandler.rollback();
@@ -158,7 +159,6 @@ public class ConsumerWorker extends DefaultPausableWork {
             } catch (JMSException ne) {
                 monitor.jmsListenerError(e);
             }
-            monitor.jmsListenerError(e);
         }
     }
 
