@@ -41,7 +41,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
@@ -66,7 +66,7 @@ public class ConsumerWorker extends DefaultPausableWork {
     private final TransactionType transactionType;
     private final ClassLoader cl;
     private final JmsFactory responseJmsFactory;
-    private JMSRuntimeMonitor monitor;
+    private JmsMonitor monitor;
 
     /**
      * Constructor.

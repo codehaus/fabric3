@@ -45,7 +45,7 @@ import org.fabric3.api.annotation.logging.Severe;
  *
  * @version $Rev: 3137 $ $Date: 2008-03-18 02:31:06 +0800 (Tue, 18 Mar 2008) $
  */
-public interface JMSRuntimeMonitor {
+public interface JmsMonitor {
 
     /**
      * Callback when an error is raised handling a message.

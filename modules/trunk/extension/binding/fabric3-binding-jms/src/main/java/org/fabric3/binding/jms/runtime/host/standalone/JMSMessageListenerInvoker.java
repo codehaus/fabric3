@@ -43,7 +43,7 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
@@ -63,7 +63,7 @@ public class JMSMessageListenerInvoker implements MessageListener {
     private TransactionType transactionType;
     private TransactionHandler transactionHandler;
     private WorkScheduler workScheduler;
-    private JMSRuntimeMonitor monitor;
+    private JmsMonitor monitor;
 
     public JMSMessageListenerInvoker(JmsFactory requestJmsFactory,
                                      JmsFactory responseJmsFactory,
@@ -71,7 +71,7 @@ public class JMSMessageListenerInvoker implements MessageListener {
                                      TransactionType transactionType,
                                      TransactionHandler transactionHandler,
                                      WorkScheduler workScheduler,
-                                     JMSRuntimeMonitor monitor) {
+                                     JmsMonitor monitor) {
         this.requestJmsFactory = requestJmsFactory;
         this.responseJmsFactory = responseJmsFactory;
         this.messageListener = messageListener;

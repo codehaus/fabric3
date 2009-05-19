@@ -36,7 +36,7 @@ package org.fabric3.binding.jms.runtime.host.standalone;
 
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JmsFactory;
-import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 
@@ -54,7 +54,7 @@ public class ConsumerWorkerTemplate {
     private final ClassLoader cl;
     private final JmsFactory responseJmsFactory;
     private final JmsFactory requestJmsFactory;
-    private JMSRuntimeMonitor monitor;
+    private JmsMonitor monitor;
 
     /**
      * @param session
@@ -74,7 +74,7 @@ public class ConsumerWorkerTemplate {
                                   JmsFactory requestJmsFactory,
                                   long readTimeout,
                                   ClassLoader cl,
-                                  JMSRuntimeMonitor monitor) {
+                                  JmsMonitor monitor) {
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
         this.listener = listener;
@@ -109,7 +109,7 @@ public class ConsumerWorkerTemplate {
         return responseJmsFactory;
     }
 
-    public JMSRuntimeMonitor getMonitor() {
+    public JmsMonitor getMonitor() {
         return monitor;
     }
 

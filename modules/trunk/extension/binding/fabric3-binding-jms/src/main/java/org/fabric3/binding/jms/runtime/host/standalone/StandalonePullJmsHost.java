@@ -49,7 +49,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
@@ -66,7 +66,7 @@ import org.fabric3.host.work.WorkScheduler;
 public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBean {
     private WorkScheduler workScheduler;
     private long readTimeout = 30000L;
-    private JMSRuntimeMonitor monitor;
+    private JmsMonitor monitor;
     private int receiverCount = 3;
     private Map<URI, List<ConsumerWorker>> consumerWorkerMap = new HashMap<URI, List<ConsumerWorker>>();
     private Map<URI, Connection> connectionMap = new HashMap<URI, Connection>();
@@ -78,7 +78,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
      * @param workScheduler the work scheduler
      * @param monitor       Monitor used for logging.
      */
-    public StandalonePullJmsHost(@Reference WorkScheduler workScheduler, @Monitor JMSRuntimeMonitor monitor) {
+    public StandalonePullJmsHost(@Reference WorkScheduler workScheduler, @Monitor JmsMonitor monitor) {
         this.workScheduler = workScheduler;
         this.monitor = monitor;
     }

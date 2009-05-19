@@ -42,7 +42,7 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
@@ -63,7 +63,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
     private final TransactionHandler transactionHandler;
     private final TransactionType transactionType;
     private int poolSize = 3; //default value
-    private JMSRuntimeMonitor monitor;
+    private JmsMonitor monitor;
     private final WorkScheduler workScheduler;
 
     /**
@@ -83,7 +83,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
                                        TransactionType transactionType,
                                        WorkScheduler workScheduler,
                                        int receiverCount,
-                                       JMSRuntimeMonitor monitor) throws JMSException {
+                                       JmsMonitor monitor) throws JMSException {
         this.jmsFactory = jmsFactory;
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;

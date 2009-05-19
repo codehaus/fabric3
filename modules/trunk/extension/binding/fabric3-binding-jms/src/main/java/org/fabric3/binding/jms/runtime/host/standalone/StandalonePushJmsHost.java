@@ -47,7 +47,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
@@ -64,7 +64,7 @@ public class StandalonePushJmsHost implements JmsHost {
 
     private WorkScheduler workScheduler;
     private Connection connection;
-    private JMSRuntimeMonitor monitor;
+    private JmsMonitor monitor;
     private int receiverCount = 3;
     private Map<URI, JMSMessageListenerInvoker> jmsMessageListenerInvokers = new HashMap<URI, JMSMessageListenerInvoker>();
 
@@ -74,7 +74,7 @@ public class StandalonePushJmsHost implements JmsHost {
      * @param workScheduler the work scheduler
      * @param monitor       Monitor to be injected.
      */
-    public StandalonePushJmsHost(@Reference WorkScheduler workScheduler, @Monitor JMSRuntimeMonitor monitor) {
+    public StandalonePushJmsHost(@Reference WorkScheduler workScheduler, @Monitor JmsMonitor monitor) {
         this.workScheduler = workScheduler;
         this.monitor = monitor;
     }

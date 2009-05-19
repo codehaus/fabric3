@@ -30,7 +30,7 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
-import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 
@@ -40,13 +40,13 @@ import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 public class AdministeredObjectResolverImpl implements AdministeredObjectResolver {
     private Map<CreateOption, ConnectionFactoryStrategy> factoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
     private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
-    private JMSRuntimeMonitor monitor;
+    private JmsMonitor monitor;
     private Map<String, ConnectionFactoryHolder> connectionCache = new HashMap<String, ConnectionFactoryHolder>();
     private Map<DestinationKey, Destination> destinationCache = new HashMap<DestinationKey, Destination>();
 
     public AdministeredObjectResolverImpl(@Reference Map<CreateOption, ConnectionFactoryStrategy> factoryStrategies,
                                           @Reference Map<CreateOption, DestinationStrategy> destinationStrategies,
-                                          @Monitor JMSRuntimeMonitor monitor) {
+                                          @Monitor JmsMonitor monitor) {
         this.factoryStrategies = factoryStrategies;
         this.destinationStrategies = destinationStrategies;
         this.monitor = monitor;
