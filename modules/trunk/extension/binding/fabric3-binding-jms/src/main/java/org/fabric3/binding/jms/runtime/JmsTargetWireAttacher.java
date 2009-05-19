@@ -44,14 +44,12 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
-import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
-import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
@@ -72,17 +70,14 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDefinition> {
-    private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
-    private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
+    private AdministeredObjectResolver resolver;
     private ClassLoaderRegistry classLoaderRegistry;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
     private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
-    public JmsTargetWireAttacher(@Reference Map<CreateOption, DestinationStrategy> destinationStrategies,
-                                 @Reference Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies,
-                                 @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.destinationStrategies = destinationStrategies;
-        this.connectionFactoryStrategies = connectionFactoryStrategies;
+
+    public JmsTargetWireAttacher(@Reference AdministeredObjectResolver resolver, @Reference ClassLoaderRegistry classLoaderRegistry) {
+        this.resolver = resolver;
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
@@ -107,26 +102,21 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
         ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
-        CreateOption create = connectionFactoryDefinition.getCreate();
         Destination responseDestination = null;
         Destination reqDestination;
         ConnectionFactory responseConnectionFactory = null;
         ConnectionFactory reqCf;
         try {
-            reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
-
+            reqCf = resolver.resolve(connectionFactoryDefinition, env);
             DestinationDefinition destinationDefinition = metadata.getDestination();
-            create = destinationDefinition.getCreate();
-            reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
+            reqDestination = resolver.resolve(destinationDefinition, reqCf, env);
 
             if (metadata.isResponse()) {
                 connectionFactoryDefinition = metadata.getResponseConnectionFactory();
-                create = connectionFactoryDefinition.getCreate();
-                responseConnectionFactory = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+                responseConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
 
                 destinationDefinition = metadata.getResponseDestination();
-                create = destinationDefinition.getCreate();
-                responseDestination = destinationStrategies.get(create).getDestination(destinationDefinition, responseConnectionFactory, env);
+                responseDestination = resolver.resolve(destinationDefinition, responseConnectionFactory, env);
             }
         } catch (JmsLookupException e) {
             throw new WiringException(e);
@@ -190,11 +180,13 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, JmsWireTargetDefinition target) throws WiringException {
-        // no-op
+        // release the connection
+        resolver.release(target.getMetadata().getConnectionFactory());
     }
 
     public ObjectFactory<?> createObjectFactory(JmsWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
+
 
 }

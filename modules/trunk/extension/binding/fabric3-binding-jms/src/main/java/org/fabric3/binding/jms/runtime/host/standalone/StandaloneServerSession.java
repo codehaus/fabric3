@@ -54,23 +54,16 @@ public class StandaloneServerSession implements ServerSession {
      *
      * @param session            Underlying JMS session.
      * @param serverSessionPool  Server session pool.
-     * @param transactionHandler Transaction handler (XA or Local)
      */
     public StandaloneServerSession(Session session, StandaloneServerSessionPool serverSessionPool) {
         this.session = session;
         this.serverSessionPool = serverSessionPool;
     }
 
-    /**
-     * @see javax.jms.ServerSession#getSession()
-     */
     public Session getSession() throws JMSException {
         return session;
     }
 
-    /**
-     * @see javax.jms.ServerSession#start()
-     */
     public void start() throws JMSException {
         serverSessionPool.startServerSession(this);
     }

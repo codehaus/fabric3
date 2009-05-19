@@ -72,6 +72,10 @@
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher"/>
     </component>
 
+    <component name="AdministeredObjectResolver">
+        <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolverImpl"/>
+    </component>
+
     <!-- Always create destination strategy -->
     <component name="AlwaysCreateDestination" f3-core:key="always">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.AlwaysDestinationStrategy"/>

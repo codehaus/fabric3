@@ -41,11 +41,12 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
+import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.DefaultPausableWork;
@@ -80,7 +81,7 @@ public class ConsumerWorker extends DefaultPausableWork {
         listener = template.getListener();
         responseJmsFactory = template.getResponseJMSObjectFactory();
         JmsFactory requestJmsFactory = template.getRequestJMSObjectFactory();
-        session = requestJmsFactory.createTransactedSession();
+        session = requestJmsFactory.getConnection().createSession(true, Session.SESSION_TRANSACTED);
         consumer = session.createConsumer(requestJmsFactory.getDestination());
         readTimeout = template.getReadTimeout();
         cl = template.getCl();
@@ -108,7 +109,7 @@ public class ConsumerWorker extends DefaultPausableWork {
             if (message != null) {
                 if (responseJmsFactory != null) {
                     // invocation is request-response, resolve the response destination
-                    responseSession = responseJmsFactory.createTransactedSession();
+                    responseSession = responseJmsFactory.getConnection().createSession(true, Session.SESSION_TRANSACTED);
                     if (transactionType == TransactionType.GLOBAL) {
                         transactionHandler.enlist(responseSession);
                     }
@@ -140,9 +141,15 @@ public class ConsumerWorker extends DefaultPausableWork {
             rollback();
             throw e;
         } finally {
+            JmsHelper.closeQuietly(responseSession);
             Thread.currentThread().setContextClassLoader(oldCl);
         }
 
+    }
+
+    public final void stop() {
+        super.stop();
+        JmsHelper.closeQuietly(session);
     }
 
     private void rollback() {

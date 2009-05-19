@@ -38,93 +38,26 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.Session;
-
-import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 
 /**
  * Factory for providing connections, sessions and destinations.
  */
 public class JmsFactory {
-    private static final int CACHE_CONNECTION = 1;
-    private static final int CACHE_SESSION = 2;
-
     private final ConnectionFactory connectionFactory;
-
-    /**
-     * Cache level
-     */
-    private int cacheLevel = 1;
-
-    /**
-     * JMS connection shared by session
-     */
-    private Connection sharedConnection;
-    /**
-     * JMS Session shared by consumer
-     */
-    private Session sharedSession;
-    /**
-     * JMS destination
-     */
     private final Destination destination;
 
 
-    public JmsFactory(ConnectionFactory connectionFactory, Destination destination, int cacheLevel) {
+    public JmsFactory(ConnectionFactory connectionFactory, Destination destination) {
         this.connectionFactory = connectionFactory;
         this.destination = destination;
-        this.cacheLevel = cacheLevel;
     }
 
     public Connection getConnection() throws JMSException {
-        if (sharedConnection == null) {
-            sharedConnection = connectionFactory.createConnection();
-        }
-        //TODO check connection
-        return sharedConnection;
+        return connectionFactory.createConnection();
     }
 
     public Destination getDestination() {
         return destination;
-    }
-
-    public Session getSession() throws JMSException {
-        if (sharedSession == null) {
-            sharedSession = createTransactedSession();
-        }
-        //TODO check session
-        return sharedSession;
-    }
-
-    public Session createTransactedSession() throws JMSException {
-        return getConnection().createSession(true, Session.SESSION_TRANSACTED);
-    }
-
-    /**
-     * Recycles shared connections and sessions.
-     */
-    public void recycle() {
-        if (cacheLevel < CACHE_CONNECTION) {
-            if (sharedConnection != null) {
-                JmsHelper.closeQuietly(sharedConnection);
-                sharedConnection = null;
-            }
-        }
-        if (cacheLevel < CACHE_SESSION) {
-            if (sharedSession != null) {
-                //already closed by connection.
-                sharedSession = null;
-            }
-        }
-    }
-
-    /**
-     * Closes shared resources.
-     */
-    public void close() {
-        if (sharedConnection != null) {
-            JmsHelper.closeQuietly(sharedConnection);
-        }
     }
 
 }

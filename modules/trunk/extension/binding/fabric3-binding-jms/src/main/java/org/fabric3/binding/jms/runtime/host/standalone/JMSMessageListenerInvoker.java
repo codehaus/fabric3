@@ -43,11 +43,12 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
+import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
@@ -81,13 +82,8 @@ public class JMSMessageListenerInvoker implements MessageListener {
     }
 
     public void start(int receiverCount) throws JMSException {
-        ServerSessionPool serverSessionPool = new StandaloneServerSessionPool(requestJmsFactory,
-                                                                              transactionHandler,
-                                                                              this,
-                                                                              transactionType,
-                                                                              workScheduler,
-                                                                              receiverCount,
-                                                                              monitor);
+        ServerSessionPool serverSessionPool =
+                new StandaloneServerSessionPool(requestJmsFactory, transactionHandler, this, transactionType, workScheduler, receiverCount, monitor);
         Connection connection = requestJmsFactory.getConnection();
         Destination destination = requestJmsFactory.getDestination();
         connection.createConnectionConsumer(destination, null, serverSessionPool, 1);
@@ -95,22 +91,18 @@ public class JMSMessageListenerInvoker implements MessageListener {
     }
 
     public void stop() {
-        requestJmsFactory.close();
-        responseJmsFactory.close();
     }
 
     public void onMessage(Message message) {
         Session responseSession = null;
         try {
-            responseSession = responseJmsFactory.createTransactedSession();
+            responseSession = responseJmsFactory.getConnection().createSession(true, Session.SESSION_TRANSACTED);
             if (transactionType == TransactionType.GLOBAL) {
                 transactionHandler.enlist(responseSession);
             }
-            Destination responseDestination = responseJmsFactory
-                    .getDestination();
+            Destination responseDestination = responseJmsFactory.getDestination();
             messageListener.onMessage(message, responseSession, responseDestination);
             commit(responseSession);
-            responseJmsFactory.recycle();
         } catch (JMSException e) {
             rollback();
             monitor.jmsListenerError(e);
@@ -139,8 +131,10 @@ public class JMSMessageListenerInvoker implements MessageListener {
             } catch (JmsTxException e2) {
                 rollback();
             } catch (JMSException e1) {
-
+                rollback();
             }
+        }  finally{
+            JmsHelper.closeQuietly(responseSession);
         }
     }
 

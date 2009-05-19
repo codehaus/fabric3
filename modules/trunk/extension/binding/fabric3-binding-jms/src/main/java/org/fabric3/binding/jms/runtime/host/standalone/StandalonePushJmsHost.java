@@ -47,12 +47,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
-import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
 
@@ -108,7 +107,6 @@ public class StandalonePushJmsHost implements JmsHost {
         for (JMSMessageListenerInvoker invoker : jmsMessageListenerInvokers.values()) {
             invoker.stop();
         }
-        JmsHelper.closeQuietly(connection);
         jmsMessageListenerInvokers.clear();
         monitor.stop();
     }

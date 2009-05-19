@@ -42,8 +42,8 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -58,7 +58,7 @@ import org.fabric3.host.work.WorkScheduler;
 public class StandaloneServerSessionPool implements ServerSessionPool {
 
     // Available server sessions
-    private Stack<ServerSession> serverSessions = new Stack<ServerSession>();
+    private final Stack<ServerSession> serverSessions = new Stack<ServerSession>();
     private final JmsFactory jmsFactory;
     private final TransactionHandler transactionHandler;
     private final TransactionType transactionType;
@@ -95,7 +95,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
 
     private void initSessions(MessageListener listener) throws JMSException {
         for (int i = 0; i < poolSize; i++) {
-            Session session = jmsFactory.createTransactedSession();
+            Session session = jmsFactory.getConnection().createSession(true, Session.SESSION_TRANSACTED);
             session.setMessageListener(listener);
             ServerSession serverSession = new StandaloneServerSession(session, this);
             serverSessions.add(serverSession);

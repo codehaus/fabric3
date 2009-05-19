@@ -47,15 +47,13 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
-import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
-import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
@@ -77,23 +75,20 @@ import org.fabric3.spi.wire.Wire;
  */
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDefinition>, JmsSourceWireAttacherMBean {
     private JmsHost jmsHost;
-    private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
-    private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
     private ClassLoaderRegistry classLoaderRegistry;
+    private AdministeredObjectResolver resolver;
     private TransactionHandler transactionHandler;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
     private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
-    public JmsSourceWireAttacher(@Reference TransactionHandler transactionHandler,
+    public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
+                                 @Reference TransactionHandler transactionHandler,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference JmsHost jmsHost,
-                                 @Reference Map<CreateOption, DestinationStrategy> destinationStrategies,
-                                 @Reference Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies) {
+                                 @Reference JmsHost jmsHost) {
+        this.resolver = resolver;
         this.transactionHandler = transactionHandler;
         this.classLoaderRegistry = classLoaderRegistry;
         this.jmsHost = jmsHost;
-        this.destinationStrategies = destinationStrategies;
-        this.connectionFactoryStrategies = connectionFactoryStrategies;
     }
 
     @Reference
@@ -224,14 +219,9 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     private JmsFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
                                           DestinationDefinition destinationDefinition,
                                           Hashtable<String, String> env) throws JmsLookupException {
-
-        CreateOption create = connectionFactoryDefinition.getCreate();
-        ConnectionFactoryStrategy connectionStrategy = connectionFactoryStrategies.get(create);
-        ConnectionFactory connectionFactory = connectionStrategy.getConnectionFactory(connectionFactoryDefinition, env);
-        create = destinationDefinition.getCreate();
-        DestinationStrategy destinationStrategy = destinationStrategies.get(create);
-        Destination reqDestination = destinationStrategy.getDestination(destinationDefinition, connectionFactory, env);
-        return new JmsFactory(connectionFactory, reqDestination, 1);
+        ConnectionFactory connectionFactory = resolver.resolve(connectionFactoryDefinition, env);
+        Destination reqDestination = resolver.resolve(destinationDefinition, connectionFactory, env);
+        return new JmsFactory(connectionFactory, reqDestination);
     }
 
 }

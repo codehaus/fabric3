@@ -49,12 +49,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
+import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
-import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
 
@@ -125,9 +124,6 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
                 worker.stop();
             }
         }
-        for (Connection connection : connectionMap.values()) {
-            JmsHelper.closeQuietly(connection);
-        }
         monitor.stop();
 
     }
@@ -141,7 +137,6 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         for (ConsumerWorker consumerWorker : workers) {
             consumerWorker.stop();
         }
-        JmsHelper.closeQuietly(connectionMap.remove(serviceUri));
         templateMap.remove(serviceUri);
         monitor.unRegisterListener(serviceUri);
     }
