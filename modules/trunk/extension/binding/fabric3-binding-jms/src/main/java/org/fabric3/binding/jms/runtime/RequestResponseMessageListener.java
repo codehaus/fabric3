@@ -44,8 +44,8 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
+import org.fabric3.binding.jms.runtime.helper.WorkContextHelper;
 import org.fabric3.spi.binding.format.EncodeCallback;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
@@ -120,7 +120,7 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
                 inMessage.setBody(new Object[]{deserialized});
             }
             String callbackUri = wireHolder.getCallbackUri();
-            JmsHelper.addCallFrame(inMessage, callbackUri);
+            WorkContextHelper.addCallFrame(inMessage, callbackUri);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
             String serialized = parameterEncoder.encodeText(outMessage);
             if (outMessage.isFault()) {
@@ -144,7 +144,7 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
                         PayloadType payloadType,
                         Session responseSession,
                         Destination responseDestination) throws JmsServiceException, JMSException, JmsBadMessageException {
-        WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
+        WorkContext workContext = WorkContextHelper.createWorkContext(request, wireHolder.getCallbackUri());
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
 

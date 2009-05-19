@@ -42,6 +42,7 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
+import org.fabric3.binding.jms.runtime.helper.WorkContextHelper;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
@@ -109,7 +110,7 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
                 inMessage.setBody(new Object[]{deserialized});
             }
             String callbackUri = wireHolder.getCallbackUri();
-            JmsHelper.addCallFrame(inMessage, callbackUri);
+            WorkContextHelper.addCallFrame(inMessage, callbackUri);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
             if (outMessage.isFault()) {
                 throw new JmsServiceException((Throwable) outMessage.getBody());
@@ -120,7 +121,7 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
     }
 
     private void invoke(Message request, Interceptor interceptor, Object payload) throws JmsServiceException, JmsBadMessageException {
-        WorkContext workContext = JmsHelper.createWorkContext(request, wireHolder.getCallbackUri());
+        WorkContext workContext = WorkContextHelper.createWorkContext(request, wireHolder.getCallbackUri());
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
         if (outMessage.isFault()) {
