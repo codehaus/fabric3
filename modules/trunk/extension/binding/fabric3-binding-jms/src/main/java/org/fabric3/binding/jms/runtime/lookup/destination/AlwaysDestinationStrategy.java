@@ -65,7 +65,7 @@ public class AlwaysDestinationStrategy implements DestinationStrategy {
                 return qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);
             case topic:
                 TopicConnection tc = (TopicConnection) connection;
-                return tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);
+                return tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE).createTopic(name);
             default:
                 throw new IllegalArgumentException("Unknown destination type");
             }
