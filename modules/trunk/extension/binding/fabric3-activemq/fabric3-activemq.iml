@@ -116,6 +116,17 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-spi" />
     <orderEntry type="module" module-name="fabric3-binding-jms" />
+    <orderEntry type="module-library">
+      <library name="activemq-pool-5.2.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
 

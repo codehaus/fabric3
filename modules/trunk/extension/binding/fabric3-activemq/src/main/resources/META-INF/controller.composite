@@ -19,12 +19,8 @@
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
-           name="ActiveMQExtension"
+           name="ActiveMQControllerExtension"
            autowire="true">
-
-    <component name="ActiveMQBrokerEngine">
-        <f3-impl:implementation.system class="org.fabric3.activemq.broker.BrokerEngine"/>
-    </component>
 
     <component name="ActiveMQBindingProvider" f3-core:key="f3-binding:binding.activemq">
         <f3-impl:implementation.system class="org.fabric3.activemq.control.ActiveMQBindingProvider"/>

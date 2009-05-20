@@ -32,7 +32,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.runtime.HostInfo;
 
 /**
- * Creates an embedded ActiveMQ broker that autodiscovers other brokers in the domain via multi-cast.
+ * Creates an embedded ActiveMQ broker.
  *
  * @version $Revision$ $Date$
  */
