@@ -40,7 +40,7 @@ import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
  * Parses ConnectionFactoryConfiguration entries in the runtime system configuration, instantiates connection factories for them, and registers the
  * factories with the ConnectionFactoryRegistry.
  *
- * @version $Revision$ $Date$
+ * @version $Revision$ $Date$  
  */
 @EagerInit
 public class ConnectionFactoryParser {
@@ -105,8 +105,6 @@ public class ConnectionFactoryParser {
             case XMLStreamConstants.END_DOCUMENT:
                 return;
             }
-
-
         }
     }
 
