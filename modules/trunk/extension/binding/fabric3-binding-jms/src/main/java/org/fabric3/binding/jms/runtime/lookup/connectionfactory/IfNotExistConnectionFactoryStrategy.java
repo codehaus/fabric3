@@ -38,24 +38,33 @@ import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 import javax.naming.NameNotFoundException;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
+import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
+import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 
 /**
- * Implementation that attempts to resolve a destination in JNDI, and create the destination if it is not found.
+ * Implementation that attempts to resolve a connection by searching the ConnectionFactoryRegistry, then JNDI and then, if not found, creating it.
  */
 public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStrategy {
     private ConnectionFactoryStrategy always;
+    private ConnectionFactoryRegistry registry;
 
-    public IfNotExistConnectionFactoryStrategy() {
+    public IfNotExistConnectionFactoryStrategy(@Reference ConnectionFactoryRegistry registry) {
         this.always = new AlwaysConnectionFactoryStrategy();
+        this.registry = registry;
     }
-
 
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException {
         try {
-            return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
+            String name = definition.getName();
+            ConnectionFactory factory = registry.get(name);
+            if (factory != null) {
+                return factory;
+            }
+            return (ConnectionFactory) JndiHelper.lookup(name, env);
         } catch (NameNotFoundException ex) {
             return always.getConnectionFactory(definition, env);
         }

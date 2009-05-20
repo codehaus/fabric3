@@ -38,20 +38,33 @@ import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 import javax.naming.NameNotFoundException;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
+import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
+import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 
 /**
- * Implementation that attempts to resolve a connection factory in JNDI.
+ * Implementation that attempts to resolve a connection by searching the ConnectionFactoryRegistry and then JNDI.
  */
 public class NeverConnectionFactoryStrategy implements ConnectionFactoryStrategy {
+    private ConnectionFactoryRegistry registry;
+
+    public NeverConnectionFactoryStrategy(@Reference ConnectionFactoryRegistry registry) {
+        this.registry = registry;
+    }
 
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException {
+        String name = definition.getName();
         try {
-            return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
+            ConnectionFactory factory = registry.get(name);
+            if (factory != null) {
+                return factory;
+            }
+            return (ConnectionFactory) JndiHelper.lookup(name, env);
         } catch (NameNotFoundException ex) {
-            throw new JmsLookupException(definition.getName() + " not found", ex);
+            throw new JmsLookupException(name + " not found", ex);
         }
     }
 
