@@ -23,6 +23,7 @@
 
     <include name="JMSTypesComposite"/>
     <include name="JMSCallbackComposite"/>
+    <include name="JMSDefaultsComposite"/>
     <include name="JMSScopeComposite"/>
     <include name="JMSJAXBComposite"/>
 

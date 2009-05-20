@@ -26,15 +26,9 @@
         <f3-impl:junit class="org.fabric3.binding.jms.test.jaxb.JAXBWeatherTest"/>
         <reference name="weatherService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID">
-                <destination name="jaxbServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="jaxbServiceQueue"/>
                 <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="clientQueue"/>
                 </response>
             </binding.jms>
         </reference>
@@ -44,20 +38,13 @@
         <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
         <service name="WeatherService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="jaxbServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="jaxbServiceQueue"/>
                 <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="clientQueue"/>
                 </response>
             </binding.jms>
         </service>
     </component>
-
 
 
 </composite>

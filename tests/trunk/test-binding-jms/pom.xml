@@ -116,7 +116,19 @@
                             <version>1.5.0</version>
                         </dependency>
                     </extensions>
-                </configuration>
+                    <systemConfig>
+                               <![CDATA[
+                               <config>
+                               <jms>
+                                   <connection.factories>
+                                       <connection.factory name="xaDefault" broker.url="vm://broker" type="xa"/>
+                                       <connection.factory name="default" broker.url="vm://broker"/>
+                                   </connection.factories>
+                               </jms>
+                               </config>
+                               ]]>
+                           </systemConfig>
+                       </configuration>
                 <executions>
                     <execution>
                         <goals>
