@@ -106,14 +106,4 @@ public class JmsLoaderHelper {
         return result;
     }
 
-//    /**
-//     * Generate an URI from JmsBindingMetadata. This may be removed when call eliminate dependency on binding's URI.
-//     */
-//    static URI generateURI(JmsBindingMetadata metadata) {
-//        StringBuilder builder = new StringBuilder();
-//        builder.append("jms:").append(metadata.getDestination().getName())
-//                .append("?connectionFactory=").append(
-//                metadata.getConnectionFactory().getName());
-//        return builder.toString();
-//    }
 }
