@@ -37,71 +37,29 @@ package org.fabric3.binding.jms.common;
 
 /**
  * JMS administered object definition.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class AdministeredObjectDefinition extends PropertyAwareObject {
     private static final long serialVersionUID = 3952595885616542808L;
-
-    /**
-     * Destination type.
-     */
-    private DestinationType type;
-
-    /**
-     * Destination name (can be JNDI name or simple name)
-     */
     private String name;
-
-    /**
-     * Destination creation.
-     */
     private CreateOption create = CreateOption.ifnotexist;
 
-    /**
-     * @return the create
-     */
-    public CreateOption getCreate() {
-        return create;
-    }
-
-    /**
-     * @param create the create to set
-     */
-    public void setCreate(CreateOption create) {
-        this.create = create;
-    }
-
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the type
-     */
-    public DestinationType getType() {
-        return type;
+    public CreateOption getCreate() {
+        return create;
     }
 
-    /**
-     * @param type the type to set
-     */
-    public void setType(DestinationType type) {
-        this.type = type;
+    public void setCreate(CreateOption create) {
+        this.create = create;
     }
-
-
-
 
 
 }

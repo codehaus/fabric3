@@ -37,6 +37,7 @@ package org.fabric3.binding.jms.runtime.lookup.connectionfactory;
 import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 import javax.naming.NameNotFoundException;
+import javax.naming.Context;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -63,6 +64,10 @@ public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStr
             ConnectionFactory factory = registry.get(name);
             if (factory != null) {
                 return factory;
+            }
+            if (!env.contains(Context.INITIAL_CONTEXT_FACTORY)) {
+                // java.naming.factory.initial is not defined, resort to creating
+                return always.getConnectionFactory(definition, env);
             }
             return (ConnectionFactory) JndiHelper.lookup(name, env);
         } catch (NameNotFoundException ex) {

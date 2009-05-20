@@ -37,11 +37,12 @@ package org.fabric3.binding.jms.runtime.lookup.destination;
 import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.common.DestinationDefinition;
-import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
+import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 
 /**
  * Implementation that attempts to resolve a a destination in JNDI and if it is not found, will create it.
@@ -52,6 +53,10 @@ public class IfNotExistDestinationStrategy implements DestinationStrategy {
     public Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env)
             throws JmsLookupException {
         try {
+            if (!env.contains(Context.INITIAL_CONTEXT_FACTORY)) {
+                // java.naming.factory.initial is not defined, resort to creating
+                return always.getDestination(definition, cf, env);
+            }
             return (Destination) JndiHelper.lookup(definition.getName(), env);
         } catch (NameNotFoundException ex) {
             return always.getDestination(definition, cf, env);
