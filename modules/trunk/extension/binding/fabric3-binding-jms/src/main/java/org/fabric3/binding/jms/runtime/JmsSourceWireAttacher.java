@@ -48,6 +48,7 @@ import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
@@ -150,6 +151,9 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
             JmsBindingMetadata metadata = source.getMetadata();
             Hashtable<String, String> env = metadata.getEnv();
             ConnectionFactoryDefinition requestConnectionFactoryDefinition = metadata.getConnectionFactory();
+
+            checkDefaults(source, requestConnectionFactoryDefinition);
+
             ConnectionFactory requestConnectionFactory = resolver.resolve(requestConnectionFactoryDefinition, env);
             DestinationDefinition destinationDefinition = metadata.getDestination();
             Destination requestDestination = resolver.resolve(destinationDefinition, requestConnectionFactory, env);
@@ -157,6 +161,9 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
             configuration.setRequestDestination(requestDestination);
             if (metadata.isResponse()) {
                 ConnectionFactoryDefinition responseConnectionFactoryDefinition = metadata.getResponseConnectionFactory();
+
+                checkDefaults(source, responseConnectionFactoryDefinition);
+
                 ConnectionFactory responseConnectionFactory = resolver.resolve(responseConnectionFactoryDefinition, env);
                 DestinationDefinition responseDestinationDestination = metadata.getResponseDestination();
                 Destination responseDestination = resolver.resolve(responseDestinationDestination, responseConnectionFactory, env);
@@ -212,6 +219,23 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
             }
         }
         return new WireHolder(chainHolders, callbackUri, correlationScheme, configuration.getTransactionType(), messageEncoder, parameterEncoder);
+    }
+
+    /**
+     * Sets default connection factory values if not specified.
+     *
+     * @param target                      the source definition
+     * @param connectionFactoryDefinition the connection factory definition
+     */
+    private void checkDefaults(JmsWireSourceDefinition target, ConnectionFactoryDefinition connectionFactoryDefinition) {
+        String name = connectionFactoryDefinition.getName();
+        if (name == null) {
+            if (TransactionType.GLOBAL == target.getTransactionType()) {
+                connectionFactoryDefinition.setName(JmsConstants.DEFAULT_XA_CONNECTION_FACTORY);
+            } else {
+                connectionFactoryDefinition.setName(JmsConstants.DEFAULT_CONNECTION_FACTORY);
+            }
+        }
     }
 
 

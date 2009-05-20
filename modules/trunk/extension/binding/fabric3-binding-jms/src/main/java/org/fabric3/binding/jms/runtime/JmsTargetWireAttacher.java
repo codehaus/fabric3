@@ -45,6 +45,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
@@ -129,6 +130,8 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         Hashtable<String, String> env = metadata.getEnv();
 
         ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
+        checkDefaults(target, connectionFactoryDefinition);
+
         try {
             ConnectionFactory requestConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
             DestinationDefinition destinationDefinition = metadata.getDestination();
@@ -137,8 +140,9 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
             wireConfiguration.setRequestDestination(requestDestination);
             if (metadata.isResponse()) {
                 connectionFactoryDefinition = metadata.getResponseConnectionFactory();
-                ConnectionFactory responseConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
+                checkDefaults(target, connectionFactoryDefinition);
 
+                ConnectionFactory responseConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
                 destinationDefinition = metadata.getResponseDestination();
                 Destination responseDestination = resolver.resolve(destinationDefinition, responseConnectionFactory, env);
                 JmsResponseMessageListener receiver = new JmsResponseMessageListener(responseDestination, responseConnectionFactory);
@@ -148,6 +152,23 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
             throw new WiringException(e);
         }
 
+    }
+
+    /**
+     * Sets default connection factory values if not specified.
+     *
+     * @param target                      the target definition
+     * @param connectionFactoryDefinition the connection factory definition
+     */
+    private void checkDefaults(JmsWireTargetDefinition target, ConnectionFactoryDefinition connectionFactoryDefinition) {
+        String name = connectionFactoryDefinition.getName();
+        if (name == null) {
+            if (TransactionType.GLOBAL == target.getTransactionType()) {
+                connectionFactoryDefinition.setName(JmsConstants.DEFAULT_XA_CONNECTION_FACTORY);
+            } else {
+                connectionFactoryDefinition.setName(JmsConstants.DEFAULT_CONNECTION_FACTORY);
+            }
+        }
     }
 
     private void resolveEncoders(PhysicalOperationDefinition op, Wire wire, ClassLoader classloader, InterceptorConfiguration configuration)

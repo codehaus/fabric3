@@ -34,6 +34,7 @@
  */
 package org.fabric3.binding.jms.introspection;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -164,7 +165,9 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             case END_ELEMENT:
                 name = reader.getName().getLocalPart();
                 if ("binding.jms".equals(name)) {
-                    bd.setGeneratedTargetUri(loaderHelper.getURI(JmsLoaderHelper.generateURI(metadata)));
+                    String destination = bd.getMetadata().getDestination().getName();
+                    URI bindingUri = URI.create("jms:" + destination);
+                    bd.setGeneratedTargetUri(bindingUri);
                     return bd;
                 }
                 break;

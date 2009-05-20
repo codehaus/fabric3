@@ -72,9 +72,9 @@ public class JmsBindingMetadata extends ModelObject {
     private DestinationDefinition destination;
 
     /**
-     * Connection factory definition.
+     * Connection factory definition. Set for the default.
      */
-    private ConnectionFactoryDefinition connectionFactory;
+    private ConnectionFactoryDefinition connectionFactory = new ConnectionFactoryDefinition();
 
     /**
      * Response definition.

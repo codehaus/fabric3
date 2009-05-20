@@ -40,12 +40,9 @@ import org.fabric3.model.type.ModelObject;
  * @version $Revision$ $Date$
  */
 public class ResponseDefinition extends ModelObject {
-    
     private static final long serialVersionUID = -3413442748842988653L;
-
-       
-    private DestinationDefinition destination;    
-    private ConnectionFactoryDefinition connectionFactory;
+    private DestinationDefinition destination;
+    private ConnectionFactoryDefinition connectionFactory = new ConnectionFactoryDefinition();
 
     public ConnectionFactoryDefinition getConnectionFactory() {
         return connectionFactory;

@@ -38,4 +38,8 @@ public interface JmsConstants {
      */
     String FAULT_HEADER = "f3Fault";
 
+    String DEFAULT_CONNECTION_FACTORY = "default";
+
+    String DEFAULT_XA_CONNECTION_FACTORY = "xaDefault";
+
 }
