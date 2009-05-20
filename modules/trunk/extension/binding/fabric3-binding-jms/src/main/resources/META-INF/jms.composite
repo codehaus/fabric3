@@ -76,6 +76,11 @@
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolverImpl"/>
     </component>
 
+    <component name="ConnectionFactoryRegistry">
+        <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.factory.impl.ConnectionFactoryRegistryImpl"/>
+    </component>
+
+    
     <!-- Always create destination strategy -->
     <component name="AlwaysCreateDestination" f3-core:key="always">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.AlwaysDestinationStrategy"/>
