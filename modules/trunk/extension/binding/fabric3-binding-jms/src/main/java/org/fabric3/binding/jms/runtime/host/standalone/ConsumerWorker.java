@@ -34,6 +34,7 @@
  */
 package org.fabric3.binding.jms.runtime.host.standalone;
 
+import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -41,9 +42,8 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
-import org.fabric3.binding.jms.runtime.JmsFactory;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
@@ -58,15 +58,16 @@ import org.fabric3.host.work.DefaultPausableWork;
  */
 public class ConsumerWorker extends DefaultPausableWork {
 
-    private final Session session;
-    private final TransactionHandler transactionHandler;
-    private final MessageConsumer consumer;
-    private final ServiceMessageListener listener;
-    private final long readTimeout;
-    private final TransactionType transactionType;
-    private final ClassLoader cl;
-    private final JmsFactory responseJmsFactory;
+    private Session session;
+    private TransactionHandler transactionHandler;
+    private MessageConsumer consumer;
+    private ServiceMessageListener listener;
+    private long readTimeout;
+    private TransactionType transactionType;
+    private ClassLoader cl;
     private JmsMonitor monitor;
+    private Connection responseConnection;
+    private Destination responseDestination;
 
     /**
      * Constructor.
@@ -79,12 +80,12 @@ public class ConsumerWorker extends DefaultPausableWork {
         transactionHandler = template.getTransactionHandler();
         transactionType = template.getTransactionType();
         listener = template.getListener();
-        responseJmsFactory = template.getResponseJMSObjectFactory();
-        JmsFactory requestJmsFactory = template.getRequestJMSObjectFactory();
-        session = requestJmsFactory.getConnection().createSession(true, Session.SESSION_TRANSACTED);
-        consumer = session.createConsumer(requestJmsFactory.getDestination());
+        session = template.getRequestConnection().createSession(true, Session.SESSION_TRANSACTED);
+        consumer = session.createConsumer(template.getRequestDestination());
+        responseConnection = template.getResponseConnection();
+        responseDestination = template.getResponseDestination();
         readTimeout = template.getReadTimeout();
-        cl = template.getCl();
+        cl = template.getClassloader();
         monitor = template.getMonitor();
     }
 
@@ -100,20 +101,18 @@ public class ConsumerWorker extends DefaultPausableWork {
         }
 
         Session responseSession = null;
-        Destination responseDestination = null;
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
             Message message = consumer.receive(readTimeout);
             // set the TCCL to the target service classloader
             Thread.currentThread().setContextClassLoader(cl);
             if (message != null) {
-                if (responseJmsFactory != null) {
+                if (responseDestination != null) {
                     // invocation is request-response, resolve the response destination
-                    responseSession = responseJmsFactory.getConnection().createSession(true, Session.SESSION_TRANSACTED);
+                    responseSession = responseConnection.createSession(true, Session.SESSION_TRANSACTED);
                     if (transactionType == TransactionType.GLOBAL) {
                         transactionHandler.enlist(responseSession);
                     }
-                    responseDestination = responseJmsFactory.getDestination();
                 }
                 // dispatch the message
                 listener.onMessage(message, responseSession, responseDestination);

@@ -40,7 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Destination;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
@@ -48,13 +50,13 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsMonitor;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
+import org.fabric3.binding.jms.runtime.ServiceListenerConfiguration;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
@@ -69,7 +71,6 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     private JmsMonitor monitor;
     private int receiverCount = 3;
     private Map<URI, List<ConsumerWorker>> consumerWorkerMap = new HashMap<URI, List<ConsumerWorker>>();
-    private Map<URI, Connection> connectionMap = new HashMap<URI, Connection>();
     private Map<URI, ConsumerWorkerTemplate> templateMap = new HashMap<URI, ConsumerWorkerTemplate>();
 
     /**
@@ -141,27 +142,13 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         monitor.unRegisterListener(serviceUri);
     }
 
-    public void registerResponseListener(JmsFactory requestFactory,
-                                         JmsFactory responseFactory,
-                                         ServiceMessageListener messageListener,
-                                         TransactionType transactionType,
-                                         TransactionHandler transactionHandler,
-                                         ClassLoader cl,
-                                         URI serviceUri) throws JmsHostException {
+    public void registerListener(ServiceListenerConfiguration configuration) throws JmsHostException {
 
+        URI serviceUri = configuration.getServiceUri();
         try {
 
-            Connection connection = requestFactory.getConnection();
             List<ConsumerWorker> consumerWorkers = new ArrayList<ConsumerWorker>();
-
-            ConsumerWorkerTemplate template = new ConsumerWorkerTemplate(transactionHandler,
-                                                                         transactionType,
-                                                                         messageListener,
-                                                                         responseFactory,
-                                                                         requestFactory,
-                                                                         readTimeout,
-                                                                         cl,
-                                                                         monitor);
+            ConsumerWorkerTemplate template = createTemplate(configuration);
             templateMap.put(serviceUri, template);
 
             for (int i = 0; i < receiverCount; i++) {
@@ -169,9 +156,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
                 workScheduler.scheduleWork(work);
                 consumerWorkers.add(work);
             }
-
-            connection.start();
-            connectionMap.put(serviceUri, connection);
+            template.getRequestConnection().start();
             consumerWorkerMap.put(serviceUri, consumerWorkers);
 
         } catch (JMSException ex) {
@@ -228,7 +213,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     public List<String> getReceivers() {
 
         List<String> receivers = new ArrayList<String>();
-        for (URI destination : connectionMap.keySet()) {
+        for (URI destination : templateMap.keySet()) {
             receivers.add(destination.toString());
         }
         return receivers;
@@ -236,5 +221,31 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     }
 
     // ---------------------------------- End of management operations -------------------
+
+    private ConsumerWorkerTemplate createTemplate(ServiceListenerConfiguration configuration) throws JMSException {
+
+        Connection requestConnection = configuration.getRequestConnectionFactory().createConnection();
+        Destination requestDestination = configuration.getRequestDestination();
+        Connection responseConnection = null;
+        ConnectionFactory responseConnectionFactory = configuration.getResponseConnectionFactory();
+        if (responseConnectionFactory != null) {
+            responseConnection = responseConnectionFactory.createConnection();
+        }
+        Destination responseDestination = configuration.getResponseDestination();
+        ServiceMessageListener listener = configuration.getMessageListener();
+        TransactionType transactionType = configuration.getTransactionType();
+        TransactionHandler handler = configuration.getTransactionHandler();
+        ClassLoader classloader = configuration.getClassloader();
+        return new ConsumerWorkerTemplate(listener,
+                                          requestConnection,
+                                          requestDestination,
+                                          responseConnection,
+                                          responseDestination,
+                                          readTimeout,
+                                          transactionType,
+                                          handler,
+                                          classloader,
+                                          monitor);
+    }
 
 }

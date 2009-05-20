@@ -38,6 +38,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 
 import org.osoa.sca.annotations.Destroy;
@@ -47,10 +49,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsMonitor;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
+import org.fabric3.binding.jms.runtime.ServiceListenerConfiguration;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
@@ -63,7 +65,6 @@ import org.fabric3.host.work.WorkScheduler;
 public class StandalonePushJmsHost implements JmsHost {
 
     private WorkScheduler workScheduler;
-    private Connection connection;
     private JmsMonitor monitor;
     private int receiverCount = 3;
     private Map<URI, JMSMessageListenerInvoker> jmsMessageListenerInvokers = new HashMap<URI, JMSMessageListenerInvoker>();
@@ -115,26 +116,37 @@ public class StandalonePushJmsHost implements JmsHost {
         return jmsMessageListenerInvokers.containsKey(serviceUri);
     }
 
-    public void registerResponseListener(JmsFactory requestFactory,
-                                         JmsFactory responseFactory,
-                                         ServiceMessageListener messageListener,
-                                         TransactionType transactionType,
-                                         TransactionHandler transactionHandler,
-                                         ClassLoader cl,
-                                         URI serviceUri) throws JmsHostException {
-        JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(requestFactory,
-                                                                          responseFactory,
-                                                                          messageListener,
-                                                                          transactionType,
-                                                                          transactionHandler,
-                                                                          workScheduler,
-                                                                          monitor);
+    public void registerListener(ServiceListenerConfiguration configuration) throws JmsHostException {
+
+        URI serviceUri = configuration.getServiceUri();
         try {
+
+            Connection requestConnection = configuration.getRequestConnectionFactory().createConnection();
+            Destination requestDestination = configuration.getRequestDestination();
+            Connection responseConnection = null;
+            ConnectionFactory responseConnectionFactory = configuration.getResponseConnectionFactory();
+            if (responseConnectionFactory != null) {
+                responseConnection = responseConnectionFactory.createConnection();
+            }
+            Destination responseDestination = configuration.getResponseDestination();
+            ServiceMessageListener messageListener = configuration.getMessageListener();
+            TransactionType transactionType = configuration.getTransactionType();
+            TransactionHandler transactionHandler = configuration.getTransactionHandler();
+
+            JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(requestConnection,
+                                                                              requestDestination,
+                                                                              responseConnection,
+                                                                              responseDestination,
+                                                                              messageListener,
+                                                                              transactionType,
+                                                                              transactionHandler,
+                                                                              workScheduler,
+                                                                              monitor);
             invoker.start(receiverCount);
+            jmsMessageListenerInvokers.put(serviceUri, invoker);
         } catch (JMSException e) {
             throw new JmsHostException("Unable to register service listener for: " + serviceUri, e);
         }
-        jmsMessageListenerInvokers.put(serviceUri, invoker);
 
     }
 

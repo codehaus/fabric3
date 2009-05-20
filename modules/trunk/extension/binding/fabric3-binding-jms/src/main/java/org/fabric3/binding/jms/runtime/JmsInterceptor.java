@@ -78,61 +78,25 @@ public class JmsInterceptor implements Interceptor {
     private MessageEncoder messageEncoder;
     private ParameterEncoder parameterEncoder;
     private ClassLoader cl;
+    private boolean requestResponse;
 
     /**
-     * Constructor that sets up an interceptor for one-way operations.
+     * Constructor.
      *
-     * @param methodName        Method name.
-     * @param payloadType       the type of JMS message to send
-     * @param destination       Request destination.
-     * @param connectionFactory Request connection factory
-     * @param correlationScheme Correlation scheme.
-     * @param messageEncoder    Message encoder or null if encoding is not required
-     * @param parameterEncoder  Parameter encoder or null if encoding is not required
-     * @param cl                the classloader for loading parameter types.
+     * @param configuration the configuration template
      */
-    public JmsInterceptor(String methodName,
-                          PayloadType payloadType,
-                          Destination destination,
-                          ConnectionFactory connectionFactory,
-                          CorrelationScheme correlationScheme,
-                          MessageEncoder messageEncoder,
-                          ParameterEncoder parameterEncoder,
-                          ClassLoader cl) {
-        this(methodName, payloadType, destination, connectionFactory, correlationScheme, null, messageEncoder, parameterEncoder, cl);
-    }
-
-    /**
-     * Constructor that sets up an interceptor for request-response operations.
-     *
-     * @param methodName        Method name.
-     * @param payloadType       the type of JMS message to send
-     * @param destination       Request destination.
-     * @param connectionFactory Request connection factory
-     * @param correlationScheme Correlation scheme.
-     * @param messageReceiver   Message receiver for response
-     * @param messageEncoder    Message encoder or null if encoding is not required
-     * @param parameterEncoder  Parameter encoder or null if encoding is not required
-     * @param cl                the classloader for loading parameter types.
-     */
-    public JmsInterceptor(String methodName,
-                          PayloadType payloadType,
-                          Destination destination,
-                          ConnectionFactory connectionFactory,
-                          CorrelationScheme correlationScheme,
-                          JmsResponseMessageListener messageReceiver,
-                          MessageEncoder messageEncoder,
-                          ParameterEncoder parameterEncoder,
-                          ClassLoader cl) {
-        this.methodName = methodName;
-        this.payloadType = payloadType;
-        this.destination = destination;
-        this.connectionFactory = connectionFactory;
-        this.correlationScheme = correlationScheme;
-        this.messageReceiver = messageReceiver;
-        this.messageEncoder = messageEncoder;
-        this.parameterEncoder = parameterEncoder;
-        this.cl = cl;
+    public JmsInterceptor(InterceptorConfiguration configuration) {
+        this.destination = configuration.getWireConfiguration().getRequestDestination();
+        this.connectionFactory = configuration.getWireConfiguration().getRequestConnectionFactory();
+        this.correlationScheme = configuration.getWireConfiguration().getCorrelationScheme();
+        this.cl = configuration.getWireConfiguration().getClassloader();
+        this.messageReceiver = configuration.getWireConfiguration().getMessageReceiver();
+        // If message receiver is null, the interceptor is configured for one-way invocations. Otherwise, it is request-response.
+        requestResponse = messageReceiver != null;
+        this.methodName = configuration.getOperationName();
+        this.payloadType = configuration.getPayloadType();
+        this.messageEncoder = configuration.getMessageEncoder();
+        this.parameterEncoder = configuration.getParameterEncoder();
     }
 
     public Message invoke(Message message) {
@@ -162,7 +126,7 @@ public class JmsInterceptor implements Interceptor {
                 correlationId = jmsMessage.getJMSMessageID();
             }
             session.commit();
-            if (messageReceiver != null) {
+            if (requestResponse) {
                 // request-response, block on response
                 receive(response, correlationId);
             }

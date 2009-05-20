@@ -43,7 +43,6 @@ import javax.jms.Destination;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
@@ -91,101 +90,86 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         this.messageFormatters = messageFormatters;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JmsWireTargetDefinition targetDefinition, Wire wire)
-            throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, JmsWireTargetDefinition target, Wire wire) throws WiringException {
 
-        ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassLoaderId());
+        WireConfiguration wireConfiguration = new WireConfiguration();
+        ClassLoader classloader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
+        wireConfiguration.setClassloader(classloader);
+        wireConfiguration.setCorrelationScheme(target.getMetadata().getCorrelationScheme());
 
-        JmsBindingMetadata metadata = targetDefinition.getMetadata();
+        // resolve the connection factories and destinations for the wire
+        resolveAdministeredObjects(target, wireConfiguration);
 
-        Hashtable<String, String> env = metadata.getEnv();
-        CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
-
-        ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
-        Destination responseDestination = null;
-        Destination reqDestination;
-        ConnectionFactory responseConnectionFactory = null;
-        ConnectionFactory reqCf;
-        try {
-            reqCf = resolver.resolve(connectionFactoryDefinition, env);
-            DestinationDefinition destinationDefinition = metadata.getDestination();
-            reqDestination = resolver.resolve(destinationDefinition, reqCf, env);
-
-            if (metadata.isResponse()) {
-                connectionFactoryDefinition = metadata.getResponseConnectionFactory();
-                responseConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
-
-                destinationDefinition = metadata.getResponseDestination();
-                responseDestination = resolver.resolve(destinationDefinition, responseConnectionFactory, env);
-            }
-        } catch (JmsLookupException e) {
-            throw new WiringException(e);
-        }
-        Map<String, PayloadType> payloadTypes = targetDefinition.getPayloadTypes();
-
+        Map<String, PayloadType> payloadTypes = target.getPayloadTypes();
         for (InvocationChain chain : wire.getInvocationChains()) {
-
+            // setup operation-specific configuration and create an interceptor
+            InterceptorConfiguration configuration = new InterceptorConfiguration(wireConfiguration);
             PhysicalOperationDefinition op = chain.getPhysicalOperation();
-
             String operationName = op.getName();
+            configuration.setOperationName(operationName);
             PayloadType payloadType = payloadTypes.get(operationName);
-            String dataBinding = op.getDatabinding();
-
-            MessageEncoder messageEncoder = null;
-            ParameterEncoder parameterEncoder = null;
-
-            if (dataBinding != null) {
-                ParameterEncoderFactory factory = parameterEncoderFactories.get(dataBinding);
-                if (factory == null) {
-                    throw new WiringException("Parameter encoder factory not found for: " + dataBinding);
-                }
-                try {
-                    parameterEncoder = factory.getInstance(wire, cl);
-                } catch (EncoderException e) {
-                    throw new WiringException(e);
-                }
-                messageEncoder = messageFormatters.get(dataBinding);
-                if (messageEncoder == null) {
-                    throw new WiringException("Message encoder not found for: " + dataBinding);
-                }
-            }
-
-            Interceptor interceptor;
-            if (metadata.isResponse()) {
-                // setup a request-response interceptor
-                JmsResponseMessageListener receiver = new JmsResponseMessageListener(responseDestination, responseConnectionFactory);
-                interceptor = new JmsInterceptor(operationName,
-                                                 payloadType,
-                                                 reqDestination,
-                                                 reqCf,
-                                                 correlationScheme,
-                                                 receiver,
-                                                 messageEncoder,
-                                                 parameterEncoder,
-                                                 cl);
-            } else {
-                // setup a one-way interceptor
-                interceptor = new JmsInterceptor(operationName,
-                                                 payloadType,
-                                                 reqDestination,
-                                                 reqCf,
-                                                 correlationScheme,
-                                                 messageEncoder,
-                                                 parameterEncoder,
-                                                 cl);
-            }
+            configuration.setPayloadType(payloadType);
+            resolveEncoders(op, wire, classloader, configuration);
+            Interceptor interceptor = new JmsInterceptor(configuration);
             chain.addInterceptor(interceptor);
         }
 
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, JmsWireTargetDefinition target) throws WiringException {
-        // release the connection
-        resolver.release(target.getMetadata().getConnectionFactory());
+        // no-op
     }
 
     public ObjectFactory<?> createObjectFactory(JmsWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
+    }
+
+    private void resolveAdministeredObjects(JmsWireTargetDefinition target, WireConfiguration wireConfiguration) throws WiringException {
+        JmsBindingMetadata metadata = target.getMetadata();
+        Hashtable<String, String> env = metadata.getEnv();
+
+        ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
+        try {
+            ConnectionFactory requestConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
+            DestinationDefinition destinationDefinition = metadata.getDestination();
+            Destination requestDestination = resolver.resolve(destinationDefinition, requestConnectionFactory, env);
+            wireConfiguration.setRequestConnectionFactory(requestConnectionFactory);
+            wireConfiguration.setRequestDestination(requestDestination);
+            if (metadata.isResponse()) {
+                connectionFactoryDefinition = metadata.getResponseConnectionFactory();
+                ConnectionFactory responseConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
+
+                destinationDefinition = metadata.getResponseDestination();
+                Destination responseDestination = resolver.resolve(destinationDefinition, responseConnectionFactory, env);
+                JmsResponseMessageListener receiver = new JmsResponseMessageListener(responseDestination, responseConnectionFactory);
+                wireConfiguration.setMessageReceiver(receiver);
+            }
+        } catch (JmsLookupException e) {
+            throw new WiringException(e);
+        }
+
+    }
+
+    private void resolveEncoders(PhysicalOperationDefinition op, Wire wire, ClassLoader classloader, InterceptorConfiguration configuration)
+            throws WiringException {
+        String dataBinding = op.getDatabinding();
+        if (dataBinding != null) {
+            ParameterEncoderFactory factory = parameterEncoderFactories.get(dataBinding);
+            if (factory == null) {
+                throw new WiringException("Parameter encoder factory not found for: " + dataBinding);
+            }
+            try {
+                ParameterEncoder parameterEncoder = factory.getInstance(wire, classloader);
+                configuration.setParameterEncoder(parameterEncoder);
+            } catch (EncoderException e) {
+                throw new WiringException(e);
+            }
+            MessageEncoder messageEncoder = messageFormatters.get(dataBinding);
+            if (messageEncoder == null) {
+                throw new WiringException("Message encoder not found for: " + dataBinding);
+            }
+            configuration.setMessageEncoder(messageEncoder);
+        }
     }
 
 

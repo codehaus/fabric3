@@ -34,8 +34,10 @@
  */
 package org.fabric3.binding.jms.runtime.host.standalone;
 
+import javax.jms.Connection;
+import javax.jms.Destination;
+
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsFactory;
 import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
@@ -47,39 +49,34 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
  */
 public class ConsumerWorkerTemplate {
 
-    private final TransactionHandler transactionHandler;
-    private final ServiceMessageListener listener;
-    private final long readTimeout;
-    private final TransactionType transactionType;
-    private final ClassLoader cl;
-    private final JmsFactory responseJmsFactory;
-    private final JmsFactory requestJmsFactory;
+    private TransactionHandler transactionHandler;
+    private ServiceMessageListener listener;
+    private Connection requestConnection;
+    private Connection responseConnection;
+    private Destination requestDestination;
+    private Destination responseDestination;
+    private long readTimeout;
+    private TransactionType transactionType;
+    private ClassLoader cl;
     private JmsMonitor monitor;
 
-    /**
-     * @param session
-     * @param transactionHandler
-     * @param transactionType
-     * @param consumer
-     * @param listener
-     * @param responseJmsFactory
-     * @param readTimeout
-     * @param cl
-     * @param monitor
-     */
-    public ConsumerWorkerTemplate(TransactionHandler transactionHandler,
-                                  TransactionType transactionType,
-                                  ServiceMessageListener listener,
-                                  JmsFactory responseJmsFactory,
-                                  JmsFactory requestJmsFactory,
+    public ConsumerWorkerTemplate(ServiceMessageListener listener,
+                                  Connection requestConnection,
+                                  Destination requestDestination,
+                                  Connection responseConnection,
+                                  Destination responseDestination,
                                   long readTimeout,
+                                  TransactionType transactionType,
+                                  TransactionHandler transactionHandler,
                                   ClassLoader cl,
                                   JmsMonitor monitor) {
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
         this.listener = listener;
-        this.responseJmsFactory = responseJmsFactory;
-        this.requestJmsFactory = requestJmsFactory;
+        this.requestConnection = requestConnection;
+        this.responseConnection = responseConnection;
+        this.requestDestination = requestDestination;
+        this.responseDestination = responseDestination;
         this.readTimeout = readTimeout;
         this.cl = cl;
         this.monitor = monitor;
@@ -101,20 +98,28 @@ public class ConsumerWorkerTemplate {
         return transactionType;
     }
 
-    public ClassLoader getCl() {
+    public ClassLoader getClassloader() {
         return cl;
     }
 
-    public JmsFactory getResponseJMSObjectFactory() {
-        return responseJmsFactory;
+    public Connection getRequestConnection() {
+        return requestConnection;
+    }
+
+    public Connection getResponseConnection() {
+        return responseConnection;
+    }
+
+    public Destination getRequestDestination() {
+        return requestDestination;
+    }
+
+    public Destination getResponseDestination() {
+        return responseDestination;
     }
 
     public JmsMonitor getMonitor() {
         return monitor;
-    }
-
-    public JmsFactory getRequestJMSObjectFactory() {
-        return requestJmsFactory;
     }
 
 }

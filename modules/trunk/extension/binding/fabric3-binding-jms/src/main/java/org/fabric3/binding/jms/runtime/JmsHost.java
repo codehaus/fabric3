@@ -36,9 +36,6 @@ package org.fabric3.binding.jms.runtime;
 
 import java.net.URI;
 
-import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
-
 /**
  * Provisions listeners with the underlying JMS infrastructure.
  *
@@ -55,24 +52,12 @@ public interface JmsHost {
     boolean isRegistered(URI serviceUri);
 
     /**
-     * Register a ResponseMessageListener which dispatches inbound JMS messages to a service.
+     * Register a ServiceMessageListener which dispatches inbound JMS messages to a service.
      *
-     * @param requestFactory     factory for creating JMS request objects
-     * @param responseFactory    factory for creating JMS response objects
-     * @param messageListener    the message listener
-     * @param transactionType    the transaction type
-     * @param transactionHandler the transaction handler
-     * @param cl                 the target service classloader
-     * @param serviceUri         URI of the service to which the binding is attached
+     * @param configuration the configuration template
      * @throws JmsHostException if an error registering the listener is encountered
      */
-    void registerResponseListener(JmsFactory requestFactory,
-                                  JmsFactory responseFactory,
-                                  ServiceMessageListener messageListener,
-                                  TransactionType transactionType,
-                                  TransactionHandler transactionHandler,
-                                  ClassLoader cl,
-                                  URI serviceUri) throws JmsHostException;
+    void registerListener(ServiceListenerConfiguration configuration) throws JmsHostException;
 
     /**
      * Unregister the message listener for the given service

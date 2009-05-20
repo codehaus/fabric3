@@ -43,9 +43,8 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsBadMessageException;
-import org.fabric3.binding.jms.runtime.JmsFactory;
+import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.JmsServiceException;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
@@ -57,23 +56,29 @@ import org.fabric3.host.work.WorkScheduler;
  * A container class used to support MessageListener with ServerSessionPool.
  */
 public class JMSMessageListenerInvoker implements MessageListener {
-    private JmsFactory requestJmsFactory = null;
-    private JmsFactory responseJmsFactory;
+    private Connection requestConnection;
+    private Destination requestDestination;
+    private Connection responseConnection;
+    private Destination responseDestination;
     private ServiceMessageListener messageListener = null;
     private TransactionType transactionType;
     private TransactionHandler transactionHandler;
     private WorkScheduler workScheduler;
     private JmsMonitor monitor;
 
-    public JMSMessageListenerInvoker(JmsFactory requestJmsFactory,
-                                     JmsFactory responseJmsFactory,
+    public JMSMessageListenerInvoker(Connection requestConnection,
+                                     Destination requestDestination,
+                                     Connection responseConnection,
+                                     Destination responseDestination,
                                      ServiceMessageListener messageListener,
                                      TransactionType transactionType,
                                      TransactionHandler transactionHandler,
                                      WorkScheduler workScheduler,
                                      JmsMonitor monitor) {
-        this.requestJmsFactory = requestJmsFactory;
-        this.responseJmsFactory = responseJmsFactory;
+        this.requestConnection = requestConnection;
+        this.requestDestination = requestDestination;
+        this.responseConnection = responseConnection;
+        this.responseDestination = responseDestination;
         this.messageListener = messageListener;
         this.transactionType = transactionType;
         this.transactionHandler = transactionHandler;
@@ -83,11 +88,9 @@ public class JMSMessageListenerInvoker implements MessageListener {
 
     public void start(int receiverCount) throws JMSException {
         ServerSessionPool serverSessionPool =
-                new StandaloneServerSessionPool(requestJmsFactory, transactionHandler, this, transactionType, workScheduler, receiverCount, monitor);
-        Connection connection = requestJmsFactory.getConnection();
-        Destination destination = requestJmsFactory.getDestination();
-        connection.createConnectionConsumer(destination, null, serverSessionPool, 1);
-        connection.start();
+                new StandaloneServerSessionPool(requestConnection, transactionHandler, this, transactionType, workScheduler, receiverCount, monitor);
+        requestConnection.createConnectionConsumer(requestDestination, null, serverSessionPool, 1);
+        requestConnection.start();
     }
 
     public void stop() {
@@ -96,11 +99,10 @@ public class JMSMessageListenerInvoker implements MessageListener {
     public void onMessage(Message message) {
         Session responseSession = null;
         try {
-            responseSession = responseJmsFactory.getConnection().createSession(true, Session.SESSION_TRANSACTED);
+            responseSession = responseConnection.createSession(true, Session.SESSION_TRANSACTED);
             if (transactionType == TransactionType.GLOBAL) {
                 transactionHandler.enlist(responseSession);
             }
-            Destination responseDestination = responseJmsFactory.getDestination();
             messageListener.onMessage(message, responseSession, responseDestination);
             commit(responseSession);
         } catch (JMSException e) {
@@ -133,7 +135,7 @@ public class JMSMessageListenerInvoker implements MessageListener {
             } catch (JMSException e1) {
                 rollback();
             }
-        }  finally{
+        } finally {
             JmsHelper.closeQuietly(responseSession);
         }
     }
