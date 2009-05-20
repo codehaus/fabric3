@@ -24,22 +24,32 @@ import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 
 /**
+ * Resolves administered objects, specifically connection factories and destinations. Different strategies may be used for resolution as defined by
+ * ConnectionFactoryDefinition or DestinationDefinition.
+ *
  * @version $Revision$ $Date$
  */
 public interface AdministeredObjectResolver {
 
     /**
-     * Resolves a connection factory.
+     * Resolves a ConnectionFactory.
      *
-     * @param definition the factory definition
-     * @param env        environment properties used during resloution
-     * @return the connection factory
+     * @param definition the connection factory definition
+     * @param env        properties for use when resolving the ConnectionFactory.
+     * @return the connection factory.
      * @throws JmsLookupException if there is an error during resolution
      */
-    ConnectionFactory resolve(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException;
+    public ConnectionFactory resolve(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException;
 
-    void release(ConnectionFactoryDefinition definition);
-
-    Destination resolve(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env) throws JmsLookupException;
+    /**
+     * Resolves a destination.
+     *
+     * @param definition the destination definition
+     * @param factory    the connection factory
+     * @param env        environment properties used during resloution
+     * @return the destination
+     * @throws JmsLookupException if there is an error during resolution
+     */
+    Destination resolve(DestinationDefinition definition, ConnectionFactory factory, Hashtable<String, String> env) throws JmsLookupException;
 
 }
