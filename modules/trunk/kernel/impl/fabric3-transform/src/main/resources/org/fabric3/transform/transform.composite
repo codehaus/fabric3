@@ -123,11 +123,12 @@
         <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
+    <component name="Element2Stream">
+        <f3-impl:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+    
     <!--
-        <component name="Element2Stream">
-            <f3-impl:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
-            <reference name="registry" target="PullTransformerRegistry"/>
-        </component>
 
         <component name="Stream2Stream">
             <f3-impl:implementation.system class="org.fabric3.transform.xml.Stream2Stream"/>

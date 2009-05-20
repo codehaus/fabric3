@@ -21,29 +21,30 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.dom.DOMSource;
 
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 import org.fabric3.model.type.service.DataType;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.xml.XMLFactory;
 
 /**
  * @version $Rev$ $Date$
  */
 public class Element2Stream extends AbstractPullTransformer<Element, XMLStreamReader> {
+    private static final JavaClass<XMLStreamReader> TARGET = new JavaClass<XMLStreamReader>(XMLStreamReader.class);
+
     private final XMLInputFactory xmlFactory;
 
-    public Element2Stream(XMLInputFactory xmlFactory) {
-        this.xmlFactory = xmlFactory;
-    }
-
-    public DataType<?> getSourceType() {
-        return null;
+    public Element2Stream(@Reference XMLFactory xmlFactory) {
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
     public DataType<?> getTargetType() {
-        return null;
+        return TARGET;
     }
 
     public XMLStreamReader transform(Element element, TransformContext context) throws TransformationException {
