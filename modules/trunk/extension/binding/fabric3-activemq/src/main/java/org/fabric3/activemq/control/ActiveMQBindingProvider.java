@@ -97,13 +97,13 @@ public class ActiveMQBindingProvider implements BindingProvider {
 
         DestinationDefinition destinationDefinition = new DestinationDefinition();
         destinationDefinition.setDestinationType(DestinationType.queue);
-        destinationDefinition.setCreate(CreateOption.always);
+        destinationDefinition.setCreate(CreateOption.ifnotexist);
         destinationDefinition.setName(queueName);
         metadata.setDestination(destinationDefinition);
 
         ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
         factoryDefinition.setName(ActiveMQConnectionFactory.class.getName());
-        factoryDefinition.setCreate(CreateOption.always);
+        factoryDefinition.setCreate(CreateOption.ifnotexist);
         factoryDefinition.addProperty("brokerURL", brokerUrl);
         metadata.setConnectionFactory(factoryDefinition);
 
