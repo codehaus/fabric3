@@ -26,15 +26,9 @@
         <f3-impl:junit class="org.fabric3.binding.jms.test.object.ObjectWeatherTest"/>
         <reference name="weatherService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID">
-                <destination name="objectServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="objectServiceQueue"/>
                 <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="clientQueue"/>
                 </response>
             </binding.jms>
         </reference>
@@ -44,15 +38,9 @@
         <implementation.java class="org.fabric3.binding.jms.test.object.WeatherServiceImpl"/>
         <service name="WeatherService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="objectServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="objectServiceQueue"/>
                 <response>
-                    <destination name="clientQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="clientQueue"/>
                 </response>
             </binding.jms>
         </service>
@@ -63,15 +51,9 @@
         <f3-impl:junit class="org.fabric3.binding.jms.test.primitives.PrimitiveTest"/>
         <reference name="service">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID">
-                <destination name="primitiveServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="primitiveServiceQueue"/>
                 <response>
-                    <destination name="primitiveResponseQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="primitiveResponseQueue"/>
                 </response>
             </binding.jms>
         </reference>
@@ -81,15 +63,9 @@
         <implementation.java class="org.fabric3.binding.jms.test.primitives.PrimitiveServiceImpl"/>
         <service name="PrimitiveService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="primitiveServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="primitiveServiceQueue"/>
                 <response>
-                    <destination name="primitiveResponseQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="primitiveResponseQueue"/>
                 </response>
             </binding.jms>
         </service>
