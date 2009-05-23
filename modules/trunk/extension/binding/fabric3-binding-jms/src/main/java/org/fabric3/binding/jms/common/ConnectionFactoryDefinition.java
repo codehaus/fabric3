@@ -36,7 +36,7 @@ package org.fabric3.binding.jms.common;
 
 /**
  * JMS connection factory definition.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class ConnectionFactoryDefinition extends AdministeredObjectDefinition {

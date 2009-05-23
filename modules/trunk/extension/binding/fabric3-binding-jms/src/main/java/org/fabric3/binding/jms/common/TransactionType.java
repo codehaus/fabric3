@@ -38,7 +38,7 @@ package org.fabric3.binding.jms.common;
  * @version $Revision$ $Date$
  */
 public enum TransactionType {
-    
+
     GLOBAL, LOCAL
 
 }

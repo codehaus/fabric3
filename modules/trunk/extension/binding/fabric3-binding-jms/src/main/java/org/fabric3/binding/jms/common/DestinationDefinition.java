@@ -35,9 +35,8 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * JMS destination definition used for receiving requests and dispatching
- * responses.
- * 
+ * JMS destination definition used for receiving requests and dispatching responses.
+ *
  * @version $Revision$ $Date$
  */
 public class DestinationDefinition extends AdministeredObjectDefinition {

@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.control;
+package org.fabric3.binding.jms.generator;
 
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.model.type.service.Operation;

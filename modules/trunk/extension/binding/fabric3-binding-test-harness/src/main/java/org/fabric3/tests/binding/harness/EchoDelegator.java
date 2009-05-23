@@ -36,7 +36,7 @@ public class EchoDelegator implements EchoService {
         return delegate.echoInt(value);
     }
 
-    public void echoFault() throws EchoFault {
-        delegate.echoFault();
+    public String echoFault() throws EchoFault {
+        return delegate.echoFault();
     }
 }

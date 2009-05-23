@@ -35,8 +35,7 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * ModelObject represents binding.jms\headers and
- * binding.jms\operationProperties\headers.
+ * ModelObject represents binding.jms\headers and binding.jms\operationProperties\headers.
  */
 public class HeadersDefinition extends PropertyAwareObject {
     private static final long serialVersionUID = 831415808031924363L;
@@ -85,8 +84,8 @@ public class HeadersDefinition extends PropertyAwareObject {
     public void setJMSPriority(Integer priority) {
         jMSPriority = priority;
     }
+
     /**
-     *
      * Clone a new HeadersDefinition.
      */
     public HeadersDefinition cloneHeadersDefinition() {
@@ -99,6 +98,7 @@ public class HeadersDefinition extends PropertyAwareObject {
         clone.setProperties(this.getProperties());
         return clone;
     }
+
     /**
      * Return a new HeadersDefinition which value is <code>this</code> is shadowed by <code>from</code>
      */
@@ -110,13 +110,13 @@ public class HeadersDefinition extends PropertyAwareObject {
         if (from.jMSType != null) {
             result.setJMSType(from.jMSType);
         }
-        if(from.jMSDeliveryMode!=null){
+        if (from.jMSDeliveryMode != null) {
             result.setJMSDeliveryMode(from.jMSDeliveryMode);
         }
-        if(from.jMSPriority !=null){
+        if (from.jMSPriority != null) {
             result.setJMSPriority(from.jMSPriority);
         }
-        if(from.jMSTimeToLive !=null ){
+        if (from.jMSTimeToLive != null) {
             result.setJMSTimeToLive(from.jMSTimeToLive);
         }
         result.setProperties(from.getProperties());

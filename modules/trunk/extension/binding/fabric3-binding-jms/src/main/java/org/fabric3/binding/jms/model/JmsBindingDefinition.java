@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.scdl;
+package org.fabric3.binding.jms.model;
 
 import java.net.URI;
 import javax.xml.namespace.QName;

@@ -41,8 +41,8 @@ import java.util.List;
 import java.util.Map;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
@@ -50,13 +50,13 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JmsHost;
 import org.fabric3.binding.jms.runtime.JmsHostException;
 import org.fabric3.binding.jms.runtime.JmsMonitor;
 import org.fabric3.binding.jms.runtime.ServiceListenerConfiguration;
 import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
-import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.host.work.WorkScheduler;
 
 /**

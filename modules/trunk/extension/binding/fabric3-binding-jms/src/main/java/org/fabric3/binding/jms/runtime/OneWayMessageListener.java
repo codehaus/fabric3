@@ -40,7 +40,6 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
 import org.fabric3.binding.jms.runtime.helper.WorkContextHelper;
 import org.fabric3.spi.binding.format.EncoderException;
@@ -63,36 +62,36 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
 
     public void onMessage(Message request, Session responseSession, Destination responseDestination)
             throws JmsServiceException, JmsBadMessageException, JMSException {
-            String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
-            InvocationChainHolder holder = getInvocationChainHolder(opName);
-            Interceptor interceptor = holder.getChain().getHeadInterceptor();
-            PayloadType payloadType = holder.getPayloadType();
+        String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
+        InvocationChainHolder holder = getInvocationChainHolder(opName);
+        Interceptor interceptor = holder.getChain().getHeadInterceptor();
+        PayloadType payloadType = holder.getPayloadType();
 
-            Object payload = MessageHelper.getPayload(request, payloadType);
+        Object payload = MessageHelper.getPayload(request, payloadType);
 
-            switch (payloadType) {
+        switch (payloadType) {
 
-            case OBJECT:
+        case OBJECT:
+            payload = new Object[]{payload};
+            invoke(request, interceptor, payload);
+            break;
+        case TEXT:
+            MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
+            if (messageEncoder != null) {
+                decodeAndInvoke(request, opName, interceptor, payload, messageEncoder);
+            } else {
+                // non-encoded text
                 payload = new Object[]{payload};
                 invoke(request, interceptor, payload);
-                break;
-            case TEXT:
-                MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
-                if (messageEncoder != null) {
-                    decodeAndInvoke(request, opName, interceptor, payload, messageEncoder);
-                } else {
-                    // non-encoded text
-                    payload = new Object[]{payload};
-                    invoke(request, interceptor, payload);
-                }
-                break;
-            case STREAM:
-                throw new UnsupportedOperationException();
-            default:
-                payload = new Object[]{payload};
-                invoke(request, interceptor, payload);
-                break;
             }
+            break;
+        case STREAM:
+            throw new UnsupportedOperationException();
+        default:
+            payload = new Object[]{payload};
+            invoke(request, interceptor, payload);
+            break;
+        }
 
 
     }

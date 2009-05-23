@@ -36,8 +36,8 @@ package org.fabric3.binding.jms.runtime.lookup.connectionfactory;
 
 import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
-import javax.naming.NameNotFoundException;
 import javax.naming.Context;
+import javax.naming.NameNotFoundException;
 
 import org.osoa.sca.annotations.Reference;
 

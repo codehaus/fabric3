@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.introspection;
+package org.fabric3.binding.jms.loader;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -50,7 +50,8 @@ import org.w3c.dom.Document;
 
 import org.fabric3.binding.jms.common.HeadersDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.binding.jms.model.JmsBindingDefinition;
+import org.fabric3.binding.jms.loader.JmsBindingLoader;
 import org.fabric3.model.type.PolicyAware;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;

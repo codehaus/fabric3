@@ -40,8 +40,8 @@ import javax.jms.Destination;
 import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.common.DestinationDefinition;
-import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
+import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 
 /**
  * Implementation that always resolves a destination against JNDI and never attempts to create it.

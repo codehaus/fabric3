@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.control;
+package org.fabric3.binding.jms.generator;
 
 import java.net.URI;
 import java.util.Collections;
@@ -50,10 +50,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;

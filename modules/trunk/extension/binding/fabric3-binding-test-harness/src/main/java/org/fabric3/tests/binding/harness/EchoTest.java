@@ -28,16 +28,15 @@ public class EchoTest extends TestCase {
 
     @Reference protected List<EchoService> service;
 
-    public void testString() {
-    	int i = 0;
-    	for (EchoService echoService : service) {
-    		assertEquals("Hello", echoService.echoString("Hello"));
-    	}
-    }
-
-    public void testInt() {
-        assertEquals(123, service.get(0).echoInt(123));
-    }
+//    public void testString() {
+//    	for (EchoService echoService : service) {
+//    		assertEquals("Hello", echoService.echoString("Hello"));
+//    	}
+//    }
+//
+//    public void testInt() {
+//        assertEquals(123, service.get(0).echoInt(123));
+//    }
 
     public void testFault() {
         try {

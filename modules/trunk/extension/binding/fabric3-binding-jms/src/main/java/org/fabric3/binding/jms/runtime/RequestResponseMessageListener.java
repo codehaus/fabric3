@@ -68,37 +68,37 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
 
     public void onMessage(Message request, Session responseSession, Destination responseDestination)
             throws JmsServiceException, JmsBadMessageException, JMSException {
-            String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
-            InvocationChainHolder holder = getInvocationChainHolder(opName);
-            Interceptor interceptor = holder.getChain().getHeadInterceptor();
-            PayloadType payloadType = holder.getPayloadType();
+        String opName = request.getStringProperty(JmsConstants.OPERATION_HEADER);
+        InvocationChainHolder holder = getInvocationChainHolder(opName);
+        Interceptor interceptor = holder.getChain().getHeadInterceptor();
+        PayloadType payloadType = holder.getPayloadType();
 
-            Object payload = MessageHelper.getPayload(request, payloadType);
-            switch (payloadType) {
-            //
-            case OBJECT:
-                if (payload == null || !payload.getClass().isArray()) {
-                    payload = new Object[]{payload};
-                }
-                invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
-                break;
-            case TEXT:
-                MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
-                if (messageEncoder != null) {
-                    decodeAndInvoke(request, opName, interceptor, payload, payloadType, messageEncoder, responseSession, responseDestination);
-                } else {
-                    // non-encoded text
-                    payload = new Object[]{payload};
-                    invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
-                }
-                break;
-            case STREAM:
-                throw new UnsupportedOperationException();
-            default:
+        Object payload = MessageHelper.getPayload(request, payloadType);
+        switch (payloadType) {
+        //
+        case OBJECT:
+            if (payload == null || !payload.getClass().isArray()) {
+                payload = new Object[]{payload};
+            }
+            invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
+            break;
+        case TEXT:
+            MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
+            if (messageEncoder != null) {
+                decodeAndInvoke(request, opName, interceptor, payload, payloadType, messageEncoder, responseSession, responseDestination);
+            } else {
+                // non-encoded text
                 payload = new Object[]{payload};
                 invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
-                break;
             }
+            break;
+        case STREAM:
+            throw new UnsupportedOperationException();
+        default:
+            payload = new Object[]{payload};
+            invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
+            break;
+        }
     }
 
     private void decodeAndInvoke(Message request,

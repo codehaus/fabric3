@@ -50,16 +50,16 @@
 
     <!-- JMS Binding Loader -->
     <component f3-core:key="sca:binding.jms" name="JMSBindingLoader">
-        <f3-impl:implementation.system class="org.fabric3.binding.jms.introspection.JmsBindingLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.jms.loader.JmsBindingLoader"/>
     </component>
 
     <!-- JMS Binding Generator -->
-    <component name="JmsBindingGenerator" f3-core:key="org.fabric3.binding.jms.scdl.JmsBindingDefinition">
-        <f3-impl:implementation.system class="org.fabric3.binding.jms.control.JmsBindingGenerator"/>
+    <component name="JmsBindingGenerator" f3-core:key="org.fabric3.binding.jms.model.JmsBindingDefinition">
+        <f3-impl:implementation.system class="org.fabric3.binding.jms.generator.JmsBindingGenerator"/>
     </component>
 
     <component name="MessageTypeIntrospector">
-        <f3-impl:implementation.system class="org.fabric3.binding.jms.control.PayloadTypeIntrospectorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.jms.generator.PayloadTypeIntrospectorImpl"/>
     </component>
 
     <!-- JMS Source Wire Attacher -->

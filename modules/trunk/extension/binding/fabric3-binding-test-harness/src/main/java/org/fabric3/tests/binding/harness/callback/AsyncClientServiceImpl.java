@@ -16,8 +16,11 @@
  */
 package org.fabric3.tests.binding.harness.callback;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
+import org.oasisopen.sca.ComponentContext;
+import org.oasisopen.sca.annotation.Context;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Service;
@@ -28,16 +31,26 @@ import org.osoa.sca.annotations.Service;
 @Scope("COMPOSITE")
 @Service(interfaces = {AsyncClientService.class, AsyncCallback.class})
 public class AsyncClientServiceImpl implements AsyncClientService, AsyncCallback {
+    @Context
+    protected ComponentContext context;
+
+    public AsyncClientServiceImpl() {
+        System.out.println("Created............");
+    }
+
     @Reference
     protected AsyncForwardService service;
     private CountDownLatch latch;
 
     public void invoke(CountDownLatch latch) {
         this.latch = latch;
-        service.invoke("test");
+        String id = UUID.randomUUID().toString();
+        System.out.println("ID:" + id + ":" + context.getURI());
+        service.invoke(id);
     }
 
     public void onCallback(String data) {
+        System.out.println("Callback ID:" + data + ":" + context.getURI());
         latch.countDown();
     }
 }

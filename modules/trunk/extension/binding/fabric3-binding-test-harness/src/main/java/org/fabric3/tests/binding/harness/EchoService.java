@@ -26,5 +26,5 @@ public interface EchoService {
 
     int echoInt(int value);
 
-    void echoFault() throws EchoFault;
+    String echoFault() throws EchoFault;
 }

@@ -25,7 +25,7 @@
     <import.java package="javax.jms" version="1.1.0"/>
     <import.java package="org.fabric3.spi.*" version="1.1"/>
     <import.java package="org.fabric3.binding.jms.common" version="1.1"/>
-    <import.java package="org.fabric3.binding.jms.scdl" version="1.1"/>
+    <import.java package="org.fabric3.binding.jms.model" version="1.1"/>
     <import.java package="org.fabric3.binding.jms.runtime.factory" version="1.1"/>
     <deployable composite="ns:ActiveMQRuntimeExtension" modes="participant vm"/>
     <deployable composite="ns:ActiveMQControllerExtension" modes="controller vm"/>

@@ -71,7 +71,7 @@ public class OperationPropertiesDefinition extends PropertyAwareObject {
         OperationPropertiesDefinition clone = new OperationPropertiesDefinition();
         clone.setName(this.name);
         clone.setNativeOperation(this.nativeOperation);
-        if(this.header!=null){
+        if (this.header != null) {
             clone.setHeaders(header.cloneHeadersDefinition());
         }
         return clone;

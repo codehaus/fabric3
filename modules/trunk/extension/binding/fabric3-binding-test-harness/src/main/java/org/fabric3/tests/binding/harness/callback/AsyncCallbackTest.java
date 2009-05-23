@@ -17,7 +17,6 @@
 package org.fabric3.tests.binding.harness.callback;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
@@ -32,6 +31,6 @@ public class AsyncCallbackTest extends TestCase {
     public void testSyncCallback() throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
         client.invoke(latch);
-        latch.await(5000, TimeUnit.MILLISECONDS);
+        latch.await();
     }
 }

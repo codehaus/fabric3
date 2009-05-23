@@ -28,7 +28,7 @@ import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.DestinationType;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.spi.binding.provider.BindingMatchResult;
 import org.fabric3.spi.binding.provider.BindingProvider;
 import org.fabric3.spi.binding.provider.BindingSelectionException;

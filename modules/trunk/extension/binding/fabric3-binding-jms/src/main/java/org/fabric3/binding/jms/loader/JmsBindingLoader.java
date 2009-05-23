@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.introspection;
+package org.fabric3.binding.jms.loader;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,7 +57,7 @@ import org.fabric3.binding.jms.common.JmsURIMetadata;
 import org.fabric3.binding.jms.common.OperationPropertiesDefinition;
 import org.fabric3.binding.jms.common.PropertyAwareObject;
 import org.fabric3.binding.jms.common.ResponseDefinition;
-import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;

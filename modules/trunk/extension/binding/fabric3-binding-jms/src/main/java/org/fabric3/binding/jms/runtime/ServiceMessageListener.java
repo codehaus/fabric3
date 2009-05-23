@@ -35,9 +35,9 @@
 package org.fabric3.binding.jms.runtime;
 
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
-import javax.jms.JMSException;
 
 /**
  * Dispatches an asynchronously received message to a service. Implementations support request-response and one-way operations. For request-response

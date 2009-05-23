@@ -32,11 +32,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.introspection;
+package org.fabric3.binding.jms.loader;
 
 import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.JmsURIMetadata;
+import org.fabric3.binding.jms.loader.JmsLoaderHelper;
 
 import junit.framework.TestCase;
 

@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.jms.introspection;
+package org.fabric3.binding.jms.loader;
 
 import java.util.Map;
 
