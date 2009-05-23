@@ -35,12 +35,9 @@
 package org.fabric3.binding.jms.generator;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.oasisopen.sca.Constants;
@@ -75,12 +72,10 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     private static final QName TRANSACTED_ONEWAY = new QName(SCA_NS, "transactedOneWay");
     private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(SCA_NS, "transactedOneWay.local");
     private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(SCA_NS, "transactedOneWay.global");
-    private static final QName ONEWAY = new QName(SCA_NS, "oneWay");
 
     private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName OASIS_TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
     private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
-    private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");
 
     private PayloadTypeIntrospector introspector;
 
@@ -94,12 +89,11 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
                                                       Policy policy) throws GenerationException {
 
         TransactionType transactionType = getTransactionType(policy, operations);
-        Set<String> oneWayOperations = getOneWayOperations(policy, operations);
 
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
         URI uri = logicalBinding.getDefinition().getTargetUri();
-        return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations);
+        return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType);
     }
 
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
@@ -108,12 +102,11 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
                                                       Policy policy) throws GenerationException {
 
         TransactionType transactionType = getTransactionType(policy, operations);
-        Set<String> oneWayOperations = getOneWayOperations(policy, operations);
 
         URI uri = logicalBinding.getDefinition().getTargetUri();
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
-        return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations);
+        return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType);
     }
 
     /*
@@ -136,30 +129,6 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         //no transaction policy specified, use local
         return TransactionType.LOCAL;
 
-    }
-
-    /*
-     * Gets one way method names.
-     */
-    private Set<String> getOneWayOperations(Policy policy, List<LogicalOperation> operations) {
-        Set<String> result = null;
-        // If any operation has the intent, return that
-        for (LogicalOperation operation : operations) {
-            for (QName intent : policy.getProvidedIntents(operation)) {
-                if (ONEWAY.equals(intent) || OASIS_ONEWAY.equals(intent)) {
-                    if (result == null) {
-                        result = new HashSet<String>();
-                    }
-                    result.add(operation.getDefinition().getName());
-                    break;
-                }
-            }
-        }
-        if (result != null) {
-            return result;
-        } else {
-            return Collections.emptySet();
-        }
     }
 
     /**

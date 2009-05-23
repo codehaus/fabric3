@@ -77,7 +77,7 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
         switch (payloadType) {
         //
         case OBJECT:
-            if (payload == null || !payload.getClass().isArray()) {
+            if (payload != null && !payload.getClass().isArray()) {
                 payload = new Object[]{payload};
             }
             invoke(request, interceptor, payload, payloadType, responseSession, responseDestination);
@@ -186,13 +186,13 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
         case STREAM:
             throw new UnsupportedOperationException("Stream message not yet supported");
         case TEXT:
-            if (!(payload instanceof String)) {
+            if (payload != null && !(payload instanceof String)) {
                 // this should not happen
                 throw new IllegalArgumentException("Response payload is not a string: " + payload);
             }
             return session.createTextMessage((String) payload);
         case OBJECT:
-            if (!(payload instanceof Serializable)) {
+            if (payload != null && !(payload instanceof Serializable)) {
                 // this should not happen
                 throw new IllegalArgumentException("Response payload is not serializable: " + payload);
             }

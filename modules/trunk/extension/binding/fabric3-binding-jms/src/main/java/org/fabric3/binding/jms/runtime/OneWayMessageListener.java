@@ -72,7 +72,9 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
         switch (payloadType) {
 
         case OBJECT:
-            payload = new Object[]{payload};
+            if (payload != null) {
+                payload = new Object[]{payload};
+            }
             invoke(request, interceptor, payload);
             break;
         case TEXT:
@@ -81,14 +83,18 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
                 decodeAndInvoke(request, opName, interceptor, payload, messageEncoder);
             } else {
                 // non-encoded text
-                payload = new Object[]{payload};
+                if (payload != null) {
+                    payload = new Object[]{payload};
+                }
                 invoke(request, interceptor, payload);
             }
             break;
         case STREAM:
             throw new UnsupportedOperationException();
         default:
-            payload = new Object[]{payload};
+            if (payload != null) {
+                payload = new Object[]{payload};
+            }
             invoke(request, interceptor, payload);
             break;
         }

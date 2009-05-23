@@ -36,7 +36,6 @@ package org.fabric3.binding.jms.provision;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.Set;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
@@ -49,26 +48,19 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
     private static final long serialVersionUID = -151189038434425132L;
     private JmsBindingMetadata metadata;
     private TransactionType transactionType;
-    private Set<String> oneWayOperations;
     private Map<String, PayloadType> payloadTypes;
 
     /**
      * Constructor
      *
-     * @param uri              The target service URI
-     * @param metadata         Metadata to be initialized.
-     * @param payloadTypes     The payload types keyed by operation name
-     * @param transactionType  Transaction type
-     * @param oneWayOperations The set of oneway operation names
+     * @param uri             The target service URI
+     * @param metadata        Metadata to be initialized.
+     * @param payloadTypes    The payload types keyed by operation name
+     * @param transactionType Transaction type
      */
-    public JmsWireTargetDefinition(URI uri,
-                                   JmsBindingMetadata metadata,
-                                   Map<String, PayloadType> payloadTypes,
-                                   TransactionType transactionType,
-                                   Set<String> oneWayOperations) {
+    public JmsWireTargetDefinition(URI uri, JmsBindingMetadata metadata, Map<String, PayloadType> payloadTypes, TransactionType transactionType) {
         this.metadata = metadata;
         this.transactionType = transactionType;
-        this.oneWayOperations = oneWayOperations;
         this.payloadTypes = payloadTypes;
         setUri(uri);
     }
@@ -101,15 +93,6 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
      */
     public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
-    }
-
-    /**
-     * Returns the operation names for the wire.
-     *
-     * @return the operation names for the wire
-     */
-    public Set<String> getOneWayOperations() {
-        return oneWayOperations;
     }
 
 
