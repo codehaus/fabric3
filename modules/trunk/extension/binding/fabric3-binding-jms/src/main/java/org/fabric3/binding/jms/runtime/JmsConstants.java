@@ -38,8 +38,14 @@ public interface JmsConstants {
      */
     String FAULT_HEADER = "f3Fault";
 
+    /**
+     * Identifies the default configured non-XA connection factory
+     */
     String DEFAULT_CONNECTION_FACTORY = "default";
 
+    /**
+     * Identifies the default configured XA-enabled connection factory
+     */
     String DEFAULT_XA_CONNECTION_FACTORY = "xaDefault";
 
 }
