@@ -68,6 +68,7 @@ import org.fabric3.spi.wire.Interceptor;
  * @version $Revision$ $Date$
  */
 public class JmsInterceptor implements Interceptor {
+    private static final Message ONE_WAY_RESPONSE = new MessageImpl();
     private Interceptor next;
     private String methodName;
     private PayloadType payloadType;
@@ -101,7 +102,6 @@ public class JmsInterceptor implements Interceptor {
 
     public Message invoke(Message message) {
 
-        Message response = new MessageImpl();
 
         Connection connection = null;
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -128,9 +128,10 @@ public class JmsInterceptor implements Interceptor {
             session.commit();
             if (requestResponse) {
                 // request-response, block on response
-                receive(response, correlationId);
+                return receive(correlationId);
+            } else {
+                return ONE_WAY_RESPONSE;
             }
-            return response;
 
         } catch (JMSException ex) {
             throw new ServiceRuntimeException("Unable to receive response", ex);
@@ -150,14 +151,20 @@ public class JmsInterceptor implements Interceptor {
         this.next = next;
     }
 
-    private void receive(Message response, String correlationId) throws JMSException {
+    private Message receive(String correlationId) throws JMSException {
         javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
         Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
+        Message response = new MessageImpl();
         if (messageEncoder != null) {
             decode(response, responseMessage);
         } else {
-            response.setBody(responseMessage);
+            if (resultMessage.getBooleanProperty(JmsConstants.FAULT_HEADER)) {
+                response.setBodyWithFault(responseMessage);
+            } else {
+                response.setBody(responseMessage);
+            }
         }
+        return response;
     }
 
     private void decode(Message response, Object responseMessage) {

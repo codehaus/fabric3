@@ -103,7 +103,7 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
     }
 
     private void decodeAndInvoke(Message request, String opName, Interceptor interceptor, Object payload, MessageEncoder messageEncoder)
-            throws JmsServiceException {
+            throws JmsServiceException, JmsBadMessageException {
         try {
             JMSHeaderContext context = new JMSHeaderContext(request);
             org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
@@ -121,7 +121,7 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
                 throw new JmsServiceException((Throwable) outMessage.getBody());
             }
         } catch (EncoderException e) {
-            throw new JmsServiceException(e);
+            throw new JmsBadMessageException("Error decoding message", e);
         }
     }
 
@@ -130,7 +130,8 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
         if (outMessage.isFault()) {
-            throw new JmsServiceException((Throwable) outMessage.getBody());
+            // One-way operations should not throw an exception. Raise as an unexpected exception
+            throw new RuntimeException((Throwable) outMessage.getBody());
         }
     }
 

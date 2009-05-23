@@ -108,7 +108,7 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
                                  PayloadType payloadType,
                                  MessageEncoder messageEncoder,
                                  Session responseSession,
-                                 Destination responseDestination) throws JMSException, JmsServiceException {
+                                 Destination responseDestination) throws JMSException, JmsServiceException, JmsBadMessageException {
         try {
             JMSHeaderContext context = new JMSHeaderContext(request);
             org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
@@ -134,7 +134,7 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
             Message response = createMessage(serializedMessage, responseSession, payloadType);
             sendResponse(request, responseSession, responseDestination, outMessage, response);
         } catch (EncoderException e) {
-            throw new JmsServiceException(e);
+            throw new JmsBadMessageException("Error decoding message", e);
         }
     }
 
@@ -169,16 +169,19 @@ public class RequestResponseMessageListener extends AbstractServiceMessageListen
             break;
         }
         }
+        if (outMessage.isFault()) {
+            response.setBooleanProperty(JmsConstants.FAULT_HEADER, true);
+        }
         MessageProducer producer = responseSession.createProducer(responseDestination);
         producer.send(response);
         TransactionType transactionType = wireHolder.getTransactionType();
         if (transactionType == TransactionType.LOCAL) {
             responseSession.commit();
         }
-        if (outMessage.isFault()) {
-            // report the service exception so it can be logged but do not roll back the transaction since the message was successfully processed
-            throw new JmsServiceException((Throwable) outMessage.getBody());
-        }
+//        if (outMessage.isFault()) {
+//            // report the service exception so it can be logged but do not roll back the transaction since the message was successfully processed
+//            throw new JmsServiceException((Throwable) outMessage.getBody());
+//        }
     }
 
     private Message createMessage(Object payload, Session session, PayloadType payloadType) throws JMSException {
