@@ -71,28 +71,28 @@
         </service>
     </component>
 
-    <!--<component name="EchoOneWayTest">-->
-        <!--<f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>-->
-        <!--<reference name="service">-->
-            <!--<binding.jms>-->
-                <!--<destination name="oneWayEchoServiceQueue" type="queue" create="always"/>-->
-                <!--<connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">-->
-                    <!--<property name="brokerURL">vm://broker</property>-->
-                <!--</connectionFactory>-->
-            <!--</binding.jms>-->
-        <!--</reference>-->
-    <!--</component>-->
+    <component name="EchoOneWayTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>
+        <reference name="service">
+            <binding.jms>
+                <destination name="oneWayEchoServiceQueue"/>
+                <response>
+                    <destination name="oneWayEchoServiceResponseQueue"/>
+                </response>
+            </binding.jms>
+        </reference>
+    </component>
 
-    <!--<component name="OneWayEchoService">-->
-        <!--<implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>-->
-        <!--<service name="OneWayEchoService">-->
-            <!--<binding.jms>-->
-                <!--<destination name="oneWayEchoServiceQueue" type="queue" create="always"/>-->
-                <!--<connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">-->
-                    <!--<property name="brokerURL">vm://broker</property>-->
-                <!--</connectionFactory>-->
-            <!--</binding.jms>-->
-        <!--</service>-->
-    <!--</component>-->
+    <component name="OneWayEchoService">
+        <implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>
+        <service name="OneWayEchoService">
+            <binding.jms>
+                <destination name="oneWayEchoServiceQueue"/>
+                <response>
+                    <destination name="oneWayEchoServiceResponseQueue"/>
+                </response>
+            </binding.jms>
+        </service>
+    </component>
 
 </composite>
