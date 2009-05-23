@@ -18,15 +18,35 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-binding="urn:fabric3.org:binding"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="JMSTestComposite">
+           name="JMSFaultsComposite" autowire="false">
 
-    <include name="JMSTypesComposite"/>
-    <include name="JMSCallbackComposite"/>
-    <include name="JMSDefaultsComposite"/>
-    <include name="JMSScopeComposite"/>
-    <include name="JMSJAXBComposite"/>
-    <include name="JMSFaultsComposite"/>
+
+    <component name="EchoTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
+        <reference name="service" target="EchoService">
+            <binding.jms>
+                <destination name="EchoServiceQueue"/>
+                <response>
+                    <destination name="EchoServiceResponseQueue"/>
+                </response>
+            </binding.jms>
+        </reference>
+    </component>
+
+
+    <component name="EchoService">
+        <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+        <service name="EchoService">
+            <binding.jms>
+                <destination name="EchoServiceQueue"/>
+                <response>
+                    <destination name="EchoServiceResponseQueue"/>
+                </response>
+            </binding.jms>
+        </service>
+    </component>
 
 
 </composite>
