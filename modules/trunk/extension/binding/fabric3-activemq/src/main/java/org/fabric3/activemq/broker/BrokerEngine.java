@@ -20,15 +20,19 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URI;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.TransportConnector;
+import org.apache.activemq.store.amq.AMQPersistenceAdapter;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.activemq.factory.InvalidConfigurationException;
 import org.fabric3.host.runtime.HostInfo;
 
 /**
@@ -42,11 +46,11 @@ public class BrokerEngine {
     private BrokerService broker;
     private File tempDir;
     private int selectedPort = 61616;
-    private String port;
     private String hostAddress = "localhost";
     private int maxPort = 71717;
     private int minPort = 61616;
     private File dataDir;
+    private BrokerConfiguration brokerConfiguration;
 
     public BrokerEngine(@Reference HostInfo info) {
         tempDir = new File(info.getTempDir(), "activemq");
@@ -56,44 +60,56 @@ public class BrokerEngine {
     }
 
     @Property(required = false)
-    public void setBrokerName(String brokerName) {
-        this.brokerName = brokerName;
-    }
-
-//    @Property(required = false)
-//    public void setPort(String port) {
-//        this.port = port;
-//    }
-
-    @Property(required = false)
     public void setHostAddress(String hostAddress) {
         this.hostAddress = hostAddress;
+    }
+
+    @Property(required = false)
+    public void setBrokerConfig(XMLStreamReader reader) throws InvalidConfigurationException, XMLStreamException {
+        BrokerParser parser = new BrokerParser();
+        brokerConfiguration = parser.parse(reader);
     }
 
     @Init
     public void init() throws Exception {
         broker = new BrokerService();
-        broker.setBrokerName(brokerName);
-        broker.setTmpDataDirectory(tempDir);
-        broker.setDataDirectory(dataDir.toString());
         // TODO enable JMX via the F3 JMX agent
         // JMX must be turned off prior to configuring connections to avoid conflicts with the F3 JMX agent.
         broker.setUseJmx(false);
-
-        boolean loop = true;
-        TransportConnector connector = null;
-        while (loop) {
-            try {
-                connector = broker.addConnector("tcp://" + hostAddress + ":" + selectedPort);
-                loop = false;
-            } catch (IOException e) {
-                selectPort();
-
-
+        broker.setTmpDataDirectory(tempDir);
+        broker.setDataDirectory(dataDir.toString());
+        if (brokerConfiguration == null) {
+            // default configuration
+            broker.setBrokerName(brokerName);
+            boolean loop = true;
+            TransportConnector connector = null;
+            while (loop) {
+                try {
+                    connector = broker.addConnector("tcp://" + hostAddress + ":" + selectedPort);
+                    loop = false;
+                } catch (IOException e) {
+                    selectPort();
+                }
+            }
+            connector.setDiscoveryUri(URI.create("multicast://default"));
+            broker.addNetworkConnector("multicast://default");
+        } else {
+            broker.setBrokerName(brokerConfiguration.getName());
+            PersistenceAdapterConfig persistenceConfig = brokerConfiguration.getPersistenceAdapter();
+            if (persistenceConfig != null) {
+                if (PersistenceAdapterConfig.Type.AMQ == persistenceConfig.getType()) {
+                    AMQPersistenceAdapter adapter = new AMQPersistenceAdapter();
+                    adapter.setIndexBinSize(persistenceConfig.getIndexBinSize());
+                    adapter.setCheckpointInterval(persistenceConfig.getCheckpointInterval());
+                    adapter.setCleanupInterval(persistenceConfig.getCleanupInterval());
+                    adapter.setIndexKeySize(persistenceConfig.getIndexKeySize());
+                    adapter.setIndexPageSize(persistenceConfig.getIndexPageSize());
+                    adapter.setSyncOnWrite(persistenceConfig.isSyncOnWrite());
+                    adapter.setDisableLocking(persistenceConfig.isDisableLocking());
+                    broker.setPersistenceAdapter(adapter);
+                }
             }
         }
-        connector.setDiscoveryUri(URI.create("multicast://default"));
-        broker.addNetworkConnector("multicast://default");
         broker.start();
     }
 

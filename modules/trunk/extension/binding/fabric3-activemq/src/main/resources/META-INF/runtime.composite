@@ -24,6 +24,7 @@
 
     <component name="ActiveMQBrokerEngine">
         <f3-impl:implementation.system class="org.fabric3.activemq.broker.BrokerEngine"/>
+        <property name="brokerConfig" source="$systemConfig//jms/activemq"/>
     </component>
 
     <component name="ConnectionFactoryParser">
