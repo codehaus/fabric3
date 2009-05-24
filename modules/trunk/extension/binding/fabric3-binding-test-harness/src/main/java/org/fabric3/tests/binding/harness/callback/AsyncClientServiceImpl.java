@@ -34,9 +34,6 @@ public class AsyncClientServiceImpl implements AsyncClientService, AsyncCallback
     @Context
     protected ComponentContext context;
 
-    public AsyncClientServiceImpl() {
-        System.out.println("Created............");
-    }
 
     @Reference
     protected AsyncForwardService service;
@@ -45,12 +42,10 @@ public class AsyncClientServiceImpl implements AsyncClientService, AsyncCallback
     public void invoke(CountDownLatch latch) {
         this.latch = latch;
         String id = UUID.randomUUID().toString();
-        System.out.println("ID:" + id + ":" + context.getURI());
         service.invoke(id);
     }
 
     public void onCallback(String data) {
-        System.out.println("Callback ID:" + data + ":" + context.getURI());
         latch.countDown();
     }
 }
