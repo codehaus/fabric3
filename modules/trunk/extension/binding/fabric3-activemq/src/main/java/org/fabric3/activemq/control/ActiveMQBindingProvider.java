@@ -17,9 +17,13 @@
 package org.fabric3.activemq.control;
 
 import java.net.URI;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQXAConnectionFactory;
+import org.oasisopen.sca.Constants;
+import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 
@@ -32,8 +36,10 @@ import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.spi.binding.provider.BindingMatchResult;
 import org.fabric3.spi.binding.provider.BindingProvider;
 import org.fabric3.spi.binding.provider.BindingSelectionException;
+import org.fabric3.spi.model.instance.LogicalAttachPoint;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -46,11 +52,24 @@ import org.fabric3.spi.model.instance.LogicalService;
  */
 @EagerInit
 public class ActiveMQBindingProvider implements BindingProvider {
-    private String brokerUrl = "vm://DefaultBroker";
+    // Transacted one way intent
+    private static final QName TRANSACTED_ONEWAY = new QName(SCA_NS, "transactedOneWay");
+    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(SCA_NS, "transactedOneWay.global");
+
+    private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
+    private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
+
+    private String connectionFactory;
+    private String xaConnectionFactory;
 
     @Property
-    public void setBrokerUrl(String brokerUrl) {
-        this.brokerUrl = brokerUrl;
+    public void setConnectionFactory(String name) {
+        this.connectionFactory = name;
+    }
+
+    @Property
+    public void setXaConnectionFactory(String name) {
+        this.xaConnectionFactory = name;
     }
 
     public QName getType() {
@@ -66,12 +85,15 @@ public class ActiveMQBindingProvider implements BindingProvider {
         // setup forward bindings
         // derive the forward queue name from the service name
         String forwardQueue = target.getUri().toString();
-        JmsBindingDefinition definition = createBindingDefinition(forwardQueue);
-        LogicalBinding<JmsBindingDefinition> referenceBinding = new LogicalBinding<JmsBindingDefinition>(definition, source);
+        JmsBindingDefinition referenceDefinition = createBindingDefinition(forwardQueue, false);  // XA not enabled on references
+        LogicalBinding<JmsBindingDefinition> referenceBinding = new LogicalBinding<JmsBindingDefinition>(referenceDefinition, source);
         referenceBinding.setAssigned(true);
         QName deployable = source.getParent().getDeployable();
         source.addBinding(referenceBinding);
-        LogicalBinding<JmsBindingDefinition> serviceBinding = new LogicalBinding<JmsBindingDefinition>(definition, target, deployable);
+
+        boolean xa = isXA(target, false);
+        JmsBindingDefinition serviceDefinition = createBindingDefinition(forwardQueue, xa);
+        LogicalBinding<JmsBindingDefinition> serviceBinding = new LogicalBinding<JmsBindingDefinition>(serviceDefinition, target, deployable);
         serviceBinding.setAssigned(true);
         target.addBinding(serviceBinding);
 
@@ -80,19 +102,22 @@ public class ActiveMQBindingProvider implements BindingProvider {
             // setup callback bindings
             // derive the callback queue name from the reference name since multiple clients can connect to a service
             String callbackQueue = source.getUri().toString();
-            JmsBindingDefinition callbackDefinition = createBindingDefinition(callbackQueue);
-            LogicalBinding<JmsBindingDefinition> callbackReferenceBinding = new LogicalBinding<JmsBindingDefinition>(callbackDefinition, source);
+            JmsBindingDefinition callbackReferenceDefinition = createBindingDefinition(callbackQueue, false); // XA not rnabled on refrences
+            LogicalBinding<JmsBindingDefinition> callbackReferenceBinding =
+                    new LogicalBinding<JmsBindingDefinition>(callbackReferenceDefinition, source);
             callbackReferenceBinding.setAssigned(true);
             source.addCallbackBinding(callbackReferenceBinding);
+            JmsBindingDefinition callbackServiceDefinition = createBindingDefinition(callbackQueue, true);
             LogicalBinding<JmsBindingDefinition> callbackServiceBinding =
-                    new LogicalBinding<JmsBindingDefinition>(callbackDefinition, target, deployable);
+                    new LogicalBinding<JmsBindingDefinition>(callbackServiceDefinition, target, deployable);
             callbackServiceBinding.setAssigned(true);
             target.addCallbackBinding(callbackServiceBinding);
-            callbackDefinition.setGeneratedTargetUri(createCallbackUri(source));
+            callbackReferenceDefinition.setGeneratedTargetUri(createCallbackUri(source));
+            callbackServiceDefinition.setGeneratedTargetUri(createCallbackUri(source));
         }
     }
 
-    private JmsBindingDefinition createBindingDefinition(String queueName) {
+    private JmsBindingDefinition createBindingDefinition(String queueName, boolean xa) {
         JmsBindingMetadata metadata = new JmsBindingMetadata();
 
         DestinationDefinition destinationDefinition = new DestinationDefinition();
@@ -100,13 +125,32 @@ public class ActiveMQBindingProvider implements BindingProvider {
         destinationDefinition.setCreate(CreateOption.ifnotexist);
         destinationDefinition.setName(queueName);
         metadata.setDestination(destinationDefinition);
+        if (xa && xaConnectionFactory != null) {
+            // XA connection factory defined
+            ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
+            factoryDefinition.setName(xaConnectionFactory);
+            factoryDefinition.setCreate(CreateOption.never);
+            metadata.setConnectionFactory(factoryDefinition);
+        } else if (xa) {
+            // XA, no connection factory defined
+            ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
+            factoryDefinition.setName(ActiveMQXAConnectionFactory.class.getName());
+            factoryDefinition.setCreate(CreateOption.always);
+            metadata.setConnectionFactory(factoryDefinition);
 
-        ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
-        factoryDefinition.setName(ActiveMQConnectionFactory.class.getName());
-        factoryDefinition.setCreate(CreateOption.ifnotexist);
-        factoryDefinition.addProperty("brokerURL", brokerUrl);
-        metadata.setConnectionFactory(factoryDefinition);
-
+        } else if (connectionFactory != null) {
+            // non-XA connection factory defined
+            ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
+            factoryDefinition.setName(connectionFactory);
+            factoryDefinition.setCreate(CreateOption.never);
+            metadata.setConnectionFactory(factoryDefinition);
+        } else {
+            // non-XA, no connection factory defined
+            ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
+            factoryDefinition.setName(ActiveMQConnectionFactory.class.getName());
+            factoryDefinition.setCreate(CreateOption.always);
+            metadata.setConnectionFactory(factoryDefinition);
+        }
         JmsBindingDefinition definition = new JmsBindingDefinition(metadata, null);
         definition.setMetadata(metadata);
         return definition;
@@ -119,5 +163,50 @@ public class ActiveMQBindingProvider implements BindingProvider {
         return URI.create(component.getUri() + "#" + name);
     }
 
+    /**
+     * Recurses the component hierarchy to determine if XA transacted messaging is required.
+     * <p/>
+     * TODO this should be refactored to normalize intents
+     *
+     * @param attachPoint the service or reference
+     * @param callback    true if callback operations should be evaluated
+     * @return true if XA is required
+     */
+    private boolean isXA(LogicalAttachPoint attachPoint, boolean callback) {
+        // check operations
+        if (callback) {
+            for (LogicalOperation operation : attachPoint.getCallbackOperations()) {
+                if (containsTransactionIntent(operation.getIntents())) {
+                    return true;
+                }
+            }
+        } else {
+            for (LogicalOperation operation : attachPoint.getOperations()) {
+                if (containsTransactionIntent(operation.getIntents())) {
+                    return true;
+                }
+            }
+        }
+        // recurse the parents
+        LogicalComponent<?> parent = attachPoint.getParent();
+        while (parent != null) {
+            if (containsTransactionIntent(parent.getIntents())) {
+                return true;
+            }
+            if (containsTransactionIntent(parent.getDefinition().getImplementation().getIntents())) {
+                return true;
+            }
+            parent = parent.getParent();
+        }
+        return false;
+
+    }
+
+    private boolean containsTransactionIntent(Set<QName> intents) {
+        return intents.contains(OASIS_TRANSACTED_ONEWAY_GLOBAL)
+                || intents.contains(TRANSACTED_ONEWAY_GLOBAL)
+                || intents.contains(OASIS_TRANSACTED_ONEWAY)
+                || intents.contains(TRANSACTED_ONEWAY);
+    }
 
 }
