@@ -28,7 +28,7 @@ public interface Constants {
     /**
      * The default SCA namespace.
      */
-    String SCA_NS = "http://docs.oasis-open.org/ns/opencsa/sca/200712";
+    String SCA_NS = "http://docs.oasis-open.org/ns/opencsa/sca/200903"; 
 
     /**
      * The default SCA namespace as a qualified name prefix.
