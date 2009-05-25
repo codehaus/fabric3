@@ -102,12 +102,13 @@ public class ActiveMQBindingProvider implements BindingProvider {
             // setup callback bindings
             // derive the callback queue name from the reference name since multiple clients can connect to a service
             String callbackQueue = source.getUri().toString();
-            JmsBindingDefinition callbackReferenceDefinition = createBindingDefinition(callbackQueue, false); // XA not rnabled on refrences
+            boolean callbackXa = isXA(target, true);
+            JmsBindingDefinition callbackReferenceDefinition = createBindingDefinition(callbackQueue, callbackXa);
             LogicalBinding<JmsBindingDefinition> callbackReferenceBinding =
                     new LogicalBinding<JmsBindingDefinition>(callbackReferenceDefinition, source);
             callbackReferenceBinding.setAssigned(true);
             source.addCallbackBinding(callbackReferenceBinding);
-            JmsBindingDefinition callbackServiceDefinition = createBindingDefinition(callbackQueue, true);
+            JmsBindingDefinition callbackServiceDefinition = createBindingDefinition(callbackQueue, false); // XA not enabled on service side callback
             LogicalBinding<JmsBindingDefinition> callbackServiceBinding =
                     new LogicalBinding<JmsBindingDefinition>(callbackServiceDefinition, target, deployable);
             callbackServiceBinding.setAssigned(true);
