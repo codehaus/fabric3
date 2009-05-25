@@ -72,7 +72,7 @@ public class OneWayMessageListener extends AbstractServiceMessageListener {
         switch (payloadType) {
 
         case OBJECT:
-            if (payload != null) {
+            if (payload != null && !payload.getClass().isArray()) {
                 payload = new Object[]{payload};
             }
             invoke(request, interceptor, payload);
