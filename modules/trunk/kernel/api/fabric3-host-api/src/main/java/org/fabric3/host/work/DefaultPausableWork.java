@@ -66,28 +66,28 @@ public abstract class DefaultPausableWork implements PausableWork {
 	/**
 	 * Pauses the job.
 	 */
-	public final void pause() {
+	public void pause() {
 		paused.set(true);
 	}
 	
 	/**
 	 * Restarts the job.
 	 */
-	public final void start() {
+	public void start() {
 		paused.set(false);
 	}
 	
 	/**
 	 * Terminates the job.
 	 */
-	public final void stop() {
+	public void stop() {
 		active.set(false);
 	}
 	
 	/**
 	 * Runs the job.
 	 */
-	public final void run() {		
+	public final void run() {
 		
 		if (daemon) {
 			while (active.get()) {
