@@ -69,8 +69,6 @@ public class TxInterceptor implements Interceptor {
         if (txAction == TxAction.BEGIN) {
             if (transaction == null) {
                 begin();
-            } else {
-                monitor.joined(hashCode());
             }
         } else if (txAction == TxAction.SUSPEND && transaction != null) {
             suspend();
@@ -128,7 +126,6 @@ public class TxInterceptor implements Interceptor {
 
     private void begin() {
         try {
-            monitor.started(hashCode());
             transactionManager.begin();
         } catch (NotSupportedException e) {
             throw new TxException(e);
