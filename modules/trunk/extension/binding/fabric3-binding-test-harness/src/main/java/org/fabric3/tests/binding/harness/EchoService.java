@@ -22,9 +22,13 @@ package org.fabric3.tests.binding.harness;
  * @version $Rev$ $Date$
  */
 public interface EchoService {
+
     String echoString(String message);
 
     int echoInt(int value);
 
     String echoFault() throws EchoFault;
+
+    String echoMultiParam(String param1, double param2, double param3);
+
 }

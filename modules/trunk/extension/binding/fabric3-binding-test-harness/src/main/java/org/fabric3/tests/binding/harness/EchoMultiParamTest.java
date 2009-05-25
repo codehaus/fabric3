@@ -16,34 +16,20 @@
  */
 package org.fabric3.tests.binding.harness;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
  */
-public class EchoTest extends TestCase {
+public class EchoMultiParamTest extends TestCase {
 
-    @Reference protected List<EchoService> service;
+    @Reference
+    protected EchoService service;
 
-    public void testString() {
-    	for (EchoService echoService : service) {
-    		assertEquals("Hello", echoService.echoString("Hello"));
-    	}
+
+    public void testMultiParam() {
+        assertEquals("123", service.echoMultiParam("123", 1d, 2d));
     }
 
-    public void testInt() {
-        assertEquals(123, service.get(0).echoInt(123));
-    }
-
-    public void testFault() {
-        try {
-        	service.get(0).echoFault();
-            fail();
-        } catch (EchoFault echoFault) {
-            // OK
-        }
-    }
 }

@@ -31,4 +31,8 @@ public class EchoServiceImpl implements EchoService {
     public String echoFault() throws EchoFault {
         throw new EchoFault();
     }
+
+    public String echoMultiParam(String param1, double param2, double param3) {
+        return param1;
+    }
 }

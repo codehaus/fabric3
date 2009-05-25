@@ -39,4 +39,8 @@ public class EchoDelegator implements EchoService {
     public String echoFault() throws EchoFault {
         return delegate.echoFault();
     }
+
+    public String echoMultiParam(String param1, double param2, double param3) {
+        return delegate.echoMultiParam(param1, param2, param3);
+    }
 }
