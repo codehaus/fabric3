@@ -16,7 +16,7 @@
 -->
 <definitions
         xmlns="http://www.osoa.org/xmlns/sca/1.0"
-        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200712"
+        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200903"
         targetNamespace="http://www.osoa.org/xmlns/sca/1.0">
 
 

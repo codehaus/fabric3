@@ -18,7 +18,7 @@
         xmlns="http://www.osoa.org/xmlns/sca/1.0"
         xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
         xmlns:f3-impl="urn:fabric3.org:implementation"
-        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200712"
+        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200903"
         targetNamespace="urn:fabric3.org:policy">
 
     <implementationType name="f3-impl:implementation.timer" mayProvide="sca:managedTransaction"/>
