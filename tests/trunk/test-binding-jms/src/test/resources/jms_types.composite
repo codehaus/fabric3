@@ -95,4 +95,32 @@
         </service>
     </component>
 
+
+    <component name="EchoMultiParamTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoMultiParamTest"/>
+        <reference name="service">
+            <binding.jms>
+                <destination name="EchoMutliParamServiceQueue"/>
+                <response>
+                    <destination name="EchoMutliParamServiceResponseQueue"/>
+                </response>
+            </binding.jms>
+        </reference>
+    </component>
+
+
+    <component name="EchoMutliParamService">
+        <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+        <service name="EchoService">
+            <binding.jms>
+                <destination name="EchoMutliParamServiceQueue"/>
+                <response>
+                    <destination name="EchoMutliParamServiceResponseQueue"/>
+                </response>
+            </binding.jms>
+        </service>
+    </component>
+
+
+
 </composite>

@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.3</version>
+            <version>0.4</version>
         </dependency>
 
         <dependency>
