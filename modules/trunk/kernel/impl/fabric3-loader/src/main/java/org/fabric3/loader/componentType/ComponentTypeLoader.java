@@ -46,17 +46,17 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.model.type.component.ComponentType;
-import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.component.Property;
-import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * Loads a generic component type.
@@ -72,18 +72,11 @@ public class ComponentTypeLoader implements TypeLoader<ComponentType> {
 
     private final LoaderRegistry registry;
     private final TypeLoader<Property> propertyLoader;
-    private final TypeLoader<ServiceDefinition> serviceLoader;
-    private final TypeLoader<ReferenceDefinition> referenceLoader;
 
     public ComponentTypeLoader(@Reference LoaderRegistry registry,
-                               @Reference(name = "property")TypeLoader<Property> propertyLoader,
-                               @Reference(name = "service")TypeLoader<ServiceDefinition> serviceLoader,
-                               @Reference(name = "reference")TypeLoader<ReferenceDefinition> referenceLoader
-    ) {
+                               @Reference(name = "property") TypeLoader<Property> propertyLoader) {
         this.registry = registry;
         this.propertyLoader = propertyLoader;
-        this.serviceLoader = serviceLoader;
-        this.referenceLoader = referenceLoader;
     }
 
     @Init
@@ -115,18 +108,30 @@ public class ComponentTypeLoader implements TypeLoader<ComponentType> {
                     Property property = propertyLoader.load(reader, introspectionContext);
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
-                    ServiceDefinition service = serviceLoader.load(reader, introspectionContext);
+                    ServiceDefinition service = null;
+                    try {
+                        service = registry.load(reader, ServiceDefinition.class, introspectionContext);
+                    } catch (UnrecognizedElementException e) {
+                        UnrecognizedElement failure = new UnrecognizedElement(reader);
+                        introspectionContext.addError(failure);
+                        continue;
+                    }
                     type.add(service);
                 } else if (REFERENCE.equals(qname)) {
-                    ReferenceDefinition reference = referenceLoader.load(reader, introspectionContext);
+                    ReferenceDefinition reference = null;
+                    try {
+                        reference = registry.load(reader, ReferenceDefinition.class, introspectionContext);
+                    } catch (UnrecognizedElementException e) {
+                        UnrecognizedElement failure = new UnrecognizedElement(reader);
+                        introspectionContext.addError(failure);
+                        continue;
+                    }
                     type.add(reference);
                 } else {
                     // Extension element - for now try to load and see if we can handle it
                     ModelObject modelObject;
                     try {
                         modelObject = registry.load(reader, ModelObject.class, introspectionContext);
-                        // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
-                        // UnrecognizedElement added to the context if none is found
                     } catch (UnrecognizedElementException e) {
                         UnrecognizedElement failure = new UnrecognizedElement(reader);
                         introspectionContext.addError(failure);

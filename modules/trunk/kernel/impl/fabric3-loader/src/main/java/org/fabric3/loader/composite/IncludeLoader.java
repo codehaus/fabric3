@@ -43,31 +43,34 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.oasisopen.sca.Constants;
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.contribution.StoreException;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.Include;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.ElementLoadFailure;
 import org.fabric3.spi.introspection.xml.InvalidValue;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.model.type.component.Composite;
-import org.fabric3.model.type.component.Include;
-import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.host.contribution.StoreException;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.contribution.ResourceElement;
 
 /**
  * Loader that handles &lt;include&gt; elements.
  *
  * @version $Rev$ $Date$
  */
-public class IncludeLoader implements TypeLoader<Include> {
+public class IncludeLoader extends AbstractExtensibleTypeLoader<Include> {
+    private static final QName INCLUDE = new QName(Constants.SCA_NS, "include");
+
     private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
 
     static {
@@ -77,12 +80,31 @@ public class IncludeLoader implements TypeLoader<Include> {
         ATTRIBUTES.put("requires", "requires");
     }
 
-    private final Loader loader;
     private MetaDataStore store;
 
-    public IncludeLoader(@Reference Loader loader, @Reference(required = false)MetaDataStore store) {
-        this.loader = loader;
+    /**
+     * Constructor used during boostrap.
+     *
+     * @param registry the loader registry
+     */
+    public IncludeLoader(LoaderRegistry registry) {
+        super(registry);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param registry the loader registry
+     * @param store    optional MetaDataStore used to resolve resources reference to by their symbolic name
+     */
+    @Constructor
+    public IncludeLoader(@Reference LoaderRegistry registry, @Reference(required = false) MetaDataStore store) {
+        super(registry);
         this.store = store;
+    }
+
+    public QName getXMLType() {
+        return INCLUDE;
     }
 
     public Include load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
@@ -152,11 +174,10 @@ public class IncludeLoader implements TypeLoader<Include> {
         IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
         Composite composite;
         try {
-            composite = loader.load(url, Composite.class, childContext);
+            composite = registry.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
             InvalidValue failure = new InvalidValue("Error loading include", reader);
             context.addError(failure);
-            e.printStackTrace();
             return include;
         }
         if (childContext.hasErrors()) {

@@ -46,9 +46,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import static org.oasisopen.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ArtifactValidationFailure;
@@ -63,7 +61,6 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.WireDefinition;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
@@ -79,7 +76,7 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class CompositeLoader implements TypeLoader<Composite> {
+public class CompositeLoader extends AbstractExtensibleTypeLoader<Composite> {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     public static final QName INCLUDE = new QName(SCA_NS, "include");
     public static final QName PROPERTY = new QName(SCA_NS, "property");
@@ -100,73 +97,45 @@ public class CompositeLoader implements TypeLoader<Composite> {
         ATTRIBUTES.put("constrainingType", "constrainingType");
     }
 
-    private final LoaderRegistry registry;
-    private final Loader loader;
-    private final TypeLoader<Include> includeLoader;
-    private final TypeLoader<Property> propertyLoader;
-    private final TypeLoader<CompositeService> serviceLoader;
-    private final TypeLoader<CompositeReference> referenceLoader;
-    private final TypeLoader<ComponentDefinition<?>> componentLoader;
-    private final TypeLoader<WireDefinition> wireLoader;
+    private TypeLoader<CompositeService> serviceLoader;
+    private TypeLoader<CompositeReference> referenceLoader;
+    private TypeLoader<Property> propertyLoader;
     private final LoaderHelper loaderHelper;
 
-    /**
-     * Constructor used during bootstrap.
-     *
-     * @param loader          loader for extension elements
-     * @param includeLoader   loader for include elements
-     * @param propertyLoader  loader for composite property elements
-     * @param componentLoader loader for component elements
-     * @param wireLoader      loader for wire elements
-     * @param loaderHelper    helper
-     */
-    public CompositeLoader(Loader loader,
-                           TypeLoader<Include> includeLoader,
-                           TypeLoader<Property> propertyLoader,
-                           TypeLoader<ComponentDefinition<?>> componentLoader,
-                           TypeLoader<WireDefinition> wireLoader,
-                           LoaderHelper loaderHelper) {
-        this.loader = loader;
-        this.includeLoader = includeLoader;
-        this.propertyLoader = propertyLoader;
-        this.componentLoader = componentLoader;
-        this.wireLoader = wireLoader;
-        this.loaderHelper = loaderHelper;
 
-        this.registry = null;
-        this.serviceLoader = null;
-        this.referenceLoader = null;
+    /**
+     * Constructor used during bootstrap; service and reference elements are not supported.
+     *
+     * @param registry       the loader registry to register with; also used to load extension elements
+     * @param propertyLoader the property loader
+     * @param loaderHelper   helper the helper
+     */
+    public CompositeLoader(LoaderRegistry registry, TypeLoader<Property> propertyLoader, LoaderHelper loaderHelper) {
+        super(registry);
+        this.propertyLoader = propertyLoader;
+        this.loaderHelper = loaderHelper;
     }
 
     /**
-     * Constructor to be used when registering this component through SCDL.
+     * Constructor. Specific loaders to handle overloaded <code>property>, <code>service</code> and <code>reference</code> elements on composites and
+     * components.
      *
      * @param registry        the loader registry to register with; also used to load extension elements
-     * @param includeLoader   loader for include elements
-     * @param propertyLoader  loader for composite property elements
-     * @param serviceLoader   loader for composite services
-     * @param referenceLoader loader for composite references
-     * @param componentLoader loader for component elements
-     * @param wireLoader      loader for wire elements
-     * @param loaderHelper    helper
+     * @param serviceLoader   the service loader
+     * @param referenceLoader the reference loader
+     * @param propertyLoader  the property loader
+     * @param loaderHelper    helper the helper
      */
     @Constructor
     public CompositeLoader(@Reference LoaderRegistry registry,
-                           @Reference(name = "include") TypeLoader<Include> includeLoader,
-                           @Reference(name = "property") TypeLoader<Property> propertyLoader,
                            @Reference(name = "service") TypeLoader<CompositeService> serviceLoader,
                            @Reference(name = "reference") TypeLoader<CompositeReference> referenceLoader,
-                           @Reference(name = "component") TypeLoader<ComponentDefinition<?>> componentLoader,
-                           @Reference(name = "wire") TypeLoader<WireDefinition> wireLoader,
-                           @Reference(name = "loaderHelper") LoaderHelper loaderHelper) {
-        this.registry = registry;
-        this.loader = registry;
-        this.includeLoader = includeLoader;
-        this.propertyLoader = propertyLoader;
+                           @Reference(name = "property") TypeLoader<Property> propertyLoader,
+                           @Reference LoaderHelper loaderHelper) {
+        super(registry);
         this.serviceLoader = serviceLoader;
         this.referenceLoader = referenceLoader;
-        this.componentLoader = componentLoader;
-        this.wireLoader = wireLoader;
+        this.propertyLoader = propertyLoader;
         this.loaderHelper = loaderHelper;
     }
 
@@ -174,22 +143,12 @@ public class CompositeLoader implements TypeLoader<Composite> {
         return COMPOSITE;
     }
 
-    @Init
-    public void init() {
-        registry.registerLoader(COMPOSITE, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(COMPOSITE);
-    }
-
-    public Composite load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
-        validateAttributes(reader, introspectionContext);
+    public Composite load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         boolean local = Boolean.valueOf(reader.getAttributeValue(null, "local"));
-        IntrospectionContext childContext = new DefaultIntrospectionContext(introspectionContext, targetNamespace);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(context, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
         NamespaceContext namespace = reader.getNamespaceContext();
         String constrainingTypeAttrbute = reader.getAttributeValue(null, "constrainingType");
@@ -200,51 +159,57 @@ public class CompositeLoader implements TypeLoader<Composite> {
         type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
         type.setConstrainingType(constrainingType);
         loaderHelper.loadPolicySetsAndIntents(type, reader, childContext);
-        while (true) {
-            switch (reader.next()) {
-            case START_ELEMENT:
-                QName qname = reader.getName();
-                if (INCLUDE.equals(qname)) {
-                    handleInclude(type, reader, childContext);
-                    continue;
-                } else if (PROPERTY.equals(qname)) {
-                    handleProperty(type, reader, childContext);
-                    continue;
-                } else if (SERVICE.equals(qname)) {
-                    handleService(type, reader, childContext);
-                    continue;
-                } else if (REFERENCE.equals(qname)) {
-                    handleReference(type, reader, childContext);
-                    continue;
-                } else if (COMPONENT.equals(qname)) {
-                    handleComponent(type, reader, childContext);
-                    continue;
-                } else if (WIRE.equals(qname)) {
-                    handleWire(type, reader, childContext);
-                    continue;
-                } else {
-                    handleExtensionElement(type, reader, childContext);
-                    continue;
-                }
-            case END_ELEMENT:
-                assert COMPOSITE.equals(reader.getName());
-                validateServicePromotions(type, reader, childContext);
-                validateReferencePromotions(type, reader, childContext);
-                if (childContext.hasErrors() || childContext.hasWarnings()) {
-                    URI uri = introspectionContext.getContributionUri();
-                    if (childContext.hasErrors()) {
-                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(uri, compositeName.toString());
-                        artifactFailure.addFailures(childContext.getErrors());
-                        introspectionContext.addError(artifactFailure);
+        try {
+            while (true) {
+                switch (reader.next()) {
+                case START_ELEMENT:
+                    QName qname = reader.getName();
+                    if (INCLUDE.equals(qname)) {
+                        handleInclude(type, reader, childContext);
+                        continue;
+                    } else if (PROPERTY.equals(qname)) {
+                        handleProperty(type, reader, childContext);
+                        continue;
+                    } else if (SERVICE.equals(qname)) {
+                        handleService(type, reader, childContext);
+                        continue;
+                    } else if (REFERENCE.equals(qname)) {
+                        handleReference(type, reader, childContext);
+                        continue;
+                    } else if (COMPONENT.equals(qname)) {
+                        handleComponent(type, reader, childContext);
+                        continue;
+                    } else if (WIRE.equals(qname)) {
+                        handleWire(type, reader, childContext);
+                        continue;
+                    } else {
+                        handleExtensionElement(type, reader, childContext);
+                        continue;
                     }
-                    if (childContext.hasWarnings()) {
-                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(uri, compositeName.toString());
-                        artifactFailure.addFailures(childContext.getWarnings());
-                        introspectionContext.addWarning(artifactFailure);
+                case END_ELEMENT:
+                    assert COMPOSITE.equals(reader.getName());
+                    validateServicePromotions(type, reader, childContext);
+                    validateReferencePromotions(type, reader, childContext);
+                    if (childContext.hasErrors() || childContext.hasWarnings()) {
+                        URI uri = context.getContributionUri();
+                        if (childContext.hasErrors()) {
+                            ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(uri, compositeName.toString());
+                            artifactFailure.addFailures(childContext.getErrors());
+                            context.addError(artifactFailure);
+                        }
+                        if (childContext.hasWarnings()) {
+                            ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(uri, compositeName.toString());
+                            artifactFailure.addFailures(childContext.getWarnings());
+                            context.addWarning(artifactFailure);
+                        }
                     }
+                    return type;
                 }
-                return type;
             }
+        } catch (UnrecognizedElementException e) {
+            UnrecognizedElement failure = new UnrecognizedElement(reader);
+            context.addError(failure);
+            return type;
         }
     }
 
@@ -252,7 +217,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
         // Extension element - for now try to load and see if we can handle it
         ModelObject modelObject;
         try {
-            modelObject = loader.load(reader, ModelObject.class, childContext);
+            modelObject = registry.load(reader, ModelObject.class, childContext);
             // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
             // UnrecognizedElement added to the context if none is found
         } catch (UnrecognizedElementException e) {
@@ -275,8 +240,9 @@ public class CompositeLoader implements TypeLoader<Composite> {
         }
     }
 
-    private void handleWire(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
-        WireDefinition wire = wireLoader.load(reader, childContext);
+    private void handleWire(Composite type, XMLStreamReader reader, IntrospectionContext childContext)
+            throws XMLStreamException, UnrecognizedElementException {
+        WireDefinition wire = registry.load(reader, WireDefinition.class, childContext);
         if (wire == null) {
             // errror encountered loading the wire
             return;
@@ -284,8 +250,9 @@ public class CompositeLoader implements TypeLoader<Composite> {
         type.add(wire);
     }
 
-    private void handleComponent(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
-        ComponentDefinition<?> componentDefinition = componentLoader.load(reader, childContext);
+    private void handleComponent(Composite type, XMLStreamReader reader, IntrospectionContext childContext)
+            throws XMLStreamException, UnrecognizedElementException {
+        ComponentDefinition<?> componentDefinition = registry.load(reader, ComponentDefinition.class, childContext);
         if (componentDefinition == null) {
             // errror encountered loading the componentDefinition
             return;
@@ -302,7 +269,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
         type.add(componentDefinition);
     }
 
-    private void handleReference(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+    private void handleReference(Composite type, XMLStreamReader reader, IntrospectionContext childContext)
+            throws XMLStreamException {
         CompositeReference reference = referenceLoader.load(reader, childContext);
         if (reference == null) {
             // errror encountered loading the reference
@@ -317,7 +285,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
         }
     }
 
-    private void handleService(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+    private void handleService(Composite type, XMLStreamReader reader, IntrospectionContext childContext)
+            throws XMLStreamException {
         CompositeService service = serviceLoader.load(reader, childContext);
         if (service == null) {
             // errror encountered loading the service
@@ -332,7 +301,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
         }
     }
 
-    private void handleProperty(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+    private void handleProperty(Composite type, XMLStreamReader reader, IntrospectionContext childContext)
+            throws XMLStreamException, UnrecognizedElementException {
         Property property = propertyLoader.load(reader, childContext);
         if (property == null) {
             // errror encountered loading the property
@@ -347,8 +317,9 @@ public class CompositeLoader implements TypeLoader<Composite> {
         }
     }
 
-    private void handleInclude(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
-        Include include = includeLoader.load(reader, childContext);
+    private void handleInclude(Composite type, XMLStreamReader reader, IntrospectionContext childContext)
+            throws XMLStreamException, UnrecognizedElementException {
+        Include include = registry.load(reader, Include.class, childContext);
         if (include == null) {
             // errror encountered loading the include
             return;

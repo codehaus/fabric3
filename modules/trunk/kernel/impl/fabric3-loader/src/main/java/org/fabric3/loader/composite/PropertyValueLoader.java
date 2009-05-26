@@ -36,31 +36,35 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.oasisopen.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import org.fabric3.model.type.component.PropertyValue;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.model.type.XSDSimpleType;
 
 /**
+ * Loads property values configured on a component.
+ *
  * @version $Rev$ $Date$
  */
-public class PropertyValueLoader implements TypeLoader<PropertyValue> {
+public class PropertyValueLoader extends AbstractExtensibleTypeLoader<PropertyValue> {
+    private static final QName PROPERTY = new QName(Constants.SCA_NS, "property");
     private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
 
     static {
@@ -70,10 +74,16 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
         ATTRIBUTES.put("type", "type");
         ATTRIBUTES.put("element", "element");
     }
+
     private final LoaderHelper helper;
 
-    public PropertyValueLoader(@Reference LoaderHelper helper) {
+    public PropertyValueLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper helper) {
+        super(registry);
         this.helper = helper;
+    }
+
+    public QName getXMLType() {
+        return PROPERTY;
     }
 
     public PropertyValue load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {

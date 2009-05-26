@@ -49,27 +49,28 @@ import javax.xml.stream.XMLStreamReader;
 import static org.oasisopen.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.InvalidValue;
-import org.fabric3.spi.introspection.xml.Loader;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.introspection.xml.UnrecognizedElement;
-import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
+import org.fabric3.loader.composite.AbstractExtensibleTypeLoader;
+import org.fabric3.model.type.ModelObject;
 import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.ComponentReference;
-import org.fabric3.model.type.ModelObject;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.service.OperationDefinition;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.InvalidValue;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
+import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.introspection.xml.UnrecognizedElement;
+import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loads a reference from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class ComponentReferenceLoader implements TypeLoader<ComponentReference> {
+public class ComponentReferenceLoader extends AbstractExtensibleTypeLoader<ComponentReference> {
+    private static final QName REFERENCE = new QName(SCA_NS, "reference");
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
     private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
 
@@ -82,12 +83,15 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         ATTRIBUTES.put("policySets", "policySets");
     }
 
-    private final Loader loader;
-    private final LoaderHelper loaderHelper;
+    private LoaderHelper loaderHelper;
 
-    public ComponentReferenceLoader(@Reference Loader loader, @Reference LoaderHelper loaderHelper) {
-        this.loader = loader;
+    public ComponentReferenceLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
+        super(registry);
         this.loaderHelper = loaderHelper;
+    }
+
+    public QName getXMLType() {
+        return REFERENCE;
     }
 
     public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
@@ -138,7 +142,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                 QName elementName = reader.getName();
                 ModelObject type;
                 try {
-                    type = loader.load(reader, ModelObject.class, context);
+                    type = registry.load(reader, ModelObject.class, context);
                     // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
                     // UnrecognizedElement added to the context if none is found
                 } catch (UnrecognizedElementException e) {

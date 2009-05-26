@@ -39,19 +39,21 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.model.type.component.WireDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.model.type.component.WireDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class WireLoader implements TypeLoader<WireDefinition> {
-    private final LoaderHelper helper;
+    private LoaderHelper helper;
 
     public WireLoader(@Reference LoaderHelper helper) {
         this.helper = helper;

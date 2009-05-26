@@ -55,8 +55,8 @@ import org.fabric3.model.type.service.OperationDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
@@ -64,7 +64,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 
 /**
- * Loads a reference from an XML-based assembly file
+ * Loads a reference from a composite.
  *
  * @version $Rev$ $Date$
  */
@@ -81,11 +81,11 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         ATTRIBUTES.put("policySets", "policySets");
     }
 
-    private final Loader loader;
-    private final LoaderHelper loaderHelper;
+    private LoaderRegistry registry;
+    private LoaderHelper loaderHelper;
 
-    public CompositeReferenceLoader(@Reference Loader loader, @Reference LoaderHelper loaderHelper) {
-        this.loader = loader;
+    public CompositeReferenceLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
+        this.registry = registry;
         this.loaderHelper = loaderHelper;
     }
 
@@ -127,9 +127,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                 QName elementName = reader.getName();
                 ModelObject type;
                 try {
-                    type = loader.load(reader, ModelObject.class, context);
-                    // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
-                    // UnrecognizedElement added to the context if none is found
+                    type = registry.load(reader, ModelObject.class, context);
                 } catch (UnrecognizedElementException e) {
                     UnrecognizedElement failure = new UnrecognizedElement(reader);
                     context.addError(failure);

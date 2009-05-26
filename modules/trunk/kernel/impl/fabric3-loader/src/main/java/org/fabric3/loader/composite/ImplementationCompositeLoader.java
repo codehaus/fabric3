@@ -43,27 +43,24 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
+import org.oasisopen.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.contribution.StoreException;
+import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.CompositeImplementation;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.ElementLoadFailure;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.model.type.component.Composite;
-import org.fabric3.model.type.component.CompositeImplementation;
-import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.host.contribution.StoreException;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
-import org.fabric3.spi.contribution.ResourceElement;
 
 /**
  * Loader that handles an &lt;implementation.composite&gt; element.
@@ -71,8 +68,9 @@ import org.fabric3.spi.contribution.ResourceElement;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class ImplementationCompositeLoader implements TypeLoader<CompositeImplementation> {
+public class ImplementationCompositeLoader extends AbstractExtensibleTypeLoader<CompositeImplementation> {
     private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+    private static final QName IMPL = new QName(Constants.SCA_NS, "implementation.composite");
 
     static {
         ATTRIBUTES.put("name", "name");
@@ -81,24 +79,15 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
         ATTRIBUTES.put("requires", "requires");
     }
 
-    private final Loader loader;
-    private final LoaderRegistry registry;
     private final MetaDataStore store;
 
-    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference MetaDataStore store) {
-        this.loader = loader;
-        this.registry = loader;
+    public ImplementationCompositeLoader(@Reference LoaderRegistry registry, @Reference MetaDataStore store) {
+        super(registry);
         this.store = store;
     }
 
-    @Init
-    public void init() {
-        registry.registerLoader(CompositeImplementation.IMPLEMENTATION_COMPOSITE, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(CompositeImplementation.IMPLEMENTATION_COMPOSITE);
+    public QName getXMLType() {
+        return IMPL;
     }
 
     public CompositeImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
@@ -125,7 +114,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite;
             try {
-                composite = loader.load(url, Composite.class, childContext);
+                composite = registry.load(url, Composite.class, childContext);
                 if (childContext.hasErrors()) {
                     introspectionContext.addErrors(childContext.getErrors());
                 }
@@ -156,7 +145,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite;
             try {
-                composite = loader.load(url, Composite.class, childContext);
+                composite = registry.load(url, Composite.class, childContext);
                 if (childContext.hasErrors()) {
                     introspectionContext.addErrors(childContext.getErrors());
                 }

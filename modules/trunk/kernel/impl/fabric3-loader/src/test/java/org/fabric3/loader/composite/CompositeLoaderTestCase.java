@@ -47,6 +47,7 @@ import org.fabric3.model.type.component.Autowire;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -106,7 +107,10 @@ public class CompositeLoaderTestCase extends TestCase {
                                               EasyMock.isA(IntrospectionContext.class));
         EasyMock.replay(loaderHelper);
 
-        loader = new CompositeLoader(null, null, null, null, null, null, null, loaderHelper);
+        LoaderRegistry registry = EasyMock.createNiceMock(LoaderRegistry.class);
+        EasyMock.replay(registry);
+
+        loader = new CompositeLoader(registry, null, null, null, loaderHelper);
         name = new QName("http://example.com", "composite");
     }
 }

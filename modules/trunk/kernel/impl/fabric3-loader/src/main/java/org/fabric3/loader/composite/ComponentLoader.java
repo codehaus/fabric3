@@ -43,6 +43,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.oasisopen.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.AbstractComponentType;
@@ -55,11 +56,10 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
@@ -69,7 +69,8 @@ import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
+@EagerInit
+public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefinition<?>> {
 
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
@@ -86,21 +87,10 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         ATTRIBUTES.put("initLevel", "initLevel");
     }
 
-    private final Loader loader;
-    private final TypeLoader<PropertyValue> propertyValueLoader;
-    private final TypeLoader<ComponentReference> referenceLoader;
-    private final TypeLoader<ComponentService> serviceLoader;
     private final LoaderHelper loaderHelper;
 
-    public ComponentLoader(@Reference Loader loader,
-                           @Reference(name = "propertyValue") TypeLoader<PropertyValue> propertyValueLoader,
-                           @Reference(name = "reference") TypeLoader<ComponentReference> referenceLoader,
-                           @Reference(name = "service") TypeLoader<ComponentService> serviceLoader,
-                           @Reference(name = "loaderHelper") LoaderHelper loaderHelper) {
-        this.loader = loader;
-        this.propertyValueLoader = propertyValueLoader;
-        this.referenceLoader = referenceLoader;
-        this.serviceLoader = serviceLoader;
+    public ComponentLoader(@Reference LoaderRegistry registry, @Reference(name = "loaderHelper") LoaderHelper loaderHelper) {
+        super(registry);
         this.loaderHelper = loaderHelper;
     }
 
@@ -131,14 +121,14 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                         new MissingComponentImplementation("The component " + name + " must specify an implementation", reader);
                 context.addError(error);
                 return componentDefinition;
-            } else if (PROPERTY.equals(elementName) ||REFERENCE.equals(elementName)  ||SERVICE.equals(elementName)  ) {
+            } else if (PROPERTY.equals(elementName) || REFERENCE.equals(elementName) || SERVICE.equals(elementName)) {
                 MissingComponentImplementation error =
                         new MissingComponentImplementation("The component " + name + " must specify an implementation as the first child element",
                                                            reader);
                 context.addError(error);
                 return componentDefinition;
             }
-            impl = loader.load(reader, Implementation.class, context);
+            impl = registry.load(reader, Implementation.class, context);
             if (impl == null || impl.getComponentType() == null) {
                 // error loading impl
                 return componentDefinition;
@@ -149,44 +139,48 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                 // ensure that the implementation loader has positioned the cursor to the end element 
                 throw new AssertionError("Impementation loader must position the cursor to the end element");
             }
+            componentDefinition.setImplementation(impl);
+            AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
+
+            while (true) {
+                switch (reader.next()) {
+                case START_ELEMENT:
+                    QName qname = reader.getName();
+                    if (PROPERTY.equals(qname)) {
+                        parseProperty(componentDefinition, componentType, reader, context);
+                    } else if (REFERENCE.equals(qname)) {
+                        parseReference(componentDefinition, componentType, reader, context);
+                    } else if (SERVICE.equals(qname)) {
+                        parseService(componentDefinition, componentType, reader, context);
+                    } else {
+                        // Unknown extension element - issue an error and continue
+                        context.addError(new UnrecognizedElement(reader));
+                        LoaderUtil.skipToEndElement(reader);
+                    }
+                    break;
+                case END_ELEMENT:
+                    assert COMPONENT.equals(reader.getName());
+                    validateRequiredProperties(componentDefinition, reader, context);
+                    return componentDefinition;
+                }
+            }
         } catch (UnrecognizedElementException e) {
             UnrecognizedElement failure = new UnrecognizedElement(reader);
             context.addError(failure);
             return null;
         }
-        componentDefinition.setImplementation(impl);
-        AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
+    }
 
-        while (true) {
-            switch (reader.next()) {
-            case START_ELEMENT:
-                QName qname = reader.getName();
-                if (PROPERTY.equals(qname)) {
-                    parseProperty(componentDefinition, componentType, reader, context);
-                } else if (REFERENCE.equals(qname)) {
-                    parseReference(componentDefinition, componentType, reader, context);
-                } else if (SERVICE.equals(qname)) {
-                    parseService(componentDefinition, componentType, reader, context);
-                } else {
-                    // Unknown extension element - issue an error and continue
-                    context.addError(new UnrecognizedElement(reader));
-                    LoaderUtil.skipToEndElement(reader);
-                }
-                break;
-            case END_ELEMENT:
-                assert COMPONENT.equals(reader.getName());
-                validateRequiredProperties(componentDefinition, reader, context);
-                return componentDefinition;
-            }
-        }
+    public QName getXMLType() {
+        return COMPONENT;
     }
 
     private void parseService(ComponentDefinition<Implementation<?>> componentDefinition,
                               AbstractComponentType<?, ?, ?, ?> componentType,
                               XMLStreamReader reader,
-                              IntrospectionContext context) throws XMLStreamException {
+                              IntrospectionContext context) throws XMLStreamException, UnrecognizedElementException {
         ComponentService service;
-        service = serviceLoader.load(reader, context);
+        service = registry.load(reader, ComponentService.class, context);
         if (service == null) {
             // there was an error with the service configuration, just skip it
             return;
@@ -209,9 +203,9 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private void parseReference(ComponentDefinition<Implementation<?>> componentDefinition,
                                 AbstractComponentType<?, ?, ?, ?> componentType,
                                 XMLStreamReader reader,
-                                IntrospectionContext context) throws XMLStreamException {
+                                IntrospectionContext context) throws XMLStreamException, UnrecognizedElementException {
         ComponentReference reference;
-        reference = referenceLoader.load(reader, context);
+        reference = registry.load(reader, ComponentReference.class, context);
         if (reference == null) {
             // there was an error with the reference configuration, just skip it
             return;
@@ -234,9 +228,9 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private void parseProperty(ComponentDefinition<Implementation<?>> componentDefinition,
                                AbstractComponentType<?, ?, ?, ?> componentType,
                                XMLStreamReader reader,
-                               IntrospectionContext context) throws XMLStreamException {
+                               IntrospectionContext context) throws XMLStreamException, UnrecognizedElementException {
         PropertyValue value;
-        value = propertyValueLoader.load(reader, context);
+        value = registry.load(reader, PropertyValue.class, context);
         if (value == null) {
             // there was an error with the property configuration, just skip it
             return;

@@ -49,8 +49,8 @@ import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.model.type.service.OperationDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
@@ -58,17 +58,17 @@ import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 
 /**
- * Loads a service definition from an XML-based assembly file
+ * Loads a service definition from a composite.
  *
  * @version $Rev$ $Date$
  */
 public class CompositeServiceLoader implements TypeLoader<CompositeService> {
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
-    private final Loader loader;
-    private final LoaderHelper loaderHelper;
+    private LoaderRegistry registry;
+    private LoaderHelper loaderHelper;
 
-    public CompositeServiceLoader(@Reference Loader loader, @Reference LoaderHelper loaderHelper) {
-        this.loader = loader;
+    public CompositeServiceLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
+        this.registry = registry;
         this.loaderHelper = loaderHelper;
     }
 
@@ -100,7 +100,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
                 QName elementName = reader.getName();
                 ModelObject type;
                 try {
-                    type = loader.load(reader, ModelObject.class, context);
+                    type = registry.load(reader, ModelObject.class, context);
                 } catch (UnrecognizedElementException e) {
                     UnrecognizedElement failure = new UnrecognizedElement(reader);
                     context.addError(failure);

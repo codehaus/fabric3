@@ -49,10 +49,9 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -76,34 +75,27 @@ public class ComponentLoaderPropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        TypeLoader<PropertyValue> propLoader = createPropertyLoader();
-        Loader registry = createRegistry();
+        LoaderRegistry registry = createRegistry();
         LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
-        loader = new ComponentLoader(registry, propLoader, null, null, helper);
+        loader = new ComponentLoader(registry, helper);
         reader = createReader();
         ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
     }
 
-    private Loader createRegistry() throws XMLStreamException, LoaderException {
-        Loader registry = EasyMock.createMock(Loader.class);
+    private LoaderRegistry createRegistry() throws XMLStreamException, LoaderException {
+        LoaderRegistry registry = EasyMock.createMock(LoaderRegistry.class);
         Implementation impl = createImpl();
         EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
                                       EasyMock.eq(Implementation.class),
                                       EasyMock.isA(IntrospectionContext.class))).andReturn(impl);
 
+        PropertyValue reference = new PropertyValue(PROP_NAME, "test");
+        EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
+                                      EasyMock.eq(PropertyValue.class),
+                                      EasyMock.isA(IntrospectionContext.class))).andReturn(reference);
         EasyMock.replay(registry);
         return registry;
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private TypeLoader<PropertyValue> createPropertyLoader() throws XMLStreamException, LoaderException {
-        TypeLoader<PropertyValue> loader = EasyMock.createMock(TypeLoader.class);
-        PropertyValue reference = new PropertyValue(PROP_NAME, "test");
-        EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
-                                    EasyMock.isA(IntrospectionContext.class))).andReturn(reference);
-        EasyMock.replay(loader);
-        return loader;
     }
 
     private Implementation createImpl() {

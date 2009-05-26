@@ -80,11 +80,10 @@ public class DuplicatePropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        TypeLoader<Property> propLoader = createPropertyLoader();
         LoaderRegistry registry = createRegistry();
         LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
-        loader = new CompositeLoader(registry, null, propLoader, null, null, null, null, helper);
+        loader = new CompositeLoader(registry, createPropertyLoader(), helper);
         reader = createReader();
         ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
     }
@@ -101,15 +100,6 @@ public class DuplicatePropertyTestCase extends TestCase {
         return registry;
     }
 
-    @SuppressWarnings({"unchecked"})
-    private <T> TypeLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
-        TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-        Property value = new Property(PROP_NAME, null);
-        EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
-                                    EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
-        EasyMock.replay(loader);
-        return (TypeLoader<Property>) loader;
-    }
 
     private Implementation createImpl() {
         Implementation<ComponentType> impl = new Implementation<ComponentType>() {
@@ -150,5 +140,14 @@ public class DuplicatePropertyTestCase extends TestCase {
         return reader;
     }
 
+    @SuppressWarnings({"unchecked"})
+       private <T> TypeLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
+           TypeLoader loader = EasyMock.createMock(TypeLoader.class);
+           Property value = new Property(PROP_NAME, null);
+           EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
+                                       EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
+           EasyMock.replay(loader);
+           return (TypeLoader<Property>) loader;
+       }
 
 }

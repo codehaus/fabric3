@@ -50,10 +50,9 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -77,34 +76,27 @@ public class DuplicateComponentServiceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        TypeLoader<ComponentService> serviceLoader = createServiceLoader();
-        Loader registry = createRegistry();
+        LoaderRegistry registry = createRegistry();
         LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
-        loader = new ComponentLoader(registry, null, null, serviceLoader, helper);
+        loader = new ComponentLoader(registry, helper);
         reader = createReader();
         ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
     }
 
-    private Loader createRegistry() throws XMLStreamException, LoaderException {
-        Loader registry = EasyMock.createMock(Loader.class);
+    private LoaderRegistry createRegistry() throws XMLStreamException, LoaderException {
+        LoaderRegistry registry = EasyMock.createMock(LoaderRegistry.class);
         Implementation impl = createImpl();
         EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
                                       EasyMock.eq(Implementation.class),
                                       EasyMock.isA(IntrospectionContext.class))).andReturn(impl);
 
+        ComponentService service = new ComponentService(SERVICE_NAME, null);
+        EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
+                                      EasyMock.eq(ComponentService.class),
+                                      EasyMock.isA(IntrospectionContext.class))).andReturn(service).times(2);
         EasyMock.replay(registry);
         return registry;
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private TypeLoader<ComponentService> createServiceLoader() throws XMLStreamException, LoaderException {
-        TypeLoader<ComponentService> loader = EasyMock.createMock(TypeLoader.class);
-        ComponentService service = new ComponentService(SERVICE_NAME, null);
-        EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
-                                    EasyMock.isA(IntrospectionContext.class))).andReturn(service).times(2);
-        EasyMock.replay(loader);
-        return loader;
     }
 
     private Implementation createImpl() {

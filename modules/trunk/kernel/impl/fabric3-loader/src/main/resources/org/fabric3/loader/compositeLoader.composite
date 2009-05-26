@@ -40,7 +40,7 @@
            name="CompositeLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
         >
 
-    <!-- Common SCDL loader implementations -->
+    <!-- Common loader implementations -->
     <component name="OperationLoader" f3-core:key="sca:operation">
         <f3-impl:implementation.system class="org.fabric3.loader.common.OperationLoader"/>
     </component>
@@ -57,16 +57,12 @@
         <f3-impl:implementation.system class="org.fabric3.loader.common.JavaInterfaceLoader"/>
     </component>
 
-    <!-- Composite SCDL loader implementations -->
+    <!-- Composite loader implementations -->
     <component name="PropertyValueLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.PropertyValueLoader"/>
     </component>
     <component name="ComponentLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
-        <reference name="propertyValue" target="PropertyValueLoader"/>
-        <reference name="reference" target="ComponentReferenceLoader"/>
-        <reference name="service" target="ComponentServiceLoader"/>
-        <reference name="loaderHelper" target="LoaderHelper"/>
     </component>
     <component name="IncludeLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
@@ -77,18 +73,17 @@
     <component name="CompositeServiceLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.CompositeServiceLoader"/>
     </component>
-    <component name="WireLoader">
+    
+    <component name="WireLoader" f3-core:key="sca:wire">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.WireLoader"/>
     </component>
 
     <component name="CompositeLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
-        <reference name="include" target="IncludeLoader"/>
-        <reference name="property" target="PropertyLoader"/>
+        <!-- explicitly wire composite property, service and reference laoders -->
         <reference name="service" target="CompositeServiceLoader"/>
         <reference name="reference" target="CompositeReferenceLoader"/>
-        <reference name="component" target="ComponentLoader"/>
-        <reference name="wire" target="WireLoader"/>
+        <reference name="property" target="PropertyLoader"/>
     </component>
 
     <!-- Composite implementation type -->
@@ -99,7 +94,5 @@
     <component name="ComponentTypeLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.componentType.ComponentTypeLoader"/>
         <reference name="property" target="PropertyLoader"/>
-        <reference name="service" target="ComponentServiceLoader"/>
-        <reference name="reference" target="ComponentReferenceLoader"/>
     </component>
 </composite>

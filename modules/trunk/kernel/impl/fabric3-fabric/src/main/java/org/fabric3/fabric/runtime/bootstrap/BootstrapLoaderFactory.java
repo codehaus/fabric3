@@ -16,10 +16,6 @@
  */
 package org.fabric3.fabric.runtime.bootstrap;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.namespace.QName;
-
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
@@ -34,10 +30,10 @@ import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.system.scdl.SystemImplementation;
 import org.fabric3.system.introspection.SystemImplementationLoader;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * Factory class for an implementation of Loader that can handle system SCDL.
@@ -56,41 +52,40 @@ import org.fabric3.system.introspection.SystemImplementationLoader;
 public class BootstrapLoaderFactory {
 
     public static Loader createLoader(ImplementationProcessor<SystemImplementation> processor, MonitorFactory monitorFactory, XMLFactory xmlFactory) {
-
         LoaderHelper loaderHelper = new DefaultLoaderHelper();
+        LoaderRegistryImpl.Monitor monitor = monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class);
 
-        LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
-        Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
+        LoaderRegistryImpl registry = new LoaderRegistryImpl(monitor, xmlFactory);
 
-        WireLoader wireLoader = new WireLoader(loaderHelper);
-
-        // loader for <composite> document
-        loaders.put(CompositeLoader.COMPOSITE, compositeLoader(loader, wireLoader, loaderHelper));
-
-        // loader for <implementation.system> element
+        // loader for <implementation.system> elements
         SystemImplementationLoader systemLoader = new SystemImplementationLoader(processor);
-        loaders.put(SystemImplementation.IMPLEMENTATION_SYSTEM, systemLoader);
+        registry.registerLoader(SystemImplementation.IMPLEMENTATION_SYSTEM, systemLoader);
 
-        loaders.put(CompositeLoader.WIRE, wireLoader);
+        // loader for <wire> elements
+        WireLoader wireLoader = new WireLoader(loaderHelper);
+        registry.registerLoader(CompositeLoader.WIRE, wireLoader);
 
-        loader.setLoaders(loaders);
-        return loader;
+        // loader for <composite> documents
+        compositeLoader(registry, loaderHelper);
+
+        return registry;
     }
 
-    private static CompositeLoader compositeLoader(Loader loader, WireLoader wireLoader, LoaderHelper loaderHelper) {
+    private static CompositeLoader compositeLoader(LoaderRegistry registry, LoaderHelper loaderHelper) {
+        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(registry, loaderHelper);
+        propertyValueLoader.init();
+        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(registry, loaderHelper);
+        componentReferenceLoader.init();
+        ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(registry, loaderHelper);
+        componentServiceLoader.init();
+        ComponentLoader componentLoader = new ComponentLoader(registry, loaderHelper);
+        componentLoader.init();
+        IncludeLoader includeLoader = new IncludeLoader(registry);
+        includeLoader.init();
         PropertyLoader propertyLoader = new PropertyLoader(loaderHelper);
-        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(loaderHelper);
-
-        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, loaderHelper);
-        ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, loaderHelper);
-        ComponentLoader componentLoader = new ComponentLoader(loader,
-                                                              propertyValueLoader,
-                                                              componentReferenceLoader,
-                                                              componentServiceLoader,
-                                                              loaderHelper);
-
-        IncludeLoader includeLoader = new IncludeLoader(loader, null);
-        return new CompositeLoader(loader, includeLoader, propertyLoader, componentLoader, wireLoader, loaderHelper);
+        CompositeLoader compositeLoader = new CompositeLoader(registry, propertyLoader, loaderHelper);
+        compositeLoader.init();
+        return compositeLoader;
     }
 
 

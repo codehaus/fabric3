@@ -43,34 +43,38 @@ import javax.xml.stream.XMLStreamReader;
 import static org.oasisopen.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.loader.composite.AbstractExtensibleTypeLoader;
+import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.component.BindingDefinition;
+import org.fabric3.model.type.component.ComponentService;
+import org.fabric3.model.type.service.OperationDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.model.type.component.ComponentService;
-import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.service.OperationDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * Loads a service definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class ComponentServiceLoader implements TypeLoader<ComponentService> {
+public class ComponentServiceLoader extends AbstractExtensibleTypeLoader<ComponentService> {
+    private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
 
-    private final Loader loader;
     private final LoaderHelper loaderHelper;
 
-    public ComponentServiceLoader(@Reference Loader loader, @Reference LoaderHelper loaderHelper) {
-        this.loader = loader;
+    public ComponentServiceLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
+        super(registry);
         this.loaderHelper = loaderHelper;
+    }
+
+    public QName getXMLType() {
+        return SERVICE;
     }
 
     public ComponentService load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
@@ -97,7 +101,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                 QName elementName = reader.getName();
                 ModelObject type;
                 try {
-                    type = loader.load(reader, ModelObject.class, context);
+                    type = registry.load(reader, ModelObject.class, context);
                     // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
                     // UnrecognizedElement added to the context if none is found
                 } catch (UnrecognizedElementException e) {
