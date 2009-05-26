@@ -36,21 +36,21 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import static org.osoa.sca.Constants.SCA_NS;
+import static org.oasisopen.sca.Constants.SCA_NS;
 
 import org.fabric3.model.type.component.ComponentReference;
 import org.fabric3.model.type.component.ComponentType;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.spi.introspection.xml.Loader;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;

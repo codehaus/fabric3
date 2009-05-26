@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.contribution.wire.ContributionWireInstantiatorRegistry;

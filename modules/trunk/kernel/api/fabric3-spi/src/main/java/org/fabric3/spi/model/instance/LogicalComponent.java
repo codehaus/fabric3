@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 import org.w3c.dom.Document;
 
 import org.fabric3.model.type.component.AbstractComponentType;

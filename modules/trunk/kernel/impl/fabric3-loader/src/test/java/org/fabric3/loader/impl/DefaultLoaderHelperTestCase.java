@@ -53,7 +53,7 @@ import org.fabric3.spi.introspection.xml.InvalidPrefixException;
  */
 public class DefaultLoaderHelperTestCase extends TestCase {
 
-    public static final String XML = "<composite xmlns=\"http://www.osoa.org/xmlns/sca/1.0\" " +
+    public static final String XML = "<composite xmlns=\"http://docs.oasis-open.org/ns/opencsa/sca/200903\" " +
             "xmlns:f3-core=\"urn:fabric3.org:core\"/>";
     private XMLInputFactory xmlFactory;
     private DefaultLoaderHelper helper;
@@ -68,7 +68,7 @@ public class DefaultLoaderHelperTestCase extends TestCase {
     public void testCreateQNameContext() throws Exception {
         XMLStreamReader reader = createReader(XML);
         QName qName = helper.createQName("bar", reader);
-        assertEquals("http://www.osoa.org/xmlns/sca/1.0", qName.getNamespaceURI());
+        assertEquals("http://docs.oasis-open.org/ns/opencsa/sca/200903", qName.getNamespaceURI());
     }
 
     public void testCreateQNameInvalidPrefix() throws Exception {

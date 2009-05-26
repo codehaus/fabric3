@@ -14,7 +14,7 @@
  different terms.  See the separate licenses for those programs included in the
  distribution for the permitted and restricted uses of such software.
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:groovy="http://www.fabric3.org/xmlns/groovy/1.0"
            xmlns:f3-impl="urn:fabric3.org:implementation"

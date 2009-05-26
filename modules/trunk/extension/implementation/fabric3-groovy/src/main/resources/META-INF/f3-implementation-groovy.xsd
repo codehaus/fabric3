@@ -20,10 +20,10 @@
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema" 
     targetNamespace="http://www.fabric3.org/xmlns/groovy/1.0" 
-    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+    xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
     elementFormDefault="qualified">
 
-    <import namespace="http://www.osoa.org/xmlns/sca/1.0" schemaLocation="sca-core.xsd"/>
+    <import namespace="http://docs.oasis-open.org/ns/opencsa/sca/200903" schemaLocation="sca-core.xsd"/>
 
     <element name="implementation.xquery" type="GroovyImplementation" 
     	substitutionGroup="sca:implementation"/>

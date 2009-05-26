@@ -37,7 +37,7 @@ package org.fabric3.spi.model.instance;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 
 import org.fabric3.model.type.component.ServiceDefinition;
 

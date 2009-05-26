@@ -16,13 +16,13 @@
 
 	$Rev$ $Date$
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
            name="org.fabric3.fabric.policy.testCase">
     <policySet name="BasicMsgProtSecurity"
                provides="sec.confidentiality" appliesTo="binding.ws binding.jms"
-               xmlns="http://www.osoa.org/xmlns/sca/1.0">
+               xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903">
         <wsp:PolicyAttachment/>
         <intentMap provides="sec.confidentiality" default="transport">
             <qualifier name="transport">

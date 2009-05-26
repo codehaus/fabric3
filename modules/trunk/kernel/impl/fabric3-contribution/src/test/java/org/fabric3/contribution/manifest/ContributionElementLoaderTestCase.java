@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import static org.osoa.sca.Constants.SCA_NS;
+import static org.oasisopen.sca.Constants.SCA_NS;
 
 import org.fabric3.host.Namespaces;
 import org.fabric3.spi.contribution.ContributionManifest;

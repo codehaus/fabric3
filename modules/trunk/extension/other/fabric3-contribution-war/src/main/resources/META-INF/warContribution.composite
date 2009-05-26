@@ -17,7 +17,7 @@
 
     $Rev: 667 $ $Date: 2007-08-06 09:46:10 -0700 (Mon, 06 Aug 2007) $
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="WarContributionExtension"

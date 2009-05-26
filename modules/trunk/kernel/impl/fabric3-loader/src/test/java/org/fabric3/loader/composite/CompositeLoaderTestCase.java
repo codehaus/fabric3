@@ -40,13 +40,13 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import static org.osoa.sca.Constants.SCA_NS;
+import static org.oasisopen.sca.Constants.SCA_NS;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.model.type.PolicyAware;
 import org.fabric3.model.type.component.Autowire;
 import org.fabric3.model.type.component.Composite;
-import org.fabric3.model.type.PolicyAware;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
 
 /**
  * @version $Rev$ $Date$

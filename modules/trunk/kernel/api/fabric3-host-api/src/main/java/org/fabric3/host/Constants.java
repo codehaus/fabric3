@@ -48,7 +48,7 @@ public final class Constants {
     public static final String FOLDER_CONTENT_TYPE = "application/vnd.fabric3.folder";
     public static final String COMPOSITE_CONTENT_TYPE = "text/vnd.fabric3.composite+xml";
     public static final String DEFINITIONS_TYPE = "text/vnd.fabric3.definitions+xml";
-    public final static QName COMPOSITE_TYPE = new QName("http://www.osoa.org/xmlns/sca/1.0", "composite");
+    public final static QName COMPOSITE_TYPE = new QName("http://docs.oasis-open.org/ns/opencsa/sca/200903", "composite");
 
     private Constants() {
     }

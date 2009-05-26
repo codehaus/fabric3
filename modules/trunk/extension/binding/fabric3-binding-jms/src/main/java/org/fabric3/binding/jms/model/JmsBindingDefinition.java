@@ -37,7 +37,7 @@ package org.fabric3.binding.jms.model;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 import org.w3c.dom.Document;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;

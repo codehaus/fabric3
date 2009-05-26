@@ -33,7 +33,7 @@
 
     $Rev: 4164 $ $Date: 2008-05-10 00:31:24 -0700 (Sat, 10 May 2008) $
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="CommandGeneratorsBootComposite"

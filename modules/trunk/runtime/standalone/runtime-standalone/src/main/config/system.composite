@@ -33,7 +33,7 @@
 
     $Rev: 329 $ $Date: 2007-06-30 14:33:48 +0100 (Sat, 30 Jun 2007) $
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
            name="StandaloneSystemComposite"

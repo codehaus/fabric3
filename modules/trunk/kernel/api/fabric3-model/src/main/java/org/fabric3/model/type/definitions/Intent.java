@@ -37,7 +37,7 @@ package org.fabric3.model.type.definitions;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 
 /**
  * Represents a registered intent within the domain.

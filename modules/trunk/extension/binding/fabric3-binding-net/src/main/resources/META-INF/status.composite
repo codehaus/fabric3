@@ -14,7 +14,7 @@
  different terms.  See the separate licenses for those programs included in the
  distribution for the permitted and restricted uses of such software.
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="NetBindingStatus"

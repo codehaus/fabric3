@@ -33,7 +33,7 @@
 
     $Rev: 881 $ $Date: 2007-08-27 13:12:34 -0700 (Mon, 27 Aug 2007) $
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-impl="urn:fabric3.org:implementation"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:f3-impl="urn:fabric3.org:implementation"
            name="RepositoryBootComposite"
            autowire="true">
     <component name="Repository">

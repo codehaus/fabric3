@@ -18,7 +18,7 @@ package org.fabric3.java.control;
 
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.model.type.component.Implementation;

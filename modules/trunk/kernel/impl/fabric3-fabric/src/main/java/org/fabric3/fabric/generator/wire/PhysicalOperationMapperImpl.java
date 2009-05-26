@@ -24,7 +24,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.oasisopen.sca.Constants;
-import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
@@ -34,7 +33,6 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
  * @version $Revision$ $Date$
  */
 public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
-    private static final QName ONEWAY = new QName(SCA_NS, "oneWay");
     private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");
 
     @SuppressWarnings({"unchecked"})
@@ -43,7 +41,7 @@ public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName(o.getName());
         operation.setEndsConversation(o.getConversationSequence() == Operation.CONVERSATION_END);
-        if (o.getIntents().contains(ONEWAY) || o.getIntents().contains(OASIS_ONEWAY)) {
+        if (o.getIntents().contains(OASIS_ONEWAY)) {
             operation.setOneWay(true);
         }
         Type returnType = o.getOutputType().getPhysical();

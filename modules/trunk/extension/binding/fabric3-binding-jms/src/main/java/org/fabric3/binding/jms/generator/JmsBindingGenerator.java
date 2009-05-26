@@ -41,7 +41,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.oasisopen.sca.Constants;
-import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -69,10 +68,6 @@ import org.fabric3.spi.policy.Policy;
 public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinition> {
 
     // Transacted one way intent
-    private static final QName TRANSACTED_ONEWAY = new QName(SCA_NS, "transactedOneWay");
-    private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(SCA_NS, "transactedOneWay.local");
-    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(SCA_NS, "transactedOneWay.global");
-
     private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName OASIS_TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
     private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
@@ -117,11 +112,11 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         // If any operation has the intent, return that
         for (LogicalOperation operation : operations) {
             for (QName intent : policy.getProvidedIntents(operation)) {
-                if (TRANSACTED_ONEWAY_GLOBAL.equals(intent) || OASIS_TRANSACTED_ONEWAY_GLOBAL.equals(intent)) {
+                if (OASIS_TRANSACTED_ONEWAY_GLOBAL.equals(intent)) {
                     return TransactionType.GLOBAL;
-                } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent) || OASIS_TRANSACTED_ONEWAY_LOCAL.equals(intent)) {
+                } else if (OASIS_TRANSACTED_ONEWAY_LOCAL.equals(intent)) {
                     return TransactionType.LOCAL;
-                } else if (TRANSACTED_ONEWAY.equals(intent) || OASIS_TRANSACTED_ONEWAY.equals(intent)) {
+                } else if (OASIS_TRANSACTED_ONEWAY.equals(intent)) {
                     return TransactionType.GLOBAL;
                 }
             }

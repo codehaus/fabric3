@@ -31,7 +31,7 @@ public class WebImplementation extends Implementation<WebComponentType> {
     // the deprecated, F3-specific namespace
     @Deprecated
     public static final QName IMPLEMENTATION_WEBAPP = new QName(Namespaces.IMPLEMENTATION, "web");
-    public static final QName IMPLEMENTATION_WEB = new QName(org.osoa.sca.Constants.SCA_NS, "implementation.web");
+    public static final QName IMPLEMENTATION_WEB = new QName(org.oasisopen.sca.Constants.SCA_NS, "implementation.web");
 
     public QName getType() {
         return IMPLEMENTATION_WEB;

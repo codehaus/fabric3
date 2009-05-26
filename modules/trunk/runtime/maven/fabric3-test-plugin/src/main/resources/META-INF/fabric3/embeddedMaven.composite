@@ -33,7 +33,7 @@
 
     $Rev: 6377 $ $Date: 2008-12-31 19:00:24 +0000 (Wed, 31 Dec 2008) $
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
            xmlns:loader="urn:maven:org.codehaus.fabric3:fabric3-loader"

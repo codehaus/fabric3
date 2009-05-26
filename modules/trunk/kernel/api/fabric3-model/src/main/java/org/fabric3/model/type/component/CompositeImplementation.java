@@ -36,7 +36,7 @@ package org.fabric3.model.type.component;
 
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 
 /**
  * A specialization of an implementation associated with composite components

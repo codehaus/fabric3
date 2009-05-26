@@ -42,7 +42,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import static org.osoa.sca.Constants.SCA_NS;
+import static org.oasisopen.sca.Constants.SCA_NS;
 
 import org.fabric3.host.contribution.ArtifactValidationFailure;
 import org.fabric3.host.contribution.ValidationFailure;

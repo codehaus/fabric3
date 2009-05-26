@@ -23,7 +23,6 @@ import javax.xml.namespace.QName;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQXAConnectionFactory;
 import org.oasisopen.sca.Constants;
-import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 
@@ -53,8 +52,6 @@ import org.fabric3.spi.model.instance.LogicalService;
 @EagerInit
 public class ActiveMQBindingProvider implements BindingProvider {
     // Transacted one way intent
-    private static final QName TRANSACTED_ONEWAY = new QName(SCA_NS, "transactedOneWay");
-    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(SCA_NS, "transactedOneWay.global");
 
     private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
@@ -204,10 +201,7 @@ public class ActiveMQBindingProvider implements BindingProvider {
     }
 
     private boolean containsTransactionIntent(Set<QName> intents) {
-        return intents.contains(OASIS_TRANSACTED_ONEWAY_GLOBAL)
-                || intents.contains(TRANSACTED_ONEWAY_GLOBAL)
-                || intents.contains(OASIS_TRANSACTED_ONEWAY)
-                || intents.contains(TRANSACTED_ONEWAY);
+        return intents.contains(OASIS_TRANSACTED_ONEWAY_GLOBAL) || intents.contains(OASIS_TRANSACTED_ONEWAY);
     }
 
 }

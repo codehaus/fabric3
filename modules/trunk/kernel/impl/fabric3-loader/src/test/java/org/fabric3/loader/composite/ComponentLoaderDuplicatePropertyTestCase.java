@@ -42,18 +42,18 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import static org.osoa.sca.Constants.SCA_NS;
+import static org.oasisopen.sca.Constants.SCA_NS;
 
+import org.fabric3.model.type.component.ComponentType;
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.model.type.component.ComponentType;
-import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.component.Property;
-import org.fabric3.model.type.component.PropertyValue;
 
 /**
  * @version $Rev$ $Date$

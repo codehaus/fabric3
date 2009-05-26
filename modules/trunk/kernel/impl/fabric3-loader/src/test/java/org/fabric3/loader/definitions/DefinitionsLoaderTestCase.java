@@ -51,7 +51,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
 
     public static final QName TRANSACTIONAL_QNAME =
             new QName(Namespaces.POLICY, "transactional");
-    public static final QName BINDING_QNAME = new QName("http://www.osoa.org/xmlns/sca/1.0", "binding");
+    public static final QName BINDING_QNAME = new QName("http://docs.oasis-open.org/ns/opencsa/sca/200903", "binding");
     public static final QName TRX_POLICY_QNAME =
             new QName(Namespaces.POLICY, "transactionalPolicy");
     public static final QName SERVER_SEC_POLICY =

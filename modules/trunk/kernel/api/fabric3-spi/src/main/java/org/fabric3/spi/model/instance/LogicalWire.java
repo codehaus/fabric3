@@ -38,7 +38,7 @@ import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
+import org.oasisopen.sca.Constants;
 
 /**
  * Representation of a wire from a reference to a service in the domain.
