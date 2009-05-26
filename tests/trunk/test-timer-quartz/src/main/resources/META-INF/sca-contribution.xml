@@ -15,7 +15,7 @@
  distribution for the permitted and restricted uses of such software.
 
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903">
     <import.java package="javax.transaction" version="1.1.0"/>
     <import.java package="org.fabric3.timer.spi"/>
 </contribution>

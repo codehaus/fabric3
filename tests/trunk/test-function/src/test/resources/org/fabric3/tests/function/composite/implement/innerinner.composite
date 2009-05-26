@@ -15,7 +15,7 @@
  distribution for the permitted and restricted uses of such software.
 
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            name="InnerInnerComposite">
 

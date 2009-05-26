@@ -31,7 +31,7 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" name="HessianTestComposite">
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" name="HessianTestComposite">
 
     <include name="SyncAsyncComposite"/>
     <include name="CallbackComposite"/>

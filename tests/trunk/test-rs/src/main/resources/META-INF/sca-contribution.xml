@@ -16,7 +16,7 @@
 
     $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903">
     <import.java package="javax.xml.bind" version="1.1"/>
     <import.java package="javax.xml.bind.annotation" version="1.1"/>
     <import.java package="javax.ws.rs" version="1.0"/>
