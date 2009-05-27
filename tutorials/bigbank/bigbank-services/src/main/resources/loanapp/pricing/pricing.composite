@@ -16,7 +16,7 @@
  under the License.
 -->
 
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:tutorials="urn:fabric3.org:tutorials"
            targetNamespace="urn:fabric3.org:tutorials"
            name="PricingComposite">
