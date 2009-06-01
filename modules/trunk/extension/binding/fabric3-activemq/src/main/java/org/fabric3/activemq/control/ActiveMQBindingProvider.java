@@ -51,13 +51,14 @@ import org.fabric3.spi.model.instance.LogicalService;
  */
 @EagerInit
 public class ActiveMQBindingProvider implements BindingProvider {
-    // Transacted one way intent
+    private static final BindingMatchResult NO_MATCH = new BindingMatchResult(false, JmsBindingDefinition.BINDING_QNAME);
 
     private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
 
     private String connectionFactory;
     private String xaConnectionFactory;
+    private boolean enabled = true;
 
     @Property
     public void setConnectionFactory(String name) {
@@ -69,11 +70,19 @@ public class ActiveMQBindingProvider implements BindingProvider {
         this.xaConnectionFactory = name;
     }
 
+    @Property(required = false)
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public QName getType() {
         return JmsBindingDefinition.BINDING_QNAME;
     }
 
     public BindingMatchResult canBind(LogicalReference source, LogicalService target) {
+        if (!enabled) {
+            return NO_MATCH;
+        }
         // TODO handle must provide intents
         return new BindingMatchResult(true, getType());
     }
