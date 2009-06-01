@@ -446,7 +446,12 @@ public abstract class AbstractDomain implements Domain {
                 String planName = null;
                 if (!plans.isEmpty()) {
                     // deployment plans are not used in single-VM runtimes
-                    planName = plans.get(i).getName();
+                    // if only one plan is present, use it for every deployable
+                    if (plans.size() == 1) {
+                        planName = plans.get(0).getName();
+                    } else {
+                        planName = plans.get(i).getName();
+                    }
                 }
                 for (DomainListener listener : listeners) {
                     listener.onInclude(deployable.getName(), planName);
