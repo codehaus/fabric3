@@ -43,6 +43,9 @@
   <component name="CompilerWorkspaceConfiguration">
     <option name="ASSERT_NOT_NULL" value="false" />
   </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -257,6 +260,9 @@
     <option name="projectName" value="webcalc" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectKey">
+    <option name="state" value="https://svn.codehaus.org/fabric3/tutorials/webcalc/webcalc.ipr" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/fabric3-tutorial-webcalc.iml" filepath="$PROJECT_DIR$/fabric3-tutorial-webcalc.iml" />
@@ -281,6 +287,7 @@
   </component>
   <component name="SvnBranchConfigurationManager">
     <option name="myVersion" value="124" />
+    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="" />

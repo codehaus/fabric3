@@ -19,7 +19,7 @@
 -->
 <!-- Demonstrates the use of autowire to assemble services. To enable this composite, change the deployable entry in
 sca-contribution.xml -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            name="AutoWireWebCalculator"
            targetNamespace="urn:fabric3.org:tutorials"
            autowire="true">
