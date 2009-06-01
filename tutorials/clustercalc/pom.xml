@@ -27,13 +27,13 @@
     <version>1.0</version>
     <packaging>jar</packaging>
     <name>Fabric3 Cluster Calculator</name>
-    <description>Demonstrates federated deployment and service virtualization.</description>
+    <description>Demonstrates distributed deployment.</description>
 
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.3</version>
+            <version>0.4</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
