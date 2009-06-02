@@ -46,7 +46,7 @@
                 <include>javax.resource:com.springsource.javax.resource</include>
                 <include>javax.jms:com.springsource.javax.jms</include>
              </includes>
-            <outputDirectory>/extensions</outputDirectory>
+            <outputDirectory>/repository</outputDirectory>
         </dependencySet>
   </dependencySets>
     

@@ -44,7 +44,7 @@
                 <include>javax.resource:com.springsource.javax.resource</include>
                 <include>javax.persistence:com.springsource.javax.persistence</include>
              </includes>
-            <outputDirectory>/extensions</outputDirectory>
+            <outputDirectory>/repository</outputDirectory>
         </dependencySet>
   </dependencySets>
     
