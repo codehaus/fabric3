@@ -61,7 +61,7 @@
         </fileSet>
         <fileSet>
             <directory>src/main/datasource</directory>
-            <outputDirectory>/controller/extensions/datasource</outputDirectory>
+            <outputDirectory>/controller/repository/datasource</outputDirectory>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
         </fileSet>
@@ -74,7 +74,7 @@
         </fileSet>
         <fileSet>
             <directory>src/main/datasource</directory>
-            <outputDirectory>/zone1/extensions/datasource</outputDirectory>
+            <outputDirectory>/zone1/repository/datasource</outputDirectory>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
         </fileSet>
@@ -87,7 +87,7 @@
         </fileSet>
         <fileSet>
             <directory>src/main/datasource</directory>
-            <outputDirectory>/zone2/extensions/datasource</outputDirectory>
+            <outputDirectory>/zone2/repository/datasource</outputDirectory>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
         </fileSet>
