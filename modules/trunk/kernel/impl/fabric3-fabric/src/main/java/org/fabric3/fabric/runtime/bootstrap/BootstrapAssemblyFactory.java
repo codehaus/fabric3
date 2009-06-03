@@ -41,8 +41,8 @@ import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.collector.CollectorImpl;
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.BuildComponentCommand;
-import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.ConnectionCommand;
+import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartContextCommand;
 import org.fabric3.fabric.domain.ContributionHelper;
@@ -118,6 +118,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.ContributionWire;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
@@ -303,10 +304,14 @@ public class BootstrapAssemblyFactory {
                                                                HostInfo info) {
 
         LocalContributionUriResolver resolver = new LocalContributionUriResolver(metaDataStore);
+        Map<String, ContributionUriResolver> resolvers = new HashMap<String, ContributionUriResolver>();
+        resolvers.put(ContributionUriResolver.LOCAL_SCHEME, resolver);
         JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry, info);
         classpathProcessor.init();
         ClassLoaderWireBuilder wireBuilder = new ClassLoaderWireBuilderImpl(classLoaderRegistry);
-        return new ClassLoaderBuilderImpl(wireBuilder, classLoaderRegistry, resolver, cpRegistry, componentManager, info);
+        ClassLoaderBuilderImpl builder = new ClassLoaderBuilderImpl(wireBuilder, classLoaderRegistry, cpRegistry, componentManager, info);
+        builder.setContributionUriResolver(resolvers);
+        return builder;
     }
 
     private static Generator createGenerator(LogicalComponentManager lcm, MetaDataStore metaDataStore, PolicyResolver policyResolver) {

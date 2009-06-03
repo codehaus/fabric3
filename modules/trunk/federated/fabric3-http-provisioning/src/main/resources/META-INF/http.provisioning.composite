@@ -16,6 +16,7 @@
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
            targetNamespace="org.codehaus.fabric3"
            name="HttpProvisioningExtension"
            autowire="true">
@@ -28,14 +29,8 @@
     <wire source="ClassLoaderGenerator/encoder" target="HTTPArtifactLocationEncoder"/>
     <wire source="ExtensionGenerator/encoder" target="HTTPArtifactLocationEncoder"/>
 
-    <component name="HttpContributionUriResolver">
-        <f3-impl:implementation.system
-                class="org.fabric3.provisioning.http.HttpContributionUriResolver"/>
+    <component name="HttpContributionUriResolver"  f3-core:key="http">
+        <f3-impl:implementation.system class="org.fabric3.provisioning.http.HttpContributionUriResolver"/>
     </component>
-
-    <wire source="ClassLoaderBuilder/contributionUriResolver" target="HttpContributionUriResolver"/>
-    <wire source="ProvisionExtensionsCommandExecutor/contributionUriResolver" target="HttpContributionUriResolver"/>
-    <wire source="UnProvisionExtensionsCommandExecutor/contributionUriResolver" target="HttpContributionUriResolver"/>
-
 
 </composite>

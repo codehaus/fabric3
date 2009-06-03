@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -46,9 +47,9 @@ import org.fabric3.spi.executor.ExecutionException;
 @EagerInit
 public class ProvisionExtensionsCommandExecutor implements CommandExecutor<ProvisionExtensionsCommand> {
     private CommandExecutorRegistry commandExecutorRegistry;
-    private ContributionUriResolver contributionUriResolver;
     private ContributionService contributionService;
     private Domain domain;
+    private Map<String, ContributionUriResolver> resolvers;
 
     public ProvisionExtensionsCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
                                               @Reference ContributionService contributionService,
@@ -59,14 +60,13 @@ public class ProvisionExtensionsCommandExecutor implements CommandExecutor<Provi
     }
 
     /**
-     * Setter for injecting the service for resolving contribution URIs so they may be derferenced in a domain. This is done lazily as the encoder is
-     * supplied by an extension which is intialized after this component which is needed during bootstrap.
+     * Lazily injects the contribution URI resolvers that may be supplied by extensions.
      *
-     * @param contributionUriResolver the encoder to inject
+     * @param resolvers the resolvers keyed by URI scheme
      */
-    @Reference(required = false)
-    public void setContributionUriResolver(ContributionUriResolver contributionUriResolver) {
-        this.contributionUriResolver = contributionUriResolver;
+    @Reference
+    public void setContributionUriResolver(Map<String, ContributionUriResolver> resolvers) {
+        this.resolvers = resolvers;
     }
 
     @Init
@@ -78,12 +78,13 @@ public class ProvisionExtensionsCommandExecutor implements CommandExecutor<Provi
         try {
             List<URI> stored = new ArrayList<URI>();
             for (URI encoded : command.getExtensionUris()) {
-                URI uri = contributionUriResolver.decode(encoded);
+                ContributionUriResolver resolver = getResolver(encoded);
+                URI uri = resolver.decode(encoded);
                 if (contributionService.exists(uri)) {
                     // extension already provisioned
                     continue;
                 }
-                URL url = contributionUriResolver.resolve(encoded);
+                URL url = resolver.resolve(encoded);
                 ContributionSource source = new FileContributionSource(uri, url, 0, new byte[]{});
                 contributionService.store(source);
                 stored.add(uri);
@@ -101,4 +102,17 @@ public class ProvisionExtensionsCommandExecutor implements CommandExecutor<Provi
             throw new ExecutionException(e);
         }
     }
+
+    private ContributionUriResolver getResolver(URI uri) throws ExecutionException {
+        String scheme = uri.getScheme();
+        if (scheme == null) {
+            scheme = ContributionUriResolver.LOCAL_SCHEME;
+        }
+        ContributionUriResolver resolver = resolvers.get(scheme);
+        if (resolver == null) {
+            throw new ExecutionException("Contribution resolver for scheme not found: " + scheme);
+        }
+        return resolver;
+    }
+
 }

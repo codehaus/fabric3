@@ -33,7 +33,9 @@
 
     $Rev: 1028 $ $Date: 2007-09-03 14:06:54 -0700 (Mon, 03 Sep 2007) $
 -->
-<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:f3-impl="urn:fabric3.org:implementation"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
            name="LocalProvisioningBootComposite"
            autowire="true">
 
@@ -42,9 +44,8 @@
                 class="org.fabric3.contribution.LocalContributionUriEncoder"/>
     </component>
 
-    <component name="LocalContributionUriResolver">
-        <f3-impl:implementation.system
-                class="org.fabric3.contribution.LocalContributionUriResolver"/>
+    <component name="LocalContributionUriResolver" f3-core:key="local">
+        <f3-impl:implementation.system class="org.fabric3.contribution.LocalContributionUriResolver"/>
     </component>
 
 </composite>

@@ -39,6 +39,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -66,33 +67,31 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
     private ClassLoaderWireBuilder wireBuilder;
     private ClassLoaderRegistry classLoaderRegistry;
-    private ContributionUriResolver contributionUriResolver;
     private ClasspathProcessorRegistry classpathProcessorRegistry;
     private ComponentManager componentManager;
     private boolean classLoaderIsolation;
+    private Map<String, ContributionUriResolver> resolvers;
 
     public ClassLoaderBuilderImpl(@Reference ClassLoaderWireBuilder wireBuilder,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference ContributionUriResolver contributionUriResolver,
                                   @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
                                   @Reference ComponentManager componentManager,
                                   @Reference HostInfo info) {
         this.wireBuilder = wireBuilder;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.contributionUriResolver = contributionUriResolver;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
         this.componentManager = componentManager;
         classLoaderIsolation = info.supportsClassLoaderIsolation();
     }
 
     /**
-     * Optionally, lazily injects the contribution URI resolver that may be supplied as an extension.
+     * Lazily injects the contribution URI resolvers that may be supplied by extensions.
      *
-     * @param contributionUriResolver the resolver
+     * @param resolvers the resolvers keyed by URI scheme
      */
     @Reference
-    public void setContributionUriResolver(ContributionUriResolver contributionUriResolver) {
-        this.contributionUriResolver = contributionUriResolver;
+    public void setContributionUriResolver(Map<String, ContributionUriResolver> resolvers) {
+        this.resolvers = resolvers;
     }
 
     public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
@@ -143,8 +142,9 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
             }
         }
         try {
+            ContributionUriResolver resolver = getResolver(uri);
             // release the previously resolved contribution
-            contributionUriResolver.release(uri);
+            resolver.release(uri);
         } catch (ResolutionException e) {
             throw new ClassLoaderBuilderException("Error releasing artifact: " + uri.toString(), e);
         }
@@ -164,7 +164,8 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
         try {
             // resolve the remote contributions and cache them locally
-            URL resolvedUrl = contributionUriResolver.resolve(uri);
+            ContributionUriResolver resolver = getResolver(uri);
+            URL resolvedUrl = resolver.resolve(uri);
             // introspect and expand if necessary
             classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
         } catch (ResolutionException e) {
@@ -175,5 +176,18 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         return classpath.toArray(new URL[classpath.size()]);
 
     }
+
+    private ContributionUriResolver getResolver(URI uri) throws ClassLoaderBuilderException {
+        String scheme = uri.getScheme();
+        if (scheme == null) {
+            scheme = ContributionUriResolver.LOCAL_SCHEME;
+        }
+        ContributionUriResolver resolver = resolvers.get(scheme);
+        if (resolver == null) {
+            throw new ClassLoaderBuilderException("Contribution resolver for scheme not found: " + scheme);
+        }
+        return resolver;
+    }
+
 
 }

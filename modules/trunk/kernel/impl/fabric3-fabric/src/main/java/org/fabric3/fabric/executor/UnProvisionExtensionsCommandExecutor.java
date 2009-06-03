@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -47,29 +48,26 @@ import org.fabric3.spi.executor.ExecutionException;
 @EagerInit
 public class UnProvisionExtensionsCommandExecutor implements CommandExecutor<UnProvisionExtensionsCommand> {
     private CommandExecutorRegistry commandExecutorRegistry;
-    private ContributionUriResolver contributionUriResolver;
     private ContributionService contributionService;
     private Domain domain;
+    private Map<String, ContributionUriResolver> resolvers;
 
     public UnProvisionExtensionsCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                                @Reference ContributionUriResolver contributionUriResolver,
                                                 @Reference ContributionService contributionService,
                                                 @Reference(name = "domain") Domain domain) {
         this.commandExecutorRegistry = commandExecutorRegistry;
-        this.contributionUriResolver = contributionUriResolver;
         this.contributionService = contributionService;
         this.domain = domain;
     }
 
     /**
-     * Setter for injecting the service for resolving contribution URIs so they may be derferenced in a domain. This is done lazily as the encoder is
-     * supplied by an extension which is intialized after this component which is needed during bootstrap.
+     * Lazily injects the contribution URI resolvers that may be supplied by extensions.
      *
-     * @param contributionUriResolver the encoder to inject
+     * @param resolvers the resolvers keyed by URI scheme
      */
-    @Reference(required = false)
-    public void setContributionUriResolver(ContributionUriResolver contributionUriResolver) {
-        this.contributionUriResolver = contributionUriResolver;
+    @Reference
+    public void setContributionUriResolver(Map<String, ContributionUriResolver> resolvers) {
+        this.resolvers = resolvers;
     }
 
     @Init
@@ -82,8 +80,9 @@ public class UnProvisionExtensionsCommandExecutor implements CommandExecutor<UnP
         // compile the list of extensions 
         List<URI> uninstall = new ArrayList<URI>();
         for (URI encoded : command.getExtensionUris()) {
-            URI uri = contributionUriResolver.decode(encoded);
-            int count = contributionUriResolver.getInUseCount(uri);
+            ContributionUriResolver resolver = getResolver(encoded);
+            URI uri = resolver.decode(encoded);
+            int count = resolver.getInUseCount(uri);
             if (count == 1) {
                 try {
                     // no longer in use, undeploy and uninstall the extension
@@ -102,7 +101,7 @@ public class UnProvisionExtensionsCommandExecutor implements CommandExecutor<UnP
                 }
             }
             try {
-                contributionUriResolver.release(uri);
+                resolver.release(uri);
             } catch (ResolutionException e) {
                 throw new ExecutionException(e);
             }
@@ -118,4 +117,17 @@ public class UnProvisionExtensionsCommandExecutor implements CommandExecutor<UnP
             throw new ExecutionException(e);
         }
     }
+
+    private ContributionUriResolver getResolver(URI uri) throws ExecutionException {
+        String scheme = uri.getScheme();
+        if (scheme == null) {
+            scheme = ContributionUriResolver.LOCAL_SCHEME;
+        }
+        ContributionUriResolver resolver = resolvers.get(scheme);
+        if (resolver == null) {
+            throw new ExecutionException("Contribution resolver for scheme not found: " + scheme);
+        }
+        return resolver;
+    }
+
 }

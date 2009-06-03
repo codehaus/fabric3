@@ -28,6 +28,11 @@ import java.net.URL;
 public interface ContributionUriResolver {
 
     /**
+     * The scheme for local resolution.
+     */
+    String LOCAL_SCHEME = "local";
+
+    /**
      * Decodes a URI.
      *
      * @param uri the uri
