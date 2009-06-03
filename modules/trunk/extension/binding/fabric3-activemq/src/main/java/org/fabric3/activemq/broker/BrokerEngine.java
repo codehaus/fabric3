@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -51,12 +53,18 @@ public class BrokerEngine {
     private int minPort = 61616;
     private File dataDir;
     private BrokerConfiguration brokerConfiguration;
+    private Level logLevel = Level.WARNING;
 
     public BrokerEngine(@Reference HostInfo info) {
         tempDir = new File(info.getTempDir(), "activemq");
         // sets the directory where persistent messages are written
         File baseDataDir = info.getDataDir();
         dataDir = new File(baseDataDir, "activemq.data");
+    }
+
+    @Property(required = false)
+    public void setLogLevel(String logLevel) {
+        this.logLevel = Level.parse(logLevel);
     }
 
     @Property(required = false)
@@ -72,6 +80,8 @@ public class BrokerEngine {
 
     @Init
     public void init() throws Exception {
+        // ActiveMQ default level is INFO which is verbose. Only log warnings by default
+        Logger.getLogger("org.apache.activemq").setLevel(logLevel);
         broker = new BrokerService();
         // TODO enable JMX via the F3 JMX agent
         // JMX must be turned off prior to configuring connections to avoid conflicts with the F3 JMX agent.
