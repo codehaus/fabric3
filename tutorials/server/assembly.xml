@@ -58,6 +58,10 @@
             <outputDirectory>/controller</outputDirectory>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
+            <excludes>
+               <!-- exclude files to ensure it is overwritten on Windows machines regardless of the timestamp -->
+               <exclude>**/vm/systemConfig.xml</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>src/main/datasource</directory>
@@ -71,6 +75,10 @@
             <outputDirectory>/zone1</outputDirectory>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
+            <excludes>
+               <!-- exclude files to ensure it is overwritten on Windows machines regardless of the timestamp -->
+               <exclude>**/participant/systemConfig.xml</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>src/main/datasource</directory>
@@ -84,6 +92,10 @@
             <outputDirectory>/zone2</outputDirectory>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
+            <excludes>
+               <!-- exclude files to ensure it is overwritten on Windows machines regardless of the timestamp -->
+               <exclude>**/participant/systemConfig.xml</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>src/main/datasource</directory>
@@ -93,7 +105,7 @@
         </fileSet>
     </fileSets>
     
-    <!-- copy configuration files for controller, zone1, and zone2-->
+    <!-- copy configuration files for controller, zone1, and zone2 -->
     <files>
         <file>
             <source>src/main/config/vmConfig.xml</source>
