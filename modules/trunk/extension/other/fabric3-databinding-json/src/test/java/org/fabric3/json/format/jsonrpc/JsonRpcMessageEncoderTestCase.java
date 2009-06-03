@@ -19,7 +19,6 @@ package org.fabric3.json.format.jsonrpc;
 import junit.framework.TestCase;
 
 import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 
 /**
  * @version $Revision$ $Date$
