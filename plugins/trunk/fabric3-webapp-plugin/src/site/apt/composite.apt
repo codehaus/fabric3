@@ -27,7 +27,7 @@ Using a Web Composite
   An example web composite may look something like this:
 
 +---+
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            targetNamespace="urn:com.example:MyApplication" name="ExampleWebComposite">
 
@@ -65,7 +65,7 @@ Using a Web Composite
   For the example above it would look like:
 
 +---+
-<componentType xmlns="http://www.osoa.org/xmlns/sca/1.0">
+<componentType xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903">
     <reference name="local">
         <interface.java interface="com.example.LocalService"/>
     </reference>
