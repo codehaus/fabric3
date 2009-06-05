@@ -25,7 +25,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorials-parent-pom</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Fabric3 Tutorials Parent POM</name>
     <description>Fabric3 Tutorials Parent POM.</description>
     <packaging>pom</packaging>

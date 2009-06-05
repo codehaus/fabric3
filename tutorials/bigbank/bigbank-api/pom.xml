@@ -20,11 +20,11 @@
     <parent>
         <groupId>org.codehaus.fabric3.tutorials</groupId>
         <artifactId>bigbank-parent-pom</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>bigbank-api</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Fabric3 BigBank API Classes</name>
     <description>Fabric3 BigBank API Classes.</description>
 
