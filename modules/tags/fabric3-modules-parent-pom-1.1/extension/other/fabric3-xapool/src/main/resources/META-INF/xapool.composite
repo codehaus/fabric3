@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="XaPoolDataSource"
+           autowire="true">
+
+    <property name="dataSourceConfig" type="f3-core:dataSourceConfig"/>
+    <reference name="transactionManager" promote="XaPoolDataSource/transactionManager"/>
+    <reference name="dataSourceRegistry" promote="XaPoolDataSource/dataSourceRegistry"/>
+
+    <!-- XAPool Datasource -->
+    <component name="XaPoolDataSource">
+        <f3-impl:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
+        <property name="driver" source="$dataSourceConfig//driver"/>
+        <property name="url" source="$dataSourceConfig//url"/>
+        <property name="dataSourceKeys" source="$dataSourceConfig//keys"/>
+        <property name="user" source="$dataSourceConfig//user"/>
+        <property name="password" source="$dataSourceConfig//password"/>
+        <property name="minSize" source="$dataSourceConfig//minSize"/>
+        <property name="maxSize" source="$dataSourceConfig//maxSize"/>
+    </component>
+
+</composite>

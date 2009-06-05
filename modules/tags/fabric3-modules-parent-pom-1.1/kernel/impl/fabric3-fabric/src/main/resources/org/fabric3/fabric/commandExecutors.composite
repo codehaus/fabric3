@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+ ___ Original Apache License ___
+
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           name="CommonExecutorsBootComposite"
+           autowire="true">
+
+
+    <component name="CommandExecutorRegistry">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.CommandExecutorRegistryImpl"/>
+    </component>
+
+    <component name="ClassloaderProvisionCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor"/>
+    </component>
+
+    <component name="AttachExtensionCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.AttachExtensionCommandExecutor"/>
+    </component>
+
+    <component name="ComponentBuildCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.BuildComponentCommandExecutor"/>
+    </component>
+
+    <component name="WireAttachCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.AttachWireCommandExecutor"/>
+    </component>
+
+    <component name="ComponentStartCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StartComponentCommandExecutor"/>
+    </component>
+
+    <component name="StartCompositeContextCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StartContextCommandExecutor"/>
+    </component>
+
+    <component name="ComponentStopCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StopComponentCommandExecutor"/>
+    </component>
+
+    <component name="StopCompositeContextCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StopContextCommandExecutor"/>
+    </component>
+
+    <component name="WireDetachCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.DetachWireCommandExecutor"/>
+    </component>
+
+    <component name="UnprovisionClassloaderCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.UnprovisionClassloaderCommandExecutor"/>
+    </component>
+
+    <component name="ReferenceConnectionCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.ReferenceConnectionCommandExecutor"/>
+    </component>
+
+    <component name="ProvisionExtensionsCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.ProvisionExtensionsCommandExecutor"/>
+        <reference name="domain" target="RuntimeDomain"/>
+    </component>
+
+    <component name="UnProvisionExtensionsCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.UnProvisionExtensionsCommandExecutor"/>
+        <reference name="domain" target="RuntimeDomain"/>
+    </component>
+
+</composite>

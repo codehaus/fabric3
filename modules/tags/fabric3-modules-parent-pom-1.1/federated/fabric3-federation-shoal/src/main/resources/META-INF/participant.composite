@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+    $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="ShoalFederationParticipantExtension"
+           autowire="true">
+
+
+    <component name="FederationService">
+        <f3-impl:implementation.system class="org.fabric3.federation.shoal.ParticipantFederationServiceImpl"/>
+        <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
+        <property name="zoneName" source="$systemConfig//federation/zoneName"/>
+        <property name="logLevel" source="$systemConfig//federation/@loggin"/>
+    </component>
+
+    <component name="ZoneManager">
+        <f3-impl:implementation.system class="org.fabric3.federation.shoal.ShoalZoneManager"/>
+        <!-- System configuration. If set to true, the runtime will operate as a zone manager  -->
+        <property name="transportMetadata" source="$systemConfig//federation/transport//*"/>
+    </component>
+
+    <component name="RuntimeManager">
+        <f3-impl:implementation.system class="org.fabric3.federation.shoal.ShoalRuntimeManager"/>
+    </component>
+
+    <component name="DomainSyncTimer">
+        <f3-impl:implementation.system class="org.fabric3.federation.shoal.DomainSynchronizer"/>
+    </component>
+
+    <component name="ZoneDeploymentCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.federation.executor.ZoneDeploymentCommandExecutor"/>
+    </component>
+
+    <component name="RuntimeDeploymentCommandExecutor">
+        <f3-impl:implementation.system class="org.fabric3.federation.executor.RuntimeDeploymentCommandExecutor"/>
+    </component>
+
+
+</composite>

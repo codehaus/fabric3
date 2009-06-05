@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:groovy="http://www.fabric3.org/xmlns/groovy/1.0"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="GroovyExtension"
+           autowire="true">
+
+    <component name="GroovyImplementationLoader" f3-core:key="groovy:groovy">
+        <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationLoader"/>
+        <reference name="implementationProcessor" target="GroovyImplementationProcessor"/>
+    </component>
+
+    <component name="GroovyImplementationProcessor">
+        <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationProcessor"/>
+        <reference name="heuristic" target="GroovyHeuristic"/>
+    </component>
+
+    <component name="GroovyHeuristic">
+        <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyHeuristic"/>
+    </component>
+
+    <component name="GroovyComponentGenerator" f3-core:key="org.fabric3.groovy.scdl.GroovyImplementation">
+        <f3-impl:implementation.system class="org.fabric3.groovy.control.GroovyComponentGenerator"/>
+    </component>
+
+    <component name="GroovyComponentBuilder" f3-core:key="org.fabric3.groovy.provision.GroovyComponentDefinition">
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyComponentBuilder"/>
+        <reference name="transformerRegistry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="GroovyInstanceFactoryBuilder">
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder"/>
+    </component>
+
+    <component name="GroovySourceWireAttacher" f3-core:key="org.fabric3.groovy.provision.GroovyWireSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovySourceWireAttacher"/>
+        <reference name="transformerRegistry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="GroovyTargetWireAttacher" f3-core:key="org.fabric3.groovy.provision.GroovyWireTargetDefinition">
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyTargetWireAttacher"/>
+    </component>
+</composite>

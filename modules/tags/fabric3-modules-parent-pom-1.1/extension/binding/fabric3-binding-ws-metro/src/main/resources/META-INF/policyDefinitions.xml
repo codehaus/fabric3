@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+ Fabric3
+ Copyright ? 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the ?License?), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an ?as is? basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+-->
+<definitions xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+             xmlns:f3-policy="urn:fabric3.org:policy"
+             targetNamespace="urn:fabric3.org:policy">
+
+    <intent name="messageOptimisation" constrains="binding">
+        <description>
+            Optimise transfer of binary files.
+        </description>
+    </intent>
+
+    <intent name="protocolBinding" constrains="binding">
+        <description>
+            Unqualified intent for using SOAP 1.1, SOAP 1.2, HTTP etc.
+        </description>
+    </intent>
+
+    <intent name="protocolBinding.soap11" constrains="binding">
+        <description>
+            Qualified intent for using SOAP 1.1.
+        </description>
+    </intent>
+
+    <intent name="protocolBinding.soap12" constrains="binding">
+        <description>
+            Unqualified intent for using SOAP 1.2.
+        </description>
+    </intent>
+
+    <intent name="protocolBinding.rest" constrains="binding">
+        <description>
+            Unqualified intent for using HTTP.
+        </description>
+    </intent>
+
+    <intent name="validateSchema">
+        <description>
+            Intent for requesting schema validation.
+        </description>
+    </intent>
+
+</definitions>
