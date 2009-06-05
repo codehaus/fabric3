@@ -28,7 +28,7 @@
     <name>Fabric3 Features Parent POM</name>
     <description>Fabric3 Features Parent POM.</description>
     <packaging>pom</packaging>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
 
     <modules>
         <module>fabric3-default-feature</module>
@@ -36,10 +36,4 @@
         <module>fabric3-hibernate-jotm-feature</module>
         <module>fabric3-default-webapp-feature</module>
     </modules>
-
-  <scm>
-    <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-features-parent-pom-1.1</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-features-parent-pom-1.1</developerConnection>
-    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/fabric3-features-parent-pom-1.1</url>
-  </scm>
 </project>
