@@ -46,37 +46,37 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-maven-extension</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jdk-proxy</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-java</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-junit</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-conversation-propagation</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-security-intents</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.1</version>
                         </dependency>
                     </extensions>
                     <shared>
