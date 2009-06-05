@@ -18,7 +18,7 @@
     <parent>
         <artifactId>fabric3-runtime-maven-parent-pom</artifactId>
         <groupId>org.codehaus.fabric3</groupId>
-        <version>1.1</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
@@ -28,9 +28,9 @@
     <description>Fabric3 Maven Test Plugin.</description>
     
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.1/runtime/maven/fabric3-test-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.1/runtime/maven/fabric3-test-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-1.1/runtime/maven/fabric3-test-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-test-plugin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-test-plugin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-test-plugin</url>
     </scm>
     
     <build>
