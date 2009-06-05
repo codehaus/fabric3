@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric3-profiles-parent-pom</artifactId>
+        <version>1.1</version>
+    </parent>
+    <artifactId>profile-timer</artifactId>
+    <version>1.1</version>
+    <packaging>pom</packaging>
+    <name>Fabric3 Timer Extension Pofile</name>
+    <description>Assembly distribution for the Fabric3 timer extension.</description>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <name>Apache Snapshots</name>
+            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-timer-spi</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-tx</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-tx-jotm</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-xapool</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-timer-quartz</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.resource</groupId>
+            <artifactId>com.springsource.javax.resource</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/tags/fabric3-profiles-parent-pom-1.1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/tags/fabric3-profiles-parent-pom-1.1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/tags/fabric3-profiles-parent-pom-1.1</url>
+    </scm>
+
+</project>
