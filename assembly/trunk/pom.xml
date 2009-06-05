@@ -28,7 +28,7 @@
     <name>Fabric3 Profiles Parent POM</name>
     <description>Fabric3 Profiles Parent POM.</description>
     <packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
 
     <modules>
         <module>profile-timer</module>
@@ -55,4 +55,10 @@
         </repository>
     </repositories>
 
+
+  <scm>
+    <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-profiles-parent-pom-1.1</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-profiles-parent-pom-1.1</developerConnection>
+    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/fabric3-profiles-parent-pom-1.1</url>
+  </scm>
 </project>
