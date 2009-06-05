@@ -28,7 +28,7 @@
     <name>Fabric3 Profiles Parent POM</name>
     <description>Fabric3 Profiles Parent POM.</description>
     <packaging>pom</packaging>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
 
     <modules>
         <module>profile-timer</module>
@@ -54,11 +54,4 @@
             <url>http://repository.springsource.com/maven/bundles/external</url>
         </repository>
     </repositories>
-
-
-  <scm>
-    <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-profiles-parent-pom-1.1</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-profiles-parent-pom-1.1</developerConnection>
-    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/fabric3-profiles-parent-pom-1.1</url>
-  </scm>
 </project>

@@ -21,10 +21,10 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-profiles-parent-pom</artifactId>
-        <version>1.1</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
     <artifactId>profile-jpa</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 JPA Extension Pofile</name>
     <description>Assembly distribution for Fabric3 Persistence Extensions.</description>
@@ -109,9 +109,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/tags/fabric3-profiles-parent-pom-1.1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/tags/fabric3-profiles-parent-pom-1.1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/tags/fabric3-profiles-parent-pom-1.1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/profile-jpa</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/profile-jpa</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/profile-jpa</url>
     </scm>
 
 </project>
