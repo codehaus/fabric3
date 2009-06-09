@@ -24,11 +24,11 @@
     <import.java package="javax.transaction" version="1.1.0"/>
     <import.java package="javax.transaction.xa" version="1.1.0"/>
     <import.java package="javax.persistence" version="1.0.0"/>
-    <import.java package="org.fabric3.spi.*" version="1.1"/>
-    <import.java package="org.fabric3.java.control" version="1.1"/>
-    <import.java package="org.fabric3.jpa" version="1.1"/>
-    <import.java package="org.fabric3.jpa.spi.*" version="1.1"/>
-    <import.java package="org.fabric3.resource.jndi.proxy.jdbc" version="1.1"/>
+    <import.java package="org.fabric3.spi.*" version="1.2"/>
+    <import.java package="org.fabric3.java.control" version="1.2"/>
+    <import.java package="org.fabric3.jpa" version="1.2"/>
+    <import.java package="org.fabric3.jpa.spi.*" version="1.2"/>
+    <import.java package="org.fabric3.resource.jndi.proxy.jdbc" version="1.2"/>
     <export.java package="org.hibernate.*"/>
     <deployable xmlns:ns="org.codehaus.fabric3" composite="ns:HibernateJpaExtension"/>
 </contribution>

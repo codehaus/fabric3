@@ -17,12 +17,12 @@
     $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
 -->
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="urn:org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
-    <import.java package="org.fabric3.spi.*" version="1.1"/>
-    <import.java package="org.fabric3.pojo.*" version="1.1"/>
-    <import.java package="org.fabric3.java.control" version="1.1"/>
-    <import.java package="org.fabric3.java.provision" version="1.1"/>
-    <import.java package="org.fabric3.java.introspection" version="1.1"/>
-    <import.java package="org.fabric3.java.runtime" version="1.1"/>
-    <import.java package="org.fabric3.test.spi" version="1.1"/>
+    <import.java package="org.fabric3.spi.*" version="1.2"/>
+    <import.java package="org.fabric3.pojo.*" version="1.2"/>
+    <import.java package="org.fabric3.java.control" version="1.2"/>
+    <import.java package="org.fabric3.java.provision" version="1.2"/>
+    <import.java package="org.fabric3.java.introspection" version="1.2"/>
+    <import.java package="org.fabric3.java.runtime" version="1.2"/>
+    <import.java package="org.fabric3.test.spi" version="1.2"/>
     <deployable composite="ns:JUnitExtension"/>
 </contribution>

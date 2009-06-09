@@ -19,6 +19,6 @@
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <import.java package="javax.transaction" version="1.1.0"/>
     <import.java package="javax.transaction.xa" version="1.1.0"/>
-    <import.java package="org.fabric3.spi.*" version="1.1"/>
+    <import.java package="org.fabric3.spi.*" version="1.2"/>
     <deployable composite="ns:TxExtension"/>
 </contribution>
