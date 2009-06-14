@@ -1,6 +1,6 @@
 /* 
  * Fabric3
- * Copyright (C) 2009 Metaform Systems
+ * Copyright (c) 2009 Metaform Systems
  *
  * Fabric3 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
