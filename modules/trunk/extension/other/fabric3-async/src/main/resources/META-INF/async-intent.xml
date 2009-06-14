@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
-<definitions 
-    xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-    targetNamespace="http://docs.oasis-open.org/ns/opencsa/sca/200903">
+<definitions
+        xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+        targetNamespace="http://docs.oasis-open.org/ns/opencsa/sca/200903">
 
     <!-- Asynchronous invocation intent -->
     <intent name="oneWay" constrains="binding">
@@ -9,5 +9,5 @@
             Used to indicate asynchronous invocation.
         </description>
     </intent>
-    
+
 </definitions>

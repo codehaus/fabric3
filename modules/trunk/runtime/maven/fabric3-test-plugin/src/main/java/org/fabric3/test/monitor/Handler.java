@@ -69,9 +69,9 @@ import org.apache.maven.plugin.logging.Log;
  *
  */
 class Handler implements InvocationHandler {
-    
+
     private final Map<Method, MethodHandler> handlers = new HashMap<Method, MethodHandler>();
-    
+
     void addMethodHandler(Method method, Log log, String message, int value, int throwableIndex) {
         handlers.put(method, new MethodHandler(log, message, value, throwableIndex));
     }
@@ -83,9 +83,9 @@ class Handler implements InvocationHandler {
         }
         return null;
     }
-    
+
     private class MethodHandler {
-        
+
         private final Log log;
         private final String message;
         private final int value;
@@ -99,7 +99,7 @@ class Handler implements InvocationHandler {
         }
 
         private void invoke(Object[] objects) {
-            
+
             String formattedMessage = MessageFormat.format(message, objects);
             if (throwableIndex == -1) {
                 if (value >= Level.SEVERE.intValue() && log.isErrorEnabled()) {
@@ -108,7 +108,7 @@ class Handler implements InvocationHandler {
                     log.warn(formattedMessage);
                 } else if (value >= Level.INFO.intValue() && log.isInfoEnabled()) {
                     log.info(formattedMessage);
-                } else if (log.isDebugEnabled()){
+                } else if (log.isDebugEnabled()) {
                     log.debug(formattedMessage);
                 }
             } else {
@@ -119,13 +119,13 @@ class Handler implements InvocationHandler {
                     log.warn(formattedMessage, throwable);
                 } else if (value >= Level.INFO.intValue() && log.isInfoEnabled()) {
                     log.info(formattedMessage, throwable);
-                } else if (log.isDebugEnabled()){
+                } else if (log.isDebugEnabled()) {
                     log.debug(formattedMessage, throwable);
                 }
             }
-            
+
         }
 
     }
-    
+
 }

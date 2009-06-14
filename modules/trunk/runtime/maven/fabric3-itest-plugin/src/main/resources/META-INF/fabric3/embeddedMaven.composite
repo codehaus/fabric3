@@ -65,5 +65,5 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.ApplicationLogicalComponentStore"/>
         <property name="autowire" source="$systemConfig/domain/@autowire"/>
     </component>
-    
+
 </composite>

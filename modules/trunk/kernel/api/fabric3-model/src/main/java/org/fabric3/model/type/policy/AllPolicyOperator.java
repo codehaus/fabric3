@@ -41,7 +41,6 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents wsp:All.
- *
  */
 public class AllPolicyOperator extends PolicyOperator {
 

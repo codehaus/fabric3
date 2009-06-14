@@ -55,24 +55,24 @@ import org.fabric3.model.type.java.InjectingComponentType;
 
 @SuppressWarnings("unchecked")
 public class ConversationProcessorTestCase extends TestCase {
-    
+
     public void testScopeIdentification() throws Exception {
-        
+
         ConversationAnnotated componentToProcess = new ConversationAnnotated();
-        Conversation annotation = componentToProcess.getClass().getAnnotation(Conversation.class);        
+        Conversation annotation = componentToProcess.getClass().getAnnotation(Conversation.class);
         ConversationProcessor<Implementation<? extends InjectingComponentType>> processor =
-                                new ConversationProcessor<Implementation<? extends InjectingComponentType>>();
+                new ConversationProcessor<Implementation<? extends InjectingComponentType>>();
         processor.visitType(annotation, componentToProcess.getClass(), componentToProcess, null);
-        
+
         assertEquals("Unexpected scope", Scopes.CONVERSATION, componentToProcess.getScope());
     }
-    
+
     @SuppressWarnings("serial")
     @Conversation
-    public static class ConversationAnnotated extends Implementation {        
-        
+    public static class ConversationAnnotated extends Implementation {
+
         private String scope;
-        
+
         public String getScope() {
             return scope;
         }
@@ -85,12 +85,14 @@ public class ConversationProcessorTestCase extends TestCase {
                     scope = introspectedScope;
                 }
             };
-        };
-        
+        }
+
+        ;
+
         @Override
         public QName getType() {
             return null;
         }
     }
-    
+
 }

@@ -43,9 +43,9 @@
  */
 package org.fabric3.pojo.provision;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.Serializable;
 
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectionSite;

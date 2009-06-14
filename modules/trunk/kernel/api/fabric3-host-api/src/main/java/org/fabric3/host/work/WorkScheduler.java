@@ -46,25 +46,19 @@ package org.fabric3.host.work;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Defines the contract for scheduling asychronous units of work.
- * 
- * <p>
- * Units of work can be scheduled with an optional <code>NotificationListener</code>.
- * If a notification listener is specified, the caller will be notified regarding the 
- * status of the work. The unit of work can either be completed, rejected or completed 
- * with an error. If the work completed with an error, the caller is notfied with the 
- * error details.
- * </p>
- *
+ * Defines the contract for scheduling asychronous units of work. <p/> <p> Units of work can be scheduled with an optional
+ * <code>NotificationListener</code>. If a notification listener is specified, the caller will be notified regarding the status of the work. The unit
+ * of work can either be completed, rejected or completed with an error. If the work completed with an error, the caller is notfied with the error
+ * details. </p>
  */
 public interface WorkScheduler extends ExecutorService {
-    
+
     /**
      * Schedules a unit of work for future execution. The notification listener 
      * is used to register interest in callbacks regarding the status of the work.
-     * 
+     *
      * @param work The unit of work that needs to be asynchronously executed.
      */
-    <T extends DefaultPausableWork>void scheduleWork(T work);
+    <T extends DefaultPausableWork> void scheduleWork(T work);
 
 }

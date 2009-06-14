@@ -43,13 +43,12 @@ import javax.xml.namespace.QName;
 
 /**
  * Generic abstraction for a policy operator.
- *
  */
-public class PolicyOperator extends PolicyNode implements PolicyOperatorParent  {
-    
+public class PolicyOperator extends PolicyNode implements PolicyOperatorParent {
+
     private Set<PolicyOperator> policyOperators = new HashSet<PolicyOperator>();
     private Set<PolicyAssertion> policyAssertions = new HashSet<PolicyAssertion>();
-    
+
     public PolicyOperator(QName qname) {
         super(qname);
     }

@@ -45,25 +45,24 @@ package org.fabric3.host.work;
 
 /**
  * An instance of work that can be paused and restarted.
- * 
- * @Revision $Date$
  *
+ * @Revision $Date$
  */
 public interface PausableWork extends Runnable {
-	
-	/**
-	 * Pause the work if possible.
-	 */
-	void pause();
-	
-	/**
-	 * Restart any paused work.
-	 */
-	void start();
-	
-	/**
-	 * Stop the work.
-	 */
-	void stop();
+
+    /**
+     * Pause the work if possible.
+     */
+    void pause();
+
+    /**
+     * Restart any paused work.
+     */
+    void start();
+
+    /**
+     * Stop the work.
+     */
+    void stop();
 
 }

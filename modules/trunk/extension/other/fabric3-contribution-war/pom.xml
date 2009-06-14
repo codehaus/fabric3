@@ -38,7 +38,7 @@ Public License. See the accompanying license file for details.
         </dependency>
 
     </dependencies>
-    
+
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-war</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-war</developerConnection>

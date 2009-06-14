@@ -54,9 +54,8 @@ import java.util.jar.JarFile;
  */
 
 /**
- * This class is a workaround for URL stream issue as illustrated below. InputStream is=url.getInputStream();
- * is.close(); // This line doesn't close the JAR file if the URL is a jar entry like "jar:file:/a.jar!/my.composite" We
- * also need to turn off the JarFile cache.
+ * This class is a workaround for URL stream issue as illustrated below. InputStream is=url.getInputStream(); is.close(); // This line doesn't close
+ * the JAR file if the URL is a jar entry like "jar:file:/a.jar!/my.composite" We also need to turn off the JarFile cache.
  *
  * @version $Rev$ $Date$
  * @link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4950148

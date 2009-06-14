@@ -52,8 +52,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
@@ -61,6 +59,8 @@ import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.java.Signature;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.classloader.DuplicateClassLoaderException;
 

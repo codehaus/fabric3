@@ -38,7 +38,6 @@
 package org.fabric3.binding.ws.metro.runtime.policy;
 
 import java.util.List;
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -46,14 +45,13 @@ import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Gets the list of features.
- *
  */
 public interface FeatureResolver {
-    
+
     /**
      * Translates the requested intents and policy sets to web service features.
-     * 
-     * @param requestedIntents Requested intents.
+     *
+     * @param requestedIntents    Requested intents.
      * @param requestedPolicySets Requested policy sets.
      * @return Rsolved feature sets.
      */

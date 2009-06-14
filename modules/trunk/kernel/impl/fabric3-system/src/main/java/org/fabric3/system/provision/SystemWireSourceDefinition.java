@@ -48,8 +48,7 @@ import org.fabric3.pojo.provision.PojoWireSourceDefinition;
 /**
  * Models a System physical wire source definition.
  *
- * @version $Revision$ $Date: 2007-02-28 06:29:37 +0000 (Wed, 28 Feb
- *          2007) $
+ * @version $Revision$ $Date$
  */
 public class SystemWireSourceDefinition extends PojoWireSourceDefinition {
 }

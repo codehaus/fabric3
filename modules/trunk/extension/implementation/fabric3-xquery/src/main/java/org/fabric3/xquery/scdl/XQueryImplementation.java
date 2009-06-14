@@ -88,6 +88,6 @@ public class XQueryImplementation extends Implementation<XQueryComponentType> {
     public void setContext(String context) {
         this.context = context;
     }
-    
-   
+
+
 }

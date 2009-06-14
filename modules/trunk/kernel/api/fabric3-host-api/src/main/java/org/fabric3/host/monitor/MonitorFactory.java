@@ -43,9 +43,9 @@
  */
 package org.fabric3.host.monitor;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.io.IOException;
 
 /**
  * A MonitorFactory creates implementations of components' monitor interfaces that interface with a its monitoring scheme. For example, a

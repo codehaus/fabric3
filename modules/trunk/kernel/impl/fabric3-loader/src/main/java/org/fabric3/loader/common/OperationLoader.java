@@ -49,13 +49,13 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.model.type.service.OperationDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.model.type.service.OperationDefinition;
 
 /**
  * Loads an operation definition from the SCDL.

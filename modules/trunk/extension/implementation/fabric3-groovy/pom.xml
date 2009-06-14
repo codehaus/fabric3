@@ -35,13 +35,13 @@ Public License. See the accompanying license file for details.
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-          
+
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
             <version>1.5.7</version>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

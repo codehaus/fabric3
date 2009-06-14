@@ -49,16 +49,16 @@ import com.sun.xml.ws.developer.JAXWSProperties;
 import org.fabric3.model.type.definitions.PolicySet;
 
 public class DefaultFeatureResolver implements FeatureResolver {
-    
+
     /**
      * Translates the requested intents and policy sets to web service features.
-     * 
-     * @param requestedIntents Requested intents.
+     *
+     * @param requestedIntents    Requested intents.
      * @param requestedPolicySets Requested policy sets.
      * @return Rsolved feature sets.
      */
     public WebServiceFeature[] getFeatures(List<QName> requestedIntents, List<PolicySet> requestedPolicySets) {
-        
+
         List<WebServiceFeature> features = new LinkedList<WebServiceFeature>();
         if (requestedIntents.contains(MayProvidedIntents.MESSAGE_OPTIMISATION)) {
             features.add(new MTOMFeature());
@@ -66,12 +66,12 @@ public class DefaultFeatureResolver implements FeatureResolver {
         if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_REST)) {
             features.add(new BindingTypeFeature(JAXWSProperties.REST_BINDING));
         }
-        
+
         WebServiceFeature[] webServiceFeatures = new WebServiceFeature[features.size()];
         webServiceFeatures = features.toArray(webServiceFeatures);
-        
+
         return webServiceFeatures;
-        
+
     }
 
 }

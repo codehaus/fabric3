@@ -50,108 +50,119 @@ import org.oasisopen.sca.Constants;
 
 /**
  * Represents a registered intent within the domain.
- * 
- * @version $Revision$ $Date$
  *
+ * @version $Revision$ $Date$
  */
 public final class Intent extends AbstractDefinition {
 
-    /** Binding QName */
+    /**
+     * Binding QName
+     */
     public static final QName BINDING = new QName(Constants.SCA_NS, "binding");
-    
-    /** Implementation QName */
+
+    /**
+     * Implementation QName
+     */
     public static final QName IMPLEMENTATION = new QName(Constants.SCA_NS, "implementation");
-    
-    /** Intent type. */
+
+    /**
+     * Intent type.
+     */
     private IntentType intentType;
-    
-    /** Name of the qualifiable intent if this is a qualified intent . */
+
+    /**
+     * Name of the qualifiable intent if this is a qualified intent .
+     */
     private QName qualifiable;
-    
-    /** Whether this intent requires other intents. */
+
+    /**
+     * Whether this intent requires other intents.
+     */
     private Set<QName> requires;
-    
-    /** Constrained type. */
+
+    /**
+     * Constrained type.
+     */
     private QName constrains;
 
     /**
      * Initializes the name, description and the constrained artifacts.
-     * 
-     * @param name Name of the intent.
+     *
+     * @param name        Name of the intent.
      * @param description Description of the intent.
-     * @param constrains SCA artifact constrained by this intent.
-     * @param requires The intents this intent requires if this is a profile intent.
+     * @param constrains  SCA artifact constrained by this intent.
+     * @param requires    The intents this intent requires if this is a profile intent.
      */
     public Intent(QName name, String description, QName constrains, Set<QName> requires) {
-        
+
         super(name);
-        
-        if(constrains != null) {
-            if(!BINDING.equals(constrains) && !IMPLEMENTATION.equals(constrains)) {
+
+        if (constrains != null) {
+            if (!BINDING.equals(constrains) && !IMPLEMENTATION.equals(constrains)) {
                 throw new IllegalArgumentException("Intents can constrain only bindings or implementations");
             }
             intentType = BINDING.equals(constrains) ? IntentType.INTERACTION : IntentType.IMPLEMENTATION;
             this.constrains = constrains;
         }
-        
+
         String localPart = name.getLocalPart();
-        if(localPart.indexOf('.') > 0) {
+        if (localPart.indexOf('.') > 0) {
             String qualifiableName = localPart.substring(0, localPart.indexOf('.') + 1);
             qualifiable = new QName(name.getNamespaceURI(), qualifiableName);
         }
-        
+
         this.requires = requires;
-        
+
     }
-    
+
     /**
      * Checks whether this is a profile intent.
-     * 
+     *
      * @return True if this is a profile intent.
      */
     public boolean isProfile() {
         return requires != null && requires.size() > 0;
     }
-    
+
     /**
      * The intents this intent requires if this is a profile intent.
-     * 
+     *
      * @return Required intents for a profile intent.
      */
     public Set<QName> getRequires() {
         return requires;
     }
-    
+
     /**
      * Checks whether this is a qualified intent.
-     * 
+     *
      * @return True if this is a qualified intent.
      */
     public boolean isQualified() {
         return qualifiable != null;
     }
-    
+
     /**
      * Returns the qualifiable intent if this is qualified.
-     * 
+     *
      * @return Name of the qualifiable intent.
      */
     public QName getQualifiable() {
         return qualifiable;
     }
-    
+
     /**
      * Returns the type of this intent.
-     * 
+     *
      * @return Type of the intent.
      */
     public IntentType getIntentType() {
         return intentType;
     }
-    
+
     /**
      * Whether this intent constrains the specified type.
-     * 
+     *
      * @param type Type of the SCA artifact.
      * @return True if this intent constrains the specified type.
      */

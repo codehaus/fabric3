@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.management.MBeanServerFactory;
 
 import org.apache.maven.artifact.Artifact;
@@ -61,6 +60,7 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
+
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.test.artifact.ArtifactHelper;
@@ -72,17 +72,16 @@ import org.fabric3.test.runtime.api.MavenRuntime;
 
 /**
  * Fabric3 Mojo for testing SCA services.
- * 
+ *
  * @goal test
  * @phase integration-test
  * @execute phase="integration-test"
- *
  */
 public class Fabric3TestMojo extends AbstractMojo {
 
     /**
      * Artifact helper for resolving dependencies.
-     * 
+     *
      * @parameter expression="${component.org.fabric3.test.artifact.ArtifactHelper}"
      * @required
      * @readonly
@@ -146,20 +145,20 @@ public class Fabric3TestMojo extends AbstractMojo {
      * Contributes scanned contributions and run the tests.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        
+
         if (skip) {
             return;
         }
-        
+
         artifactHelper.setRepositories(localRepository, mavenProject.getRemoteArtifactRepositories());
-        
+
         ClassLoader hostClassLoader = createHostClassLoader();
         ClassLoader bootClassLoader = createBootClassLoader(hostClassLoader);
-        
+
         MavenContributionScanner scanner = new MavenContributionScannerImpl();
-        ScanResult scanResult = scanner.scan(mavenProject);        
+        ScanResult scanResult = scanner.scan(mavenProject);
         logContributions(scanResult);
-        
+
         MavenRuntime runtime = createRuntime(bootClassLoader, hostClassLoader);
 
         getLog().info("Booting test runtime");
@@ -169,7 +168,7 @@ public class Fabric3TestMojo extends AbstractMojo {
         getLog().info("Deloying user contributions");
         runtime.deploy(scanResult.getUserContributions());
         getLog().info("User contributions deployed");
-        
+
         SurefireTestSuite surefireTestSuite = runtime.getTestSuite();
         getLog().info("Executing integration tests");
         runTests(surefireTestSuite);
@@ -181,7 +180,7 @@ public class Fabric3TestMojo extends AbstractMojo {
      * Logs the contributions.
      */
     private void logContributions(ScanResult scanResult) {
-        
+
         getLog().info("Number of extension contributions: " + scanResult.getExtensionContributions().size());
         for (ContributionSource extensionContribution : scanResult.getExtensionContributions()) {
             getLog().info(extensionContribution.getLocation().toExternalForm());
@@ -190,60 +189,61 @@ public class Fabric3TestMojo extends AbstractMojo {
         for (ContributionSource userContribution : scanResult.getUserContributions()) {
             getLog().info(userContribution.getLocation().toExternalForm());
         }
-        
+
     }
-    
+
     /*
-     * Create the host classloader.
-     */
+    * Create the host classloader.
+    */
     private ClassLoader createHostClassLoader() throws MojoExecutionException {
-        
+
         Set<URL> hostClasspath = artifactHelper.resolve("org.codehaus.fabric3", "fabric3-api", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar");
         hostClasspath.addAll(artifactHelper.resolve("org.codehaus.fabric3", "fabric3-host-api", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar"));
         hostClasspath.addAll(artifactHelper.resolve("javax.servlet", "servlet-api", "2.4", Artifact.SCOPE_RUNTIME, "jar"));
-        
-        return new URLClassLoader(hostClasspath.toArray(new URL[] {}), getClass().getClassLoader());
-        
+
+        return new URLClassLoader(hostClasspath.toArray(new URL[]{}), getClass().getClassLoader());
+
     }
-    
+
     /*
-     * Create the boot classloader.
-     */
+    * Create the boot classloader.
+    */
     private ClassLoader createBootClassLoader(ClassLoader hostClassLoader) throws MojoExecutionException {
-        
-        Set<URL> bootClassPath = artifactHelper.resolve("org.codehaus.fabric3", "fabric3-test-runtime", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar");
-        return new URLClassLoader(bootClassPath.toArray(new URL[] {}), hostClassLoader);
-        
+
+        Set<URL> bootClassPath =
+                artifactHelper.resolve("org.codehaus.fabric3", "fabric3-test-runtime", runtimeVersion, Artifact.SCOPE_RUNTIME, "jar");
+        return new URLClassLoader(bootClassPath.toArray(new URL[]{}), hostClassLoader);
+
     }
-    
+
     /*
-     * Creates the runtime instance.
-     */
+    * Creates the runtime instance.
+    */
     private MavenRuntime createRuntime(ClassLoader bootClassLoader, ClassLoader hostClassLoader) throws MojoExecutionException {
-        
+
         try {
-            
+
             Class<?> runtimeClass = bootClassLoader.loadClass("org.fabric3.test.runtime.MavenRuntimeImpl");
             MavenRuntime runtime = MavenRuntime.class.cast(runtimeClass.newInstance());
-            
+
             MonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
             runtime.setMonitorFactory(monitorFactory);
             runtime.setHostClassLoader(hostClassLoader);
-            
+
             runtime.setMBeanServer(MBeanServerFactory.createMBeanServer());
-            
+
             return runtime;
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
     }
 
     /*
      * Runs the surefire tests.
      */
     private boolean runTests(SurefireTestSuite suite) throws MojoExecutionException {
-        
+
         try {
 
             Properties status = new Properties();
@@ -266,15 +266,15 @@ public class Fabric3TestMojo extends AbstractMojo {
 
             reporterManager.runCompleted();
             reporterManager.updateResultsProperties(status);
-            
+
             return reporterManager.getNumErrors() == 0 && reporterManager.getNumFailures() == 0;
-            
+
         } catch (ReporterException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (TestSetFailedException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
     }
 
 }

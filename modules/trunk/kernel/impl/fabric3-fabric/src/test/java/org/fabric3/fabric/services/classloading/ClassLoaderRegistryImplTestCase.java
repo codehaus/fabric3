@@ -50,8 +50,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.fabric.classloader.ClassLoaderRegistryImpl;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * @version $Rev$ $Date$

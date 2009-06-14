@@ -44,12 +44,12 @@
 package org.fabric3.runtime.webapp;
 
 import java.io.IOException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
 
 /**
  * Maps incoming requests to a web application context to a servlet provided by a binding.

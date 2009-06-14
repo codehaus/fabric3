@@ -47,6 +47,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Denotes an invalid method annotated with an SCA annotation
+ *
  * @version $Revision$ $Date$
  */
 public class InvalidMethod extends ValidationFailure {

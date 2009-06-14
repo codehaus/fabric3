@@ -41,15 +41,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Scans for candidate contribution. A contribution is a location JAR or 
- * file-system directory that contains a META-INF/sca-contribution.xml.
- *
+ * Scans for candidate contribution. A contribution is a location JAR or file-system directory that contains a META-INF/sca-contribution.xml.
  */
 public interface MavenContributionScanner {
-    
+
     /**
      * Scans for possible contributions in the project.
-     * 
+     *
      * @param mavenProject Maven project.
      * @return Returns a set of identified contributions.
      */

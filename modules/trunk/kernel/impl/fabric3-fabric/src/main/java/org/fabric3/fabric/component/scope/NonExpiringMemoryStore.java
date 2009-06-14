@@ -48,8 +48,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.fabric.component.scope.InstanceWrapperStore;
-import org.fabric3.fabric.component.scope.StoreException;
 
 /**
  * A simple store that just retains instances in memory without expiration. Basically, a HashMap.

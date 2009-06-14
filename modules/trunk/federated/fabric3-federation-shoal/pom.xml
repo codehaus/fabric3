@@ -67,7 +67,7 @@ Public License. See the accompanying license file for details.
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

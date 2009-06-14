@@ -49,7 +49,7 @@ import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.generator.GenerationException;
 
 public class DefaultAddressResolverTest extends TestCase {
-    
+
     private AddressResolver addressResolver = new DefaultAddressResolver();
     private WsdlParser wsdlParser = new DefaultWsdlParser();
 
@@ -69,7 +69,7 @@ public class DefaultAddressResolverTest extends TestCase {
     public void testResolveServiceAddressWithWsdlElementSuccess() throws GenerationException {
         WsdlElement wsdlElement = new WsdlElement(new QName("urn:weather", "WeatherService"), new QName("urn:weather", "WeatherPort"));
         WSDLModel wsdlModel = wsdlParser.parse(getClass().getClassLoader().getResource("WeatherServerSide.wsdl"));
-        assertEquals( URI.create("/weather"), addressResolver.resolveServiceAddress(null, wsdlElement, wsdlModel));
+        assertEquals(URI.create("/weather"), addressResolver.resolveServiceAddress(null, wsdlElement, wsdlModel));
     }
 
     public void testResolveReferenceAddressWithWsdlElementSuccess() throws GenerationException, MalformedURLException {

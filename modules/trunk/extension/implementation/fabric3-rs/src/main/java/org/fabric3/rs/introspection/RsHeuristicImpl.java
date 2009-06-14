@@ -63,9 +63,9 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 
 /**
- * This would better have been implemented as a custom ImplementationProcessor/Heuristic
- * but then it would have limited reuse of the Java Implementation extension
- * without adding much new functionality
+ * This would better have been implemented as a custom ImplementationProcessor/Heuristic but then it would have limited reuse of the Java
+ * Implementation extension without adding much new functionality
+ *
  * @version $Rev$ $Date$
  */
 public class RsHeuristicImpl implements RsHeuristic {

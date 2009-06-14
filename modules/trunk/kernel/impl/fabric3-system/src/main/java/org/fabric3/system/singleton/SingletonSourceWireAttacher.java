@@ -45,8 +45,8 @@ package org.fabric3.system.singleton;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.spi.ObjectFactory;

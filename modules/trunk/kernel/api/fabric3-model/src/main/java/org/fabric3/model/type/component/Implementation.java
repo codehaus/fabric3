@@ -43,8 +43,8 @@
  */
 package org.fabric3.model.type.component;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.AbstractPolicyAware;

@@ -52,59 +52,56 @@ import org.fabric3.spi.generator.GenerationException;
 
 /**
  * Default implementation of the address resolvers.
- *
  */
 public class DefaultAddressResolver implements AddressResolver {
-    
+
     /**
      * Resolves the address on which the service is provisioned.
-     * 
-     * @param targetUri Target URI specified on the service binding.
+     *
+     * @param targetUri   Target URI specified on the service binding.
      * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel Model object containing the WSDL information.
+     * @param wsdlModel   Model object containing the WSDL information.
      * @return URI on which the service is provisioned.
-     * 
      * @throws GenerationException If unable to resolve the address.
      */
     public URI resolveServiceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
-        
+
         URI uri = getUri(targetUri, wsdlElement, wsdlModel);
-        
+
         if (!uri.toASCIIString().startsWith("/")) {
             throw new GenerationException("Service URIs should be relative");
         }
         return uri;
-        
+
     }
-    
+
     /**
      * Resolves the address on which the service is provisioned.
-     * 
-     * @param targetUri Target URI specified on the reference binding.
+     *
+     * @param targetUri   Target URI specified on the reference binding.
      * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel Model object containing the WSDL information.
+     * @param wsdlModel   Model object containing the WSDL information.
      * @return List of URLs on which the service can be invoked..
-     * 
      * @throws GenerationException If unable to resolve the address.
      */
     public URL[] resolveReferenceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
-        
+
         URI uri = getUri(targetUri, wsdlElement, wsdlModel);
-        
+
         URL[] referenceAddresses = null;
-        
+
         StringTokenizer stringTokenizer = new StringTokenizer(uri.toASCIIString(), ",");
         referenceAddresses = new URL[stringTokenizer.countTokens()];
-        for (int i = 0; i < referenceAddresses.length;i++) {
+        for (int i = 0; i < referenceAddresses.length; i++) {
             try {
                 referenceAddresses[i] = new URL(stringTokenizer.nextToken());
             } catch (MalformedURLException e) {
                 throw new GenerationException(e);
             }
         }
-        
+
         return referenceAddresses;
-        
+
     }
 
     /*
@@ -112,17 +109,17 @@ public class DefaultAddressResolver implements AddressResolver {
      */
     @SuppressWarnings("deprecation")
     private URI getUri(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
-        
+
         if (targetUri != null) {
             return URI.create(URLDecoder.decode(targetUri.toASCIIString()));
-        } else if (wsdlModel!= null) {
+        } else if (wsdlModel != null) {
             WSDLService wsdlService = wsdlModel.getService(wsdlElement.getServiceName());
             WSDLPort wsdlPort = wsdlService.get(wsdlElement.getPortName());
             return wsdlPort.getAddress().getURI();
         } else {
             throw new GenerationException("Either target URI or wsdlLocation should be specified");
         }
-        
+
     }
 
 }

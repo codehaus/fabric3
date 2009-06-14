@@ -46,7 +46,6 @@ package org.fabric3.pojo.instancefactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**

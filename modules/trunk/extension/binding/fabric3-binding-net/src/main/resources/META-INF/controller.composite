@@ -17,7 +17,7 @@ Public License. See the accompanying license file for details.
            autowire="true"
            xmlns:f3-binding="urn:org.fabric3:binding">
 
-        <!-- HTTP channel infrastructure -->
+    <!-- HTTP channel infrastructure -->
     <component name="HttpBindingLoader" f3-core:key="sca:binding.http">
         <f3-impl:implementation.system class="org.fabric3.binding.net.loader.HttpBindingLoader"/>
     </component>

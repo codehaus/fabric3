@@ -78,14 +78,16 @@ public interface Lifecycle {
     /**
      * Starts the Lifecycle.
      *
-     * @throws org.fabric3.host.Fabric3RuntimeException if a runtime exception occurs during start
+     * @throws org.fabric3.host.Fabric3RuntimeException
+     *          if a runtime exception occurs during start
      */
     void start() throws Fabric3RuntimeException;
 
     /**
      * Stops the Lifecycle.
      *
-     * @throws org.fabric3.host.Fabric3RuntimeException if a runtime exception occurs during stop
+     * @throws org.fabric3.host.Fabric3RuntimeException
+     *          if a runtime exception occurs during stop
      */
     void stop() throws Fabric3RuntimeException;
 }

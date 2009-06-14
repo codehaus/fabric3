@@ -96,8 +96,8 @@ Public License. See the accompanying license file for details.
         </dependency>
 
     </dependencies>
-    
-       <build>
+
+    <build>
         <defaultGoal>verify</defaultGoal>
         <plugins>
             <plugin>

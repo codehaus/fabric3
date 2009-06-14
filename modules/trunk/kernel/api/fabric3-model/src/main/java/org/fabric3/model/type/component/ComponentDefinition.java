@@ -56,13 +56,12 @@ import org.fabric3.model.type.AbstractPolicyAware;
  * configuration properties are defined by the implementation (represented by its componentType).</p> <p>Every component has a name which uniquely
  * identifies it within the scope of the composite that contains it; the name must be different from the names of all other components, services and
  * references immediately contained in the composite (directly or through an &lt;include&gt; element).</p> <p>A component may define a {@link
- * PropertyValue} that overrides the default value of a {@link Property} specified in the componentType.</p> <p>It may also define a
- * {@link ComponentReference} for a {@link ReferenceDefinition} defined in the componentType. The ComponentReference must resolve to
- * another component or a reference in the enclosing composite.</p> <p>A component may define a {@link ComponentService} for a {@link
- * ServiceDefinition} specified in the componentType.</p> <p>Components may specify an initialization level that will determine the
- * order in which it will be eagerly initialized relative to other components from the enclosing composite that are in the same scope. This can be
- * used to define a startup sequence for components that are otherwise independent. Any initialization required to resolve references between
- * components will override this initialization order.</p>
+ * PropertyValue} that overrides the default value of a {@link Property} specified in the componentType.</p> <p>It may also define a {@link
+ * ComponentReference} for a {@link ReferenceDefinition} defined in the componentType. The ComponentReference must resolve to another component or a
+ * reference in the enclosing composite.</p> <p>A component may define a {@link ComponentService} for a {@link ServiceDefinition} specified in the
+ * componentType.</p> <p>Components may specify an initialization level that will determine the order in which it will be eagerly initialized relative
+ * to other components from the enclosing composite that are in the same scope. This can be used to define a startup sequence for components that are
+ * otherwise independent. Any initialization required to resolve references between components will override this initialization order.</p>
  *
  * @version $Rev: 5594 $ $Date: 2008-10-10 09:41:58 -0700 (Fri, 10 Oct 2008) $
  */

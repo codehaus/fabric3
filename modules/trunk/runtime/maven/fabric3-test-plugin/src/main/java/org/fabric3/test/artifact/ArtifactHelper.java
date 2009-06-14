@@ -78,56 +78,55 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Helper class for resolving artifacts.
- *
  */
 public class ArtifactHelper {
 
     public ArtifactFactory artifactFactory;
     public ArtifactResolver resolver;
     public ArtifactMetadataSource metadataSource;
-    
+
     private ArtifactRepository localRepository;
     private List<?> remoteRepositories;
-    
+
     /**
      * Sets the repositories to use.
-     * 
-     * @param localRepository Local repository to use.
+     *
+     * @param localRepository    Local repository to use.
      * @param remoteRepositories Remote reporitories to use.
      */
     public void setRepositories(ArtifactRepository localRepository, List<?> remoteRepositories) {
         this.localRepository = localRepository;
         this.remoteRepositories = remoteRepositories;
     }
-    
+
     /**
      * Resolves the requested artifact transitively.
-     * 
-     * @param groupId Group Id.
+     *
+     * @param groupId    Group Id.
      * @param artifactId Artifact Id.
-     * @param version Version number.
-     * @param scope Scope of the artifact.
-     * @param type Type of the artifact.
+     * @param version    Version number.
+     * @param scope      Scope of the artifact.
+     * @param type       Type of the artifact.
      * @return Transitively resolved set of artifacts including the root.
      */
     public Set<URL> resolve(String groupId, String artifactId, String version, String scope, String type) throws MojoExecutionException {
-        
+
         try {
-        
+
             Set<URL> artifacts = new HashSet<URL>();
-            
+
             Artifact artifact = artifactFactory.createArtifact(groupId, artifactId, version, scope, type);
-            
+
             resolver.resolve(artifact, remoteRepositories, localRepository);
             artifacts.add(artifact.getFile().toURL());
-        
+
             ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact, localRepository, remoteRepositories);
             ArtifactFilter filter = new ArtifactFilter() {
                 public boolean include(Artifact artifact) {
                     return true;
                 }
             };
-            
+
             ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
                                                                            artifact,
                                                                            Collections.emptyMap(),
@@ -138,9 +137,9 @@ public class ArtifactHelper {
             for (Object transitiveArtifact : result.getArtifacts()) {
                 artifacts.add(Artifact.class.cast(transitiveArtifact).getFile().toURL());
             }
-            
+
             return artifacts;
-            
+
         } catch (ArtifactNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (ArtifactResolutionException e) {
@@ -150,7 +149,7 @@ public class ArtifactHelper {
         } catch (MalformedURLException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
     }
 
 }

@@ -31,7 +31,7 @@ Public License. See the accompanying license file for details.
     <component name="NeethiPolicyApplier">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.policy.NeethiPolicyApplier"/>
     </component>
-    
+
     <!-- Configurator -->
     <component name="Axis2F3Configurator">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.config.F3ConfiguratorImpl"/>

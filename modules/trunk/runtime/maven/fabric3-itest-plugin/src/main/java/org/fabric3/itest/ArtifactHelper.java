@@ -67,10 +67,10 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Exclusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+
 import org.fabric3.featureset.FeatureSet;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class ArtifactHelper {
@@ -78,23 +78,23 @@ public class ArtifactHelper {
     public ArtifactFactory artifactFactory;
     public ArtifactResolver resolver;
     public ArtifactMetadataSource metadataSource;
-    
+
     private MavenProject project;
     private ArtifactRepository localRepository;
     private List<?> remoteRepositories;
-    
+
     /**
      * Sets the local repository to use.
-     * 
+     *
      * @param localRepository Local repository to use.
      */
     public void setLocalRepository(ArtifactRepository localRepository) {
         this.localRepository = localRepository;
     }
-    
+
     /**
      * Sets the maven project to use.
-     * 
+     *
      * @param project Maven project to use.
      */
     public void setProject(MavenProject project) {
@@ -103,7 +103,7 @@ public class ArtifactHelper {
     }
 
     public Set<Artifact> calculateRuntimeArtifacts(String runtimeVersion) throws MojoExecutionException {
-        
+
         List<Exclusion> exclusions = Collections.emptyList();
         Dependency dependency = new Dependency();
         dependency.setGroupId("org.codehaus.fabric3");
@@ -112,7 +112,7 @@ public class ArtifactHelper {
         dependency.setExclusions(exclusions);
 
         return resolveAll(dependency);
-        
+
     }
 
     /**
@@ -147,7 +147,7 @@ public class ArtifactHelper {
         // add all declared project dependencies
         Set<Artifact> artifacts = new HashSet<Artifact>();
         List<?> dependencies = project.getDependencies();
-        for (int i = 0;i < dependencies.size();i++) {
+        for (int i = 0; i < dependencies.size(); i++) {
             Dependency dependency = (Dependency) dependencies.get(i);
             if (!dependency.getScope().equals("f3-extension")) {
                 artifacts.addAll(resolveAll(dependency));
@@ -172,10 +172,10 @@ public class ArtifactHelper {
      * @return set of artifacts to be included in the host classloader
      * @throws MojoExecutionException if an error occurs calculating the transitive dependencies
      */
-    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, 
+    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts,
                                                 Dependency[] shared,
                                                 List<FeatureSet> featureSets) throws MojoExecutionException {
-        
+
         Set<Artifact> hostArtifacts = new HashSet<Artifact>();
         List<Exclusion> exclusions = Collections.emptyList();
         // find the version of fabric3-api being used by the runtime
@@ -212,29 +212,29 @@ public class ArtifactHelper {
                 hostArtifacts.addAll(resolveAll(sharedDependency));
             }
         }
-        
+
         for (FeatureSet featureSet : featureSets) {
-        	for (Dependency sharedLibrary : featureSet.getSharedLibraries()) {
+            for (Dependency sharedLibrary : featureSet.getSharedLibraries()) {
                 hostArtifacts.addAll(resolveAll(sharedLibrary));
-        	}
+            }
         }
         return hostArtifacts;
     }
-    
+
     /**
      * Resolves the root dependency to the local artifact.
-     * 
+     *
      * @param dependency Root dependency.
      * @return Resolved artifact.
      * @throws MojoExecutionException if unable to resolve any dependencies.
      */
     public Artifact resolve(Dependency dependency) throws MojoExecutionException {
-        return  resolveArtifacts(dependency, false).iterator().next();
+        return resolveArtifacts(dependency, false).iterator().next();
     }
-    
+
     /**
      * Resolves all the dependencies transitively to local artifacts.
-     * 
+     *
      * @param dependency Root dependency.
      * @return Resolved set of artifacts.
      * @throws MojoExecutionException if unable to resolve any dependencies.
@@ -242,9 +242,9 @@ public class ArtifactHelper {
     private Set<Artifact> resolveAll(Dependency dependency) throws MojoExecutionException {
         return resolveArtifacts(dependency, true);
     }
-    
+
     private Set<Artifact> resolveArtifacts(Dependency dependency, boolean transitive) throws MojoExecutionException {
-        
+
         Set<Artifact> artifacts = new HashSet<Artifact>();
 
         if (dependency.getVersion() == null) {
@@ -253,42 +253,42 @@ public class ArtifactHelper {
         final List<?> exclusions = dependency.getExclusions();
 
         Artifact rootArtifact = createArtifact(dependency);
-        
+
         try {
-            
+
             resolver.resolve(rootArtifact, remoteRepositories, localRepository);
             artifacts.add(rootArtifact);
-            
+
             if (!transitive) {
                 return artifacts;
             }
-            
+
             Set<Artifact> resolvedArtifacts = resolveTransitive(exclusions, rootArtifact);
             artifacts.addAll(resolvedArtifacts);
-            
+
             return artifacts;
-            
+
         } catch (ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (ArtifactNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
     }
 
     @SuppressWarnings("unchecked")
     private Set<Artifact> resolveTransitive(final List<?> exclusions, Artifact rootArtifact) throws MojoExecutionException {
-        
+
         try {
-        
+
             ResolutionGroup resolutionGroup = metadataSource.retrieve(rootArtifact, localRepository, remoteRepositories);
             ArtifactFilter filter = new ArtifactFilter() {
-    
+
                 public boolean include(Artifact artifact) {
                     String groupId = artifact.getGroupId();
                     String artifactId = artifact.getArtifactId();
-    
-                    for (int i = 0; i < exclusions.size();i++) {
+
+                    for (int i = 0; i < exclusions.size(); i++) {
                         Exclusion exclusion = (Exclusion) exclusions.get(i);
                         if (artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
                             return false;
@@ -296,7 +296,7 @@ public class ArtifactHelper {
                     }
                     return true;
                 }
-    
+
             };
             return (Set<Artifact>) resolver.resolveTransitively(resolutionGroup.getArtifacts(),
                                                                 rootArtifact,
@@ -305,7 +305,7 @@ public class ArtifactHelper {
                                                                 remoteRepositories,
                                                                 metadataSource,
                                                                 filter).getArtifacts();
-            
+
         } catch (ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (ArtifactNotFoundException e) {
@@ -313,16 +313,16 @@ public class ArtifactHelper {
         } catch (ArtifactMetadataRetrievalException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
     }
-    
+
     /*
-     * Resolves the dependency version from the projects managed dependencies.
-     */
+    * Resolves the dependency version from the projects managed dependencies.
+    */
     private void resolveDependencyVersion(Dependency dependency) {
 
         List<?> managedDependencies = project.getDependencyManagement().getDependencies();
-        for ( int i = 0;i < managedDependencies.size();i++) {
+        for (int i = 0; i < managedDependencies.size(); i++) {
             Dependency managedDependency = (Dependency) managedDependencies.get(i);
             if (managedDependency.getGroupId().equals(dependency.getGroupId())
                     && managedDependency.getArtifactId().equals(dependency.getArtifactId())) {

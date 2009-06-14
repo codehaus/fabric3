@@ -50,9 +50,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.classloader.DuplicateClassLoaderException;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
  * Implementation of a registry for classloaders.

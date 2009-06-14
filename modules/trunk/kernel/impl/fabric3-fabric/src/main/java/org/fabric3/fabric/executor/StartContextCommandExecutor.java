@@ -73,7 +73,7 @@ public class StartContextCommandExecutor implements CommandExecutor<StartContext
 
     @Constructor
     public StartContextCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                                @Reference ScopeRegistry scopeRegistry) {
+                                       @Reference ScopeRegistry scopeRegistry) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }

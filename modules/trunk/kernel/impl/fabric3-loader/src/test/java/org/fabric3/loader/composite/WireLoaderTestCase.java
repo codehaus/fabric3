@@ -44,18 +44,17 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 
+import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.model.type.component.WireDefinition;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.loader.impl.DefaultLoaderHelper;
-
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$

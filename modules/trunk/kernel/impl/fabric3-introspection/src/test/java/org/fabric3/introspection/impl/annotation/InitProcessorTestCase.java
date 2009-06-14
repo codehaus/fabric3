@@ -43,19 +43,18 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
-import java.net.URI;
 import java.lang.reflect.Method;
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-
-import org.osoa.sca.annotations.Scope;
-import org.osoa.sca.annotations.Init;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 @SuppressWarnings("unchecked")
 public class InitProcessorTestCase extends TestCase {

@@ -44,15 +44,14 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents a policy operator.
- *
  */
 public class PolicyAssertion extends PolicyNode implements PolicyOperatorParent {
-    
+
     private boolean optional;
     private boolean ignorable;
     private Set<PolicyOperator> policyOperators = new HashSet<PolicyOperator>();
     private Set<AssertionParameter> assertionParameters = new HashSet<AssertionParameter>();
-    
+
     public PolicyAssertion(QName qname) {
         super(qname);
     }

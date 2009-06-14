@@ -52,9 +52,8 @@ import org.fabric3.model.type.ModelObject;
 import org.fabric3.model.type.service.DataType;
 
 /**
- * Represents the value of a configured component property. The value can be specified: <ul> <li>as an XML value in the
- * component definition</li> <li>as a reference to an external resource<li> <li>as the result of an XPath
- * expression</li> <ul>
+ * Represents the value of a configured component property. The value can be specified: <ul> <li>as an XML value in the component definition</li>
+ * <li>as a reference to an external resource<li> <li>as the result of an XPath expression</li> <ul>
  *
  * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
  */

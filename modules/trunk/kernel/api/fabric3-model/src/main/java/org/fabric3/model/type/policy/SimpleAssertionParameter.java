@@ -40,7 +40,7 @@ package org.fabric3.model.type.policy;
 import javax.xml.namespace.QName;
 
 public class SimpleAssertionParameter extends AssertionParameter {
-    
+
     private String value;
 
     public SimpleAssertionParameter(QName qname) {

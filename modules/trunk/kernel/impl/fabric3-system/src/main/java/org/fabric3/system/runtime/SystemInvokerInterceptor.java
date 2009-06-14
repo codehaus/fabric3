@@ -46,14 +46,14 @@ package org.fabric3.system.runtime;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.InstanceWrapper;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 

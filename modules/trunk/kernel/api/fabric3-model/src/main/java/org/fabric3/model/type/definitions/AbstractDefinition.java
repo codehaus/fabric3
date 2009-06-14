@@ -68,21 +68,21 @@ public abstract class AbstractDefinition extends ModelObject {
     public final QName getName() {
         return name;
     }
-    
+
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        
-        if(other == null) {
+
+        if (other == null) {
             return false;
         }
-        
-        if(this.getClass() != other.getClass()) {
+
+        if (this.getClass() != other.getClass()) {
             return false;
         }
-        
+
         return ((AbstractDefinition) other).name.equals(name);
     }
 
@@ -93,7 +93,7 @@ public abstract class AbstractDefinition extends ModelObject {
     public int hashCode() {
         return name.hashCode();
     }
-    
+
     @Override
     public String toString() {
         return name.toString();

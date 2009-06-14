@@ -48,16 +48,16 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents an implementation type.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class ImplementationType extends AbstractType {
     private static final long serialVersionUID = 7889726615312552169L;
 
     /**
-     * @param name Name of the implementation type.
+     * @param name          Name of the implementation type.
      * @param alwaysProvide Intents this implementation always provide.
-     * @param mayProvide  Intents this implementation may provide.
+     * @param mayProvide    Intents this implementation may provide.
      */
     public ImplementationType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
         super(name, alwaysProvide, mayProvide);

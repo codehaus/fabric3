@@ -43,9 +43,9 @@
  */
 package org.fabric3.runtime.webapp;
 
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 

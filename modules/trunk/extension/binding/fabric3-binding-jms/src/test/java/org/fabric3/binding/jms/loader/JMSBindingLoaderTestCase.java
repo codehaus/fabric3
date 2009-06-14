@@ -60,7 +60,6 @@ import org.w3c.dom.Document;
 import org.fabric3.binding.jms.common.HeadersDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.JmsBindingDefinition;
-import org.fabric3.binding.jms.loader.JmsBindingLoader;
 import org.fabric3.model.type.PolicyAware;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
@@ -70,46 +69,46 @@ public class JMSBindingLoaderTestCase extends TestCase {
     public void testLoaderJMSBindingElement() throws Exception {
         LoaderHelper loaderHelper = new LoaderHelper() {
 
-			public QName createQName(String name, XMLStreamReader reader)
-					throws InvalidPrefixException {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            public QName createQName(String name, XMLStreamReader reader)
+                    throws InvalidPrefixException {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			public URI getURI(String target) {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            public URI getURI(String target) {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			public Document loadKey(XMLStreamReader reader) {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            public Document loadKey(XMLStreamReader reader) {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			public void loadPolicySetsAndIntents(PolicyAware policyAware,
-					XMLStreamReader reader, IntrospectionContext context) {
-				// TODO Auto-generated method stub
-				
-			}
+            public void loadPolicySetsAndIntents(PolicyAware policyAware,
+                                                 XMLStreamReader reader, IntrospectionContext context) {
+                // TODO Auto-generated method stub
 
-			public Document loadValue(XMLStreamReader reader)
-					throws XMLStreamException {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            }
 
-			public Set<QName> parseListOfQNames(XMLStreamReader reader,
-					String attribute) throws InvalidPrefixException {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            public Document loadValue(XMLStreamReader reader)
+                    throws XMLStreamException {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			public List<URI> parseListOfUris(XMLStreamReader reader,
-					String attribute) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-        	
+            public Set<QName> parseListOfQNames(XMLStreamReader reader,
+                                                String attribute) throws InvalidPrefixException {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            public List<URI> parseListOfUris(XMLStreamReader reader,
+                                             String attribute) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
         };
         JmsBindingLoader loader = new JmsBindingLoader(loaderHelper);
         InputStream inputStream = JmsBindingLoader.class

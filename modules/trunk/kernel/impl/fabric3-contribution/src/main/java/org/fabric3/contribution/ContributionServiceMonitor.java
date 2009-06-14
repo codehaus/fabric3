@@ -43,8 +43,8 @@
  */
 package org.fabric3.contribution;
 
-import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * Receives callback events from the ContributionService

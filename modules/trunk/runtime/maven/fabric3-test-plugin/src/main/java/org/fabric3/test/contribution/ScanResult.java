@@ -49,41 +49,40 @@ import org.fabric3.host.contribution.FileContributionSource;
 
 /**
  * Result of a contribution scan.
- *
  */
 public class ScanResult {
-    
+
     private List<ContributionSource> userContributions = new LinkedList<ContributionSource>();
     private List<ContributionSource> extensionContributions = new LinkedList<ContributionSource>();
-    
+
     /**
      * Gets the user contributions.
-     * 
+     *
      * @return User contributions.
      */
     public List<ContributionSource> getUserContributions() {
         return userContributions;
     }
-    
+
     /**
      * Gets the extension contributions.
-     * 
+     *
      * @return Extension contributions.
      */
     public List<ContributionSource> getExtensionContributions() {
         return extensionContributions;
     }
-    
+
     /**
      * Adds a  contribution.
-     * 
+     *
      * @param contributionUrl Contribution URL.
-     * @param extension True if the contribution is an extension
+     * @param extension       True if the contribution is an extension
      */
     public void addContribution(URL contributionUrl, boolean extension) {
-        
+
         String contentType = contributionUrl.toExternalForm().endsWith(".jar") ? Constants.ZIP_CONTENT_TYPE : Constants.FOLDER_CONTENT_TYPE;
-        
+
         URI uri = URI.create(new File(contributionUrl.getFile()).getName());
         ContributionSource contributionSource = new FileContributionSource(uri, contributionUrl, -1, null, contentType);
         if (extension) {

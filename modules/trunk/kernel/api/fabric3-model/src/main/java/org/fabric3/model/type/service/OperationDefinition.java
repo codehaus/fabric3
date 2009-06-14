@@ -46,12 +46,11 @@ package org.fabric3.model.type.service;
 import org.fabric3.model.type.AbstractPolicyAware;
 
 /**
- * Represents an operation definition in the SCDL. 
- * 
- * This is mainly used for declaring operation level intents and policy 
- * sets in the SCDL. The SCA specification currently doesn't support 
- * overloaded operations to be differentiated in the SCDL.
- * 
+ * Represents an operation definition in the SCDL.
+ * <p/>
+ * This is mainly used for declaring operation level intents and policy sets in the SCDL. The SCA specification currently doesn't support overloaded
+ * operations to be differentiated in the SCDL.
+ *
  * @version $Revision$ $Date$
  */
 public class OperationDefinition extends AbstractPolicyAware {

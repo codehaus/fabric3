@@ -45,13 +45,13 @@ package org.fabric3.introspection.impl.annotation;
 
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.InjectingComponentType;
 import static org.fabric3.model.type.component.Scope.COMPOSITE;
 import static org.fabric3.model.type.component.Scope.CONVERSATION;
 import static org.fabric3.model.type.component.Scope.STATELESS;
+import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$

@@ -60,14 +60,14 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderException;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -103,7 +103,10 @@ public class IncludeLoaderTestCase extends TestCase {
         ResourceElement<QNameSymbol, Composite> element = new ResourceElement<QNameSymbol, Composite>(symbol);
         element.setValue(include);
         // FIXME null check
-        expect(store.resolve((URI) EasyMock.isNull(), eq(Composite.class), isA(QNameSymbol.class), isA(IntrospectionContext.class))).andReturn(element);
+        expect(store.resolve((URI) EasyMock.isNull(),
+                             eq(Composite.class),
+                             isA(QNameSymbol.class),
+                             isA(IntrospectionContext.class))).andReturn(element);
         replay(registry, reader, namespaceContext, context, store);
 
         loader.load(reader, context);

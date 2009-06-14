@@ -113,7 +113,7 @@ public class JavaLoggingTestCase extends TestCase {
         assertEquals(LOGGER.getName(), record.getLoggerName());
         assertEquals(Monitor.class.getName() + "#eventWithInfoAnnotation", record.getMessage());
     }
-    
+
     /**
      * Test the correct record is written for an event defined by annotation.
      */
@@ -126,7 +126,7 @@ public class JavaLoggingTestCase extends TestCase {
         assertEquals(LOGGER.getName(), record.getLoggerName());
         assertEquals(Monitor.class.getName() + "#eventWithSevereAnnotation", record.getMessage());
     }
-    
+
     /**
      * Test the correct record is written for an event defined by annotation.
      */
@@ -139,7 +139,7 @@ public class JavaLoggingTestCase extends TestCase {
         assertEquals(LOGGER.getName(), record.getLoggerName());
         assertEquals(Monitor.class.getName() + "#eventWithWarningAnnotation", record.getMessage());
     }
-    
+
     /**
      * Test the correct record is written for an event defined by annotation.
      */
@@ -148,7 +148,7 @@ public class JavaLoggingTestCase extends TestCase {
         mon.eventWithFineAnnotation();
         //Logger log level is info
         assertEquals(0, HANDLER.logs.size());
-    }         
+    }
 
     /**
      * Test the argument is logged.
@@ -209,13 +209,13 @@ public class JavaLoggingTestCase extends TestCase {
 
         @Info
         void eventWithInfoAnnotation();
-        
+
         @Severe
         void eventWithSevereAnnotation();
-        
+
         @Warning
         void eventWithWarningAnnotation();
-        
+
         @Fine
         void eventWithFineAnnotation();
     }

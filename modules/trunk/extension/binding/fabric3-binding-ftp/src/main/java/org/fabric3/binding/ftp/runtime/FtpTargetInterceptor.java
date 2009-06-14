@@ -1,40 +1,40 @@
-  /*
-   * Fabric3
-   * Copyright (c) 2009 Metaform Systems
-   *
-   * Fabric3 is free software: you can redistribute it and/or modify
-   * it under the terms of the GNU General Public License as
-   * published by the Free Software Foundation, either version 3 of
-   * the License, or (at your option) any later version, with the
-   * following exception:
-   *
-   * Linking this software statically or dynamically with other
-   * modules is making a combined work based on this software.
-   * Thus, the terms and conditions of the GNU General Public
-   * License cover the whole combination.
-   *
-   * As a special exception, the copyright holders of this software
-   * give you permission to link this software with independent
-   * modules to produce an executable, regardless of the license
-   * terms of these independent modules, and to copy and distribute
-   * the resulting executable under terms of your choice, provided
-   * that you also meet, for each linked independent module, the
-   * terms and conditions of the license of that module. An
-   * independent module is a module which is not derived from or
-   * based on this software. If you modify this software, you may
-   * extend this exception to your version of the software, but
-   * you are not obligated to do so. If you do not wish to do so,
-   * delete this exception statement from your version.
-   *
-   * Fabric3 is distributed in the hope that it will be useful,
-   * but WITHOUT ANY WARRANTY; without even the implied warranty
-   * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-   * See the GNU General Public License for more details.
-   *
-   * You should have received a copy of the
-   * GNU General Public License along with Fabric3.
-   * If not, see <http://www.gnu.org/licenses/>.
-   */
+/*
+* Fabric3
+* Copyright (c) 2009 Metaform Systems
+*
+* Fabric3 is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as
+* published by the Free Software Foundation, either version 3 of
+* the License, or (at your option) any later version, with the
+* following exception:
+*
+* Linking this software statically or dynamically with other
+* modules is making a combined work based on this software.
+* Thus, the terms and conditions of the GNU General Public
+* License cover the whole combination.
+*
+* As a special exception, the copyright holders of this software
+* give you permission to link this software with independent
+* modules to produce an executable, regardless of the license
+* terms of these independent modules, and to copy and distribute
+* the resulting executable under terms of your choice, provided
+* that you also meet, for each linked independent module, the
+* terms and conditions of the license of that module. An
+* independent module is a module which is not derived from or
+* based on this software. If you modify this software, you may
+* extend this exception to your version of the software, but
+* you are not obligated to do so. If you do not wish to do so,
+* delete this exception statement from your version.
+*
+* Fabric3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the
+* GNU General Public License along with Fabric3.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.fabric3.binding.ftp.runtime;
 
 import java.io.IOException;
@@ -48,8 +48,8 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.oasisopen.sca.ServiceUnavailableException;
 
-import org.fabric3.ftp.api.FtpConstants;
 import org.fabric3.binding.ftp.provision.FtpSecurity;
+import org.fabric3.ftp.api.FtpConstants;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
@@ -146,25 +146,25 @@ public class FtpTargetInterceptor implements Interceptor {
                     monitor.onResponse(ftpClient.getReplyString());
                 }
             }
-            
-            if(remotePath != null && remotePath.length() > 0) {
+
+            if (remotePath != null && remotePath.length() > 0) {
                 remoteFileLocation = remotePath.endsWith("/") ? remotePath + fileName : remotePath + "/" + fileName;
             }
-            
+
             String remoteTmpFileLocation = remoteFileLocation;
-            if(tmpFileSuffix != null && tmpFileSuffix.length() > 0) {
+            if (tmpFileSuffix != null && tmpFileSuffix.length() > 0) {
                 remoteTmpFileLocation += tmpFileSuffix;
             }
-            
+
             monitor.onCommand("STOR " + remoteFileLocation);
             if (!ftpClient.storeFile(remoteTmpFileLocation, data)) {
                 throw new ServiceUnavailableException("Unable to upload data. Response sent from server: " + ftpClient.getReplyString() +
-                                                      " ,remoteFileLocation:" + remoteFileLocation);
+                        " ,remoteFileLocation:" + remoteFileLocation);
             }
             monitor.onResponse(ftpClient.getReplyString());
-            
+
             //Rename file back to original name if temporary file suffix was used while transmission.
-            if(!remoteTmpFileLocation.equals(remoteFileLocation)) {
+            if (!remoteTmpFileLocation.equals(remoteFileLocation)) {
                 ftpClient.rename(remoteTmpFileLocation, remoteFileLocation);
             }
         } catch (IOException e) {
@@ -180,7 +180,7 @@ public class FtpTargetInterceptor implements Interceptor {
 
     /**
      * Sets remote path for the STOR operation.
-     * 
+     *
      * @param remotePath remote path for the STOR operation
      */
     public void setRemotePath(String remotePath) {
@@ -189,7 +189,7 @@ public class FtpTargetInterceptor implements Interceptor {
 
     /**
      * Sets temporary file suffix to be used while file being transmitted.
-     * 
+     *
      * @param tmpFileSuffix temporary file suffix to be used for file in transmission
      */
     public void setTmpFileSuffix(String tmpFileSuffix) {

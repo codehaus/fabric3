@@ -47,8 +47,8 @@ import java.net.URI;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.WireDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;

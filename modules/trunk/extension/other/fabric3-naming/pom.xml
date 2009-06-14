@@ -9,15 +9,15 @@ Public License. See the accompanying license file for details.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-other-parent-pom</artifactId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-naming</artifactId>
     <name>Fabric3 Naming</name>
@@ -31,19 +31,19 @@ Public License. See the accompanying license file for details.
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.4</version>
         </dependency>
-        
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
         </dependency>
-		
+
     </dependencies>
-    
+
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-naming</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-naming</developerConnection>

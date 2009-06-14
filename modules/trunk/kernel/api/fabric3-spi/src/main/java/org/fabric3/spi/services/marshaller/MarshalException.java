@@ -47,7 +47,7 @@ import org.fabric3.host.Fabric3Exception;
 
 /**
  * Super class for all marshalling/unmarshalling exceptions.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public class MarshalException extends Fabric3Exception {
@@ -55,7 +55,7 @@ public class MarshalException extends Fabric3Exception {
 
     /**
      * Initializes the exception message.
-     * 
+     *
      * @param message Message for the exception.
      */
     public MarshalException(String message) {
@@ -64,7 +64,7 @@ public class MarshalException extends Fabric3Exception {
 
     /**
      * Initializes the root cause.
-     * 
+     *
      * @param cause Root cause for the exception.
      */
     public MarshalException(Throwable cause) {

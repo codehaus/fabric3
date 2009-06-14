@@ -43,9 +43,9 @@
  */
 package org.fabric3.spi.component;
 
-import java.util.List;
-import java.io.PrintWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * @version $Rev$ $Date$
@@ -57,7 +57,7 @@ public class GroupInitializationException extends ComponentException {
     /**
      * Exception indicating a problem initializing a group of components.
      *
-     * @param causes    the individual exceptions that occurred
+     * @param causes the individual exceptions that occurred
      */
     public GroupInitializationException(List<Exception> causes) {
         super("Error initializing components");

@@ -40,7 +40,6 @@ package org.fabric3.binding.ws.metro.provision;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.binding.ws.provision.WsdlElement;
@@ -48,7 +47,6 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
  * Wire source definition for Metro binding.
- *
  */
 public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = -7874049193479847748L;
@@ -61,11 +59,11 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
 
     /**
      * Initialises information required for provisioning the service.
-     * 
-     * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * @param wsdlUrl Optional URL to the WSDL location.
-     * @param servicePath Relative path on which the service is provisioned.
-     * @param interfaze Interface for the service contract.
+     *
+     * @param wsdlElement      WSDL element that encasulates the qualified WSDL 1.1 service and port names.
+     * @param wsdlUrl          Optional URL to the WSDL location.
+     * @param servicePath      Relative path on which the service is provisioned.
+     * @param interfaze        Interface for the service contract.
      * @param requestedIntents Intents requested by the binding.
      */
     public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath, String interfaze, List<QName> requestedIntents) {
@@ -78,7 +76,7 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
 
     /**
      * Gets the WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * 
+     *
      * @return WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      */
     public WsdlElement getWsdlElement() {
@@ -87,7 +85,7 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
 
     /**
      * Gets an optional URL to the WSDL document.
-     * 
+     *
      * @return Optional URL to the WSDL document.
      */
     public URL getWsdlUrl() {
@@ -96,16 +94,16 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
 
     /**
      * Gets the relative path on which the service is provisioned.
-     * 
+     *
      * @return Relative path on which the service is provisioned.
      */
     public URI getServicePath() {
         return servicePath;
     }
-    
+
     /**
      * Gets the interface for the service contract.
-     * 
+     *
      * @return Interface for the service contract.
      */
     public String getInterfaze() {
@@ -114,7 +112,7 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
 
     /**
      * Gets the intents requested by the binding.
-     * 
+     *
      * @return Intents requested by the binding.
      */
     public List<QName> getRequestedIntents() {

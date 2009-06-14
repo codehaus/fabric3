@@ -42,10 +42,10 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 public class ComplexAssertionParameter extends AssertionParameter {
-    
+
     private Set<SimpleAssertionParameter> simpleAssertionParameters = new HashSet<SimpleAssertionParameter>();
     private Set<ComplexAssertionParameter> complexAssertionParameters = new HashSet<ComplexAssertionParameter>();
-    
+
 
     public ComplexAssertionParameter(QName qname) {
         super(qname);

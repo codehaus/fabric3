@@ -45,7 +45,7 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -54,7 +54,7 @@
         </dependency>
 
     </dependencies>
-    
+
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ws</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ws</developerConnection>

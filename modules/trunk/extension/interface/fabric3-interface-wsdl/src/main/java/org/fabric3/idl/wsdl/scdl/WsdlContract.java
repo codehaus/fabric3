@@ -43,7 +43,7 @@ import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * WSDL Service contract.
- * 
+ *
  * @version $Revsion$ $Date$
  */
 public class WsdlContract extends ServiceContract {
@@ -53,7 +53,7 @@ public class WsdlContract extends ServiceContract {
      * QName for the port type/interface.
      */
     private QName qname;
-    
+
     /**
      * Callback qname.
      */

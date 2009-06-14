@@ -48,17 +48,17 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class EagerInitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<EagerInit, I> {
-    
-	public static final QName IMPLEMENTATION_SYSTEM = new QName("urn:fabric3.org:implementation", "implementation.system");
+
+    public static final QName IMPLEMENTATION_SYSTEM = new QName("urn:fabric3.org:implementation", "implementation.system");
 
     public EagerInitProcessor() {
         super(EagerInit.class);

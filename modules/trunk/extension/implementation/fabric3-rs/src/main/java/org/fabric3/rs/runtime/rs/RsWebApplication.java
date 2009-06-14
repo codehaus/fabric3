@@ -39,7 +39,6 @@ package org.fabric3.rs.runtime.rs;
 
 import java.io.IOException;
 import java.util.Enumeration;
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.servlet.ServletConfig;
@@ -48,9 +47,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.fabric3.spi.invocation.WorkContextTunnel;
+
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 
 /**
  * @version $Rev$ $Date$
@@ -145,10 +145,7 @@ public final class RsWebApplication extends HttpServlet {
     }
 
     /**
-     * 
-     * Wrapper class to add the Jersey resource class as a web app init
-     * parameter
-     * 
+     * Wrapper class to add the Jersey resource class as a web app init parameter
      */
     public class ServletConfigWrapper implements ServletConfig {
 

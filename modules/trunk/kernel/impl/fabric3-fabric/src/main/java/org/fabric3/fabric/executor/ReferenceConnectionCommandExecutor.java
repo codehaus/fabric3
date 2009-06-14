@@ -48,8 +48,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
-import org.fabric3.fabric.command.DetachWireCommand;
 import org.fabric3.fabric.command.ConnectionCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;

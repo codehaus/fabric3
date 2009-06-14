@@ -64,71 +64,71 @@ import org.fabric3.model.type.service.Operation;
 
 /**
  * WSDL 2.0 processor implementation.
- * 
+ *
  * @version $Revsion$ $Date$
  */
 public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProcessor {
-    
+
     /**
      * @param wsdlProcessorRegistry Injected default processor.
      */
-    public Wsdl20Processor(@Reference(name="registry")WsdlProcessorRegistry wsdlProcessorRegistry) {
+    public Wsdl20Processor(@Reference(name = "registry") WsdlProcessorRegistry wsdlProcessorRegistry) {
         wsdlProcessorRegistry.registerProcessor(WsdlVersion.VERSION_2_0, this);
     }
 
     public List<Operation<XmlSchemaType>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
-        
+
         try {
-            
+
             List<Operation<XmlSchemaType>> operations = new LinkedList<Operation<XmlSchemaType>>();
-            
+
             WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
-            
+
             Description description = reader.readWSDL(wsdlUrl.toExternalForm());
             Interface interfaze = description.getInterface(portTypeOrInterfaceName);
-            
-            if(interfaze == null) {
+
+            if (interfaze == null) {
                 throw new WsdlProcessorException("Interface not found " + portTypeOrInterfaceName);
             }
-            
+
             XmlSchemaCollection xmlSchema = getXmlSchema(description);
-            
-            for(InterfaceOperation operation : interfaze.getAllInterfaceOperations()) {
-                Operation<XmlSchemaType> op = getOperation(xmlSchema, operation);                
-                operations.add(op);                
+
+            for (InterfaceOperation operation : interfaze.getAllInterfaceOperations()) {
+                Operation<XmlSchemaType> op = getOperation(xmlSchema, operation);
+                operations.add(op);
             }
-            
+
             return operations;
-            
+
         } catch (WSDLException ex) {
             throw new WsdlProcessorException("Unable to parse WSDL " + wsdlUrl, ex);
         }
-        
+
     }
 
     /*
      * Creates F3 operation from WSDL 2.0 operation.
      */
     private Operation<XmlSchemaType> getOperation(XmlSchemaCollection xmlSchema, InterfaceOperation operation) {
-        
+
         String name = operation.getName().getLocalPart();
-        
+
         InterfaceMessageReference[] messageReferences = operation.getInterfaceMessageReferences();
-        
+
         List<DataType<XmlSchemaType>> faultTypes = getFaultTypes(xmlSchema, operation);
-        
+
         List<DataType<XmlSchemaType>> inputTypes = new LinkedList<DataType<XmlSchemaType>>();
         DataType<XmlSchemaType> outputType = null;
-        
-        for(InterfaceMessageReference messageReference : messageReferences) {
+
+        for (InterfaceMessageReference messageReference : messageReferences) {
             ElementDeclaration elementDeclaration = messageReference.getElementDeclaration();
             QName qName = elementDeclaration.getName();
             DataType<XmlSchemaType> dataType = getDataType(qName, xmlSchema);
-            if(dataType != null) {
-                if(messageReference.getDirection().equals(Direction.IN)) {
+            if (dataType != null) {
+                if (messageReference.getDirection().equals(Direction.IN)) {
                     inputTypes.add(dataType);
-                } else if(messageReference.getDirection().equals(Direction.OUT)) {
-                    if(outputType != null) {
+                } else if (messageReference.getDirection().equals(Direction.OUT)) {
+                    if (outputType != null) {
                         throw new WsdlProcessorException("Multipart output is not supported");
                     }
                     outputType = dataType;
@@ -136,9 +136,9 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
                 // TODO What about in out?
             }
         }
-        
+
         DataType<List<DataType<XmlSchemaType>>> inputType = new DataType<List<DataType<XmlSchemaType>>>(Object.class, inputTypes);
-        
+
         return new Operation<XmlSchemaType>(name, inputType, outputType, faultTypes);
     }
 
@@ -146,37 +146,37 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
      * Gets the fault types.
      */
     private List<DataType<XmlSchemaType>> getFaultTypes(XmlSchemaCollection xmlSchema, InterfaceOperation operation) {
-        
+
         InterfaceFaultReference[] faultReferences = operation.getInterfaceFaultReferences();
         List<DataType<XmlSchemaType>> faultTypes = new LinkedList<DataType<XmlSchemaType>>();
-        for(InterfaceFaultReference faultReference : faultReferences) {
+        for (InterfaceFaultReference faultReference : faultReferences) {
             ElementDeclaration elementDeclaration = faultReference.getInterfaceFault().getElementDeclaration();
             QName qName = elementDeclaration.getName();
             DataType<XmlSchemaType> dataType = getDataType(qName, xmlSchema);
-            if(dataType != null) {
+            if (dataType != null) {
                 faultTypes.add(dataType);
             }
         }
         return faultTypes;
-        
+
     }
 
     /*
      * Get all the inline schemas.
      */
     private XmlSchemaCollection getXmlSchema(Description description) {
-        
+
         XmlSchemaCollection collection = new XmlSchemaCollection();
-        
+
         Schema[] schemas = description.toElement().getTypesElement().getSchemas();
-        for(Schema schema : schemas) {
-            for(Document doc : schema.getSchemaDefinition().getAllSchemas()) {
+        for (Schema schema : schemas) {
+            for (Document doc : schema.getSchemaDefinition().getAllSchemas()) {
                 collection.read(doc.getDocumentElement());
             }
         }
-        
+
         return collection;
-        
+
     }
 
 }

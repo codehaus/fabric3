@@ -45,9 +45,9 @@ package org.fabric3.system.singleton;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.Implementation;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -55,7 +55,7 @@ import org.fabric3.model.type.component.Implementation;
 public class SingletonImplementation extends Implementation<PojoComponentType> {
     private static final long serialVersionUID = -3874858273451538661L;
     public static final QName IMPLEMENTATION_SINGLETON = new QName(Namespaces.IMPLEMENTATION, "singleton");
-    
+
     private String implementationClass;
 
     public SingletonImplementation() {

@@ -19,5 +19,5 @@ Public License. See the accompanying license file for details.
     <import.java package="javax.xml.bind.util" version="1.2"/>
 
     <deployable composite="ns:DataBindingJAXBExtension"/>
-    <f3-core:provides name="jaxb"/>    
+    <f3-core:provides name="jaxb"/>
 </contribution>

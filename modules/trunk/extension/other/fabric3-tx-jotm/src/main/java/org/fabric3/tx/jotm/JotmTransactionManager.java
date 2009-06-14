@@ -1,40 +1,40 @@
-  /*
-   * Fabric3
-   * Copyright (c) 2009 Metaform Systems
-   *
-   * Fabric3 is free software: you can redistribute it and/or modify
-   * it under the terms of the GNU General Public License as
-   * published by the Free Software Foundation, either version 3 of
-   * the License, or (at your option) any later version, with the
-   * following exception:
-   *
-   * Linking this software statically or dynamically with other
-   * modules is making a combined work based on this software.
-   * Thus, the terms and conditions of the GNU General Public
-   * License cover the whole combination.
-   *
-   * As a special exception, the copyright holders of this software
-   * give you permission to link this software with independent
-   * modules to produce an executable, regardless of the license
-   * terms of these independent modules, and to copy and distribute
-   * the resulting executable under terms of your choice, provided
-   * that you also meet, for each linked independent module, the
-   * terms and conditions of the license of that module. An
-   * independent module is a module which is not derived from or
-   * based on this software. If you modify this software, you may
-   * extend this exception to your version of the software, but
-   * you are not obligated to do so. If you do not wish to do so,
-   * delete this exception statement from your version.
-   *
-   * Fabric3 is distributed in the hope that it will be useful,
-   * but WITHOUT ANY WARRANTY; without even the implied warranty
-   * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-   * See the GNU General Public License for more details.
-   *
-   * You should have received a copy of the
-   * GNU General Public License along with Fabric3.
-   * If not, see <http://www.gnu.org/licenses/>.
-   */
+/*
+* Fabric3
+* Copyright (c) 2009 Metaform Systems
+*
+* Fabric3 is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as
+* published by the Free Software Foundation, either version 3 of
+* the License, or (at your option) any later version, with the
+* following exception:
+*
+* Linking this software statically or dynamically with other
+* modules is making a combined work based on this software.
+* Thus, the terms and conditions of the GNU General Public
+* License cover the whole combination.
+*
+* As a special exception, the copyright holders of this software
+* give you permission to link this software with independent
+* modules to produce an executable, regardless of the license
+* terms of these independent modules, and to copy and distribute
+* the resulting executable under terms of your choice, provided
+* that you also meet, for each linked independent module, the
+* terms and conditions of the license of that module. An
+* independent module is a module which is not derived from or
+* based on this software. If you modify this software, you may
+* extend this exception to your version of the software, but
+* you are not obligated to do so. If you do not wish to do so,
+* delete this exception statement from your version.
+*
+* Fabric3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the
+* GNU General Public License along with Fabric3.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.fabric3.tx.jotm;
 
 import javax.naming.NamingException;
@@ -55,7 +55,7 @@ import org.osoa.sca.annotations.Service;
 
 /**
  * JOTM transaction manager with explicit service interface.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @Service(javax.transaction.TransactionManager.class)
@@ -66,7 +66,7 @@ public final class JotmTransactionManager implements TransactionManager {
 
     /**
      * Initializes JOTM.
-     * 
+     *
      * @throws NamingException
      */
     @Init
@@ -83,7 +83,7 @@ public final class JotmTransactionManager implements TransactionManager {
         }
 
     }
-    
+
     /**
      * Stops JOTM.
      */
@@ -95,8 +95,8 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
-     * @throws NotSupportedException 
+     * @throws SystemException
+     * @throws NotSupportedException
      * @see javax.transaction.TransactionManager#begin()
      */
     public void begin() throws NotSupportedException, SystemException {
@@ -104,10 +104,10 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
-     * @throws RollbackException 
-     * @throws HeuristicRollbackException 
-     * @throws HeuristicMixedException 
+     * @throws SystemException
+     * @throws RollbackException
+     * @throws HeuristicRollbackException
+     * @throws HeuristicMixedException
      * @see javax.transaction.TransactionManager#commit()
      */
     public void commit() throws HeuristicMixedException, HeuristicRollbackException, RollbackException, SystemException {
@@ -115,7 +115,7 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
+     * @throws SystemException
      * @see javax.transaction.TransactionManager#getStatus()
      */
     public int getStatus() throws SystemException {
@@ -123,7 +123,7 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
+     * @throws SystemException
      * @see javax.transaction.TransactionManager#getTransaction()
      */
     public Transaction getTransaction() throws SystemException {
@@ -131,8 +131,8 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
-     * @throws InvalidTransactionException 
+     * @throws SystemException
+     * @throws InvalidTransactionException
      * @see javax.transaction.TransactionManager#resume(javax.transaction.Transaction)
      */
     public void resume(Transaction transaction) throws InvalidTransactionException, SystemException {
@@ -140,7 +140,7 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException  
+     * @throws SystemException
      * @see javax.transaction.TransactionManager#rollback()
      */
     public void rollback() throws SystemException {
@@ -148,7 +148,7 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
+     * @throws SystemException
      * @see javax.transaction.TransactionManager#setRollbackOnly()
      */
     public void setRollbackOnly() throws SystemException {
@@ -156,7 +156,7 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
+     * @throws SystemException
      * @see javax.transaction.TransactionManager#setTransactionTimeout(int)
      */
     public void setTransactionTimeout(int timeout) throws SystemException {
@@ -164,11 +164,11 @@ public final class JotmTransactionManager implements TransactionManager {
     }
 
     /**
-     * @throws SystemException 
+     * @throws SystemException
      * @see javax.transaction.TransactionManager#suspend()
      */
     public Transaction suspend() throws SystemException {
         return delegate.suspend();
     }
-    
+
 }

@@ -41,7 +41,6 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents an assertion parameter.
- *
  */
 public class AssertionParameter extends PolicyNode {
 

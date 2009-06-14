@@ -54,7 +54,7 @@ import org.fabric3.spi.invocation.Message;
 
 /**
  * Serializer that reads and writes data using JSON RPC.
- * <p>
+ * <p/>
  * <b> Note this implementation is note yet complete.
  *
  * @version $Revision$ $Date$

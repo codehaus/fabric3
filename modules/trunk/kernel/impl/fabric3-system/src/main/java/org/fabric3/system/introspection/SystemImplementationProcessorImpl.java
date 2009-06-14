@@ -46,16 +46,16 @@ package org.fabric3.system.introspection;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.introspection.java.InvalidImplementation;
-import org.fabric3.spi.introspection.java.MissingResource;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.InvalidImplementation;
+import org.fabric3.spi.introspection.java.MissingResource;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

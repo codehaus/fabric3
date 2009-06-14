@@ -50,8 +50,7 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>Array</code>
- * containing object instances
+ * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>Array</code> containing object instances
  *
  * @version $Rev$ $Date$
  */

@@ -68,7 +68,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     private Map<Class<?>, BindingGenerator<?>> bindingGenerators = new ConcurrentHashMap<Class<?>, BindingGenerator<?>>();
 
-    private Map<QName, InterceptorDefinitionGenerator> interceptorGenerators =  new ConcurrentHashMap<QName, InterceptorDefinitionGenerator>();
+    private Map<QName, InterceptorDefinitionGenerator> interceptorGenerators = new ConcurrentHashMap<QName, InterceptorDefinitionGenerator>();
 
     private Map<Class<?>, ResourceWireGenerator<?>> resourceGenerators = new ConcurrentHashMap<Class<?>, ResourceWireGenerator<?>>();
 

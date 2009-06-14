@@ -47,17 +47,15 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 
 /**
- * Interface implemented by services that are able to store InstanceWrappers between invocations.
- * Instances are grouped together into collections identified by the context id. Each collection may contain
- * instances from several components.
+ * Interface implemented by services that are able to store InstanceWrappers between invocations. Instances are grouped together into collections
+ * identified by the context id. Each collection may contain instances from several components.
  *
  * @version $Rev$ $Date$
  * @param <KEY> the type of key this store uses to identify contexts
  */
 public interface InstanceWrapperStore<KEY> {
     /**
-     * Notification to the store that a scope context is being started.
-     * This must be called before any instances are associated with the context
+     * Notification to the store that a scope context is being started. This must be called before any instances are associated with the context
      *
      * @param contextId the id of the context
      * @throws StoreException if there was a problem initializing the context
@@ -66,15 +64,15 @@ public interface InstanceWrapperStore<KEY> {
 
     /**
      * Notification to the store that a scope context is ending.
-     * 
+     *
      * @param contextId the id of the context
      * @throws StoreException if there was a problem shutting the context down
      */
     void stopContext(KEY contextId) throws StoreException;
 
     /**
-     * Get the instance of the supplied component that is associated with the supplied context.
-     * Returns null if there is no instance currently associated.
+     * Get the instance of the supplied component that is associated with the supplied context. Returns null if there is no instance currently
+     * associated.
      *
      * @param component the component whose instance should be returned
      * @param contextId the context whose instance should be returned
@@ -88,7 +86,7 @@ public interface InstanceWrapperStore<KEY> {
      *
      * @param component the component whose instance is being stored
      * @param contextId the context with which the instance is associated
-     * @param wrapper the wrapped instance
+     * @param wrapper   the wrapped instance
      * @throws StoreException if there was a problem storing the instance
      */
     <T> void putWrapper(AtomicComponent<T> component, KEY contextId, InstanceWrapper<T> wrapper) throws StoreException;

@@ -79,24 +79,24 @@ public abstract class AbstractLifecycle implements Lifecycle {
      */
     public String toString() {
         switch (lifecycleState) {
-            case Lifecycle.CONFIG_ERROR:
-                return "CONFIG_ERROR";
-            case Lifecycle.ERROR:
-                return "ERROR";
-            case Lifecycle.INITIALIZING:
-                return "INITIALIZING";
-            case Lifecycle.INITIALIZED:
-                return "INITIALIZED";
-            case Lifecycle.RUNNING:
-                return "RUNNING";
-            case Lifecycle.STOPPING:
-                return "STOPPING";
-            case Lifecycle.STOPPED:
-                return "STOPPED";
-            case Lifecycle.UNINITIALIZED:
-                return "UNINITIALIZED";
-            default:
-                return "UNKNOWN";
+        case Lifecycle.CONFIG_ERROR:
+            return "CONFIG_ERROR";
+        case Lifecycle.ERROR:
+            return "ERROR";
+        case Lifecycle.INITIALIZING:
+            return "INITIALIZING";
+        case Lifecycle.INITIALIZED:
+            return "INITIALIZED";
+        case Lifecycle.RUNNING:
+            return "RUNNING";
+        case Lifecycle.STOPPING:
+            return "STOPPING";
+        case Lifecycle.STOPPED:
+            return "STOPPED";
+        case Lifecycle.UNINITIALIZED:
+            return "UNINITIALIZED";
+        default:
+            return "UNKNOWN";
         }
     }
 }

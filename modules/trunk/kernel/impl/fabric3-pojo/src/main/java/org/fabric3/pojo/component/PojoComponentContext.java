@@ -43,10 +43,10 @@
  */
 package org.fabric3.pojo.component;
 
-import org.osoa.sca.ComponentContext;
 import org.osoa.sca.CallableReference;
-import org.osoa.sca.ServiceReference;
+import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
+import org.osoa.sca.ServiceReference;
 
 /**
  * @version $Rev$ $Date$

@@ -41,7 +41,6 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents wsp:ExactlyOne.
- *
  */
 public class ExactlyOnePolicyOperator extends PolicyOperator {
 

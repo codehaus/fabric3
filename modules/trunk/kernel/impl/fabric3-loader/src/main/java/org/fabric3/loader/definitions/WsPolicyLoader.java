@@ -39,7 +39,6 @@ package org.fabric3.loader.definitions;
 
 import java.io.InputStream;
 import java.util.Stack;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
@@ -57,27 +56,27 @@ import org.fabric3.model.type.policy.PolicyOperatorParent;
 import org.fabric3.model.type.policy.SimpleAssertionParameter;
 
 public class WsPolicyLoader {
-    
-    private static final QName POLICY =  new QName("http://schemas.xmlsoap.org/ws/2004/09/policy", "Policy");
-    private static final QName ALL =  new QName("http://schemas.xmlsoap.org/ws/2004/09/policy", "All");
-    private static final QName EXACTLY_ONE =  new QName("http://schemas.xmlsoap.org/ws/2004/09/policy", "ExactlyOne");
-    
+
+    private static final QName POLICY = new QName("http://schemas.xmlsoap.org/ws/2004/09/policy", "Policy");
+    private static final QName ALL = new QName("http://schemas.xmlsoap.org/ws/2004/09/policy", "All");
+    private static final QName EXACTLY_ONE = new QName("http://schemas.xmlsoap.org/ws/2004/09/policy", "ExactlyOne");
+
 
     /**
      * @param args
-     * @throws FactoryConfigurationError 
-     * @throws XMLStreamException 
+     * @throws FactoryConfigurationError
+     * @throws XMLStreamException
      */
     public static void main(String[] args) throws XMLStreamException, FactoryConfigurationError {
-        
+
         InputStream stream = WsPolicyLoader.class.getResourceAsStream("policy.xml");
-        
+
         XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
-        
+
         Stack<PolicyNode> policyNodes = new Stack<PolicyNode>();
-        
+
         PolicyNode root = null;
-        
+
         while (reader.hasNext()) {
             switch (reader.next()) {
             case XMLStreamConstants.START_ELEMENT:
@@ -109,7 +108,7 @@ public class WsPolicyLoader {
                         ComplexAssertionParameter child = new ComplexAssertionParameter(name);
                         parent.addAssertionParameter(child);
                         policyNodes.push(child);
-                        for (int i = 0; i< reader.getAttributeCount();i++) {
+                        for (int i = 0; i < reader.getAttributeCount(); i++) {
                             SimpleAssertionParameter simpleAssertionParameter = new SimpleAssertionParameter(reader.getAttributeName(i));
                             simpleAssertionParameter.setValue(reader.getAttributeValue(i));
                             child.addSimpleAssertionParameter(simpleAssertionParameter);
@@ -119,7 +118,7 @@ public class WsPolicyLoader {
                         ComplexAssertionParameter child = new ComplexAssertionParameter(name);
                         parent.addComplexAssertionParameter(child);
                         policyNodes.push(child);
-                        for (int i = 0; i< reader.getAttributeCount();i++) {
+                        for (int i = 0; i < reader.getAttributeCount(); i++) {
                             SimpleAssertionParameter simpleAssertionParameter = new SimpleAssertionParameter(reader.getAttributeName(i));
                             simpleAssertionParameter.setValue(reader.getAttributeValue(i));
                             child.addSimpleAssertionParameter(simpleAssertionParameter);
@@ -132,7 +131,7 @@ public class WsPolicyLoader {
                 break;
             }
         }
-        
+
         System.err.println(root);
 
     }

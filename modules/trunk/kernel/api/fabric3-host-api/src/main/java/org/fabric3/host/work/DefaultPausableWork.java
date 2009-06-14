@@ -47,75 +47,74 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Default implementation of the pausable work.
- * 
- * @Revision $Date$
  *
+ * @Revision $Date$
  */
 public abstract class DefaultPausableWork implements PausableWork {
-	
-	private AtomicBoolean active = new AtomicBoolean(true);
-	private AtomicBoolean paused = new AtomicBoolean(false);
-	private boolean daemon;
-	
-	/**
-	 * Non-daemon constructor.
-	 */
-	public DefaultPausableWork() {
-	}
-	
-	/**
-	 * Allows to set whether the work is daemon or not.
-	 * 
-	 * @param daemon Whether this worker is a daemon or not.
-	 */
-	public DefaultPausableWork(boolean daemon) {
-		this.daemon = daemon;
-	}
-	
-	/**
-	 * Pauses the job.
-	 */
-	public void pause() {
-		paused.set(true);
-	}
-	
-	/**
-	 * Restarts the job.
-	 */
-	public void start() {
-		paused.set(false);
-	}
-	
-	/**
-	 * Terminates the job.
-	 */
-	public void stop() {
-		active.set(false);
-	}
-	
-	/**
-	 * Runs the job.
-	 */
-	public final void run() {
-		
-		if (daemon) {
-			while (active.get()) {
-				if (paused.get()) {
-					continue;
-				}
-				execute();
-			}
-		} else {
-			while (paused.get()) {
-			}
-			execute();
-		}
-		
-	}
-	
-	/**
-	 * Executes the job.
-	 */
-	protected abstract void execute();
+
+    private AtomicBoolean active = new AtomicBoolean(true);
+    private AtomicBoolean paused = new AtomicBoolean(false);
+    private boolean daemon;
+
+    /**
+     * Non-daemon constructor.
+     */
+    public DefaultPausableWork() {
+    }
+
+    /**
+     * Allows to set whether the work is daemon or not.
+     *
+     * @param daemon Whether this worker is a daemon or not.
+     */
+    public DefaultPausableWork(boolean daemon) {
+        this.daemon = daemon;
+    }
+
+    /**
+     * Pauses the job.
+     */
+    public void pause() {
+        paused.set(true);
+    }
+
+    /**
+     * Restarts the job.
+     */
+    public void start() {
+        paused.set(false);
+    }
+
+    /**
+     * Terminates the job.
+     */
+    public void stop() {
+        active.set(false);
+    }
+
+    /**
+     * Runs the job.
+     */
+    public final void run() {
+
+        if (daemon) {
+            while (active.get()) {
+                if (paused.get()) {
+                    continue;
+                }
+                execute();
+            }
+        } else {
+            while (paused.get()) {
+            }
+            execute();
+        }
+
+    }
+
+    /**
+     * Executes the job.
+     */
+    protected abstract void execute();
 
 }

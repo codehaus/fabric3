@@ -56,14 +56,14 @@ import org.fabric3.model.type.service.Operation;
  *
  * @version $Revsion$ $Date$
  */
-@Service(interfaces={WsdlProcessorRegistry.class,WsdlProcessor.class})
+@Service(interfaces = {WsdlProcessorRegistry.class, WsdlProcessor.class})
 public class WsdlProcessorRegistry implements WsdlProcessor {
 
     /**
      * WSDL processors.
      */
     private Map<WsdlVersion, WsdlProcessor> wsdlProcessors = new HashMap<WsdlVersion, WsdlProcessor>();
-    
+
     /**
      * WSDL version checker.
      */
@@ -72,14 +72,14 @@ public class WsdlProcessorRegistry implements WsdlProcessor {
     /**
      * @param versionChecker Injected WSDL version checker.
      */
-    public WsdlProcessorRegistry(@Reference(name="versionChecker")WsdlVersionChecker versionChecker) {
+    public WsdlProcessorRegistry(@Reference(name = "versionChecker") WsdlVersionChecker versionChecker) {
         this.versionChecker = versionChecker;
     }
 
     public List<Operation<XmlSchemaType>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
 
         WsdlVersion wsdlVersion = versionChecker.getVersion(wsdlUrl);
-        if(!wsdlProcessors.containsKey(wsdlVersion)) {
+        if (!wsdlProcessors.containsKey(wsdlVersion)) {
             throw new WsdlProcessorException("No processor registered for version " + wsdlVersion);
         }
         return wsdlProcessors.get(wsdlVersion).getOperations(portTypeOrInterfaceName, wsdlUrl);
@@ -90,7 +90,7 @@ public class WsdlProcessorRegistry implements WsdlProcessor {
      * Registers a processor.
      *
      * @param wsdlVersion WSDL version.
-     * @param processor WSDL processor.
+     * @param processor   WSDL processor.
      */
     public void registerProcessor(WsdlVersion wsdlVersion, WsdlProcessor processor) {
         wsdlProcessors.put(wsdlVersion, processor);

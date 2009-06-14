@@ -52,14 +52,14 @@ import org.osoa.sca.RequestContext;
 import org.osoa.sca.annotations.Context;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$

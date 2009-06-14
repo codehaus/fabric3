@@ -150,13 +150,13 @@ public class DuplicatePropertyTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-       private <T> TypeLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
-           TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-           Property value = new Property(PROP_NAME, null);
-           EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
-                                       EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
-           EasyMock.replay(loader);
-           return (TypeLoader<Property>) loader;
-       }
+    private <T> TypeLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
+        TypeLoader loader = EasyMock.createMock(TypeLoader.class);
+        Property value = new Property(PROP_NAME, null);
+        EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
+                                    EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
+        EasyMock.replay(loader);
+        return (TypeLoader<Property>) loader;
+    }
 
 }

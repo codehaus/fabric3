@@ -48,8 +48,8 @@ package org.fabric3.itest;
  */
 public class Exclusion extends org.apache.maven.model.Exclusion {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8603965798437869917L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8603965798437869917L;
 }

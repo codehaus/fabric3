@@ -43,9 +43,9 @@
  */
 package org.fabric3.spi.generator;
 
+import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -63,8 +63,8 @@ import org.fabric3.spi.policy.Policy;
 public interface ComponentGenerator<C extends LogicalComponent<? extends Implementation<?>>> {
 
     /**
-     * Generates an {@link org.fabric3.spi.model.physical.PhysicalComponentDefinition} based on a {@link ComponentDefinition}. The
-     * resulting PhysicalComponentDefinition is added to the PhysicalChangeSet associated with the current GeneratorContext.
+     * Generates an {@link org.fabric3.spi.model.physical.PhysicalComponentDefinition} based on a {@link ComponentDefinition}. The resulting
+     * PhysicalComponentDefinition is added to the PhysicalChangeSet associated with the current GeneratorContext.
      *
      * @param component the logical component to evaluate
      * @return the physical component definition

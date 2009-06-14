@@ -55,16 +55,18 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+
 import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.rs.scdl.RsBindingDefinition;
-import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -80,7 +82,8 @@ public class RsHeuristicImplTestCase extends TestCase {
     public void testInvalidResource() throws Exception {
 
         impl.setImplementationClass(Invalid.class.getName());
-        EasyMock.expect(helper.loadClass(impl.getImplementationClass(), getClass().getClassLoader())).andStubReturn(getClass().getClassLoader().loadClass(impl.getImplementationClass()));
+        EasyMock.expect(helper.loadClass(impl.getImplementationClass(),
+                                         getClass().getClassLoader())).andStubReturn(getClass().getClassLoader().loadClass(impl.getImplementationClass()));
         context.addError(EasyMock.isA(InvalidRsClass.class));
         EasyMock.replay(context);
         EasyMock.replay(helper);
@@ -93,7 +96,8 @@ public class RsHeuristicImplTestCase extends TestCase {
     public void testValidResource() throws Exception {
 
         impl.setImplementationClass(RsResource.class.getName());
-        EasyMock.expect(helper.loadClass(impl.getImplementationClass(), getClass().getClassLoader())).andStubReturn(getClass().getClassLoader().loadClass(impl.getImplementationClass()));
+        EasyMock.expect(helper.loadClass(impl.getImplementationClass(),
+                                         getClass().getClassLoader())).andStubReturn(getClass().getClassLoader().loadClass(impl.getImplementationClass()));
         EasyMock.replay(context);
         EasyMock.replay(helper);
         control.replay();
@@ -121,7 +125,8 @@ public class RsHeuristicImplTestCase extends TestCase {
     public void testValidProvider() throws Exception {
 
         impl.setImplementationClass(EntityProvider.class.getName());
-        EasyMock.expect(helper.loadClass(impl.getImplementationClass(), getClass().getClassLoader())).andStubReturn(getClass().getClassLoader().loadClass(impl.getImplementationClass()));
+        EasyMock.expect(helper.loadClass(impl.getImplementationClass(),
+                                         getClass().getClassLoader())).andStubReturn(getClass().getClassLoader().loadClass(impl.getImplementationClass()));
         EasyMock.replay(context);
         EasyMock.replay(helper);
         control.replay();
@@ -248,7 +253,7 @@ public class RsHeuristicImplTestCase extends TestCase {
         }
 
         public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,
-                MediaType mediaType) {
+                                   MediaType mediaType) {
             throw new UnsupportedOperationException();
         }
 
@@ -257,9 +262,9 @@ public class RsHeuristicImplTestCase extends TestCase {
         }
 
         public void writeTo(Entity data,
-                Class<?> type, Type genericType, Annotation[] annotations,
-                MediaType mediaType, MultivaluedMap<String, Object> headers,
-                OutputStream entityStream) throws IOException {
+                            Class<?> type, Type genericType, Annotation[] annotations,
+                            MediaType mediaType, MultivaluedMap<String, Object> headers,
+                            OutputStream entityStream) throws IOException {
             throw new UnsupportedOperationException();
         }
 
@@ -275,7 +280,12 @@ public class RsHeuristicImplTestCase extends TestCase {
             throw new UnsupportedOperationException();
         }
 
-        public Entity readFrom(Class<Entity> arg0, Type arg1, Annotation[] arg2, MediaType arg3, MultivaluedMap<String, String> arg4, InputStream arg5) throws IOException, WebApplicationException {
+        public Entity readFrom(Class<Entity> arg0,
+                               Type arg1,
+                               Annotation[] arg2,
+                               MediaType arg3,
+                               MultivaluedMap<String, String> arg4,
+                               InputStream arg5) throws IOException, WebApplicationException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }

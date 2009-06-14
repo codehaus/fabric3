@@ -56,19 +56,19 @@ public class Dependency extends org.apache.maven.model.Dependency {
      * Serial version UID.
      */
     private static final long serialVersionUID = 2603000897594439278L;
-    
+
     /**
      * No-argument constructor.
      */
     public Dependency() {
     }
-    
+
     /**
      * Sets the group id, artifact id, version and exclusions.
-     * 
-     * @param groupId Group Id.
+     *
+     * @param groupId    Group Id.
      * @param artifactId ARtifact Id.
-     * @param version Version.
+     * @param version    Version.
      * @param exclusions List of exclusions.
      */
     public Dependency(String groupId, String artifactId, String version, List<Exclusion> exclusions) {
@@ -83,16 +83,16 @@ public class Dependency extends org.apache.maven.model.Dependency {
      */
     @Override
     public boolean equals(Object obj) {
-        
+
         if (!(obj instanceof Dependency)) {
             return false;
         }
-        
+
         Dependency other = (Dependency) obj;
-        return getArtifactId().equals(other.getArtifactId()) && 
-               getGroupId().equalsIgnoreCase(other.getGroupId()) && 
-               getVersion().equals(other.getVersion());
-        
+        return getArtifactId().equals(other.getArtifactId()) &&
+                getGroupId().equalsIgnoreCase(other.getGroupId()) &&
+                getVersion().equals(other.getVersion());
+
     }
 
     /**
@@ -100,14 +100,14 @@ public class Dependency extends org.apache.maven.model.Dependency {
      */
     @Override
     public int hashCode() {
-        
+
         int hash = 7;
         hash += 31 * getArtifactId().hashCode();
         hash += 31 * getGroupId().hashCode();
         hash += 31 * getVersion().hashCode();
-        
+
         return hash;
-        
+
     }
-    
+
 }

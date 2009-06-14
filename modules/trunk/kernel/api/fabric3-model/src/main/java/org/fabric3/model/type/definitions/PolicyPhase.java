@@ -45,11 +45,11 @@ package org.fabric3.model.type.definitions;
 
 /**
  * Phases at which the policy is applied.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public enum PolicyPhase {
-    
+
     INTERCEPTION, PROVIDED
 
 }

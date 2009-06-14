@@ -51,7 +51,7 @@
     <component name="CompositeServiceLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.CompositeServiceLoader"/>
     </component>
-    
+
     <component name="WireLoader" f3-core:key="sca:wire">
         <f3-impl:implementation.system class="org.fabric3.loader.composite.WireLoader"/>
     </component>

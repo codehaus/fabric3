@@ -41,5 +41,5 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl20Processor"/>
         <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
     </component>
- 
+
 </composite>

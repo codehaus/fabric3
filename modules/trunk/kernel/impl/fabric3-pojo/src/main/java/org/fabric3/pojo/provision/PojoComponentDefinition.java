@@ -73,8 +73,7 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
     /**
      * Sets the instance factory provider definition.
      *
-     * @param providerDefinition
-     *         Instance factory provider definition.
+     * @param providerDefinition Instance factory provider definition.
      */
     public void setProviderDefinition(InstanceFactoryDefinition providerDefinition) {
         this.providerDefinition = providerDefinition;

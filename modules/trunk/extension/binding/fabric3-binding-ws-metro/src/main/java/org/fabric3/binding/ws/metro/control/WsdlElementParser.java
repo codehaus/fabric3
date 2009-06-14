@@ -45,15 +45,14 @@ import org.fabric3.spi.generator.GenerationException;
 
 /**
  * Interface for parsing the WSDL element.
- *
  */
 public interface WsdlElementParser {
-    
+
     /**
      * Parses the WSDL element.
-     * 
-     * @param wsdlElement String representation of the WSDL element.
-     * @param wsdlModel Model object containing the WSDL information.
+     *
+     * @param wsdlElement     String representation of the WSDL element.
+     * @param wsdlModel       Model object containing the WSDL information.
      * @param serviceContract Service contract for the WSDL.
      * @return Parsed WSDL element.
      * @throws GenerationException If unable to parse the WSDL element.

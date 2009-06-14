@@ -48,7 +48,6 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.ConversationEndedException;
 
-import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ExpirationPolicy;
@@ -61,6 +60,7 @@ import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 

@@ -55,36 +55,35 @@ import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Interceptor for invoking web services.
- *
  */
 public class TargetInterceptor implements Interceptor {
-    
+
     private WsdlElement wsdlElement;
     private Class<?> sei;
     private URL[] referenceUrls;
     private ClassLoader classLoader;
     private Method method;
     private WebServiceFeature[] features;
-    
+
     private Random random = new Random();
     private List<URL> failedUrls = new LinkedList<URL>();
-    
+
 
     /**
      * Initialises the instance state.
-     * 
-     * @param wsdlElement WSDL element contains the WSDL 1.1 port and service names.
-     * @param sei Service endpoint interface.
+     *
+     * @param wsdlElement   WSDL element contains the WSDL 1.1 port and service names.
+     * @param sei           Service endpoint interface.
      * @param referenceUrls URLs used to invoke the web service.
-     * @param method Method to be invoked.
-     * @param features Features to enable.
-     * @param bindingID Binding ID to use.
+     * @param method        Method to be invoked.
+     * @param features      Features to enable.
+     * @param bindingID     Binding ID to use.
      */
-    public TargetInterceptor(WsdlElement wsdlElement, 
-                             Class<?> sei, 
-                             URL[] referenceUrls, 
-                             ClassLoader classLoader, 
-                             Method method, 
+    public TargetInterceptor(WsdlElement wsdlElement,
+                             Class<?> sei,
+                             URL[] referenceUrls,
+                             ClassLoader classLoader,
+                             Method method,
                              WebServiceFeature[] features) {
         this.wsdlElement = wsdlElement;
         this.sei = sei;
@@ -111,23 +110,23 @@ public class TargetInterceptor implements Interceptor {
      * Invokes the web service.
      */
     public Message invoke(Message msg) {
-        
+
         URL endpointUrl = getEndpointUrl();
-        
+
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-        
+
         try {
-        
+
             Thread.currentThread().setContextClassLoader(classLoader);
 
             Service service = Service.create(endpointUrl, wsdlElement.getServiceName());
             Object proxy = service.getPort(sei, features);
             Object[] payload = (Object[]) msg.getBody();
             Object ret = method.invoke(proxy, payload);
-            
+
             failedUrls.clear();
             return new MessageImpl(ret, false, null);
-            
+
         } catch (InaccessibleWSDLException e) {
             failedUrls.add(endpointUrl);
             if (failedUrls.size() != referenceUrls.length) {
@@ -142,7 +141,7 @@ public class TargetInterceptor implements Interceptor {
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
-        
+
     }
 
     /*

@@ -43,17 +43,16 @@
  */
 package org.fabric3.runtime.webapp.servlet;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.verify;
-
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * @version $Rev$ $Date$

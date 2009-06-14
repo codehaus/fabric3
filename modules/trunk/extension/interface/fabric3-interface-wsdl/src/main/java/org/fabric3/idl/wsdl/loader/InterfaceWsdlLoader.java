@@ -70,7 +70,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
      * @param loaderRegistry Loader registry.
      * @param processor      WSDL processor.
      */
-    public InterfaceWsdlLoader(@Reference(name="processor")WsdlProcessor processor) {
+    public InterfaceWsdlLoader(@Reference(name = "processor") WsdlProcessor processor) {
         this.processor = processor;
     }
 
@@ -86,9 +86,9 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
         processInterface(reader, wsdlContract, wsdlUrl, context);
 
         processCallbackInterface(reader, wsdlContract, wsdlUrl);
-        
+
         LoaderUtil.skipToEndElement(reader);
-        
+
         return wsdlContract;
 
     }

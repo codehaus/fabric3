@@ -23,7 +23,7 @@ Public License. See the accompanying license file for details.
     <wire source="ClassLoaderGenerator/encoder" target="HTTPArtifactLocationEncoder"/>
     <wire source="ExtensionGenerator/encoder" target="HTTPArtifactLocationEncoder"/>
 
-    <component name="HttpContributionUriResolver"  f3-core:key="http">
+    <component name="HttpContributionUriResolver" f3-core:key="http">
         <f3-impl:implementation.system class="org.fabric3.provisioning.http.HttpContributionUriResolver"/>
     </component>
 

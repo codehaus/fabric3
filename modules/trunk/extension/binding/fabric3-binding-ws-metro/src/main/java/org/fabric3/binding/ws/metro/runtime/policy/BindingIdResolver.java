@@ -46,14 +46,13 @@ import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Interface for resolving binding id.
- *
  */
 public interface BindingIdResolver {
-    
+
     /**
      * Resolves bindings based on the requested intents and policy sets.
-     * 
-     * @param requestedIntents Intents requested on the bindings.
+     *
+     * @param requestedIntents    Intents requested on the bindings.
      * @param requestedPolicySets Policy sets requested on the bindings.
      * @return Resolved binding Id.
      */

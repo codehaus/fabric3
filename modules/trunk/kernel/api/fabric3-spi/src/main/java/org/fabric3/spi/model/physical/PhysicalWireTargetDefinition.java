@@ -43,8 +43,8 @@
  */
 package org.fabric3.spi.model.physical;
 
-import java.net.URI;
 import java.io.Serializable;
+import java.net.URI;
 
 import org.w3c.dom.Document;
 

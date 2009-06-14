@@ -19,13 +19,13 @@ Public License. See the accompanying license file for details.
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Maven Test Plugin</name>
     <description>Fabric3 Maven Test Plugin.</description>
-    
+
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-test-plugin</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-test-plugin</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-test-plugin</url>
     </scm>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -34,7 +34,7 @@ Public License. See the accompanying license file for details.
             </plugin>
         </plugins>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
@@ -63,7 +63,7 @@ Public License. See the accompanying license file for details.
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-    
+
     <reporting>
         <plugins>
             <plugin>
@@ -72,7 +72,7 @@ Public License. See the accompanying license file for details.
             </plugin>
         </plugins>
     </reporting>
-    
+
     <distributionManagement>
         <site>
             <id>dav.codehaus.org</id>
@@ -80,5 +80,5 @@ Public License. See the accompanying license file for details.
             <url>dav:https://dav.codehaus.org/fabric3/fabric3-itest-plugin</url>
         </site>
     </distributionManagement>
-    
+
 </project>

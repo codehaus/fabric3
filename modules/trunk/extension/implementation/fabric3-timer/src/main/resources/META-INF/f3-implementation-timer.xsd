@@ -11,21 +11,21 @@ Public License. See the accompanying license file for details.
 <!--
     $Rev$ $Date$
 -->
-<schema xmlns="http://www.w3.org/2001/XMLSchema" 
-    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha" 
-    xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-    elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
+        xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+        elementFormDefault="qualified">
 
     <import namespace="http://docs.oasis-open.org/ns/opencsa/sca/200903" schemaLocation="sca-core.xsd"/>
 
-    <element name="implementation.timer" type="TimerImplementation" 
-    	substitutionGroup="sca:implementation"/>
+    <element name="implementation.timer" type="TimerImplementation"
+             substitutionGroup="sca:implementation"/>
     <complexType name="TimerImplementation ">
         <complexContent>
             <extension base="sca:Implementation">
                 <sequence>
-                    <any namespace="##other" processContents="lax" 
-                    	minOccurs="0" maxOccurs="unbounded"/>
+                    <any namespace="##other" processContents="lax"
+                         minOccurs="0" maxOccurs="unbounded"/>
                 </sequence>
                 <attribute name="class" type="NCName" use="required"/>
                 <attribute name="cronExpression" type="string" use="optional"/>
@@ -33,8 +33,8 @@ Public License. See the accompanying license file for details.
                 <attribute name="repeatInterval" type="long" use="optional"/>
                 <attribute name="fireOnce" type="long" use="optional"/>
                 <attribute name="requires" type="sca:listOfQNames" use="optional"/>
-    			<attribute name="policySets" type="sca:listOfQNames" 
-    				use="optional"/>
+                <attribute name="policySets" type="sca:listOfQNames"
+                           use="optional"/>
                 <anyAttribute namespace="##any" processContents="lax"/>
             </extension>
         </complexContent>

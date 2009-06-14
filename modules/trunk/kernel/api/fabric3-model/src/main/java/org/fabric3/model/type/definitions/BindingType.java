@@ -48,16 +48,16 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents a binding type.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class BindingType extends AbstractType {
     private static final long serialVersionUID = 6187269257530837534L;
 
     /**
-     * @param name Name of the binding type.
+     * @param name          Name of the binding type.
      * @param alwaysProvide Intents this binding always provide.
-     * @param mayProvide  Intents this binding may provide.
+     * @param mayProvide    Intents this binding may provide.
      */
     public BindingType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
         super(name, alwaysProvide, mayProvide);

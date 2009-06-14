@@ -44,7 +44,6 @@
 package org.fabric3.system.runtime;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.component.PojoComponent;

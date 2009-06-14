@@ -47,16 +47,15 @@ import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Exception thrown by the work scheduler in case of unexpected exceptions.
- * 
- * @version $Rev$ $Date$
  *
+ * @version $Rev$ $Date$
  */
 @SuppressWarnings("serial")
 public class WorkSchedulerException extends Fabric3RuntimeException {
 
     /**
      * Wraps the root cause.
-     * 
+     *
      * @param cause Root cause for the exception.
      */
     public WorkSchedulerException(Throwable cause) {

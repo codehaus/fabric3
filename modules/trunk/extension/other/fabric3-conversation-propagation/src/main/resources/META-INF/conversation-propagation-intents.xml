@@ -11,7 +11,7 @@ Public License. See the accompanying license file for details.
         xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
         xmlns:f3-policy="urn:fabric3.org:policy"
         targetNamespace="urn:fabric3.org:policy">
-        
+
     <!-- Propagates conversation is defined as an interaction intent that must be handled by the component impplementation type -->
     <intent name="propagatesConversation" constrains="binding">
         <description>

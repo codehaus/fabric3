@@ -57,7 +57,7 @@ public class ConstrainingType extends AbstractComponentType<ServiceDefinition, R
     /**
      * Constructor defining the constraining type name.
      *
-     * @param name the qualified name of this constraining type
+     * @param name     the qualified name of this constraining type
      * @param requires list of required intents
      */
     public ConstrainingType(QName name, List<QName> requires) {

@@ -66,7 +66,7 @@ public class ResourceDefinition extends ModelObject {
 
     /**
      * The name of the resource
-     * 
+     *
      * @return the name of the resource
      */
     public String getName() {
@@ -75,18 +75,18 @@ public class ResourceDefinition extends ModelObject {
 
     /**
      * If true, the resource is optional
-     * 
+     *
      * @return true if the resource is optional
      */
     public boolean isOptional() {
         return optional;
     }
-    
+
     /**
      * Returned the service contract for the resource.
      */
     public ServiceContract<?> getServiceContract() {
         return serviceContract;
     }
-    
+
 }

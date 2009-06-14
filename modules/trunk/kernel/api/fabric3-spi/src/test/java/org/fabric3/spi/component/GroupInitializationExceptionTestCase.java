@@ -65,7 +65,7 @@ public class GroupInitializationExceptionTestCase extends TestCase {
         assertTrue(e.getCauses().contains(cause1));
         assertTrue(e.getCauses().contains(cause2));
     }
-    
+
     // commented out to prevent confusing stack traces in the build log - uncomment to verify output
 /*
     public void testPrintStackTraceToWriter() {

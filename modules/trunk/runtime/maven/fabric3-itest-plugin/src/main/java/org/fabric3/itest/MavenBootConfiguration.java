@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.logging.Log;
+
 import org.fabric3.featureset.FeatureSet;
 
 public class MavenBootConfiguration {

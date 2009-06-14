@@ -43,24 +43,24 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.lang.reflect.Field;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
 
 @SuppressWarnings("unchecked")
 public class ReferenceProcessorTestCase extends TestCase {

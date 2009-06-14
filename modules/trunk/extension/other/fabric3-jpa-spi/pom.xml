@@ -9,24 +9,24 @@ Public License. See the accompanying license file for details.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-other-parent-pom</artifactId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jpa-spi</artifactId>
     <name>Fabric3 JPA Integration (SPI)</name>
     <description>Fabric3 JPA Integration (SPI).</description>
-    
+
     <packaging>jar</packaging>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
@@ -53,7 +53,7 @@ Public License. See the accompanying license file for details.
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
+
     </dependencies>
 
     <scm>
@@ -61,5 +61,5 @@ Public License. See the accompanying license file for details.
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-jpa-spi</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-jpa-spi</url>
     </scm>
-    
+
 </project>

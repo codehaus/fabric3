@@ -46,10 +46,10 @@ package org.fabric3.introspection.impl.annotation;
 import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.api.annotation.scope.Conversation;
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 
 public class ConversationProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Conversation, I> {

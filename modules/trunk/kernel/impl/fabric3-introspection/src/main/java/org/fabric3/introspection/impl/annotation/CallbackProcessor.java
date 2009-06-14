@@ -45,23 +45,23 @@ package org.fabric3.introspection.impl.annotation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.model.type.component.CallbackDefinition;
-import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$

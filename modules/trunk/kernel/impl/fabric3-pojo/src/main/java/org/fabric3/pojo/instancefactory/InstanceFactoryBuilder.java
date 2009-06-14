@@ -43,7 +43,6 @@
  */
 package org.fabric3.pojo.instancefactory;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**
@@ -61,7 +60,8 @@ public interface InstanceFactoryBuilder<IFP extends InstanceFactoryProvider, IFD
      * @param ifd the definition that describes the provider
      * @param cl  the classloader to use to load any implementation classes
      * @return a provider built from the supplied definition
-     * @throws InstanceFactoryBuilderException if there was a problem with the definition
+     * @throws InstanceFactoryBuilderException
+     *          if there was a problem with the definition
      */
     IFP build(IFD ifd, ClassLoader cl) throws InstanceFactoryBuilderException;
 }

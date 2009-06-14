@@ -52,15 +52,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.service.DataType;
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.provision.PojoWireSourceDefinition;
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
@@ -93,7 +93,7 @@ public abstract class PojoSourceWireAttacher {
 
         Document keyDocument = sourceDefinition.getKey();
         if (keyDocument == null) {
-        	keyDocument = targetDefinition.getKey();
+            keyDocument = targetDefinition.getKey();
         }
 
 
@@ -122,7 +122,7 @@ public abstract class PojoSourceWireAttacher {
             ClassLoader sourceClassLoader = classLoaderRegistry.getClassLoader(sourceId);
             ClassLoader targetClassLoader = null;
             if (targetId != null) {
-            	targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
+                targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
             }
 
             TransformContext context = new TransformContext(sourceClassLoader, targetClassLoader, null, null);

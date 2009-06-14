@@ -54,12 +54,14 @@ public interface Message extends Serializable {
 
     /**
      * Returns the body of the message, which will be the payload or parameters associated with the wire.
+     *
      * @return the body of the message
      */
     Object getBody();
 
     /**
      * Sets the body of the message.
+     *
      * @param body the body of the message
      */
     void setBody(Object body);

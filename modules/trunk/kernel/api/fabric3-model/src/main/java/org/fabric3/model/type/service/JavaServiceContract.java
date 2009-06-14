@@ -66,7 +66,7 @@ public class JavaServiceContract extends ServiceContract<Type> {
     private List<String> interfaces;
     private String superType;
     private List<MethodSignature> methodSignatures;
-    
+
     //http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6176992
     private static final Map<Class, Class> PRIMITIVE_TYPES = new HashMap<Class, Class>();
 
@@ -125,8 +125,8 @@ public class JavaServiceContract extends ServiceContract<Type> {
         } else {
             return isNonJavaAssignableFrom(contract);
         }
-    // TODO handle the case where the contract is defined using a different IDL
-    //return false;
+        // TODO handle the case where the contract is defined using a different IDL
+        //return false;
     }
 
     private boolean isJavaAssignableFrom(JavaServiceContract contract) {
@@ -178,7 +178,7 @@ public class JavaServiceContract extends ServiceContract<Type> {
                         return false;
                     }
                 }
-            }else{
+            } else {
                 return false;
             }
 
@@ -212,10 +212,10 @@ public class JavaServiceContract extends ServiceContract<Type> {
         if (myType instanceof Class && theirType instanceof Class) {
             Class myClass = (Class) myType;
             Class theirClass = (Class) theirType;
-            if (myClass.isPrimitive()){
+            if (myClass.isPrimitive()) {
                 myClass = PRIMITIVE_TYPES.get(myClass);
             }
-            if (theirClass.isPrimitive()){
+            if (theirClass.isPrimitive()) {
                 theirClass = PRIMITIVE_TYPES.get(theirClass);
             }
             if (!theirClass.isAssignableFrom(myClass)) {

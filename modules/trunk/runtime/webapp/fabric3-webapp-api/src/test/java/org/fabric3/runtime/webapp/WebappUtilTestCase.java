@@ -48,7 +48,10 @@ import java.net.URL;
 import javax.servlet.ServletContext;
 
 import junit.framework.TestCase;
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
 /**
  * @version $Rev$ $Date$

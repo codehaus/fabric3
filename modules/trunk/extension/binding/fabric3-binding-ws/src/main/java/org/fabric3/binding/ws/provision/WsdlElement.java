@@ -47,9 +47,7 @@ import java.io.Serializable;
 import javax.xml.namespace.QName;
 
 /**
- * 
  * Encapsulates the service name and QName.
- *
  */
 public class WsdlElement implements Serializable {
     private static final long serialVersionUID = -5255699761094991645L;
@@ -59,9 +57,9 @@ public class WsdlElement implements Serializable {
 
     /**
      * Initialises the service name and port name.
-     * 
+     *
      * @param serviceName Service name.
-     * @param portName Port name.
+     * @param portName    Port name.
      */
     public WsdlElement(QName serviceName, QName portName) {
         this.serviceName = serviceName;
@@ -70,7 +68,7 @@ public class WsdlElement implements Serializable {
 
     /**
      * Gets the name of the service.
-     * 
+     *
      * @return Name of the service.
      */
     public QName getServiceName() {
@@ -79,7 +77,7 @@ public class WsdlElement implements Serializable {
 
     /**
      * Gets the name of the port.
-     * 
+     *
      * @return Name of the port.
      */
     public QName getPortName() {

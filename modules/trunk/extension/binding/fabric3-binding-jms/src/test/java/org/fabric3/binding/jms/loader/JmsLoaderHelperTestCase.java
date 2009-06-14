@@ -43,12 +43,11 @@
  */
 package org.fabric3.binding.jms.loader;
 
+import junit.framework.TestCase;
+
 import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.JmsURIMetadata;
-import org.fabric3.binding.jms.loader.JmsLoaderHelper;
-
-import junit.framework.TestCase;
 
 public class JmsLoaderHelperTestCase extends TestCase {
 

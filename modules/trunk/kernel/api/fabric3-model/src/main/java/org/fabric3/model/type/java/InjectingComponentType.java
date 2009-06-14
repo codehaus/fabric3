@@ -161,6 +161,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
 
     /**
      * Sets the signature of the constructor to use.
+     *
      * @param constructor the signature of the constructor to use
      */
     public void setConstructor(Signature constructor) {

@@ -38,17 +38,14 @@
 package org.fabric3.timer.quartz;
 
 import java.text.ParseException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import javax.transaction.TransactionManager;
 
 import org.osoa.sca.annotations.Destroy;
@@ -216,9 +213,9 @@ public class QuartzTimerService extends AbstractExecutorService implements Timer
 
     public void execute(final Runnable runnable) {
         workScheduler.scheduleWork(new DefaultPausableWork() {
-        	public void execute() {
-        		runnable.run();
-        	}
+            public void execute() {
+                runnable.run();
+            }
         });
     }
 
@@ -272,9 +269,9 @@ public class QuartzTimerService extends AbstractExecutorService implements Timer
 
         public boolean runInThread(final Runnable runnable) {
             workScheduler.scheduleWork(new DefaultPausableWork() {
-            	public void execute() {
-            		runnable.run();
-            	}
+                public void execute() {
+                    runnable.run();
+                }
             });
             return true;
         }

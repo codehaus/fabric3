@@ -61,7 +61,7 @@ public class DefaultWsdlElementParserTest extends TestCase {
 
     public void testWithServiceContract() throws GenerationException {
         JavaServiceContract javaServiceContract = new JavaServiceContract(TestService.class);
-        WsdlElement wsdlElement = new DefaultWsdlElementParser().parseWsdlElement(null, null, javaServiceContract);        
+        WsdlElement wsdlElement = new DefaultWsdlElementParser().parseWsdlElement(null, null, javaServiceContract);
         assertEquals(new QName("org.fabric3.binding.ws.metro.control", "TestServiceService"), wsdlElement.getServiceName());
         assertEquals(new QName("org.fabric3.binding.ws.metro.control", "TestServicePort"), wsdlElement.getPortName());
     }

@@ -48,8 +48,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 /**
  * Models a system physical wire target definition.
  *
- * @version $Revision$ $Date: 2007-02-28 06:29:37 +0000 (Wed, 28 Feb
- *          2007) $
+ * @version $Revision$ $Date$
  */
 public class SystemWireTargetDefinition extends PhysicalWireTargetDefinition {
 

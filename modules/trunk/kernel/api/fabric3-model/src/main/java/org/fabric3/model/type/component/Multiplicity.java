@@ -48,8 +48,7 @@ package org.fabric3.model.type.component;
  */
 public enum Multiplicity {
     /**
-     * Indicates a relationship that is optionally connected to the requestor and which, if supplied, must be connected
-     * to exactly one provider.
+     * Indicates a relationship that is optionally connected to the requestor and which, if supplied, must be connected to exactly one provider.
      */
     ZERO_ONE("0..1"),
 
@@ -64,8 +63,7 @@ public enum Multiplicity {
     ZERO_N("0..n"),
 
     /**
-     * Indicates a relationship that must be connected at the requestor and which connects it to zero to unbounded
-     * providers.
+     * Indicates a relationship that must be connected at the requestor and which connects it to zero to unbounded providers.
      */
     ONE_N("1..n");
 

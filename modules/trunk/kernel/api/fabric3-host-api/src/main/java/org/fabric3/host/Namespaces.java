@@ -38,46 +38,43 @@
 package org.fabric3.host;
 
 /**
- * 
  * Namespace URIs used in Fabric3.
- *
  */
 public class Namespaces {
-	   
+
     /**
-     * Namespace URI used for core Fabric3.
-     * Intended usage for map keys in SCDLs etc. Recommended prefix f3-core.
+     * Namespace URI used for core Fabric3. Intended usage for map keys in SCDLs etc. Recommended prefix f3-core.
      */
     public static final String CORE = "urn:fabric3.org:core";
-   
+
     /**
-     * Namespace URI used for fabric3 binding extensions.
-     * Intended usage for non-standard bindings like hessian, burlap, ftp etc, Recommended prefix f3-binding.
+     * Namespace URI used for fabric3 binding extensions. Intended usage for non-standard bindings like hessian, burlap, ftp etc, Recommended prefix
+     * f3-binding.
      */
     public static final String BINDING = "urn:fabric3.org:binding";
-   
+
     /**
-     * Namespace URI used for fabric3 implementation extensions.
-     * Intended usage for non-standard implementations like system, groovy, junit etc, Recommended prefix f3-implementation.
+     * Namespace URI used for fabric3 implementation extensions. Intended usage for non-standard implementations like system, groovy, junit etc,
+     * Recommended prefix f3-implementation.
      */
     public static final String IMPLEMENTATION = "urn:fabric3.org:implementation";
-   
+
     /**
-     * Namespace URI used for fabric3 policy extensions.
-     * Intended usage for non-standard SCA intents and policies like dataBinding.jaxb, authorization.message, Recommended prefix f3-policy.
+     * Namespace URI used for fabric3 policy extensions. Intended usage for non-standard SCA intents and policies like dataBinding.jaxb,
+     * authorization.message, Recommended prefix f3-policy.
      */
     public static final String POLICY = "urn:fabric3.org:policy";
-   
+
     /**
      * Namespace URI used for other extensions like implementation.cache and implementation.jpa. Recommended prefix f3-other.
      */
     public static final String OTHER = "urn:fabric3.org:other";
-   
+
     /**
      * Namespace URI used for fabric3 maven extensions. Recommended prefix f3-maven.
      */
     public static final String MAVEN = "urn:fabric3.org:maven";
-    
+
     /**
      * Private constructor.
      */

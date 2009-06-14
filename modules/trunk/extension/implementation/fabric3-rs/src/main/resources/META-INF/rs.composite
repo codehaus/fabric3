@@ -18,12 +18,12 @@ Public License. See the accompanying license file for details.
     <component name="RsHeuristic">
         <f3-impl:implementation.system class="org.fabric3.rs.introspection.RsHeuristicImpl"/>
     </component>
- 
+
     <component name="RsImplementationLoader" f3-core:key="f3-impl:implementation.rs">
         <f3-impl:implementation.system class="org.fabric3.rs.introspection.RsImplementationLoader"/>
         <reference name="implementationProcessor" target="JavaImplementationProcessorImpl"/>
     </component>
- 
+
     <!-- Rs Binding Generator -->
     <component name="RsBindingGenerator" f3-core:key="org.fabric3.rs.scdl.RsBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.rs.control.RsBindingGenerator"/>
@@ -32,9 +32,7 @@ Public License. See the accompanying license file for details.
     <!-- Rs Binding Wire Attachers  -->
     <component name="RsSourceWireAttacher" f3-core:key="org.fabric3.rs.provision.RsWireSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.rs.runtime.RsSourceWireAttacher"/>
-    </component> 
-    
-   
-   
+    </component>
+
 
 </composite>

@@ -58,7 +58,7 @@ import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
  */
 public class OASISEagerInitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<EagerInit, I> {
 
-	public static final QName IMPLEMENTATION_SYSTEM = new QName("urn:fabric3.org:implementation", "implementation.system");
+    public static final QName IMPLEMENTATION_SYSTEM = new QName("urn:fabric3.org:implementation", "implementation.system");
 
     public OASISEagerInitProcessor() {
         super(EagerInit.class);

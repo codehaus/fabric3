@@ -43,6 +43,7 @@
  */
 package org.fabric3.itest;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -57,7 +58,6 @@ import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import java.io.IOException;
 
 import org.apache.maven.plugin.logging.Log;
 

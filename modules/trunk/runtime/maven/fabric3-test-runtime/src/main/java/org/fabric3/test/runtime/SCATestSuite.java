@@ -43,13 +43,13 @@
  */
 package org.fabric3.test.runtime;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.maven.surefire.suite.SurefireTestSuite;
-import org.apache.maven.surefire.report.ReporterManager;
-import org.apache.maven.surefire.report.ReporterException;
 import org.apache.maven.surefire.report.ReportEntry;
+import org.apache.maven.surefire.report.ReporterException;
+import org.apache.maven.surefire.report.ReporterManager;
+import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 /**
@@ -75,14 +75,14 @@ public class SCATestSuite implements SurefireTestSuite {
     }
 
     public void execute(ReporterManager reporterManager, ClassLoader classLoader)
-        throws ReporterException, TestSetFailedException {
+            throws ReporterException, TestSetFailedException {
         for (SCATestSet testSet : testSets.values()) {
             execute(testSet, reporterManager, classLoader);
         }
     }
 
     public void execute(String name, ReporterManager reporterManager, ClassLoader classLoader)
-        throws ReporterException, TestSetFailedException {
+            throws ReporterException, TestSetFailedException {
         SCATestSet testSet = testSets.get(name);
         if (testSet == null) {
             throw new TestSetFailedException("Suite does not contain TestSet: " + name);
@@ -91,7 +91,7 @@ public class SCATestSuite implements SurefireTestSuite {
     }
 
     protected void execute(SCATestSet testSet, ReporterManager reporterManager, ClassLoader classLoader)
-        throws ReporterException, TestSetFailedException {
+            throws ReporterException, TestSetFailedException {
         reporterManager.testSetStarting(new ReportEntry(this, testSet.getName(), "Starting"));
         testSet.execute(reporterManager, classLoader);
         reporterManager.testSetCompleted(new ReportEntry(this, testSet.getName(), "Completed"));

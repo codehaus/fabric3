@@ -52,7 +52,7 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 
 /**
  * Notifies the Fabric3 runtime of session creation and expiration events.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public class Fabric3RequestListener implements ServletRequestListener {

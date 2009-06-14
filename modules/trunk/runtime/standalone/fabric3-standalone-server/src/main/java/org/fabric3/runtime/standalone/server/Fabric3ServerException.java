@@ -47,9 +47,8 @@ import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Exception thrown by the Fabric3 server during startup and shutdown.
- * 
- * @version $Revisiion$ $Date$
  *
+ * @version $Revisiion$ $Date$
  */
 
 @SuppressWarnings("serial")
@@ -57,6 +56,7 @@ public class Fabric3ServerException extends Fabric3RuntimeException {
 
     /**
      * Initializes the cause.
+     *
      * @param cause Root cause of the exception.
      */
     public Fabric3ServerException(Throwable cause) {
@@ -65,6 +65,7 @@ public class Fabric3ServerException extends Fabric3RuntimeException {
 
     /**
      * Initializes the message.
+     *
      * @param message Message of the exception.
      */
     public Fabric3ServerException(String message) {

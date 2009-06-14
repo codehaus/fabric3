@@ -47,12 +47,12 @@ import org.fabric3.spi.generator.GenerationException;
  * Interface for parsing WSDL documents.
  */
 public interface WsdlParser {
-    
+
     /**
      * Parses a WSDL document to the information model.
+     *
      * @param wsdlLocation Location of the WSDL document.
      * @return WSDL model object.
-     * 
      * @throws GenerationException If unable to parse the WSDL.
      */
     WSDLModel parse(URL wsdlLocation) throws GenerationException;

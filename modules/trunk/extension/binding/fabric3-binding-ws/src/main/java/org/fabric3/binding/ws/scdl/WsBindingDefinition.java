@@ -74,7 +74,7 @@ public class WsBindingDefinition extends BindingDefinition {
         super(targetUri, BINDING_QNAME, key);
         this.implementation = implementation;
         this.wsdlElement = wsdlElement;
-        this.wsdlLocation = wsdlLocation;        
+        this.wsdlLocation = wsdlLocation;
     }
 
     public String getImplementation() {

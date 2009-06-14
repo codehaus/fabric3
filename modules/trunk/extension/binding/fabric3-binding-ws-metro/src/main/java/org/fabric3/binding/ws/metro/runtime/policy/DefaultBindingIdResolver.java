@@ -47,28 +47,27 @@ import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Default implementation of the binding Id resolver.
- *
  */
 public class DefaultBindingIdResolver implements BindingIdResolver {
-    
+
     /**
      * Resolves bindings based on the requested intents and policy sets.
-     * 
-     * @param requestedIntents Intents requested on the bindings.
+     *
+     * @param requestedIntents    Intents requested on the bindings.
      * @param requestedPolicySets Policy sets requested on the bindings.
      * @return Resolved binding Id.
      */
     public BindingID resolveBindingId(List<QName> requestedIntents, List<PolicySet> requestedPolicySets) {
-        
+
         BindingID bindingID = BindingID.SOAP11_HTTP;
         if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_SOAP12)) {
             bindingID = BindingID.SOAP12_HTTP;
         } else if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_REST)) {
             bindingID = BindingID.parse(JAXWSProperties.REST_BINDING);
         }
-        
+
         return bindingID;
-        
+
     }
 
 }

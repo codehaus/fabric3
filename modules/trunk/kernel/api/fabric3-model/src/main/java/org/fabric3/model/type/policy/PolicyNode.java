@@ -41,10 +41,9 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents all policy nodes.
- *
  */
 public abstract class PolicyNode {
-    
+
     private QName qname;
 
     public PolicyNode(QName qname) {

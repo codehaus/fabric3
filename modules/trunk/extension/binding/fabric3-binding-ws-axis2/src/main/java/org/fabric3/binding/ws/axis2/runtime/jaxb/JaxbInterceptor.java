@@ -1,45 +1,45 @@
-  /*
-   * Fabric3
-   * Copyright (c) 2009 Metaform Systems
-   *
-   * Fabric3 is free software: you can redistribute it and/or modify
-   * it under the terms of the GNU General Public License as
-   * published by the Free Software Foundation, either version 3 of
-   * the License, or (at your option) any later version, with the
-   * following exception:
-   *
-   * Linking this software statically or dynamically with other
-   * modules is making a combined work based on this software.
-   * Thus, the terms and conditions of the GNU General Public
-   * License cover the whole combination.
-   *
-   * As a special exception, the copyright holders of this software
-   * give you permission to link this software with independent
-   * modules to produce an executable, regardless of the license
-   * terms of these independent modules, and to copy and distribute
-   * the resulting executable under terms of your choice, provided
-   * that you also meet, for each linked independent module, the
-   * terms and conditions of the license of that module. An
-   * independent module is a module which is not derived from or
-   * based on this software. If you modify this software, you may
-   * extend this exception to your version of the software, but
-   * you are not obligated to do so. If you do not wish to do so,
-   * delete this exception statement from your version.
-   *
-   * Fabric3 is distributed in the hope that it will be useful,
-   * but WITHOUT ANY WARRANTY; without even the implied warranty
-   * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-   * See the GNU General Public License for more details.
-   *
-   * You should have received a copy of the
-   * GNU General Public License along with Fabric3.
-   * If not, see <http://www.gnu.org/licenses/>.
-   */
+/*
+* Fabric3
+* Copyright (c) 2009 Metaform Systems
+*
+* Fabric3 is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as
+* published by the Free Software Foundation, either version 3 of
+* the License, or (at your option) any later version, with the
+* following exception:
+*
+* Linking this software statically or dynamically with other
+* modules is making a combined work based on this software.
+* Thus, the terms and conditions of the GNU General Public
+* License cover the whole combination.
+*
+* As a special exception, the copyright holders of this software
+* give you permission to link this software with independent
+* modules to produce an executable, regardless of the license
+* terms of these independent modules, and to copy and distribute
+* the resulting executable under terms of your choice, provided
+* that you also meet, for each linked independent module, the
+* terms and conditions of the license of that module. An
+* independent module is a module which is not derived from or
+* based on this software. If you modify this software, you may
+* extend this exception to your version of the software, but
+* you are not obligated to do so. If you do not wish to do so,
+* delete this exception statement from your version.
+*
+* Fabric3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the
+* GNU General Public License along with Fabric3.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.fabric3.binding.ws.axis2.runtime.jaxb;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -47,8 +47,8 @@ import javax.xml.ws.WebFault;
 
 import org.apache.axiom.om.OMElement;
 
-import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Interceptor that transforms an OMElement to a JAXB bound object on the way in and JAXB bound object to OMElement on the way out.
@@ -66,7 +66,8 @@ public class JaxbInterceptor implements Interceptor {
     private final boolean service;
     private final Map<Class<?>, Constructor<?>> faultMapping;
 
-    public JaxbInterceptor(ClassLoader classLoader, JAXBContext jaxbContext, boolean service, Map<Class<?>, Constructor<?>> faultMapping) throws JAXBException {
+    public JaxbInterceptor(ClassLoader classLoader, JAXBContext jaxbContext, boolean service, Map<Class<?>, Constructor<?>> faultMapping)
+            throws JAXBException {
         this.classLoader = classLoader;
         inTransformer = new OMElement2Jaxb(jaxbContext);
         outTransformer = new Jaxb2OMElement(jaxbContext);
@@ -120,7 +121,7 @@ public class JaxbInterceptor implements Interceptor {
     }
 
     private Object getFault(Object webFault) {
-        
+
         WebFault annotation = webFault.getClass().getAnnotation(WebFault.class);
         if (annotation == null) {
             // this is an undeclared exception
@@ -130,7 +131,7 @@ public class JaxbInterceptor implements Interceptor {
                 throw new AssertionError((Exception) webFault);
             }
         }
-        
+
         try {
             Method getFaultInfo = webFault.getClass().getMethod("getFaultInfo");
             return getFaultInfo.invoke(webFault);
@@ -141,7 +142,7 @@ public class JaxbInterceptor implements Interceptor {
     }
 
     private Message interceptReference(Message message) {
-        
+
         System.err.println("Intercepting reference");
 
         Object[] payload = (Object[]) message.getBody();

@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents a type.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class AbstractType extends AbstractDefinition {
@@ -58,9 +58,9 @@ public class AbstractType extends AbstractDefinition {
     private final Set<QName> mayProvide;
 
     /**
-     * @param name Name of the binding type.
+     * @param name          Name of the binding type.
      * @param alwaysProvide Intents this binding always provide.
-     * @param mayProvide  Intents this binding may provide.
+     * @param mayProvide    Intents this binding may provide.
      */
     public AbstractType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
         super(name);
