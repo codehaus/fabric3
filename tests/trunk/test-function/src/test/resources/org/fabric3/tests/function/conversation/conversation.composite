@@ -36,7 +36,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <!--<component name="MaxAgeConversationalService">-->
-        <!--<implementation.java class="org.fabric3.tests.function.conversation.MaxAgeConversationalServiceImpl"/>-->
+    <!--<implementation.java class="org.fabric3.tests.function.conversation.MaxAgeConversationalServiceImpl"/>-->
     <!--</component>-->
 
     <component name="CompositeServiceImpl">
@@ -48,7 +48,7 @@ Public License. See the accompanying license file for details.
         <reference name="service1" target="IntermediaryService1"/>
         <reference name="service2" target="IntermediaryService2"/>
     </component>
-    
+
     <component name="IntermediaryService1">
         <implementation.java class="org.fabric3.tests.function.conversation.IntermediaryServiceImpl"/>
         <reference name="conversationalService" target="ConversationalServiceImpl"/>

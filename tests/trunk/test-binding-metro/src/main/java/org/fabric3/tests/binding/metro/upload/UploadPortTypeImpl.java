@@ -39,13 +39,12 @@ package org.fabric3.tests.binding.metro.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.activation.DataHandler;
 
 public class UploadPortTypeImpl implements UploadPortType {
 
     public int upload(String name, DataHandler data) {
-        
+
         try {
             byte[] buffer = new byte[1024];
             InputStream stream = data.getInputStream();

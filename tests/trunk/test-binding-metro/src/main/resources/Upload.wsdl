@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions name="SOAPBuilders-mtom-cr-test" 
-    xmlns:types="urn:upload" 
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
-    xmlns:tns="urn:upload"
-    targetNamespace="urn:upload">
+<wsdl:definitions name="SOAPBuilders-mtom-cr-test"
+                  xmlns:types="urn:upload"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:tns="urn:upload"
+                  targetNamespace="urn:upload">
 
     <wsdl:types>
-        <schema 
-            xmlns="http://www.w3.org/2001/XMLSchema" 
-            targetNamespace="urn:upload" 
-            xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
-            elementFormDefault="qualified">
-        <complexType name="uploadType">
-            <sequence>
-                <element name="name" type="xsd:string"/>
-                <element name="data" type="base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
-            </sequence>
-        </complexType>
-        <complexType name="uploadResponseType">
-            <sequence>
-                <element name="size" type="xsd:int"/>
-            </sequence>
-        </complexType>
-        <element name="upload" type="types:uploadType"/>
-        <element name="uploadOut" type="types:uploadResponseType"/>
+        <schema
+                xmlns="http://www.w3.org/2001/XMLSchema"
+                targetNamespace="urn:upload"
+                xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+                elementFormDefault="qualified">
+            <complexType name="uploadType">
+                <sequence>
+                    <element name="name" type="xsd:string"/>
+                    <element name="data" type="base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+                </sequence>
+            </complexType>
+            <complexType name="uploadResponseType">
+                <sequence>
+                    <element name="size" type="xsd:int"/>
+                </sequence>
+            </complexType>
+            <element name="upload" type="types:uploadType"/>
+            <element name="uploadOut" type="types:uploadResponseType"/>
         </schema>
 
     </wsdl:types>
@@ -61,9 +61,9 @@
     </wsdl:binding>
 
     <wsdl:service name="UploadService">
-          <wsdl:port name="UploadPort" binding="tns:UploadBinding">
-                <soap:address location="ACTUAL_URL"/>
-          </wsdl:port>
+        <wsdl:port name="UploadPort" binding="tns:UploadBinding">
+            <soap:address location="ACTUAL_URL"/>
+        </wsdl:port>
     </wsdl:service>
 
 </wsdl:definitions>    

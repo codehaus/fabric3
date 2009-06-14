@@ -50,5 +50,5 @@ Public License. See the accompanying license file for details.
         <f3-impl:junit class="org.fabric3.tests.function.wiring.WireBagTest"/>
     </component>
     <include name="WiringBagComposite"/>
-    
+
 </composite>

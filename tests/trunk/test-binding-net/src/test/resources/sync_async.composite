@@ -93,21 +93,21 @@
     <!--TCP/Hessian tests -->
 
     <!--<component name="TcpHessianEchoOneWayTest">-->
-        <!--<f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>-->
-        <!--<reference name="service">-->
-            <!--<binding.tcp uri="tcp://127.0.0.1:8484/TcpHessianOneWayEchoService">-->
-                <!--<wireFormat.hessian/>-->
-            <!--</binding.tcp>-->
-        <!--</reference>-->
+    <!--<f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>-->
+    <!--<reference name="service">-->
+    <!--<binding.tcp uri="tcp://127.0.0.1:8484/TcpHessianOneWayEchoService">-->
+    <!--<wireFormat.hessian/>-->
+    <!--</binding.tcp>-->
+    <!--</reference>-->
     <!--</component>-->
 
     <!--<component name="TcpHessianOneWayEchoService">-->
-        <!--<implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>-->
-        <!--<service name="OneWayEchoService">-->
-            <!--<binding.tcp uri="/TcpHessianOneWayEchoService">-->
-                <!--<wireFormat.hessian/>-->
-            <!--</binding.tcp>-->
-        <!--</service>-->
+    <!--<implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>-->
+    <!--<service name="OneWayEchoService">-->
+    <!--<binding.tcp uri="/TcpHessianOneWayEchoService">-->
+    <!--<wireFormat.hessian/>-->
+    <!--</binding.tcp>-->
+    <!--</service>-->
     <!--</component>-->
 
     <!--end TCP/Hessian tests -->

@@ -14,9 +14,9 @@ Public License. See the accompanying license file for details.
            name="AutowiredComposite">
 
     <service name="source" promote="autowired"/>
-    
+
     <reference name="promoted" promote="autowired/target"/>
-    
+
     <component name="autowired">
         <implementation.java class="org.fabric3.tests.function.common.SourceImpl"/>
     </component>

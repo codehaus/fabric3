@@ -1,4 +1,3 @@
-
 package org.fabric3.tests.binding.metro.weather;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,9 +9,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * <p>Java class for WeatherRequest complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="WeatherRequest">
  *   &lt;complexContent>
@@ -25,13 +24,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeatherRequest", propOrder = {
-    "city",
-    "date"
+        "city",
+        "date"
 })
 public class WeatherRequest {
 
@@ -42,11 +39,8 @@ public class WeatherRequest {
 
     /**
      * Gets the value of the city property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getCity() {
         return city;
@@ -54,11 +48,8 @@ public class WeatherRequest {
 
     /**
      * Sets the value of the city property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setCity(String value) {
         this.city = value;
@@ -66,11 +57,8 @@ public class WeatherRequest {
 
     /**
      * Gets the value of the date property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     *
+     * @return possible object is {@link XMLGregorianCalendar }
      */
     public XMLGregorianCalendar getDate() {
         return date;
@@ -78,11 +66,8 @@ public class WeatherRequest {
 
     /**
      * Sets the value of the date property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
+     *
+     * @param value allowed object is {@link XMLGregorianCalendar }
      */
     public void setDate(XMLGregorianCalendar value) {
         this.date = value;

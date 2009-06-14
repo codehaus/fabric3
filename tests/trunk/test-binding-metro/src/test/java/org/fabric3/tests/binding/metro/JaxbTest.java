@@ -45,23 +45,23 @@ import org.fabric3.tests.binding.metro.weather.WeatherRequest;
 import org.fabric3.tests.binding.metro.weather.WeatherResponse;
 
 public class JaxbTest extends TestCase {
-    
+
     @Reference
     protected WeatherPortType weatherPortType;
-    
+
     public void testWeather() throws Exception {
-        
+
         WeatherRequest weatherRequest = new WeatherRequest();
         weatherRequest.setCity("New York");
-        
+
         WeatherResponse weatherResponse = weatherPortType.getWeather(weatherRequest);
         assertNotNull(weatherResponse);
         assertEquals("SUNNY", weatherResponse.getForecast());
         assertEquals(12.0, weatherResponse.getTemperature());
     }
-    
+
     public void testWeatherFault() throws Exception {
-        
+
 //        WeatherRequest weatherRequest = new WeatherRequest();
 //        weatherRequest.setCity("London");
 //
@@ -73,7 +73,7 @@ public class JaxbTest extends TestCase {
 //            assertEquals("1234", fault.getCode());
 //            assertEquals("London is always wet", fault.getDetail());
 //        }
-        
+
     }
 
 }

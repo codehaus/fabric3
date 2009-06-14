@@ -29,7 +29,7 @@ Public License. See the accompanying license file for details.
             </callback>
         </service>
     </component>
-    
+
     <component name="BindingCallbackClient">
         <implementation.java class="org.fabric3.tests.function.callback.binding.ClientServiceImpl"/>
         <reference name="forwardService">

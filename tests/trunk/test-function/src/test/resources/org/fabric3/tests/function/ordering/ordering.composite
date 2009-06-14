@@ -13,7 +13,7 @@ Public License. See the accompanying license file for details.
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="OrderingComposite">
-    
+
     <component name="OrderedInjectionTest">
         <f3-impl:junit class="org.fabric3.tests.function.ordering.OrderingITest"/>
         <reference name="displayService" target="OrderedDisplayService"/>
@@ -22,6 +22,6 @@ Public License. See the accompanying license file for details.
     <component name="OrderedDisplayService">
         <implementation.composite name="OrderedDisplayService" scdlResource="org/fabric3/tests/function/ordering/ordered-service.composite"/>
     </component>
-   
-    
+
+
 </composite>

@@ -1,4 +1,3 @@
-
 package org.fabric3.tests.binding.metro.weather;
 
 import javax.xml.bind.JAXBElement;
@@ -8,18 +7,10 @@ import javax.xml.namespace.QName;
 
 
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the weather package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
- * provided in this class.
- * 
+ * This object contains factory methods for each Java content interface and Java element interface generated in the weather package. <p>An
+ * ObjectFactory allows you to programatically construct new instances of the Java representation for XML content. The Java representation of XML
+ * content can consist of schema derived interfaces and classes representing the binding of schema type definitions, element declarations and model
+ * groups.  Factory methods for each of these are provided in this class.
  */
 @XmlRegistry
 public class ObjectFactory {
@@ -30,14 +21,12 @@ public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: weather
-     * 
      */
     public ObjectFactory() {
     }
 
     /**
      * Create an instance of {@link WeatherRequest }
-     * 
      */
     public WeatherRequest createWeatherRequest() {
         return new WeatherRequest();
@@ -45,7 +34,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link WeatherFault }
-     * 
      */
     public WeatherFault createWeatherFault() {
         return new WeatherFault();
@@ -53,7 +41,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link WeatherResponse }
-     * 
      */
     public WeatherResponse createWeatherResponse() {
         return new WeatherResponse();
@@ -61,7 +48,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link WeatherRequest }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "urn:weather", name = "weatherRequest")
     public JAXBElement<WeatherRequest> createWeatherRequest(WeatherRequest value) {
@@ -70,7 +56,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link WeatherFault }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "urn:weather", name = "weatherFault")
     public JAXBElement<WeatherFault> createWeatherFault(WeatherFault value) {
@@ -79,7 +64,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link WeatherResponse }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "urn:weather", name = "weatherResponse")
     public JAXBElement<WeatherResponse> createWeatherResponse(WeatherResponse value) {

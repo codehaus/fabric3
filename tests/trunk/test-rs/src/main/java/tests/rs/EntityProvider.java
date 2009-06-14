@@ -44,8 +44,8 @@ public class EntityProvider implements MessageBodyReader<Entity>, MessageBodyWri
     }
 
     public Entity readFrom(Class<Entity> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers, 
-            InputStream entityStream) throws IOException {
+                           Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers,
+                           InputStream entityStream) throws IOException {
         ObjectInputStream oin = new ObjectInputStream(entityStream);
         try {
             return (Entity) oin.readObject();
@@ -57,37 +57,37 @@ public class EntityProvider implements MessageBodyReader<Entity>, MessageBodyWri
 
     }
 
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,  MediaType mediaType) {
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return Entity.class.isAssignableFrom(type);
     }
-    
+
     public long getSize(Entity entity, Class<?> type, Type genericType, Annotation annotations[], MediaType mediaType) {
         return -1;
     }
 
     public void writeTo(Entity data,
-            Class<?> type, Type genericType, Annotation[] annotations,
-            MediaType mediaType, MultivaluedMap<String, Object> headers,
-            OutputStream entityStream) throws IOException {
+                        Class<?> type, Type genericType, Annotation[] annotations,
+                        MediaType mediaType, MultivaluedMap<String, Object> headers,
+                        OutputStream entityStream) throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(entityStream);
         out.writeObject(data);
         out.flush();
 
     }
 
-	public boolean isReadable(Class<?> arg0, Type arg1, Annotation[] arg2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean isReadable(Class<?> arg0, Type arg1, Annotation[] arg2) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public long getSize(Entity arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public long getSize(Entity arg0) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	public boolean isWriteable(Class<?> arg0, Type arg1, Annotation[] arg2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean isWriteable(Class<?> arg0, Type arg1, Annotation[] arg2) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

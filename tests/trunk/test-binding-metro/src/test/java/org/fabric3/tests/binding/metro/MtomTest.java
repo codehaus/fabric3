@@ -43,16 +43,16 @@ import org.oasisopen.sca.annotation.Reference;
 import org.fabric3.tests.binding.metro.upload.UploadPortType;
 
 public class MtomTest extends TestCase {
-    
+
     @Reference
     protected UploadPortType uploadPortType;
-    
+
     public void testUpload() throws Exception {
-        
+
 //        DataHandler dataHandler = new DataHandler(getClass().getClassLoader().getResource("test.dat"));
 //        int total = uploadPortType.upload("test.dat", dataHandler);
 //        assertEquals(21732480, total);
-        
+
     }
 
 }

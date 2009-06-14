@@ -7,15 +7,15 @@
 
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-           xmlns:f3-impl="urn:fabric3.org:implementation" 
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:wsdli="http://www.w3.org/2004/08/wsdl-instance"
            name="JaxbTest">
 
     <component name="JaxbTest">
         <f3-impl:junit class="org.fabric3.tests.binding.metro.JaxbTest"/>
         <reference name="weatherPortType">
-            <binding.ws wsdlElement="urn:weather#wsdl.port(WeatherService/WeatherPort)" 
-                        wsdli:wsdlLocation="Weather.wsdl" 
+            <binding.ws wsdlElement="urn:weather#wsdl.port(WeatherService/WeatherPort)"
+                        wsdli:wsdlLocation="Weather.wsdl"
                         uri="http://localhost:8900/metro/weather"/>
         </reference>
     </component>
@@ -23,7 +23,7 @@
     <component name="WeatherService">
         <implementation.java class="org.fabric3.tests.binding.metro.weather.WeatherPortTypeImpl"/>
         <service name="WeatherPortType">
-            <binding.ws wsdlElement="urn:weather#wsdl.port(WeatherService/WeatherPort)" 
+            <binding.ws wsdlElement="urn:weather#wsdl.port(WeatherService/WeatherPort)"
                         wsdli:wsdlLocation="Weather.wsdl"
                         uri="/weather"/>
         </service>

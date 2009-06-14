@@ -20,7 +20,7 @@
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Standalone Runtime Integration Tests Setup</name>
     <description>Fabric3 Standalone Runtime Integration Tests Setup</description>
-      <build>
+    <build>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -46,7 +46,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
- <!--                   <execution>
+                    <!--                   <execution>
                         <id>copy</id>
                         <phase>pre-integration-test</phase>
                         <goals>

@@ -9,18 +9,18 @@
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="RSTestHarnessComposite">
-    
+
     <component name="TestClient">
         <f3-impl:junit class="tests.rs.TestClient"/>
         <property name="hostURI">http://localhost:8900</property>
     </component>
-    
-    <component name="EntityProvider" >
-        <f3-impl:implementation.rs class="tests.rs.EntityProvider" uri="/echo" />
-   </component>
+
+    <component name="EntityProvider">
+        <f3-impl:implementation.rs class="tests.rs.EntityProvider" uri="/echo"/>
+    </component>
 
     <component name="RESTResource">
-        <f3-impl:implementation.rs class="tests.rs.EchoResource" uri="/echo" />
+        <f3-impl:implementation.rs class="tests.rs.EchoResource" uri="/echo"/>
         <property name="message">Hello</property>
         <reference name="service" target="Java"/>
     </component>

@@ -1,4 +1,3 @@
-
 package org.fabric3.tests.binding.metro.weather;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for WeatherFault complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="WeatherFault">
  *   &lt;complexContent>
@@ -24,13 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeatherFault", propOrder = {
-    "code",
-    "detail"
+        "code",
+        "detail"
 })
 public class WeatherFault {
 
@@ -41,11 +38,8 @@ public class WeatherFault {
 
     /**
      * Gets the value of the code property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getCode() {
         return code;
@@ -53,11 +47,8 @@ public class WeatherFault {
 
     /**
      * Sets the value of the code property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setCode(String value) {
         this.code = value;
@@ -65,11 +56,8 @@ public class WeatherFault {
 
     /**
      * Gets the value of the detail property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getDetail() {
         return detail;
@@ -77,11 +65,8 @@ public class WeatherFault {
 
     /**
      * Sets the value of the detail property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setDetail(String value) {
         this.detail = value;

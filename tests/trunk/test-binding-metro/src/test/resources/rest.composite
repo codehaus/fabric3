@@ -7,7 +7,7 @@
 
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-           xmlns:f3-impl="urn:fabric3.org:implementation"   
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-policy="urn:fabric3.org:policy"
            name="RestTest">
 

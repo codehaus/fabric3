@@ -10,16 +10,16 @@
            xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:wsdli="http://www.w3.org/2004/08/wsdl-instance"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:f3-impl="urn:fabric3.org:implementation"           
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-policy="urn:fabric3.org:policy"
            name="Axis2JaxbTest">
 
     <component name="WeatherTest">
         <f3-impl:junit class="org.fabric3.tests.binding.axis2.jaxb.WeatherServiceTest"/>
         <reference name="weatherService">
-             <binding.ws wsdlElement="urn:fabric3.org:tests:axis2#wsdl.port(WeatherService/WeatherServiceHttpSoap11Endpoint)" 
-                         wsdli:wsdlLocation="WeatherService.wsdl"
-                         uri="http://localhost:8900/axis2/weatherService" requires="f3-policy:dataBinding.jaxb"/>
+            <binding.ws wsdlElement="urn:fabric3.org:tests:axis2#wsdl.port(WeatherService/WeatherServiceHttpSoap11Endpoint)"
+                        wsdli:wsdlLocation="WeatherService.wsdl"
+                        uri="http://localhost:8900/axis2/weatherService" requires="f3-policy:dataBinding.jaxb"/>
         </reference>
     </component>
 

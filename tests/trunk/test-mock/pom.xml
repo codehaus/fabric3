@@ -24,7 +24,7 @@
     <description>Fabric3 Mock Test.</description>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
@@ -35,12 +35,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
-        
+
     </dependencies>
 
     <build>

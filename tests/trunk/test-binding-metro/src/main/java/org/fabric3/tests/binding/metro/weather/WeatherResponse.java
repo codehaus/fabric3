@@ -1,4 +1,3 @@
-
 package org.fabric3.tests.binding.metro.weather;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for WeatherResponse complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="WeatherResponse">
  *   &lt;complexContent>
@@ -24,13 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeatherResponse", propOrder = {
-    "forecast",
-    "temperature"
+        "forecast",
+        "temperature"
 })
 public class WeatherResponse {
 
@@ -40,11 +37,8 @@ public class WeatherResponse {
 
     /**
      * Gets the value of the forecast property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getForecast() {
         return forecast;
@@ -52,11 +46,8 @@ public class WeatherResponse {
 
     /**
      * Sets the value of the forecast property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setForecast(String value) {
         this.forecast = value;
@@ -64,7 +55,6 @@ public class WeatherResponse {
 
     /**
      * Gets the value of the temperature property.
-     * 
      */
     public double getTemperature() {
         return temperature;
@@ -72,7 +62,6 @@ public class WeatherResponse {
 
     /**
      * Sets the value of the temperature property.
-     * 
      */
     public void setTemperature(double value) {
         this.temperature = value;

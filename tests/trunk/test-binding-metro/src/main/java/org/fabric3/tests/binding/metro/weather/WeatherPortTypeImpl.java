@@ -40,20 +40,20 @@ package org.fabric3.tests.binding.metro.weather;
 public class WeatherPortTypeImpl implements WeatherPortType {
 
     public WeatherResponse getWeather(WeatherRequest weatherRequest) throws WeatherFaultException {
-        
+
         if (weatherRequest.getCity().equals("London")) {
             WeatherFault weatherFault = new WeatherFault();
             weatherFault.code = "1234";
             weatherFault.detail = "London is always wet";
             throw new WeatherFaultException("Application excption", weatherFault);
         }
-        
+
         WeatherResponse weatherResponse = new WeatherResponse();
         weatherResponse.setForecast("SUNNY");
         weatherResponse.setTemperature(12.0);
-        
+
         return weatherResponse;
-        
+
     }
 
 }

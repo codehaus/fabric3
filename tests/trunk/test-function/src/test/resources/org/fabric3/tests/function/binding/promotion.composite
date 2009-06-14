@@ -19,7 +19,7 @@ Public License. See the accompanying license file for details.
         <f3-impl:junit class="org.fabric3.tests.function.binding.PromotionTest"/>
     </component>
 
-    <reference name ="PromotedReference" promote="PromotionTestComponent/helloService">
+    <reference name="PromotedReference" promote="PromotionTestComponent/helloService">
         <f3-binding:binding.test uri="PromotedHelloService"/>
     </reference>
 

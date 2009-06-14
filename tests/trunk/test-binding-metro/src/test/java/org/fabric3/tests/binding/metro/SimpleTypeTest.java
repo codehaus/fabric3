@@ -43,10 +43,10 @@ import org.oasisopen.sca.annotation.Reference;
 import org.fabric3.tests.binding.metro.hello.HelloWorldPortType;
 
 public class SimpleTypeTest extends TestCase {
-    
+
     @Reference
     protected HelloWorldPortType helloWorldPortType;
-    
+
     public void testHello() throws Exception {
 //        assertEquals("Hello, Foo", helloWorldPortType.sayHello("Foo"));
     }

@@ -44,8 +44,8 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SearchResult", propOrder = {
-    "isbn",
-    "name"
+        "isbn",
+        "name"
 })
 public class SearchResult {
 

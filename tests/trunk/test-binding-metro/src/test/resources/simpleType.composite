@@ -7,15 +7,15 @@
 
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-           xmlns:f3-impl="urn:fabric3.org:implementation" 
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:wsdli="http://www.w3.org/2004/08/wsdl-instance"
            name="SimpleTypeTest">
 
     <component name="SimpleTypeTest">
         <f3-impl:junit class="org.fabric3.tests.binding.metro.SimpleTypeTest"/>
         <reference name="helloWorldPortType">
-            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)" 
-                        wsdli:wsdlLocation="HelloWorld.wsdl" 
+            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)"
+                        wsdli:wsdlLocation="HelloWorld.wsdl"
                         uri="http://localhost:8901/metro/hello,http://localhost:8900/metro/hello"/>
         </reference>
     </component>
@@ -23,7 +23,7 @@
     <component name="HelloService">
         <implementation.java class="org.fabric3.tests.binding.metro.hello.HelloWorldPortTypeImpl"/>
         <service name="HelloWorldPortType">
-            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)" 
+            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)"
                         wsdli:wsdlLocation="HelloWorld.wsdl"
                         uri="/hello"/>
         </service>

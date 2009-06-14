@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-                  xmlns:ns1="http://org.apache.axis2/xsd" 
-                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" 
-                  xmlns:ax21="http://jaxb.axis.binding.tests.fabric3.org/xsd" 
-                  xmlns:ns="urn:fabric3.org:tests:axis2" 
-                  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:ns1="http://org.apache.axis2/xsd"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:ax21="http://jaxb.axis.binding.tests.fabric3.org/xsd"
+                  xmlns:ns="urn:fabric3.org:tests:axis2"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
                   targetNamespace="urn:fabric3.org:tests:axis2">
     <wsdl:types>
         <xs:schema xmlns:ax23="urn:fabric3.org:tests:axis2" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://jaxb.axis.binding.tests.fabric3.org/xsd">
@@ -115,10 +115,10 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-    </wsdl:binding>    
+    </wsdl:binding>
     <wsdl:service name="WeatherService">
         <wsdl:port name="WeatherServiceHttpSoap11Endpoint" binding="ns:WeatherServiceSoap11Binding">
             <soap:address location="http://localhost:8080/axis2/services/WeatherService"/>
-        </wsdl:port>        
+        </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
