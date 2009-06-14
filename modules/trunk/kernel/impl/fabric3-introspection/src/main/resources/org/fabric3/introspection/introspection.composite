@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Fabric3
+Fabric3
 Copyright (C) 2009 Metaform Systems
 
 Fabric3 is licensed under modified terms of the GNU General
@@ -138,7 +138,7 @@ Public License. see the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ServiceProcessor"/>
     </component>
 
-    <!-- Fabric3 Annotations -->
+    <!--Fabric3 Annotations -->
 
     <component name="ConversationProcessor" f3-core:key="org.fabric3.api.annotation.scope.Conversation">
         <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationProcessor"/>
