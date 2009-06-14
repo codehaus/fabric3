@@ -1,17 +1,39 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright (C) 2009 Metaform Systems
  *
- * This proprietary software may be used only connection with the Fabric3 license
- * (the ñLicenseî), a copy of which is included in the software or may be
- * obtained at: http://www.metaformsystems.com/licenses/license.html.
-
- * Software distributed under the License is distributed on an ñas isî basis,
- * without warranties or conditions of any kind.  See the License for the
- * specific language governing permissions and limitations of use of the software.
- * This software is distributed in conjunction with other software licensed under
- * different terms.  See the separate licenses for those programs included in the
- * distribution for the permitted and restricted uses of such software.
+ * Fabric3 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version, with the
+ * following exception:
+ *
+ * Linking this software statically or dynamically with other
+ * modules is making a combined work based on this software.
+ * Thus, the terms and conditions of the GNU General Public
+ * License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of this software
+ * give you permission to link this software with independent
+ * modules to produce an executable, regardless of the license
+ * terms of these independent modules, and to copy and distribute
+ * the resulting executable under terms of your choice, provided
+ * that you also meet, for each linked independent module, the
+ * terms and conditions of the license of that module. An
+ * independent module is a module which is not derived from or
+ * based on this software. If you modify this software, you may
+ * extend this exception to your version of the software, but
+ * you are not obligated to do so. If you do not wish to do so,
+ * delete this exception statement from your version.
+ *
+ * Fabric3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the
+ * GNU General Public License along with Fabric3.
+ * If not, see <http://www.gnu.org/licenses/>.
  *
  * --- Original Apache License ---
  *
@@ -66,7 +88,6 @@ import org.fabric3.test.spi.TestWireHolder;
 
 /**
  * Maven runtime implementation.
- *
  */
 public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenRuntime {
 
@@ -76,58 +97,58 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
     public MavenRuntimeImpl() {
         super(MavenHostInfo.class);
     }
-    
+
     /**
      * Starts the runtime.
-     * 
+     *
      * @param hostProperties Host properties.
-     * @param extensions Extensions to activate on the runtime.
+     * @param extensions     Extensions to activate on the runtime.
      * @throws StartException If unable to start the runtime.
      */
     public void start(Properties hostProperties, List<ContributionSource> extensions) throws StartException {
-        
+
         BootConfiguration bootConfiguration = getBootConfiguration(extensions);
-        
+
         RuntimeLifecycleCoordinator coordinator = new DefaultCoordinator();
         coordinator.setConfiguration(bootConfiguration);
-        
+
         MavenHostInfo mavenHostInfo = new MavenHostInfoImpl(hostProperties);
         setHostInfo(mavenHostInfo);
-        
+
         boot(coordinator);
-        
+
     }
-    
+
     /**
      * Deploys a list contributions.
-     * 
+     *
      * @param contributions List of contributions.
      */
     public void deploy(List<ContributionSource> contributions) {
-        
+
         try {
-            
+
             ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
-            
+
             List<URI> uris = contributionService.contribute(contributions);
             domain.include(uris, false);
-            
+
         } catch (DeploymentException e) {
             throw new DeployException(e.getMessage(), e);
         } catch (ContributionException e) {
             throw new DeployException(e.getMessage(), e);
         }
-        
+
     }
-    
+
     /**
      * Gets the test suite from the SCA contribution.
-     * 
+     *
      * @return SCA test suite.
      */
     public SurefireTestSuite getTestSuite() {
-        
+
         TestWireHolder testWireHolder = getSystemComponent(TestWireHolder.class, TestWireHolder.COMPONENT_URI);
         SCATestSuite suite = new SCATestSuite();
         for (Map.Entry<String, Wire> entry : testWireHolder.getWires().entrySet()) {
@@ -135,14 +156,14 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
             suite.add(testSet);
         }
         return suite;
-        
+
     }
 
     /*
      * Boots the runtime.
      */
     private void boot(RuntimeLifecycleCoordinator coordinator) {
-        
+
         try {
             coordinator.bootPrimordial();
             coordinator.initialize();
@@ -152,50 +173,50 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
         } catch (Exception e) {
             throw new StartException(e.getMessage(), e);
         }
-        
+
     }
 
     /*
      * Create the boot configuration.
      */
     private BootConfiguration getBootConfiguration(List<ContributionSource> extensions) {
-        
+
         BootConfiguration bootConfiguration = new BootConfiguration();
-        
+
         bootConfiguration.setExtensionContributions(extensions);
         bootConfiguration.setRuntime(this);
         bootConfiguration.setBootClassLoader(getClass().getClassLoader());
-        
+
         setExportedPackages(bootConfiguration);
         setBootstrapper(bootConfiguration);
-        
+
         return bootConfiguration;
-        
+
     }
 
     /*
      * Set the bootstrapper.
      */
     private void setBootstrapper(BootConfiguration bootConfiguration) {
-        
+
         ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
         URL systemScdl = getClass().getClassLoader().getResource("META-INF/fabric3/embeddedMaven.composite");
         bootstrapper.setScdlLocation(systemScdl);
         bootConfiguration.setBootstrapper(bootstrapper);
-        
+
     }
 
     /*
      * Set the packages to be exported.
      */
     private void setExportedPackages(BootConfiguration bootConfiguration) {
-        
+
         Map<String, String> exportedPackages = new HashMap<String, String>();
         exportedPackages.put("org.fabric3.test.spi", Names.VERSION);
         exportedPackages.put("org.fabric3.maven", Names.VERSION);
-        
+
         bootConfiguration.setExportedPackages(exportedPackages);
-        
+
     }
 
 }
