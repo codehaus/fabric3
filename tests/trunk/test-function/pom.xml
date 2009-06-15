@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -49,9 +49,9 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <!-- generally this should point to the latest plugin and kernel version -->
-                <version>1.1-SNAPSHOT</version>
+                <version>1.2-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>1.1-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
                     <compositeName>FunctionTestHarnessComposite</compositeName>
                     <systemConfig>
                         <![CDATA[
@@ -66,17 +66,17 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-test</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-databinding-jaxb</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jaxb</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                 </configuration>

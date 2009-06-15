@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-api</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -79,16 +79,16 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.2-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>1.1-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
                     <features>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-hibernate-jotm-feature</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                             <type>xml</type>
                         </dependency>
                     </features>

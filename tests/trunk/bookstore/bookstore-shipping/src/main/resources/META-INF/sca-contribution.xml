@@ -16,7 +16,7 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:shipping="urn:fabric3.org:bookstore:shipping">
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:shipping="urn:fabric3.org:bookstore:shipping">
     <export.java package="org.fabric3.bookstore.shipping.api" version="0.1"/>
     <export namespace="urn:fabric3.org:bookstore:shipping" />
     <deployable composite="shipping:Shipping"/>

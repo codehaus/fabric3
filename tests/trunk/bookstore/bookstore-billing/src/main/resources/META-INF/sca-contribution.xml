@@ -16,7 +16,7 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:billing="urn:fabric3.org:bookstore:billing">
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:billing="urn:fabric3.org:bookstore:billing">
     <export.java package="org.fabric3.bookstore.billing.api" version="0.1"/>
     <export namespace="urn:fabric3.org:bookstore:billing" />
     <deployable composite="billing:Billing"/>

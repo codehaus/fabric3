@@ -39,7 +39,7 @@
                                     <artifactId>runtime-standalone</artifactId>
                                     <classifier>bin</classifier>
                                     <type>zip</type>
-                                    <version>1.1-SNAPSHOT</version>
+                                    <version>1.2-SNAPSHOT</version>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/assembly</outputDirectory>
                                 </artifactItem>

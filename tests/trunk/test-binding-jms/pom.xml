@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-test-harness</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
@@ -56,9 +56,9 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.2-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>1.1-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>javax.jms</groupId>
@@ -69,32 +69,32 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-jms</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-activemq</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jaxb</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-databinding-jaxb</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>javax.transaction</groupId>

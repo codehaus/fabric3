@@ -18,7 +18,7 @@
 
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>test-jpa-core</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <name>Fabric3 JPA Core Test</name>
     <packaging>jar</packaging>
     <description>Fabric3 JPA Core Test</description>
@@ -55,16 +55,16 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.2-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>1.1-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
                     <features>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-hibernate-jotm-feature</artifactId>
-                            <version>1.1-SNAPSHOT</version>
+                            <version>1.2-SNAPSHOT</version>
                             <type>xml</type>
                         </dependency>
                     </features>
