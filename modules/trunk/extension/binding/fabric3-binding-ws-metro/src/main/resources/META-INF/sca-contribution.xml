@@ -15,4 +15,5 @@ Public License. See the accompanying license file for details.
     <import.java package="org.fabric3.binding.ws.scdl" version="1.2"/>
     <deployable composite="ns:MetroControllerExtension"/>
     <deployable composite="ns:MetroRuntimeExtension"/>
+    <f3-core:provides name="jaxb"/>
 </contribution>
