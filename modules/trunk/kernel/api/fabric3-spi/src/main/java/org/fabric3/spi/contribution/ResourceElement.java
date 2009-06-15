@@ -37,15 +37,12 @@
 */
 package org.fabric3.spi.contribution;
 
-import java.io.Serializable;
-
 /**
  * An addressable part of a Resource, such as a WSDL PortType, ComponentType, or Schema.
  *
  * @version $Rev$ $Date$
  */
-public class ResourceElement<SYMBOL extends Symbol, VALUE extends Serializable> implements Serializable {
-    private static final long serialVersionUID = 7148942706569626009L;
+public class ResourceElement<SYMBOL extends Symbol, VALUE> {
     private SYMBOL symbol;
     private VALUE value;
 

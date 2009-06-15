@@ -37,7 +37,6 @@
 */
 package org.fabric3.spi.contribution;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,8 +47,7 @@ import java.util.List;
  *
  * @version $Rev$ $Date$
  */
-public class Resource implements Serializable {
-    private static final long serialVersionUID = 4291622973495594302L;
+public class Resource {
     private List<ResourceElement<?, ?>> elements = new ArrayList<ResourceElement<?, ?>>();
     private URL url;
     private String contentType;
