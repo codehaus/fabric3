@@ -2,16 +2,16 @@
     <groupId>test</groupId>
     <artifactId>test</artifactId>
     <version>0.1-SNAPSHOT</version>
-  <name>no-files</name>
-  
-  <build>
-    <plugins>
-		<plugin>
-        	<groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-contribution-plugin</artifactId>
-            <extensions>true</extensions>
-            <configuration/>
-		</plugin>
-    </plugins>
-  </build>
+    <name>no-files</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration/>
+            </plugin>
+        </plugins>
+    </build>
 </project>

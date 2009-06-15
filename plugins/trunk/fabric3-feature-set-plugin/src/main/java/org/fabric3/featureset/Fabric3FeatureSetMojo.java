@@ -1,47 +1,46 @@
-  /*
-   * Fabric3
-   * Copyright (c) 2009 Metaform Systems
-   *
-   * Fabric3 is free software: you can redistribute it and/or modify
-   * it under the terms of the GNU General Public License as
-   * published by the Free Software Foundation, either version 3 of
-   * the License, or (at your option) any later version, with the
-   * following exception:
-   *
-   * Linking this software statically or dynamically with other
-   * modules is making a combined work based on this software.
-   * Thus, the terms and conditions of the GNU General Public
-   * License cover the whole combination.
-   *
-   * As a special exception, the copyright holders of this software
-   * give you permission to link this software with independent
-   * modules to produce an executable, regardless of the license
-   * terms of these independent modules, and to copy and distribute
-   * the resulting executable under terms of your choice, provided
-   * that you also meet, for each linked independent module, the
-   * terms and conditions of the license of that module. An
-   * independent module is a module which is not derived from or
-   * based on this software. If you modify this software, you may
-   * extend this exception to your version of the software, but
-   * you are not obligated to do so. If you do not wish to do so,
-   * delete this exception statement from your version.
-   *
-   * Fabric3 is distributed in the hope that it will be useful,
-   * but WITHOUT ANY WARRANTY; without even the implied warranty
-   * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-   * See the GNU General Public License for more details.
-   *
-   * You should have received a copy of the
-   * GNU General Public License along with Fabric3.
-   * If not, see <http://www.gnu.org/licenses/>.
-   */
+/*
+* Fabric3
+* Copyright (c) 2009 Metaform Systems
+*
+* Fabric3 is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as
+* published by the Free Software Foundation, either version 3 of
+* the License, or (at your option) any later version, with the
+* following exception:
+*
+* Linking this software statically or dynamically with other
+* modules is making a combined work based on this software.
+* Thus, the terms and conditions of the GNU General Public
+* License cover the whole combination.
+*
+* As a special exception, the copyright holders of this software
+* give you permission to link this software with independent
+* modules to produce an executable, regardless of the license
+* terms of these independent modules, and to copy and distribute
+* the resulting executable under terms of your choice, provided
+* that you also meet, for each linked independent module, the
+* terms and conditions of the license of that module. An
+* independent module is a module which is not derived from or
+* based on this software. If you modify this software, you may
+* extend this exception to your version of the software, but
+* you are not obligated to do so. If you do not wish to do so,
+* delete this exception statement from your version.
+*
+* Fabric3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the
+* GNU General Public License along with Fabric3.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.fabric3.featureset;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -57,15 +56,14 @@ import org.apache.maven.project.MavenProject;
 import org.xml.sax.SAXException;
 
 /**
- * 
- * Mojo for generating a feature set from a set of requested extensions. A feature set can be built by composing a number of other feature sets, 
- * and or including a set of explicitly requested extensions. A feature set is published as maven artifact with the extension .xml. This can be later 
- * referenced by the itest and webapp plugins, instead of explictly referencing all the extensions included in the feature set. User applications are 
- * expected to have a separate maven module to build the feature set, and then the installed artifact will be reused from the other modules that use 
+ * Mojo for generating a feature set from a set of requested extensions. A feature set can be built by composing a number of other feature sets, and
+ * or including a set of explicitly requested extensions. A feature set is published as maven artifact with the extension .xml. This can be later
+ * referenced by the itest and webapp plugins, instead of explictly referencing all the extensions included in the feature set. User applications are
+ * expected to have a separate maven module to build the feature set, and then the installed artifact will be reused from the other modules that use
  * the itest and webapp plugins. Feature sets can also contain shared dependencies used in itest environments.
- * 
+ * <p/>
  * An example usage of the feature set plugin is shown below,
- * 
+ * <p/>
  * <pre>
  *    &lt;plugin&gt;
  *       &lt;groupId&gt;org.codehaus.fabric3&lt;/groupId&gt;
@@ -94,14 +92,13 @@ import org.xml.sax.SAXException;
  *     &lt;/plugin&gt;
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  * @goal package
  * @phase package
  */
 public class Fabric3FeatureSetMojo extends AbstractMojo {
 
     /**
-     *
      * @parameter expression="${project}"
      * @readonly
      * @required
@@ -174,7 +171,7 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * Generates the feature set files.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        
+
         String fileName = project.getArtifactId() + "-" + project.getVersion() + ".xml";
         File file = new File(outputDirectory, fileName);
         try {
@@ -183,7 +180,7 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
         if (extensions == null && includes == null) {
             throw new MojoExecutionException("Extensions or includes should be specified");
         }
@@ -191,13 +188,13 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
         processExtensions();
         processShared();
         processIncludes();
-        
+
         try {
             featureSet.serialize(file);
         } catch (FileNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
         project.getArtifact().setFile(file);
 
     }
@@ -206,69 +203,69 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * Processes the included feature sets.
      */
     private void processIncludes() throws MojoExecutionException {
-        
+
         if (includes == null) {
             return;
         }
 
         for (Dependency include : includes) {
-            
+
             File featureSetFile = resolve(include);
             FeatureSet includedFeatureSet = null;
-			try {
-				includedFeatureSet = FeatureSet.deserialize(featureSetFile);
-			} catch (ParserConfigurationException e) {
-				throw new MojoExecutionException("Unable to process includes", e);
-			} catch (SAXException e) {
-				throw new MojoExecutionException("Unable to process includes", e);
-			} catch (IOException e) {
-				throw new MojoExecutionException("Unable to process includes", e);
-			}
-            
+            try {
+                includedFeatureSet = FeatureSet.deserialize(featureSetFile);
+            } catch (ParserConfigurationException e) {
+                throw new MojoExecutionException("Unable to process includes", e);
+            } catch (SAXException e) {
+                throw new MojoExecutionException("Unable to process includes", e);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Unable to process includes", e);
+            }
+
             for (org.apache.maven.model.Dependency extension : includedFeatureSet.getExtensions()) {
-            	resolve(extension);
+                resolve(extension);
                 featureSet.addExtension(extension);
             }
-            
+
             for (org.apache.maven.model.Dependency sharedLibrary : includedFeatureSet.getSharedLibraries()) {
-            	resolve(sharedLibrary);
+                resolve(sharedLibrary);
                 featureSet.addSharedLibrary(sharedLibrary);
             }
-            
+
         }
-        
+
     }
 
     /*
      * Processes the requested extensions. 
      */
     private void processExtensions() throws MojoExecutionException {
-        
+
         if (extensions == null) {
             return;
         }
-        
+
         for (Dependency extension : extensions) {
             resolve(extension);
             featureSet.addExtension(extension);
         }
-        
+
     }
 
     /*
      * Processes the requested shared libraries. 
      */
     private void processShared() throws MojoExecutionException {
-        
+
         if (shared == null) {
             return;
         }
-        
+
         for (Dependency sharedLibrary : shared) {
             resolve(sharedLibrary);
             featureSet.addSharedLibrary(sharedLibrary);
         }
-        
+
     }
 
     /*
