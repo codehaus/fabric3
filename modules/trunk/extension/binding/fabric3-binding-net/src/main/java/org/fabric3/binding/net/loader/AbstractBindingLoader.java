@@ -56,7 +56,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 /**
  * Base binding loader.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public abstract class AbstractBindingLoader<T extends BindingDefinition> implements TypeLoader<T> {

@@ -69,7 +69,7 @@ import org.fabric3.spi.transform.TransformContext;
  * Pull transformer that will convert a Stax stream to a DOM representation. The transformer expects the cursor to be at the element from which the
  * info set needs to transferred into the DOM tree.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class Stream2Document extends AbstractPullTransformer<XMLStreamReader, Document> {

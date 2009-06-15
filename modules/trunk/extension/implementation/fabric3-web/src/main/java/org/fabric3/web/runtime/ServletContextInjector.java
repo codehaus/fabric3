@@ -47,7 +47,7 @@ import org.fabric3.spi.ObjectFactory;
 /**
  * Injects objects (reference proxies, properties, contexts) into a ServletContext.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ServletContextInjector implements Injector<ServletContext> {
     private ObjectFactory<?> objectFactory;

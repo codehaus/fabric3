@@ -54,7 +54,7 @@ import javax.transaction.xa.XAResource;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JtaTransactionHandler implements TransactionHandler {
     private TransactionManager transactionManager;

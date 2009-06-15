@@ -51,7 +51,7 @@ import org.fabric3.model.type.ModelObject;
 /**
  * Model object that represents the include of a composite by value.
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public class Include extends ModelObject {
     private static final long serialVersionUID = 3982129607792011105L;

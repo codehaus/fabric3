@@ -49,7 +49,7 @@ import javax.jms.Session;
 /**
  * Manages global transactions for a JMS session.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TransactionHandler {
 

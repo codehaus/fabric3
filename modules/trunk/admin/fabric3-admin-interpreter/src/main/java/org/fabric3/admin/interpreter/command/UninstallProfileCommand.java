@@ -49,7 +49,7 @@ import org.fabric3.admin.interpreter.CommandException;
 import org.fabric3.management.contribution.ContributionManagementException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UninstallProfileCommand implements Command {
     private DomainController controller;

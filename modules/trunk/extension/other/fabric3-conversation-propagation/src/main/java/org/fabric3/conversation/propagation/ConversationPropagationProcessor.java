@@ -56,7 +56,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 
 /**
- * @version $Rev: 3105 $ $Date: 2008-03-15 09:47:31 -0700 (Sat, 15 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class ConversationPropagationProcessor<I extends Implementation<? extends InjectingComponentType>>
         extends AbstractAnnotationProcessor<PropagatesConversation, I> {

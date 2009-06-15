@@ -81,7 +81,7 @@ import static org.fabric3.web.provision.WebContextInjectionSite.ContextType.SESS
 /**
  * Generates commands to provision a web component.
  *
- * @version $Rev: 2931 $ $Date: 2008-02-28 04:49:35 -0800 (Thu, 28 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class WebComponentGenerator implements ComponentGenerator<LogicalComponent<WebImplementation>> {

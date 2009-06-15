@@ -56,7 +56,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
  * <p/>
  * The implementation.mock element is expected to have a delimitted list of fully qualified named of the interfaces that need to be mocked.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ImplementationMockLoader implements TypeLoader<ImplementationMock> {

@@ -50,7 +50,7 @@ import org.oasisopen.sca.Constants;
 /**
  * A specialization of an implementation associated with composite components
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public class CompositeImplementation extends Implementation<Composite> {
     private static final long serialVersionUID = 2140686609936627287L;

@@ -48,7 +48,7 @@ import org.fabric3.host.contribution.ContributionSource;
  * A ContributionSource that wraps an underlying input stream to avoid closing it. This implementation is used to handle input streams that contain
  * multiple contribution archives.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StreamContributionSource implements ContributionSource {
     private URI uri;

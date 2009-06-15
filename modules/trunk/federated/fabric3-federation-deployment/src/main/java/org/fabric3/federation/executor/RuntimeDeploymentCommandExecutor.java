@@ -63,7 +63,7 @@ import org.fabric3.spi.services.event.EventService;
 /**
  * A CommandExecutor that processes deployment commands on a participant node.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class RuntimeDeploymentCommandExecutor implements CommandExecutor<RuntimeDeploymentCommand> {

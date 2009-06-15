@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  * <p/>
  * Standard JPA annotation can be applied on constructor arguments.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

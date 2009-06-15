@@ -42,7 +42,7 @@ import org.fabric3.spi.services.expression.ExpressionEvaluator;
 /**
  * Returns an value set through a system property.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class SystemPropertyEvaluator implements ExpressionEvaluator {
 

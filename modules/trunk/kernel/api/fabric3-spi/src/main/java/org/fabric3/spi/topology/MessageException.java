@@ -38,7 +38,7 @@
 package org.fabric3.spi.topology;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MessageException extends Exception {
     private static final long serialVersionUID = 9222872325419816221L;

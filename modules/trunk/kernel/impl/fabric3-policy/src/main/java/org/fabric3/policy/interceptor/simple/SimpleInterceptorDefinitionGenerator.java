@@ -47,7 +47,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 /**
  * Interceptor definition generator for simple policy set extensions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class SimpleInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {

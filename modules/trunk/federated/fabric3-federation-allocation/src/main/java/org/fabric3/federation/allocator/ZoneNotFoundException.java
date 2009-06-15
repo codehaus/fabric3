@@ -40,7 +40,7 @@ package org.fabric3.federation.allocator;
 import org.fabric3.spi.allocator.AllocationException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ZoneNotFoundException extends AllocationException {
     private static final long serialVersionUID = -4116461999930783927L;

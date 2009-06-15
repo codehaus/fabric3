@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an exception updating a configuration value.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ConfigurationUpdateException extends Fabric3Exception {
     private static final long serialVersionUID = 8916453343130992505L;

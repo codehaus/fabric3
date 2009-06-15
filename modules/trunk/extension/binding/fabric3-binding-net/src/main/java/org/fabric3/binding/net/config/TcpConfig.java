@@ -40,7 +40,7 @@ package org.fabric3.binding.net.config;
 /**
  * Configuration for TCP communications.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpConfig extends BaseConfig {
     private static final long serialVersionUID = 7789582500392971627L;

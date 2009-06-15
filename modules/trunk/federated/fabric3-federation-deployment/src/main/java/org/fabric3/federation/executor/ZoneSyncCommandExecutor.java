@@ -51,7 +51,7 @@ import org.fabric3.spi.executor.ExecutionException;
 /**
  * Processes a ZoneSyncCommand on the controller by regenerating a set of deployment commands for the current state of the zone.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ZoneSyncCommandExecutor implements CommandExecutor<ZoneSyncCommand> {

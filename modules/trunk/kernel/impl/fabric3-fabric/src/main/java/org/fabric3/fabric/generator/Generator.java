@@ -52,7 +52,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 /**
  * Generates commands to provision a set of componets to zones in a domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Generator {
 

@@ -38,7 +38,7 @@
 package org.fabric3.mock;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Bar {
 

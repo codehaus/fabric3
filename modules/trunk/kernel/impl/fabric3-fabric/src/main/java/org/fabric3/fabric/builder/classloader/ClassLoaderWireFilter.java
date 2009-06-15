@@ -41,7 +41,7 @@ package org.fabric3.fabric.builder.classloader;
  * A bridging classloader that filters class and resource loading to a specified set of classes. This is used to enforce the semantics of a
  * JavaContributionWire.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ClassLoaderWireFilter extends ClassLoader {
     private String[] importedPackage;

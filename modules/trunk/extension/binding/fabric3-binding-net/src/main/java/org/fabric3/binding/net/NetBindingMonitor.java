@@ -43,7 +43,7 @@ import org.fabric3.api.annotation.logging.Severe;
 /**
  * Monitor for communications events.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface NetBindingMonitor {
 

@@ -48,7 +48,7 @@ import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @SuppressWarnings("unchecked")
 @EagerInit

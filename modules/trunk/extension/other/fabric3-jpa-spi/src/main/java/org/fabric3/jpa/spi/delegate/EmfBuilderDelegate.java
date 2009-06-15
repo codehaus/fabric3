@@ -45,7 +45,7 @@ import org.fabric3.jpa.spi.EmfBuilderException;
 /**
  * Delegate interface for creating entity manager factories for adding provider specific hook-ins.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface EmfBuilderDelegate {
 

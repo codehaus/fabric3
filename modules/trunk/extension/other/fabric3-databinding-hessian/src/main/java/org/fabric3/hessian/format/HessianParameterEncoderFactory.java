@@ -47,7 +47,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Creates HessianParameterEncoder instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class HessianParameterEncoderFactory implements ParameterEncoderFactory {

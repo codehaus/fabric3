@@ -40,7 +40,7 @@ package org.fabric3.activemq.factory;
 /**
  * Defines ActiveMQ connection factory types.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum ConnectionFactoryType {
     LOCAL, XA, POOLED

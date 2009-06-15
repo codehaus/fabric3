@@ -72,7 +72,7 @@ import org.fabric3.spi.wire.InvocationChain;
 /**
  * Dispatches from a proxy to a wire.
  *
- * @version $Rev: 3021 $ $Date: 2008-03-03 19:28:04 -0800 (Mon, 03 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public final class JDKInvocationHandler<B> implements ConversationExpirationCallback, InvocationHandler, ServiceReference<B> {
     private static final long serialVersionUID = -5841336280391145583L;

@@ -63,7 +63,7 @@ import org.fabric3.spi.executor.ExecutionException;
 /**
  * Provisions and installs extension contributions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ProvisionExtensionsCommandExecutor implements CommandExecutor<ProvisionExtensionsCommand> {

@@ -40,7 +40,7 @@ package org.fabric3.spi.topology;
 /**
  * Represents the
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface RuntimeService {
 

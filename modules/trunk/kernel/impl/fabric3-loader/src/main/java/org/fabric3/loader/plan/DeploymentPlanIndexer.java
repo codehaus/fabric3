@@ -59,7 +59,7 @@ import org.fabric3.spi.plan.DeploymentPlan;
 /**
  * Indexes a deployment plan.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class DeploymentPlanIndexer implements XmlIndexer {

@@ -44,7 +44,7 @@ import org.fabric3.admin.interpreter.ParseException;
 import org.fabric3.admin.interpreter.command.StatCommand;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StatCommandParser implements CommandParser {
     private DomainController controller;

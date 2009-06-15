@@ -40,7 +40,7 @@ package org.fabric3.web.runtime;
 import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WebComponentStartException extends Fabric3RuntimeException {
     private static final long serialVersionUID = 4561241524721587772L;

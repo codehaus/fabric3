@@ -56,7 +56,7 @@ import org.fabric3.model.type.component.ServiceDefinition;
 /**
  * A component type associated with an implementation that supports injection.
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
     private static final long serialVersionUID = -2602867276842414240L;

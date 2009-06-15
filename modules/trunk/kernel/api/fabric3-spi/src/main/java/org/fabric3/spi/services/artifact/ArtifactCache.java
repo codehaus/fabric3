@@ -44,7 +44,7 @@ import java.net.URL;
 /**
  * Temporarily stores artifacts locally to a runtime, maintaining an in-use count.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ArtifactCache {
 

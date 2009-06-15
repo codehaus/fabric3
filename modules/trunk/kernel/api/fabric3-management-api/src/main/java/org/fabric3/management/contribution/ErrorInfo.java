@@ -42,7 +42,7 @@ import java.io.Serializable;
 /**
  * Used to propagate error information during contribution deployment.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ErrorInfo implements Serializable {
     private static final long serialVersionUID = 6418588000824961044L;

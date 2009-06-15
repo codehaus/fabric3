@@ -55,7 +55,7 @@ import org.fabric3.web.provision.WebContextInjectionSite;
 /**
  * Default implementaiton of the InjectorFactory.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InjectorFactoryImpl implements InjectorFactory {
 

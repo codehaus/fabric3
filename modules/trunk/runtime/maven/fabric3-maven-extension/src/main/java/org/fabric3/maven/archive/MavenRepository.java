@@ -53,7 +53,7 @@ import org.fabric3.spi.services.repository.RepositoryException;
 /**
  * A Repository implementation that delegates to a set of local and remote Maven repositories.
  *
- * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class MavenRepository implements Repository {

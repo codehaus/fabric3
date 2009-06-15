@@ -50,7 +50,7 @@ import javax.xml.namespace.QName;
 /**
  * Base class for SCA definitions that support references to intents and policySets.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class AbstractPolicyAware extends ModelObject implements PolicyAware {
     private static final long serialVersionUID = -3494285576822641528L;

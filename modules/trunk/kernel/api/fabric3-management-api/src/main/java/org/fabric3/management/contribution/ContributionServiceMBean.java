@@ -45,7 +45,7 @@ import org.fabric3.api.annotation.Management;
 /**
  * MBean for managing contributions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Management
 public interface ContributionServiceMBean {

@@ -61,7 +61,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 /**
  * Loader for definitions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class IntentLoader implements TypeLoader<Intent> {
 

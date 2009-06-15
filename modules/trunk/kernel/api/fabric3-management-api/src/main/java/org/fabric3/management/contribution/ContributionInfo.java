@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 /**
  * Encapsulates information about a contribution for a management client.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionInfo implements Serializable, Comparable<ContributionInfo> {
     private static final long serialVersionUID = -7848414989706207915L;

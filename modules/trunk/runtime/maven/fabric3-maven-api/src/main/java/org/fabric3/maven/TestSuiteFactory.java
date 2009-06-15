@@ -46,7 +46,7 @@ import org.fabric3.host.Names;
 /**
  * Creates a Surfire testsuite to run as a set of integration tests.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TestSuiteFactory {
 

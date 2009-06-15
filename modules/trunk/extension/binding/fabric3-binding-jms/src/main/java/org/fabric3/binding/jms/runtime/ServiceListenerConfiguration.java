@@ -47,7 +47,7 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 /**
  * A configuration template used when registering a ServiceMessageListener with a JmsHost.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ServiceListenerConfiguration {
 

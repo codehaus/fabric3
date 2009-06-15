@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class PassiveConnectionServiceImpl implements PassiveConnectionService {

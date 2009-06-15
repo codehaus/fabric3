@@ -53,7 +53,7 @@ import org.fabric3.spi.binding.format.EncoderException;
 /**
  * ParameterEncoder that uses Hessian.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class HessianParameterEncoder extends BaseParameterEncoder {

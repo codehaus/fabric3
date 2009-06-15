@@ -42,7 +42,7 @@ import java.net.URL;
 /**
  * Resolver for content type based on file extensions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ContentTypeResolver {
 

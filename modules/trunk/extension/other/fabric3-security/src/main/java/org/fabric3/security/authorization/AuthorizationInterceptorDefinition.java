@@ -47,7 +47,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  * <p/>
  * where the namespace prefix f3-policy maps to the uri urn:fabric3.org:policy.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AuthorizationInterceptorDefinition extends PhysicalInterceptorDefinition {
     private static final long serialVersionUID = -6234482688280435134L;

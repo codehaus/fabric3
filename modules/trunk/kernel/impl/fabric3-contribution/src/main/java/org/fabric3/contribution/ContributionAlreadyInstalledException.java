@@ -40,7 +40,7 @@ package org.fabric3.contribution;
 import org.fabric3.host.contribution.InstallException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionAlreadyInstalledException extends InstallException {
     private static final long serialVersionUID = 1236610771089236696L;

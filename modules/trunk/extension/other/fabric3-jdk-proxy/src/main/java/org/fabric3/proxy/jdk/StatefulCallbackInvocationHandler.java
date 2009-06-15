@@ -50,7 +50,7 @@ import org.fabric3.spi.wire.InvocationChain;
  * invoke the instance this proxy is injected on at a time, there can only be one callback target, even if the proxy is injected on an instance
  * variable. Consequently, the proxy does not need to map the callback target based on the forward request.
  *
- * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
+ * @version $Rev$ $Date$
  */
 public class StatefulCallbackInvocationHandler<T> extends AbstractCallbackInvocationHandler<T> {
     private Map<Method, InvocationChain> chains;

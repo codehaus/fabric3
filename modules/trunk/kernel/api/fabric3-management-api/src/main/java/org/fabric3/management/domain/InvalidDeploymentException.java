@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * Used to report deployment errors.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidDeploymentException extends DeploymentManagementException {
     private static final long serialVersionUID = -4240726635386110545L;

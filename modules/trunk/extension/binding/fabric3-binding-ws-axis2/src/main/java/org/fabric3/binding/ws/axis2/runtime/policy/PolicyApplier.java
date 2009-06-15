@@ -41,7 +41,7 @@ import org.apache.axis2.description.AxisDescription;
 import org.w3c.dom.Element;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PolicyApplier {
 

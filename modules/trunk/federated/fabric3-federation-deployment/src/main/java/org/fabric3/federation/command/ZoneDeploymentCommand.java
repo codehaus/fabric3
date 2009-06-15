@@ -42,7 +42,7 @@ import org.fabric3.spi.command.Command;
 /**
  * Aggregates a set of commands for deploying components to a zone.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ZoneDeploymentCommand implements Command {
     private static final long serialVersionUID = 8673100303949676875L;

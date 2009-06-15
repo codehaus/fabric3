@@ -40,7 +40,7 @@ package org.fabric3.spi.contribution.manifest;
 /**
  * Represents Java package information specified in a Java import or export contribution manifest declaration.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class PackageInfo {
     private static final PackageVersion NON_SPECIFIED = new PackageVersion(0, 0, 0);

@@ -52,7 +52,7 @@ import org.fabric3.api.annotation.logging.Severe;
 /**
  * Monitor interface for JMS Host.
  *
- * @version $Rev: 3137 $ $Date: 2008-03-18 02:31:06 +0800 (Tue, 18 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public interface JmsMonitor {
 

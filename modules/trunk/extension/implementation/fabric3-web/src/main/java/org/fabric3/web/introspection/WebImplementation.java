@@ -45,7 +45,7 @@ import org.fabric3.model.type.component.Implementation;
 /**
  * Model object for a web component.
  *
- * @version $Rev: 956 $ $Date: 2007-08-31 15:35:28 -0700 (Fri, 31 Aug 2007) $
+ * @version $Rev$ $Date$
  */
 public class WebImplementation extends Implementation<WebComponentType> {
     private static final long serialVersionUID = 5589199308230767243L;

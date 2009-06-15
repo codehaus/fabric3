@@ -55,7 +55,7 @@ import org.fabric3.spi.wire.InvocationChain;
 /**
  * Creates a proxy for a wire that implements a provided interface
  *
- * @version $Rev: 2982 $ $Date: 2008-03-02 09:42:03 -0800 (Sun, 02 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class WireObjectFactory<T> implements ObjectFactory<T> {
     private Class<T> interfaze;

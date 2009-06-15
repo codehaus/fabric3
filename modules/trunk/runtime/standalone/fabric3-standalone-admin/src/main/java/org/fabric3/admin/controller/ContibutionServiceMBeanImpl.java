@@ -75,7 +75,7 @@ import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {

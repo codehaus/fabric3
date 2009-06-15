@@ -46,7 +46,7 @@ import org.fabric3.timer.component.provision.TriggerData;
 /**
  * Represents a timer component implementation type.
  *
- * @version $$Rev: 3079 $$ $$Date: 2008-03-13 03:30:59 -0700 (Thu, 13 Mar 2008) $$
+ * @version $$Rev$$ $$Date$$
  */
 public class TimerImplementation extends JavaImplementation {
     public static final QName IMPLEMENTATION_TIMER = new QName(Namespaces.IMPLEMENTATION, "implementation.timer");

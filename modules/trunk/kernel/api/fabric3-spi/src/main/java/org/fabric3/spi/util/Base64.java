@@ -62,7 +62,7 @@ import java.io.Writer;
  * Content-Transfer-Encoding</cite> from RFC 2045 <cite>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message
  * Bodies</cite> by Freed and Borenstein.</p>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 
 

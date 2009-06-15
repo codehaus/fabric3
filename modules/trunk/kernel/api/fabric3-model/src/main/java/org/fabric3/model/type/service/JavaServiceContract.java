@@ -54,7 +54,7 @@ import java.util.Map;
 /**
  * Represents a service contract specified using a Java interface
  *
- * @version $Rev: 6030 $ $Date: 2008-11-23 09:34:57 -0800 (Sun, 23 Nov 2008) $
+ * @version $Rev$ $Date$
  */
 public class JavaServiceContract extends ServiceContract<Type> {
 

@@ -44,7 +44,7 @@ import java.net.URI;
 import org.fabric3.host.domain.AssemblyFailure;
 
 /**
- * @version $Rev: 4789 $ $Date: 2008-06-08 07:54:46 -0700 (Sun, 08 Jun 2008) $
+ * @version $Rev$ $Date$
  */
 public class InvalidProperty extends AssemblyFailure {
     private String name;

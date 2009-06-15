@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * Retains settings in memory.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TransientSettings implements Settings {
     private Map<String, String> domains = new HashMap<String, String>();

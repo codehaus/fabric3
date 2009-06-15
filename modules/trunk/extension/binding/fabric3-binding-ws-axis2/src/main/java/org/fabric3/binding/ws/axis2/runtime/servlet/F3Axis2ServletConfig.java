@@ -42,7 +42,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class F3Axis2ServletConfig implements ServletConfig {
 

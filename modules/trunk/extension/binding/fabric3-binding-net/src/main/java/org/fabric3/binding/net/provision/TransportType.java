@@ -40,7 +40,7 @@ package org.fabric3.binding.net.provision;
 /**
  * Indentifies supported transports.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum TransportType {
 

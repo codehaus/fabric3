@@ -53,7 +53,7 @@ import org.fabric3.ftp.server.protocol.RequestHandler;
  * Handles the <code>LIST</code> command.
  * <p/>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ListRequestHandler implements RequestHandler {
     private static final byte[] BYTES = "".getBytes();

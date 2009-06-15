@@ -68,7 +68,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  * messages to external brokers with target service consumers. To configure the wire to use a remote broker topology, the <code>brokerUrl</code>
  * property may be set to the appropriate broker location.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ActiveMQBindingProvider implements BindingProvider {

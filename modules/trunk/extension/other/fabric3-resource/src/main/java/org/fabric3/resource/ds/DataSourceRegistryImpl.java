@@ -44,7 +44,7 @@ import javax.sql.DataSource;
 import org.fabric3.spi.resource.DataSourceRegistry;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DataSourceRegistryImpl implements DataSourceRegistry {
 

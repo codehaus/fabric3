@@ -66,7 +66,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     /**

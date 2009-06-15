@@ -50,7 +50,7 @@ import org.fabric3.api.annotation.Management;
 /**
  * Management interface for the standalone pull JMS host.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Management
 public interface StandalonePullJmsHostMBean {

@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Execption thrown if unable to activate definition.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PolicyActivationException extends Fabric3Exception {
     private static final long serialVersionUID = -7879956099570998326L;

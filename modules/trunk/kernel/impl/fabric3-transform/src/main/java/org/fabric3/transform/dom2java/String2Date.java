@@ -51,7 +51,7 @@ import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.AbstractPullTransformer;
 
 /**
- * @version $Rev: 566 $ $Date: 2007-07-24 22:07:41 +0100 (Tue, 24 Jul 2007) $ String format of Date, expects format of
+ * @version $Rev$ $Date$ String format of Date, expects format of
  *          date as dd/mm/yyyy (<date>12/07/2007</date>)
  */
 public class String2Date extends AbstractPullTransformer<Node, Date> {

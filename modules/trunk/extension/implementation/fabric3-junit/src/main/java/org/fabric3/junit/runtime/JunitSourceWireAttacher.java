@@ -49,7 +49,7 @@ import org.fabric3.spi.wire.Wire;
 import org.fabric3.test.spi.TestWireHolder;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitWireSourceDefinition> {

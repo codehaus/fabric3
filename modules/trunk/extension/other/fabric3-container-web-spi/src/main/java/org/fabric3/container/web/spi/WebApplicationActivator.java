@@ -49,7 +49,7 @@ import org.fabric3.pojo.reflection.Injector;
 /**
  * Responsible for activating a web application in an embedded servlet container.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WebApplicationActivator {
     public static final String SERVLET_CONTEXT_SITE = "fabric3.servletContext";

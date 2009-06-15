@@ -48,7 +48,7 @@ import org.fabric3.binding.net.NetBindingMonitor;
 /**
  * Listens for the completion of a channel write operation to a TCP socketand retries the specified number of times if the operation failed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpRetryWriteListener implements ChannelFutureListener {
     private ChannelBuffer buffer;

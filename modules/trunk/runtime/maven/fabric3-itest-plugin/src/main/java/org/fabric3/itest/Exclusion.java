@@ -44,7 +44,7 @@
 package org.fabric3.itest;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Exclusion extends org.apache.maven.model.Exclusion {
 

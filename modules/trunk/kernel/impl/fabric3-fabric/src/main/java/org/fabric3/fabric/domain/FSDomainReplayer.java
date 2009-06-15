@@ -74,7 +74,7 @@ import org.fabric3.spi.xml.XMLFactory;
  * offline (either as a result of a normal shutdown or system failure). Replaying the journal will also send physical change sets to all zones in the
  * domain. If a zone is up-to-date, it will discard the change set. Otherwise it will execute its commands, resulting in component reprovisioning.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class FSDomainReplayer implements Fabric3EventListener<DomainRecover> {

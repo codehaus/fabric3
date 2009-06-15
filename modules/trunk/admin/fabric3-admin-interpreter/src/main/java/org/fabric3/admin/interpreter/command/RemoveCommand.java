@@ -53,7 +53,7 @@ import org.fabric3.management.contribution.ContributionRemoveException;
 import org.fabric3.management.contribution.ContributionUninstallException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RemoveCommand implements Command {
     private DomainController controller;

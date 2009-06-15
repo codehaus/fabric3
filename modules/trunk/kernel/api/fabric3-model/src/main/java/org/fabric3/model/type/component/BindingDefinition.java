@@ -56,7 +56,7 @@ import org.fabric3.model.type.CapabilityAware;
 /**
  * The base representation of a binding specified in an assembly
  *
- * @version $Rev: 5650 $ $Date: 2008-10-12 09:43:10 -0700 (Sun, 12 Oct 2008) $
+ * @version $Rev$ $Date$
  */
 public abstract class BindingDefinition extends AbstractPolicyAware implements CapabilityAware {
     private static final long serialVersionUID = 8780407747984243865L;

@@ -42,7 +42,7 @@ import org.fabric3.spi.command.Command;
 /**
  * A command issued by the zone manager on behalf of a participant to synchronize with the domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ZoneSyncCommand implements Command {
     private static final long serialVersionUID = 6531949467055199113L;

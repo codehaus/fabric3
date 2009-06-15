@@ -42,7 +42,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Axis2ServiceProvisioner {
 

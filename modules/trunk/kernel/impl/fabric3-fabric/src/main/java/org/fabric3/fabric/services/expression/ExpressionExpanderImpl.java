@@ -49,7 +49,7 @@ import org.fabric3.spi.services.expression.ExpressionExpansionException;
 /**
  * Expands strings containing expressions delimited by '${' and '}' through delegation to a set of ExpressionEvaluators.
  *
- * @version $Rev: 3524 $ $Date: 2008-03-31 14:43:51 -0700 (Mon, 31 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class ExpressionExpanderImpl implements ExpressionExpander {
     private static final String PREFIX = "${";

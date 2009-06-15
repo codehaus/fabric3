@@ -38,7 +38,7 @@
 package org.fabric3.management.contribution;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionInstallException extends ContributionManagementException {
     private static final long serialVersionUID = 4938971859311394300L;

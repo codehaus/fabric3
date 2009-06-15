@@ -45,7 +45,7 @@ import org.fabric3.spi.ObjectFactory;
 /**
  * Creates MultiThreadedEntityManagerProxy instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MultiThreadedEntityManagerProxyFactory implements ObjectFactory<MultiThreadedEntityManagerProxy> {
     private String unitName;

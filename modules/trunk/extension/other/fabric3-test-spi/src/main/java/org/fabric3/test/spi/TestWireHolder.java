@@ -46,7 +46,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Provides wires to test components used by a integration test runtime for test dispatching.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TestWireHolder {
 

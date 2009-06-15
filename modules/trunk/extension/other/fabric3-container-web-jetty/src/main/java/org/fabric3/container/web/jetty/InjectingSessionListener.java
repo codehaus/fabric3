@@ -48,7 +48,7 @@ import org.fabric3.spi.ObjectCreationException;
 /**
  * Injects reference proxies into an HTTP session when it is created.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InjectingSessionListener implements HttpSessionListener {
     private List<Injector<HttpSession>> injectors;

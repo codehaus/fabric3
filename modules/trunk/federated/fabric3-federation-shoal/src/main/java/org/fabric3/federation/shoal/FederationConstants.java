@@ -44,7 +44,7 @@ import org.fabric3.host.Namespaces;
 /**
  * Constants for federation extension classes.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface FederationConstants {
 

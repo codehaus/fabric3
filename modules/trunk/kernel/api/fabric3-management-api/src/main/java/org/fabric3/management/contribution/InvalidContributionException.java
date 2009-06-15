@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * Denotes an invalid contribution and reports introspection errors.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidContributionException extends ContributionInstallException {
     private static final long serialVersionUID = -9209475021865946685L;

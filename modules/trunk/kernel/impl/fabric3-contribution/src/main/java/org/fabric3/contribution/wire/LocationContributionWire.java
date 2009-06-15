@@ -48,7 +48,7 @@ import org.fabric3.spi.contribution.Symbol;
  * Wires two contributions using an explicit target contribution reference, making all artifacts exported from one contribution visible to the other
  * importing contribution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class LocationContributionWire implements ContributionWire<ContributionImport, ContributionExport> {
     private static final long serialVersionUID = -2724694051340291455L;

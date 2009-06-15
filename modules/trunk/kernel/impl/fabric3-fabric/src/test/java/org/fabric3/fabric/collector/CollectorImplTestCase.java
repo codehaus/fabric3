@@ -48,7 +48,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CollectorImplTestCase extends TestCase {
     private static final QName DEPLOYABLE = new QName(null, "deployable");

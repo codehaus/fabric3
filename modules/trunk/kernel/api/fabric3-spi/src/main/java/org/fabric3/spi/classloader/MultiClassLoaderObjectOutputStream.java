@@ -45,7 +45,7 @@ import java.io.OutputStream;
  * A specialized ObjectOutputStream that serializes objects with classloader information so they may be deserialized by {@link
  * MultiClassLoaderObjectInputStream}.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MultiClassLoaderObjectOutputStream extends ObjectOutputStream {
     public MultiClassLoaderObjectOutputStream(OutputStream out) throws IOException {

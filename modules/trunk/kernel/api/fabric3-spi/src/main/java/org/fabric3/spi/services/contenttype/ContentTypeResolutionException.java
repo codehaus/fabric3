@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an error resolving the content type for a resource.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContentTypeResolutionException extends Fabric3Exception {
     private static final long serialVersionUID = 7983355008884153907L;

@@ -61,7 +61,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.resource.DataSourceRegistry;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class XaPoolDataSource implements DataSource {

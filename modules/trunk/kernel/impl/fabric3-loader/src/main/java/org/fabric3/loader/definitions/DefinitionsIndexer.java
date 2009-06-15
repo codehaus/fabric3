@@ -63,7 +63,7 @@ import org.fabric3.spi.introspection.xml.MissingAttribute;
 /**
  * Indexer for definitions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class DefinitionsIndexer implements XmlIndexer {

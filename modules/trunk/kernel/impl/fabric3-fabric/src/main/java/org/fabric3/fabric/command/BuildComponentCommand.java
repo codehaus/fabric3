@@ -49,7 +49,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 /**
  * A command to instantiate a component on a runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class BuildComponentCommand implements Command {
     private static final long serialVersionUID = -6102447991230736883L;

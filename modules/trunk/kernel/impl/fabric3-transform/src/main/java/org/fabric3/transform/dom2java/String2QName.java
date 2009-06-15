@@ -48,7 +48,7 @@ import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.AbstractPullTransformer;
 
 /**
- * @version $Rev: 42 $ $Date: 2007-05-16 18:58:55 +0100 (Wed, 16 May 2007) $
+ * @version $Rev$ $Date$
  */
 public class String2QName extends AbstractPullTransformer<Node, QName> {
     /**

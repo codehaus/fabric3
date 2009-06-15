@@ -48,7 +48,7 @@ import org.fabric3.admin.interpreter.CommandException;
 import org.fabric3.management.contribution.ContributionInfo;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StatCommand implements Command {
     private DomainController controller;

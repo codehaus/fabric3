@@ -40,7 +40,7 @@ package org.fabric3.spi.invocation;
 /**
  * Defines the types of conversational context between a client and a service provider.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum ConversationContext {
     /**

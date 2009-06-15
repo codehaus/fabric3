@@ -47,7 +47,7 @@ import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition implements Axis2PolicyAware {
 

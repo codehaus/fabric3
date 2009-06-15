@@ -43,7 +43,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 /**
  * Source definition for the TCP binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = -7539751390983381654L;

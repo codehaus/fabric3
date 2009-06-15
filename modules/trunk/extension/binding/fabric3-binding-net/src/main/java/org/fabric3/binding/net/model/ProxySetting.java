@@ -43,7 +43,7 @@ import java.util.List;
 import org.fabric3.model.type.ModelObject;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ProxySetting extends ModelObject {
     public enum Type {

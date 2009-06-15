@@ -44,7 +44,7 @@ import org.fabric3.spi.command.Command;
 /**
  * A command to attach a contribution classloader as an extension to a contribution classloader that provides an extension point.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AttachExtensionCommand implements Command {
     private static final long serialVersionUID = -5002990071569611217L;

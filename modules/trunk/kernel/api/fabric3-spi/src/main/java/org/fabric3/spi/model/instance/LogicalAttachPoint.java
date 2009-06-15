@@ -48,7 +48,7 @@ import org.fabric3.model.type.service.ServiceContract;
 /**
  * Represents a contract-based attachment point on an instantiated component, specifically a service, reference, or resource.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class LogicalAttachPoint extends LogicalScaArtifact<LogicalComponent<?>> {
     private static final long serialVersionUID = -5294444649296282992L;

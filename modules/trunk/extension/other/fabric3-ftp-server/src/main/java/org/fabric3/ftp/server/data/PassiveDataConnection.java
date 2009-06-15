@@ -49,7 +49,7 @@ import java.net.SocketAddress;
 /**
  * Represents a passive data connection.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PassiveDataConnection implements DataConnection {
 

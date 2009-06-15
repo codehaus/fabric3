@@ -44,7 +44,7 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * Indicates the loader encountered an invalid wire format element.
  *
- * @version $Rev: 6368 $ $Date: 2008-12-29 16:30:06 -0800 (Mon, 29 Dec 2008) $
+ * @version $Rev$ $Date$
  */
 public class InvalidWireFormat extends XmlValidationFailure {
 

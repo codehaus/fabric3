@@ -47,7 +47,7 @@ import org.fabric3.admin.interpreter.ParseException;
 import org.fabric3.admin.interpreter.command.InstallCommand;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InstallCommandParser implements CommandParser {
     private DomainController controller;

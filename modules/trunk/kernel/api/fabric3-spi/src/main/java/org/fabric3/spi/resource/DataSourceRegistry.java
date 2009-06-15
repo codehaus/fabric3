@@ -40,7 +40,7 @@ package org.fabric3.spi.resource;
 import javax.sql.DataSource;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface DataSourceRegistry {
 

@@ -53,7 +53,7 @@ import org.fabric3.model.type.service.ServiceContract;
 /**
  * Super class for logical services and references.
  *
- * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
+ * @version $Rev$ $Date$
  */
 public abstract class Bindable extends LogicalAttachPoint {
     private static final long serialVersionUID = 570403036597601956L;

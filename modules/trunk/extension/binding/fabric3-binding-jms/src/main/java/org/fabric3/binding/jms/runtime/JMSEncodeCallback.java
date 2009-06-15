@@ -47,7 +47,7 @@ import org.fabric3.spi.binding.format.EncodeCallback;
 /**
  * EncodeCallback that populates a JMS Message.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JMSEncodeCallback implements EncodeCallback {
     private Message jmsMessage;

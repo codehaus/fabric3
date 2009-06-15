@@ -47,7 +47,7 @@ import com.caucho.hessian.io.AbstractHessianInput;
 /**
  * Custom Deserializer for {@link QName}s.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QNameDeserializer extends AbstractDeserializer {
 

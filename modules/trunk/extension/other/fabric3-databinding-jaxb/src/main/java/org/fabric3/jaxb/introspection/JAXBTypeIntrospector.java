@@ -50,7 +50,7 @@ import org.fabric3.spi.introspection.contract.OperationIntrospector;
 /**
  * Introspects operations for the presence of JAXB types. If a parameter is a JAXB type, the JAXB intent is added to the operation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JAXBTypeIntrospector implements OperationIntrospector {
 

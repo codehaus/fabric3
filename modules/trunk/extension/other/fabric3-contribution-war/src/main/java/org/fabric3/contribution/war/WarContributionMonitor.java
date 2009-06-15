@@ -42,7 +42,7 @@ import org.fabric3.api.annotation.logging.Info;
 /**
  * Monitor interface for the WAR contribution extension.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WarContributionMonitor {
     /**

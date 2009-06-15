@@ -57,7 +57,7 @@ import org.fabric3.spi.invocation.Message;
  * <p/>
  * <b> Note this implementation is note yet complete.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JsonRpcMessageEncoder implements MessageEncoder {
     private ObjectMapper mapper;

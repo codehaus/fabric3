@@ -43,7 +43,7 @@ import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class SystemSourcedResource extends ResourceDefinition {
     private String mappedName;

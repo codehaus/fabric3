@@ -43,7 +43,7 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JUnitBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = -1306543849900003084L;

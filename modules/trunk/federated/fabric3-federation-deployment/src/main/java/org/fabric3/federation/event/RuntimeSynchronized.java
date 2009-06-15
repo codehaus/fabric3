@@ -42,7 +42,7 @@ import org.fabric3.spi.services.event.Fabric3Event;
 /**
  * Denotes when a runtime is synchronized with the domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RuntimeSynchronized implements Fabric3Event {
 }

@@ -40,7 +40,7 @@ package org.fabric3.federation.shoal;
 import org.fabric3.api.annotation.logging.Info;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ZoneManagerMonitor {
 

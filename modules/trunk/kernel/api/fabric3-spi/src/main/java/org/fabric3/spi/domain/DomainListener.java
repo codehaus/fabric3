@@ -42,7 +42,7 @@ import javax.xml.namespace.QName;
 /**
  * Implementations receive callbacks for domain events.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface DomainListener {
 

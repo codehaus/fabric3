@@ -53,7 +53,7 @@ import org.quartz.core.SchedulingContext;
 /**
  * JobRunShell that wraps job invocations in a transaction.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TrxJobRunShell extends F3JobRunShell {
     private TransactionManager tm;

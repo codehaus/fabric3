@@ -46,7 +46,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 
 public class Fabric3LogFormatter extends Formatter {

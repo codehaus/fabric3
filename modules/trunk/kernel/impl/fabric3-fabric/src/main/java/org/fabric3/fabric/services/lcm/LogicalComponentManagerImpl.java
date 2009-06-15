@@ -59,7 +59,7 @@ import org.fabric3.spi.services.lcm.WriteException;
 import org.fabric3.spi.util.UriHelper;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class LogicalComponentManagerImpl implements LogicalComponentManager, LogicalComponentManagerMBean {
 

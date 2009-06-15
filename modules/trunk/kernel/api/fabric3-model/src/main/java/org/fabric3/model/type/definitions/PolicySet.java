@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
 /**
  * Model object that represents a policy set.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class PolicySet extends AbstractDefinition {
     private static final long serialVersionUID = -4507145141780962741L;

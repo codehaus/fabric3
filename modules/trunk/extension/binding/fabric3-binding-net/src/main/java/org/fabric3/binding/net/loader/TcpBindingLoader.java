@@ -55,7 +55,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 /**
  * Loader for binding.http.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class TcpBindingLoader extends AbstractBindingLoader<TcpBindingDefinition> {

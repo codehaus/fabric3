@@ -47,7 +47,7 @@ import org.fabric3.spi.services.VoidService;
 /**
  * Reports the status of the binding extension.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class BindingStatus implements VoidService {

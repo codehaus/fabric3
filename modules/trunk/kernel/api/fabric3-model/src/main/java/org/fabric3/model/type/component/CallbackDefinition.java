@@ -49,7 +49,7 @@ import org.fabric3.model.type.service.ServiceContract;
 /**
  * Represents a callback definition.
  *
- * @version $Rev: 1450 $ $Date: 2007-10-04 12:03:56 -0700 (Thu, 04 Oct 2007) $
+ * @version $Rev$ $Date$
  */
 public class CallbackDefinition extends ModelObject {
     private static final long serialVersionUID = -1845071329121684755L;

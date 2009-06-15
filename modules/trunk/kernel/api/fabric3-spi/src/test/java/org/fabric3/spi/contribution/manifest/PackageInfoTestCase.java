@@ -40,7 +40,7 @@ package org.fabric3.spi.contribution.manifest;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PackageInfoTestCase extends TestCase {
 

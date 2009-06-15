@@ -40,7 +40,7 @@ package org.fabric3.binding.jms.runtime;
 /**
  * Defines JMS constants.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface JmsConstants {
 

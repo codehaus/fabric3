@@ -70,7 +70,7 @@ import java.util.StringTokenizer;
  * <p/>
  * This implementation is based on org.osgi.framework.Version from the OSGi Alliance issued under the Apache 2.0 License.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PackageVersion implements Comparable {
 

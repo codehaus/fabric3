@@ -68,7 +68,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 /**
  * Implementation loader for JPA component.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {

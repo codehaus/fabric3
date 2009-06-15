@@ -44,7 +44,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Component type loader for the mock component type.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface MockComponentTypeLoader {
 

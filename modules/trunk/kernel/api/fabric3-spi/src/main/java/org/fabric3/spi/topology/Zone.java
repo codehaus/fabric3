@@ -41,7 +41,7 @@ package org.fabric3.spi.topology;
  * Represents a domain zone. A domain consists of one or more zones, which are partitions of homogenous runtimes. A zone may contain one or more
  * runtimes. A zone elects one member a leader, which is responsible for communicating with the domain controller.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Zone {
     private String name;

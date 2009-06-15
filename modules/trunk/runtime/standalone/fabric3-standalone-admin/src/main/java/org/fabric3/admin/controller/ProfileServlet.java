@@ -58,7 +58,7 @@ import org.fabric3.host.contribution.StoreException;
 /**
  * Responsible for soring contributions in a profile with the ContributionService.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ProfileServlet extends HttpServlet {
     private static final long serialVersionUID = -8286023912719635905L;

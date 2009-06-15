@@ -58,7 +58,7 @@ import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper implements ImplementationPolicyHelper {
 

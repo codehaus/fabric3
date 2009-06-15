@@ -61,7 +61,7 @@ import org.fabric3.spi.topology.RuntimeService;
 /**
  * Manages federated communications using Shoal on a controller instance.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 @Service(interfaces = {RuntimeService.class, FederationService.class})

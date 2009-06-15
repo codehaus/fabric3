@@ -60,7 +60,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDefinition> {
     private ExpressionExpander expander;

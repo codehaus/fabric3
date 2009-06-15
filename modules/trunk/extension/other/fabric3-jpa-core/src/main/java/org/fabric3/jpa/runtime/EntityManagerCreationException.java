@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an exception creating and associating an EntityManager with an execution context.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EntityManagerCreationException extends Fabric3Exception {
     private static final long serialVersionUID = 6562347332589851544L;

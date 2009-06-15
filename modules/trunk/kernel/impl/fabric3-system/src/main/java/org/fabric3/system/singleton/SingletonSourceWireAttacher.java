@@ -60,7 +60,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * A SourceWireAttacher used to reinject singleton components after the runtime bootsrap.
  *
- * @version $Rev: 4790 $ $Date: 2008-06-08 08:14:42 -0700 (Sun, 08 Jun 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class SingletonSourceWireAttacher implements SourceWireAttacher<SingletonWireSourceDefinition> {

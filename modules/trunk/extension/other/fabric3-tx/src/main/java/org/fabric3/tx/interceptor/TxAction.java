@@ -38,7 +38,7 @@
 package org.fabric3.tx.interceptor;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum TxAction {
 

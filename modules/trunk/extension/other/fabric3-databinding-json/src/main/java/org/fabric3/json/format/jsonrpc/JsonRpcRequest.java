@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * Represents a JSON RPC 2.0 invocation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JsonRpcRequest {
 

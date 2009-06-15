@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
  * Associates the current web request with the thread processing it so that contexts such as the HTTP session can be accessed by the web component
  * container .
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class WebRequestTunnel {
     private static final ThreadLocal<HttpServletRequest> REQUEST = new ThreadLocal<HttpServletRequest>();

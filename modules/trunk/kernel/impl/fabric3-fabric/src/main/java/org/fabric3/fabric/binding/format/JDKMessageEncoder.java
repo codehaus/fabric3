@@ -50,7 +50,7 @@ import org.fabric3.spi.classloader.ClassLoaderObjectInputStream;
 /**
  * MessageEncoder that uses JDK serialization to encode/decode messages.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JDKMessageEncoder extends BaseMessageEncoder {
 

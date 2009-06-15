@@ -61,7 +61,7 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
  * to retrieve the EntityManager instance associated with the current conversation. The proxy will cache the EntityManager instance until the
  * transaction completes (or aborts) or the conversation ends.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StatefulEntityManagerProxy implements EntityManagerProxy {
     private String unitName;

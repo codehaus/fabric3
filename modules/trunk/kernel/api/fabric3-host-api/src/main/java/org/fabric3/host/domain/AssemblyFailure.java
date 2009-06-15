@@ -42,7 +42,7 @@ import java.net.URI;
 /**
  * Base class for recoverable errors updating the domain assembly encountered during a deployment.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class AssemblyFailure {
     private URI componentUri;

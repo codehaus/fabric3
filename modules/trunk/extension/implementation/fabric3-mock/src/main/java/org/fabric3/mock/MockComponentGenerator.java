@@ -50,7 +50,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class MockComponentGenerator implements ComponentGenerator<LogicalComponent<ImplementationMock>> {

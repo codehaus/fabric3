@@ -50,7 +50,7 @@ import org.easymock.EasyMock;
 import org.fabric3.admin.api.DomainController;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DeployTestCase extends TestCase {
 

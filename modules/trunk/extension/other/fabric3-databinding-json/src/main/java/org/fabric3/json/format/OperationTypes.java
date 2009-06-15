@@ -42,7 +42,7 @@ import java.util.Set;
 /**
  * Holder for for operation type information.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class OperationTypes {
     private Class<?> inParameterType;

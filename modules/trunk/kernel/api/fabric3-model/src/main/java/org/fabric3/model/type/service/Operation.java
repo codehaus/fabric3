@@ -56,7 +56,7 @@ import org.fabric3.model.type.AbstractPolicyAware;
  * Represents an operation that is part of a service contract. The type paramter of this operation identifies the logical type system for all data
  * types.
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public class Operation<T> extends AbstractPolicyAware {
     public static final int NO_CONVERSATION = -1;

@@ -67,7 +67,7 @@ import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.MavenEmbeddedRuntime;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MavenRuntimeBooter {
     private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";

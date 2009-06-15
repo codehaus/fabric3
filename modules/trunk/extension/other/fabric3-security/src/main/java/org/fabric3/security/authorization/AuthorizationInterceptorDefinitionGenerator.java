@@ -51,7 +51,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
  * <p/>
  * where the namespace prefix f3-policy maps to the uri urn:fabric3.org:policy.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class AuthorizationInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {

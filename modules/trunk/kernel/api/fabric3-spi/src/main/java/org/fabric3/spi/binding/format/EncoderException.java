@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes a general encoding/decoding exception.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EncoderException extends Fabric3Exception {
     private static final long serialVersionUID = -8851706178703876467L;

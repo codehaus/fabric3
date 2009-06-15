@@ -73,7 +73,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 /**
  * Loader for definitions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class DefinitionsLoader implements XmlResourceElementLoader {

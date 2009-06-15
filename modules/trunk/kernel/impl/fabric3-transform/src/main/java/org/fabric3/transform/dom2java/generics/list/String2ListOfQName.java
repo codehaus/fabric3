@@ -58,7 +58,7 @@ import org.fabric3.spi.transform.TransformationException;
  * <p/>
  * where values correspond to the format specified by {@link QName#valueOf(String)}.
  *
- * @version $Rev: 1570 $ $Date: 2007-10-20 14:24:19 +0100 (Sat, 20 Oct 2007) $
+ * @version $Rev$ $Date$
  */
 public class String2ListOfQName extends AbstractPullTransformer<Node, List<QName>> {
 

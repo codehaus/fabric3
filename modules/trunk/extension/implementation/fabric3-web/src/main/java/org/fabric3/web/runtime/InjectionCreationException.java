@@ -40,7 +40,7 @@ package org.fabric3.web.runtime;
 import org.fabric3.spi.builder.BuilderException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InjectionCreationException extends BuilderException {
     private static final long serialVersionUID = 3550562261724468883L;

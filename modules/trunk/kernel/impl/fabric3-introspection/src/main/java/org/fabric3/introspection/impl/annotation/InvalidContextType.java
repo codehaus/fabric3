@@ -48,7 +48,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * Denotes an invalid type for a field or setter annotated with @Context
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidContextType extends ValidationFailure {
     private String message;

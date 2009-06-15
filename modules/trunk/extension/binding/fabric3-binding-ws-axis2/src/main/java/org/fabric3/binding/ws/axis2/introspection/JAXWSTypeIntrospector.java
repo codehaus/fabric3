@@ -48,7 +48,7 @@ import org.fabric3.spi.introspection.contract.OperationIntrospector;
 /**
  * Introspects operations for the presence of JAX-WS annotations. JAX-WS annotations are used to configure the Axis2 engine.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JAXWSTypeIntrospector implements OperationIntrospector {
 

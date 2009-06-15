@@ -51,7 +51,7 @@ import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.DuplicateContributionManagementException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InstallCommand implements Command {
     private DomainController controller;

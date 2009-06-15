@@ -40,7 +40,7 @@ package org.fabric3.util.closure;
 /**
  * Represents a typed closure.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Closure<OBJECT, RESULT> {
 

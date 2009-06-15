@@ -50,7 +50,7 @@ import org.fabric3.spi.transform.AbstractPullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class OMElement2Jaxb extends AbstractPullTransformer<OMElement, Object> {
 

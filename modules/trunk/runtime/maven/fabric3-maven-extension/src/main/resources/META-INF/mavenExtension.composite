@@ -10,7 +10,7 @@ Copyright (C) 2009 Metaform Systems
  licensed under the Apache 2.0 license.
 
 
-    $Rev: 5971 $ $Date: 2008-11-16 10:47:20 -0800 (Sun, 16 Nov 2008) $
+    $Rev$ $Date$
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"

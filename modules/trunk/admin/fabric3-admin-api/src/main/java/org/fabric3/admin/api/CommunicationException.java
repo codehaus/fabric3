@@ -40,7 +40,7 @@ package org.fabric3.admin.api;
 /**
  * Denotes an exception installing a contribution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CommunicationException extends Exception {
     private static final long serialVersionUID = -351731887104971407L;

@@ -48,7 +48,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * Denotes a missing resource such as a class file.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MissingResource extends ValidationFailure {
     private String description;

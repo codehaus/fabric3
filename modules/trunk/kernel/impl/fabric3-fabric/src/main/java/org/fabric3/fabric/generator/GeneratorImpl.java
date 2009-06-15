@@ -69,7 +69,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 /**
  * Default Generator implementation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class GeneratorImpl implements Generator {

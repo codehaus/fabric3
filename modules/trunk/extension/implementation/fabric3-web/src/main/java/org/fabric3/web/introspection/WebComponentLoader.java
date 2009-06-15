@@ -63,7 +63,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 /**
  * Loads <code><implementation.web></code> from a composite.
  *
- * @version $Rev: 3105 $ $Date: 2008-03-15 09:47:31 -0700 (Sat, 15 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class WebComponentLoader implements TypeLoader<WebImplementation> {

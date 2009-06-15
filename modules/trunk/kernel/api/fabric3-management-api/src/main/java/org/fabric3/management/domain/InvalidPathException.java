@@ -40,7 +40,7 @@ package org.fabric3.management.domain;
 /**
  * Denotes an invalid composite path.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidPathException extends DeploymentManagementException {
     private static final long serialVersionUID = 3216813902486412174L;

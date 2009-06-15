@@ -45,7 +45,7 @@ import org.fabric3.spi.component.F3Conversation;
 /**
  * Responsible for returning an EntityManager with a persitence context tied to an execution context.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface EntityManagerService {
 

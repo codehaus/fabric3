@@ -75,7 +75,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class AbstractComponentInstantiator implements ComponentInstantiator {
 

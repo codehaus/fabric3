@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * Returns the packages that should be exported by the host contribution for the Java 5 platform.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class Java5HostExports {
     private static final Map<String, String> HOST_EXPORTS;

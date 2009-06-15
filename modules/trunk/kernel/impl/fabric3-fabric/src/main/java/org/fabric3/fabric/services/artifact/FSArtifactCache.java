@@ -56,7 +56,7 @@ import org.fabric3.spi.services.artifact.CacheException;
 import org.fabric3.util.io.FileHelper;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class FSArtifactCache implements ArtifactCache {

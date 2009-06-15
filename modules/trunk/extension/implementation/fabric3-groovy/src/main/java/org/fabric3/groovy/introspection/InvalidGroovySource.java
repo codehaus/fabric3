@@ -40,7 +40,7 @@ package org.fabric3.groovy.introspection;
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidGroovySource extends ValidationFailure {
     private String source;

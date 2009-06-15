@@ -48,7 +48,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 /**
  * Processes a <code>extends</code> element in a contribution manifest
  *
- * @version $Rev: 6368 $ $Date: 2008-12-29 16:30:06 -0800 (Mon, 29 Dec 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ExtendsLoader implements TypeLoader<ExtendsDeclaration> {

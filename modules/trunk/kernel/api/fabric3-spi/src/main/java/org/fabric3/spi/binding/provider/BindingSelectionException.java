@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * General error denoting an exception configuring a binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class BindingSelectionException extends Fabric3Exception {
     private static final long serialVersionUID = -8232393072665476184L;

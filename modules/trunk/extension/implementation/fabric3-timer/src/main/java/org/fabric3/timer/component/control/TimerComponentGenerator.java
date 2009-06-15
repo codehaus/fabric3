@@ -63,7 +63,7 @@ import org.fabric3.timer.component.provision.TriggerData;
 /**
  * Generates a TimerComponentDefinition from a ComponentDefinition corresponding to a timer component implementation
  *
- * @version $Rev: 4833 $ $Date: 2008-06-20 03:41:57 -0700 (Fri, 20 Jun 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class TimerComponentGenerator implements ComponentGenerator<LogicalComponent<TimerImplementation>> {

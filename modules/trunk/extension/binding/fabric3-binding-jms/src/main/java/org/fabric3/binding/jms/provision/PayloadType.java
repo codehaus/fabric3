@@ -46,7 +46,7 @@ package org.fabric3.binding.jms.provision;
 /**
  * The payload type for bound service or reference.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum PayloadType {
     TEXT, OBJECT, STREAM, SHORT, INTEGER, DOUBLE, FLOAT, LONG, CHARACTER, BOOLEAN, BYTE

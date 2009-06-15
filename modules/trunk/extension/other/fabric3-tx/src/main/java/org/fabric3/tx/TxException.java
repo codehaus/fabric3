@@ -40,7 +40,7 @@ package org.fabric3.tx;
 import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TxException extends Fabric3RuntimeException {
 

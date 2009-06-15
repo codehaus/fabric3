@@ -67,7 +67,7 @@ import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class PojoSourceWireAttacher {
 

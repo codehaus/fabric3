@@ -53,7 +53,7 @@ import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QuartzTimerServiceTestCase extends TestCase {
     private QuartzTimerService timerService;

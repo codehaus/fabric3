@@ -42,7 +42,7 @@ import javax.persistence.EntityManagerFactory;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CachingEmfBuilderTest extends TestCase {
 

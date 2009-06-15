@@ -56,7 +56,7 @@ import org.fabric3.web.provision.WebComponentWireSourceDefinition;
 /**
  * Source WireAttacher for web components.
  *
- * @version $Rev: 955 $ $Date: 2007-08-31 23:10:21 +0100 (Fri, 31 Aug 2007) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebComponentWireSourceDefinition> {

@@ -66,7 +66,7 @@ import org.fabric3.spi.topology.ZoneManager;
  * participant that is the zone manager. If the node is elected as a zone manager, the synchronization will be sent directly to the domain
  * controller.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class DomainSynchronizer implements Runnable, Fabric3EventListener {

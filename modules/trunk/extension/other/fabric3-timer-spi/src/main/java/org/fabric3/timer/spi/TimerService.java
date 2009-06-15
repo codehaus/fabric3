@@ -44,7 +44,7 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * Provides facilities for execution of tasks at some later time.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TimerService extends ScheduledExecutorService {
 

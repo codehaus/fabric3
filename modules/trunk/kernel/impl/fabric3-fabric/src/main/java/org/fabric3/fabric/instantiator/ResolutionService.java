@@ -46,7 +46,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  * Abstraction for resolving reference targets, reference promotions, and serivce promotions. Resolution involves determining the fully-qualified URI
  * of a promoted service, promoted reference, or a reference target.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ResolutionService {
 

@@ -55,7 +55,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 /**
  * Base class for resolving policies.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AbstractPolicyHelper {
     protected LogicalComponentManager lcm;

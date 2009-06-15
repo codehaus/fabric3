@@ -42,7 +42,7 @@ import javax.persistence.EntityManager;
 /**
  * Delegates to an EntityManager
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface EntityManagerProxy extends EntityManager {
 

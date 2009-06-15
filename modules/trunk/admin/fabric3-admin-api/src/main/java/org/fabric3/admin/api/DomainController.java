@@ -55,7 +55,7 @@ import org.fabric3.management.domain.InvalidPathException;
 /**
  * The interface for performing domain administrative functions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface DomainController {
 

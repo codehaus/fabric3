@@ -44,7 +44,7 @@ import org.osoa.sca.Conversation;
 /**
  * Used internally to represent a conversation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface F3Conversation extends Conversation, Serializable {
 }

@@ -53,7 +53,7 @@ import org.w3c.dom.Element;
 /**
  * Applies policies based on WS-Policy.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class NeethiPolicyApplier implements PolicyApplier {

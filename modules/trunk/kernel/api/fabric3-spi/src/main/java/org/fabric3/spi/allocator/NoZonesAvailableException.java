@@ -38,7 +38,7 @@
 package org.fabric3.spi.allocator;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class NoZonesAvailableException extends AllocationException {
     private static final long serialVersionUID = -2916042483754585243L;

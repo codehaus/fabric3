@@ -42,7 +42,7 @@ import java.net.URI;
 /**
  * Implements a strategy for creating or returning a classloader to set for entity manager factory instantiation for a given application classloader.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface EmfClassLoaderService {
 

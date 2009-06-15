@@ -68,7 +68,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  * </ul>
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PhysicalWireGenerator {
 

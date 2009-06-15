@@ -7,7 +7,7 @@ Fabric3 is licensed under modified terms of the GNU General
 Public License. See the accompanying license file for details.
 
 
-    $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
+    $Rev$ $Date$
 -->
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="urn:maven:org.codehaus.fabric3:fabric3-binding-ws-axis2" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <import.java package="org.fabric3.spi.*" version="1.2"/>

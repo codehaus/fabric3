@@ -53,7 +53,7 @@ import org.fabric3.spi.transform.AbstractPullTransformer;
 /**
  * String format for Calendar, expects format of date per XMLSchema (2007-10-31T01:02:03Z)
  *
- * @version $Rev: 566 $ $Date: 2007-07-24 22:07:41 +0100 (Tue, 24 Jul 2007) $
+ * @version $Rev$ $Date$
  */
 public class String2Calendar extends AbstractPullTransformer<Node, Calendar> {
     private static final JavaClass<Calendar> TARGET = new JavaClass<Calendar>(Calendar.class);

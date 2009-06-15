@@ -59,7 +59,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DefaultPolicyResolverDetachTestCase extends TestCase {
     private static final QName POLICY_SET = new QName("urn:test", "testPolicy");

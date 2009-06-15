@@ -40,7 +40,7 @@ package org.fabric3.spi.synthesize;
 /**
  * Synthesizes and registers a component from an existing object instance in the runtime domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ComponentSynthesizer {
 

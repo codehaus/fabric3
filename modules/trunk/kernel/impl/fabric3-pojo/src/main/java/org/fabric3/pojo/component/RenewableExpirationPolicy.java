@@ -42,7 +42,7 @@ import org.fabric3.spi.component.ExpirationPolicy;
 /**
  * An expiration that can be renewed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RenewableExpirationPolicy implements ExpirationPolicy {
     private long expiration;

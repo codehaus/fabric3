@@ -50,7 +50,7 @@ import java.util.Set;
 /**
  * Description of some packaged artifact such as a JAR file or a Composite.
  *
- * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
+ * @version $Rev$ $Date$
  */
 public class Artifact {
 

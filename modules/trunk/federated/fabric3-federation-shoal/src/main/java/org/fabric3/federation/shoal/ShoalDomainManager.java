@@ -68,7 +68,7 @@ import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.Zone;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ShoalDomainManager implements DomainManager, FederationCallback {

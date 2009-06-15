@@ -48,7 +48,7 @@ import java.net.URI;
 /**
  * Provisions listeners with the underlying JMS infrastructure.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface JmsHost {
 

@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  * A ClassLoader implementations that only loads classes matching a set of regular expression patterns from its parent. For example,
  * <code>org.fabric3.test.*</code> loads all classes in the <code>org.fabric3.test</code> package and its subpackages.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FilteringMultiparentClassLoader extends MultiParentClassLoader {
     private Set<Pattern> patterns = new HashSet<Pattern>();

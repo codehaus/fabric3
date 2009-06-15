@@ -70,7 +70,7 @@ import org.fabric3.management.domain.InvalidDeploymentException;
 /**
  * Default implementation of the DomainController API.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DomainControllerImpl implements DomainController {
     private static final String CONTRIBUTION_SERVICE_MBEAN =

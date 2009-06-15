@@ -10,7 +10,7 @@
  licensed under the Apache 2.0 license.
 
 
-    $Rev: 6377 $ $Date: 2008-12-31 19:00:24 +0000 (Wed, 31 Dec 2008) $
+    $Rev$ $Date$
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"

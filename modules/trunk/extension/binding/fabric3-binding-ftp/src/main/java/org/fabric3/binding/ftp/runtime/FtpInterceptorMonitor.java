@@ -44,7 +44,7 @@ import org.fabric3.api.annotation.logging.Fine;
 /**
  * Receives callbacks for FTP invocations from a client.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface FtpInterceptorMonitor {
 

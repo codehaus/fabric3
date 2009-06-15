@@ -60,7 +60,7 @@ import org.fabric3.spi.topology.DomainManager;
 /**
  * Creates logical configuration for binding.sca using the HTTP binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class HttpBindingProvider implements BindingProvider {

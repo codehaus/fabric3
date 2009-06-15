@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3RuntimeException;
 /**
  * Denotes a programming error using the ArtifactCache.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CacheRuntimeException extends Fabric3RuntimeException {
     private static final long serialVersionUID = -5547221159599422616L;

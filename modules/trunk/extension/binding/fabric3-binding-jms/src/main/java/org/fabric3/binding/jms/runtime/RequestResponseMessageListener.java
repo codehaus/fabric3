@@ -66,7 +66,7 @@ import org.fabric3.spi.wire.Interceptor;
 /**
  * Listens for requests sent to a destination and dispatches them to a service, returning a response to the response destination.
  *
- * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
+ * @version $Revison$ $Date$
  */
 public class RequestResponseMessageListener extends AbstractServiceMessageListener {
     public static final EncodeCallback CALLBACK = new ReturnEncodeCallback();

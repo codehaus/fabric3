@@ -45,7 +45,7 @@ import org.oasisopen.sca.ServiceRuntimeException;
 import org.fabric3.spi.binding.format.HeaderContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JMSHeaderContext implements HeaderContext {
     private Message jmsMessage;

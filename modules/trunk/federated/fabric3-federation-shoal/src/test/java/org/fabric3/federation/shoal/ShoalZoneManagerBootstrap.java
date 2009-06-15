@@ -38,7 +38,7 @@
 package org.fabric3.federation.shoal;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ShoalZoneManagerBootstrap {
 

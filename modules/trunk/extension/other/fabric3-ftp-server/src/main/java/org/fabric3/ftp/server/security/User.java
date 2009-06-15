@@ -40,7 +40,7 @@ package org.fabric3.ftp.server.security;
 /**
  * Represents a connected user.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class User {
 

@@ -48,7 +48,7 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 /**
  * Interface for the policy resolver.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PolicyResolver {
 

@@ -40,7 +40,7 @@ package org.fabric3.spi.topology;
 /**
  * Represents a runtime in the domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RuntimeInstance {
     private String name;

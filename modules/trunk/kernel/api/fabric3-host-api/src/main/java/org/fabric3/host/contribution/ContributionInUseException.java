@@ -43,7 +43,7 @@ import java.util.Set;
 /**
  * Thrown when there is an attempt to unload a contribution referenced by other installed contributions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionInUseException extends UninstallException {
     private static final long serialVersionUID = 3826037592455762508L;

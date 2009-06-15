@@ -40,7 +40,7 @@ package org.fabric3.jpa.hibernate;
 import org.fabric3.jpa.spi.EmfBuilderException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DataSourceInitException extends EmfBuilderException {
     private static final long serialVersionUID = -5344376508087234040L;

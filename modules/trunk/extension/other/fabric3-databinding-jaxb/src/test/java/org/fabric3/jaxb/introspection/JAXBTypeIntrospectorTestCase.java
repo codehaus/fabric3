@@ -48,7 +48,7 @@ import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JAXBTypeIntrospectorTestCase extends TestCase {
     private JAXBTypeIntrospector introspector;

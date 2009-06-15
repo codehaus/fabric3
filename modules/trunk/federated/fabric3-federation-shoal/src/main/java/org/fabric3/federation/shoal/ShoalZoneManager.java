@@ -80,7 +80,7 @@ import org.fabric3.spi.topology.ZoneManager;
  * This implementation executes commands received from the DomainManager and syncronizes the domain-wide distributed cache with runtime metadata
  * cached at the zone level.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ShoalZoneManager implements ZoneManager, FederationCallback {

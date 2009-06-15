@@ -46,7 +46,7 @@ import org.osoa.sca.annotations.Property;
 /**
  * User manager implementation that reads the credential from the file system.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FileSystemUserManager implements UserManager {
 

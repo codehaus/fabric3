@@ -64,7 +64,7 @@ import org.fabric3.spi.util.UriHelper;
 /**
  * Generate commands to attach local wires between components.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class LocalWireCommandGenerator implements CommandGenerator {
 

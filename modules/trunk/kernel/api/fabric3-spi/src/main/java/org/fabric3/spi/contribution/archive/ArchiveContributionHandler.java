@@ -44,7 +44,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Responsible for handling the specifics of an archive-based contribution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ArchiveContributionHandler {
 

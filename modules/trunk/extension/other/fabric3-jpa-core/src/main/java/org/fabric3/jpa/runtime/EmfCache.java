@@ -42,7 +42,7 @@ import javax.persistence.EntityManagerFactory;
 /**
  * A cache of EntityManagerFactorys.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface EmfCache {
 

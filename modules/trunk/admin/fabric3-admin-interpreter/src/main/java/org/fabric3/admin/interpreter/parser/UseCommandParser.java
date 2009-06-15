@@ -45,7 +45,7 @@ import org.fabric3.admin.interpreter.Settings;
 import org.fabric3.admin.interpreter.command.UseCommand;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UseCommandParser implements CommandParser {
     private DomainController controller;

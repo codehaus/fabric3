@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * Encapsulates errors for a contribution artifact.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ArtifactErrorInfo extends ErrorInfo {
     private static final long serialVersionUID = 1620259064648312693L;

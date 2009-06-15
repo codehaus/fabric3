@@ -49,7 +49,7 @@ import org.fabric3.spi.wire.InvocationRuntimeException;
 /**
  * Implementation registered with the runtime TimerService to receive notifications and invoke a component instance when a trigger has fired.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TimerComponentInvoker<T> implements Runnable {
     private TimerComponent<T> component;

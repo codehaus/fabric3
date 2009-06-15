@@ -46,7 +46,7 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
 /**
  * Default implementation of ClassLoaderWireGenerator.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JavaContributionWireGeneratorImpl implements ClassLoaderWireGenerator<JavaContributionWire> {
 

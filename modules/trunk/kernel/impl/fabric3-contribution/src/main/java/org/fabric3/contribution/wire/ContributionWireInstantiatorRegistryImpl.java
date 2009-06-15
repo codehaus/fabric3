@@ -49,7 +49,7 @@ import org.fabric3.spi.contribution.Export;
 import org.fabric3.spi.contribution.Import;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ContributionWireInstantiatorRegistryImpl implements ContributionWireInstantiatorRegistry {

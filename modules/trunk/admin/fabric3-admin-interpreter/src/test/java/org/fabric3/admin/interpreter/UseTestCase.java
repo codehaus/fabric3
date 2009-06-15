@@ -48,7 +48,7 @@ import org.easymock.EasyMock;
 import org.fabric3.admin.api.DomainController;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UseTestCase extends TestCase {
     private static final String DOMAIN_ADDRESS = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";

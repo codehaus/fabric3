@@ -59,7 +59,7 @@ import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.InvalidDeploymentException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DeployCommand implements Command {
     private DomainController controller;

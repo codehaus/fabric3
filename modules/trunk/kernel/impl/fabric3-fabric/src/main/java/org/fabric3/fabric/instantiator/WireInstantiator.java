@@ -43,7 +43,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 /**
  * Instantiates explicity wires (i.e. those declared by <wire>) in a composite and its included composites.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WireInstantiator {
 

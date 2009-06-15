@@ -62,7 +62,7 @@ import org.fabric3.spi.wire.Interceptor;
 /**
  * Propagates non-blocking invocations made by a client over a TCP channel. This interceptor is placed on the reference side of an invocation chain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpOneWayInterceptor implements Interceptor {
     private static final Message MESSAGE = new MessageImpl();

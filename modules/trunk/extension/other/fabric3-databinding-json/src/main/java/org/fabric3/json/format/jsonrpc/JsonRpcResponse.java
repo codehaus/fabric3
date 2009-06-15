@@ -38,7 +38,7 @@
 package org.fabric3.json.format.jsonrpc;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JsonRpcResponse {
 

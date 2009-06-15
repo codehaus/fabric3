@@ -50,7 +50,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Handles incoming FTP puts from the protocol stack.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class BindingFtpLet implements FtpLet {
     private String servicePath;

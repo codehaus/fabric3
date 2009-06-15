@@ -46,7 +46,7 @@ import org.w3c.dom.Document;
 /**
  * Utilities for copying a logical model graph.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CopyUtil {
     private CopyUtil() {

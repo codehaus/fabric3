@@ -41,7 +41,7 @@ import java.net.URI;
 import java.util.Set;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionInUseManagementException extends ContributionUninstallException {
     private static final long serialVersionUID = -4801764591014282993L;

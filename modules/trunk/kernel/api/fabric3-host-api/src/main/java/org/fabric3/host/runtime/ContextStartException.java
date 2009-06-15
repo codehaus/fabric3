@@ -46,7 +46,7 @@ package org.fabric3.host.runtime;
 import org.fabric3.host.Fabric3Exception;
 
 /**
- * @version $Rev: 2248 $ $Date: 2007-12-11 19:22:04 -0800 (Tue, 11 Dec 2007) $
+ * @version $Rev$ $Date$
  */
 public class ContextStartException extends Fabric3Exception {
     private static final long serialVersionUID = 5507052175927252111L;

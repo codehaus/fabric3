@@ -50,7 +50,7 @@ import javax.jms.Session;
 /**
  * Server session used in standalone JMS host.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StandaloneServerSession implements ServerSession {
 

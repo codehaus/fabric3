@@ -62,7 +62,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
 

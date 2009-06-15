@@ -44,7 +44,7 @@ import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UseCommand implements Command {
     String username;

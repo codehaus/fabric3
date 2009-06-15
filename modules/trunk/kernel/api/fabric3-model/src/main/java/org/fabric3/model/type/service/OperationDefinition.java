@@ -51,7 +51,7 @@ import org.fabric3.model.type.AbstractPolicyAware;
  * This is mainly used for declaring operation level intents and policy sets in the SCDL. The SCA specification currently doesn't support overloaded
  * operations to be differentiated in the SCDL.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class OperationDefinition extends AbstractPolicyAware {
     private static final long serialVersionUID = 3429988354453068399L;

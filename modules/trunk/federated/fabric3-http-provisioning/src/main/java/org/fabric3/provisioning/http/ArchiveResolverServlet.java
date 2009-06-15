@@ -54,7 +54,7 @@ import org.fabric3.spi.contribution.MetaDataStore;
 /**
  * Returns the contents of a contribution associated with the encoded servlet path. The servlet path corresponds to the contribution URI.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ArchiveResolverServlet extends HttpServlet {
     private static final long serialVersionUID = -5822568715938454572L;

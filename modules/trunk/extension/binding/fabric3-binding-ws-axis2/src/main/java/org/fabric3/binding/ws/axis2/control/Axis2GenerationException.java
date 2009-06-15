@@ -40,7 +40,7 @@ package org.fabric3.binding.ws.axis2.control;
 import org.fabric3.spi.generator.GenerationException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Axis2GenerationException extends GenerationException {
 

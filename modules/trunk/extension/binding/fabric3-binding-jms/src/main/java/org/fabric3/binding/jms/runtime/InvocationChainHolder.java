@@ -43,7 +43,7 @@ import org.fabric3.spi.wire.InvocationChain;
 /**
  * Holder for invocation chains, associated serializers and payload type metadata. Used when dispatching messages.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvocationChainHolder {
     private InvocationChain chain;

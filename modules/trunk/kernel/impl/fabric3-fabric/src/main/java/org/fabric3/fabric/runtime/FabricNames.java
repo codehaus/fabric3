@@ -44,7 +44,7 @@ import org.fabric3.host.Names;
 /**
  * Defines URIs of well-known runtime component names used during bootstrap.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface FabricNames {
 

@@ -49,7 +49,7 @@ import org.fabric3.spi.model.instance.LogicalState;
 /**
  * Creates a command to stop an atomic component on a runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StopComponentCommandGenerator implements CommandGenerator {
 

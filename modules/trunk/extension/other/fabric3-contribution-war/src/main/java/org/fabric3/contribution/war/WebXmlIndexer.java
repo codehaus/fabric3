@@ -57,7 +57,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Adds an index entry for the web.xml descriptor to the symbol space of a WAR contribution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class WebXmlIndexer implements XmlIndexer {

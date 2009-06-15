@@ -57,7 +57,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Processes a contributed deployment plan file.
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class DeploymentPlanXmlProcessor implements XmlProcessor {

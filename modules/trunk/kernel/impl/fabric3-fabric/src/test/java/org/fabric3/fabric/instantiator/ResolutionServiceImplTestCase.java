@@ -66,7 +66,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * @version $Rev: 2852 $ $Date: 2008-02-21 23:24:40 +0000 (Thu, 21 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 public class ResolutionServiceImplTestCase extends TestCase {
     private static final URI REFERENCE_URI = URI.create("source#ref");

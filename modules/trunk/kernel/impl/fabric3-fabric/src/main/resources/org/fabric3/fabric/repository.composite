@@ -9,7 +9,7 @@
  Portions originally based on Apache Tuscany 2007
  licensed under the Apache 2.0 license.
 
-    $Rev: 881 $ $Date: 2007-08-27 13:12:34 -0700 (Mon, 27 Aug 2007) $
+    $Rev$ $Date$
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:f3-impl="urn:fabric3.org:implementation"
            name="RepositoryBootComposite"

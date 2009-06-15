@@ -40,7 +40,7 @@ package org.fabric3.spi.component;
 /**
  * Implementations receive notifications of a conversation having expired.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ConversationExpirationCallback {
 

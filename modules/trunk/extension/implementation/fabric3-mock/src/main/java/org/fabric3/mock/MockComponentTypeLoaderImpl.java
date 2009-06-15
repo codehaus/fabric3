@@ -53,7 +53,7 @@ import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.MissingResource;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
     private final ContractProcessor contractProcessor;

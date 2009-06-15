@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes a general exception caching an artifact.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CacheException extends Fabric3Exception {
     private static final long serialVersionUID = -8045584133726217777L;

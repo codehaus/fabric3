@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * Encapsulates persistent settings for the admin interpreter.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Settings {
 

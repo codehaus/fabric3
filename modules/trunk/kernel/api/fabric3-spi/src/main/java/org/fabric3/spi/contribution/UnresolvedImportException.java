@@ -40,7 +40,7 @@ package org.fabric3.spi.contribution;
 import org.fabric3.host.contribution.InstallException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UnresolvedImportException extends InstallException {
     private static final long serialVersionUID = -1442853849509129572L;

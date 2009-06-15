@@ -40,7 +40,7 @@ package org.fabric3.mock;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MockWireSourceDefinition extends PhysicalWireSourceDefinition {
 

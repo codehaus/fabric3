@@ -71,7 +71,7 @@ import org.apache.maven.project.MavenProject;
 import org.fabric3.featureset.FeatureSet;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ArtifactHelper {
 

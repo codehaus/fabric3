@@ -53,7 +53,7 @@ import org.fabric3.host.contribution.ContributionSource;
 /**
  * Encapsulates configuration needed to boostrap a runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class BootConfiguration {
     private Fabric3Runtime<?> runtime;

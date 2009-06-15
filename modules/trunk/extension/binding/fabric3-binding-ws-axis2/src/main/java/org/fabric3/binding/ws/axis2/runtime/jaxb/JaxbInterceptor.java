@@ -55,7 +55,7 @@ import org.fabric3.spi.wire.Interceptor;
  * <p/>
  * TODO The interceptor assumes doc-lit wrapped, this may need to be fixed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JaxbInterceptor implements Interceptor {
 

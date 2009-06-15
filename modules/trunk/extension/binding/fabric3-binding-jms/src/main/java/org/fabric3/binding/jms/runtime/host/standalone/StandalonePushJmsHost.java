@@ -69,7 +69,7 @@ import org.fabric3.host.work.WorkScheduler;
 /**
  * A JmsHost implementation that uses the JMS ServerSessionPool API.
  *
- * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
+ * @version $Revsion$ $Date$
  */
 public class StandalonePushJmsHost implements JmsHost {
 

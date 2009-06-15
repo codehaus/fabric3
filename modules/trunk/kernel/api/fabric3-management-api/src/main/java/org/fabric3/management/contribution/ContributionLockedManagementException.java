@@ -42,7 +42,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionLockedManagementException extends ContributionUninstallException {
     private static final long serialVersionUID = 5508297045249783700L;

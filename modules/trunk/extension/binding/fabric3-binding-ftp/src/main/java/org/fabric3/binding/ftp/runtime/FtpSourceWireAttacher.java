@@ -55,7 +55,7 @@ import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDefinition> {
 

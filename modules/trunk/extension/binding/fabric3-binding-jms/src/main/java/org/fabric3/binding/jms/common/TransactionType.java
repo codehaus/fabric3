@@ -44,7 +44,7 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum TransactionType {
 

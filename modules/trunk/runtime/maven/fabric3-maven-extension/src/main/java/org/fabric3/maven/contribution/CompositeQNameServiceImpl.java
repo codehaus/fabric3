@@ -62,7 +62,7 @@ import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.xml.XMLFactory;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CompositeQNameServiceImpl implements CompositeQNameService {
     private MetaDataStore store;

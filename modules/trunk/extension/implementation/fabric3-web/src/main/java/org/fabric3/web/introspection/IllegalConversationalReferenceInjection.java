@@ -43,7 +43,7 @@ import org.fabric3.model.type.component.ReferenceDefinition;
 /**
  * Denotes an illegal reference declaration.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class IllegalConversationalReferenceInjection extends ValidationFailure {
     private ReferenceDefinition definition;

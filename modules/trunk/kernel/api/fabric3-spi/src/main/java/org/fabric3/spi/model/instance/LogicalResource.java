@@ -46,7 +46,7 @@ import org.fabric3.model.type.component.ResourceDefinition;
 /**
  * Represents a resource on an instantiated component in the domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class LogicalResource<RD extends ResourceDefinition> extends LogicalAttachPoint {
     private static final long serialVersionUID = -6298167441706672513L;

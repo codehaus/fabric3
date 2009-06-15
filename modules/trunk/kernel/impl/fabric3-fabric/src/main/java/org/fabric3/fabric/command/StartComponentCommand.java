@@ -50,7 +50,7 @@ import org.fabric3.spi.command.Command;
 /**
  * A command to start a component on a runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StartComponentCommand implements Command {
     private static final long serialVersionUID = -6106317903755129824L;

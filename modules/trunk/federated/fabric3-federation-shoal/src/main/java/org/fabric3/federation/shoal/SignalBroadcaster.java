@@ -45,7 +45,7 @@ import com.sun.enterprise.ee.cms.core.Signal;
 /**
  * Broadcasts signals to a set of FederationCallback instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class SignalBroadcaster implements CallBack {
     private FederationServiceMonitor monitor;

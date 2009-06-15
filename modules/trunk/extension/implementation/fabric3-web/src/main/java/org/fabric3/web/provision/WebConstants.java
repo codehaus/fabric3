@@ -38,7 +38,7 @@
 package org.fabric3.web.provision;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WebConstants {
 

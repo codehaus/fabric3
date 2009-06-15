@@ -58,7 +58,7 @@ import org.fabric3.spi.topology.DomainManager;
 /**
  * Creates logical configuration for binding.sca using the TCP binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class TcpBindingProvider implements BindingProvider {

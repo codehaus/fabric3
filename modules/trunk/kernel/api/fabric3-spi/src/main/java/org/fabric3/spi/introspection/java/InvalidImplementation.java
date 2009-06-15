@@ -48,7 +48,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * Denotes an invalid implementation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidImplementation extends ValidationFailure {
     private String description;

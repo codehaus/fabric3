@@ -40,7 +40,7 @@ package org.fabric3.host;
 /**
  * The different modes a runtime can be started in.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum RuntimeMode {
     CONTROLLER,

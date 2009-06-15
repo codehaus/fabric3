@@ -38,7 +38,7 @@
 package org.fabric3.management.contribution;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionRemoveException extends ContributionManagementException {
     private static final long serialVersionUID = -2608610594863271459L;

@@ -50,7 +50,7 @@ import org.fabric3.management.domain.ComponentInfo;
 import org.fabric3.management.domain.InvalidPathException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ListCommand implements Command {
     private DomainController controller;

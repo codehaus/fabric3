@@ -52,7 +52,7 @@ import org.fabric3.spi.wire.InvocationChain;
 /**
  * Returns a proxy instance for a callback wire.
  *
- * @version $Rev: 3150 $ $Date: 2008-03-21 14:12:51 -0700 (Fri, 21 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
     private ScopeContainer container;

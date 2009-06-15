@@ -54,7 +54,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Creates JsonParameterEncoder instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class JsonParameterEncoderFactory implements ParameterEncoderFactory {

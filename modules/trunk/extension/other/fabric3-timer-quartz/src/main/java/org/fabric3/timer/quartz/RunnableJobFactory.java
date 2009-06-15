@@ -42,7 +42,7 @@ import org.quartz.spi.JobFactory;
 /**
  * JobFactory that allows Runnable instances to be used to execute jobs.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface RunnableJobFactory extends JobFactory {
 

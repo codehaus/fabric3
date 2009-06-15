@@ -60,7 +60,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 /**
  * Loads an operation definition from the SCDL.
  *
- * @version $Rev: 1980 $ $Date: 2007-11-13 17:31:55 +0000 (Tue, 13 Nov 2007) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class OperationLoader implements TypeLoader<OperationDefinition> {

@@ -38,7 +38,7 @@
 package org.fabric3.management.contribution;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DuplicateContributionManagementException extends ContributionManagementException {
     private static final long serialVersionUID = 2950465877291283258L;

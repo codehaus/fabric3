@@ -61,7 +61,7 @@ import org.fabric3.spi.executor.ExecutionException;
 /**
  * Executes AttachExtensionCommands.
  *
- * @version $Rev: 2878 $ $Date: 2008-02-23 18:42:09 +0000 (Sat, 23 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class AttachExtensionCommandExecutor implements CommandExecutor<AttachExtensionCommand> {

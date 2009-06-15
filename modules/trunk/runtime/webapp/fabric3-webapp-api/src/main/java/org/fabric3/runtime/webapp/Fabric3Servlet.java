@@ -54,7 +54,7 @@ import javax.servlet.http.HttpServlet;
 /**
  * Maps incoming requests to a web application context to a servlet provided by a binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Fabric3Servlet extends HttpServlet {
     private static final long serialVersionUID = 1548054328338375218L;

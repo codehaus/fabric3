@@ -40,7 +40,7 @@ package org.fabric3.ftp.server.protocol;
 /**
  * Handler for incoming FTP requests.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface RequestHandler {
 

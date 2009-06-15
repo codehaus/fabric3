@@ -52,7 +52,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MockComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
 

@@ -45,7 +45,7 @@ import org.fabric3.host.work.WorkScheduler;
 /**
  * Wrapper to use the Fabric3 work scheduler to handle work from the Axis2 extension.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class F3ThreadFactory implements ThreadFactory {
     private WorkScheduler scheduler;

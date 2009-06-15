@@ -51,7 +51,7 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.DuplicateContributionException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionServlet extends HttpServlet {
     private static final long serialVersionUID = -8286023912719635905L;

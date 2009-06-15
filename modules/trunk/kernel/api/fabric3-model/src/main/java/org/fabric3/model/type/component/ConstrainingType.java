@@ -47,7 +47,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 /**
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public class ConstrainingType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
     private static final long serialVersionUID = 4415016987970558995L;

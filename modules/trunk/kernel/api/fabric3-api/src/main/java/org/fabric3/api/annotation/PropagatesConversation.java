@@ -47,7 +47,7 @@ import org.oasisopen.sca.annotation.Intent;
 /**
  * Declares that a component implementation or reference propagates conversational context.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Intent(PropagatesConversation.PROPAGATES)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})

@@ -47,7 +47,7 @@ import org.fabric3.contribution.manifest.ContributionImport;
 /**
  * Creates LocationContributionWireInstantiator instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class LocationContributionWireInstantiator

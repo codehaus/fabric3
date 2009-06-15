@@ -45,7 +45,7 @@ import org.fabric3.binding.net.model.ProxySetting;
 /**
  * Configuration for HTTP communications.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpConfig extends BaseConfig {
     private static final long serialVersionUID = 8322571803453217170L;

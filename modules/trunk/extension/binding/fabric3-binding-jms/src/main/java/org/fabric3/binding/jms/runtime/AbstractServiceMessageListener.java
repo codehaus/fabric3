@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * Base class for SourceMessageListener implementations.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class AbstractServiceMessageListener implements ServiceMessageListener {
     protected WireHolder wireHolder;

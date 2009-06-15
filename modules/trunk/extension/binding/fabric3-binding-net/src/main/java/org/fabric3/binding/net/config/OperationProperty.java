@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class OperationProperty implements Serializable {
     private static final long serialVersionUID = 7634535043051781256L;

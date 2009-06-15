@@ -64,7 +64,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 /**
  * Creates a command to build a component on a runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class BuildComponentCommandGenerator implements CommandGenerator {
 

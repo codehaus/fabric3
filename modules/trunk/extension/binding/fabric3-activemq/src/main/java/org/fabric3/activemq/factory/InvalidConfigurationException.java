@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an invalid connection factory configuration specified in the runtime system configuration.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidConfigurationException extends Fabric3Exception {
     private static final long serialVersionUID = 3851093533071664532L;

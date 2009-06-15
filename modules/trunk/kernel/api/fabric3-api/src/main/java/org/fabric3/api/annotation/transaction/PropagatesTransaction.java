@@ -50,7 +50,7 @@ import org.oasisopen.sca.annotation.Intent;
 /**
  * Used to specify the propagates transaction intent on a component implementation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Target({FIELD, METHOD})
 @Retention(RUNTIME)

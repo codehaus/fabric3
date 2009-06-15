@@ -47,7 +47,7 @@ package org.fabric3.spi.model.instance;
  * </ul>
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum LogicalState {
 

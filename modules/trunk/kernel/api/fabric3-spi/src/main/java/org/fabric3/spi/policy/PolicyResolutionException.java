@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Exception thrown in case of invalid policy configuration.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PolicyResolutionException extends Fabric3Exception {
 

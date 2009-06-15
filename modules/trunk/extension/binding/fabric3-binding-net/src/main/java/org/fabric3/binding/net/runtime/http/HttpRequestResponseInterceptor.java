@@ -61,7 +61,7 @@ import org.fabric3.spi.wire.Interceptor;
 /**
  * Makes a blocking request-response style invocation over an HTTP channel. This interceptor is placed on the reference side of an invocation chain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpRequestResponseInterceptor implements Interceptor {
     private String operationName;

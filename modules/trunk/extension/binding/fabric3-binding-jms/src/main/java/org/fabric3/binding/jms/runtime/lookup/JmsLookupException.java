@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an error looking up a connection factory or destination.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JmsLookupException extends Fabric3Exception {
     private static final long serialVersionUID = -2022498980450562546L;

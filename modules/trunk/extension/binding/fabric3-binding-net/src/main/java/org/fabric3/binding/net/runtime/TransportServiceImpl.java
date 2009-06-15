@@ -64,7 +64,7 @@ import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.builder.WiringException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TransportServiceImpl implements TransportService {
     private final WorkScheduler scheduler;

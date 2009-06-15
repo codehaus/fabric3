@@ -46,7 +46,7 @@ import org.fabric3.spi.binding.format.EncodeCallback;
 /**
  * Callback that sets HTTP headers.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpCallback implements EncodeCallback {
     private HttpRequest request;

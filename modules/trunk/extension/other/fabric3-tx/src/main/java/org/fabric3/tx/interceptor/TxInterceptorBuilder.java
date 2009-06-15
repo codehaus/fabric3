@@ -47,7 +47,7 @@ import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TxInterceptorBuilder implements InterceptorBuilder<TxInterceptorDefinition> {
 

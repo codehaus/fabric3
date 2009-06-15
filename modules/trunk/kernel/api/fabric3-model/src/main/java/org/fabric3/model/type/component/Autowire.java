@@ -46,7 +46,7 @@ package org.fabric3.model.type.component;
 /**
  * Denotes if autowire is on, off or inherited.
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public enum Autowire {
     ON,

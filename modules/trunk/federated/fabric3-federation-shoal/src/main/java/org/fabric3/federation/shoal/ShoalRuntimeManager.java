@@ -58,7 +58,7 @@ import org.fabric3.spi.executor.ExecutionException;
  * Handles communications between a zone participant and the ZoneManager. Specifically, executes commands received from the ZoneManager and updates
  * the zone distributed cache with runtime metadata.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ShoalRuntimeManager implements FederationCallback {

@@ -55,7 +55,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Creates JAXBParameterEncoder instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class JAXBParameterEncoderFactory implements ParameterEncoderFactory {

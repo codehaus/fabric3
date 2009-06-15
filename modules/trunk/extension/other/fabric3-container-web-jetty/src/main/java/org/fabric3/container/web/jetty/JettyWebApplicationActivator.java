@@ -65,7 +65,7 @@ import org.fabric3.spi.contribution.ContributionUriResolver;
 /**
  * Activates a web application in an embedded Jetty instance.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JettyWebApplicationActivator implements WebApplicationActivator {
     private JettyService jettyService;

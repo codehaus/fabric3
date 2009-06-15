@@ -42,7 +42,7 @@ import org.fabric3.spi.invocation.Message;
 /**
  * Convenience class for ParameterEncoder implementations.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class AbstractParameterEncoder implements ParameterEncoder {
 

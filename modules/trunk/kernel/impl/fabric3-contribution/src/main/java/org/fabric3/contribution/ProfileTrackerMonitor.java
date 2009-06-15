@@ -40,7 +40,7 @@ package org.fabric3.contribution;
 import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ProfileTrackerMonitor {
 

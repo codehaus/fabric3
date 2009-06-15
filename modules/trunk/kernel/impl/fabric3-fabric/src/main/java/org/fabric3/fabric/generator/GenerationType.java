@@ -40,7 +40,7 @@ package org.fabric3.fabric.generator;
 /**
  * Denotes the type of generation operation being performed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum GenerationType {
     INCREMENTAL,

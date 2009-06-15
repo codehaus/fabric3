@@ -40,7 +40,7 @@ package org.fabric3.tx.interceptor;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TxInterceptorDefinition extends PhysicalInterceptorDefinition {
     private static final long serialVersionUID = 5601171801790816606L;

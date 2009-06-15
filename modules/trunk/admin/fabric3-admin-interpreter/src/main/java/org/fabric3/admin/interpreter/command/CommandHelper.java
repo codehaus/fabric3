@@ -46,7 +46,7 @@ import org.fabric3.management.contribution.ErrorInfo;
 import org.fabric3.management.contribution.InvalidContributionException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CommandHelper {
 

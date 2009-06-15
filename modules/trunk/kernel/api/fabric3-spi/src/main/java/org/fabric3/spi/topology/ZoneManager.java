@@ -40,7 +40,7 @@ package org.fabric3.spi.topology;
 import java.util.List;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ZoneManager {
 

@@ -75,7 +75,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Attaches references to an HTTP channel.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
     private long connectTimeout = 10000;

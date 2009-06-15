@@ -47,7 +47,7 @@ import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HessianParameterEncoderFactoryTestCase extends TestCase {
     private HessianParameterEncoderFactory factory = new HessianParameterEncoderFactory();

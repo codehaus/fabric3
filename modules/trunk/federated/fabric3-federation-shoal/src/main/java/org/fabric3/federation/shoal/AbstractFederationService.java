@@ -63,7 +63,7 @@ import org.fabric3.spi.topology.RuntimeService;
 /**
  * Base implementation of the FederationService based on Shoal.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 @Service(interfaces = {RuntimeService.class, FederationService.class})

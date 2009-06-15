@@ -48,7 +48,7 @@ import org.fabric3.spi.ObjectFactory;
  * Creates Injector collections for injecting references, properties and context proxies into web application artifacts. These include servlets,
  * filters, the servlet context, and the session context.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface InjectorFactory {
     /**

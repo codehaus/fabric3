@@ -46,7 +46,7 @@ import org.fabric3.spi.wire.Interceptor;
 /**
  * Target interceptor for entity manager factory.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EmfInterceptor implements Interceptor {
 

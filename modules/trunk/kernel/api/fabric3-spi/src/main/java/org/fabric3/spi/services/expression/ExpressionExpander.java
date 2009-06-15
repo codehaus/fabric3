@@ -45,7 +45,7 @@ package org.fabric3.spi.services.expression;
  * <binding.ws uri="http://${myservice.endpoint}/>
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ExpressionExpander {
 

@@ -40,7 +40,7 @@ package org.fabric3.jpa.runtime;
 import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Fabric3JpaRuntimeException extends Fabric3RuntimeException {
     private static final long serialVersionUID = 2897143398279023346L;

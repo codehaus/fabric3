@@ -40,7 +40,7 @@ package org.fabric3.spi.introspection.xml;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidQNamePrefix extends XmlValidationFailure {
 

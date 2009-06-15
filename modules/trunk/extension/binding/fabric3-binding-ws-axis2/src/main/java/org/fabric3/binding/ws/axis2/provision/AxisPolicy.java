@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
 /**
  * Axis policy definition.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class AxisPolicy {
 

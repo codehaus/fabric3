@@ -43,7 +43,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.expression.ExpressionEvaluator;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HostPropertiesExpressionEvaluator implements ExpressionEvaluator {
     private HostInfo info;

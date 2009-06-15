@@ -82,7 +82,7 @@ import org.fabric3.spi.policy.PolicyResult;
 /**
  * Default implementation of PhysicalWireGenerator.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 

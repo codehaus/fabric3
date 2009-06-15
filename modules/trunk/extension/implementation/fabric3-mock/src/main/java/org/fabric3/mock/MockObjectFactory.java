@@ -49,7 +49,7 @@ import org.easymock.IMocksControl;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MockObjectFactory<T> implements ObjectFactory<T> {
 

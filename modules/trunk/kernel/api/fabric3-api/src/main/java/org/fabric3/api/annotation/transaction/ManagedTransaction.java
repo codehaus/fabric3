@@ -50,7 +50,7 @@ import org.oasisopen.sca.annotation.Qualifier;
 /**
  * Used to specify the managed transaction intent on a component implementation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Target({TYPE})
 @Retention(RUNTIME)

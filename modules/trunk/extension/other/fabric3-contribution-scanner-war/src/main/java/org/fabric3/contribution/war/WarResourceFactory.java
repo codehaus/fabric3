@@ -54,7 +54,7 @@ import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
 /**
  * Creates a FileResource for SCA contribution jars
  *
- * @version $Rev: 1343 $ $Date: 2007-09-15 16:30:11 -0700 (Sat, 15 Sep 2007) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class WarResourceFactory implements FileSystemResourceFactory {

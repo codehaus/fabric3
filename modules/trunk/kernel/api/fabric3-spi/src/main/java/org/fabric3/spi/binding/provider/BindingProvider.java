@@ -58,7 +58,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  * For a given wire, a variety of transport protocols may potentially be used. Which provider is selected depends on the algorithm inforce in a
  * particular domain. For example, a domain may use a weighted algorithm where a particular provider is preferred.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface BindingProvider {
 

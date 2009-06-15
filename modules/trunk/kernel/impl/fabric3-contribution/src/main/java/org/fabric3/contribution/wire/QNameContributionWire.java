@@ -49,7 +49,7 @@ import org.fabric3.spi.contribution.manifest.QNameSymbol;
  * Wires two contributions using the SCA import/export mechanism, making QName-based artifacts exported from one contribution visible to the other
  * importing contribution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QNameContributionWire implements ContributionWire<QNameImport, QNameExport> {
     private static final long serialVersionUID = -2760593628993100399L;

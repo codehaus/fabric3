@@ -42,7 +42,7 @@ import org.fabric3.spi.builder.BuilderException;
 /**
  * Thrown when there is an error instantiating a web component.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WebComponentCreationException extends BuilderException {
     private static final long serialVersionUID = -679264080783573274L;

@@ -46,7 +46,7 @@ package org.fabric3.introspection.impl.annotation;
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidIntentAnnotation extends ValidationFailure {
     private String msg;

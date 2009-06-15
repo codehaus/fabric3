@@ -42,7 +42,7 @@ import org.fabric3.spi.component.ExpirationPolicy;
 /**
  * An ExpirationPolicy that cannot be renewed, i.e. expiration is set for a fixed time.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class NonRenewableExpirationPolicy implements ExpirationPolicy {
     private long expiration;

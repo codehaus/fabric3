@@ -49,7 +49,7 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
  * Encodes classnames and the classloader they are to be loaded in. This Mapper is used by the XStreamFactory so classes loaded in extension
  * classloaders can be deserialized properly, e.g. a a set of commands provisioned to a runtime node.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ClassLoaderMapper extends DefaultMapper {
     private ClassLoaderRegistry registry;

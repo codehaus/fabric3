@@ -45,7 +45,7 @@ import org.fabric3.spi.contribution.manifest.JavaImport;
 /**
  * Creates JavaContributionWire instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JavaContributionWireInstantiator implements ContributionWireInstantiator<JavaImport, JavaExport, JavaContributionWire> {
 

@@ -59,7 +59,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
 

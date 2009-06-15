@@ -53,7 +53,7 @@ import org.fabric3.spi.host.ServletHost;
 /**
  * Encodes a contribution URI so it can be dereferenced in a domain via HTTP. The encoding maps from the contribution URI to an HTTP-based URI.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     private ServletHost host;

@@ -46,7 +46,7 @@ package org.fabric3.model.type.definitions;
 /**
  * Phases at which the policy is applied.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum PolicyPhase {
 

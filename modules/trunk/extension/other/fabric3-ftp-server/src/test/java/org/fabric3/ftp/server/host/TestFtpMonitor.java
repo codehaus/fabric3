@@ -41,7 +41,7 @@ import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.ftp.server.monitor.FtpMonitor;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TestFtpMonitor implements FtpMonitor {
 

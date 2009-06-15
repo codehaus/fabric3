@@ -46,7 +46,7 @@ import org.fabric3.model.type.component.Implementation;
 /**
  * Implementation type for mock components.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ImplementationMock extends Implementation<MockComponentType> {
     private static final long serialVersionUID = -3519206465795353416L;

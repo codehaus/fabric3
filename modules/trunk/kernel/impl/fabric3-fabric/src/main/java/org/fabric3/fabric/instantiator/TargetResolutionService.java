@@ -43,7 +43,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 /**
  * Abstraction for resolving refeence targets. Implementations perform resolution through matching an explicit target URI or through autowire.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TargetResolutionService {
 

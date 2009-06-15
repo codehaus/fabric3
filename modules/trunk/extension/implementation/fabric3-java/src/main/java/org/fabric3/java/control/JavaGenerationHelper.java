@@ -53,7 +53,7 @@ import org.fabric3.spi.policy.Policy;
 /**
  * Handles generation operations for Java components and specialized subtypes.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface JavaGenerationHelper {
 

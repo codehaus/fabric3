@@ -42,7 +42,7 @@ import javax.persistence.spi.PersistenceUnitInfo;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ClasspathPersistenceUnitScannerTestCase extends TestCase {
 

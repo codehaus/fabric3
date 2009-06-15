@@ -69,7 +69,7 @@ import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DefaultPolicyResolver implements PolicyResolver {
     private static final QName IMPLEMENTATION_SYSTEM = new QName(Namespaces.IMPLEMENTATION, "implementation.system");

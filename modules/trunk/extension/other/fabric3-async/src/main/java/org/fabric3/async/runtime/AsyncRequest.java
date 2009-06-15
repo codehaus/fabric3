@@ -49,7 +49,7 @@ import org.fabric3.spi.wire.Interceptor;
 /**
  * Encapsulates an invocation to be processed asynchronously.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AsyncRequest extends DefaultPausableWork {
     private final Interceptor next;

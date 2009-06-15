@@ -40,7 +40,7 @@ package org.fabric3.fabric.services.lcm;
 import org.fabric3.api.annotation.logging.Warning;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ApplicationStoreMonitor {
 

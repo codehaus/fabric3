@@ -44,7 +44,7 @@ import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 

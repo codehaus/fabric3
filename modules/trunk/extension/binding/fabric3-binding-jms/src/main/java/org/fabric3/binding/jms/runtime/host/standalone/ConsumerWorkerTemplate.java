@@ -54,7 +54,7 @@ import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 /**
  * A thread pull message from destination and invoke Message listener.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ConsumerWorkerTemplate {
 

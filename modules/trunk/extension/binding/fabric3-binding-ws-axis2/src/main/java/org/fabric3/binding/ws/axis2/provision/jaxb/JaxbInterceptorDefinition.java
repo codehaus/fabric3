@@ -42,7 +42,7 @@ import java.util.Set;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
     private static final long serialVersionUID = -8415124613439053493L;

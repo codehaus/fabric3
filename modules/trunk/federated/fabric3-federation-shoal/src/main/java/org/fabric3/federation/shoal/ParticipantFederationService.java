@@ -40,7 +40,7 @@ package org.fabric3.federation.shoal;
 import com.sun.enterprise.ee.cms.core.GroupManagementService;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ParticipantFederationService extends FederationService {
 

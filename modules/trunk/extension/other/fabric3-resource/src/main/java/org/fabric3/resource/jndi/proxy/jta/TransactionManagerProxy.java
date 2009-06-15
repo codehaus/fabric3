@@ -51,7 +51,7 @@ import org.fabric3.resource.jndi.proxy.AbstractProxy;
 /**
  * Proxy class for a JNDI-based transaction manager.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TransactionManagerProxy extends AbstractProxy<TransactionManager> implements TransactionManager {
 

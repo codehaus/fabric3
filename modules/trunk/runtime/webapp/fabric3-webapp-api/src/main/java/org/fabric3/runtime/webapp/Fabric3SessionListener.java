@@ -52,7 +52,7 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 /**
  * Notifies the WebappRuntime of session events.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Fabric3SessionListener implements HttpSessionListener {
     private WebappRuntime runtime;

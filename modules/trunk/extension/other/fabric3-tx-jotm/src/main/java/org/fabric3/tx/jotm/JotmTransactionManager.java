@@ -56,7 +56,7 @@ import org.osoa.sca.annotations.Service;
 /**
  * JOTM transaction manager with explicit service interface.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Service(javax.transaction.TransactionManager.class)
 public final class JotmTransactionManager implements TransactionManager {

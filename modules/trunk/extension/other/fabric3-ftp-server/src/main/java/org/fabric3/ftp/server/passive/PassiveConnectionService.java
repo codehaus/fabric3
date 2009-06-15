@@ -39,7 +39,7 @@ package org.fabric3.ftp.server.passive;
 
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PassiveConnectionService {
 

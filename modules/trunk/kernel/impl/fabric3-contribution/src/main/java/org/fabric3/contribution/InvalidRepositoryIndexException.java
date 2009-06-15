@@ -40,7 +40,7 @@ package org.fabric3.contribution;
 import org.fabric3.host.contribution.ContributionException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidRepositoryIndexException extends ContributionException {
     private static final long serialVersionUID = -8360413917086565004L;

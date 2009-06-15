@@ -40,7 +40,7 @@ package org.fabric3.jpa.provision;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JpaComponentDefinition extends PhysicalComponentDefinition {
     private static final long serialVersionUID = 8976227894841502230L;

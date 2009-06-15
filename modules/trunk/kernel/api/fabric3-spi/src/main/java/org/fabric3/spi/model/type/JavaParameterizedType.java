@@ -42,7 +42,7 @@ import java.lang.reflect.ParameterizedType;
 import org.fabric3.model.type.service.DataType;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JavaParameterizedType extends DataType<ParameterizedType> {
     private static final long serialVersionUID = -8832071773275935399L;

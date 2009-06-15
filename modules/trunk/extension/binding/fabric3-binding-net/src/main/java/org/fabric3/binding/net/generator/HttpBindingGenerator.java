@@ -54,7 +54,7 @@ import org.fabric3.spi.policy.Policy;
 /**
  * Generates source and target wire definitions for the HTTP binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinition> {
 

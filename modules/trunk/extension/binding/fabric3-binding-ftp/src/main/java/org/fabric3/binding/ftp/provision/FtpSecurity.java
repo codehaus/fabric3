@@ -38,7 +38,7 @@
 package org.fabric3.binding.ftp.provision;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FtpSecurity {
 

@@ -48,7 +48,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
  * Returns the previously constructed classloader. The Hibernate extension implicitly imports the Hibernate extension contribution into any
  * application using it, so nothing is required to be done here.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HibernateEmfClassLoaderService implements EmfClassLoaderService {
     private ClassLoaderRegistry classLoaderRegistry;

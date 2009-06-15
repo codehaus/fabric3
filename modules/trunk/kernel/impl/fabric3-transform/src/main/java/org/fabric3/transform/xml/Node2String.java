@@ -54,7 +54,7 @@ import org.fabric3.spi.transform.TransformationException;
 /**
  * Serializes an element.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Node2String extends AbstractPullTransformer<Node, String> {
 

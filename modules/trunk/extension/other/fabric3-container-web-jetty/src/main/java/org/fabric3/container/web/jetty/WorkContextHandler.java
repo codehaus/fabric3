@@ -52,7 +52,7 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
 /**
  * Processes incoming requests for the web application context, adding a WorkContext to the thread so it is associated to user code in the web app.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WorkContextHandler extends HandlerWrapper {
     public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException {

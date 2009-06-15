@@ -42,7 +42,7 @@ import javax.jms.ConnectionFactory;
 /**
  * A registry of JMS connection factories.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ConnectionFactoryRegistry {
 

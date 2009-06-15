@@ -42,7 +42,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 /**
  * Contains attach point metadata for an EntityManager resource.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PersistenceContextWireTargetDefinition extends PhysicalWireTargetDefinition {
     private static final long serialVersionUID = -6823873953780670817L;

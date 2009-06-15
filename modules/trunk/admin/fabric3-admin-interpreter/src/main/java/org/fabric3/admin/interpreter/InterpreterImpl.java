@@ -61,7 +61,7 @@ import org.fabric3.admin.interpreter.parser.UseCommandParser;
  * <p/>
  * Antlr3 is used as the parser technology to construct the parse tree and AST.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InterpreterImpl implements Interpreter {
     private static final String PROMPT = "\nf3>";

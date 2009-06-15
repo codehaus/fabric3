@@ -45,7 +45,7 @@ import org.fabric3.host.Names;
 /**
  * Used to receive request callbacks
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface F3RequestListener {
 

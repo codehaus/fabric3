@@ -63,7 +63,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class F3ConfiguratorImpl implements F3Configurator {

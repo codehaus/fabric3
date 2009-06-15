@@ -58,7 +58,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 /**
  * Implementation that manages a cache of EntityManagers.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EntityManagerServiceImpl implements EntityManagerService {
     public static final Object JOINED = new Object();

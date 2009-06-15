@@ -45,7 +45,7 @@ package org.fabric3.contribution.manifest;
  *                 ( Õ;Õ parameter ) *
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class OSGiManifestEntryParser {
     public enum EventType {

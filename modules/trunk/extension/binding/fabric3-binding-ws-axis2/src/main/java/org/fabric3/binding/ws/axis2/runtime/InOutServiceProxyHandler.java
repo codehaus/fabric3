@@ -54,7 +54,7 @@ import org.fabric3.spi.wire.InvocationChain;
 /**
  * Implementation of In-Out MEP receiver for Axis2.
  *
- * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
+ * @version $Revision$ $Date$
  */
 public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
 

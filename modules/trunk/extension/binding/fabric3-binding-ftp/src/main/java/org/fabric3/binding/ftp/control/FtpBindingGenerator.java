@@ -59,7 +59,7 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinition> {
     private int connectTimeout = 120000; // two minutes

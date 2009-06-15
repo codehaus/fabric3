@@ -40,7 +40,7 @@ package org.fabric3.spi.model.physical;
 /**
  * The interacton style a wire implements.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum InteractionType {
     /**

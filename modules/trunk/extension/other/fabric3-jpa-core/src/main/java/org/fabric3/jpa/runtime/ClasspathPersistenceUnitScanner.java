@@ -53,7 +53,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 

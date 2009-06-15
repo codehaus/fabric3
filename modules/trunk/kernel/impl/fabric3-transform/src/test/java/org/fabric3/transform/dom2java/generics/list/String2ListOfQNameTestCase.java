@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class String2ListOfQNameTestCase extends TestCase {
     private static final DocumentBuilderFactory DOCUMENT_FACTORY;

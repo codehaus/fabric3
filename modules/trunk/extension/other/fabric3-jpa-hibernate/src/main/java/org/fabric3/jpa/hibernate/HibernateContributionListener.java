@@ -52,7 +52,7 @@ import org.fabric3.spi.contribution.manifest.PackageInfo;
  * classloader that loaded a particular entity (i.e. the application classloader). If a Hibernate is explicitly imported in a contribution manifest
  * (sca-contribution.xml), it is used instead.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HibernateContributionListener implements ContributionServiceListener {
     private JavaImport hibernateImport;

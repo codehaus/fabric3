@@ -56,7 +56,7 @@ import org.fabric3.spi.ObjectCreationException;
 /**
  * Injects a servlet or filter with reference proxies, properties, and the component context.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InjectingServletHandler extends ServletHandler {
     private Map<String, List<Injector<?>>> injectorMappings;

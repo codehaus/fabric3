@@ -56,7 +56,7 @@ import org.fabric3.spi.introspection.xml.MissingAttribute;
 /**
  * Loader for binding.http.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class HttpBindingLoader extends AbstractBindingLoader<HttpBindingDefinition> {

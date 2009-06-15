@@ -57,7 +57,7 @@ import org.fabric3.spi.util.Base64;
  * header information as HTTP headers and JMS message properties respectively. This base implementation uses an EncodeCallback to pass serialed header
  * information to the client to encode as part of the transport packet.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JDKUnwrappedMessageEncoder implements MessageEncoder {
 

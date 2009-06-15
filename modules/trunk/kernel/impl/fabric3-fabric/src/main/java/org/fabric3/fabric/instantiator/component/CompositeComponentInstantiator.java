@@ -70,7 +70,7 @@ import org.fabric3.spi.model.instance.LogicalWire;
 /**
  * Instatiates a composite component in the logical representation of a domain. Child components will be recursively instantiated if they exist.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CompositeComponentInstantiator extends AbstractComponentInstantiator {
 

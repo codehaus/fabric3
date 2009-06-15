@@ -38,7 +38,7 @@
 package org.fabric3.management.domain;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionNotFoundException extends DeploymentManagementException {
     private static final long serialVersionUID = -344143140199797738L;

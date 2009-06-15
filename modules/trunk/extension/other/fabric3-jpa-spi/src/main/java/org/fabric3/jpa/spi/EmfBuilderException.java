@@ -40,7 +40,7 @@ package org.fabric3.jpa.spi;
 import org.fabric3.host.Fabric3Exception;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EmfBuilderException extends Fabric3Exception {
     private static final long serialVersionUID = 8918152702982814428L;

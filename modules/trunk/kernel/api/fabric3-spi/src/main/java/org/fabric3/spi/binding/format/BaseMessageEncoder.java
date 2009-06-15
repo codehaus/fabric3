@@ -43,7 +43,7 @@ import org.fabric3.spi.util.Base64;
 /**
  * Base class for MessageEncoders that use custom serialization formats.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class BaseMessageEncoder implements MessageEncoder {
 

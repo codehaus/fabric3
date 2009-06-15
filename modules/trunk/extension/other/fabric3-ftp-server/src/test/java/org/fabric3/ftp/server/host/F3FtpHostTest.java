@@ -59,7 +59,7 @@ import org.fabric3.ftp.server.security.FileSystemUserManager;
 import org.fabric3.ftp.spi.FtpLetContainer;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class F3FtpHostTest extends TestCase {
 

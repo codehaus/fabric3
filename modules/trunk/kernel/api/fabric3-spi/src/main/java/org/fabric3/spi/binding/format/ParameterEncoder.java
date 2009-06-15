@@ -42,7 +42,7 @@ import org.fabric3.spi.invocation.Message;
 /**
  * Encodes in-, out- and fault parameters.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ParameterEncoder {
 

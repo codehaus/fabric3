@@ -52,7 +52,7 @@ import org.fabric3.spi.wire.InvocationChain;
  * representing C must correctly dispatch back to A and A'. This is done by recording the callback URI in the current CallFrame as the forward invoke
  * is made.
  *
- * @version $Rev: 3150 $ $Date: 2008-03-21 14:12:51 -0700 (Fri, 21 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class MultiThreadedCallbackInvocationHandler<T> extends AbstractCallbackInvocationHandler<T> {
     private Map<String, Map<Method, InvocationChain>> mappings;

@@ -61,7 +61,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Attaches services to an HTTP channel.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSourceDefinition> {
     private TransportService service;

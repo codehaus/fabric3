@@ -45,7 +45,7 @@ import org.fabric3.spi.model.instance.LogicalScaArtifact;
 /**
  * Evaluates an XPath policy expression against the logical domain model.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PolicyEvaluator {
 

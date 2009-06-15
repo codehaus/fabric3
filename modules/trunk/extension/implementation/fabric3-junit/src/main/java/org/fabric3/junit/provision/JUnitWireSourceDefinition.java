@@ -40,7 +40,7 @@ package org.fabric3.junit.provision;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JUnitWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = 750231487385651182L;

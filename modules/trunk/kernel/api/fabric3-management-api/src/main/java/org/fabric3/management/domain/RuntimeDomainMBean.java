@@ -44,7 +44,7 @@ import org.fabric3.api.annotation.Management;
 /**
  * MBean for invoking runtime domain operations.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Management
 public interface RuntimeDomainMBean extends DomainMBean {

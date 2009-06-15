@@ -53,7 +53,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.topology.DomainManager;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpBindingProviderTestCase extends TestCase {
     private HttpBindingProvider bindingProvider;

@@ -40,7 +40,7 @@ package org.fabric3.spi.contribution;
 /**
  * Defines the contribution lifecycle.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum ContributionState {
 

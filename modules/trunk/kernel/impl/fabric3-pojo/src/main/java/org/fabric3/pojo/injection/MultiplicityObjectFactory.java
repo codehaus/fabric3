@@ -42,7 +42,7 @@ import org.fabric3.spi.ObjectFactory;
 /**
  * Common interface for all multiplicity object factories.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  * @param <T>
  */
 public interface MultiplicityObjectFactory<T> extends ObjectFactory<T> {

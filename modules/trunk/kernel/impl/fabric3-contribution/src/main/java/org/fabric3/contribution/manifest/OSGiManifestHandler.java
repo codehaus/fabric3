@@ -56,7 +56,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Parses OSGi manifest headers and adds the metadta to the SCA contribution manifest.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class OSGiManifestHandler implements JarManifestHandler {

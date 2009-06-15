@@ -44,7 +44,7 @@ import org.fabric3.spi.contribution.Contribution;
 /**
  * Processes contribution dependencies
  *
- * @version $Rev: 6228 $ $Date: 2008-12-13 00:24:14 -0800 (Sat, 13 Dec 2008) $
+ * @version $Rev$ $Date$
  */
 public interface DependencyService {
 

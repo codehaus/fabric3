@@ -72,7 +72,7 @@ import org.fabric3.host.work.WorkScheduler;
  * A JmsHost implementation that initializes one or more message consumers per service that receive and dispatch messages in separate threads. The
  * message consumers are registered with the kernel WorkScheduler.
  *
- * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
+ * @version $Revsion$ $Date$
  */
 public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBean {
     private WorkScheduler workScheduler;

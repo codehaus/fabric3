@@ -50,7 +50,7 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class OSGiManifestHandlerTestCase extends TestCase {
     private static final String MANIFEST = "Manifest-Version: 1.0\n" +

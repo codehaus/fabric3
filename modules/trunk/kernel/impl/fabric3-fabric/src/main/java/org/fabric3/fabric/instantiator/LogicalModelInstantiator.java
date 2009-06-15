@@ -45,7 +45,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 /**
  * Implementations instantiate logical components within a domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface LogicalModelInstantiator {
 

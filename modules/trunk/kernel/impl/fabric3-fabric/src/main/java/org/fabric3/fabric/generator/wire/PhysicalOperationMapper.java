@@ -43,7 +43,7 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 /**
  * Maps an Operation type to a PhysicalOperationDefinition.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PhysicalOperationMapper {
 

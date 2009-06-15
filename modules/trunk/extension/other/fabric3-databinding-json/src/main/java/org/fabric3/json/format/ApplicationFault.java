@@ -40,7 +40,7 @@ package org.fabric3.json.format;
 /**
  * Wrapper for a declared fault thrown by application code. This wrapper is used to serialize fault information to a client.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ApplicationFault {
     private String message;

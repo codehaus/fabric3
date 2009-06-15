@@ -40,7 +40,7 @@ package org.fabric3.binding.ftp.scdl;
 /**
  * The FTP transfer mode.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum TransferMode {
 

@@ -44,7 +44,7 @@ import java.io.OutputStream;
 /**
  * Active data connection.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ActiveDataConnection implements DataConnection {
 

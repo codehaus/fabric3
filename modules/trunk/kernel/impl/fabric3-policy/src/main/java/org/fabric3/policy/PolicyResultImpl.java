@@ -50,7 +50,7 @@ import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResult;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PolicyResultImpl implements PolicyResult {
 

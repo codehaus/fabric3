@@ -40,7 +40,7 @@ package org.fabric3.admin.interpreter;
 /**
  * Thrown when an error is encountered executing a command.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CommandException extends InterpreterException {
     private static final long serialVersionUID = 793863388384348302L;

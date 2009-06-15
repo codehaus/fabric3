@@ -53,7 +53,7 @@ import javax.jms.TextMessage;
 import org.fabric3.binding.jms.provision.PayloadType;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MessageHelper {
 

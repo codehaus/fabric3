@@ -40,7 +40,7 @@ package org.fabric3.resource.generator;
 import org.fabric3.spi.generator.GenerationException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @SuppressWarnings("serial")
 public class MappedNameNotFoundException extends GenerationException {

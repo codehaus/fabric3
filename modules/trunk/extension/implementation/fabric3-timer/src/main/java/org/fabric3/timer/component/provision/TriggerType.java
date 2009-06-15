@@ -38,7 +38,7 @@
 package org.fabric3.timer.component.provision;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum TriggerType {
     ONCE,

@@ -41,7 +41,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Interpreter {
 

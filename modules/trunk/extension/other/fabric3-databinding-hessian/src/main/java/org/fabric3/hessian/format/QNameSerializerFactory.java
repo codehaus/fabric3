@@ -47,7 +47,7 @@ import com.caucho.hessian.io.Serializer;
 /**
  * Creates QNameSerializers and QNameDeserializers for use with Hessian.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QNameSerializerFactory extends AbstractSerializerFactory {
     public Serializer getSerializer(Class cl) throws HessianProtocolException {

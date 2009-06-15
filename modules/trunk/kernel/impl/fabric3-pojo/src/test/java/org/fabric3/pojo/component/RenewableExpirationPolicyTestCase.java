@@ -40,7 +40,7 @@ package org.fabric3.pojo.component;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RenewableExpirationPolicyTestCase extends TestCase {
 

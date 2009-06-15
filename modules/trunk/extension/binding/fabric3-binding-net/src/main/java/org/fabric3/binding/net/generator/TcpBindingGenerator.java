@@ -54,7 +54,7 @@ import org.fabric3.spi.policy.Policy;
 /**
  * Generates source and target wire definitions for the TCP binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpBindingGenerator implements BindingGenerator<TcpBindingDefinition> {
 

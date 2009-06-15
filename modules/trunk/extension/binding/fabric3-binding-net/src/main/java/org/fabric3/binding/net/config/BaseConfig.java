@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Common configuration for socket communications.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class BaseConfig implements Serializable {
     private static final long serialVersionUID = -7562937002327535329L;

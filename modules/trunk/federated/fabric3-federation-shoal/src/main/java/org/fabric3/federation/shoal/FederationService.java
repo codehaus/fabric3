@@ -43,7 +43,7 @@ import com.sun.enterprise.ee.cms.core.GroupManagementService;
  * Responsible for managing communications between runtimes in a domain. Federated communications are segmented between domain-wide communications and
  * 1 to N zones. Implementations handle domain-wide communication as well communication within a particular zone.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface FederationService {
 

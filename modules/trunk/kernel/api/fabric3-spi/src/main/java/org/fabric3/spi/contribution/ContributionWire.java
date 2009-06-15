@@ -45,7 +45,7 @@ import java.net.URI;
  * artifact visibility. For example, a Java-based wire may restrict visibility to a set of packages while a QName-based wire may restrict visibility
  * to a set of artifacts of a specified QName.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ContributionWire<I extends Import, E extends Export> extends Serializable {
 

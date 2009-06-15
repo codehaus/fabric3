@@ -54,7 +54,7 @@ import org.fabric3.spi.resource.DataSourceRegistry;
 /**
  * Proxy class for a JNDI-based datasource.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DataSourceProxy extends AbstractProxy<DataSource> implements DataSource {
 

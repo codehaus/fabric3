@@ -41,7 +41,7 @@ import org.fabric3.api.annotation.logging.Fine;
 import org.fabric3.api.annotation.logging.Warning;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TxMonitor {
 

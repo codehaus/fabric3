@@ -44,7 +44,7 @@ import java.util.logging.LogRecord;
 /**
  * Diverts Shoal logging to the Fabric3 monitor framework.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MonitorLogHandler extends Handler {
     private FederationServiceMonitor monitor;

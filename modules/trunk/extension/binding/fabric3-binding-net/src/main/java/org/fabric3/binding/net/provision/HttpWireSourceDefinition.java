@@ -43,7 +43,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 /**
  * Source definition for the HTTP binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = 3519868912711758321L;

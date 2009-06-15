@@ -26,7 +26,7 @@ import org.oasisopen.sca.ServiceReference;
 import org.fabric3.spi.wire.InvocationChain;
 
 /**
- * @version $Rev: 2883 $ $Date: 2008-02-24 11:05:35 -0800 (Sun, 24 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 public class JDKProxyServiceTestCase extends TestCase {
     private JDKProxyService proxyService;

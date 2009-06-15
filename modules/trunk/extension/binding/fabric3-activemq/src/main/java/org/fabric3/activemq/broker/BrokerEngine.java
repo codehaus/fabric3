@@ -61,7 +61,7 @@ import org.fabric3.host.runtime.HostInfo;
 /**
  * Creates an embedded ActiveMQ broker.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class BrokerEngine {

@@ -42,7 +42,7 @@ import java.net.URI;
 import org.fabric3.host.domain.AssemblyFailure;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DuplicateProperty extends AssemblyFailure {
     private String propertyName;

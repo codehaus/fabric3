@@ -42,7 +42,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MissingMainifestAttribute extends XmlValidationFailure {
     public MissingMainifestAttribute(String message, XMLStreamReader reader) {

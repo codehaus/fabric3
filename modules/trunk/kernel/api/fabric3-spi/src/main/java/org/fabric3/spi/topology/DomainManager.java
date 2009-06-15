@@ -47,7 +47,7 @@ import java.util.List;
  * </ul>
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface DomainManager {
 

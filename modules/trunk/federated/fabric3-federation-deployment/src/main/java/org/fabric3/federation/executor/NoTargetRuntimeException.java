@@ -42,7 +42,7 @@ import org.fabric3.spi.executor.ExecutionException;
 /**
  * Thrown when a target runtime cannot be found to deploy to.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class NoTargetRuntimeException extends ExecutionException {
     private static final long serialVersionUID = 5115365218091847896L;

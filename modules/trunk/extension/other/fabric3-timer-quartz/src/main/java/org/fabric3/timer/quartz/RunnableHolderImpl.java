@@ -49,7 +49,7 @@ import org.quartz.SchedulerException;
 /**
  * Default implementation of a RunnableHolder.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RunnableHolderImpl<T> extends FutureTask<T> implements RunnableHolder<T> {
     private String id;

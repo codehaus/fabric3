@@ -51,7 +51,7 @@ import org.oasisopen.sca.Constants;
 /**
  * Represents a registered intent within the domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class Intent extends AbstractDefinition {
 

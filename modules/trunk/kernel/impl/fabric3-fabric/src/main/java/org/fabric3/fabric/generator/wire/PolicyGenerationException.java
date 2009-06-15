@@ -41,7 +41,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.policy.PolicyResolutionException;
 
 /**
- * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
+ * @version $Rev$ $Date$
  */
 public class PolicyGenerationException extends GenerationException {
     private static final long serialVersionUID = 8176001620286767338L;

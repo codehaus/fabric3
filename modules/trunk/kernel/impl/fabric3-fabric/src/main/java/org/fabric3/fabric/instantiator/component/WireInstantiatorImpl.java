@@ -53,7 +53,7 @@ import org.fabric3.spi.util.UriHelper;
 /**
  * Default implementation of the WireInstantiator.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WireInstantiatorImpl implements WireInstantiator {
 

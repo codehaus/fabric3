@@ -42,7 +42,7 @@ import org.fabric3.spi.services.expression.ExpressionExpansionException;
 /**
  * Thrown when an expression value cannot be found.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ValueNotFoundException extends ExpressionExpansionException {
     private static final long serialVersionUID = 851637435862308601L;

@@ -59,7 +59,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  * Generates commands to attach component reference wires to their transports for components being deployed or commands to detach reference wires for
  * components being undeployed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ReferenceWireCommandGenerator implements CommandGenerator {
 

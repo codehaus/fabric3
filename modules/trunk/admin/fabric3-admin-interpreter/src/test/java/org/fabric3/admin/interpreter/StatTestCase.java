@@ -50,7 +50,7 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.management.contribution.ContributionInfo;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StatTestCase extends TestCase {
 

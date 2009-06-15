@@ -64,7 +64,7 @@ import org.fabric3.spi.host.ServletHost;
 /**
  * A WebApplicationActivator used in a runtime embedded in a WAR.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Service(interfaces = {WebApplicationActivator.class, HttpSessionListener.class})
 public class EmbeddedWebApplicationActivator implements WebApplicationActivator, HttpSessionListener {

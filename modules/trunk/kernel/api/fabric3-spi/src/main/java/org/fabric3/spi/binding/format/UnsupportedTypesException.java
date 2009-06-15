@@ -40,7 +40,7 @@ package org.fabric3.spi.binding.format;
 /**
  * Raised when an attempt to serialize or deserialize an unsupported type is made.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UnsupportedTypesException extends EncoderException {
     private static final long serialVersionUID = 4607391693877849373L;

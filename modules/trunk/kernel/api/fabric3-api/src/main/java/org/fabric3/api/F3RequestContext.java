@@ -51,7 +51,7 @@ import org.osoa.sca.RequestContext;
  * </pre>
  * At runtime, the <code>context</code> field will be injected with an instance of F3RequestContext.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface F3RequestContext extends RequestContext {
 

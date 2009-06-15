@@ -46,7 +46,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 /**
  * Represents the implementation of a web artifact such as a servlet or filter.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WebArtifactImplementation extends Implementation<PojoComponentType> {
     private static final long serialVersionUID = -5415465119697665067L;

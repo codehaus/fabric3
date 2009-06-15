@@ -51,7 +51,7 @@ import org.fabric3.model.type.ModelObject;
 /**
  * Base class representing service contract information
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public abstract class ServiceContract<T> extends ModelObject {
     private static final long serialVersionUID = 7930416351019873131L;

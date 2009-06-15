@@ -51,7 +51,7 @@ import org.oasisopen.sca.RequestContext;
  * </pre>
  * At runtime, the <code>context</code> field will be injected with an instance of F3RequestContext.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Fabric3RequestContext extends RequestContext {
 

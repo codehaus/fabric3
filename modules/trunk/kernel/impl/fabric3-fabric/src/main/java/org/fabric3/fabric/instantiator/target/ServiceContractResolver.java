@@ -46,7 +46,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  * instead using a contract defined further down in the promotion hierarchy. In these cases, the service contract is often inferred from the
  * implementation (e.g. a Java class) or explicitly declared within the component definition in a composite file.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ServiceContractResolver {
 

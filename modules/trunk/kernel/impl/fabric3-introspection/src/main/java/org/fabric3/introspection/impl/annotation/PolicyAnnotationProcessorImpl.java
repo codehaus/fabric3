@@ -58,7 +58,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
 
 /**
- * @version $Rev: 6194 $ $Date: 2008-12-05 07:52:09 -0800 (Fri, 05 Dec 2008) $
+ * @version $Rev$ $Date$
  */
 public class PolicyAnnotationProcessorImpl implements PolicyAnnotationProcessor {
 

@@ -40,7 +40,7 @@ package org.fabric3.ftp.server.protocol;
 /**
  * Default implementation of the FTP response.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DefaultResponse implements Response {
 

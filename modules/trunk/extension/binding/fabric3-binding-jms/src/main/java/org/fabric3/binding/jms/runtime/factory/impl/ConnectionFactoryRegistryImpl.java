@@ -48,7 +48,7 @@ import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
 /**
  * Default ConnectionFactoryRegistry implementaton.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ConnectionFactoryRegistryImpl implements ConnectionFactoryRegistry {

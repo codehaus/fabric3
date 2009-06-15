@@ -63,7 +63,7 @@ import org.fabric3.spi.wire.Interceptor;
 /**
  * Makes a blocking request-response style invocation over the TCP channel. This interceptor is placed on the reference side of an invocation chain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpRequestResponseInterceptor implements Interceptor {
     private static final EncodeCallback CALLBACK = new TcpRequestResponseCallback();

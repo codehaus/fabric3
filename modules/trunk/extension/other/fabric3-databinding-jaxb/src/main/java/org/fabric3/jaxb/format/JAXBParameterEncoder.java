@@ -52,7 +52,7 @@ import org.fabric3.spi.invocation.Message;
  * ParameterEncoder that uses JAXB. Currently, only string-based serialization is supported but enhancements to support alternative formats such as
  * binary streams could be supported.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JAXBParameterEncoder extends AbstractParameterEncoder {
     private JAXBContext jaxbContext;

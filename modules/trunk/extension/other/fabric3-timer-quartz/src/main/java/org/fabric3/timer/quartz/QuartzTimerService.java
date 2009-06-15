@@ -78,7 +78,7 @@ import org.fabric3.timer.spi.TimerService;
 /**
  * Implementation of the TimerService that is backed by Quartz.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QuartzTimerService extends AbstractExecutorService implements TimerService {
     public static final String GROUP = "default";

@@ -66,7 +66,7 @@ import org.fabric3.model.type.ModelObject;
  * to other eagerly initializing components. For example, an implementation that pre-loads some form of cache could declare that it should be eagerly
  * initialized at the start of the scope so that the cache load occured on startup rather than first use.
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public abstract class AbstractComponentType<S extends ServiceDefinition,
         R extends ReferenceDefinition,

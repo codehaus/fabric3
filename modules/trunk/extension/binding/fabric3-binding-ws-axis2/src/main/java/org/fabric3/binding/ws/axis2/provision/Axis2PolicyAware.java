@@ -40,7 +40,7 @@ package org.fabric3.binding.ws.axis2.provision;
 import java.util.Set;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  *          <p/>
  *          TODO Support overloading.
  */

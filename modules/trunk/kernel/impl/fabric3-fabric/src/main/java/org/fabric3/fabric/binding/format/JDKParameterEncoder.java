@@ -50,7 +50,7 @@ import org.fabric3.spi.classloader.ClassLoaderObjectInputStream;
 /**
  * ParameterEncoder that uses JDK serialization.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JDKParameterEncoder extends BaseParameterEncoder {
 

@@ -57,7 +57,7 @@ import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DefaultPolicyRegistryTestCase extends TestCase {
     private DefaultPolicyRegistry registry;

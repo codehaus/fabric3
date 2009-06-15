@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.model.type.ModelObject;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class AbstractDefinition extends ModelObject {
     private static final long serialVersionUID = -4450566760116409021L;

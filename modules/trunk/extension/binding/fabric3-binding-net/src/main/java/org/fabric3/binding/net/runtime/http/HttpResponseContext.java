@@ -44,7 +44,7 @@ import org.fabric3.spi.binding.format.HeaderContext;
 /**
  * HeaderContext for an HTTP response.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpResponseContext implements HeaderContext {
     private HttpResponse response;

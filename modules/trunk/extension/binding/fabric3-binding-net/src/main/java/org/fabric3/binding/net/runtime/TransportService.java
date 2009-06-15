@@ -42,7 +42,7 @@ import org.fabric3.spi.builder.WiringException;
 /**
  * Registers wires for services with an transport channel.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TransportService {
 

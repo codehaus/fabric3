@@ -52,7 +52,7 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PolicyAnnotationProcessorImplTestCase extends TestCase {
     private PolicyAnnotationProcessorImpl processor = new PolicyAnnotationProcessorImpl();

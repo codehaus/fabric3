@@ -53,7 +53,7 @@ import org.fabric3.spi.command.Command;
 /**
  * Contains commands mapped by the zone to which they are to be applied.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CommandMap {
     private String id;

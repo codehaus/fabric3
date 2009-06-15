@@ -47,7 +47,7 @@ import org.fabric3.admin.interpreter.ParseException;
 import org.fabric3.admin.interpreter.command.RemoveCommand;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RemoveCommandParser implements CommandParser {
     private DomainController controller;

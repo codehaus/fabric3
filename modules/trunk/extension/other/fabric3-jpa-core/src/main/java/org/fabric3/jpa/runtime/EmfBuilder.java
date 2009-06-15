@@ -44,7 +44,7 @@ import org.fabric3.jpa.spi.EmfBuilderException;
 /**
  * Abstraction for building entity manager factory instances for the specified persistence unit names.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface EmfBuilder {
 

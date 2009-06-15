@@ -49,7 +49,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 /**
  * Interceptor definition generator for suspend transaction policy extensions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class TxInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {

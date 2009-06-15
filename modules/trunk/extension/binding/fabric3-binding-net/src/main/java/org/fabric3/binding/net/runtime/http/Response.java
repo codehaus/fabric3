@@ -40,7 +40,7 @@ package org.fabric3.binding.net.runtime.http;
 /**
  * Encapsulates an HTTP response code and content received during a blocking request-response invocation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Response {
     private int code;

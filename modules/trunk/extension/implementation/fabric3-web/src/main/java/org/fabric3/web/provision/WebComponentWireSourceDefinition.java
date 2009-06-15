@@ -40,7 +40,7 @@ package org.fabric3.web.provision;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * @version $Rev: 955 $ $Date: 2007-08-31 15:10:21 -0700 (Fri, 31 Aug 2007) $
+ * @version $Rev$ $Date$
  */
 public class WebComponentWireSourceDefinition extends PhysicalWireSourceDefinition {
 }

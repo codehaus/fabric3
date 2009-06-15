@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 /**
  * Encapsulates information about a component.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ComponentInfo implements Serializable {
     private static final long serialVersionUID = -4847696410167502510L;

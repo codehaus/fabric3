@@ -40,7 +40,7 @@ package org.fabric3.spi.services.event;
 /**
  * Signals when a runtime enters the recover phase of its bootstrap process.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RuntimeRecover implements Fabric3Event {
 }

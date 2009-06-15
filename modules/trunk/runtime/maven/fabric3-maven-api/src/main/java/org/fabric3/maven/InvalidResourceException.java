@@ -40,7 +40,7 @@ package org.fabric3.maven;
 import org.fabric3.host.Fabric3Exception;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidResourceException extends Fabric3Exception {
     private static final long serialVersionUID = 3510451706705428374L;

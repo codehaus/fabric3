@@ -38,7 +38,7 @@
 package org.fabric3.provisioning.http;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface HttpProvisionConstants {
 

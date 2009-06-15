@@ -78,7 +78,7 @@ import org.fabric3.system.singleton.SingletonImplementation;
 /**
  * Implementation that synthesizes a singleton component from an existing object instance.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class SingletonComponentSynthesizer implements ComponentSynthesizer {
 

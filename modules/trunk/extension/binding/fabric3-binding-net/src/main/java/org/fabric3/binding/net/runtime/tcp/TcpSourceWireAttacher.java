@@ -61,7 +61,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Attaches services to the transport channel and handler pipeline configured to use the TCP binding.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDefinition> {
     private TransportService service;

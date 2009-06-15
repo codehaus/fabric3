@@ -53,7 +53,7 @@ import org.fabric3.binding.net.NetBindingMonitor;
 /**
  * Listens for an HTTP channel connection event, retrying a specified number of times if the operation failed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpRetryConnectListener implements ChannelFutureListener {
     private HttpRequest request;

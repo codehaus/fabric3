@@ -42,7 +42,7 @@ import com.sun.enterprise.ee.cms.core.Signal;
 /**
  * Implementations register with the FederationService to receive callbacks for a GroupManagementService instance.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface FederationCallback {
 

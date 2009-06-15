@@ -68,7 +68,7 @@ import org.fabric3.util.io.FileHelper;
 /**
  * Processes a Maven module directory.
  *
- * @version $Rev: 5954 $ $Date: 2008-11-15 12:52:25 -0800 (Sat, 15 Nov 2008) $
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ModuleContributionProcessor implements ContributionProcessor {

@@ -40,7 +40,7 @@ package org.fabric3.host.domain;
 /**
  * Denotes an error undeploying a composite.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UndeploymentException extends DomainException {
     private static final long serialVersionUID = 956468460659715891L;

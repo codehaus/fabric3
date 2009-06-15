@@ -79,7 +79,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Axis2 Service provisioner.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {

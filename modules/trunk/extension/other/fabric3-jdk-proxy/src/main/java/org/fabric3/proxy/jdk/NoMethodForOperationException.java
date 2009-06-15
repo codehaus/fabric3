@@ -49,7 +49,7 @@ import org.fabric3.pojo.builder.ProxyCreationException;
 /**
  * Thrown when an {@link Operation} cannot be mapped to a method on an interface
  *
- * @version $Rev: 2957 $ $Date: 2008-02-29 08:59:16 -0800 (Fri, 29 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 public class NoMethodForOperationException extends ProxyCreationException {
     private static final long serialVersionUID = -2770346906058273180L;

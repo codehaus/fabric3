@@ -45,7 +45,7 @@ import org.fabric3.spi.wire.InvocationChain;
 /**
  * Holder for Wires and required metadata for performing an invocation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WireHolder {
     private ParameterEncoder parameterEncoder;

@@ -45,7 +45,7 @@ import java.net.URL;
 import org.fabric3.host.contribution.ContributionSource;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RemoteContributionSource implements ContributionSource {
     private URI uri;

@@ -44,7 +44,7 @@ import org.fabric3.host.Fabric3Exception;
  * client. For one-way invocations, the exception will be logged. Since this exception does not represent an error at the binding level, if the
  * invocation message is transacted, this exception will <strong>not</strong> result in the transaction being rolled back.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JmsServiceException extends Fabric3Exception {
     private static final long serialVersionUID = -6821325841475500514L;

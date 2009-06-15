@@ -44,7 +44,7 @@ import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 /**
  * Denotes an invalid promotion value on a composite service or reference.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PromotionNotFound extends XmlValidationFailure {
 

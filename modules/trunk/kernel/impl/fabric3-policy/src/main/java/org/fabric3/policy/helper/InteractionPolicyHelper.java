@@ -46,7 +46,7 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.PolicyResolutionException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface InteractionPolicyHelper {
 

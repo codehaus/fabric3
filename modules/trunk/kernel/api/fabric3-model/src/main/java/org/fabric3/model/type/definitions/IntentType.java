@@ -44,7 +44,7 @@
 package org.fabric3.model.type.definitions;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public enum IntentType {
 

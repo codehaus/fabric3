@@ -64,7 +64,7 @@ import org.fabric3.spi.model.instance.LogicalOperation;
  * implementation type. <li>Policy sets that map to interaction intents on each operation and understood by the service binding type. <li>Policy sets
  * that map to implementation and interaction intents on each operation that are implemented using interceptors. </ol>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PolicyResult {
 

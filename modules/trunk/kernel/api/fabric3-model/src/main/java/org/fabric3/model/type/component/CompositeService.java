@@ -50,7 +50,7 @@ import org.fabric3.model.type.service.ServiceContract;
 /**
  * Representation of a service exposed by a composite component type.
  *
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public class CompositeService extends ServiceDefinition {
     private static final long serialVersionUID = 7831894579780963064L;

@@ -50,7 +50,7 @@ import org.fabric3.admin.interpreter.command.InstallProfileCommand;
 import org.fabric3.admin.interpreter.command.UninstallProfileCommand;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ProfileCommandParser implements CommandParser {
     private DomainController controller;

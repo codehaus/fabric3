@@ -40,7 +40,7 @@ package org.fabric3.spi.contribution;
 /**
  * Implementations receive callbacks for ContributionService events.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ContributionServiceListener {
 

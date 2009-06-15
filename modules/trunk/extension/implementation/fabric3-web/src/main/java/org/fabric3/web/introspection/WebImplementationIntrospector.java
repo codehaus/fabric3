@@ -43,7 +43,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
  * Introspects the contents of a web application for a web component and generates a corresponding component type. Introspected information will be
  * derive from implementation classes and the web.xml deployment descriptor.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WebImplementationIntrospector {
     /**

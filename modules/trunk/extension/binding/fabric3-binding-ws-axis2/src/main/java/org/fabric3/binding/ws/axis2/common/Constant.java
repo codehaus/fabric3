@@ -40,7 +40,7 @@ package org.fabric3.binding.ws.axis2.common;
 import javax.xml.namespace.QName;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Constant {
     public static final QName AXIS2_JAXWS_QNAME = new QName("urn:org.fabric3:binding:axis2", "jaxws");

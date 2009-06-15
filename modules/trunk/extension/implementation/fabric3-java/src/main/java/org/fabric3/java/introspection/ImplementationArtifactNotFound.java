@@ -40,7 +40,7 @@ package org.fabric3.java.introspection;
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ImplementationArtifactNotFound extends ValidationFailure {
     private String artifact;

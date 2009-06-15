@@ -60,7 +60,7 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
  * the current transaction context from the EntityManagerService. If the persistence context is extended (as defined by JPA), the proxy will attempt
  * to retrieve the EntityManager instance associated with the current conversation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MultiThreadedEntityManagerProxy implements EntityManagerProxy {
     private String unitName;

@@ -47,7 +47,7 @@ import org.quartz.core.SchedulingContext;
 /**
  * Factory for the standard JobRunShell that wraps job invocations.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class F3JobRunShellFactory implements JobRunShellFactory {
     private JobRunShell shell;

@@ -40,7 +40,7 @@ package org.fabric3.management.contribution;
 /**
  * Denotes a general exception performing a contribution operation. This exception may be propagated to management clients.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionManagementException extends Exception {
     private static final long serialVersionUID = -6044812737369164000L;

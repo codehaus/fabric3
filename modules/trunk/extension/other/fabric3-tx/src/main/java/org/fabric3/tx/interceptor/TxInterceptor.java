@@ -52,7 +52,7 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.tx.TxException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TxInterceptor implements Interceptor {
 

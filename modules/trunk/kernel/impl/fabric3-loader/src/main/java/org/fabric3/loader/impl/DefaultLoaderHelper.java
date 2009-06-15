@@ -80,7 +80,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 /**
  * Default implementation of the loader helper.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DefaultLoaderHelper implements LoaderHelper {
     private final DocumentBuilderFactory documentBuilderFactory;

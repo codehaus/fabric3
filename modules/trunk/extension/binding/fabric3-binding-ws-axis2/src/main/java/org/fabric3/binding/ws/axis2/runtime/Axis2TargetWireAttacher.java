@@ -70,7 +70,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  *          <p/>
  *          TODO Add support for WSDL contract
  */

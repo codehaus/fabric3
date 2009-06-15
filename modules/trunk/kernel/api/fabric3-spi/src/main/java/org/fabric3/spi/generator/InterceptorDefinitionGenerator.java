@@ -52,7 +52,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 /**
  * Interface for the interceptor definition generator.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface InterceptorDefinitionGenerator {
 

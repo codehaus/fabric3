@@ -49,7 +49,7 @@ import org.easymock.EasyMock;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ImplementationMockLoaderTestCase extends TestCase {
 

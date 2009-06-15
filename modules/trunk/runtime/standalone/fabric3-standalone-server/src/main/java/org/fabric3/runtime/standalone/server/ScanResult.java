@@ -45,7 +45,7 @@ import org.fabric3.host.contribution.ContributionSource;
 /**
  * Holder for extension and user contributions in the runtime repository.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ScanResult {
     private List<ContributionSource> extensionContributions = new ArrayList<ContributionSource>();

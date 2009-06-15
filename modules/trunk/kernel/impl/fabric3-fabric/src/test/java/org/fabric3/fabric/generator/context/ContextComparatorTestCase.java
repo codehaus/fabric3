@@ -50,7 +50,7 @@ import org.fabric3.fabric.command.StartContextCommand;
 import org.fabric3.spi.command.Command;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContextComparatorTestCase extends TestCase {
 

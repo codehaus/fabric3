@@ -48,7 +48,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an exception performing a transaction operation such as commit or enlist.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JmsTxException extends Fabric3Exception {
     private static final long serialVersionUID = -1184454615953550937L;

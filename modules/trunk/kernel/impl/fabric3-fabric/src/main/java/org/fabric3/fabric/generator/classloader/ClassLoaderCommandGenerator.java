@@ -47,7 +47,7 @@ import org.fabric3.spi.generator.GenerationException;
 /**
  * Generates commands for provisioning and releasing classloaders on runtimes for a set of contributions being deployed or undeployed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ClassLoaderCommandGenerator {
 

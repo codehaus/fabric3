@@ -55,7 +55,7 @@ import org.fabric3.spi.policy.Policy;
 /**
  * Attaches wires to Junit components to the WireHolder.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class JUnitBindingGenerator implements BindingGenerator<JUnitBindingDefinition> {

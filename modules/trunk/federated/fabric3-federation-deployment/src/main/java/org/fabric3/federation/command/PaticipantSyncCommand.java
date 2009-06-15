@@ -42,7 +42,7 @@ import org.fabric3.spi.command.Command;
 /**
  * A command issued by a participant to synchronize with the domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PaticipantSyncCommand implements Command {
     private static final long serialVersionUID = -6969171512764646396L;

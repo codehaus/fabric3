@@ -51,7 +51,7 @@ import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
     private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");

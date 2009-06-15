@@ -75,7 +75,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Attaches references configured to use the TCP binding to the channel and handler pipeline.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDefinition> {
     private long connectTimeout = 10000;

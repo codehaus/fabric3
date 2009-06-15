@@ -52,7 +52,7 @@ import org.fabric3.timer.spi.TimerService;
 /**
  * A timer component implementation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TimerComponent<T> extends JavaComponent<T> {
     private TriggerData data;

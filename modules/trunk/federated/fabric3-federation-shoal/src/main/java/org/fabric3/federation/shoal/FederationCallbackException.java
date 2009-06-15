@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an exception while processing a federation callback operation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class FederationCallbackException extends Fabric3Exception {
     private static final long serialVersionUID = 1577729859596722713L;

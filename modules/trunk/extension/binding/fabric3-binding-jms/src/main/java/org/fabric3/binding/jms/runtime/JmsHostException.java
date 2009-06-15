@@ -42,7 +42,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an exception registering or unregistering a listener with a JmsHost.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JmsHostException extends Fabric3Exception {
     private static final long serialVersionUID = 8872645176633966439L;

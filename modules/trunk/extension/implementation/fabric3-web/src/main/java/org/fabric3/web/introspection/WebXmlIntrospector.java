@@ -44,7 +44,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Introspects a web.xml descriptor.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WebXmlIntrospector {
 

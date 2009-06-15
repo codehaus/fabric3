@@ -58,7 +58,7 @@ import org.fabric3.ftp.spi.FtpLetContainer;
  * <p/>
  * TODO Add mechanism to register the FTPlet.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StorRequestHandler implements RequestHandler {
 

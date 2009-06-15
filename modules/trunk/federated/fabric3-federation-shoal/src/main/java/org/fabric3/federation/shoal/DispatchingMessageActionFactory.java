@@ -48,7 +48,7 @@ import com.sun.enterprise.ee.cms.core.SignalReleaseException;
 /**
  * Dispatches to a callback handler.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DispatchingMessageActionFactory implements MessageActionFactory {
     private String serviceName;

@@ -40,7 +40,7 @@ package org.fabric3.host.contribution;
 /**
  * Denotes an error updating a contribution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UpdateException extends ContributionException {
     private static final long serialVersionUID = 3077970823020574546L;

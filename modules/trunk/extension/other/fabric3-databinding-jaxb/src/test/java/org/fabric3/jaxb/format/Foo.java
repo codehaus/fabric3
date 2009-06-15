@@ -40,7 +40,7 @@ package org.fabric3.jaxb.format;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @XmlRootElement
 public class Foo {

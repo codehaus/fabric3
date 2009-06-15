@@ -40,7 +40,7 @@ package org.fabric3.federation.command;
 import org.fabric3.spi.command.Command;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RuntimeDeploymentCommand implements Command {
     private static final long serialVersionUID = -3864446712541806877L;

@@ -46,7 +46,7 @@ package org.fabric3.spi.introspection.java;
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * @version $Rev: 5937 $ $Date: 2008-11-14 21:52:29 -0800 (Fri, 14 Nov 2008) $
+ * @version $Rev$ $Date$
  */
 public class AmbiguousConstructor extends ValidationFailure {
     private Class<?> clazz;

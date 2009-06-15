@@ -47,7 +47,7 @@ import org.quartz.spi.TriggerFiredBundle;
 /**
  * Default implementation of a RunnableJobFactory.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RunnableJobFactoryImpl implements RunnableJobFactory {
     private final Map<String, RunnableHolder<?>> runnables;

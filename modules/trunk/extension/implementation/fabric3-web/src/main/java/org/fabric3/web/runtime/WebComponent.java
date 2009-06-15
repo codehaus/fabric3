@@ -68,7 +68,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * A component whose implementation is a web applicaiton.
  *
- * @version $Rev: 3020 $ $Date: 2008-03-03 19:16:33 -0800 (Mon, 03 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class WebComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
 

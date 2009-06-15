@@ -48,7 +48,7 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * Denotes an error bootstrapping the runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class BootstrapException extends Fabric3Exception {
     private static final long serialVersionUID = -5481231211452396895L;

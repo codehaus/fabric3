@@ -40,7 +40,7 @@ package org.fabric3.spi.component;
 /**
  * Implementations provide conversation expiration semantics.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ExpirationPolicy {
 

@@ -44,7 +44,7 @@ import org.quartz.Job;
 /**
  * Manages a Runnable scheduled for execution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface RunnableHolder<T> extends ScheduledFuture<T>, Job {
 

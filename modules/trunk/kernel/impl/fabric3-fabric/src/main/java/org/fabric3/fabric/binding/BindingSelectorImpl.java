@@ -62,7 +62,7 @@ import org.fabric3.spi.util.UriHelper;
  * said to using binding.sca, in which case the BindingSelector will select an appropriate remote transport and create binding configuraton for both
  * sides of the wire.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class BindingSelectorImpl implements BindingSelector {

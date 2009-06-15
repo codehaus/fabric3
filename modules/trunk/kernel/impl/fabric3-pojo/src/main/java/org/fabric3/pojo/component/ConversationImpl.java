@@ -46,7 +46,7 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
 /**
  * Implementation of specification Conversation interface.
  *
- * @version $Rev: 2939 $ $Date: 2008-02-28 23:03:30 -0800 (Thu, 28 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 public class ConversationImpl implements F3Conversation {
     private static final long serialVersionUID = 8249514203064252385L;

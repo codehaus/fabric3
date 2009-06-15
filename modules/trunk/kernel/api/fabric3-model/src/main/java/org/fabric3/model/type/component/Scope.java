@@ -52,7 +52,7 @@ import org.fabric3.model.type.ModelObject;
 /**
  * An implementation scope that defines the lifecycle for implementation instances.
  *
- * @version $Rev: 5822 $ $Date: 2008-11-05 11:31:03 -0800 (Wed, 05 Nov 2008) $
+ * @version $Rev$ $Date$
  * @param <T> the type of identifier used to identify instances of this scope
  */
 public class Scope<T> extends ModelObject {

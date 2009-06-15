@@ -45,7 +45,7 @@ import java.util.Set;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition implements Axis2PolicyAware {
 

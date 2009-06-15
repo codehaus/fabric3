@@ -45,7 +45,7 @@ import org.fabric3.spi.ObjectFactory;
 /**
  * Creates StatefulEntityManagerProxy intances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StatefulEntityManagerProxyFactory implements ObjectFactory<StatefulEntityManagerProxy> {
     private String unitName;

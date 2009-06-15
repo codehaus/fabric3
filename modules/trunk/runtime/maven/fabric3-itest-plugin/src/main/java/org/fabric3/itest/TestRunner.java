@@ -65,7 +65,7 @@ import org.fabric3.maven.MavenEmbeddedRuntime;
 /**
  * Executes integration tests.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TestRunner {
     private File reportsDirectory;

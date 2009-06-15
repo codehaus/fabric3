@@ -40,7 +40,7 @@ package org.fabric3.spi.binding.format;
 /**
  * Callback for {@link MessageEncoder} clients to receive notification of encoded message header information for a service invocation response.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ResponseEncodeCallback {
 

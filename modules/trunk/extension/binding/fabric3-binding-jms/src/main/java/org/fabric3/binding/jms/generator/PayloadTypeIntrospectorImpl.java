@@ -63,7 +63,7 @@ import org.fabric3.model.type.service.Operation;
  * <ul>
  * </pre>
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
 

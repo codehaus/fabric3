@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Node2StringTest extends TestCase {
 

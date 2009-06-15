@@ -45,7 +45,7 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 /**
  * Template for configuring non-operation specific objects for a JmsInterceptor. Used by InterceptorConfiguration.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WireConfiguration {
     private CorrelationScheme correlationScheme;

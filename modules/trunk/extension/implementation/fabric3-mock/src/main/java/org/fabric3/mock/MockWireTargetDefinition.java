@@ -40,7 +40,7 @@ package org.fabric3.mock;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class MockWireTargetDefinition extends PhysicalWireTargetDefinition {
     private String mockedInterface;

@@ -47,7 +47,7 @@ import org.fabric3.spi.services.expression.ExpressionEvaluator;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 
 /**
- * @version $Rev: 3524 $ $Date: 2008-03-31 14:43:51 -0700 (Mon, 31 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class ExpressionExpanderImplTestCase extends TestCase {
 

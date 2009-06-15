@@ -42,7 +42,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Creates or returns ParameterEncoder instances.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ParameterEncoderFactory {
 

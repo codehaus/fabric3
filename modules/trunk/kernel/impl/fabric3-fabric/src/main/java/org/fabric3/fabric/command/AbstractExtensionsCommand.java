@@ -44,7 +44,7 @@ import java.util.List;
 import org.fabric3.spi.command.Command;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class AbstractExtensionsCommand implements Command {
     private static final long serialVersionUID = -4757212674286772185L;

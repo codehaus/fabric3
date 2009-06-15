@@ -46,7 +46,7 @@ import com.caucho.hessian.io.AbstractSerializer;
 /**
  * Custom Serializer for {@link QName}s.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QNameSerializer extends AbstractSerializer {
 

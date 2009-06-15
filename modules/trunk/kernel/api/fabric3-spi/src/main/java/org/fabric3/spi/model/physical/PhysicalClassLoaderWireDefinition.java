@@ -43,7 +43,7 @@ import java.net.URI;
 /**
  * Represents a "wire" between two classloaders that defines visibility constraints.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PhysicalClassLoaderWireDefinition implements Serializable {
     private static final long serialVersionUID = 4080221327918467451L;

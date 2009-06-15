@@ -48,7 +48,7 @@ import org.fabric3.binding.net.NetBindingMonitor;
 /**
  * Listens for the completion of an HTTP channel write operation and retries the specified number of times if the operation failed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpRetryWriteListener implements ChannelFutureListener {
     private HttpRequest request;

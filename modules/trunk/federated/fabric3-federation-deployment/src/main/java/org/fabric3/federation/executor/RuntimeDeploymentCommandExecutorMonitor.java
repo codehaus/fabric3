@@ -40,7 +40,7 @@ package org.fabric3.federation.executor;
 import org.fabric3.api.annotation.logging.Info;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface RuntimeDeploymentCommandExecutorMonitor {
 

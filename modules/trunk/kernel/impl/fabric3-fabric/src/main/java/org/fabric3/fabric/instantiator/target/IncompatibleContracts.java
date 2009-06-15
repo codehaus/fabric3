@@ -44,7 +44,7 @@ import org.fabric3.host.domain.AssemblyFailure;
 /**
  * Thrown when an attempt is made to wire a reference to a service with incompatible contracts.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class IncompatibleContracts extends AssemblyFailure {
     private URI referenceUri;

@@ -46,7 +46,7 @@ import org.fabric3.ftp.server.security.User;
 /**
  * Handles the <code>USER</code> command.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class UserRequestHandler implements RequestHandler {
 

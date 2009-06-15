@@ -61,7 +61,7 @@ import org.fabric3.spi.xml.XMLFactory;
 /**
  * Default implementation of WebXmlIntrospector.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WebXmlIntrospectorImpl implements WebXmlIntrospector {
     private static final QNameSymbol WEB_APP_NO_NAMESPACE = new QNameSymbol(new QName(null, "web-app"));

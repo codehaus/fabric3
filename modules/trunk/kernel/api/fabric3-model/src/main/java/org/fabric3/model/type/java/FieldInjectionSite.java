@@ -46,7 +46,7 @@ package org.fabric3.model.type.java;
 import java.lang.reflect.Field;
 
 /**
- * @version $Rev: 5481 $ $Date: 2008-09-26 02:36:30 -0700 (Fri, 26 Sep 2008) $
+ * @version $Rev$ $Date$
  */
 public class FieldInjectionSite extends InjectionSite {
     private static final long serialVersionUID = -6502983302874808563L;

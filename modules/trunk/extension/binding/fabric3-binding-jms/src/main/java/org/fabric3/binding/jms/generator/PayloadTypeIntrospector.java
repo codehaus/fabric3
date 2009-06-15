@@ -49,7 +49,7 @@ import org.fabric3.model.type.service.Operation;
 /**
  * Introspects an operation's in parameters to determine the payload type.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PayloadTypeIntrospector {
 

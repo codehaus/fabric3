@@ -45,7 +45,7 @@ import org.fabric3.spi.binding.format.ParameterEncoder;
  * Template for configuring a JmsInterceptor. If a JmsResponseMessageListener is not set, the interceptor will be configured to perform one-way
  * invocations.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InterceptorConfiguration {
     private String operationName;

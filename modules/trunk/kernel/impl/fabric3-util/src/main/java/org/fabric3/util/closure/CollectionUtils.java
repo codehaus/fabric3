@@ -47,7 +47,7 @@ import java.util.Set;
  * <p/>
  * TODO To be moved into a separate module.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CollectionUtils {
 

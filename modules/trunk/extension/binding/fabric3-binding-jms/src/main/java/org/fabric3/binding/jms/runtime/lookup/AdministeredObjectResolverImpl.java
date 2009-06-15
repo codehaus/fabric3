@@ -54,7 +54,7 @@ import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 /**
  * Default implementation of AdministeredObjectResolver.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AdministeredObjectResolverImpl implements AdministeredObjectResolver {
     private Map<CreateOption, ConnectionFactoryStrategy> factoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();

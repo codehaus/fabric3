@@ -53,7 +53,7 @@ import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 /**
  * Creates a TCP channel pipeline for both clients and service providers.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpPipelineFactory implements ChannelPipelineFactory {
     private final ChannelHandler handler;

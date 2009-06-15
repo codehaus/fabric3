@@ -40,7 +40,7 @@ package org.fabric3.binding.net.provision;
 /**
  * Constants used by the network binding extension.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface NetConstants {
 

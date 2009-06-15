@@ -41,7 +41,7 @@ import javax.persistence.spi.PersistenceUnitInfo;
 
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface PersistenceUnitScanner {
 

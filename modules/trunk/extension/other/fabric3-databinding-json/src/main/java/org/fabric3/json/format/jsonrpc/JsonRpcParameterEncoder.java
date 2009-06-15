@@ -40,7 +40,7 @@ package org.fabric3.json.format.jsonrpc;
 import org.fabric3.spi.binding.format.AbstractParameterEncoder;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JsonRpcParameterEncoder extends AbstractParameterEncoder {
 }

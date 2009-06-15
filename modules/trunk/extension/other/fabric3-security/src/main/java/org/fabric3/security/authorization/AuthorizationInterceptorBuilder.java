@@ -50,7 +50,7 @@ import org.fabric3.spi.wire.Interceptor;
  * authorization services here can be a keyed map. The key can be specified in the policy definition, which would map to a specific instance of the
  * interceptor.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AuthorizationInterceptorBuilder implements InterceptorBuilder<AuthorizationInterceptorDefinition> {
 

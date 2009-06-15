@@ -64,7 +64,7 @@ import org.fabric3.spi.xml.XMLFactory;
 /**
  * Records the current domain state to a journal so it may be replayed when a controller comes back online and resyncs with the domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class FSDomainTracker implements DomainListener {

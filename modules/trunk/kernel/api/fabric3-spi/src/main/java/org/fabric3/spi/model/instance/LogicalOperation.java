@@ -42,7 +42,7 @@ import org.fabric3.model.type.service.Operation;
 /**
  * Represents an operation on a service, reference or resource of an instantiated component.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class LogicalOperation extends LogicalScaArtifact<LogicalAttachPoint> {
     private static final long serialVersionUID = -3846488579836419406L;

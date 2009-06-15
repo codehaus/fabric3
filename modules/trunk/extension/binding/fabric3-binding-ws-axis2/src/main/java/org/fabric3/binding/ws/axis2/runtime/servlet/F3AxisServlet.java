@@ -52,7 +52,7 @@ import org.apache.axis2.transport.http.AxisServlet;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @SuppressWarnings("serial")
 public class F3AxisServlet extends AxisServlet {

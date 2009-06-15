@@ -71,7 +71,7 @@ import org.fabric3.spi.topology.ZoneManager;
  * Processes a ZoneDeploymentCommand. This may result in routing the command locally, to an individual runtime, or to  all runtimes in a zone
  * depending on the correlation semantics.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploymentCommand> {

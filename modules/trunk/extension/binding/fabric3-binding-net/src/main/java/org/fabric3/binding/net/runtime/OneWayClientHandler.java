@@ -48,7 +48,7 @@ import org.fabric3.binding.net.NetBindingMonitor;
 /**
  * Client-side handler for one-way operations. This handler only logs errors and closes the channel.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @ChannelPipelineCoverage("all")
 public class OneWayClientHandler extends SimpleChannelHandler {

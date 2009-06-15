@@ -42,7 +42,7 @@ import org.fabric3.host.contribution.ContributionException;
 /**
  * Denotes an illegal attempt to change the state of a contribution.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class IllegalContributionStateException extends ContributionException {
     private static final long serialVersionUID = -3109597535703475667L;

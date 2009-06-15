@@ -52,7 +52,7 @@ import javax.xml.namespace.QName;
 /**
  * Super class for all logical SCA artifacts.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> implements Serializable {
     private static final long serialVersionUID = 3937960041374196627L;

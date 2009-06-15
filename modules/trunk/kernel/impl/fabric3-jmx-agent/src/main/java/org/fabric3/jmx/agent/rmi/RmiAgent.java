@@ -34,7 +34,7 @@ import org.fabric3.jmx.agent.ManagementException;
 /**
  * Utility for starting the JMX server with an RMI agent.
  *
- * @version $Revsion$ $Date: 2007-09-02 01:33:01 +0100 (Sun, 02 Sep 2007) $
+ * @version $Revsion$ $Date$
  */
 public class RmiAgent extends AbstractAgent {
 

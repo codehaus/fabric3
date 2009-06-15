@@ -40,7 +40,7 @@ package org.fabric3.management.domain;
 /**
  * Denotes a general exception performing a deployment operation. This exception may be propagated to management clients.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DeploymentManagementException extends Exception {
     private static final long serialVersionUID = 5748693619945698434L;

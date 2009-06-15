@@ -63,7 +63,7 @@ import org.fabric3.model.type.AbstractPolicyAware;
  * to other components from the enclosing composite that are in the same scope. This can be used to define a startup sequence for components that are
  * otherwise independent. Any initialization required to resolve references between components will override this initialization order.</p>
  *
- * @version $Rev: 5594 $ $Date: 2008-10-10 09:41:58 -0700 (Fri, 10 Oct 2008) $
+ * @version $Rev$ $Date$
  */
 public class ComponentDefinition<I extends Implementation<?>> extends AbstractPolicyAware {
     private static final long serialVersionUID = 4909969579651563484L;

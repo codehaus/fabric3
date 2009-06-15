@@ -48,7 +48,7 @@ import org.fabric3.api.annotation.logging.Warning;
 /**
  * Monitor for federation services.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface FederationServiceMonitor {
 

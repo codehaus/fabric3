@@ -47,7 +47,7 @@ import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DistributedDomainMBean extends AbstractDomainMBean implements DomainMBean {
 

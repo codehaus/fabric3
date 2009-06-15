@@ -52,7 +52,7 @@ import org.apache.activemq.ActiveMQXAConnectionFactory;
 import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ConnectionFactoryParserTestCase extends TestCase {
     private static final String XML = "<foo><value>" +

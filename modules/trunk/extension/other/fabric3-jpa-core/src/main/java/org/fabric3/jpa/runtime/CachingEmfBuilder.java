@@ -54,7 +54,7 @@ import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
  * Creates entity manager factories using the JPA provider SPI. Creation of entity manager factories are expensive operations and hence created
  * instances are cached.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Service(interfaces = {EmfBuilder.class, EmfCache.class})
 public class CachingEmfBuilder implements EmfBuilder, EmfCache {

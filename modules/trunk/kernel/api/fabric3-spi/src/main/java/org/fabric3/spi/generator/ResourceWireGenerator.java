@@ -44,7 +44,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 /**
  * Wire generator for resources.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface ResourceWireGenerator<RD extends ResourceDefinition> {
 

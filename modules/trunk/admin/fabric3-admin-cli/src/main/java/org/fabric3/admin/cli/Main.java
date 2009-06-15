@@ -51,7 +51,7 @@ import org.fabric3.admin.interpreter.InterpreterImpl;
 /**
  * Main entry point for the domain administation command line tool.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Main {
 

@@ -41,7 +41,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisModule;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface F3Configurator {
 

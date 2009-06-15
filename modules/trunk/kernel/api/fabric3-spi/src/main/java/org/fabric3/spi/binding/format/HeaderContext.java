@@ -40,7 +40,7 @@ package org.fabric3.spi.binding.format;
 /**
  * Provides transport-independent access to header information transmitted as part of a remote service invocation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface HeaderContext {
 

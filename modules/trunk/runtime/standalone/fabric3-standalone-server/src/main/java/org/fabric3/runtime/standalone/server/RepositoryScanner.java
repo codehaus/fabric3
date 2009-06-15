@@ -66,7 +66,7 @@ import org.fabric3.runtime.standalone.SyntheticContributionSource;
 /**
  * Scans a repository for extension and user contributions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RepositoryScanner {
     private static final String MANIFEST_PATH = "META-INF/sca-contribution.xml";

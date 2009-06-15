@@ -45,7 +45,7 @@ import org.fabric3.ftp.server.protocol.RequestHandler;
 /**
  * Handles the <code>QUIT</code> command.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QuitRequestHandler implements RequestHandler {
     public void service(Request request) {

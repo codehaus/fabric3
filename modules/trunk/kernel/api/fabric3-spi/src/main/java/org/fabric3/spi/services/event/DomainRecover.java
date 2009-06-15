@@ -40,7 +40,7 @@ package org.fabric3.spi.services.event;
 /**
  * Signals when a domain enters the recover phase.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DomainRecover implements Fabric3Event {
 }

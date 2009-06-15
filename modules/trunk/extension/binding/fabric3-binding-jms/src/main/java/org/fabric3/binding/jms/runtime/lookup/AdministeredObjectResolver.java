@@ -48,7 +48,7 @@ import org.fabric3.binding.jms.common.DestinationDefinition;
  * Resolves administered objects, specifically connection factories and destinations. Different strategies may be used for resolution as defined by
  * ConnectionFactoryDefinition or DestinationDefinition.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface AdministeredObjectResolver {
 

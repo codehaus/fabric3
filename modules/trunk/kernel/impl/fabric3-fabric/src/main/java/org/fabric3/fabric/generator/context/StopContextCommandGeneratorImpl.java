@@ -51,7 +51,7 @@ import org.fabric3.spi.model.instance.LogicalState;
 /**
  * Generates a map of commands keyed by zone to stop deployment contexts during an undeploy operation.
  *
- * @version $Rev: 4150 $ $Date: 2008-05-09 12:33:01 -0700 (Fri, 09 May 2008) $
+ * @version $Rev$ $Date$
  */
 
 public class StopContextCommandGeneratorImpl implements StopContextCommandGenerator {

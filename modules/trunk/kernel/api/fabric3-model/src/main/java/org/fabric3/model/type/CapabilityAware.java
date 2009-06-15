@@ -42,7 +42,7 @@ import java.util.Set;
 /**
  * Interface that indicates a type (e.g. binding or component implementation) requires a runtime capability.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface CapabilityAware {
 

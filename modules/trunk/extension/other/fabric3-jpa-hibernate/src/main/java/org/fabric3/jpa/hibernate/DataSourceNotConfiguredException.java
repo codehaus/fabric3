@@ -40,7 +40,7 @@ package org.fabric3.jpa.hibernate;
 import org.fabric3.jpa.spi.EmfBuilderException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DataSourceNotConfiguredException extends EmfBuilderException {
     private static final long serialVersionUID = 2023986653827615130L;

@@ -47,7 +47,7 @@ import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
- * @version $Rev: 2803 $ $Date: 2008-02-17 05:57:55 -0800 (Sun, 17 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 public class WebComponentDefinition extends PhysicalComponentDefinition {
     private static final long serialVersionUID = 2871569095506575868L;

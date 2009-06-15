@@ -42,7 +42,7 @@ import junit.framework.TestCase;
 import org.fabric3.spi.invocation.Message;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JsonRpcMessageEncoderTestCase extends TestCase {
 

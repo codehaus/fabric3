@@ -73,7 +73,7 @@ import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Axis2TargetInterceptor implements Interceptor {
 

@@ -78,7 +78,7 @@ import org.fabric3.spi.xml.XMLFactory;
 /**
  * Records profiles installed in the runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Service(interfaces = {ContributionServiceListener.class, Fabric3EventListener.class})
 @EagerInit

@@ -49,7 +49,7 @@ import javax.xml.namespace.QName;
 /**
  * Represents a binding type.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class BindingType extends AbstractType {
     private static final long serialVersionUID = 6187269257530837534L;

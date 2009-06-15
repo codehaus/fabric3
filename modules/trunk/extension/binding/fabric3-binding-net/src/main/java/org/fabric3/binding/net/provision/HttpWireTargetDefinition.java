@@ -43,7 +43,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 /**
  * Target definition for binding.http.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpWireTargetDefinition extends PhysicalWireTargetDefinition {
     private static final long serialVersionUID = -1496341521233245378L;

@@ -61,7 +61,7 @@ import org.fabric3.host.work.WorkScheduler;
 /**
  * F3 implementation of the in-process FTP host.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class F3FtpHost implements FtpHost {

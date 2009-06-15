@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpHeaders implements Serializable {
     private static final long serialVersionUID = -3247241670947499477L;

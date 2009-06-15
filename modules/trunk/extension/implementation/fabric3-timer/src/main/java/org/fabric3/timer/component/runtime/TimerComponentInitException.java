@@ -40,7 +40,7 @@ package org.fabric3.timer.component.runtime;
 import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TimerComponentInitException extends Fabric3RuntimeException {
     private static final long serialVersionUID = -2271902394308088059L;

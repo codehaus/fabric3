@@ -67,7 +67,7 @@ import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerComponentDefinition, TimerComponent<?>> {

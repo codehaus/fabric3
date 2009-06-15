@@ -55,7 +55,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {

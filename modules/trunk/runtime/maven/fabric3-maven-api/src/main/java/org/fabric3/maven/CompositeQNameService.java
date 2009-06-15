@@ -47,7 +47,7 @@ import org.fabric3.host.contribution.ContributionNotFoundException;
 /**
  * Returns the QName of a composite.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface CompositeQNameService {
 

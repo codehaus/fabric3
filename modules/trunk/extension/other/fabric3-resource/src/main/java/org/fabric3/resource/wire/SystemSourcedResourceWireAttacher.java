@@ -52,7 +52,7 @@ import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class SystemSourcedResourceWireAttacher implements TargetWireAttacher<SystemSourcedWireTargetDefinition> {
     private final ComponentManager manager;

@@ -50,7 +50,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 /**
  * Utility methods for outputting validation errors.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class ValidationUtils {
     private static ValidationExceptionComparator COMPARATOR = new ValidationExceptionComparator();

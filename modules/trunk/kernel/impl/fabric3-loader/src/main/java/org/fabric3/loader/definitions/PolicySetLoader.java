@@ -79,7 +79,7 @@ import org.fabric3.spi.transform.TransformationException;
 /**
  * Loader for definitions.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class PolicySetLoader implements TypeLoader<PolicySet> {

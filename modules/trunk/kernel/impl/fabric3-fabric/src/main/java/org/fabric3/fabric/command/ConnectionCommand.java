@@ -45,7 +45,7 @@ import org.fabric3.spi.command.Command;
 /**
  * Contains commands for attaching and detaching wires.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ConnectionCommand implements Command {
     private static final long serialVersionUID = -2313380946362271104L;

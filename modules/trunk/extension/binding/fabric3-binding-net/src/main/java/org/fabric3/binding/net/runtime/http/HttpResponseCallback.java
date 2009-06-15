@@ -46,7 +46,7 @@ import org.fabric3.spi.binding.format.ResponseEncodeCallback;
 /**
  * ResponseEncodeCallback for an HTTP response.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpResponseCallback implements ResponseEncodeCallback {
     private HttpResponse response;

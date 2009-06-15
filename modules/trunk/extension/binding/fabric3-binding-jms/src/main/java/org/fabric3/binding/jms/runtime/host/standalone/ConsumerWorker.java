@@ -63,7 +63,7 @@ import org.fabric3.host.work.DefaultPausableWork;
 /**
  * A thread pull message from destination and invoke Message listener.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ConsumerWorker extends DefaultPausableWork {
 

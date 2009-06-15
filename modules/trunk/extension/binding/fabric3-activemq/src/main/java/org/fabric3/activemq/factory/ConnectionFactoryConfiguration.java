@@ -43,7 +43,7 @@ import java.util.Properties;
 /**
  * Represents a parsed connection factory configuration from the runtime system configuration.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ConnectionFactoryConfiguration {
     private ConnectionFactoryType type = ConnectionFactoryType.LOCAL;

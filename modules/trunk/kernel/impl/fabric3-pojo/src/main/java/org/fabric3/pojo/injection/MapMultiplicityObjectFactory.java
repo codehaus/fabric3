@@ -46,7 +46,7 @@ import org.fabric3.spi.ObjectFactory;
 /**
  * A map based object factory.
  *
- * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
+ * @version $Rev$ $Date$
  */
 public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<Map<?, ?>> {
 

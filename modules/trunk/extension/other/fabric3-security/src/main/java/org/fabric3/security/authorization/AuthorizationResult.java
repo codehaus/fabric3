@@ -40,7 +40,7 @@ package org.fabric3.security.authorization;
 /**
  * Result of performing authorization.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface AuthorizationResult {
 

@@ -52,7 +52,7 @@ import org.fabric3.spi.invocation.Message;
  * message metadata in the envelope may not issue callbacks. However, certain message encoding formats propagate message data as part of the transport
  * "packet" (e.g. HTTP headers and JMS message propertes). The callback mechanism is used to notify the client to write to transport packet.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface MessageEncoder {
 

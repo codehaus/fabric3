@@ -59,7 +59,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @SuppressWarnings({"unchecked"})
 public class LogicalModelXPathTestCase extends TestCase {

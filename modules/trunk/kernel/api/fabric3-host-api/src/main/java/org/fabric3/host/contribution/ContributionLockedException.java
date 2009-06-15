@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 /**
  * Thrown when an attempt is made to uninstall a contribution that is referenced by deployed components.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ContributionLockedException extends UninstallException {
     private static final long serialVersionUID = -5443601943113359365L;

@@ -62,7 +62,7 @@ import org.fabric3.host.work.WorkScheduler;
 /**
  * Server session pool used by the standalone JMS server.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StandaloneServerSessionPool implements ServerSessionPool {
 

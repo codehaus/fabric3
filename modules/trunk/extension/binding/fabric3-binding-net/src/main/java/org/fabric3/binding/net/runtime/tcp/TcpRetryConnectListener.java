@@ -56,7 +56,7 @@ import org.fabric3.spi.binding.format.EncoderException;
 /**
  * Listens for a channel connection event for a TCP socket, retrying a specified number of times if the operation failed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TcpRetryConnectListener implements ChannelFutureListener {
     private SocketAddress address;

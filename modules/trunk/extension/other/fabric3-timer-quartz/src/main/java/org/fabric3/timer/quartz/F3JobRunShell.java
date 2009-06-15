@@ -46,7 +46,7 @@ import org.quartz.core.SchedulingContext;
 /**
  * Placeholder shell for monitoring events.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class F3JobRunShell extends JobRunShell {
     public F3JobRunShell(JobRunShellFactory jobRunShellFactory, Scheduler scheduler, SchedulingContext schedulingContext) {

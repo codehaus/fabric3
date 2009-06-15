@@ -40,7 +40,7 @@ package org.fabric3.resource.model;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class SystemSourcedWireTargetDefinition extends PhysicalWireTargetDefinition {
 

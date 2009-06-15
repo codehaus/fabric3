@@ -42,7 +42,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 /**
  * Interceptor definition that encapsulates the interceptor class.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class SimpleInterceptorDefinition extends PhysicalInterceptorDefinition {
     private static final long serialVersionUID = 880405443267716015L;

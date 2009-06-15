@@ -56,7 +56,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 /**
  * Implements the OperationRef function defined by the SCA Policy Specificaton.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class OperationRefFunction implements Function {
 

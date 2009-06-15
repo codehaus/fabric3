@@ -51,7 +51,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Implementations evaluate a Java-based interface and populate the corresponding service contract with relevant metadata.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface InterfaceIntrospector {
 

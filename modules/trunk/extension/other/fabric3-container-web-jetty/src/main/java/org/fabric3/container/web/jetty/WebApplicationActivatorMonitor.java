@@ -42,7 +42,7 @@ import org.fabric3.api.annotation.logging.Info;
 /**
  * Receives events related to web application activation and deactivation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WebApplicationActivatorMonitor {
 

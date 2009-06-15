@@ -64,7 +64,7 @@ import org.fabric3.spi.executor.ExecutionException;
 /**
  * Undeploys, uninstalls, and removes extension contributions from a runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @EagerInit
 public class UnProvisionExtensionsCommandExecutor implements CommandExecutor<UnProvisionExtensionsCommand> {

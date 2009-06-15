@@ -58,7 +58,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 /**
  * Interface for the helper class for loading intents and policy sets into elements aginst which intents and policies can be declared.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface LoaderHelper {
     /**

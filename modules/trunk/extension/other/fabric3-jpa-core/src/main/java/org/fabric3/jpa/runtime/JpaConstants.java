@@ -38,7 +38,7 @@
 package org.fabric3.jpa.runtime;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JpaConstants {
 

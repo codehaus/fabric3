@@ -43,7 +43,7 @@ import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface JarManifestHandler {
 

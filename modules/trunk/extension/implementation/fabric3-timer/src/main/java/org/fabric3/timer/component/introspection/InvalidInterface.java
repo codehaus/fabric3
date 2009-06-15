@@ -41,7 +41,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.timer.component.model.TimerImplementation;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class InvalidInterface extends ValidationFailure {
     private TimerImplementation implementation;

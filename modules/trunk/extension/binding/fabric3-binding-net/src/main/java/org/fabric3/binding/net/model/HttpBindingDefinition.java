@@ -49,7 +49,7 @@ import org.fabric3.model.type.component.BindingDefinition;
 /**
  * Represents a binding.http configuration.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 1035192281713003125L;

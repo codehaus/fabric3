@@ -53,7 +53,7 @@ import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 /**
  * Creates a client-side HTTP channel pipeline.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class HttpClientPipelineFactory implements ChannelPipelineFactory {
     private final ChannelHandler handler;

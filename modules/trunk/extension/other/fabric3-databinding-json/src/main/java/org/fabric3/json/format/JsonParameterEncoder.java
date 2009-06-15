@@ -54,7 +54,7 @@ import org.fabric3.spi.invocation.Message;
 /**
  * ParameterEncoder that uses JSON. Note this implementation only encodes type information for faults, wrapping them in {@link ApplicationFault}.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class JsonParameterEncoder extends AbstractParameterEncoder {
     private ObjectMapper mapper;

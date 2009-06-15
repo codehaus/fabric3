@@ -41,7 +41,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public final class ParameterizedTypeImpl implements ParameterizedType {
 

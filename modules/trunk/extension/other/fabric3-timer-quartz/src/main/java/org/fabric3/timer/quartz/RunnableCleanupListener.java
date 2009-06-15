@@ -43,7 +43,7 @@ import org.quartz.listeners.SchedulerListenerSupport;
 /**
  * Removes references to a registered holder after a job trigger has completed.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class RunnableCleanupListener extends SchedulerListenerSupport {
     private RunnableJobFactory jobFactory;

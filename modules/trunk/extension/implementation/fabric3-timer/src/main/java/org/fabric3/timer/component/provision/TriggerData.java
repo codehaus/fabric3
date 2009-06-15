@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Encapsulates data for a timer trigger.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TriggerData implements Serializable {
     private static final long serialVersionUID = 5814910790533612455L;

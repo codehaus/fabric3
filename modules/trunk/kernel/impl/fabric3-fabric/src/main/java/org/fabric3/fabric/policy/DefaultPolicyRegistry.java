@@ -62,7 +62,7 @@ import org.fabric3.spi.policy.PolicyRegistry;
 /**
  * Default implementation of the policy registry.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DefaultPolicyRegistry implements PolicyRegistry {
 
