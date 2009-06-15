@@ -32,14 +32,14 @@ Public License. See the accompanying license file for details.
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-feature-set-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <includes>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-hibernate-feature</artifactId>
-                            <version>1.1</version>
+                            <version>1.2-SNAPSHOT</version>
                             <type>xml</type>
                         </dependency>
                     </includes>
@@ -48,7 +48,7 @@ Public License. See the accompanying license file for details.
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>1.1</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>javax.transaction</groupId>

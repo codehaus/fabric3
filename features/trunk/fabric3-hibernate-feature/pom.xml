@@ -11,13 +11,13 @@ Public License. See the accompanying license file for details.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-features-parent-pom</artifactId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-hibernate-feature</artifactId>
     <name>Fabric3 Hibernate Feature</name>
@@ -32,7 +32,7 @@ Public License. See the accompanying license file for details.
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-feature-set-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <extensions>
@@ -40,25 +40,25 @@ Public License. See the accompanying license file for details.
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-hibernate</artifactId>
-                            <version>1.1</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <!-- JPA Core Components -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-spi</artifactId>
-                            <version>1.1</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <!-- Declarative Transaction Policies -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>1.1</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <!-- JSR 250 Resource Support and Datasource Management -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
-                            <version>1.1</version>
+                            <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>javax.persistence</groupId>
