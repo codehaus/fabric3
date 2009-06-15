@@ -38,7 +38,7 @@
 package org.fabric3.policy.attachment;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface AttachService {
 

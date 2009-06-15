@@ -43,7 +43,7 @@ import org.oasisopen.sca.annotation.Scope;
 import org.fabric3.api.annotation.PropagatesConversation;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Scope("CONVERSATION")
 public class ClientToIntermediaryImpl implements ClientToIntermediary {

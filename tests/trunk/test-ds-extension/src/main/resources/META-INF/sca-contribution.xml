@@ -5,7 +5,7 @@
 
  Fabric3 integration tests are licensed under the Apache 2.0 license.
 
-    $Rev: 5738 $ $Date: 2008-10-29 12:35:01 -0700 (Wed, 29 Oct 2008) $
+    $Rev$ $Date$
 -->
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <import.java package="javax.transaction" version="1.1.0"/>

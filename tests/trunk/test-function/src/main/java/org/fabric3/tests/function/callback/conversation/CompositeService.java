@@ -41,7 +41,7 @@ import org.oasisopen.sca.annotation.Callback;
 import org.oasisopen.sca.annotation.OneWay;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Callback(CallbackService.class)
 public interface CompositeService {

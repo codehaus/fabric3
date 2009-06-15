@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Conversational;
 import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Conversational
 public interface ConversationalClientService {

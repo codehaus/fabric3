@@ -45,7 +45,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import org.apache.ws.security.WSPasswordCallback;
 
 /**
- * @version $Revision: 6208 $ $Date: 2008-12-07 18:29:58 +0000 (Sun, 07 Dec 2008) $
+ * @version $Revision$ $Date$
  */
 public class AuthenticationHandler implements CallbackHandler {
 

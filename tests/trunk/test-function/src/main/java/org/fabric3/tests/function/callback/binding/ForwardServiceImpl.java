@@ -43,7 +43,7 @@ import org.oasisopen.sca.annotation.OneWay;
 import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class ForwardServiceImpl implements ForwardService {
     @Callback

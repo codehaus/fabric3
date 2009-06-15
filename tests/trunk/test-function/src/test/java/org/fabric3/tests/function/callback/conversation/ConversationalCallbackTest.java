@@ -45,7 +45,7 @@ import org.fabric3.tests.function.callback.common.CallbackData;
 /**
  * Tests for stateless calbacks.
  *
- * @version $Rev: 2751 $ $Date: 2008-02-12 01:14:41 -0800 (Tue, 12 Feb 2008) $
+ * @version $Rev$ $Date$
  */
 public class ConversationalCallbackTest extends TestCase {
     @Reference

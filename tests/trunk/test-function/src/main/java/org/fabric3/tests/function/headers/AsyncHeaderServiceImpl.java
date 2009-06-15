@@ -42,7 +42,7 @@ import org.oasisopen.sca.annotation.Context;
 import org.fabric3.api.Fabric3RequestContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class AsyncHeaderServiceImpl implements AsyncHeaderService {
 

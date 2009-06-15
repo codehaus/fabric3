@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @XmlRootElement
 public class WeatherResponse implements Serializable {

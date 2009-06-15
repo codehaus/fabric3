@@ -56,7 +56,7 @@ import org.fabric3.management.contribution.ContributionInfo;
 /**
  * Runs basic smoketests for the standalone runtime booted in single-VM mode.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class StandaloneVMTestCase {
     private static final File RUNTIME_DIR = new File(".." + File.separator

@@ -45,7 +45,7 @@ import org.fabric3.jpa.ConversationalDao;
 import org.fabric3.jpa.model.Employee;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EmployeeServiceImpl implements EmployeeService {
 

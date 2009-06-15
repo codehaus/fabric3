@@ -39,7 +39,7 @@ package org.fabric3.policy.tx;
 
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface TransactionalService {
 

@@ -40,7 +40,7 @@ package org.fabric3.tests.timer;
 import org.oasisopen.sca.annotation.Reference;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TimedComponent implements Runnable {
     @Reference

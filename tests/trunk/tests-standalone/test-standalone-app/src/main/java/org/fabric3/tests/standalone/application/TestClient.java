@@ -40,7 +40,7 @@ package org.fabric3.tests.standalone.application;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TestClient implements TestClientService {
 

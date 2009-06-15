@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.EndsConversation;
 import org.fabric3.jpa.model.Employee;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Conversational
 public interface ConversationEmployeeService extends EmployeeService {

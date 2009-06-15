@@ -47,7 +47,7 @@ import org.oasisopen.sca.annotation.Reference;
 import org.fabric3.api.Fabric3RequestContext;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class DataTransferServiceITest extends TestCase {
 

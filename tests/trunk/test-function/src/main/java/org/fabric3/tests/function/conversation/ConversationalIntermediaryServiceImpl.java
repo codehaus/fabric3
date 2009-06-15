@@ -41,7 +41,7 @@ import org.oasisopen.sca.annotation.Reference;
 import org.oasisopen.sca.annotation.Scope;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Scope("CONVERSATION")
 public class ConversationalIntermediaryServiceImpl implements ConversationalIntermediaryService {

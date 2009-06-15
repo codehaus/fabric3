@@ -40,7 +40,7 @@ package org.fabric3.tests.binding.axis2;
 import org.apache.axiom.om.OMElement;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class Axis2FaultServiceImpl implements Axis2FaultService {
     public String runtimeFaultOperation(OMElement inputText) {

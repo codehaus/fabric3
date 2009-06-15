@@ -38,7 +38,7 @@
 package org.fabric3.tests.function.conversation;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface IntermediaryService {
 

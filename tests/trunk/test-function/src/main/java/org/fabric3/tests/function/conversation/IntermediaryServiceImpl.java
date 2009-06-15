@@ -42,7 +42,7 @@ import org.oasisopen.sca.annotation.Reference;
 import org.fabric3.api.annotation.PropagatesConversation;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class IntermediaryServiceImpl implements IntermediaryService {
     @Reference

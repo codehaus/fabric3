@@ -41,7 +41,7 @@ import org.oasisopen.sca.annotation.Callback;
 import org.osoa.sca.annotations.Conversational;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Conversational
 @Callback(CallbackEndsService.class)

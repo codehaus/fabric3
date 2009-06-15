@@ -42,7 +42,7 @@ import org.oasisopen.sca.annotation.Scope;
 import org.oasisopen.sca.annotation.Service;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Service(interfaces = {ConversationalCallbackClientEndsService.class, CallbackEndsService.class})
 @Scope("CONVERSATION")

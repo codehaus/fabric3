@@ -43,7 +43,7 @@ import org.oasisopen.sca.annotation.Scope;
 import org.oasisopen.sca.annotation.Service;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Scope("COMPOSITE")
 @Service(interfaces = {CompositeService.class, CallbackService.class})

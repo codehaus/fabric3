@@ -38,7 +38,7 @@
 package org.fabric3.tests.function.lifecycle;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class CalloutTargetImpl implements CalloutTarget {
     public void invoke() {

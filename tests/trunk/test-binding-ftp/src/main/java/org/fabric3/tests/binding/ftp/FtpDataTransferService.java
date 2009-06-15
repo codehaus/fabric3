@@ -40,7 +40,7 @@ package org.fabric3.tests.binding.ftp;
 import java.io.InputStream;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface FtpDataTransferService {
 

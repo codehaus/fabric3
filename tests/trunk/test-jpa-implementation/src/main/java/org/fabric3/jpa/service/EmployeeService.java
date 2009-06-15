@@ -42,7 +42,7 @@ import java.util.List;
 import org.fabric3.jpa.model.Employee;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface EmployeeService {
 

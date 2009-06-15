@@ -48,7 +48,7 @@ import org.hibernate.criterion.Restrictions;
 import org.fabric3.runtime.webapp.smoketest.model.Employee;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EmployeeServiceImpl implements EmployeeService {
     private EntityManager em;

@@ -49,7 +49,7 @@ import org.fabric3.jpa.model.Employee;
 import org.fabric3.jpa.model.ExEmployee;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Scope("CONVERSATION")
 public class ConversationEmployeeServiceImpl implements ConversationEmployeeService {

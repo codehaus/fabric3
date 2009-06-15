@@ -40,7 +40,7 @@ package org.fabric3.binding.jms.test.object;
 import java.io.Serializable;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WeatherResponse implements Serializable {
 

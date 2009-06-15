@@ -38,7 +38,7 @@
 package org.fabric3.tests.standalone.application;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class TestComponent implements TestService {
     public String invoke(String msg) {

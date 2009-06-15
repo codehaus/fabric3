@@ -42,7 +42,7 @@ import org.oasisopen.sca.annotation.OneWay;
 import org.osoa.sca.annotations.Conversational;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Conversational
 @Callback(CallbackService.class)

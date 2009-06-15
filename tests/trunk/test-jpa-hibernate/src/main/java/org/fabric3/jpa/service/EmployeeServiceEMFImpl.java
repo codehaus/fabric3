@@ -48,7 +48,7 @@ import org.fabric3.jpa.model.ExEmployee;
 /**
  * Exercises injecting an EntityManagerFactory.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EmployeeServiceEMFImpl implements EmployeeService {
     private EntityManagerFactory emf;

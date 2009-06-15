@@ -39,7 +39,7 @@ package org.fabric3.binding.jms.test.jaxb;
 
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WeatherService {
 

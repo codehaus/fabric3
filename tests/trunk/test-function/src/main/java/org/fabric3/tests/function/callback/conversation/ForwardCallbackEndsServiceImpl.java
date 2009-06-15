@@ -42,7 +42,7 @@ import org.oasisopen.sca.annotation.Scope;
 
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Scope("CONVERSATION")
 public class ForwardCallbackEndsServiceImpl implements ForwardCallbackEndsService {

@@ -38,7 +38,7 @@
 package org.fabric3.tests.function.common;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Client {
 

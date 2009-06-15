@@ -41,7 +41,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 
 public class WeatherRequest implements Serializable {

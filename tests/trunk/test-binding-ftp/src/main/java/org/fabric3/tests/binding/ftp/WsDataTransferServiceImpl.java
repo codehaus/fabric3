@@ -46,7 +46,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WsDataTransferServiceImpl implements WsDataTransferService {
 

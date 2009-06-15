@@ -43,7 +43,7 @@ import javax.transaction.TransactionManager;
 import org.fabric3.api.annotation.Resource;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class PropagatesTransactionService implements TransactionalService {
     @Resource(mappedName = "TransactionManager")

@@ -40,7 +40,7 @@ package org.fabric3.runtime.webapp.smoketest;
 import org.oasisopen.sca.annotation.Scope;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Scope("CONVERSATION")
 public class CounterServiceImpl implements CounterService {

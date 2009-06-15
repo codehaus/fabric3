@@ -38,7 +38,7 @@
 package org.fabric3.tests.binding.net.jaxb;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class WeatherServiceImpl implements WeatherService {
 

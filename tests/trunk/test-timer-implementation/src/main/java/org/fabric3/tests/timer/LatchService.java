@@ -38,7 +38,7 @@
 package org.fabric3.tests.timer;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface LatchService {
 

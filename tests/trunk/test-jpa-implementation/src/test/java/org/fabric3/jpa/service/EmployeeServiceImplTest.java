@@ -46,7 +46,7 @@ import org.oasisopen.sca.annotation.Reference;
 import org.fabric3.jpa.model.Employee;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class EmployeeServiceImplTest extends TestCase {
 

@@ -44,7 +44,7 @@ import org.oasisopen.sca.annotation.Service;
 import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Service(interfaces = {ClientService.class, CallbackService.class})
 public class ClientServiceImpl implements ClientService, CallbackService {

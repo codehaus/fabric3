@@ -40,7 +40,7 @@ package org.fabric3.tests.binding.ftp;
 import org.apache.axiom.om.OMElement;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface WsDataTransferService {
 

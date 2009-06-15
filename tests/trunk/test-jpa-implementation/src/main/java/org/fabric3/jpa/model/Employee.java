@@ -42,7 +42,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 @Entity
 @NamedQuery(name = "findAll", query = "SELECT o FROM Employee o")

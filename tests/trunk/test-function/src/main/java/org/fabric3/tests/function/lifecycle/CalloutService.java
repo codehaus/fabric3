@@ -1,7 +1,7 @@
 package org.fabric3.tests.function.lifecycle;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface CalloutService {
 

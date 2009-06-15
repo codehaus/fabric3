@@ -49,7 +49,7 @@ import org.fabric3.api.annotation.Resource;
 import org.fabric3.timer.spi.TimerService;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public class QuartzTestComponent extends TestCase {
 
