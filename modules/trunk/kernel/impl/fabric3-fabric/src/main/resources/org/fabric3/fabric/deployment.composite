@@ -26,6 +26,7 @@
             <zip>application/zip</zip>
             <jar>application/zip</jar>
             <definitions>text/vnd.fabric3.definitions+xml</definitions>
+            <wsdl>text/wsdl+xml</wsdl>
         </property>
     </component>
 
