@@ -183,7 +183,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * The version of the runtime to use.
      *
-     * @parameter expression="0.7"
+     * @parameter expression="RELEASE"
      */
     public String runtimeVersion;
 
