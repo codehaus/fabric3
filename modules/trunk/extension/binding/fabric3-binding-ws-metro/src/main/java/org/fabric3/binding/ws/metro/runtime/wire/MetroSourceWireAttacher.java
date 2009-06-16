@@ -50,7 +50,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
-import org.fabric3.binding.ws.metro.runtime.core.F3Invoker;
+import org.fabric3.binding.ws.metro.runtime.core.MetroServiceInvoker;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
@@ -124,12 +124,12 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             } finally {
                 Thread.currentThread().setContextClassLoader(old);
             }
-            F3Invoker f3Invoker = new F3Invoker(invocationChains);
+            MetroServiceInvoker invoker = new MetroServiceInvoker(invocationChains);
 
             // FIXME remove need to decode
             String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
             servletHost.registerMapping(path, metroServlet);
-            metroServlet.registerService(sei, serviceName, portName, wsdlUrl, path, f3Invoker, features, bindingID);
+            metroServlet.registerService(sei, serviceName, portName, wsdlUrl, path, invoker, features, bindingID);
 
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);

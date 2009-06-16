@@ -61,40 +61,28 @@ import org.fabric3.spi.wire.InvocationChain;
 
 
 /**
- * Invoker that passes the incoming invocation through the interceptor chain.
+ * Invoker that receives a web service invocation from the Metro transport layer and dispatches it through the interceptor chain.
  */
-public class F3Invoker extends Invoker {
-
-    private Map<String, InvocationChain> invocationChains = new HashMap<String, InvocationChain>();
+public class MetroServiceInvoker extends Invoker {
+    private Map<String, InvocationChain> chains = new HashMap<String, InvocationChain>();
 
     /**
-     * Instantiates the invocation chains.
+     * Constructor.
      *
-     * @param invocationChains Invocation chains.
+     * @param chains Invocation chains.
      */
-    public F3Invoker(List<InvocationChain> invocationChains) {
-        for (InvocationChain chain : invocationChains) {
-            this.invocationChains.put(chain.getPhysicalOperation().getName(), chain);
+    public MetroServiceInvoker(List<InvocationChain> chains) {
+        for (InvocationChain chain : chains) {
+            this.chains.put(chain.getPhysicalOperation().getName(), chain);
         }
     }
 
-    /**
-     * Overridden as the super class method throws <code>UnsupportedOperationException</code>
-     */
-    @Override
-    public void start(WebServiceContext wsc) {
-    }
-
-    /**
-     * Invokes the head interceptor.
-     */
     public Object invoke(Packet packet, Method method, Object... args) throws InvocationTargetException {
-
-        Interceptor head = invocationChains.get(method.getName()).getHeadInterceptor();
+        Interceptor head = chains.get(method.getName()).getHeadInterceptor();
         WorkContext workContext = new WorkContext();
-        // TODO Add any header tunnelling
-
+        // TODO support callback URIs
         Message input = new MessageImpl(args, false, workContext);
+
         Message ret = head.invoke(input);
 
         if (!ret.isFault()) {
@@ -103,7 +91,13 @@ public class F3Invoker extends Invoker {
             Throwable th = (Throwable) ret.getBody();
             throw new InvocationTargetException(th);
         }
+    }
 
+    /**
+     * Overridden as the superclass method throws <code>UnsupportedOperationException</code>
+     */
+    @Override
+    public void start(WebServiceContext wsc) {
     }
 
 }

@@ -50,9 +50,9 @@ import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Interceptor for invoking a web service proxy
+ * Interceptor for invoking a web service proxy.
  */
-public class TargetInterceptor implements Interceptor {
+public class MetroTargetInterceptor implements Interceptor {
     private ObjectFactory<?> proxyFactory;
     private Method method;
 
@@ -62,7 +62,7 @@ public class TargetInterceptor implements Interceptor {
      * @param proxyFactory the service proxy factory
      * @param method       method corresponding to the invoked operation
      */
-    public TargetInterceptor(ObjectFactory<?> proxyFactory, Method method) {
+    public MetroTargetInterceptor(ObjectFactory<?> proxyFactory, Method method) {
         this.proxyFactory = proxyFactory;
         this.method = method;
     }

@@ -48,7 +48,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
-import org.fabric3.binding.ws.metro.runtime.core.TargetInterceptor;
+import org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
@@ -98,7 +98,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                         break;
                     }
                 }
-                TargetInterceptor targetInterceptor = new TargetInterceptor(proxyFactory, method);
+                MetroTargetInterceptor targetInterceptor = new MetroTargetInterceptor(proxyFactory, method);
                 chain.addInterceptor(targetInterceptor);
             }
         } catch (ClassNotFoundException e) {

@@ -83,7 +83,7 @@ public class MetroServlet extends WSServlet {
                                 QName portName,
                                 URL wsdlUrl,
                                 String servicePath,
-                                F3Invoker invoker,
+                                MetroServiceInvoker invoker,
                                 WebServiceFeature[] features,
                                 BindingID bindingID) {
 
