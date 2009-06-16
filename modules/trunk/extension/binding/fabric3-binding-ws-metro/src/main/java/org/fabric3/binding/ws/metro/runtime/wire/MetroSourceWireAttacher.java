@@ -37,11 +37,11 @@
  */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
-import java.io.UnsupportedEncodingException;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -127,7 +127,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             F3Invoker f3Invoker = new F3Invoker(invocationChains);
 
             // FIXME remove need to decode
-            String path = URLDecoder.decode(servicePath.toASCIIString(),"UTF-8");
+            String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
             servletHost.registerMapping(path, metroServlet);
             metroServlet.registerService(sei, serviceName, portName, wsdlUrl, path, f3Invoker, features, bindingID);
 
@@ -138,8 +138,16 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         }
     }
 
-    public void detachFromSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target) {
-        throw new UnsupportedOperationException();
+    public void detachFromSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        try {
+            ServiceEndpointDefinition endpointDefinition = source.getEndpointDefinition();
+            URI servicePath = endpointDefinition.getServicePath();
+            // FIXME remove need to decode
+            String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
+            metroServlet.unregisterService(path);
+        } catch (UnsupportedEncodingException e) {
+            throw new WiringException(e);
+        }
     }
 
     public void detachObjectFactory(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target) {

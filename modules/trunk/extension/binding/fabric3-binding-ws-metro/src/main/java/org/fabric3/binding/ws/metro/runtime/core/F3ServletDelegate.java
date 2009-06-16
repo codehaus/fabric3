@@ -72,15 +72,25 @@ public class F3ServletDelegate extends WSServletDelegate {
     }
 
     /**
-     * Registers a new servlet adapter. Each adapter corresponds to a provisioned service.
+     * Registers a new servlet adapter. Each adapter corresponds to a provisioned service endpoint.
      *
-     * @param servletAdapter Servlet adapter to be registsred.
-     * @param classLoader    the TCCL classloader to set on incoming requests
+     * @param servletAdapter servlet adapter to be registered.
+     * @param classLoader    the TCCL to set on incoming requests
      */
     public void registerServletAdapter(ServletAdapter servletAdapter, ClassLoader classLoader) {
-        final String path = servletAdapter.urlPattern;
+        String path = servletAdapter.urlPattern;
         adapters.put(path, servletAdapter);
         classLoaders.put(path, classLoader);
+    }
+
+    /**
+     * Unregisters a servlet adapter.
+     *
+     * @param path the servlet adaptor path.
+     */
+    public void unregisterServletAdapter(String path) {
+        adapters.remove(path);
+        classLoaders.remove(path);
     }
 
     /**

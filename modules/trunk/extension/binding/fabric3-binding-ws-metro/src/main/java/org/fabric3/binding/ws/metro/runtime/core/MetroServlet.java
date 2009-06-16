@@ -67,9 +67,11 @@ public class MetroServlet extends WSServlet {
     private F3ServletDelegate delegate;
 
     /**
-     * Registers a new service.
+     * Registers a new service endpoint.
      *
-     * @param sei         Service end point interface.
+     * @param sei         service endpoint interface.
+     * @param serviceName service name
+     * @param portName    port name
      * @param wsdlUrl     Optional URL to the WSDL document.
      * @param servicePath Relative path on which the service is provisioned.
      * @param invoker     Invoker for receiving the web service request.
@@ -116,6 +118,15 @@ public class MetroServlet extends WSServlet {
             Thread.currentThread().setContextClassLoader(classLoader);
         }
 
+    }
+
+    /**
+     * Unregisters a service endpoint.
+     *
+     * @param path the endpoint path
+     */
+    public void unregisterService(String path) {
+        delegate.unregisterServletAdapter(path);
     }
 
     /**
