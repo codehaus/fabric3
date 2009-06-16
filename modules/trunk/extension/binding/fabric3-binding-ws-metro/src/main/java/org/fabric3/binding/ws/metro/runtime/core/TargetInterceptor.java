@@ -39,66 +39,38 @@ package org.fabric3.binding.ws.metro.runtime.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 import org.oasisopen.sca.ServiceRuntimeException;
 
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Interceptor for invoking web services.
+ * Interceptor for invoking a web service proxy
  */
 public class TargetInterceptor implements Interceptor {
-    private QName serviceName;
-    private Class<?> seiClass;
-    private URL targetUrl;
-    private ClassLoader classLoader;
+    private ObjectFactory<?> proxyFactory;
     private Method method;
-    private WebServiceFeature[] features;
-    private Object proxy;
-
 
     /**
      * Constructor.
      *
-     * @param serviceName the target service name
-     * @param seiClass    service endpoint interface
-     * @param targetUrl   URL of the target the web service
-     * @param classLoader the classloader with visibility to application parameter types
-     * @param method      method corresponding to the invoked operation
-     * @param features    web service features to enable
+     * @param proxyFactory the service proxy factory
+     * @param method       method corresponding to the invoked operation
      */
-    public TargetInterceptor(QName serviceName,
-                             Class<?> seiClass,
-                             URL targetUrl,
-                             ClassLoader classLoader,
-                             Method method,
-                             WebServiceFeature[] features) {
-        this.serviceName = serviceName;
-        this.seiClass = seiClass;
-        this.targetUrl = targetUrl;
-        this.classLoader = classLoader;
+    public TargetInterceptor(ObjectFactory<?> proxyFactory, Method method) {
+        this.proxyFactory = proxyFactory;
         this.method = method;
-        this.features = features;
     }
 
     public Message invoke(Message msg) {
-        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(classLoader);
-            if (proxy == null) {
-                // no synchronization since creating multiple proxies doesn't have side-effects and this avoids the later cost of a synchronized block
-                Service service = Service.create(targetUrl, serviceName);
-                proxy = service.getPort(seiClass, features);
-            }
             Object[] payload = (Object[]) msg.getBody();
-            Object ret = method.invoke(proxy, payload);
+            Object ret = method.invoke(proxyFactory.getInstance(), payload);
             return new MessageImpl(ret, false, null);
         } catch (InaccessibleWSDLException e) {
             throw new ServiceRuntimeException(e);
@@ -106,8 +78,8 @@ public class TargetInterceptor implements Interceptor {
             throw new AssertionError(e);
         } catch (InvocationTargetException e) {
             return new MessageImpl(e.getTargetException(), true, null);
-        } finally {
-            Thread.currentThread().setContextClassLoader(oldClassLoader);
+        } catch (ObjectCreationException e) {
+            throw new ServiceRuntimeException(e);
         }
     }
 

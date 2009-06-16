@@ -55,7 +55,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -88,16 +87,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
 
             Class<?> seiClass = classLoader.loadClass(interfaze);
 
-            // Metro requires library classes to be visibile to the application classloader. If executing in an environment that supports classloader
-            // isolation, dynamically update the application classloader by setting a parent to the Metro classloader.
-            ClassLoader seiClassLoader = seiClass.getClassLoader();
-            if (seiClassLoader instanceof MultiParentClassLoader) {
-                MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
-                ClassLoader extensionCl = getClass().getClassLoader();
-                if (!multiParentClassLoader.getParents().contains(extensionCl)) {
-                    multiParentClassLoader.addParent(extensionCl);
-                }
-            }
+            ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(url, serviceName, seiClass, features);
+
             Method[] methods = seiClass.getDeclaredMethods();
             for (InvocationChain chain : wire.getInvocationChains()) {
                 Method method = null;
@@ -107,7 +98,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                         break;
                     }
                 }
-                TargetInterceptor targetInterceptor = new TargetInterceptor(serviceName, seiClass, url, seiClassLoader, method, features);
+                TargetInterceptor targetInterceptor = new TargetInterceptor(proxyFactory, method);
                 chain.addInterceptor(targetInterceptor);
             }
         } catch (ClassNotFoundException e) {
