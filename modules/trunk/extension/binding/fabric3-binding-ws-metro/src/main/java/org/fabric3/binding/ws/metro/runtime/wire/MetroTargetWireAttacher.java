@@ -50,6 +50,7 @@ import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -63,12 +64,14 @@ import org.fabric3.spi.wire.Wire;
  * Creates invocation chains for invoking a target web service.
  */
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
-    private ClassLoaderRegistry classLoaderRegistry;
-    private FeatureResolver featureResolver;
+    private ClassLoaderRegistry registry;
+    private FeatureResolver resolver;
+    private WorkScheduler scheduler;
 
-    public MetroTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference FeatureResolver featureResolver) {
-        this.classLoaderRegistry = classLoaderRegistry;
-        this.featureResolver = featureResolver;
+    public MetroTargetWireAttacher(@Reference ClassLoaderRegistry registry, @Reference FeatureResolver resolver, @Reference WorkScheduler scheduler) {
+        this.registry = registry;
+        this.resolver = resolver;
+        this.scheduler = scheduler;
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target, Wire wire) throws WiringException {
@@ -82,12 +85,12 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             List<QName> requestedIntents = target.getRequestedIntents();
             List<PolicySet> requestedPolicySets = null;
 
-            ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
-            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
+            ClassLoader classLoader = registry.getClassLoader(classLoaderId);
+            WebServiceFeature[] features = resolver.getFeatures(requestedIntents, requestedPolicySets);
 
             Class<?> seiClass = classLoader.loadClass(interfaze);
 
-            ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(url, serviceName, seiClass, features);
+            ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(url, serviceName, seiClass, features, scheduler);
 
             Method[] methods = seiClass.getDeclaredMethods();
             for (InvocationChain chain : wire.getInvocationChains()) {

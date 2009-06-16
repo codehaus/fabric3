@@ -44,6 +44,7 @@ import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
@@ -59,13 +60,15 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
     private QName serviceName;
     private Class<?> seiClass;
     private WebServiceFeature[] features;
+    private WorkScheduler scheduler;
     private Object proxy;
 
-    public LazyProxyObjectFactory(URL targetUrl, QName serviceName, Class<?> seiClass, WebServiceFeature[] features) {
+    public LazyProxyObjectFactory(URL targetUrl, QName serviceName, Class<?> seiClass, WebServiceFeature[] features, WorkScheduler scheduler) {
         this.targetUrl = targetUrl;
         this.serviceName = serviceName;
         this.seiClass = seiClass;
         this.features = features;
+        this.scheduler = scheduler;
     }
 
     public Object getInstance() throws ObjectCreationException {
@@ -92,6 +95,8 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
         try {
             Thread.currentThread().setContextClassLoader(seiClassLoader);
             Service service = Service.create(targetUrl, serviceName);
+            // use the kernel scheduler for dispatching
+            service.setExecutor(scheduler);
             return service.getPort(seiClass, features);
         } catch (InaccessibleWSDLException e) {
             throw new ObjectCreationException(e);
