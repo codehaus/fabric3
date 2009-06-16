@@ -34,29 +34,41 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- */
-package org.fabric3.binding.ws.metro.control;
+*/
+package org.fabric3.binding.ws.metro.generator;
 
-import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+import java.net.URI;
+import java.net.URL;
 
-import org.fabric3.binding.ws.provision.WsdlElement;
+import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
+import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Interface for parsing the WSDL element.
+ * Synthesizes endpoint information from a service contract.
+ *
+ * @version $Rev$ $Date$
  */
-public interface WsdlElementParser {
+public interface EndpointSynthesizer {
 
     /**
-     * Parses the WSDL element.
+     * Synthesize reference endpoint information.
      *
-     * @param wsdlElement     String representation of the WSDL element.
-     * @param wsdlModel       Model object containing the WSDL information.
-     * @param serviceContract Service contract for the WSDL.
-     * @return Parsed WSDL element.
-     * @throws GenerationException If unable to parse the WSDL element.
+     * @param contract the service contract
+     * @param url      the target endpoint URL
+     * @return the     endpoint information
+     * @throws UnsupportedContractException if an unsupported service contract type is passed as an argument
      */
-    WsdlElement parseWsdlElement(String wsdlElement, WSDLModel wsdlModel, ServiceContract<?> serviceContract) throws GenerationException;
+    ReferenceEndpointDefinition synthesizeReferenceEndpoint(ServiceContract<?> contract, URL url) throws UnsupportedContractException;
+
+    /**
+     * Synthesize service endpoint information.
+     *
+     * @param contract    the service contract
+     * @param servicePath the relative service path
+     * @return the     endpoint information
+     * @throws UnsupportedContractException if an unsupported service contract type is passed as an argument
+     */
+    ServiceEndpointDefinition synthesizeServiceEndpoint(ServiceContract<?> contract, URI servicePath) throws UnsupportedContractException;
 
 }

@@ -40,15 +40,13 @@ package org.fabric3.binding.ws.metro.runtime.core;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
+import org.oasisopen.sca.ServiceRuntimeException;
 
-import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
@@ -57,83 +55,50 @@ import org.fabric3.spi.wire.Interceptor;
  * Interceptor for invoking web services.
  */
 public class TargetInterceptor implements Interceptor {
-
-    private WsdlElement wsdlElement;
-    private Class<?> sei;
-    private URL[] referenceUrls;
+    private QName serviceName;
+    private Class<?> seiClass;
+    private URL targetUrl;
     private ClassLoader classLoader;
     private Method method;
     private WebServiceFeature[] features;
 
-    private Random random = new Random();
-    private List<URL> failedUrls = new LinkedList<URL>();
-
 
     /**
-     * Initialises the instance state.
+     * Constructor.
      *
-     * @param wsdlElement   WSDL element contains the WSDL 1.1 port and service names.
-     * @param sei           Service endpoint interface.
-     * @param referenceUrls URLs used to invoke the web service.
-     * @param method        Method to be invoked.
-     * @param features      Features to enable.
-     * @param bindingID     Binding ID to use.
+     * @param serviceName the target service name
+     * @param seiClass    service endpoint interface
+     * @param targetUrl   URL of the target the web service
+     * @param classLoader the classloader with visibility to application parameter types
+     * @param method      method corresponding to the invoked operation
+     * @param features    web service features to enable
      */
-    public TargetInterceptor(WsdlElement wsdlElement,
-                             Class<?> sei,
-                             URL[] referenceUrls,
+    public TargetInterceptor(QName serviceName,
+                             Class<?> seiClass,
+                             URL targetUrl,
                              ClassLoader classLoader,
                              Method method,
                              WebServiceFeature[] features) {
-        this.wsdlElement = wsdlElement;
-        this.sei = sei;
-        this.referenceUrls = referenceUrls;
+        this.serviceName = serviceName;
+        this.seiClass = seiClass;
+        this.targetUrl = targetUrl;
         this.classLoader = classLoader;
         this.method = method;
         this.features = features;
     }
 
-    /**
-     * Gets the next interceptor in the chain.
-     */
-    public Interceptor getNext() {
-        return null;
-    }
-
-    /**
-     * Sets the next interceptor in the chain.
-     */
-    public void setNext(Interceptor next) {
-    }
-
-    /**
-     * Invokes the web service.
-     */
     public Message invoke(Message msg) {
-
-        URL endpointUrl = getEndpointUrl();
-
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-
         try {
-
             Thread.currentThread().setContextClassLoader(classLoader);
-
-            Service service = Service.create(endpointUrl, wsdlElement.getServiceName());
-            Object proxy = service.getPort(sei, features);
+            // TODO cache proxy
+            Service service = Service.create(targetUrl, serviceName);
+            Object proxy = service.getPort(seiClass, features);
             Object[] payload = (Object[]) msg.getBody();
             Object ret = method.invoke(proxy, payload);
-
-            failedUrls.clear();
             return new MessageImpl(ret, false, null);
-
         } catch (InaccessibleWSDLException e) {
-            failedUrls.add(endpointUrl);
-            if (failedUrls.size() != referenceUrls.length) {
-                return invoke(msg);
-            } else {
-                throw e;
-            }
+            throw new ServiceRuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new AssertionError(e);
         } catch (InvocationTargetException e) {
@@ -141,23 +106,14 @@ public class TargetInterceptor implements Interceptor {
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
-
     }
 
-    /*
-     * Gets the endpoint url
-     */
-    private URL getEndpointUrl() {
+    public Interceptor getNext() {
+        return null;
+    }
 
-        int index = random.nextInt(referenceUrls.length);
-        URL endpointUrl = referenceUrls[index];
-
-        if (failedUrls.contains(endpointUrl)) {
-            endpointUrl = getEndpointUrl();
-        }
-
-        return endpointUrl;
-
+    public void setNext(Interceptor next) {
+        throw new IllegalStateException("This interceptor must be the last in the chain");
     }
 
 }

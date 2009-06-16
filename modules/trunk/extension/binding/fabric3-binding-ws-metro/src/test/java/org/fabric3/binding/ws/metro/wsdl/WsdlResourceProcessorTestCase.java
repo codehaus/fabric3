@@ -57,6 +57,7 @@ import org.fabric3.spi.xml.XMLFactoryInstantiationException;
  */
 public class WsdlResourceProcessorTestCase extends TestCase {
 
+    @SuppressWarnings({"unchecked"})
     public void testIndexAndProcess() throws Exception {
         WsdlResourceProcessor processor = new WsdlResourceProcessor(null, new MockXMLFactory());
         URL wsdl = Thread.currentThread().getContextClassLoader().getResource("Weather.wsdl");

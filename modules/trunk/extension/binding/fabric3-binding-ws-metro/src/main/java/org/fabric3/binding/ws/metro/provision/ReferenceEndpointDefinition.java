@@ -34,9 +34,62 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- */
-package org.fabric3.binding.ws.metro.control;
+*/
+package org.fabric3.binding.ws.metro.provision;
 
-public interface TestService {
+import java.io.Serializable;
+import java.net.URL;
+import javax.xml.namespace.QName;
+
+/**
+ * Encapsulates endpoint information for the reference side of an invocation chain.
+ *
+ * @version $Rev$ $Date$
+ */
+public class ReferenceEndpointDefinition implements Serializable {
+    private static final long serialVersionUID = -7422624061436929193L;
+    private QName serviceName;
+    private QName portName;
+    private URL url;
+
+    /**
+     * Constructor.
+     *
+     * @param serviceName the qualified name of the target service
+     * @param portName    the qualified name of the target port
+     * @param url         the endpoint URL
+     */
+    public ReferenceEndpointDefinition(QName serviceName, QName portName, URL url) {
+        this.serviceName = serviceName;
+        this.portName = portName;
+        this.url = url;
+    }
+
+    /**
+     * Returns the qualified service name.
+     *
+     * @return the qualified service name
+     */
+    public QName getServiceName() {
+        return serviceName;
+    }
+
+    /**
+     * Returns the qualified port name.
+     *
+     * @return the qualified port name
+     */
+    public QName getPortName() {
+        return portName;
+    }
+
+    /**
+     * Returns the endpoint URL.
+     *
+     * @return the endpoint URL
+     */
+    public URL getUrl() {
+        return url;
+    }
 
 }

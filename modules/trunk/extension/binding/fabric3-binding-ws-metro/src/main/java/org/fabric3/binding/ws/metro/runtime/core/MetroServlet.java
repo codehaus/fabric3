@@ -45,6 +45,7 @@ package org.fabric3.binding.ws.metro.runtime.core;
 
 import java.net.URL;
 import javax.servlet.ServletConfig;
+import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.api.BindingID;
@@ -55,8 +56,6 @@ import com.sun.xml.ws.binding.BindingImpl;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.WSServlet;
 import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
-
-import org.fabric3.binding.ws.provision.WsdlElement;
 
 /**
  * Servlet that handles all the incoming request, extends the Metro servlet and overrides the <code>getDelegate</code> method.
@@ -73,15 +72,15 @@ public class MetroServlet extends WSServlet {
      * @param sei         Service end point interface.
      * @param wsdlUrl     Optional URL to the WSDL document.
      * @param servicePath Relative path on which the service is provisioned.
-     * @param wsdlElement WSDL element that encapsulates the WSDL 1.1 service and port names.
      * @param invoker     Invoker for receiving the web service request.
      * @param features    Web service features to enable.
      * @param bindingID   Binding ID to use.
      */
     public void registerService(Class<?> sei,
+                                QName serviceName,
+                                QName portName,
                                 URL wsdlUrl,
                                 String servicePath,
-                                WsdlElement wsdlElement,
                                 F3Invoker invoker,
                                 WebServiceFeature[] features,
                                 BindingID bindingID) {
@@ -102,8 +101,8 @@ public class MetroServlet extends WSServlet {
             WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei,
                                                          false,
                                                          invoker,
-                                                         wsdlElement.getServiceName(),
-                                                         wsdlElement.getPortName(),
+                                                         serviceName,
+                                                         portName,
                                                          null,
                                                          binding,
                                                          primaryWsdl,

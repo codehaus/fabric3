@@ -35,24 +35,24 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.control;
+package org.fabric3.binding.ws.metro.generator;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import com.sun.xml.ws.api.model.wsdl.WSDLModel;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
-import org.fabric3.binding.ws.provision.WsdlElement;
+import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
+import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
-import org.fabric3.host.Names;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -60,80 +60,90 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
 
 /**
+ * Generates PhysicalWireSourceDefinitions and PhysicalWireTargetDefinitions for the Metro web services binding.
+ *
  * @version $Rev$ $Date$
- *          <p/>
- *          TODO Add support for WSDL Contract
  */
 public class MetroBindingGenerator implements BindingGenerator<WsBindingDefinition> {
+    private EndpointResolver endpointResolver;
+    private EndpointSynthesizer synthesizer;
 
-    @Reference
-    protected ClassLoaderRegistry classLoaderRegistry;
-    @Reference
-    protected WsdlElementParser wsdlElementParser;
-    @Reference
-    protected AddressResolver addressResolver;
-    @Reference
-    protected WsdlParser wsdlParser;
+    public MetroBindingGenerator(@Reference EndpointResolver endpointResolver, @Reference EndpointSynthesizer synthesizer) {
+        this.endpointResolver = endpointResolver;
+        this.synthesizer = synthesizer;
+    }
 
-    /**
-     * Creates the wire source definition.
-     */
     public MetroWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                         ServiceContract<?> contract,
                                                         List<LogicalOperation> operations,
                                                         Policy policy) throws GenerationException {
-
         WsBindingDefinition definition = binding.getDefinition();
-        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation());
-        WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
+        URL wsdlLocation = getWsdlLocation(definition);
+        ServiceEndpointDefinition endpointDefinition;
 
-        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, contract);
-        URI servicePath = addressResolver.resolveServiceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
+        URI targetUri = binding.getDefinition().getTargetUri();
+        if (targetUri != null) {
+            endpointDefinition = synthesizer.synthesizeServiceEndpoint(contract, targetUri);
+        } else {
+            // TODO error check WSDL element in binding loader
+            // no targetUri specified, check wsdlElement
+            URI uri = URI.create(binding.getDefinition().getWsdlElement());
+            QName deployable = binding.getParent().getParent().getDeployable();
+            endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri);
+        }
+
         String interfaze = contract.getQualifiedInterfaceName();
 
         List<QName> requestedIntents = policy.getProvidedIntents();
 
-        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze, requestedIntents);
+        return new MetroWireSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents);
 
     }
 
-    /**
-     * Creates the wire target definition.
-     */
     public MetroWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         ServiceContract<?> contract,
                                                         List<LogicalOperation> operations,
                                                         Policy policy) throws GenerationException {
 
         WsBindingDefinition definition = binding.getDefinition();
-        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation());
-        WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
-        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, contract);
-        URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
+        URL wsdlLocation = getWsdlLocation(definition);
+
+        URI targetUri = binding.getDefinition().getTargetUri();
+        ReferenceEndpointDefinition endpointDefinition;
+        if (targetUri != null) {
+            try {
+                // TODO get rid of need to decode
+                URL url = new URL(URLDecoder.decode(targetUri.toASCIIString(), "UTF-8"));
+                endpointDefinition = synthesizer.synthesizeReferenceEndpoint(contract, url);
+            } catch (MalformedURLException e) {
+                throw new GenerationException(e);
+            } catch (UnsupportedEncodingException e) {
+                throw new GenerationException(e);
+            }
+        } else {
+            // TODO error check WSDL element in binding loader
+            // no targetUri specified, introspect from wsdlElement
+            URI uri = URI.create(binding.getDefinition().getWsdlElement());
+            QName deployable = binding.getParent().getParent().getDeployable();
+            endpointDefinition = endpointResolver.resolveReferenceEndpoint(deployable, uri);
+        }
+
         String interfaze = contract.getQualifiedInterfaceName();
-
         List<QName> requestedIntents = policy.getProvidedIntents();
-
-        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, requestedIntents, referenceUrls);
-
+        return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents);
     }
 
-    /*
-     * Gets the WSDL location as a URL.
-     */
-    private URL getWsdlLocation(String wsdlLocation) {
-
-        if (wsdlLocation == null) {
-            return null;
+    private URL getWsdlLocation(WsBindingDefinition definition) throws GenerationException {
+        URL wsdlLocation = null;
+        String location = definition.getWsdlLocation();
+        if (location != null) {
+            try {
+                wsdlLocation = new URL(location);
+            } catch (MalformedURLException e) {
+                throw new GenerationException(e);
+            }
         }
-
-        try {
-            return new URL(wsdlLocation);
-        } catch (MalformedURLException e) {
-            ClassLoader classLoader = classLoaderRegistry.getClassLoader(Names.HOST_CONTRIBUTION);
-            return classLoader.getResource(wsdlLocation);
-        }
-
+        return wsdlLocation;
     }
 
 }

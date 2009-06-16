@@ -48,11 +48,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
+import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.metro.runtime.core.F3Invoker;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
-import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -68,17 +68,22 @@ import org.fabric3.spi.wire.Wire;
  * Source wire attacher that provisions services.
  */
 public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSourceDefinition> {
-
-    @Reference
-    protected ServletHost servletHost;
-    @Reference
-    protected ClassLoaderRegistry classLoaderRegistry;
-    @Reference
-    protected FeatureResolver featureResolver;
-    @Reference
-    protected BindingIdResolver bindingIdResolver;
+    private ServletHost servletHost;
+    private ClassLoaderRegistry classLoaderRegistry;
+    private FeatureResolver featureResolver;
+    private BindingIdResolver bindingIdResolver;
 
     private MetroServlet metroServlet = new MetroServlet();
+
+    public MetroSourceWireAttacher(@Reference ServletHost servletHost,
+                                   @Reference ClassLoaderRegistry classLoaderRegistry,
+                                   @Reference FeatureResolver featureResolver,
+                                   @Reference BindingIdResolver bindingIdResolver) {
+        this.servletHost = servletHost;
+        this.classLoaderRegistry = classLoaderRegistry;
+        this.featureResolver = featureResolver;
+        this.bindingIdResolver = bindingIdResolver;
+    }
 
     /**
      * Registers the servlet.
@@ -89,25 +94,15 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
 
     }
 
-    /**
-     * Not supported.
-     */
-    public void attachObjectFactory(MetroWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Provisions the service.
-     */
     public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-
         try {
-
-            URI servicePath = source.getServicePath();
-            WsdlElement wsdlElement = source.getWsdlElement();
+            ServiceEndpointDefinition endpointDefinition = source.getEndpointDefinition();
+            QName serviceName = endpointDefinition.getServiceName();
+            QName portName = endpointDefinition.getPortName();
+            URI servicePath = endpointDefinition.getServicePath();
             List<InvocationChain> invocationChains = wire.getInvocationChains();
             URI classLoaderId = source.getClassLoaderId();
-            String interfaze = source.getInterfaze();
+            String interfaze = source.getInterface();
             URL wsdlUrl = source.getWsdlUrl();
             List<QName> requestedIntents = source.getRequestedIntents();
             List<PolicySet> requestedPolicySets = null;
@@ -139,25 +134,23 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             }
             F3Invoker f3Invoker = new F3Invoker(invocationChains);
 
-            metroServlet.registerService(sei, wsdlUrl, "/metro" + servicePath.toASCIIString(), wsdlElement, f3Invoker, features, bindingID);
+            metroServlet.registerService(sei, serviceName, portName, wsdlUrl, "/metro" + servicePath.toASCIIString(), f3Invoker, features, bindingID);
 
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         }
-
     }
 
-    /**
-     * Not supported.
-     */
     public void detachFromSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Unprovisions the service.
-     */
     public void detachObjectFactory(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target) {
     }
+
+    public void attachObjectFactory(MetroWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) {
+        throw new UnsupportedOperationException();
+    }
+
 
 }

@@ -34,27 +34,64 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- */
-package org.fabric3.binding.ws.metro.control;
+*/
 
-import java.net.URL;
+package org.fabric3.binding.ws.metro.provision;
 
-import com.sun.xml.ws.api.model.wsdl.WSDLModel;
-
-import org.fabric3.spi.generator.GenerationException;
+import java.io.Serializable;
+import java.net.URI;
+import javax.xml.namespace.QName;
 
 /**
- * Interface for parsing WSDL documents.
+ * Encapsulates endpoint information for the service side of an invocation chain.
+ *
+ * @version $Rev$ $Date$
  */
-public interface WsdlParser {
+public class ServiceEndpointDefinition implements Serializable {
+    private static final long serialVersionUID = 3242092002688340187L;
+    private QName serviceName;
+    private QName portName;
+    private URI servicePath;
 
     /**
-     * Parses a WSDL document to the information model.
+     * Constructor.
      *
-     * @param wsdlLocation Location of the WSDL document.
-     * @return WSDL model object.
-     * @throws GenerationException If unable to parse the WSDL.
+     * @param serviceName the qualified service name
+     * @param portName    the qualified port name
+     * @param servicePath the service path relative to the runtime base HTTP address
      */
-    WSDLModel parse(URL wsdlLocation) throws GenerationException;
+    public ServiceEndpointDefinition(QName serviceName, QName portName, URI servicePath) {
+        this.serviceName = serviceName;
+        this.portName = portName;
+        this.servicePath = servicePath;
+    }
+
+    /**
+     * Returns the qualified service name.
+     *
+     * @return the qualified service name
+     */
+    public QName getServiceName() {
+        return serviceName;
+    }
+
+    /**
+     * Returns the qualified port name.
+     *
+     * @return the qualified port name
+     */
+    public QName getPortName() {
+        return portName;
+    }
+
+    /**
+     * Returns the service path relative to the runtme base HTTP address.
+     *
+     * @return the service path relative to the runtme base HTTP address
+     */
+    public URI getServicePath() {
+        return servicePath;
+    }
+
 
 }

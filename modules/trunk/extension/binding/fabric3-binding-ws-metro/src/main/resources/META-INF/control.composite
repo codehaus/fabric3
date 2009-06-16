@@ -19,20 +19,16 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.wsdl.WsdlResourceProcessor"/>
     </component>
 
+    <component name="EndpointResolver">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.EndpointResolverImpl"/>
+    </component>
+
+    <component name="EndpointSynthesizer">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.EndpointSynthesizerImpl"/>
+    </component>
+
     <component name="MetroBindingGenerator" f3-core:key="org.fabric3.binding.ws.scdl.WsBindingDefinition">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.MetroBindingGenerator"/>
-    </component>
-
-    <component name="AddressResolver">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.DefaultAddressResolver"/>
-    </component>
-
-    <component name="WsdlElementParser">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.DefaultWsdlElementParser"/>
-    </component>
-
-    <component name="WsdlParser">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.DefaultWsdlParser"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.MetroBindingGenerator"/>
     </component>
 
 </composite>

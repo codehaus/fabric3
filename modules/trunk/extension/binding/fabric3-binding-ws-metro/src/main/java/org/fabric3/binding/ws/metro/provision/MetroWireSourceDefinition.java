@@ -37,12 +37,10 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -51,69 +49,57 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = -7874049193479847748L;
 
-    private WsdlElement wsdlElement;
     private URL wsdlUrl;
-    private URI servicePath;
     private String interfaze;
     private List<QName> requestedIntents;
+    private ServiceEndpointDefinition endpointDefinition;
 
     /**
-     * Initialises information required for provisioning the service.
+     * Constructor.
      *
-     * @param wsdlElement      WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * @param wsdlUrl          Optional URL to the WSDL location.
-     * @param servicePath      Relative path on which the service is provisioned.
-     * @param interfaze        Interface for the service contract.
-     * @param requestedIntents Intents requested by the binding.
+     * @param endpointDefinition endpoint information
+     * @param wsdlUrl            optional URL to the WSDL location
+     * @param interfaze          the service contract name.
+     * @param requestedIntents   intents requested by the binding
      */
-    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath, String interfaze, List<QName> requestedIntents) {
-        this.wsdlElement = wsdlElement;
+    public MetroWireSourceDefinition(ServiceEndpointDefinition endpointDefinition, URL wsdlUrl, String interfaze, List<QName> requestedIntents) {
+        this.endpointDefinition = endpointDefinition;
         this.wsdlUrl = wsdlUrl;
-        this.servicePath = servicePath;
         this.interfaze = interfaze;
         this.requestedIntents = requestedIntents;
     }
 
     /**
-     * Gets the WSDL element that encasulates the qualified WSDL 1.1 service and port names.
+     * Returns the endpoint information.
      *
-     * @return WSDL element that encasulates the qualified WSDL 1.1 service and port names.
+     * @return the endpoint information
      */
-    public WsdlElement getWsdlElement() {
-        return wsdlElement;
+    public ServiceEndpointDefinition getEndpointDefinition() {
+        return endpointDefinition;
     }
 
     /**
-     * Gets an optional URL to the WSDL document.
+     * Returns an optional URL to the WSDL document.
      *
-     * @return Optional URL to the WSDL document.
+     * @return optional URL to the WSDL document
      */
     public URL getWsdlUrl() {
         return wsdlUrl;
     }
 
     /**
-     * Gets the relative path on which the service is provisioned.
+     * Returns the service contract name.
      *
-     * @return Relative path on which the service is provisioned.
+     * @return the service contract name
      */
-    public URI getServicePath() {
-        return servicePath;
-    }
-
-    /**
-     * Gets the interface for the service contract.
-     *
-     * @return Interface for the service contract.
-     */
-    public String getInterfaze() {
+    public String getInterface() {
         return interfaze;
     }
 
     /**
-     * Gets the intents requested by the binding.
+     * Returns the intents requested by the binding.
      *
-     * @return Intents requested by the binding.
+     * @return intents requested by the binding
      */
     public List<QName> getRequestedIntents() {
         return requestedIntents;

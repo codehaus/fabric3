@@ -47,9 +47,9 @@ import javax.xml.ws.WebServiceFeature;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.runtime.core.TargetInterceptor;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
-import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -61,25 +61,24 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Provides the infrastructure for invoking a target web service.
+ * Creates nvocation chains for invoking a target web service.
  */
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
+    private ClassLoaderRegistry classLoaderRegistry;
+    private FeatureResolver featureResolver;
 
-    @Reference
-    protected ClassLoaderRegistry classLoaderRegistry;
-    @Reference
-    protected FeatureResolver featureResolver;
+    public MetroTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference FeatureResolver featureResolver) {
+        this.classLoaderRegistry = classLoaderRegistry;
+        this.featureResolver = featureResolver;
+    }
 
-    /**
-     * Attaches to the target.
-     */
     public void attachToTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target, Wire wire) throws WiringException {
 
         try {
-
-            WsdlElement wsdlElement = target.getWsdlElement();
-            URL[] referenceUrls = target.getTargetUrls();
-            String interfaze = target.getInterfaze();
+            ReferenceEndpointDefinition endpointDefinition = target.getEndpointDefinition();
+            QName serviceName = endpointDefinition.getServiceName();
+            URL url = endpointDefinition.getUrl();
+            String interfaze = target.getInterface();
             URI classLoaderId = source.getClassLoaderId();
             List<QName> requestedIntents = target.getRequestedIntents();
             List<PolicySet> requestedPolicySets = null;
@@ -87,11 +86,11 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
 
-            Class<?> sei = classLoader.loadClass(interfaze);
+            Class<?> seiClass = classLoader.loadClass(interfaze);
 
             // Metro requires library classes to be visibile to the application classloader. If executing in an environment that supports classloader
             // isolation, dynamically update the application classloader by setting a parent to the Metro classloader.
-            ClassLoader seiClassLoader = sei.getClassLoader();
+            ClassLoader seiClassLoader = seiClass.getClassLoader();
             if (seiClassLoader instanceof MultiParentClassLoader) {
                 MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
                 ClassLoader extensionCl = getClass().getClassLoader();
@@ -99,8 +98,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                     multiParentClassLoader.addParent(extensionCl);
                 }
             }
-            Method[] methods = sei.getDeclaredMethods();
-
+            Method[] methods = seiClass.getDeclaredMethods();
             for (InvocationChain chain : wire.getInvocationChains()) {
                 Method method = null;
                 for (Method meth : methods) {
@@ -109,26 +107,19 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                         break;
                     }
                 }
-                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls, seiClassLoader, method, features);
+                TargetInterceptor targetInterceptor = new TargetInterceptor(serviceName, seiClass, url, seiClassLoader, method, features);
                 chain.addInterceptor(targetInterceptor);
             }
-
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         }
 
     }
 
-    /**
-     * Creates an object factory.
-     */
     public ObjectFactory<?> createObjectFactory(MetroWireTargetDefinition target) throws WiringException {
         return null;
     }
 
-    /**
-     * Detach from the target.
-     */
     public void detachFromTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target) throws WiringException {
     }
 

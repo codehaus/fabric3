@@ -34,42 +34,20 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- */
-package org.fabric3.binding.ws.metro.control;
+*/
+package org.fabric3.binding.ws.metro.generator;
 
-import java.net.URI;
-import java.net.URL;
-
-import com.sun.xml.ws.api.model.wsdl.WSDLModel;
-
-import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Resolves the address on which service is provisioned or reference is invoked.
+ * Denotes an error resolving endpoint information from a WSDL document.
+ *
+ * @version $Rev$ $Date$
  */
-public interface AddressResolver {
+public class EndpointResolutionException extends GenerationException {
+    private static final long serialVersionUID = 6481333003446910943L;
 
-    /**
-     * Resolves the address on which the service is provisioned.
-     *
-     * @param targetUri   Target URI specified on the service binding.
-     * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel   Model object representing the WSDL information.
-     * @return URI on which the service is provisioned.
-     * @throws GenerationException If unable to resolve the address.
-     */
-    URI resolveServiceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException;
-
-    /**
-     * Resolves the address on which the service is provisioned.
-     *
-     * @param targetUri   Target URI specified on the reference binding.
-     * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel   Model object representing the WSDL information.
-     * @return List of URLs on which the service can be invoked.
-     * @throws GenerationException If unable to resolve the address.
-     */
-    URL[] resolveReferenceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException;
-
+    public EndpointResolutionException(String message) {
+        super(message);
+    }
 }
