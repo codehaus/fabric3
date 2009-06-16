@@ -61,6 +61,7 @@ public class TargetInterceptor implements Interceptor {
     private ClassLoader classLoader;
     private Method method;
     private WebServiceFeature[] features;
+    private Object proxy;
 
 
     /**
@@ -91,9 +92,11 @@ public class TargetInterceptor implements Interceptor {
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(classLoader);
-            // TODO cache proxy
-            Service service = Service.create(targetUrl, serviceName);
-            Object proxy = service.getPort(seiClass, features);
+            if (proxy == null) {
+                // no synchronization since creating multiple proxies doesn't have side-effects and this avoids the later cost of a synchronized block
+                Service service = Service.create(targetUrl, serviceName);
+                proxy = service.getPort(seiClass, features);
+            }
             Object[] payload = (Object[]) msg.getBody();
             Object ret = method.invoke(proxy, payload);
             return new MessageImpl(ret, false, null);

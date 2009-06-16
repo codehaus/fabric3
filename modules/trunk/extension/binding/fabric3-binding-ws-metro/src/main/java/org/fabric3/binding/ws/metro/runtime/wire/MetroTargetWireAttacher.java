@@ -61,7 +61,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Creates nvocation chains for invoking a target web service.
+ * Creates invocation chains for invoking a target web service.
  */
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
     private ClassLoaderRegistry classLoaderRegistry;
