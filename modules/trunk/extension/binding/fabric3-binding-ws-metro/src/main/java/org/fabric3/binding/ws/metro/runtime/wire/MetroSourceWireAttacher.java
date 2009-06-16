@@ -39,12 +39,13 @@ package org.fabric3.binding.ws.metro.runtime.wire;
 
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
+import java.io.UnsupportedEncodingException;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.api.BindingID;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
@@ -83,15 +84,6 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         this.classLoaderRegistry = classLoaderRegistry;
         this.featureResolver = featureResolver;
         this.bindingIdResolver = bindingIdResolver;
-    }
-
-    /**
-     * Registers the servlet.
-     */
-    @Init
-    public void start() {
-        servletHost.registerMapping("/metro/*", metroServlet);
-
     }
 
     public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
@@ -134,9 +126,14 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             }
             F3Invoker f3Invoker = new F3Invoker(invocationChains);
 
-            metroServlet.registerService(sei, serviceName, portName, wsdlUrl, "/metro" + servicePath.toASCIIString(), f3Invoker, features, bindingID);
+            // FIXME remove need to decode
+            String path = URLDecoder.decode(servicePath.toASCIIString(),"UTF-8");
+            servletHost.registerMapping(path, metroServlet);
+            metroServlet.registerService(sei, serviceName, portName, wsdlUrl, path, f3Invoker, features, bindingID);
 
         } catch (ClassNotFoundException e) {
+            throw new WiringException(e);
+        } catch (UnsupportedEncodingException e) {
             throw new WiringException(e);
         }
     }

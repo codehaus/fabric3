@@ -111,15 +111,7 @@ public class EndpointResolverImpl implements EndpointResolver {
             throw new EndpointResolutionException("WSDL port not found: " + fragment);
         }
         URL url = port.getAddress().getURL();
-        URI servicePath;
-        if (url.getPath().startsWith("/metro")) {
-            // FIXME remove this hack
-            servicePath = URI.create(url.getPath().substring(6));
-
-        } else {
-            servicePath = URI.create(url.getPath());
-        }
-
+        URI servicePath = URI.create(url.getPath());
         return new ServiceEndpointDefinition(serviceName, portName, servicePath);
     }
 
