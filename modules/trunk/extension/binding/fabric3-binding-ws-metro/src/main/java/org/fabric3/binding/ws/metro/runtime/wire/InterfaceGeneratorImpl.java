@@ -99,14 +99,18 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
         cw.visit(V1_5, ACC_INTERFACE | ACC_PUBLIC, className, null, "java/lang/Object", null);
         // add @WebService
         AnnotationVisitor av = cw.visitAnnotation(getSignature(WebService.class), true);
-        if (targetNamespace != null)
+        if (targetNamespace != null) {
             av.visit("targetNamespace", targetNamespace);
-        if (wsdlLocation != null)
+        }
+        if (wsdlLocation != null) {
             av.visit("wsdlLocation", wsdlLocation);
-        if (serviceName != null)
+        }
+        if (serviceName != null) {
             av.visit("serviceName", serviceName);
-        if (portName != null)
+        }
+        if (portName != null) {
             av.visit("portName", portName);
+        }
         av.visitEnd();
 
         Method[] methods = clazz.getMethods();
