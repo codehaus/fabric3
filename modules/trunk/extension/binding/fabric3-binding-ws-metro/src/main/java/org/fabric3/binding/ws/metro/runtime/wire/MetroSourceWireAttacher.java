@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.api.BindingID;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
@@ -55,6 +56,7 @@ import org.fabric3.binding.ws.metro.runtime.core.MetroServiceInvoker;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -75,19 +77,27 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     private FeatureResolver featureResolver;
     private BindingIdResolver bindingIdResolver;
     private InterfaceGenerator interfaceGenerator;
+    private WorkScheduler scheduler;
 
-    private MetroServlet metroServlet = new MetroServlet();
+    private MetroServlet metroServlet;
 
     public MetroSourceWireAttacher(@Reference ServletHost servletHost,
                                    @Reference ClassLoaderRegistry classLoaderRegistry,
                                    @Reference FeatureResolver featureResolver,
                                    @Reference BindingIdResolver bindingIdResolver,
-                                   @Reference InterfaceGenerator interfaceGenerator) {
+                                   @Reference InterfaceGenerator interfaceGenerator,
+                                   @Reference WorkScheduler scheduler) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.featureResolver = featureResolver;
         this.bindingIdResolver = bindingIdResolver;
         this.interfaceGenerator = interfaceGenerator;
+        this.scheduler = scheduler;
+    }
+
+    @Init
+    public void init() {
+        metroServlet = new MetroServlet(scheduler);
     }
 
     public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {

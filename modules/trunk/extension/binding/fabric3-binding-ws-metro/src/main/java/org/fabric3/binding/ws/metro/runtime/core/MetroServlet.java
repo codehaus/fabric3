@@ -57,14 +57,26 @@ import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.WSServlet;
 import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
 
+import org.fabric3.host.work.WorkScheduler;
+
 /**
  * Servlet that handles all the incoming request, extends the Metro servlet and overrides the <code>getDelegate</code> method.
  */
 public class MetroServlet extends WSServlet {
     private static final long serialVersionUID = -2581439830158433922L;
+    private WorkScheduler scheduler;
 
     private ServletAdapterFactory servletAdapterFactory = new ServletAdapterFactory();
     private volatile F3ServletDelegate delegate;
+
+    /**
+     * Constructor
+     *
+     * @param scheduler the work scheduler for dispatching invocations.
+     */
+    public MetroServlet(WorkScheduler scheduler) {
+        this.scheduler = scheduler;
+    }
 
     /**
      * Registers a new service endpoint.
@@ -111,7 +123,7 @@ public class MetroServlet extends WSServlet {
                                                          null,
                                                          null,
                                                          true);
-
+            wsEndpoint.setExecutor(scheduler);
             ServletAdapter adapter = servletAdapterFactory.createAdapter(servicePath, servicePath, wsEndpoint);
             delegate.registerServletAdapter(adapter, seiClassLoader);
         } finally {
