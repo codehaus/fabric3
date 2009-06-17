@@ -99,7 +99,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             List<InvocationChain> invocationChains = wire.getInvocationChains();
             URI classLoaderId = source.getClassLoaderId();
             String interfaze = source.getInterface();
-            URL wsdlUrl = source.getWsdlUrl();
+            URL wsdlUrl = source.getWsdlLocation();
             List<QName> requestedIntents = source.getRequestedIntents();
             List<PolicySet> requestedPolicySets = null;
 

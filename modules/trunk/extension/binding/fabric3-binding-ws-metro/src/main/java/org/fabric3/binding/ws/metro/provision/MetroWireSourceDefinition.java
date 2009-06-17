@@ -49,7 +49,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = -7874049193479847748L;
 
-    private URL wsdlUrl;
+    private URL wsdlLocation;
     private String interfaze;
     private List<QName> requestedIntents;
     private ServiceEndpointDefinition endpointDefinition;
@@ -58,13 +58,13 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      * Constructor.
      *
      * @param endpointDefinition endpoint information
-     * @param wsdlUrl            optional URL to the WSDL location
+     * @param wsdlLocation            optional URL to the WSDL location
      * @param interfaze          the service contract name.
      * @param requestedIntents   intents requested by the binding
      */
-    public MetroWireSourceDefinition(ServiceEndpointDefinition endpointDefinition, URL wsdlUrl, String interfaze, List<QName> requestedIntents) {
+    public MetroWireSourceDefinition(ServiceEndpointDefinition endpointDefinition, URL wsdlLocation, String interfaze, List<QName> requestedIntents) {
         this.endpointDefinition = endpointDefinition;
-        this.wsdlUrl = wsdlUrl;
+        this.wsdlLocation = wsdlLocation;
         this.interfaze = interfaze;
         this.requestedIntents = requestedIntents;
     }
@@ -83,8 +83,8 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      *
      * @return optional URL to the WSDL document
      */
-    public URL getWsdlUrl() {
-        return wsdlUrl;
+    public URL getWsdlLocation() {
+        return wsdlLocation;
     }
 
     /**
