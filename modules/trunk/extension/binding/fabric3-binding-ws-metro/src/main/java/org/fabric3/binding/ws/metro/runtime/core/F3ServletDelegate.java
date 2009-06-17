@@ -63,7 +63,7 @@ public class F3ServletDelegate extends WSServletDelegate {
     private Map<String, ClassLoader> classLoaders = new ConcurrentHashMap<String, ClassLoader>();
 
     /**
-     * Initialises an empty list of adapters.
+     * Initializes an empty list of adapters.
      *
      * @param servletContext Servlet context.
      */
