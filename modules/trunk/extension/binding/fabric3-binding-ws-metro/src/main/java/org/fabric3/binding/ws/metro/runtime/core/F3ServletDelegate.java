@@ -58,7 +58,6 @@ import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
  * Custom servlet delegate that supports lazy initiation of adapters.
  */
 public class F3ServletDelegate extends WSServletDelegate {
-
     private Map<String, ServletAdapter> adapters = new ConcurrentHashMap<String, ServletAdapter>();
     private Map<String, ClassLoader> classLoaders = new ConcurrentHashMap<String, ClassLoader>();
 
@@ -106,8 +105,7 @@ public class F3ServletDelegate extends WSServletDelegate {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext)
-            throws ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) throws ServletException {
         String path = request.getRequestURI().substring(request.getContextPath().length());
         ClassLoader classLoader = classLoaders.get(path);
         assert classLoader != null;
