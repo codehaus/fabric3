@@ -64,7 +64,7 @@ public class MetroServlet extends WSServlet {
     private static final long serialVersionUID = -2581439830158433922L;
 
     private ServletAdapterFactory servletAdapterFactory = new ServletAdapterFactory();
-    private F3ServletDelegate delegate;
+    private volatile F3ServletDelegate delegate;
 
     /**
      * Registers a new service endpoint.
@@ -135,7 +135,13 @@ public class MetroServlet extends WSServlet {
      * @return Returns a Fabric3 servlet delegate.
      */
     protected WSServletDelegate getDelegate(ServletConfig servletConfig) {
-        delegate = new F3ServletDelegate(servletConfig.getServletContext());
+        if (delegate == null) {
+            synchronized (this) {
+                if (delegate == null) {
+                    delegate = new F3ServletDelegate(servletConfig.getServletContext());
+                }
+            }
+        }
         return delegate;
     }
 
