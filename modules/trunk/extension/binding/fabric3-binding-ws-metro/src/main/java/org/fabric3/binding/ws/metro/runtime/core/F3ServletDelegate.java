@@ -89,8 +89,11 @@ public class F3ServletDelegate extends WSServletDelegate {
      * @param path the servlet adaptor path.
      */
     public void unregisterServletAdapter(String path) {
-        adapters.remove(path);
         classLoaders.remove(path);
+        ServletAdapter adapter = adapters.remove(path);
+        if (adapter != null) {
+            adapter.getEndpoint().dispose();
+        }
     }
 
     /**
