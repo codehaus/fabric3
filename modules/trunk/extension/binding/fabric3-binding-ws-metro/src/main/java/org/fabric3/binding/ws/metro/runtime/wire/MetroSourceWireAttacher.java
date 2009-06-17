@@ -42,6 +42,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
+import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -73,17 +74,20 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     private ClassLoaderRegistry classLoaderRegistry;
     private FeatureResolver featureResolver;
     private BindingIdResolver bindingIdResolver;
+    private InterfaceGenerator interfaceGenerator;
 
     private MetroServlet metroServlet = new MetroServlet();
 
     public MetroSourceWireAttacher(@Reference ServletHost servletHost,
                                    @Reference ClassLoaderRegistry classLoaderRegistry,
                                    @Reference FeatureResolver featureResolver,
-                                   @Reference BindingIdResolver bindingIdResolver) {
+                                   @Reference BindingIdResolver bindingIdResolver,
+                                   @Reference InterfaceGenerator interfaceGenerator) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.featureResolver = featureResolver;
         this.bindingIdResolver = bindingIdResolver;
+        this.interfaceGenerator = interfaceGenerator;
     }
 
     public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
@@ -100,21 +104,17 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             List<PolicySet> requestedPolicySets = null;
 
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
-            // load the application class
-            Class<?> sei = classLoader.loadClass(interfaze);
 
-            // Metro requires a Metro proxy interface to be visible to the classloader that loaded the SEI class
-            // To enable this, dynamically add the Metro extension classloader as a parent to the classloader that loaded the SEI class if the host
-            // supports classloader isolation. Note that the latter may be different than the application classloader (e.g. in the Maven iTest
-            // runtime, the SEI class will be loaded by the host classloader, not the classloader representing the application
-            ClassLoader seiClassLoader = sei.getClassLoader();
-            ClassLoader extensionClassLoader = getClass().getClassLoader();
-            if (seiClassLoader instanceof MultiParentClassLoader) {
-                MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
-                if (!multiParentClassLoader.getParents().contains(extensionClassLoader)) {
-                    multiParentClassLoader.addParent(extensionClassLoader);
-                }
+            // load the service interface
+            Class<?> seiClass = classLoader.loadClass(interfaze);
+            if (!seiClass.isAnnotationPresent(WebService.class)) {
+                // if the service interface is not annotated, generate an implementing class that is
+                // TODO make sure the WSDL is correct
+                seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
             }
+
+            ClassLoader extensionClassLoader = updateClassLoader(seiClass);
+
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
             ClassLoader old = Thread.currentThread().getContextClassLoader();
             BindingID bindingID;
@@ -129,7 +129,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             // FIXME remove need to decode
             String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
             servletHost.registerMapping(path, metroServlet);
-            metroServlet.registerService(sei, serviceName, portName, wsdlUrl, path, invoker, features, bindingID);
+            metroServlet.registerService(seiClass, serviceName, portName, wsdlUrl, path, invoker, features, bindingID);
 
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
@@ -155,6 +155,31 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
 
     public void attachObjectFactory(MetroWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Updates the application classloader with visibility to Meto classes. Metro requires a Metro proxy interface to be visible to the classloader
+     * that loaded the SEI class.To enable this, dynamically add the Metro extension classloader as a parent to the classloader that loaded the SEI
+     * class if the host supports classloader isolation. Note that the latter may be different than the application classloader (e.g. in the Maven
+     * iTest runtime, the SEI class will be loaded by the host classloader, not the classloader representing the application
+     *
+     * @param seiClass the service interface
+     * @return the updated classloader
+     */
+    private ClassLoader updateClassLoader(Class<?> seiClass) {
+        // Metro requires a Metro proxy interface to be visible to the classloader that loaded the SEI class
+        // To enable this, dynamically add the Metro extension classloader as a parent to the classloader that loaded the SEI class if the host
+        // supports classloader isolation. Note that the latter may be different than the application classloader (e.g. in the Maven iTest
+        // runtime, the SEI class will be loaded by the host classloader, not the classloader representing the application
+        ClassLoader seiClassLoader = seiClass.getClassLoader();
+        ClassLoader extensionClassLoader = getClass().getClassLoader();
+        if (seiClassLoader instanceof MultiParentClassLoader) {
+            MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
+            if (!multiParentClassLoader.getParents().contains(extensionClassLoader)) {
+                multiParentClassLoader.addParent(extensionClassLoader);
+            }
+        }
+        return extensionClassLoader;
     }
 
 

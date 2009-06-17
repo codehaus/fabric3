@@ -68,7 +68,7 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
 
     public Class<?> generateAnnotatedInterface(Class interfaze, String targetNamespace, String wsdlLocation, String serviceName, String portName)
             throws InterfaceGenerationException {
-        if ((interfaze.getClassLoader() instanceof SecureClassLoader)) {
+        if (!(interfaze.getClassLoader() instanceof SecureClassLoader)) {
             throw new InterfaceGenerationException("Classloader for " + interfaze.getName() + " must be a SecureClassLoader");
         }
         SecureClassLoader loader = (SecureClassLoader) interfaze.getClassLoader();

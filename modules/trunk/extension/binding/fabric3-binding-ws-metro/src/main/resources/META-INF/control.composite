@@ -31,4 +31,8 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.MetroBindingGenerator"/>
     </component>
 
+    <component name="InterfaceGenerator">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.InterfaceGeneratorImpl"/>
+    </component>
+
 </composite>

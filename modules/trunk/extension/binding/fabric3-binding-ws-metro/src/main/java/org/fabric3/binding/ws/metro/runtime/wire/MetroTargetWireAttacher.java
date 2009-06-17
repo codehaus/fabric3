@@ -41,6 +41,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
+import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -66,11 +67,16 @@ import org.fabric3.spi.wire.Wire;
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
     private ClassLoaderRegistry registry;
     private FeatureResolver resolver;
+    private InterfaceGenerator interfaceGenerator;
     private WorkScheduler scheduler;
 
-    public MetroTargetWireAttacher(@Reference ClassLoaderRegistry registry, @Reference FeatureResolver resolver, @Reference WorkScheduler scheduler) {
+    public MetroTargetWireAttacher(@Reference ClassLoaderRegistry registry,
+                                   @Reference FeatureResolver resolver,
+                                   @Reference InterfaceGenerator interfaceGenerator,
+                                   @Reference WorkScheduler scheduler) {
         this.registry = registry;
         this.resolver = resolver;
+        this.interfaceGenerator = interfaceGenerator;
         this.scheduler = scheduler;
     }
 
@@ -89,6 +95,12 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             WebServiceFeature[] features = resolver.getFeatures(requestedIntents, requestedPolicySets);
 
             Class<?> seiClass = classLoader.loadClass(interfaze);
+            if (!seiClass.isAnnotationPresent(WebService.class)) {
+                // if the service interface is not annotated, generate an implementing class that is
+                // TODO make sure the WSDL is correct
+                seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
+            }
+
 
             ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(url, serviceName, seiClass, features, scheduler);
 
