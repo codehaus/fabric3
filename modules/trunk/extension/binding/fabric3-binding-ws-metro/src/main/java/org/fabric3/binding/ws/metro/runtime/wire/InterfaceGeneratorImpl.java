@@ -167,12 +167,12 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
             return "S";
         } else if (clazz == Boolean.TYPE) {
             return "Z";
+        } else if (!clazz.getName().startsWith("[")) {
+            // object
+            return "L" + clazz.getName().replace('.', '/') + ";";
         } else {
-            if (!clazz.getName().startsWith("[")) {
-                return "L" + clazz.getName().replace('.', '/') + ";";
-            } else {
-                return "[" + clazz.getName().replace('.', '/') + ";";
-            }
+            // array
+            return clazz.getName().replace('.', '/');
         }
     }
 
