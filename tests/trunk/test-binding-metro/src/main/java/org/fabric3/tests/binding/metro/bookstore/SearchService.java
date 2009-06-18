@@ -37,14 +37,8 @@
  */
 package org.fabric3.tests.binding.metro.bookstore;
 
-import java.util.List;
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-
-@WebService
 public interface SearchService {
 
-    @WebMethod
-    public List<SearchResult> search(String author);
+    public SearchResult[] search(String author);
 
 }

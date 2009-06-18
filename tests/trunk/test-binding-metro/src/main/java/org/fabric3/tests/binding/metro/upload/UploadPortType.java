@@ -15,12 +15,6 @@ import javax.xml.ws.ResponseWrapper;
 @WebService(name = "UploadPortType", targetNamespace = "urn:upload")
 public interface UploadPortType {
 
-
-    /**
-     * @param data
-     * @param name
-     * @return returns int
-     */
     @WebMethod
     @WebResult(name = "size", targetNamespace = "urn:upload")
     @RequestWrapper(localName = "upload", targetNamespace = "urn:upload", className = "upload.UploadType")

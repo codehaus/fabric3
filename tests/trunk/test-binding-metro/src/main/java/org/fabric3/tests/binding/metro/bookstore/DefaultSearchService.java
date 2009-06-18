@@ -37,16 +37,13 @@
  */
 package org.fabric3.tests.binding.metro.bookstore;
 
-import java.util.Collections;
-import java.util.List;
-
 public class DefaultSearchService implements SearchService {
 
-    public List<SearchResult> search(String author) {
+    public SearchResult[] search(String author) {
         SearchResult searchResult = new SearchResult();
         searchResult.setIsbn("foo");
         searchResult.setName("bar");
-        return Collections.singletonList(searchResult);
+        return new SearchResult[]{searchResult};
     }
 
 }

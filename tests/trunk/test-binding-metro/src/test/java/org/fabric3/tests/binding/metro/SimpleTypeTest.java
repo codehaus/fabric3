@@ -48,7 +48,7 @@ public class SimpleTypeTest extends TestCase {
     protected HelloWorldPortType helloWorldPortType;
 
     public void testHello() throws Exception {
-//        assertEquals("Hello, Foo", helloWorldPortType.sayHello("Foo"));
+        assertEquals("Hello, Foo", helloWorldPortType.sayHello("Foo"));
     }
 
 }

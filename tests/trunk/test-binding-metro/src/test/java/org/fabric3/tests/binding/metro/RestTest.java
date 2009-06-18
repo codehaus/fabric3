@@ -48,7 +48,7 @@ public class RestTest extends TestCase {
     protected SearchService searchService;
 
     public void testSearch() throws Exception {
-//        searchService.search("William Shakespear");
+        searchService.search("William Shakespear");
     }
 
 }

@@ -14,7 +14,7 @@
     <component name="SimpleTypeTest">
         <f3-impl:junit class="org.fabric3.tests.binding.metro.SimpleTypeTest"/>
         <reference name="helloWorldPortType">
-            <binding.ws uri="http://localhost:8901/hello"/>
+            <binding.ws uri="http://localhost:8900/hello"/>
         </reference>
     </component>
 
