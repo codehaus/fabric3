@@ -38,6 +38,7 @@
 package org.fabric3.binding.ws.metro.runtime.wire;
 
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -63,6 +64,8 @@ import org.fabric3.spi.wire.Wire;
 
 /**
  * Creates invocation chains for invoking a target web service.
+ *
+ * @version $Rev$ $Date$
  */
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
     private ClassLoaderRegistry registry;
@@ -101,8 +104,12 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                 seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
             }
 
-
-            ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(url, serviceName, seiClass, features, scheduler);
+            URL wsdlLocation = target.getWsdlLocation();
+            if (wsdlLocation == null) {
+                // default to the target URL with ?wsdl appended since most WS stacks support this
+                wsdlLocation = new URL(url.toString() + "?wsdl");
+            }
+            ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(wsdlLocation, serviceName, seiClass, features, scheduler);
 
             Method[] methods = seiClass.getDeclaredMethods();
             for (InvocationChain chain : wire.getInvocationChains()) {
@@ -117,6 +124,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                 chain.addInterceptor(targetInterceptor);
             }
         } catch (ClassNotFoundException e) {
+            throw new WiringException(e);
+        } catch (MalformedURLException e) {
             throw new WiringException(e);
         }
 

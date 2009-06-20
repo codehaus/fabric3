@@ -45,6 +45,8 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
  * Wire source definition for Metro binding.
+ *
+ * @version $Rev$ $Date$
  */
 public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = -7874049193479847748L;

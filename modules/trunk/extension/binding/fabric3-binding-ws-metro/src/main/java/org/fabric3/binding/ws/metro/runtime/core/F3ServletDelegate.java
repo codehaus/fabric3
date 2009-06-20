@@ -51,23 +51,30 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.xml.ws.transport.http.HttpAdapter;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
 
 /**
  * Custom servlet delegate that supports lazy initiation of adapters.
+ *
+ * @version $Rev$ $Date$
  */
 public class F3ServletDelegate extends WSServletDelegate {
+    private static final String WS_TRANSFER_GET_ACTION = "\"http://schemas.xmlsoap.org/ws/2004/09/transfer/Get\"";
+
     private Map<String, ServletAdapter> adapters = new ConcurrentHashMap<String, ServletAdapter>();
     private Map<String, ClassLoader> classLoaders = new ConcurrentHashMap<String, ClassLoader>();
 
     /**
-     * Initializes an empty list of adapters.
+     * Constructor.
      *
      * @param servletContext Servlet context.
      */
     public F3ServletDelegate(ServletContext servletContext) {
         super(new ArrayList<ServletAdapter>(), servletContext);
+        // turn off status page
+        HttpAdapter.publishStatusPage = false;
     }
 
     /**
@@ -86,18 +93,17 @@ public class F3ServletDelegate extends WSServletDelegate {
      * Unregisters a servlet adapter.
      *
      * @param path the servlet adaptor path.
+     * @return the unregistered adaptor or null
      */
-    public void unregisterServletAdapter(String path) {
+    public ServletAdapter unregisterServletAdapter(String path) {
         classLoaders.remove(path);
         ServletAdapter adapter = adapters.remove(path);
         if (adapter != null) {
             adapter.getEndpoint().dispose();
         }
+        return adapter;
     }
 
-    /**
-     * Does a hash lookup. Currently supports only exact paths.
-     */
     @Override
     protected ServletAdapter getTarget(HttpServletRequest request) {
         String path = request.getRequestURI().substring(request.getContextPath().length());
@@ -106,6 +112,15 @@ public class F3ServletDelegate extends WSServletDelegate {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) throws ServletException {
+        String actionHeader = request.getHeader("SOAPAction");
+        // Short-circuit processing GET and POSTs with a SoapAction of "http://schemas.xmlsoap.org/ws/2004/09/transfer/Get" unless they are
+        // WS-MEX requests, i.e. <endpoint-url>/mex. This avoids an issue where WSIT is not properly setup to handle these requests using SOAP 1.2
+        // and the WSIT client falls back to issuing a SOAP 1.1 request with a content type of text/xml, which causes then causes WSIT to throw a
+        // content type error. A proper fix would be to enable this SoapAction with SOAP 1.2.
+        if (!request.getRequestURI().endsWith("/mex") && actionHeader != null && WS_TRANSFER_GET_ACTION.equals(actionHeader)) {
+            response.setStatus(200);
+            return;
+        }
         String path = request.getRequestURI().substring(request.getContextPath().length());
         ClassLoader classLoader = classLoaders.get(path);
         assert classLoader != null;

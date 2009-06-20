@@ -43,10 +43,13 @@ import org.fabric3.host.Namespaces;
 
 /**
  * List of may provided intents.
+ *
+ * @version $Rev$ $Date$
  */
 public class MayProvidedIntents {
 
     public static QName MESSAGE_OPTIMISATION = new QName(Namespaces.POLICY, "messageOptimisation");
+    public static QName PROTOCOL_X_SOAP12 = new QName(Namespaces.POLICY, "protocolBinding.xsoap12");
     public static QName PROTOCOL_SOAP12 = new QName(Namespaces.POLICY, "protocolBinding.soap12");
     public static QName PROTOCOL_SOAP11 = new QName(Namespaces.POLICY, "protocolBinding.soap11");
     public static QName PROTOCOL_REST = new QName(Namespaces.POLICY, "protocolBinding.rest");

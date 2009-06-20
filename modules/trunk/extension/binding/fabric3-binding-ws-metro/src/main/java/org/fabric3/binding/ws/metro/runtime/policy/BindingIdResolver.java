@@ -46,6 +46,8 @@ import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Interface for resolving binding id.
+ *
+ * @version $Rev$ $Date$
  */
 public interface BindingIdResolver {
 

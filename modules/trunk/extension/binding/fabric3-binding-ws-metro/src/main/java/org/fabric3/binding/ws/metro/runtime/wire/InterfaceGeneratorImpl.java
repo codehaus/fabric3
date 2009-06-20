@@ -88,7 +88,6 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
         return defineClass(generatedName, bytes, loader);
     }
 
-
     private byte[] generate(ClassWriter cw,
                             String className,
                             Class clazz,
@@ -96,7 +95,8 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
                             String wsdlLocation,
                             String serviceName,
                             String portName) {
-        cw.visit(V1_5, ACC_INTERFACE | ACC_PUBLIC, className, null, "java/lang/Object", null);
+        String[] interfaces = {clazz.getName().replace('.', '/')};
+        cw.visit(V1_5, ACC_INTERFACE | ACC_PUBLIC, className, null, "java/lang/Object", interfaces);
         // add @WebService
         AnnotationVisitor av = cw.visitAnnotation(getSignature(WebService.class), true);
         if (targetNamespace != null) {

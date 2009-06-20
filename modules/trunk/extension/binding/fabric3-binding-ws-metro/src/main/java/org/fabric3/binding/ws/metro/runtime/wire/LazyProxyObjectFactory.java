@@ -50,21 +50,21 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
- * Lazily creates a service proxy that can be shared among invocation chains of a wire. The proxy must be lazily created as opposed during wire
+ * Lazily creates a service proxy that can be shared among invocation chains of a wire. The proxy must be lazily created as opposed to during wire
  * attachment as the JAX-WS runtime attempts to access the WSDL from the endpoint address, which may not be provisioned at that time.
  *
  * @version $Rev$ $Date$
  */
 public class LazyProxyObjectFactory implements ObjectFactory<Object> {
-    private URL targetUrl;
+    private URL wsdlLocation;
     private QName serviceName;
     private Class<?> seiClass;
     private WebServiceFeature[] features;
     private WorkScheduler scheduler;
     private Object proxy;
 
-    public LazyProxyObjectFactory(URL targetUrl, QName serviceName, Class<?> seiClass, WebServiceFeature[] features, WorkScheduler scheduler) {
-        this.targetUrl = targetUrl;
+    public LazyProxyObjectFactory(URL wsdlLocation, QName serviceName, Class<?> seiClass, WebServiceFeature[] features, WorkScheduler scheduler) {
+        this.wsdlLocation = wsdlLocation;
         this.serviceName = serviceName;
         this.seiClass = seiClass;
         this.features = features;
@@ -74,12 +74,12 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
     public Object getInstance() throws ObjectCreationException {
         if (proxy == null) {
             // there is a possibility more than one proxy will be created but since this does not have side-effects, avoid synchronization
-            proxy = createProxy(targetUrl, serviceName, seiClass, features);
+            proxy = createProxy();
         }
         return proxy;
     }
 
-    private Object createProxy(URL targetUrl, QName serviceName, Class<?> seiClass, WebServiceFeature[] features) throws ObjectCreationException {
+    private Object createProxy() throws ObjectCreationException {
         // Metro requires library classes to be visibile to the application classloader. If executing in an environment that supports classloader
         // isolation, dynamically update the application classloader by setting a parent to the Metro classloader.
         ClassLoader seiClassLoader = seiClass.getClassLoader();
@@ -94,7 +94,7 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(seiClassLoader);
-            Service service = Service.create(targetUrl, serviceName);
+            Service service = Service.create(wsdlLocation, serviceName);
             // use the kernel scheduler for dispatching
             service.setExecutor(scheduler);
             return service.getPort(seiClass, features);

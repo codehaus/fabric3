@@ -14,6 +14,7 @@ Public License. See the accompanying license file for details.
     <bindingType name="binding.ws" mayProvide="f3-policy:messageOptimisation 
                                                 f3-policy:protocolBinding.soap11 
                                                 f3-policy:protocolBinding.soap12
+                                                f3-policy:protocolBinding.xsoap12
                                                 f3-policy:protocolBinding.rest
                                                 f3-policy:schemaValidation"/>
 

@@ -45,6 +45,8 @@ package org.fabric3.binding.ws.metro.runtime.core;
 
 import java.net.URL;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -53,6 +55,7 @@ import com.sun.xml.ws.api.WSBinding;
 import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.binding.BindingImpl;
+import com.sun.xml.ws.mex.server.MEXEndpoint;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.WSServlet;
 import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
@@ -60,14 +63,21 @@ import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
- * Servlet that handles all the incoming request, extends the Metro servlet and overrides the <code>getDelegate</code> method.
+ * Handles incoming HTTP requests and dispatches them to the Metro stack. Extends the Metro servlet and overrides the <code>getDelegate</code>
+ * method.
+ *
+ * @version $Rev$ $Date$
  */
 public class MetroServlet extends WSServlet {
     private static final long serialVersionUID = -2581439830158433922L;
+    private static final String MEX_SUFFIX = "/mex";
+
     private WorkScheduler scheduler;
 
     private ServletAdapterFactory servletAdapterFactory = new ServletAdapterFactory();
     private volatile F3ServletDelegate delegate;
+    private F3Container container;
+    private WSEndpoint<?> mexEndpoint;
 
     /**
      * Constructor
@@ -76,6 +86,35 @@ public class MetroServlet extends WSServlet {
      */
     public MetroServlet(WorkScheduler scheduler) {
         this.scheduler = scheduler;
+    }
+
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init(servletConfig);
+        ServletContext servletContext = servletConfig.getServletContext();
+        // Setup the WSIT endpoint that handles WS-MEX requests for registered endpoints. The TCCL must be set for JAXB.
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader seiClassLoader = MEXEndpoint.class.getClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(seiClassLoader);
+            container = new F3Container(servletContext);
+
+            WSBinding binding = BindingImpl.create(BindingID.SOAP12_HTTP);
+            mexEndpoint = WSEndpoint.create(MEXEndpoint.class,
+                                            false,
+                                            null,
+                                            null,
+                                            null,
+                                            container,
+                                            binding,
+                                            null,
+                                            null,
+                                            null,
+                                            true);
+        } finally {
+            Thread.currentThread().setContextClassLoader(classLoader);
+        }
+
     }
 
     /**
@@ -117,7 +156,7 @@ public class MetroServlet extends WSServlet {
                                                          invoker,
                                                          serviceName,
                                                          portName,
-                                                         null,
+                                                         container,
                                                          binding,
                                                          primaryWsdl,
                                                          null,
@@ -126,6 +165,10 @@ public class MetroServlet extends WSServlet {
             wsEndpoint.setExecutor(scheduler);
             ServletAdapter adapter = servletAdapterFactory.createAdapter(servicePath, servicePath, wsEndpoint);
             delegate.registerServletAdapter(adapter, seiClassLoader);
+
+            String mexPath = servicePath + MEX_SUFFIX;
+            ServletAdapter mexAdapter = servletAdapterFactory.createAdapter(mexPath, mexPath, mexEndpoint);
+            delegate.registerServletAdapter(mexAdapter, seiClassLoader);
         } finally {
             Thread.currentThread().setContextClassLoader(classLoader);
         }
@@ -138,7 +181,12 @@ public class MetroServlet extends WSServlet {
      * @param path the endpoint path
      */
     public void unregisterService(String path) {
-        delegate.unregisterServletAdapter(path);
+        ServletAdapter adapter = delegate.unregisterServletAdapter(path);
+        if (adapter != null) {
+            container.removeEndpoint(adapter);
+        }
+        String mexPath = path + MEX_SUFFIX;
+        servletAdapterFactory.createAdapter(mexPath, mexPath, mexEndpoint);
     }
 
     /**

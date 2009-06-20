@@ -49,6 +49,8 @@ import com.sun.xml.ws.transport.http.servlet.ServletAdapterList;
 
 /**
  * Factory for creating the servlet adapter as the Metro factory method seems to be protected access.
+ *
+ * @version $Rev$ $Date$
  */
 public class ServletAdapterFactory extends ServletAdapterList {
 

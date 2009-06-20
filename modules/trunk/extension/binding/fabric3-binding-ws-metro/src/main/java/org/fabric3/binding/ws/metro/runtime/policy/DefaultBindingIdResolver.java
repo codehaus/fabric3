@@ -47,6 +47,8 @@ import org.fabric3.model.type.definitions.PolicySet;
 
 /**
  * Default implementation of the binding Id resolver.
+ *
+ * @version $Rev$ $Date$
  */
 public class DefaultBindingIdResolver implements BindingIdResolver {
 
@@ -62,6 +64,8 @@ public class DefaultBindingIdResolver implements BindingIdResolver {
         BindingID bindingID = BindingID.SOAP11_HTTP;
         if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_SOAP12)) {
             bindingID = BindingID.SOAP12_HTTP;
+        } else if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_X_SOAP12)) {
+            bindingID = BindingID.X_SOAP12_HTTP;
         } else if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_REST)) {
             bindingID = BindingID.parse(JAXWSProperties.REST_BINDING);
         }

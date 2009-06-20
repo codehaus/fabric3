@@ -51,6 +51,8 @@ import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Interceptor for invoking a web service proxy.
+ *
+ * @version $Rev$ $Date$
  */
 public class MetroTargetInterceptor implements Interceptor {
     private ObjectFactory<?> proxyFactory;

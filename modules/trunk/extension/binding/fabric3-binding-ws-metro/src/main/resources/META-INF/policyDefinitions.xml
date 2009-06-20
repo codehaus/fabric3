@@ -34,6 +34,12 @@ Public License. See the accompanying license file for details.
         </description>
     </intent>
 
+    <intent name="protocolBinding.xsoap12" constrains="binding">
+        <description>
+            Unqualified intent for using SOAP 1.2 and WSDL generation with Metro.
+        </description>
+    </intent>
+
     <intent name="protocolBinding.rest" constrains="binding">
         <description>
             Unqualified intent for using HTTP.

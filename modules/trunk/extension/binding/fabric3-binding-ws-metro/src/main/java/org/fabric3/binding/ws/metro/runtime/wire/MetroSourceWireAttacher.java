@@ -70,6 +70,8 @@ import org.fabric3.spi.wire.Wire;
 
 /**
  * Source wire attacher that provisions services.
+ *
+ * @version $Rev$ $Date$
  */
 public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSourceDefinition> {
     private ServletHost servletHost;
@@ -139,6 +141,9 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             // FIXME remove need to decode
             String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
             servletHost.registerMapping(path, metroServlet);
+            // register <endpoint-url/mex> address for serving WS-MEX requests
+            servletHost.registerMapping(path +"/mex", metroServlet);
+
             metroServlet.registerService(seiClass, serviceName, portName, wsdlUrl, path, invoker, features, bindingID);
 
         } catch (ClassNotFoundException e) {

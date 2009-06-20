@@ -41,6 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.soap.MTOMFeature;
 
 import com.sun.xml.ws.developer.BindingTypeFeature;
@@ -48,6 +49,11 @@ import com.sun.xml.ws.developer.JAXWSProperties;
 
 import org.fabric3.model.type.definitions.PolicySet;
 
+/**
+ * Default implementation of FeatureResolver.Â
+ *  
+ * @version $Rev$ $Date$
+ */
 public class DefaultFeatureResolver implements FeatureResolver {
 
     /**
@@ -67,6 +73,7 @@ public class DefaultFeatureResolver implements FeatureResolver {
             features.add(new BindingTypeFeature(JAXWSProperties.REST_BINDING));
         }
 
+        features.add(new AddressingFeature());
         WebServiceFeature[] webServiceFeatures = new WebServiceFeature[features.size()];
         webServiceFeatures = features.toArray(webServiceFeatures);
 

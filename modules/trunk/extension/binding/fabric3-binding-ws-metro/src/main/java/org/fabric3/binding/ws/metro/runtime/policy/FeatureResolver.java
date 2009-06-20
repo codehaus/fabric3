@@ -44,7 +44,9 @@ import javax.xml.ws.WebServiceFeature;
 import org.fabric3.model.type.definitions.PolicySet;
 
 /**
- * Gets the list of features.
+ * Resolves the set of features corresponding to intents and policy sets for a bound service or reference.
+ *
+ * @version $Rev$ $Date$
  */
 public interface FeatureResolver {
 
