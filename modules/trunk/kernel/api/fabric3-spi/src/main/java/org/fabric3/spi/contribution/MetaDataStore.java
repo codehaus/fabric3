@@ -183,4 +183,7 @@ public interface MetaDataStore {
      */
     Set<Contribution> resolveCapability(String capability);
 
+    List<Resource> resolveResources(URI contributionUri);
+
+
 }

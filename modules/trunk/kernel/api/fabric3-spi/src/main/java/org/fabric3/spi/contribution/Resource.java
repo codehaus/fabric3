@@ -39,11 +39,10 @@ package org.fabric3.spi.contribution;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
- * Represents a resource in a contribution such as a WSDL file or Composite definition
+ * Represents a resource in a contribution such as a WSDL document or composite.
  *
  * @version $Rev$ $Date$
  */
@@ -83,10 +82,6 @@ public class Resource {
      */
     public void addResourceElement(ResourceElement<?, ?> element) {
         elements.add(element);
-    }
-
-    public void addResourceElements(Collection<ResourceElement<?, ?>> elements) {
-        elements.addAll(elements);
     }
 
     /**
