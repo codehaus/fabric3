@@ -182,10 +182,6 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
      * @return the updated classloader
      */
     private ClassLoader updateClassLoader(Class<?> seiClass) {
-        // Metro requires a Metro proxy interface to be visible to the classloader that loaded the SEI class
-        // To enable this, dynamically add the Metro extension classloader as a parent to the classloader that loaded the SEI class if the host
-        // supports classloader isolation. Note that the latter may be different than the application classloader (e.g. in the Maven iTest
-        // runtime, the SEI class will be loaded by the host classloader, not the classloader representing the application
         ClassLoader seiClassLoader = seiClass.getClassLoader();
         ClassLoader extensionClassLoader = getClass().getClassLoader();
         if (seiClassLoader instanceof MultiParentClassLoader) {
