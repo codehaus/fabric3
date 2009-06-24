@@ -60,9 +60,10 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
         JavaServiceContract javaContract = (JavaServiceContract) contract;
         String qualifedName = javaContract.getInterfaceClass();
         String packageName = qualifedName.substring(0, qualifedName.lastIndexOf('.'));
+        String namespace = deriveNamespace(packageName);
         String unqualifiedName = qualifedName.substring(qualifedName.lastIndexOf('.') + 1);
-        QName serviceName = new QName(packageName, unqualifiedName + "Service");
-        QName portName = new QName(packageName, unqualifiedName + "Port");
+        QName serviceName = new QName(namespace, unqualifiedName + "Service");
+        QName portName = new QName(namespace, unqualifiedName + "Port");
         return new ReferenceEndpointDefinition(serviceName, portName, url);
     }
 
@@ -74,9 +75,31 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
         String qualifedName = javaContract.getInterfaceClass();
         String packageName = qualifedName.substring(0, qualifedName.lastIndexOf('.'));
         String unqualifiedName = qualifedName.substring(qualifedName.lastIndexOf('.') + 1);
-        QName serviceName = new QName(packageName, unqualifiedName + "Service");
-        QName portName = new QName(packageName, unqualifiedName + "Port");
+        String namespace = deriveNamespace(packageName);
+        QName serviceName = new QName(namespace, unqualifiedName + "Service");
+        QName portName = new QName(namespace, unqualifiedName + "Port");
         return new ServiceEndpointDefinition(serviceName, portName, uri);
+    }
+
+    /**
+     * Derives an XML namespace from a Java package according to JAXB rules. For example, org.foo is rendered as http://foo.org/.
+     *
+     * @param pkg the Java package
+     * @return the XML namespace
+     */
+    String deriveNamespace(String pkg) {
+        String[] tokens = pkg.split("\\.");
+        StringBuilder builder = new StringBuilder("http://");
+        for (int i = tokens.length - 1; i >= 0; i--) {
+            String token = tokens[i];
+            builder.append(token);
+            if (i != 0) {
+                builder.append(".");
+            } else {
+                builder.append("/");
+            }
+        }
+        return builder.toString();
     }
 
 }
