@@ -38,6 +38,8 @@
 package org.fabric3.binding.ws.metro.runtime.policy;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import com.sun.xml.ws.api.BindingID;
@@ -65,7 +67,7 @@ public class WsdlGeneratorImpl implements WsdlGenerator {
     }
 
 
-    public File generate(Class<?> seiClass, QName serviceQName) throws WsdlGenerationException {
+    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName) throws WsdlGenerationException {
         RuntimeModeler modeler = new RuntimeModeler(seiClass, serviceQName, BindingID.SOAP12_HTTP);
         AbstractSEIModelImpl model = modeler.buildRuntimeModel();
         String packageName = seiClass.getPackage().getName();
@@ -73,8 +75,15 @@ public class WsdlGeneratorImpl implements WsdlGenerator {
         // only support SOAP 1.2
         WSBinding binding = BindingImpl.create(BindingID.SOAP12_HTTP);
         WSDLGenerator generator = new WSDLGenerator(model, wsdlResolver, binding, null, seiClass);
+
+        // generate the WSDL and schemas
         generator.doGeneration();
-        String name = model.getPortTypeName().getLocalPart();
-        return new File(tempDir, packageName + "." + name + ".wsdl");
+
+        // resolve the generated XSD files
+        // TODO support multiple schema artifacts
+        List<File> schemas = new ArrayList<File>();
+        schemas.add(wsdlResolver.getSchema());
+
+        return new GeneratedArtifacts(wsdlResolver.getConcreteWsdl(), schemas);
     }
 }

@@ -74,7 +74,7 @@ public class WsdlPolicyAttacherImplTestCase extends TestCase {
     public void testAttach() throws Exception {
         // Verifies a policy expression is properly attached to a WSDL operation definition.
         // The WSDL artifacts are generated from a Java type and the policy expression is attached to the abstract WSDL.
-        QName serviceQName = new QName("urn:helloworld", "HelloWorldService");
+        QName serviceQName = new QName("http://policy.runtime.metro.ws.binding.fabric3.org/", "HelloWorldService");
         RuntimeModeler modeler = new RuntimeModeler(HelloWorldPortType.class, serviceQName, BindingID.SOAP12_HTTP);
         AbstractSEIModelImpl model = modeler.buildRuntimeModel();
         String packageName = HelloWorldPortType.class.getPackage().getName();
@@ -89,10 +89,10 @@ public class WsdlPolicyAttacherImplTestCase extends TestCase {
         ByteArrayInputStream bas = new ByteArrayInputStream(TestPolicy.POLICY.getBytes());
         Document document = builder.parse(bas);
         WsdlPolicyAttacherImpl attacher = new WsdlPolicyAttacherImpl();
-        File portTypeFile = new File(packageName + "." + "HelloWorldPortType.wsdl");
+//        File portTypeFile = new File(packageName + "." + "HelloWorldPortTypeService.wsdl");
         List<String> operationNames = new ArrayList<String>();
         operationNames.add("sayHello");
-        attacher.attach(portTypeFile, operationNames, document.getDocumentElement());
+        attacher.attach(wsdlResolver.getConcreteWsdl(), operationNames, document.getDocumentElement());
 
         URL wsdlLocation = new File(packageName + "." + "HelloWorldService.wsdl").toURI().toURL();
         InputStream stream = wsdlLocation.openStream();
@@ -101,9 +101,9 @@ public class WsdlPolicyAttacherImplTestCase extends TestCase {
         NullResolver entityResolver = new NullResolver();
         WSDLModel generatedModel = RuntimeWSDLParser.parse(wsdlLocation, source, entityResolver, false, null);
 
-        QName serviceName = new QName("urn:helloworld", "HelloWorldService");
-        QName portName = new QName("urn:helloworld", "HelloWorldPortTypePort");
-        QName operationName = new QName("urn:helloworld", "sayHello");
+        QName serviceName = new QName("http://policy.runtime.metro.ws.binding.fabric3.org/", "HelloWorldService");
+        QName portName = new QName("http://policy.runtime.metro.ws.binding.fabric3.org/", "HelloWorldPortTypePort");
+        QName operationName = new QName("http://policy.runtime.metro.ws.binding.fabric3.org/", "sayHello");
         PolicyMapKey key = PolicyMap.createWsdlOperationScopeKey(serviceName, portName, operationName);
 
         Policy policy = generatedModel.getPolicyMap().getOperationEffectivePolicy(key);

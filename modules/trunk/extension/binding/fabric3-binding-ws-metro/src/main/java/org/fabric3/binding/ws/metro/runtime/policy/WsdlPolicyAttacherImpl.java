@@ -75,10 +75,10 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
         DOCUMENT_FACTORY.setNamespaceAware(true);
     }
 
-    public void attach(File abstractWsdl, List<String> operationNames, Element policy) throws PolicyAttachmentException {
+    public void attach(File wsdl, List<String> operationNames, Element policy) throws PolicyAttachmentException {
         try {
             DocumentBuilder builder = DOCUMENT_FACTORY.newDocumentBuilder();
-            Document document = builder.parse(new BufferedInputStream(new FileInputStream(abstractWsdl)));
+            Document document = builder.parse(new BufferedInputStream(new FileInputStream(wsdl)));
             Element root = document.getDocumentElement();
             Node clone = policy.cloneNode(true);
             document.adoptNode(clone);
@@ -87,21 +87,23 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
             // calculate the policy id to use in the PolicyReference element
             Node item = clone.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
             if (item == null) {
-                throw new PolicyAttachmentException("Missing id in policy expression:" + abstractWsdl.getName());
+                throw new PolicyAttachmentException("Missing id in policy expression:" + wsdl.getName());
             }
             String id = "#" + item.getNodeValue();
 
             // add the policy id to the operations elements for the portType
             Node portTypeNode = findChildNode(root, "portType");
             if (portTypeNode == null) {
-                throw new PolicyAttachmentException("portType element missing: " + abstractWsdl.getName());
+                throw new PolicyAttachmentException("portType element missing: " + wsdl.getName());
             }
 
             addPolicyReferenceToOperation(portTypeNode, operationNames, id);
+            addPolicyToBinding(root, id, wsdl);
+
 
             // Write the DOM representing the abstract WSDL back to the file
             Source source = new DOMSource(document);
-            Result result = new StreamResult(abstractWsdl);
+            Result result = new StreamResult(wsdl);
             Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
             transformer.transform(source, result);
         } catch (SAXException e) {
@@ -113,6 +115,28 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
         } catch (IOException e) {
             throw new PolicyAttachmentException(e);
         }
+    }
+
+    /**
+     * Adds a policy reference to the WSDL binding the WS-Policy PolicyReference element.
+     * <p/>
+     * Ideally, policy references should only be attached to individual operations. However, Metro appears to require security policy to be attached
+     * to an endpoint subject as SecurityTubeBase.collectPolicies() sets the security policy version (spVersion) based on endpoint policy. If the
+     * policy is attached to operations and not an endpoint subject, spVersion will not be set and result in an NPE further down the call stack.
+     *
+     * @param bindingElement the binding element node to attach the reference to
+     * @param id             the policy reference id, e.g. "#SomePolicy"
+     * @param wsdl           the WSDL file being attached to
+     * @throws PolicyAttachmentException if there is an error performing the attachment
+     */
+    private void addPolicyToBinding(Element bindingElement, String id, File wsdl) throws PolicyAttachmentException {
+        Node bindingNode = findChildNode(bindingElement, "binding");
+        if (bindingNode == null) {
+            throw new PolicyAttachmentException("binding element missing: " + wsdl.getName());
+        }
+        Element reference = bindingNode.getOwnerDocument().createElementNS(WS_POLICY_NS, "PolicyReference");
+        reference.setAttribute("URI", id);
+        bindingNode.appendChild(reference);
     }
 
     /**

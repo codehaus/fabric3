@@ -23,6 +23,14 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroTargetWireAttacher"/>
     </component>
 
+    <component name="WsdlGenerator">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.WsdlGeneratorImpl"/>
+    </component>
+
+    <component name="WsdlPolicyAttacher">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacherImpl"/>
+    </component>
+
     <component name="FeatureResolver">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultFeatureResolver"/>
     </component>

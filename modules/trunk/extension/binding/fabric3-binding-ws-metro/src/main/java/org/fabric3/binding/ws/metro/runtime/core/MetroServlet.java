@@ -43,7 +43,11 @@
  */
 package org.fabric3.binding.ws.metro.runtime.core;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -52,6 +56,7 @@ import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.api.WSBinding;
+import com.sun.xml.ws.api.server.Container;
 import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.binding.BindingImpl;
@@ -120,14 +125,16 @@ public class MetroServlet extends WSServlet {
     /**
      * Registers a new service endpoint.
      *
-     * @param sei         service endpoint interface.
-     * @param serviceName service name
-     * @param portName    port name
-     * @param wsdlUrl     Optional URL to the WSDL document.
-     * @param servicePath Relative path on which the service is provisioned.
-     * @param invoker     Invoker for receiving the web service request.
-     * @param features    Web service features to enable.
-     * @param bindingID   Binding ID to use.
+     * @param sei               service endpoint interface.
+     * @param serviceName       service name
+     * @param portName          port name
+     * @param wsdlUrl           Optional URL to the WSDL document.
+     * @param servicePath       Relative path on which the service is provisioned.
+     * @param invoker           Invoker for receiving the web service request.
+     * @param features          Web service features to enable.
+     * @param bindingID         Binding ID to use.
+     * @param wsitConfiguration the generated WSDL used for WSIT configuration or null if no policy is configured
+     * @param schemas           the handles to schemas (XSDs) imported by the WSDL or null if none exist
      */
     public void registerService(Class<?> sei,
                                 QName serviceName,
@@ -136,7 +143,9 @@ public class MetroServlet extends WSServlet {
                                 String servicePath,
                                 MetroServiceInvoker invoker,
                                 WebServiceFeature[] features,
-                                BindingID bindingID) {
+                                BindingID bindingID,
+                                File wsitConfiguration,
+                                List<File> schemas) {
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
@@ -144,22 +153,36 @@ public class MetroServlet extends WSServlet {
         try {
             Thread.currentThread().setContextClassLoader(seiClassLoader);
 
+            WSBinding binding = BindingImpl.create(bindingID, features);
+            Container endpointContainer = container;
+            List<SDDocumentSource> metadata = null;
+            if (wsitConfiguration != null) {
+                // create a container wrapper used by Metro to resolve the WSIT configuration
+                endpointContainer = new WsitCongifurationContainer(container, wsitConfiguration);
+                // Compile the list of imported schemas so they can be resolved using ?xsd GET requests. Metro will re-write the WSDL import
+                // so clients can dereference the imports when they obtain the WSDL.
+                metadata = new ArrayList<SDDocumentSource>();
+                if (schemas != null) {
+                    for (File schema : schemas) {
+                        metadata.add(SDDocumentSource.create(schema.toURI().toURL()));
+                    }
+                }
+            }
             SDDocumentSource primaryWsdl = null;
             if (wsdlUrl != null) {
                 primaryWsdl = SDDocumentSource.create(wsdlUrl);
             }
 
-            WSBinding binding = BindingImpl.create(bindingID, features);
 
             WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei,
                                                          false,
                                                          invoker,
                                                          serviceName,
                                                          portName,
-                                                         container,
+                                                         endpointContainer,
                                                          binding,
                                                          primaryWsdl,
-                                                         null,
+                                                         metadata,
                                                          null,
                                                          true);
             wsEndpoint.setExecutor(scheduler);
@@ -169,6 +192,9 @@ public class MetroServlet extends WSServlet {
             String mexPath = servicePath + MEX_SUFFIX;
             ServletAdapter mexAdapter = servletAdapterFactory.createAdapter(mexPath, mexPath, mexEndpoint);
             delegate.registerServletAdapter(mexAdapter, seiClassLoader);
+        } catch (MalformedURLException e) {
+            // this should not happen
+            throw new AssertionError(e);
         } finally {
             Thread.currentThread().setContextClassLoader(classLoader);
         }

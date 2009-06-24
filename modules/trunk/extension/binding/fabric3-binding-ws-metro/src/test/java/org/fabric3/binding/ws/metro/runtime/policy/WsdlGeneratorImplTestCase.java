@@ -51,14 +51,14 @@ import org.fabric3.host.runtime.HostInfo;
 public class WsdlGeneratorImplTestCase extends TestCase {
 
     public void testGeneration() throws Exception {
-        QName serviceName = new QName("urn:helloworld", "HelloWorldService");
+        QName serviceName = new QName("http://policy.runtime.metro.ws.binding.fabric3.org", "HelloWorldService");
         HostInfo info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getTempDir()).andReturn(new File("."));
         EasyMock.replay(info);
         WsdlGenerator generator = new WsdlGeneratorImpl(info);
-        File generated = generator.generate(HelloWorldPortType.class, serviceName);
+        GeneratedArtifacts generated = generator.generate(HelloWorldPortType.class, serviceName);
         // only verify file exists and do not verify the WSDL contents - we assume the underlying Metro WSDL generator is correct
-        assertTrue(generated.exists());
+        assertTrue(generated.getWsdl().exists());
     }
 
 }

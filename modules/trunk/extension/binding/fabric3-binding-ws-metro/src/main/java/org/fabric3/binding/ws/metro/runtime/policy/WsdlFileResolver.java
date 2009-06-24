@@ -47,8 +47,8 @@ import javax.xml.ws.Holder;
 import com.sun.xml.ws.wsdl.writer.WSDLResolver;
 
 /**
- * Resolves WSDL artifacts for a SEI to the local filesystem, typically a temporary directory. Artifacts will be marked for deletion on JVM exit. Note
- * that as deployment operations are not concurrent and the WSDL artifacts are only needed for the duration of endpoint provisioning, this
+ * Resolves WSDL and schema artifacts for a SEI to the local filesystem, typically a temporary directory. Artifacts will be marked for deletion on JVM
+ * exit. Note that as deployment operations are not concurrent and the WSDL artifacts are only needed for the duration of endpoint provisioning, this
  * implementation does not need to handle naming clashes. However, it does prefix the artifact file names with the Java SEI package.
  *
  * @version $Rev$ $Date$
@@ -56,6 +56,9 @@ import com.sun.xml.ws.wsdl.writer.WSDLResolver;
 public class WsdlFileResolver implements WSDLResolver {
     private String packageName;
     private File directory;
+    private File concreteWsdl;
+    private File schema;
+
 
     /**
      * Constructor.
@@ -69,17 +72,24 @@ public class WsdlFileResolver implements WSDLResolver {
     }
 
     public Result getWSDL(String fileName) {
-        File file = createFile(fileName);
-        return toResult(file);
+        concreteWsdl = createFile(fileName);
+        return toResult(concreteWsdl);
     }
 
     public Result getAbstractWSDL(Holder<String> filename) {
-        File file = createFile(filename.value);
-        return toResult(file);
+        return toResult(concreteWsdl);
     }
 
     public Result getSchemaOutput(String namespace, Holder<String> filename) {
-        return getSchemaOutput(namespace, packageName + "." + filename.value);
+        return getSchemaOutput(namespace, filename.value);
+    }
+
+    public File getConcreteWsdl() {
+        return concreteWsdl;
+    }
+
+    public File getSchema() {
+        return schema;
     }
 
     private File createFile(String fileName) {
@@ -92,8 +102,8 @@ public class WsdlFileResolver implements WSDLResolver {
         if (namespace.equals("")) {
             return null;
         }
-        File file = createFile(fileName);
-        return toResult(file);
+        schema = createFile(fileName);
+        return toResult(schema);
     }
 
     private Result toResult(File file) {

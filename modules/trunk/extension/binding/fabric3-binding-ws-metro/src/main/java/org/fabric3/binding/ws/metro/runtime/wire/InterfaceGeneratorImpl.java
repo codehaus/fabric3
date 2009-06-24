@@ -53,11 +53,13 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Service;
 
 /**
+ * Default implementation of InterfaceGenerator.
+ *
  * @version $Rev$ $Date$
  */
 @Service(InterfaceGenerator.class)
 public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
-    private static final String SUFFIX = "_F3Subtype";
+    private static final String SUFFIX = "F3Subtype";
     private Method method;
 
     @Init

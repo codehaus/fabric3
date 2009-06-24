@@ -37,7 +37,6 @@
 */
 package org.fabric3.binding.ws.metro.runtime.policy;
 
-import java.io.File;
 import javax.xml.namespace.QName;
 
 /**
@@ -54,8 +53,8 @@ public interface WsdlGenerator {
      *
      * @param seiClass     the SEI or implementaiton class
      * @param serviceQName the service qualified name
-     * @return the generated abstract WSDL file handle
+     * @return the handles to the generated WSDL and schemas.
      * @throws WsdlGenerationException if an error occurs during generation
      */
-    File generate(Class<?> seiClass, QName serviceQName) throws WsdlGenerationException;
+    GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName) throws WsdlGenerationException;
 }

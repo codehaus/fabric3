@@ -37,7 +37,9 @@
  */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -51,11 +53,17 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServiceInvoker;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.binding.ws.metro.runtime.policy.GeneratedArtifacts;
+import org.fabric3.binding.ws.metro.runtime.policy.PolicyAttachmentException;
+import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
+import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
+import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
@@ -79,6 +87,8 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     private FeatureResolver featureResolver;
     private BindingIdResolver bindingIdResolver;
     private InterfaceGenerator interfaceGenerator;
+    private WsdlGenerator wsdlGenerator;
+    private WsdlPolicyAttacher policyAttacher;
     private WorkScheduler scheduler;
 
     private MetroServlet metroServlet;
@@ -88,12 +98,16 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                                    @Reference FeatureResolver featureResolver,
                                    @Reference BindingIdResolver bindingIdResolver,
                                    @Reference InterfaceGenerator interfaceGenerator,
+                                   @Reference WsdlGenerator wsdlGenerator,
+                                   @Reference WsdlPolicyAttacher policyAttacher,
                                    @Reference WorkScheduler scheduler) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.featureResolver = featureResolver;
         this.bindingIdResolver = bindingIdResolver;
         this.interfaceGenerator = interfaceGenerator;
+        this.wsdlGenerator = wsdlGenerator;
+        this.policyAttacher = policyAttacher;
         this.scheduler = scheduler;
     }
 
@@ -124,7 +138,18 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                 // TODO make sure the WSDL is correct
                 seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
             }
-
+            File generatedWsdl = null;
+            List<File> generatedSchemas = null;
+            if (!source.getMappings().isEmpty()) {
+                // if policy is configured for the endpoint, generate a WSDL with the policy attachments
+                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName);
+                generatedWsdl = artifacts.getWsdl();
+                generatedSchemas = artifacts.getSchemas();
+                for (PolicyExpressionMapping mapping : source.getMappings()) {
+                    policyAttacher.attach(generatedWsdl, mapping.getOperations(), mapping.getPolicyExpression());
+                }
+                wsdlUrl = generatedWsdl.toURI().toURL();
+            }
             ClassLoader extensionClassLoader = updateClassLoader(seiClass);
 
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
@@ -136,19 +161,35 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             } finally {
                 Thread.currentThread().setContextClassLoader(old);
             }
+
             MetroServiceInvoker invoker = new MetroServiceInvoker(invocationChains);
 
             // FIXME remove need to decode
             String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
             servletHost.registerMapping(path, metroServlet);
             // register <endpoint-url/mex> address for serving WS-MEX requests
-            servletHost.registerMapping(path +"/mex", metroServlet);
+            servletHost.registerMapping(path + "/mex", metroServlet);
 
-            metroServlet.registerService(seiClass, serviceName, portName, wsdlUrl, path, invoker, features, bindingID);
+            metroServlet.registerService(seiClass,
+                                         serviceName,
+                                         portName,
+                                         wsdlUrl,
+                                         path,
+                                         invoker,
+                                         features,
+                                         bindingID,
+                                         generatedWsdl,
+                                         generatedSchemas);
 
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         } catch (UnsupportedEncodingException e) {
+            throw new WiringException(e);
+        } catch (WsdlGenerationException e) {
+            throw new WiringException(e);
+        } catch (PolicyAttachmentException e) {
+            throw new WiringException(e);
+        } catch (MalformedURLException e) {
             throw new WiringException(e);
         }
     }

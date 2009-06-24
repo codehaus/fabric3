@@ -49,6 +49,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
@@ -96,7 +97,9 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
 
         List<QName> requestedIntents = policy.getProvidedIntents();
 
-        return new MetroWireSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents);
+        List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
+
+        return new MetroWireSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
 
     }
 
@@ -133,6 +136,13 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents);
     }
 
+    /**
+     * Returns the WSDL location if one is defined in the binding configuration or null.
+     *
+     * @param definition the binding configuration
+     * @return the WSDL location or null
+     * @throws GenerationException if the WSDL location is invalid
+     */
     private URL getWsdlLocation(WsBindingDefinition definition) throws GenerationException {
         URL wsdlLocation = null;
         String location = definition.getWsdlLocation();
@@ -145,5 +155,6 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         }
         return wsdlLocation;
     }
+
 
 }
