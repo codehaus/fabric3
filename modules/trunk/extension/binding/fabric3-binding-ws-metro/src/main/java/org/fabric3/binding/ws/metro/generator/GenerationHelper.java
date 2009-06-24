@@ -1,0 +1,100 @@
+/*
+ * Fabric3
+ * Copyright (c) 2009 Metaform Systems
+ *
+ * Fabric3 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version, with the
+ * following exception:
+ *
+ * Linking this software statically or dynamically with other
+ * modules is making a combined work based on this software.
+ * Thus, the terms and conditions of the GNU General Public
+ * License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of this software
+ * give you permission to link this software with independent
+ * modules to produce an executable, regardless of the license
+ * terms of these independent modules, and to copy and distribute
+ * the resulting executable under terms of your choice, provided
+ * that you also meet, for each linked independent module, the
+ * terms and conditions of the license of that module. An
+ * independent module is a module which is not derived from or
+ * based on this software. If you modify this software, you may
+ * extend this exception to your version of the software, but
+ * you are not obligated to do so. If you do not wish to do so,
+ * delete this exception statement from your version.
+ *
+ * Fabric3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the
+ * GNU General Public License along with Fabric3.
+ * If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package org.fabric3.binding.ws.metro.generator;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.xml.namespace.QName;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
+import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.LogicalOperation;
+import org.fabric3.spi.policy.Policy;
+
+/**
+ * @version $Rev$ $Date$
+ */
+public class GenerationHelper {
+    private static final String WS_SECURITY_UTILITY_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
+
+    private GenerationHelper() {
+    }
+
+    /**
+     * Normalizes policy sets by mapping policy expressions to the operations they are attached to.
+     *
+     * @param policy the policy for the wire
+     * @return the normalized mappings
+     * @throws GenerationException if the policy expression is invalid
+     */
+    public static List<PolicyExpressionMapping> createMappings(Policy policy) throws GenerationException {
+        // temporarily store mappings keyed by policy expression id
+        Map<String, PolicyExpressionMapping> mappings = new HashMap<String, PolicyExpressionMapping>();
+        for (Map.Entry<LogicalOperation, List<PolicySet>> entry : policy.getProvidedPolicySets().entrySet()) {
+            String operationName = entry.getKey().getDefinition().getName();
+            for (PolicySet policySet : entry.getValue()) {
+                Element expression = policySet.getExtension();
+                Node node = expression.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
+                if (node == null) {
+                    URI uri = policySet.getContributionUri();
+                    QName extensionName = policySet.getExtensionName();
+                    throw new GenerationException("Invalid policy in contribution " + uri + ". No id specified: " + extensionName);
+                }
+                String id = node.getNodeValue();
+
+                PolicyExpressionMapping mapping = mappings.get(id);
+                if (mapping == null) {
+                    mapping = new PolicyExpressionMapping(id, expression);
+                    mappings.put(id, mapping);
+                }
+                mapping.addOperation(operationName);
+            }
+        }
+        return new ArrayList<PolicyExpressionMapping>(mappings.values());
+    }
+
+
+}
