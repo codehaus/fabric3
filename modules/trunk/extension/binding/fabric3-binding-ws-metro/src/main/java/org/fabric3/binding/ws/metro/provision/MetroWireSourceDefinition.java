@@ -64,8 +64,7 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      * @param wsdlLocation       optional URL to the WSDL location
      * @param interfaze          the service contract name.
      * @param requestedIntents   intents requested by the binding
-     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to construct dynamic endpoint WSDL on a
-     *                           runtime.
+     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to construct dynamic endpoint WSDL
      */
     public MetroWireSourceDefinition(ServiceEndpointDefinition endpointDefinition,
                                      URL wsdlLocation,
