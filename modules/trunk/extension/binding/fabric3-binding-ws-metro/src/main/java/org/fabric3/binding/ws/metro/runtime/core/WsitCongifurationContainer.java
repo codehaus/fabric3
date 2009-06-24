@@ -45,7 +45,7 @@ import com.sun.xml.ws.api.ResourceLoader;
 import com.sun.xml.ws.api.server.Container;
 
 /**
- * Wraps a a Metro Container with one that resolves dynamically generated WSDL containing policy configuration.
+ * Wraps a a Metro Container with one that resolves dynamically generated WSDL containing policy configuration for an endpoint.
  *
  * @version $Rev$ $Date$
  */
