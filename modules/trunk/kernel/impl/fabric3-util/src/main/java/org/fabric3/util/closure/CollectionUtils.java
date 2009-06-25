@@ -44,8 +44,6 @@ import java.util.Set;
 
 /**
  * Utility for applying closures on collections.
- * <p/>
- * TODO To be moved into a separate module.
  *
  * @version $Rev$ $Date$
  */
