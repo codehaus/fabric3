@@ -42,6 +42,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
+import java.io.File;
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
@@ -50,8 +51,15 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor;
+import org.fabric3.binding.ws.metro.runtime.core.LazyProxyObjectFactory;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
+import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
+import org.fabric3.binding.ws.metro.runtime.policy.GeneratedArtifacts;
+import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
+import org.fabric3.binding.ws.metro.runtime.policy.PolicyAttachmentException;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
@@ -71,15 +79,21 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
     private ClassLoaderRegistry registry;
     private FeatureResolver resolver;
     private InterfaceGenerator interfaceGenerator;
+    private WsdlGenerator wsdlGenerator;
+    private WsdlPolicyAttacher policyAttacher;
     private WorkScheduler scheduler;
 
     public MetroTargetWireAttacher(@Reference ClassLoaderRegistry registry,
                                    @Reference FeatureResolver resolver,
                                    @Reference InterfaceGenerator interfaceGenerator,
+                                   @Reference WsdlGenerator wsdlGenerator,
+                                   @Reference WsdlPolicyAttacher policyAttacher,
                                    @Reference WorkScheduler scheduler) {
         this.registry = registry;
         this.resolver = resolver;
         this.interfaceGenerator = interfaceGenerator;
+        this.wsdlGenerator = wsdlGenerator;
+        this.policyAttacher = policyAttacher;
         this.scheduler = scheduler;
     }
 
@@ -109,7 +123,21 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                 // default to the target URL with ?wsdl appended since most WS stacks support this
                 wsdlLocation = new URL(url.toString() + "?wsdl");
             }
-            ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(wsdlLocation, serviceName, seiClass, features, scheduler);
+
+            File generatedWsdl = null;
+            List<File> generatedSchemas = null;
+            if (!target.getMappings().isEmpty()) {
+                // if policy is configured for the endpoint, generate a WSDL with the policy attachments
+                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, true);
+                generatedWsdl = artifacts.getWsdl();
+                generatedSchemas = artifacts.getSchemas();
+                for (PolicyExpressionMapping mapping : target.getMappings()) {
+                    policyAttacher.attach(generatedWsdl, mapping.getOperations(), mapping.getPolicyExpression());
+                }
+//                wsdlLocation = generatedWsdl.toURI().toURL();
+            }
+
+            ObjectFactory<?> proxyFactory = new LazyProxyObjectFactory(wsdlLocation, serviceName, seiClass, features, generatedWsdl, scheduler);
 
             Method[] methods = seiClass.getDeclaredMethods();
             for (InvocationChain chain : wire.getInvocationChains()) {
@@ -126,6 +154,10 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         } catch (MalformedURLException e) {
+            throw new WiringException(e);
+        } catch (WsdlGenerationException e) {
+            throw new WiringException(e);
+        } catch (PolicyAttachmentException e) {
             throw new WiringException(e);
         }
 

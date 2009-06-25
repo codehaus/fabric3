@@ -35,13 +35,16 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.wire;
+package org.fabric3.binding.ws.metro.runtime.core;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
 
+import com.sun.xml.ws.api.WSService;
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 
 import org.fabric3.host.work.WorkScheduler;
@@ -60,14 +63,21 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
     private QName serviceName;
     private Class<?> seiClass;
     private WebServiceFeature[] features;
+    private File wsitConfiguration;
     private WorkScheduler scheduler;
     private Object proxy;
 
-    public LazyProxyObjectFactory(URL wsdlLocation, QName serviceName, Class<?> seiClass, WebServiceFeature[] features, WorkScheduler scheduler) {
+    public LazyProxyObjectFactory(URL wsdlLocation,
+                                  QName serviceName,
+                                  Class<?> seiClass,
+                                  WebServiceFeature[] features,
+                                  File wsitConfiguration,
+                                  WorkScheduler scheduler) {
         this.wsdlLocation = wsdlLocation;
         this.serviceName = serviceName;
         this.seiClass = seiClass;
         this.features = features;
+        this.wsitConfiguration = wsitConfiguration;
         this.scheduler = scheduler;
     }
 
@@ -94,11 +104,23 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(seiClassLoader);
-            Service service = Service.create(wsdlLocation, serviceName);
+            Service service;
+            if (wsitConfiguration != null) {
+                // Policy configured. Pass in an implementation of the Metro Container SPI so the client proxy configuration can be resolved.
+                WSService.InitParams params = new WSService.InitParams();
+                WsitClientConfigurationContainer container = new WsitClientConfigurationContainer(wsitConfiguration);
+                params.setContainer(container);
+                service = WSService.create(wsdlLocation, serviceName, params);
+            } else {
+                // No policy, create without the Container SPI as there is no client configuration
+                service = Service.create(wsdlLocation, serviceName);
+            }
             // use the kernel scheduler for dispatching
             service.setExecutor(scheduler);
             return service.getPort(seiClass, features);
         } catch (InaccessibleWSDLException e) {
+            throw new ObjectCreationException(e);
+        } catch (MalformedURLException e) {
             throw new ObjectCreationException(e);
         } finally {
             Thread.currentThread().setContextClassLoader(old);

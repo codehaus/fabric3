@@ -142,7 +142,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             List<File> generatedSchemas = null;
             if (!source.getMappings().isEmpty()) {
                 // if policy is configured for the endpoint, generate a WSDL with the policy attachments
-                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName);
+                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, false);
                 generatedWsdl = artifacts.getWsdl();
                 generatedSchemas = artifacts.getSchemas();
                 for (PolicyExpressionMapping mapping : source.getMappings()) {

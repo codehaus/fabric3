@@ -55,6 +55,7 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
     private URL wsdlLocation;
     private String interfaze;
     private List<QName> requestedIntents;
+    private List<PolicyExpressionMapping> mappings;
 
     /**
      * Constructor.
@@ -63,15 +64,18 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
      * @param wsdlLocation       optional URL to the WSDL location
      * @param interfaze          the service contract name.
      * @param requestedIntents   intents requested by the binding
+     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to construct dynamic client WSDL.
      */
     public MetroWireTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
                                      URL wsdlLocation,
                                      String interfaze,
-                                     List<QName> requestedIntents) {
+                                     List<QName> requestedIntents,
+                                     List<PolicyExpressionMapping> mappings) {
         this.endpointDefinition = endpointDefinition;
         this.wsdlLocation = wsdlLocation;
         this.interfaze = interfaze;
         this.requestedIntents = requestedIntents;
+        this.mappings = mappings;
     }
 
     /**
@@ -108,6 +112,15 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
      */
     public List<QName> getRequestedIntents() {
         return requestedIntents;
+    }
+
+    /**
+     * Returns the mappings from policy expression to operations.
+     *
+     * @return the mappings from policy expression to operations
+     */
+    public List<PolicyExpressionMapping> getMappings() {
+        return mappings;
     }
 
 }

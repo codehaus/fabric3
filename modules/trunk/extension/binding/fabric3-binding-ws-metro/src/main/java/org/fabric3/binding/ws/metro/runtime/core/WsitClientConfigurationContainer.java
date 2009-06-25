@@ -35,30 +35,44 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.policy;
+package org.fabric3.binding.ws.metro.runtime.core;
 
 import java.io.File;
-import javax.xml.namespace.QName;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
-
-import org.fabric3.host.runtime.HostInfo;
+import com.sun.xml.ws.api.ResourceLoader;
+import com.sun.xml.ws.api.server.Container;
 
 /**
+ * Implements the Metro Container SPI to resolve dynamically generated WSDL containing policy configuration for a client (reference).
+ *
  * @version $Rev$ $Date$
  */
-public class WsdlGeneratorImplTestCase extends TestCase {
+public class WsitClientConfigurationContainer extends Container {
+    private static final String CLIENT_CONFIG = "wsit-client.xml";
+    private URL wsitConfiguration;
 
-    public void testGeneration() throws Exception {
-        QName serviceName = new QName("http://policy.runtime.metro.ws.binding.fabric3.org", "HelloWorldService");
-        HostInfo info = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(info.getTempDir()).andReturn(new File("."));
-        EasyMock.replay(info);
-        WsdlGenerator generator = new WsdlGeneratorImpl(info);
-        GeneratedArtifacts generated = generator.generate(HelloWorldPortType.class, serviceName, false);
-        // only verify file exists and do not verify the WSDL contents - we assume the underlying Metro WSDL generator is correct
-        assertTrue(generated.getWsdl().exists());
+    public WsitClientConfigurationContainer(File wsitConfiguration) throws MalformedURLException {
+        this.wsitConfiguration = wsitConfiguration.toURI().toURL();
     }
+
+    private final ResourceLoader loader = new ResourceLoader() {
+        public URL getResource(String resource) {
+            // if the endpoint configuration file is requested, return the generated WSDL, otherwise return null
+            if (resource.equals(CLIENT_CONFIG)) {
+                return wsitConfiguration;
+            }
+            return null;
+        }
+    };
+
+    public <T> T getSPI(Class<T> spiType) {
+        if (spiType == ResourceLoader.class) {
+            return spiType.cast(loader);
+        }
+        return null;
+    }
+
 
 }

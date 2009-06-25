@@ -45,16 +45,16 @@ import com.sun.xml.ws.api.ResourceLoader;
 import com.sun.xml.ws.api.server.Container;
 
 /**
- * Wraps a a Metro Container with one that resolves dynamically generated WSDL containing policy configuration for an endpoint.
+ * Wraps a Metro Container with one that resolves dynamically generated WSDL containing policy configuration for an endpoint.
  *
  * @version $Rev$ $Date$
  */
-public class WsitCongifurationContainer extends Container {
+public class WsitConfigurationContainer extends Container {
     private Container delegate;
     private File wsitConfiguration;
     private String configName;
 
-    public WsitCongifurationContainer(Container delegate, File wsitConfiguration) {
+    public WsitConfigurationContainer(Container delegate, File wsitConfiguration) {
         this.delegate = delegate;
         this.wsitConfiguration = wsitConfiguration;
         // calculate the configuration file name for the endpoint

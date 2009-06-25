@@ -67,13 +67,13 @@ public class WsdlGeneratorImpl implements WsdlGenerator {
     }
 
 
-    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName) throws WsdlGenerationException {
-        RuntimeModeler modeler = new RuntimeModeler(seiClass, serviceQName, BindingID.SOAP12_HTTP);
+    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, boolean client) throws WsdlGenerationException {
+        RuntimeModeler modeler = new RuntimeModeler(seiClass, serviceQName, BindingID.SOAP11_HTTP);
         AbstractSEIModelImpl model = modeler.buildRuntimeModel();
         String packageName = seiClass.getPackage().getName();
-        WsdlFileResolver wsdlResolver = new WsdlFileResolver(packageName, tempDir);
-        // only support SOAP 1.2
-        WSBinding binding = BindingImpl.create(BindingID.SOAP12_HTTP);
+        WsdlFileResolver wsdlResolver = new WsdlFileResolver(packageName, tempDir, client);
+        // only support SOAP 1.1
+        WSBinding binding = BindingImpl.create(BindingID.SOAP11_HTTP);
         WSDLGenerator generator = new WSDLGenerator(model, wsdlResolver, binding, null, seiClass);
 
         // generate the WSDL and schemas

@@ -56,6 +56,7 @@ import com.sun.xml.ws.wsdl.writer.WSDLResolver;
 public class WsdlFileResolver implements WSDLResolver {
     private String packageName;
     private File directory;
+    private boolean client;
     private File concreteWsdl;
     private File schema;
 
@@ -63,15 +64,21 @@ public class WsdlFileResolver implements WSDLResolver {
     /**
      * Constructor.
      *
-     * @param packageName the package name for SEI classes being resolved. Used to qualify the names of artifacts written to disk.
+     * @param packageName the package name for SEI classes being resolved. Used to qualify the names of artifacts written to disk
      * @param directory   the directory to store the artifacts in
+     * @param client      true if client WSDL is being generated
      */
-    public WsdlFileResolver(String packageName, File directory) {
+    public WsdlFileResolver(String packageName, File directory, boolean client) {
         this.packageName = packageName;
         this.directory = directory;
+        this.client = client;
     }
 
     public Result getWSDL(String fileName) {
+        if (client) {
+            int pos = fileName.lastIndexOf(".");
+            fileName = fileName.substring(0, pos) + "Client" + fileName.substring(pos);
+        }
         concreteWsdl = createFile(fileName);
         return toResult(concreteWsdl);
     }

@@ -53,8 +53,9 @@ public interface WsdlGenerator {
      *
      * @param seiClass     the SEI or implementaiton class
      * @param serviceQName the service qualified name
+     * @param client       true if client WSDL is being generated
      * @return the handles to the generated WSDL and schemas.
      * @throws WsdlGenerationException if an error occurs during generation
      */
-    GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName) throws WsdlGenerationException;
+    GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, boolean client) throws WsdlGenerationException;
 }

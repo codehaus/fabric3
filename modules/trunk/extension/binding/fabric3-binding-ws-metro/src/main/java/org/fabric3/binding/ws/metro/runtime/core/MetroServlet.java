@@ -158,7 +158,7 @@ public class MetroServlet extends WSServlet {
             List<SDDocumentSource> metadata = null;
             if (wsitConfiguration != null) {
                 // create a container wrapper used by Metro to resolve the WSIT configuration
-                endpointContainer = new WsitCongifurationContainer(container, wsitConfiguration);
+                endpointContainer = new WsitConfigurationContainer(container, wsitConfiguration);
                 // Compile the list of imported schemas so they can be resolved using ?xsd GET requests. Metro will re-write the WSDL import
                 // so clients can dereference the imports when they obtain the WSDL.
                 metadata = new ArrayList<SDDocumentSource>();

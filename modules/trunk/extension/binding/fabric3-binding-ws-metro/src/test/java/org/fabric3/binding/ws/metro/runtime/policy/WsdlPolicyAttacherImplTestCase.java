@@ -78,7 +78,7 @@ public class WsdlPolicyAttacherImplTestCase extends TestCase {
         RuntimeModeler modeler = new RuntimeModeler(HelloWorldPortType.class, serviceQName, BindingID.SOAP12_HTTP);
         AbstractSEIModelImpl model = modeler.buildRuntimeModel();
         String packageName = HelloWorldPortType.class.getPackage().getName();
-        WsdlFileResolver wsdlResolver = new WsdlFileResolver(packageName, new File("."));
+        WsdlFileResolver wsdlResolver = new WsdlFileResolver(packageName, new File("."), false);
         WSBinding binding = BindingImpl.create(BindingID.SOAP12_HTTP);
         WSDLGenerator generator = new WSDLGenerator(model, wsdlResolver, binding, null, HelloWorldPortType.class);
         generator.doGeneration();

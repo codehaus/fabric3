@@ -81,7 +81,6 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         WsBindingDefinition definition = binding.getDefinition();
         URL wsdlLocation = getWsdlLocation(definition);
         ServiceEndpointDefinition endpointDefinition;
-
         URI targetUri = binding.getDefinition().getTargetUri();
         if (targetUri != null) {
             endpointDefinition = synthesizer.synthesizeServiceEndpoint(contract, targetUri);
@@ -92,25 +91,18 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
             QName deployable = binding.getParent().getParent().getDeployable();
             endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri);
         }
-
         String interfaze = contract.getQualifiedInterfaceName();
-
         List<QName> requestedIntents = policy.getProvidedIntents();
-
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
-
         return new MetroWireSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
-
     }
 
     public MetroWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         ServiceContract<?> contract,
                                                         List<LogicalOperation> operations,
                                                         Policy policy) throws GenerationException {
-
         WsBindingDefinition definition = binding.getDefinition();
         URL wsdlLocation = getWsdlLocation(definition);
-
         URI targetUri = binding.getDefinition().getTargetUri();
         ReferenceEndpointDefinition endpointDefinition;
         if (targetUri != null) {
@@ -133,7 +125,8 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
 
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
-        return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents);
+        List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
+        return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
     }
 
     /**
