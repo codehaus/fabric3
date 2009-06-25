@@ -76,12 +76,8 @@ public class PolicyImpl implements Policy {
      *
      * @return Resolved policy sets that are provided.
      */
-    public List<PolicySet> getProvidedPolicySets() {
-        List<PolicySet> ret = new LinkedList<PolicySet>();
-        for (LogicalOperation operation : intentMap.keySet()) {
-            ret.addAll(getProvidedPolicySets(operation));
-        }
-        return ret;
+    public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets() {
+        return policySetMap;
     }
 
     /**
