@@ -62,7 +62,6 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
@@ -108,8 +107,6 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
             if (uri == null) {
-                MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", reader);
-                introspectionContext.addError(failure);
                 bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
             } else {
                 // encode the URI since there may be expressions (e.g. "${..}") contained in it
