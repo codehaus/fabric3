@@ -39,6 +39,7 @@ package org.fabric3.fabric.policy;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.definitions.PolicySet;
@@ -107,8 +108,8 @@ public class NullPolicyResolver implements PolicyResolver {
             return Collections.emptyList();
         }
 
-        public List<PolicySet> getProvidedPolicySets() {
-            return Collections.emptyList();
+        public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets() {
+            return Collections.emptyMap();
         }
     }
 
