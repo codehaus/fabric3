@@ -56,11 +56,18 @@ import javax.servlet.ServletContext;
 public interface ServletHost {
 
     /**
-     * Returns the HTTP port the service is running on.
+     * Returns the runtime HTTP.
      *
-     * @return the HTTP port the service is running on
+     * @return the runtime HTTP
      */
     int getHttpPort();
+
+    /**
+     * Returns the runtime HTTPS port.
+     *
+     * @return the runtime HTTPS port
+     */
+    int getHttpsPort();
 
     /**
      * Returns the default servlet context associated with the host.
@@ -93,6 +100,5 @@ public interface ServletHost {
      * @return true if mapping is registered, false otherwise
      */
     boolean isMappingRegistered(String mapping);
-
 
 }

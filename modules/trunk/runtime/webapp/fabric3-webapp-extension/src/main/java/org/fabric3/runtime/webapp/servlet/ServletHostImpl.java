@@ -82,6 +82,10 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
         return -1;
     }
 
+    public int getHttpsPort() {
+        return -1;
+    }
+
     public ServletContext getServletContext() {
         return info.getServletContext();
     }

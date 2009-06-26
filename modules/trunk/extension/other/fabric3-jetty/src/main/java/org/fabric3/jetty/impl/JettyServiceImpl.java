@@ -43,6 +43,7 @@
  */
 package org.fabric3.jetty.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
@@ -75,6 +76,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jetty.JettyService;
@@ -97,34 +99,37 @@ public class JettyServiceImpl implements JettyService {
 
     private final Object joinLock = new Object();
     private int state = UNINITIALIZED;
+    private boolean enableHttps;
     private int minHttpPort = 8080;
     private int maxHttpPort = -1;
     private int selectedHttp = -1;
-    private int httpsPort = 8484;
+    private int minHttpsPort = 8484;
+    private int maxHttpsPort = -1;
+    private int selectedHttps = -1;
     private String keystore;
     private String certPassword;
     private String keyPassword;
+    private String truststore;
+    private String trustPassword;
     private boolean sendServerVersion;
-    private boolean isHttps;
+    private HostInfo info;
     private TransportMonitor monitor;
     private WorkScheduler scheduler;
     private boolean debug;
     private Server server;
-    private Connector connector;
     private ServletHandler servletHandler;
     private ContextHandlerCollection rootHandler;
-
 
     static {
         // hack to replace the static Jetty logger
         System.setProperty("org.mortbay.log.class", JettyLogger.class.getName());
     }
 
-
     @Constructor
-    public JettyServiceImpl(@Reference WorkScheduler scheduler, @Monitor TransportMonitor monitor) {
-        this.monitor = monitor;
+    public JettyServiceImpl(@Reference WorkScheduler scheduler, @Reference HostInfo info, @Monitor TransportMonitor monitor) {
         this.scheduler = scheduler;
+        this.info = info;
+        this.monitor = monitor;
         // Jetty uses a static logger, so jam in the monitor into a static reference
         Logger logger = Log.getLogger(null);
         if (logger instanceof JettyLogger) {
@@ -138,6 +143,11 @@ public class JettyServiceImpl implements JettyService {
 
     public JettyServiceImpl(TransportMonitor monitor) {
         this.monitor = monitor;
+    }
+
+    @Property
+    public void setEnableHttps(boolean enableHttps) {
+        this.enableHttps = enableHttps;
     }
 
     @Property
@@ -157,8 +167,19 @@ public class JettyServiceImpl implements JettyService {
     }
 
     @Property
-    public void setHttpsPort(int httpsPort) {
-        this.httpsPort = httpsPort;
+    public void setHttpsPort(String httpsPort) {
+        String[] tokens = httpsPort.split("-");
+        if (tokens.length == 1) {
+            // port specified
+            minHttpsPort = parsePortNumber(tokens[0], "HTTPS");
+
+        } else if (tokens.length == 2) {
+            // port range specified
+            minHttpsPort = parsePortNumber(tokens[0], "HTTPS");
+            maxHttpsPort = parsePortNumber(tokens[1], "HTTPS");
+        } else {
+            throw new IllegalArgumentException("Invalid HTTPS port specified in system configuration");
+        }
     }
 
     @Property
@@ -167,13 +188,13 @@ public class JettyServiceImpl implements JettyService {
     }
 
     @Property
-    public void setHttps(boolean https) {
-        this.isHttps = https;
+    public void setKeystore(String keystore) {
+        this.keystore = keystore;
     }
 
     @Property
-    public void setKeystore(String keystore) {
-        this.keystore = keystore;
+    public void setKeyPassword(String keyPassword) {
+        this.keyPassword = keyPassword;
     }
 
     @Property
@@ -182,8 +203,13 @@ public class JettyServiceImpl implements JettyService {
     }
 
     @Property
-    public void setKeyPassword(String keyPassword) {
-        this.keyPassword = keyPassword;
+    public void setTruststore(String truststore) {
+        this.truststore = truststore;
+    }
+
+    @Property
+    public void setTrustPassword(String trustPassword) {
+        this.trustPassword = trustPassword;
     }
 
     @Property
@@ -203,8 +229,8 @@ public class JettyServiceImpl implements JettyService {
             server.setSendServerVersion(sendServerVersion);
             monitor.extensionStarted();
             monitor.startHttpListener(selectedHttp);
-            if (isHttps) {
-                monitor.startHttpsListener(httpsPort);
+            if (enableHttps) {
+                monitor.startHttpsListener(selectedHttps);
             }
             server.start();
             state = STARTED;
@@ -227,6 +253,10 @@ public class JettyServiceImpl implements JettyService {
 
     public int getHttpPort() {
         return selectedHttp;
+    }
+
+    public int getHttpsPort() {
+        return selectedHttps;
     }
 
     public ServletContext getServletContext() {
@@ -298,27 +328,70 @@ public class JettyServiceImpl implements JettyService {
 
     private void initializeConnector() throws IOException, JettyInitializationException {
         selectHttpPort();
-        if (connector == null) {
-            if (isHttps) {
-                Connector httpConnector = new SelectChannelConnector();
-                httpConnector.setPort(selectedHttp);
-                SslSocketConnector sslConnector = new SslSocketConnector();
-                sslConnector.setPort(httpsPort);
-                sslConnector.setKeystore(keystore);
-                sslConnector.setPassword(certPassword);
-                sslConnector.setKeyPassword(keyPassword);
-                server.setConnectors(new Connector[]{httpConnector, sslConnector});
+        selectHttpsPort();
+
+        if (enableHttps) {
+            initializeKeystoreName();
+            initializeTruststoreName();
+            // setup HTTP and HTTPS
+            Connector httpConnector = new SelectChannelConnector();
+            httpConnector.setPort(selectedHttp);
+            SslSocketConnector sslConnector = new SslSocketConnector();
+            sslConnector.setPort(selectedHttps);
+            sslConnector.setKeystore(keystore);
+            sslConnector.setKeyPassword(keyPassword);
+            sslConnector.setPassword(certPassword);
+            sslConnector.setTruststore(truststore);
+            sslConnector.setTrustPassword(trustPassword);
+            server.setConnectors(new Connector[]{httpConnector, sslConnector});
+        } else {
+            // setup HTTP
+            SelectChannelConnector selectConnector = new SelectChannelConnector();
+            selectConnector.setPort(selectedHttp);
+            selectConnector.setSoLingerTime(-1);
+            server.setConnectors(new Connector[]{selectConnector});
+        }
+    }
+
+    private void initializeKeystoreName() throws JettyInitializationException, IOException {
+        File keystoreFile;
+        if (keystore == null) {
+            File dir = info.getBaseDir();
+            if (dir != null) {
+                keystoreFile = new File(dir, "config" + File.separator + "fabric3-keystore.jks");
+                keystore = keystoreFile.toURI().toURL().toString();
             } else {
-                SelectChannelConnector selectConnector = new SelectChannelConnector();
-                selectConnector.setPort(selectedHttp);
-                selectConnector.setSoLingerTime(-1);
-                server.setConnectors(new Connector[]{selectConnector});
+                throw new JettyInitializationException("A keystore location must be configured in systemConfig.xml");
             }
         } else {
-            connector.setPort(selectedHttp);
-            connector.setMaxIdleTime(-1);
-            connector.setLowResourceMaxIdleTime(-1);
-            server.setConnectors(new Connector[]{connector});
+            keystoreFile = new File(keystore);
+        }
+        if (!keystoreFile.exists()) {
+            throw new JettyInitializationException("Keystore not found:" + keystoreFile.getCanonicalPath());
+        }
+    }
+
+    private void initializeTruststoreName() throws JettyInitializationException, IOException {
+        File truststoreFile;
+        if (truststore == null) {
+            File dir = info.getBaseDir();
+            if (dir != null) {
+                truststoreFile = new File(dir, "config" + File.separator + "fabric3-keystore.jks");
+                truststore = truststoreFile.toURI().toURL().toString();
+                trustPassword = keyPassword;
+            } else if (keystore != null) {
+                // default to keystore values
+                truststore = keystore;
+                trustPassword = keyPassword;
+                return;
+            } else {
+                throw new JettyInitializationException("A truststore location must be configured in systemConfig.xml");
+            }
+        } else {
+            truststoreFile = new File(truststore);
+        }
+        if (!truststoreFile.exists()) {
+            throw new JettyInitializationException("Truststore not found:" + truststoreFile.getCanonicalPath());
         }
     }
 
@@ -343,6 +416,29 @@ public class JettyServiceImpl implements JettyService {
         selectedHttp = -1;
         throw new JettyInitializationException(
                 "Unable to find an available HTTP port. Check to ensure the system configuration specifies an open HTTP port or port range.");
+    }
+
+    private void selectHttpsPort() throws IOException, JettyInitializationException {
+        if (!enableHttps) {
+            return;
+        }
+        if (maxHttpsPort == -1) {
+            selectedHttps = minHttpsPort;
+            return;
+        }
+        selectedHttps = minHttpsPort;
+        while (selectedHttps <= maxHttpsPort) {
+            try {
+                ServerSocket socket = new ServerSocket(selectedHttps);
+                socket.close();
+                return;
+            } catch (BindException e) {
+                selectedHttps++;
+            }
+        }
+        selectedHttps = -1;
+        throw new JettyInitializationException(
+                "Unable to find an available HTTPS port. Check to ensure the system configuration specifies an open HTTPS port or port range.");
     }
 
     private void initializeThreadPool() {
