@@ -117,6 +117,15 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="javax.security.auth.message:jmac:1.0-rev-1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/javax/security/auth/message/jmac/1.0-rev-1/jmac-1.0-rev-1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
