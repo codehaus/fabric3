@@ -98,8 +98,6 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
             }
 
             addPolicyReferenceToOperation(portTypeNode, operationNames, id);
-            addPolicyToBinding(root, id, wsdl);
-
 
             // Write the DOM representing the abstract WSDL back to the file
             Source source = new DOMSource(document);
@@ -115,28 +113,6 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
         } catch (IOException e) {
             throw new PolicyAttachmentException(e);
         }
-    }
-
-    /**
-     * Adds a policy reference to the WSDL binding the WS-Policy PolicyReference element.
-     * <p/>
-     * Ideally, policy references should only be attached to individual operations. However, Metro appears to require security policy to be attached
-     * to an endpoint subject as SecurityTubeBase.collectPolicies() sets the security policy version (spVersion) based on endpoint policy. If the
-     * policy is attached to operations and not an endpoint subject, spVersion will not be set and result in an NPE further down the call stack.
-     *
-     * @param bindingElement the binding element node to attach the reference to
-     * @param id             the policy reference id, e.g. "#SomePolicy"
-     * @param wsdl           the WSDL file being attached to
-     * @throws PolicyAttachmentException if there is an error performing the attachment
-     */
-    private void addPolicyToBinding(Element bindingElement, String id, File wsdl) throws PolicyAttachmentException {
-        Node bindingNode = findChildNode(bindingElement, "binding");
-        if (bindingNode == null) {
-            throw new PolicyAttachmentException("binding element missing: " + wsdl.getName());
-        }
-        Element reference = bindingNode.getOwnerDocument().createElementNS(WS_POLICY_NS, "PolicyReference");
-        reference.setAttribute("URI", id);
-        bindingNode.appendChild(reference);
     }
 
     /**

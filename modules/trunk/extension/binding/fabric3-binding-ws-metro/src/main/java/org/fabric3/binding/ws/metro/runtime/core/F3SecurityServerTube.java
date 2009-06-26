@@ -37,48 +37,31 @@
 */
 package org.fabric3.binding.ws.metro.runtime.core;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import com.sun.xml.ws.api.ResourceLoader;
-import com.sun.xml.ws.api.server.Container;
+import com.sun.xml.ws.api.pipe.Tube;
+import com.sun.xml.ws.api.pipe.TubeCloner;
+import com.sun.xml.ws.assembler.ServerTubelineAssemblyContext;
+import com.sun.xml.ws.security.policy.SecurityPolicyVersion;
+import com.sun.xml.wss.jaxws.impl.SecurityServerTube;
 
 /**
- * Wraps a Metro Container with one that resolves dynamically generated WSDL containing policy configuration for an endpoint.
+ * Security tube for workaround as described in {@link F3SecurityTubeFactory}.
  *
  * @version $Rev$ $Date$
  */
-public class WsitConfigurationContainer extends Container {
-    private Container delegate;
-    private File wsitConfiguration;
-    private String configName;
+public class F3SecurityServerTube extends SecurityServerTube {
 
-    public WsitConfigurationContainer(Container delegate, File wsitConfiguration) {
-        this.delegate = delegate;
-        this.wsitConfiguration = wsitConfiguration;
-        // calculate the configuration file name for the endpoint
-        configName = "wsit-" + wsitConfiguration.getName().substring(0, wsitConfiguration.getName().length() - 5) + ".xml";
+    public F3SecurityServerTube(ServerTubelineAssemblyContext context, Tube nextTube) {
+        super(context, nextTube);
     }
 
-
-    private final ResourceLoader loader = new ResourceLoader() {
-        public URL getResource(String resource) throws MalformedURLException {
-            if (resource.equals(configName)) {
-                // if the Metro endpoint configuration file is requested, return the generated WSDL
-                String name = wsitConfiguration.getName().substring(0, wsitConfiguration.getName().length() - 5) + "Service.wsdl";
-                return new File(wsitConfiguration.getParent(), name).toURI().toURL();
-            }
-            return delegate.getSPI(ResourceLoader.class).getResource(resource);
-        }
-    };
-
-    public <T> T getSPI(Class<T> spiType) {
-        if (spiType == ResourceLoader.class) {
-            return spiType.cast(loader);
-        }
-        return delegate.getSPI(spiType);
+    protected F3SecurityServerTube(SecurityServerTube that, TubeCloner cloner) {
+        super(that, cloner);
     }
 
+    @Override
+    protected void collectPolicies() {
+        spVersion = SecurityPolicyVersion.SECURITYPOLICY12NS;
+        super.collectPolicies();
+    }
 
 }

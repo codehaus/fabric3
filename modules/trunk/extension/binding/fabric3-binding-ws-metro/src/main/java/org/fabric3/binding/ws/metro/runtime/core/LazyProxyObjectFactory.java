@@ -105,16 +105,17 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
         try {
             Thread.currentThread().setContextClassLoader(seiClassLoader);
             Service service;
+            WSService.InitParams params = new WSService.InitParams();
+            WsitClientConfigurationContainer container;
             if (wsitConfiguration != null) {
-                // Policy configured. Pass in an implementation of the Metro Container SPI so the client proxy configuration can be resolved.
-                WSService.InitParams params = new WSService.InitParams();
-                WsitClientConfigurationContainer container = new WsitClientConfigurationContainer(wsitConfiguration);
-                params.setContainer(container);
-                service = WSService.create(wsdlLocation, serviceName, params);
+                // Policy configured
+                container = new WsitClientConfigurationContainer(wsitConfiguration);
             } else {
-                // No policy, create without the Container SPI as there is no client configuration
-                service = Service.create(wsdlLocation, serviceName);
+                // No policy
+                container = new WsitClientConfigurationContainer();
             }
+            params.setContainer(container);
+            service = WSService.create(wsdlLocation, serviceName, params);
             // use the kernel scheduler for dispatching
             service.setExecutor(scheduler);
             return service.getPort(seiClass, features);

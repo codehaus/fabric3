@@ -55,6 +55,7 @@ import com.sun.xml.ws.transport.http.servlet.ServletModule;
  * @version $Rev$ $Date$
  */
 public class F3Container extends Container {
+    private static final String METRO_CONFIG = "metro-default.xml";
     private ServletContext servletContext;
 
     // Collection of active web service endpoints. Note this is updated by Metro (ServletAdaptor) using Module.getBoundResources() and hence there is
@@ -74,6 +75,10 @@ public class F3Container extends Container {
 
     private final ResourceLoader loader = new ResourceLoader() {
         public URL getResource(String resource) throws MalformedURLException {
+            if (METRO_CONFIG.equals(resource)) {
+                // return the Fabric3 custom metro tube configuration
+                return getClass().getClassLoader().getResource("META-INF/f3-metro.xml");
+            }
             return servletContext.getResource("/META-INF/" + resource);
         }
     };

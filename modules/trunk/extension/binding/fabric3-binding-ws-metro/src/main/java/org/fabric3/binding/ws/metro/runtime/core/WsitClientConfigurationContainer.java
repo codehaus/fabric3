@@ -51,17 +51,24 @@ import com.sun.xml.ws.api.server.Container;
  */
 public class WsitClientConfigurationContainer extends Container {
     private static final String CLIENT_CONFIG = "wsit-client.xml";
+    private static final String METRO_CONFIG = "metro-default.xml";
     private URL wsitConfiguration;
 
     public WsitClientConfigurationContainer(File wsitConfiguration) throws MalformedURLException {
         this.wsitConfiguration = wsitConfiguration.toURI().toURL();
     }
 
+    public WsitClientConfigurationContainer() throws MalformedURLException {
+    }
+
     private final ResourceLoader loader = new ResourceLoader() {
         public URL getResource(String resource) {
-            // if the endpoint configuration file is requested, return the generated WSDL, otherwise return null
-            if (resource.equals(CLIENT_CONFIG)) {
+            if (wsitConfiguration != null && CLIENT_CONFIG.equals(resource)) {
+                // if the Metro client configuration file is requested, return the generated WSDL
                 return wsitConfiguration;
+            } else if (METRO_CONFIG.equals(resource)) {
+                // return the Fabric3 custom metro tube configuration
+                return getClass().getClassLoader().getResource("META-INF/f3-metro.xml");
             }
             return null;
         }
