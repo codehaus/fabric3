@@ -38,6 +38,7 @@
 package org.fabric3.spi.policy;
 
 import java.util.List;
+import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.definitions.PolicySet;
@@ -74,8 +75,8 @@ public interface Policy {
     /**
      * Policy sets that are provided by the binding or implemenenation for all operations.
      *
-     * @return Resolved policy sets that are provided.
+     * @return Resolved policy sets that are provided mapped to their operation.
      */
-    public List<PolicySet> getProvidedPolicySets();
+    public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets();
 
 }
