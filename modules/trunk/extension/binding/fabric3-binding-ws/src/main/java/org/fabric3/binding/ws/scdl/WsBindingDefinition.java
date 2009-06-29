@@ -59,28 +59,25 @@ import org.fabric3.model.type.component.BindingDefinition;
  */
 public class WsBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = -2097314069798596206L;
-
-    /**
-     * Qualified name for the binding element.
-     */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.ws");
 
-    private final String implementation;
     private final String wsdlLocation;
     private final String wsdlElement;
-    private Map<String, String> config;
+    private Map<String, String> configuration;
 
-    public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement, Document key) {
+    /**
+     * Constructor
+     *
+     * @param targetUri    the target binding URI. May be null.
+     * @param wsdlLocation the WSDL location. May be null.
+     * @param wsdlElement  the SCA WSDL element expression. May be null.
+     * @param key          the key to use when wiring multiplicity references. May be null.
+     */
+    public WsBindingDefinition(URI targetUri, String wsdlLocation, String wsdlElement, Document key) {
         super(targetUri, BINDING_QNAME, key);
-        this.implementation = implementation;
         this.wsdlElement = wsdlElement;
         this.wsdlLocation = wsdlLocation;
     }
-
-    public String getImplementation() {
-        return implementation;
-    }
-
 
     public String getWsdlElement() {
         return wsdlElement;
@@ -90,12 +87,12 @@ public class WsBindingDefinition extends BindingDefinition {
         return wsdlLocation;
     }
 
-    public Map<String, String> getConfig() {
-        return config;
+    public Map<String, String> getConfiguration() {
+        return configuration;
     }
 
-    public void setConfig(Map<String, String> config) {
-        this.config = config;
+    public void setConfiguration(Map<String, String> configuration) {
+        this.configuration = configuration;
     }
 
 }

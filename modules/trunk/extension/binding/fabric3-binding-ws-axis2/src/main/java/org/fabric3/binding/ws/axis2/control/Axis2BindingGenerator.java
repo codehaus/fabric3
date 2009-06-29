@@ -108,7 +108,7 @@ public class Axis2BindingGenerator implements BindingGenerator<WsBindingDefiniti
         addOperationInfo(hwtd, contract);
 
         //Set config
-        hwtd.setConfig(binding.getDefinition().getConfig());
+        hwtd.setConfig(binding.getDefinition().getConfiguration());
 
         setPolicyConfigs(hwtd, policy, operations);
 

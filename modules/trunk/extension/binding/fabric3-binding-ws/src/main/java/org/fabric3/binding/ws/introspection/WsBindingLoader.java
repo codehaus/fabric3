@@ -58,7 +58,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
-import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
@@ -89,8 +88,7 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
      *
      * @param loaderHelper the policy helper
      */
-    public WsBindingLoader(@Reference
-    LoaderHelper loaderHelper) {
+    public WsBindingLoader(@Reference LoaderHelper loaderHelper) {
         this.loaderHelper = loaderHelper;
     }
 
@@ -102,16 +100,15 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
         try {
 
             uri = reader.getAttributeValue(null, "uri");
-            String implementation = reader.getAttributeValue(Namespaces.IMPLEMENTATION, "impl");
             String wsdlElement = reader.getAttributeValue(null, "wsdlElement");
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
             if (uri == null) {
-                bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
+                bd = new WsBindingDefinition(null, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
             } else {
                 // encode the URI since there may be expressions (e.g. "${..}") contained in it
                 URI endpointUri = new URI(URLEncoder.encode(uri, "UTF-8"));
-                bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
+                bd = new WsBindingDefinition(endpointUri, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
             }
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 
@@ -134,24 +131,23 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
     }
 
     private void loadConfig(WsBindingDefinition bd, XMLStreamReader reader) throws XMLStreamException {
-        Map<String, String> config = null;
-        String name = null;
+        Map<String, String> configuration = null;
+        String name;
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
                 name = reader.getName().getLocalPart();
-                if ("config".equals(name)) {
-                    config = new HashMap<String, String>();
-                } else if ("parameter".equals(name)) {
-                    final String key = reader.getAttributeValue(null, "name");
-                    final String value = reader.getElementText();
-                    config.put(key, value);
+                if ("configuration".equals(name)) {
+                    configuration = new HashMap<String, String>();
+                } else if (configuration != null) {
+                    String value = reader.getElementText();
+                    configuration.put(name, value);
                 }
                 break;
             case END_ELEMENT:
                 name = reader.getName().getLocalPart();
-                if ("config".equals(name)) {
-                    bd.setConfig(config);
+                if ("configuration".equals(name)) {
+                    bd.setConfiguration(configuration);
                 } else if ("binding.ws".equals(name)) {
                     return;
                 }
