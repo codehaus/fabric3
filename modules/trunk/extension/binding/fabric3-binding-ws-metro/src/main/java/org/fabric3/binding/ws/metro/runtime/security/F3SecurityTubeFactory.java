@@ -35,11 +35,9 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  *
- * Based on code from the Sun Metro Project:
+ * Originally based on code from the Sun Metro Project XWS-Security extensions:
  *
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- *
- * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+ * Copyright 1997-2008 Sun Microsystems, Inc. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -70,8 +68,8 @@
  * and therefore, elected the GPL Version 2 license, then the option applies
  * only if the new code is made subject to such option by the copyright
  * holder.
- */
-package org.fabric3.binding.ws.metro.runtime.core;
+*/
+package org.fabric3.binding.ws.metro.runtime.security;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

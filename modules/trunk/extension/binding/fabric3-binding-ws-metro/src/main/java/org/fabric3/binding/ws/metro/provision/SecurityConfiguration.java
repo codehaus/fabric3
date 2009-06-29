@@ -35,32 +35,31 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.core;
+package org.fabric3.binding.ws.metro.provision;
 
-import com.sun.xml.ws.api.pipe.Tube;
-import com.sun.xml.ws.api.pipe.TubeCloner;
-import com.sun.xml.ws.assembler.ClientTubelineAssemblyContext;
-import com.sun.xml.ws.security.policy.SecurityPolicyVersion;
-import com.sun.xml.wss.jaxws.impl.SecurityClientTube;
+import java.io.Serializable;
 
 /**
- * Security tube for workaround as described in {@link F3SecurityTubeFactory}.
+ * Encapsulates security configuration for the Metro-based web services binding.
  *
  * @version $Rev$ $Date$
  */
-public class F3SecurityClientTube extends SecurityClientTube {
+public class SecurityConfiguration implements Serializable {
+    private static final long serialVersionUID = 6145747708025591245L;
 
-    public F3SecurityClientTube(ClientTubelineAssemblyContext wsitContext, Tube nextTube) {
-        super(wsitContext, nextTube);
+    private String username;
+    private String password;
+
+    public SecurityConfiguration(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    protected F3SecurityClientTube(SecurityClientTube that, TubeCloner cloner) {
-        super(that, cloner);
+    public String getUsername() {
+        return username;
     }
 
-    @Override
-    protected void collectPolicies() {
-        spVersion = SecurityPolicyVersion.SECURITYPOLICY12NS;
-        super.collectPolicies();
+    public String getPassword() {
+        return password;
     }
 }

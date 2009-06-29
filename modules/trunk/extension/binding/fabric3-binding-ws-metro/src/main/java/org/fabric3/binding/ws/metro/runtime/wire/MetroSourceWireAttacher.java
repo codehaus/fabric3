@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.api.BindingID;
+import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
@@ -89,6 +90,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     private InterfaceGenerator interfaceGenerator;
     private WsdlGenerator wsdlGenerator;
     private WsdlPolicyAttacher policyAttacher;
+    private SecurityEnvironment securityEnvironment;
     private WorkScheduler scheduler;
 
     private MetroServlet metroServlet;
@@ -100,6 +102,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                                    @Reference InterfaceGenerator interfaceGenerator,
                                    @Reference WsdlGenerator wsdlGenerator,
                                    @Reference WsdlPolicyAttacher policyAttacher,
+                                   @Reference SecurityEnvironment securityEnvironment,
                                    @Reference WorkScheduler scheduler) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
@@ -108,12 +111,13 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         this.interfaceGenerator = interfaceGenerator;
         this.wsdlGenerator = wsdlGenerator;
         this.policyAttacher = policyAttacher;
+        this.securityEnvironment = securityEnvironment;
         this.scheduler = scheduler;
     }
 
     @Init
     public void init() {
-        metroServlet = new MetroServlet(scheduler);
+        metroServlet = new MetroServlet(scheduler, securityEnvironment);
     }
 
     public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {

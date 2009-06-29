@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * Wire target definition for Metro binding.
+ * Reference-side wire target definition for the Metro binding.
  *
  * @version $Rev$ $Date$
  */
@@ -56,26 +56,30 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
     private String interfaze;
     private List<QName> requestedIntents;
     private List<PolicyExpressionMapping> mappings;
+    private SecurityConfiguration configuration;
 
     /**
      * Constructor.
      *
      * @param endpointDefinition endpoint information
      * @param wsdlLocation       optional URL to the WSDL location
-     * @param interfaze          the service contract name.
+     * @param interfaze          the service contract name
      * @param requestedIntents   intents requested by the binding
-     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to construct dynamic client WSDL.
+     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to construct dynamic client WSDL
+     * @param configuration      the security configuration
      */
     public MetroWireTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
                                      URL wsdlLocation,
                                      String interfaze,
                                      List<QName> requestedIntents,
-                                     List<PolicyExpressionMapping> mappings) {
+                                     List<PolicyExpressionMapping> mappings,
+                                     SecurityConfiguration configuration) {
         this.endpointDefinition = endpointDefinition;
         this.wsdlLocation = wsdlLocation;
         this.interfaze = interfaze;
         this.requestedIntents = requestedIntents;
         this.mappings = mappings;
+        this.configuration = configuration;
     }
 
     /**
@@ -123,4 +127,12 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
         return mappings;
     }
 
+    /**
+     * Returns the security configuration.
+     *
+     * @return the security configuration
+     */
+    public SecurityConfiguration getConfiguration() {
+        return configuration;
+    }
 }

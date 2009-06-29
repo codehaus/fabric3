@@ -46,6 +46,7 @@ import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.ws.api.WSService;
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
+import com.sun.xml.wss.SecurityEnvironment;
 
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectCreationException;
@@ -65,6 +66,7 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
     private WebServiceFeature[] features;
     private File wsitConfiguration;
     private WorkScheduler scheduler;
+    private SecurityEnvironment securityEnvironment;
     private Object proxy;
 
     public LazyProxyObjectFactory(URL wsdlLocation,
@@ -72,13 +74,15 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
                                   Class<?> seiClass,
                                   WebServiceFeature[] features,
                                   File wsitConfiguration,
-                                  WorkScheduler scheduler) {
+                                  WorkScheduler scheduler,
+                                  SecurityEnvironment securityEnvironment) {
         this.wsdlLocation = wsdlLocation;
         this.serviceName = serviceName;
         this.seiClass = seiClass;
         this.features = features;
         this.wsitConfiguration = wsitConfiguration;
         this.scheduler = scheduler;
+        this.securityEnvironment = securityEnvironment;
     }
 
     public Object getInstance() throws ObjectCreationException {
@@ -109,10 +113,10 @@ public class LazyProxyObjectFactory implements ObjectFactory<Object> {
             WsitClientConfigurationContainer container;
             if (wsitConfiguration != null) {
                 // Policy configured
-                container = new WsitClientConfigurationContainer(wsitConfiguration);
+                container = new WsitClientConfigurationContainer(wsitConfiguration, securityEnvironment);
             } else {
                 // No policy
-                container = new WsitClientConfigurationContainer();
+                container = new WsitClientConfigurationContainer(securityEnvironment);
             }
             params.setContainer(container);
             service = WSService.create(wsdlLocation, serviceName, params);

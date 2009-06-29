@@ -48,6 +48,7 @@ import com.sun.xml.ws.api.ResourceLoader;
 import com.sun.xml.ws.api.server.BoundEndpoint;
 import com.sun.xml.ws.api.server.Container;
 import com.sun.xml.ws.transport.http.servlet.ServletModule;
+import com.sun.xml.wss.SecurityEnvironment;
 
 /**
  * Implementation of the Metro host container SPI. Metro uses this SPI to obtain resources from the host container, in this case the Fabric3 runtime.
@@ -57,6 +58,7 @@ import com.sun.xml.ws.transport.http.servlet.ServletModule;
 public class F3Container extends Container {
     private static final String METRO_CONFIG = "metro-default.xml";
     private ServletContext servletContext;
+    private SecurityEnvironment securityEnvironment;
 
     // Collection of active web service endpoints. Note this is updated by Metro (ServletAdaptor) using Module.getBoundResources() and hence there is
     // only a method for removing resources, which is not done by Metro and must be performed by the Fabric3 runtime.
@@ -83,8 +85,15 @@ public class F3Container extends Container {
         }
     };
 
-    public F3Container(ServletContext servletContext) {
+    /**
+     * Constructor.
+     *
+     * @param servletContext      the host servlet context
+     * @param securityEnvironment the host security environment
+     */
+    public F3Container(ServletContext servletContext, SecurityEnvironment securityEnvironment) {
         this.servletContext = servletContext;
+        this.securityEnvironment = securityEnvironment;
     }
 
     public void removeEndpoint(BoundEndpoint endpoint) {
@@ -94,6 +103,8 @@ public class F3Container extends Container {
     public <T> T getSPI(Class<T> spiType) {
         if (ServletContext.class.equals(spiType)) {
             return spiType.cast(servletContext);
+        } else if (spiType.isAssignableFrom(SecurityEnvironment.class)) {
+            return spiType.cast(securityEnvironment);
         } else if (spiType.isAssignableFrom(ServletModule.class)) {
             return spiType.cast(module);
         } else if (spiType == ResourceLoader.class) {

@@ -51,6 +51,7 @@ import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
+import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.model.type.service.ServiceContract;
@@ -126,7 +127,12 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
-        return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
+
+        // obtain security information such as username/password
+        String username = definition.getConfiguration().get("username");
+        String password = definition.getConfiguration().get("password");
+        SecurityConfiguration configuration = new SecurityConfiguration(username, password);
+        return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings, configuration);
     }
 
     /**

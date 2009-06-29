@@ -64,6 +64,7 @@ import com.sun.xml.ws.mex.server.MEXEndpoint;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.WSServlet;
 import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
+import com.sun.xml.wss.SecurityEnvironment;
 
 import org.fabric3.host.work.WorkScheduler;
 
@@ -78,6 +79,7 @@ public class MetroServlet extends WSServlet {
     private static final String MEX_SUFFIX = "/mex";
 
     private WorkScheduler scheduler;
+    private SecurityEnvironment securityEnvironment;
 
     private ServletAdapterFactory servletAdapterFactory = new ServletAdapterFactory();
     private volatile F3ServletDelegate delegate;
@@ -87,10 +89,12 @@ public class MetroServlet extends WSServlet {
     /**
      * Constructor
      *
-     * @param scheduler the work scheduler for dispatching invocations.
+     * @param scheduler           the work scheduler for dispatching invocations
+     * @param securityEnvironment the Fabric3 implementation of the Metro SecurityEnvironemnt SPI
      */
-    public MetroServlet(WorkScheduler scheduler) {
+    public MetroServlet(WorkScheduler scheduler, SecurityEnvironment securityEnvironment) {
         this.scheduler = scheduler;
+        this.securityEnvironment = securityEnvironment;
     }
 
     @Override
@@ -102,7 +106,7 @@ public class MetroServlet extends WSServlet {
         ClassLoader seiClassLoader = MEXEndpoint.class.getClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(seiClassLoader);
-            container = new F3Container(servletContext);
+            container = new F3Container(servletContext, securityEnvironment);
 
             WSBinding binding = BindingImpl.create(BindingID.SOAP12_HTTP);
             mexEndpoint = WSEndpoint.create(MEXEndpoint.class,

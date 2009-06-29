@@ -39,4 +39,17 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultBindingIdResolver"/>
     </component>
 
+    <component name="F3SecurityEnvironment">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.security.F3SecurityEnvironment"/>
+        <property name="keyStoreLocation" source="$systemConfig/security/keystore"/>
+        <property name="keyStorePassword" source="$systemConfig/security/keystore.password"/>
+        <!--<property name="certPassword" source="$systemConfig/security/cert.password"/>-->
+        <property name="trustStoreLocation" source="$systemConfig/security/truststore"/>
+        <property name="trustStorePassword" source="$systemConfig/security/truststore.password"/>
+    </component>
+
+    <component name="CertificateValidator">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.security.CertificateValidatorImpl"/>
+    </component>
+
 </composite>

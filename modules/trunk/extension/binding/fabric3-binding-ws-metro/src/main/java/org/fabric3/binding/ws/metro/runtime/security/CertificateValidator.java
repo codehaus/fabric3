@@ -35,33 +35,28 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.core;
+package org.fabric3.binding.ws.metro.runtime.security;
 
-import com.sun.xml.ws.api.pipe.Tube;
-import com.sun.xml.ws.api.pipe.TubeCloner;
-import com.sun.xml.ws.assembler.ServerTubelineAssemblyContext;
-import com.sun.xml.ws.security.policy.SecurityPolicyVersion;
-import com.sun.xml.wss.jaxws.impl.SecurityServerTube;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
+
+import com.sun.xml.wss.XWSSecurityException;
 
 /**
- * Security tube for workaround as described in {@link F3SecurityTubeFactory}.
+ * Validates certificates.
  *
  * @version $Rev$ $Date$
  */
-public class F3SecurityServerTube extends SecurityServerTube {
+public interface CertificateValidator {
 
-    public F3SecurityServerTube(ServerTubelineAssemblyContext context, Tube nextTube) {
-        super(context, nextTube);
-    }
-
-    protected F3SecurityServerTube(SecurityServerTube that, TubeCloner cloner) {
-        super(that, cloner);
-    }
-
-    @Override
-    protected void collectPolicies() {
-        spVersion = SecurityPolicyVersion.SECURITYPOLICY12NS;
-        super.collectPolicies();
-    }
+    /**
+     * Validates an X.509 certificate using a trust store.
+     *
+     * @param certificate the certificate to validate
+     * @param trustStore  the trust store
+     * @return true if valid
+     * @throws XWSSecurityException if a validation error occurs
+     */
+    boolean validate(X509Certificate certificate, KeyStore trustStore) throws XWSSecurityException;
 
 }

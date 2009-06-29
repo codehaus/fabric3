@@ -39,10 +39,14 @@ package org.fabric3.binding.ws.metro.runtime.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
+import javax.xml.ws.BindingProvider;
 
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 import org.oasisopen.sca.ServiceRuntimeException;
 
+import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
+import org.fabric3.binding.ws.metro.runtime.MetroConstants;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.Message;
@@ -57,22 +61,27 @@ import org.fabric3.spi.wire.Interceptor;
 public class MetroTargetInterceptor implements Interceptor {
     private ObjectFactory<?> proxyFactory;
     private Method method;
+    private SecurityConfiguration configuration;
 
     /**
      * Constructor.
      *
-     * @param proxyFactory the service proxy factory
-     * @param method       method corresponding to the invoked operation
+     * @param proxyFactory  the service proxy factory
+     * @param method        method corresponding to the invoked operation
+     * @param configuration the security configuration
      */
-    public MetroTargetInterceptor(ObjectFactory<?> proxyFactory, Method method) {
+    public MetroTargetInterceptor(ObjectFactory<?> proxyFactory, Method method, SecurityConfiguration configuration) {
         this.proxyFactory = proxyFactory;
         this.method = method;
+        this.configuration = configuration;
     }
 
     public Message invoke(Message msg) {
         try {
             Object[] payload = (Object[]) msg.getBody();
-            Object ret = method.invoke(proxyFactory.getInstance(), payload);
+            Object proxy = proxyFactory.getInstance();
+            configureSecurity(((BindingProvider) proxy));
+            Object ret = method.invoke(proxy, payload);
             return new MessageImpl(ret, false, null);
         } catch (InaccessibleWSDLException e) {
             throw new ServiceRuntimeException(e);
@@ -83,6 +92,21 @@ public class MetroTargetInterceptor implements Interceptor {
         } catch (ObjectCreationException e) {
             throw new ServiceRuntimeException(e);
         }
+    }
+
+    /**
+     * Configures the outbound security context.
+     *
+     * @param provider the binding provider for the invocation
+     */
+    private void configureSecurity(BindingProvider provider) {
+        if (configuration.getUsername() != null) {
+            // user authentication configured
+            Map<String, Object> context = provider.getRequestContext();
+            context.put(MetroConstants.USERNAME, configuration.getUsername());
+            context.put(MetroConstants.PASSWORD, configuration.getPassword());
+        }
+
     }
 
     public Interceptor getNext() {
