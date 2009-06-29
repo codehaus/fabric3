@@ -101,7 +101,9 @@ public class MetroTargetInterceptor implements Interceptor {
      */
     private void configureSecurity(BindingProvider provider) {
         if (configuration.getUsername() != null) {
-            // user authentication configured
+            // User authentication configured
+            // Places authentication information in the invocation context, which is used by the Fabric3 security environment to include the
+            // credentials in the message header.
             Map<String, Object> context = provider.getRequestContext();
             context.put(MetroConstants.USERNAME, configuration.getUsername());
             context.put(MetroConstants.PASSWORD, configuration.getPassword());
