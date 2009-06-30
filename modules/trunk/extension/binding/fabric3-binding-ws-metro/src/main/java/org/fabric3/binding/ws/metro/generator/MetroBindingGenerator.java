@@ -54,7 +54,7 @@ import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
-import org.fabric3.binding.ws.scdl.WsBindingDefinition;
+import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;

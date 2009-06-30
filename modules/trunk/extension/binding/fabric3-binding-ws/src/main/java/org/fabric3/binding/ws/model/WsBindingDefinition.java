@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.binding.ws.scdl;
+package org.fabric3.binding.ws.model;
 
 import java.net.URI;
 import java.util.Map;

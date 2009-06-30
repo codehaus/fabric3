@@ -17,7 +17,7 @@ Public License. See the accompanying license file for details.
 
     <!-- Ws Binding Loader -->
     <component name="WsBindingLoader" f3-core:key="sca:binding.ws">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.introspection.WsBindingLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.loader.WsBindingLoader"/>
     </component>
 
 </composite>

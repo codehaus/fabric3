@@ -50,7 +50,7 @@ import org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.provision.WsdlElement;
-import org.fabric3.binding.ws.scdl.WsBindingDefinition;
+import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.service.Operation;

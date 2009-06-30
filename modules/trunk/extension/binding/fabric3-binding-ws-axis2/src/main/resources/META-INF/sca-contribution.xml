@@ -12,7 +12,7 @@ Public License. See the accompanying license file for details.
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="urn:maven:org.codehaus.fabric3:fabric3-binding-ws-axis2" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
     <import.java package="org.fabric3.spi.*" version="1.2"/>
     <import.java package="org.fabric3.binding.ws.provision" version="1.2"/>
-    <import.java package="org.fabric3.binding.ws.scdl" version="1.2"/>
+    <import.java package="org.fabric3.binding.ws.model" version="1.2"/>
     <import.java package="javax.jws" version="2.0.0"/>
     <import.java package="javax.jws.soap" version="2.0.0"/>
     <import.java package="javax.xml.soap" version="1.3.0"/>

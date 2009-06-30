@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.binding.ws.introspection;
+package org.fabric3.binding.ws.loader;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -57,7 +57,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ws.scdl.WsBindingDefinition;
+import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;

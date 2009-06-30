@@ -16,7 +16,7 @@ Public License. See the accompanying license file for details.
            autowire="true">
 
     <!-- Ws Binding Generator -->
-    <component name="Axis2BindingGenerator" f3-core:key="org.fabric3.binding.ws.scdl.WsBindingDefinition">
+    <component name="Axis2BindingGenerator" f3-core:key="org.fabric3.binding.ws.model.WsBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.Axis2BindingGenerator"/>
     </component>
 
