@@ -43,6 +43,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
@@ -129,9 +130,13 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
 
         // obtain security information such as username/password
-        String username = definition.getConfiguration().get("username");
-        String password = definition.getConfiguration().get("password");
-        SecurityConfiguration configuration = new SecurityConfiguration(username, password);
+        SecurityConfiguration configuration = null;
+        Map<String, String> securityConfiguration = definition.getConfiguration();
+        if (securityConfiguration != null) {
+            String username = securityConfiguration.get("username");
+            String password = securityConfiguration.get("password");
+            configuration = new SecurityConfiguration(username, password);
+        }
         return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings, configuration);
     }
 

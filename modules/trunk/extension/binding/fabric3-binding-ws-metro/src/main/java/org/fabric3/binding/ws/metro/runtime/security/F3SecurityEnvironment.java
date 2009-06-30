@@ -72,11 +72,11 @@
 package org.fabric3.binding.ws.metro.runtime.security;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -139,9 +139,11 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     private String keyStoreLocation;
     private String keyStorePassword;
     private String keyStoreType = "JKS";
+    private File keyStoreHandle;
     private String trustStoreLocation;
     private String trustStorePassword;
     private String trustStoreType = "JKS";
+    private File trustStoreHandle;
 
     private final SimpleDateFormat calendarFormatter1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private final SimpleDateFormat calendarFormatter2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
@@ -696,13 +698,12 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     private void initKeyStore() throws XWSSecurityException {
         InputStream stream = null;
         try {
-            URL keyStoreUrl;
             if (keyStoreLocation != null) {
-                keyStoreUrl = getUrl(keyStoreLocation);
+                keyStoreHandle = new File(keyStoreLocation).getCanonicalFile();
             } else {
                 File dir = info.getBaseDir();
                 if (dir != null) {
-                    keyStoreUrl = new File(dir, "config" + File.separator + "fabric3-keystore.jks").toURI().toURL();
+                    keyStoreHandle = new File(dir, "config" + File.separator + "fabric3-keystore.jks");
                 } else {
                     // skip keystore initialization as it is not setup
                     return;
@@ -714,7 +715,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 keyStorePasswordChars = keyStorePassword.toCharArray();
             }
             keyStore = KeyStore.getInstance(keyStoreType);
-            stream = keyStoreUrl.openStream();
+            stream = new FileInputStream(keyStoreHandle);
             keyStore.load(stream, keyStorePasswordChars);
         } catch (MalformedURLException e) {
             throw new XWSSecurityException("Invalid keystore location", e);
@@ -740,19 +741,19 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     private void initTrustStore() throws XWSSecurityException {
         InputStream stream = null;
         try {
-            URL trustStoreUrl;
             if (trustStoreLocation != null) {
-                trustStoreUrl = getUrl(trustStoreLocation);
+                trustStoreHandle = new File(trustStoreLocation).getCanonicalFile();
             } else {
                 File dir = info.getBaseDir();
                 if (dir != null) {
-                    trustStoreUrl = new File(dir, "config" + File.separator + "fabric3-truststore.jks").toURI().toURL();
+                    trustStoreHandle = new File(dir, "config" + File.separator + "fabric3-truststore.jks");
                 } else {
                     if (keyStore != null) {
                         // default the truststore to the keystore if it is not explicitly configured
                         trustStore = keyStore;
                         trustStorePassword = keyStorePassword;
                         trustStoreType = keyStoreType;
+                        System.setProperty("javax.net.ssl.trustStore", keyStoreHandle.getCanonicalPath());
                         return;
                     } else {
                         // skip truststore initialization as it is not setup
@@ -766,8 +767,9 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 trustStorePasswordChars = trustStorePassword.toCharArray();
             }
             trustStore = KeyStore.getInstance(trustStoreType);
-            stream = trustStoreUrl.openStream();
+            stream = new FileInputStream(trustStoreHandle);
             trustStore.load(stream, trustStorePasswordChars);
+            System.setProperty("javax.net.ssl.trustStore", keyStoreHandle.getCanonicalPath());
         } catch (MalformedURLException e) {
             throw new XWSSecurityException("Invalid truststore location", e);
         } catch (NoSuchAlgorithmException e) {
@@ -787,25 +789,6 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         }
-    }
-
-    private URL getUrl(String location) throws IOException {
-        try {
-            return new URL(location);
-        }
-        catch (MalformedURLException e) {
-            if (!location.startsWith("jar:") && !location.startsWith("file:") && !location.startsWith("ftp:")) {
-                // default to file
-                if (location.startsWith("./"))
-                    location = location.substring(2);
-
-                File file = new File(location).getCanonicalFile();
-                return file.toURI().toURL();
-            } else {
-                throw e;
-            }
-        }
-
     }
 
     private void checkEnabled() throws XWSSecurityException {

@@ -68,7 +68,7 @@ public class MetroTargetInterceptor implements Interceptor {
      *
      * @param proxyFactory  the service proxy factory
      * @param method        method corresponding to the invoked operation
-     * @param configuration the security configuration
+     * @param configuration the security configuration or null if security is not configured
      */
     public MetroTargetInterceptor(ObjectFactory<?> proxyFactory, Method method, SecurityConfiguration configuration) {
         this.proxyFactory = proxyFactory;
@@ -100,6 +100,10 @@ public class MetroTargetInterceptor implements Interceptor {
      * @param provider the binding provider for the invocation
      */
     private void configureSecurity(BindingProvider provider) {
+        if (configuration == null) {
+            // no security
+            return;
+        }
         if (configuration.getUsername() != null) {
             // User authentication configured
             // Places authentication information in the invocation context, which is used by the Fabric3 security environment to include the
