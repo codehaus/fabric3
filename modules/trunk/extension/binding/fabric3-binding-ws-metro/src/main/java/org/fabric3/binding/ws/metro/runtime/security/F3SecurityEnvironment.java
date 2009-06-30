@@ -741,27 +741,27 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     private void initTrustStore() throws XWSSecurityException {
         InputStream stream = null;
         try {
+            File dir = info.getBaseDir();
             if (trustStoreLocation != null) {
                 trustStoreHandle = new File(trustStoreLocation).getCanonicalFile();
+            } else if (dir != null) {
+                trustStoreHandle = new File(dir, "config" + File.separator + "fabric3-truststore.jks");
+                if (!trustStoreHandle.exists()) {
+                    return;
+                }
             } else {
-                File dir = info.getBaseDir();
-                if (dir != null) {
-                    trustStoreHandle = new File(dir, "config" + File.separator + "fabric3-truststore.jks");
+                if (keyStore != null) {
+                    // default the truststore to the keystore if it is not explicitly configured
+                    trustStore = keyStore;
+                    trustStorePassword = keyStorePassword;
+                    trustStoreType = keyStoreType;
+                    System.setProperty("javax.net.ssl.trustStore", keyStoreHandle.getCanonicalPath());
+                    return;
                 } else {
-                    if (keyStore != null) {
-                        // default the truststore to the keystore if it is not explicitly configured
-                        trustStore = keyStore;
-                        trustStorePassword = keyStorePassword;
-                        trustStoreType = keyStoreType;
-                        System.setProperty("javax.net.ssl.trustStore", keyStoreHandle.getCanonicalPath());
-                        return;
-                    } else {
-                        // skip truststore initialization as it is not setup
-                        return;
-                    }
+                    // skip truststore initialization as it is not setup
+                    return;
                 }
             }
-
             char[] trustStorePasswordChars = null;
             if (trustStorePassword != null) {
                 trustStorePasswordChars = trustStorePassword.toCharArray();
