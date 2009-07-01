@@ -24,9 +24,9 @@
         </reference>
         <reference name="faultService">
             <binding.ws uri="http://localhost:8900/axis2/faultService">
-                <config>
-                    <parameter name="enableMTOM">false</parameter>
-                </config>
+                <configuration>
+                    <enableMTOM>false</enableMTOM>
+                </configuration>
             </binding.ws>
         </reference>
     </component>
