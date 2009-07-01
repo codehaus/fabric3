@@ -35,7 +35,8 @@
                 <include>org.codehaus.fabric3:fabric3-databinding-jaxb</include>
                 <include>org.codehaus.fabric3:fabric3-jaxb</include>
                 <include>org.codehaus.fabric3:fabric3-binding-ws</include>
-                <include>org.codehaus.fabric3:fabric3-binding-ws-axis2</include>
+                <include>org.codehaus.fabric3:fabric3-binding-ws-metro</include>
+                <include>org.objectweb.asm:com.springsource.org.objectweb.asm</include>
              </includes>
             <outputDirectory>/repository</outputDirectory>
         </dependencySet>

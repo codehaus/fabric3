@@ -45,6 +45,12 @@
         </dependency>
 
         <dependency>
+           <groupId>javax.xml.soap</groupId>
+           <artifactId>com.springsource.javax.xml.soap</artifactId>
+           <version>1.3.0</version>
+         </dependency>
+
+        <dependency>
             <groupId>javax.jws</groupId>
             <artifactId>com.springsource.javax.jws</artifactId>
             <version>2.0.0</version>
@@ -53,30 +59,33 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-databinding-jaxb</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jaxb</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-ws</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-binding-ws-axis2</artifactId>
-            <version>1.1</version>
+            <artifactId>fabric3-binding-ws-metro</artifactId>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
-           <groupId>javax.xml.soap</groupId>
-           <artifactId>com.springsource.javax.xml.soap</artifactId>
-           <version>1.3.0</version>
-         </dependency>
+            <groupId>org.objectweb.asm</groupId>
+            <artifactId>com.springsource.org.objectweb.asm</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
