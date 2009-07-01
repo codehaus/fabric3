@@ -704,6 +704,9 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 File dir = info.getBaseDir();
                 if (dir != null) {
                     keyStoreHandle = new File(dir, "config" + File.separator + "fabric3-keystore.jks");
+                    if (!keyStoreHandle.exists()) {
+                        return;
+                    }
                 } else {
                     // skip keystore initialization as it is not setup
                     return;
