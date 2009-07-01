@@ -6,6 +6,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fabric3-tutorial-wscalc.iml" afterPath="$PROJECT_DIR$/fabric3-tutorial-wscalc.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wscalc.ipr" afterPath="$PROJECT_DIR$/wscalc.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorService.java" afterPath="$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorServiceImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wscalc.iws" afterPath="$PROJECT_DIR$/wscalc.iws" />
     </list>
     <ignored path="webcalc.iws" />
@@ -65,10 +66,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CalculatorServiceImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorServiceImpl.java">
+      <file leaf-file-name="DivideService.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/DivideService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="48" selection-start="181" selection-end="181" vertical-scroll-proportion="0.0">
+            <state line="18" column="0" selection-start="0" selection-end="814" vertical-scroll-proportion="0.016233766">
               <folding />
             </state>
           </provider>
@@ -83,10 +84,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CalculatorService.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="CalculatorService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="0" selection-start="1045" selection-end="1045" vertical-scroll-proportion="0.32467532">
+            <state line="24" column="17" selection-start="853" selection-end="853" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -462,20 +463,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/DivideService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/DivideServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/MultiplyService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -504,13 +491,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="48" selection-start="181" selection-end="181" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/META-INF/wscalculator.composite">
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="26" selection-start="285" selection-end="285" vertical-scroll-proportion="0.0">
@@ -518,9 +498,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/DivideServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="0" selection-start="1045" selection-end="1045" vertical-scroll-proportion="0.32467532">
+        <state line="24" column="17" selection-start="853" selection-end="853" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/CalculatorServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="42" selection-start="141" selection-end="141" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/fabric3/tutorials/ws/calculator/DivideService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="0" selection-start="0" selection-end="814" vertical-scroll-proportion="0.016233766">
           <folding />
         </state>
       </provider>
