@@ -2,7 +2,11 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            name="WsCalculatorComposite"
            targetNamespace="org.codehaus.fabric3">
-   
+
+    <service name="Calculator" promote="CalculatorService">
+        <binding.ws uri="/calculator"/>
+    </service>
+    
     <component name="CalculatorService">
         <implementation.java class="org.fabric3.tutorials.ws.calculator.CalculatorServiceImpl"/>
         <reference name="addService" target="AddService"/>
