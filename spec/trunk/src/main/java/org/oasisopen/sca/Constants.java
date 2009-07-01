@@ -21,7 +21,7 @@ package org.oasisopen.sca;
 /**
  * OASIS defined constant values for SCA.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
 public interface Constants {
 
