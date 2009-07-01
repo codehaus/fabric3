@@ -133,4 +133,23 @@ public class F3ServletDelegate extends WSServletDelegate {
             Thread.currentThread().setContextClassLoader(old);
         }
     }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws ServletException {
+        String query = request.getQueryString();
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        if (query != null && (query.equals("WSDL") || query.startsWith("wsdl") || query.startsWith("xsd="))) {
+            // For metadata requests (e.g. WSDLs, XSDs), the extension classloader must be set as the TCCL as Metro attempts to load
+            // a StAX implementation to process documents. The StAX FactoryFinder uses the TCCL to search for the parser implementation class.
+            try {
+                Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+                super.doGet(request, response, context);
+            } finally {
+                Thread.currentThread().setContextClassLoader(old);
+            }
+        } else {
+            // not a metadata request - e.g. a REST request
+            super.doGet(request, response, context);
+        }
+    }
 }
