@@ -20,11 +20,11 @@
     <parent>
         <groupId>org.codehaus.fabric3.tutorials</groupId>
         <artifactId>fabric3-tutorials-parent-pom</artifactId>
-        <version>1.1</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-server</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Server Assembly</name>
     <description>Creates Fabric3 server images for the tutorials.</description>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>runtime-standalone</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
             <exclusions>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-jpa</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-jms</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-web</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <classifier>bin</classifier>
             <type>zip</type>
         </dependency>

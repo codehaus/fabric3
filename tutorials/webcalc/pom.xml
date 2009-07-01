@@ -20,11 +20,11 @@
     <parent>
        <groupId>org.codehaus.fabric3.tutorials</groupId>
        <artifactId>fabric3-tutorials-parent-pom</artifactId>
-       <version>1.1</version>
+       <version>1.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-webcalc</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Fabric3 Web Calculator</name>
     <description>Demonstrates creating a service and wiring it to a servlet.</description>
