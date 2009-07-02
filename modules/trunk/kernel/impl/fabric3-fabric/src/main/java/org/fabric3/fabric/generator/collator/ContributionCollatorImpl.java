@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.fabric.generator;
+package org.fabric3.fabric.generator.collator;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -45,6 +45,7 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.generator.GenerationType;
 import org.fabric3.host.Names;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionWire;

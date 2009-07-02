@@ -35,11 +35,12 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.fabric.generator;
+package org.fabric3.fabric.generator.collator;
 
 import java.util.List;
 import java.util.Map;
 
+import org.fabric3.fabric.generator.GenerationType;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.model.instance.LogicalComponent;
 

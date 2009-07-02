@@ -28,7 +28,7 @@
     </component>
 
     <component name="Generator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.GeneratorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.impl.GeneratorImpl"/>
     </component>
     <!-- the wire forces a reinjection of the generator into the RuntimeDomain -->
     <wire source="RuntimeDomain/generator" target="Generator"/>
@@ -58,7 +58,7 @@
     </component>
 
     <component name="GeneratorRegistry">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.impl.GeneratorRegistryImpl"/>
     </component>
 
     <!-- Default scopes -->

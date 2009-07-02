@@ -19,7 +19,7 @@
            autowire="true">
 
     <component name="ContributionCollator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.ContributionCollatorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.collator.ContributionCollatorImpl"/>
     </component>
 
     <component name="ExtensionGenerator">

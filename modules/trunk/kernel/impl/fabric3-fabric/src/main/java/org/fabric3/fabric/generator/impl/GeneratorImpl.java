@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.fabric.generator;
+package org.fabric3.fabric.generator.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +54,10 @@ import java.util.UUID;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.generator.GenerationType;
+import org.fabric3.fabric.generator.Generator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
+import org.fabric3.fabric.generator.collator.ContributionCollator;
 import org.fabric3.fabric.generator.context.StartContextCommandGenerator;
 import org.fabric3.fabric.generator.context.StopContextCommandGenerator;
 import org.fabric3.fabric.generator.extension.ExtensionGenerator;
