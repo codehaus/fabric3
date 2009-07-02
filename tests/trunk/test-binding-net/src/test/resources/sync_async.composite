@@ -12,17 +12,6 @@
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="SyncAsyncComposite" autowire="false">
 
-    <!-- JSON tests -->
-    <component name="JsonEchoTest">
-        <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
-        <reference name="service">
-            <binding.http uri="http://127.0.0.1:8282/JsonEchoService">
-                <wireFormat.json/>
-            </binding.http>
-        </reference>
-    </component>
-
-
     <component name="JsonEchoOneWayTest">
         <f3-impl:junit class="org.fabric3.tests.binding.harness.EchoOneWayTest"/>
         <reference name="service">
@@ -32,14 +21,6 @@
         </reference>
     </component>
 
-    <component name="JsonEchoService">
-        <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
-        <service name="EchoService">
-            <binding.http uri="/JsonEchoService">
-                <wireFormat.json/>
-            </binding.http>
-        </service>
-    </component>
 
     <component name="JsonOneWayEchoService">
         <implementation.java class="org.fabric3.tests.binding.harness.OneWayEchoServiceImpl"/>
