@@ -40,6 +40,18 @@ package org.fabric3.binding.jms.runtime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.IOException;
+import javax.jms.Message;
+import javax.jms.JMSException;
+
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.ConversationContext;
+import org.fabric3.spi.util.Base64;
+import org.fabric3.spi.component.F3Conversation;
 
 /**
  * Base class for SourceMessageListener implementations.
@@ -79,6 +91,61 @@ public abstract class AbstractServiceMessageListener implements ServiceMessageLi
             throw new JmsBadMessageException("Unable to match operation on the service contract");
         }
 
+    }
+
+    /**
+     * Creates a WorkContext for the request by deserializing the callframe stack
+     *
+     * @param request     the message received from the JMS transport
+     * @param callbackUri if the destination service for the message is bidirectional, the callback URI is the URI of the callback service for the
+     *                    client that is wired to it. Otherwise, it is null.
+     * @return the work context
+     * @throws JmsBadMessageException if an error is encountered deserializing the callframe
+     */
+    @SuppressWarnings({"unchecked"})
+    protected WorkContext createWorkContext(Message request, String callbackUri) throws JmsBadMessageException {
+        try {
+            WorkContext workContext = new WorkContext();
+            String encoded = request.getStringProperty("f3Context");
+            if (encoded == null) {
+                // no callframe found, use a blank one
+                return workContext;
+            }
+            ByteArrayInputStream bas = new ByteArrayInputStream(Base64.decode(encoded));
+            ObjectInputStream stream = new ObjectInputStream(bas);
+            List<CallFrame> stack = (List<CallFrame>) stream.readObject();
+            workContext.addCallFrames(stack);
+            stream.close();
+            CallFrame previous = workContext.peekCallFrame();
+            // Copy correlation and conversation information from incoming frame to new frame
+            // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
+            // bidirectional service
+            Serializable id = previous.getCorrelationId(Serializable.class);
+            ConversationContext context = previous.getConversationContext();
+            F3Conversation conversation = previous.getConversation();
+            CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
+            stack.add(frame);
+            return workContext;
+        } catch (JMSException ex) {
+            throw new JmsBadMessageException("Error deserializing callframe", ex);
+        } catch (IOException ex) {
+            throw new JmsBadMessageException("Error deserializing callframe", ex);
+        } catch (ClassNotFoundException ex) {
+            throw new JmsBadMessageException("Error deserializing callframe", ex);
+        }
+    }
+
+    protected void addCallFrame(org.fabric3.spi.invocation.Message message, String callbackUri) {
+        WorkContext workContext = message.getWorkContext();
+        CallFrame previous = workContext.peekCallFrame();
+        // Copy correlation and conversation information from incoming frame to new frame
+        // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
+        // bidirectional service
+        Serializable id = previous.getCorrelationId(Serializable.class);
+        ConversationContext context = previous.getConversationContext();
+        F3Conversation conversation = previous.getConversation();
+        CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
+        workContext.addCallFrame(frame);
     }
 
 
