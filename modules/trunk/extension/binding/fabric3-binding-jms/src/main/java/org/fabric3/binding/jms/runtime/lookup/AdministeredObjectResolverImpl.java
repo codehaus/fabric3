@@ -48,8 +48,6 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
-import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
-import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 
 /**
  * Default implementation of AdministeredObjectResolver.

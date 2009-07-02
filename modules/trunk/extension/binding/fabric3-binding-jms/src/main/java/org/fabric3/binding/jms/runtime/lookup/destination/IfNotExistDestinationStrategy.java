@@ -50,6 +50,7 @@ import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.common.DestinationDefinition;
+import org.fabric3.binding.jms.runtime.lookup.DestinationStrategy;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 

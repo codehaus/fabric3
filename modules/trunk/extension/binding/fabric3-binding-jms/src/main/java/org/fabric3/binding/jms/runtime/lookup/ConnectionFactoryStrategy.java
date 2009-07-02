@@ -41,13 +41,12 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.binding.jms.runtime.lookup.connectionfactory;
+package org.fabric3.binding.jms.runtime.lookup;
 
 import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
  * Strategy for looking up connection factories.

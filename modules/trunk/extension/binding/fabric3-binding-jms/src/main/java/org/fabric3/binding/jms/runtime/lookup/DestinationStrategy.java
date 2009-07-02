@@ -41,14 +41,13 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.binding.jms.runtime.lookup.destination;
+package org.fabric3.binding.jms.runtime.lookup;
 
 import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
 import org.fabric3.binding.jms.common.DestinationDefinition;
-import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
  * Strategy for looking up destinations.

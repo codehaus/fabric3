@@ -54,6 +54,7 @@ import javax.jms.TopicConnection;
 
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
+import org.fabric3.binding.jms.runtime.lookup.DestinationStrategy;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**

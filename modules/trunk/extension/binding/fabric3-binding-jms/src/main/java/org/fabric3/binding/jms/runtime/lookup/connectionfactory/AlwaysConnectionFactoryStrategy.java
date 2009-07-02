@@ -53,6 +53,7 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
+import org.fabric3.binding.jms.runtime.lookup.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
