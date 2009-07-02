@@ -13,7 +13,7 @@ Public License. See the accompanying license file for details.
     <import.java package="org.fabric3.spi.*" version="1.2"/>
     <deployable composite="ns:NetBindingControllerExtension" modes="controller vm"/>
     <deployable composite="ns:NetBindingParticipantExtension" modes="participant vm"/>
-    <deployable composite="ns:NetBindingStatus"/>
+    <deployable composite="ns:NetBinding"/>
     <f3-core:provides name="binding.net"/>
 
 </contribution>
