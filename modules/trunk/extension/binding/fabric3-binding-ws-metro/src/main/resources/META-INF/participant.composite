@@ -12,7 +12,7 @@ Public License. See the accompanying license file for details.
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="urn:fabric3.org:binding"
-           name="MetroRuntimeExtension"
+           name="MetroParticipantExtension"
            autowire="true">
 
     <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition" name="MetroSourceWireAttacher">

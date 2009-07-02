@@ -53,6 +53,8 @@ import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.ws.metro.MetroBindingMonitor;
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
@@ -92,6 +94,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     private WsdlPolicyAttacher policyAttacher;
     private SecurityEnvironment securityEnvironment;
     private WorkScheduler scheduler;
+    private MetroBindingMonitor monitor;
 
     private MetroServlet metroServlet;
 
@@ -103,7 +106,8 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                                    @Reference WsdlGenerator wsdlGenerator,
                                    @Reference WsdlPolicyAttacher policyAttacher,
                                    @Reference SecurityEnvironment securityEnvironment,
-                                   @Reference WorkScheduler scheduler) {
+                                   @Reference WorkScheduler scheduler,
+                                   @Monitor MetroBindingMonitor monitor) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.featureResolver = featureResolver;
@@ -113,6 +117,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         this.policyAttacher = policyAttacher;
         this.securityEnvironment = securityEnvironment;
         this.scheduler = scheduler;
+        this.monitor = monitor;
     }
 
     @Init
@@ -184,7 +189,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                                          bindingID,
                                          generatedWsdl,
                                          generatedSchemas);
-
+            monitor.endpointProvisioned(path);
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         } catch (UnsupportedEncodingException e) {
@@ -205,6 +210,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             // FIXME remove need to decode
             String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
             metroServlet.unregisterService(path);
+            monitor.endpointRemoved(path);
         } catch (UnsupportedEncodingException e) {
             throw new WiringException(e);
         }
