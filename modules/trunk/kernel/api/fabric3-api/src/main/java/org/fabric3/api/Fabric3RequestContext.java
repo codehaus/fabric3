@@ -56,6 +56,13 @@ import org.oasisopen.sca.RequestContext;
 public interface Fabric3RequestContext extends RequestContext {
 
     /**
+     * Returns the Fabric3-specific security subject for the current request.
+     *
+     * @return the Fabric3-specific security subject for the current request
+     */
+    SecuritySubject getCurrentSubject();
+
+    /**
      * Returns the header value corresponding to a name for the current request message.
      *
      * @param type the value type

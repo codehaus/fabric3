@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 import javax.security.auth.Subject;
 
-import org.fabric3.spi.security.SecuritySubject;
+import org.fabric3.api.SecuritySubject;
 
 /**
  * @version $Rev$ $Date$

@@ -70,7 +70,7 @@ import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.security.SecuritySubject;
+import org.fabric3.api.SecuritySubject;
 import org.fabric3.spi.wire.Interceptor;
 
 /**

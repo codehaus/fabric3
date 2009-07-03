@@ -37,6 +37,8 @@
 */
 package org.fabric3.spi.security;
 
+import org.fabric3.api.SecuritySubject;
+
 /**
  * Implemented by security providers that perform authentication.
  *

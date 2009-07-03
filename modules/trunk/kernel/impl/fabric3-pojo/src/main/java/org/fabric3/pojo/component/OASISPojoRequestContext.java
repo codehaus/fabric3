@@ -42,6 +42,7 @@ import javax.security.auth.Subject;
 import org.oasisopen.sca.ServiceReference;
 
 import org.fabric3.api.Fabric3RequestContext;
+import org.fabric3.api.SecuritySubject;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.WorkContextTunnel;
 
@@ -53,6 +54,12 @@ public class OASISPojoRequestContext implements Fabric3RequestContext {
         WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
         return workContext.getSubject().getJaasSubject();
     }
+
+    public SecuritySubject getCurrentSubject() {
+        WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
+        return workContext.getSubject();
+    }
+
 
     public String getServiceName() {
         return null;

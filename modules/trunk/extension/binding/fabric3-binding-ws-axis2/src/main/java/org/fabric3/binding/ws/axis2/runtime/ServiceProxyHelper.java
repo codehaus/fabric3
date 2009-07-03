@@ -53,7 +53,7 @@ import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.util.WSSecurityUtil;
 
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.security.SecuritySubject;
+import org.fabric3.api.SecuritySubject;
 
 /**
  * Helper class to perform common ServiceProxy operations.s

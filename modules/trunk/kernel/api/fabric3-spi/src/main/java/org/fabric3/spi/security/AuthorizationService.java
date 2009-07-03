@@ -39,6 +39,8 @@ package org.fabric3.spi.security;
 
 import java.util.Collection;
 
+import org.fabric3.api.SecuritySubject;
+
 /**
  * Implemented by security providers that perform authorization.
  *

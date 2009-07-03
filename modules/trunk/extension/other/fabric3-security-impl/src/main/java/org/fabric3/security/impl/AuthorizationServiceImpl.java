@@ -42,7 +42,7 @@ import java.util.Collection;
 import org.fabric3.spi.security.AuthorizationException;
 import org.fabric3.spi.security.AuthorizationService;
 import org.fabric3.spi.security.NotAuthorizedException;
-import org.fabric3.spi.security.SecuritySubject;
+import org.fabric3.api.SecuritySubject;
 
 /**
  * Basic implementation of the AuthorizationService.

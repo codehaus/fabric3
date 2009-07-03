@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fabric3.spi.security.SecuritySubject;
+import org.fabric3.api.SecuritySubject;
 
 /**
  * Implementations track information associated with a request as it is processed by the runtime. Requests originate at a domain boundary (e.g. a

@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.security;
+package org.fabric3.api;
 
 import javax.security.auth.Subject;
 
