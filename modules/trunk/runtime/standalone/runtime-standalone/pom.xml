@@ -74,6 +74,13 @@ licensed under the Apache 2.0 license.
             <version>1.2-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-security-impl</artifactId>
+            <version>1.2-SNAPSHOT</version>
+        </dependency>
+        
+
         <!-- provided scope dependencies that need to be resolved -->
         <dependency>
             <groupId>javax.annotation</groupId>
