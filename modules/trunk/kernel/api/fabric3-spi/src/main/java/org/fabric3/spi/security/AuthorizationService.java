@@ -46,9 +46,44 @@ import java.util.Collection;
  */
 public interface AuthorizationService {
 
-    void checkRoles(Collection<String> roles) throws AuthorizationException;
+    /**
+     * Determines if the subject has a role.
+     *
+     * @param subject the subject
+     * @param role    the role
+     * @throws AuthorizationException if the user does not have the role or there is a general error performing authorization. If the user does not
+     *                                have the role, NotAuthorizedException will be thrown.
+     */
+    void checkRole(SecuritySubject subject, String role) throws AuthorizationException;
 
-    void checkRole(String role) throws AuthorizationException;
+    /**
+     * Determines if the subject has the collection of roles.
+     *
+     * @param subject the subject
+     * @param roles   the roles
+     * @throws AuthorizationException if the user does not have the roles or there is a general error performing authorization. If the user does not
+     *                                have a role, NotAuthorizedException will be thrown.
+     */
+    void checkRoles(SecuritySubject subject, Collection<String> roles) throws AuthorizationException;
 
+    /**
+     * Determines if the subject has a permission.
+     *
+     * @param subject the subject
+     * @param role    the role
+     * @throws AuthorizationException if the user does not have the permission or there is a general error performing authorization. If the user does
+     *                                not have the permission, NotAuthorizedException will be thrown.
+     */
+    void checkPermission(SecuritySubject subject, String role) throws AuthorizationException;
+
+    /**
+     * Determines if the subject has the collection of permission.
+     *
+     * @param subject the subject
+     * @param roles   the roles
+     * @throws AuthorizationException if the user does not have the permissions or there is a general error performing authorization. If the user does
+     *                                not have a permission, NotAuthorizedException will be thrown.
+     */
+    void checkPermissions(SecuritySubject subject, Collection<String> roles) throws AuthorizationException;
 
 }
