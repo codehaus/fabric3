@@ -35,21 +35,43 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime;
+package org.fabric3.binding.ws.metro.runtime.core;
+
+import com.sun.xml.ws.api.message.Packet;
+import com.sun.xml.ws.api.pipe.NextAction;
+import com.sun.xml.ws.api.pipe.Tube;
+import com.sun.xml.ws.api.pipe.TubeCloner;
+import com.sun.xml.ws.api.pipe.helper.AbstractFilterTubeImpl;
+
+import org.fabric3.binding.ws.metro.runtime.MetroConstants;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
- * Constants.
+ * Populates invocation properties of an incoming request with a WorkContext. This is done so that the work context can be updated by other tubes, for
+ * example, with an authenticated SecuritySubject.
  *
  * @version $Rev$ $Date$
  */
-public interface MetroConstants {
+public class WorkContextTube extends AbstractFilterTubeImpl {
 
-    String KEYSTORE_ALIAS = "f3.keystore.alias";
+    public WorkContextTube(Tube next) {
+        super(next);
+    }
 
-    String USERNAME = "f3.username";
+    private WorkContextTube(WorkContextTube original, TubeCloner cloner) {
+        super(original, cloner);
+    }
 
-    String PASSWORD = "f3.password";
+    public WorkContextTube copy(TubeCloner cloner) {
+        return new WorkContextTube(this, cloner);
+    }
 
-    String WORK_CONTEXT = "f3.work.context";
+    @Override
+    public NextAction processRequest(Packet request) {
+        WorkContext context = new WorkContext();
+        request.invocationProperties.put(MetroConstants.WORK_CONTEXT, context);
+        return super.processRequest(request);
+    }
 
 }
+

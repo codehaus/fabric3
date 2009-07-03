@@ -53,6 +53,7 @@ import javax.xml.ws.WebServiceContext;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.server.Invoker;
 
+import org.fabric3.binding.ws.metro.runtime.MetroConstants;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
@@ -80,11 +81,15 @@ public class MetroServiceInvoker extends Invoker {
     }
 
     public Object invoke(Packet packet, Method method, Object... args) throws InvocationTargetException {
-        Interceptor head = chains.get(method.getName()).getHeadInterceptor();
-        WorkContext workContext = new WorkContext();
-        // TODO support callback URIs
+        // the work context is populated by the current tubline
+        WorkContext workContext = (WorkContext) packet.invocationProperties.get(MetroConstants.WORK_CONTEXT);
+        if (workContext == null) {
+            // programming error
+            throw new AssertionError("Work context not set");
+        }
         Message input = new MessageImpl(args, false, workContext);
 
+        Interceptor head = chains.get(method.getName()).getHeadInterceptor();
         Message ret = head.invoke(input);
 
         if (!ret.isFault()) {

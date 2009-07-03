@@ -40,7 +40,7 @@ package org.fabric3.binding.ws.metro.runtime.security;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
-import com.sun.xml.wss.XWSSecurityException;
+import com.sun.xml.wss.impl.XWSSecurityRuntimeException;
 
 /**
  * Validates certificates.
@@ -55,8 +55,8 @@ public interface CertificateValidator {
      * @param certificate the certificate to validate
      * @param trustStore  the trust store
      * @return true if valid
-     * @throws XWSSecurityException if a validation error occurs
+     * @throws XWSSecurityRuntimeException if a validation error occurs
      */
-    boolean validate(X509Certificate certificate, KeyStore trustStore) throws XWSSecurityException;
+    boolean validate(X509Certificate certificate, KeyStore trustStore) throws XWSSecurityRuntimeException;
 
 }

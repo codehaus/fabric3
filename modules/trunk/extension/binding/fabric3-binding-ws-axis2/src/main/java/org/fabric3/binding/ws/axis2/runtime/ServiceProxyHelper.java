@@ -53,6 +53,7 @@ import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.util.WSSecurityUtil;
 
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.security.SecuritySubject;
 
 /**
  * Helper class to perform common ServiceProxy operations.s
@@ -97,7 +98,7 @@ public class ServiceProxyHelper {
             }
 
             if (principals.size() > 0) {// If we have found principals then set newly created Subject on work context
-                workContext.setSubject(new Subject(false, principals, new HashSet<Principal>(), new HashSet<Principal>()));
+                workContext.setSubject(new AxisSubject(new Subject(false, principals, new HashSet<Principal>(), new HashSet<Principal>())));
             }
         }
     }
@@ -126,5 +127,21 @@ public class ServiceProxyHelper {
         }
         return null;
 
+    }
+
+    private static class AxisSubject implements SecuritySubject {
+        private Subject subject;
+
+        private AxisSubject(Subject subject) {
+            this.subject = subject;
+        }
+
+        public <T> T getDelegate(Class<T> type) {
+            return null;
+        }
+
+        public Subject getJaasSubject() {
+            return subject;
+        }
     }
 }

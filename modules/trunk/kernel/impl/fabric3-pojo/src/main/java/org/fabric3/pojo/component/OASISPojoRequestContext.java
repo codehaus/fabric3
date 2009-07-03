@@ -51,7 +51,7 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
 public class OASISPojoRequestContext implements Fabric3RequestContext {
     public Subject getSecuritySubject() {
         WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
-        return workContext.getSubject();
+        return workContext.getSubject().getJaasSubject();
     }
 
     public String getServiceName() {

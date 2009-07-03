@@ -129,7 +129,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
         options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
 
-        Subject subject = msg.getWorkContext().getSubject();
+        Subject subject = msg.getWorkContext().getSubject().getJaasSubject();
         if (subject != null && !subject.getPrincipals().isEmpty()) {
             Principal primaryPrincipal = subject.getPrincipals().iterator().next();
             options.setUserName(primaryPrincipal.getName());

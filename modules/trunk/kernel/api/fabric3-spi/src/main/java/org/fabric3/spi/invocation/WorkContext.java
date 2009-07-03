@@ -48,7 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.security.auth.Subject;
+
+import org.fabric3.spi.security.SecuritySubject;
 
 /**
  * Implementations track information associated with a request as it is processed by the runtime. Requests originate at a domain boundary (e.g. a
@@ -62,11 +63,11 @@ import javax.security.auth.Subject;
  */
 public class WorkContext implements Serializable {
     private static final long serialVersionUID = 9108092492339191639L;
-    private Subject subject;
+    private SecuritySubject subject;
     private List<CallFrame> callStack;
     private Map<String, Object> headers;
 
-    public void setSubject(Subject subject) {
+    public void setSubject(SecuritySubject subject) {
         this.subject = subject;
     }
 
@@ -75,7 +76,7 @@ public class WorkContext implements Serializable {
      *
      * @return Subject associated with the current invocation.
      */
-    public Subject getSubject() {
+    public SecuritySubject getSubject() {
         return subject;
     }
 

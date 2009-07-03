@@ -95,7 +95,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import com.sun.xml.wss.XWSSecurityException;
+import com.sun.xml.wss.impl.XWSSecurityRuntimeException;
 
 /**
  * Default CertificateValidator extension.
@@ -104,13 +104,13 @@ import com.sun.xml.wss.XWSSecurityException;
  */
 public class CertificateValidatorImpl implements CertificateValidator {
 
-    public boolean validate(X509Certificate certificate, KeyStore trustStore) throws XWSSecurityException {
+    public boolean validate(X509Certificate certificate, KeyStore trustStore) throws XWSSecurityRuntimeException {
         try {
             certificate.checkValidity();
         } catch (CertificateExpiredException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (CertificateNotYetValidException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
 
         // for self-signed certificate
@@ -118,7 +118,7 @@ public class CertificateValidatorImpl implements CertificateValidator {
             if (isTrustedSelfSigned(certificate, trustStore)) {
                 return true;
             } else {
-                throw new XWSSecurityException("Validation of self signed certificate failed");
+                throw new XWSSecurityRuntimeException("Validation of self signed certificate failed");
             }
         }
 
@@ -190,19 +190,19 @@ public class CertificateValidatorImpl implements CertificateValidator {
             certValidator.validate(certPath, parameters);
             return true;
         } catch (InvalidAlgorithmParameterException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (CertPathValidatorException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (CertificateException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
     }
 
-    private static boolean isTrustedSelfSigned(X509Certificate cert, KeyStore trustStore) throws XWSSecurityException {
+    private static boolean isTrustedSelfSigned(X509Certificate cert, KeyStore trustStore) throws XWSSecurityRuntimeException {
         try {
             Enumeration aliases = trustStore.aliases();
             while (aliases.hasMoreElements()) {
@@ -218,7 +218,7 @@ public class CertificateValidatorImpl implements CertificateValidator {
             }
             return false;
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
     }
 

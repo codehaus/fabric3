@@ -109,6 +109,7 @@ import com.sun.xml.wss.core.Timestamp;
 import com.sun.xml.wss.core.reference.X509SubjectKeyIdentifier;
 import com.sun.xml.wss.impl.MessageConstants;
 import com.sun.xml.wss.impl.WssSoapFaultException;
+import com.sun.xml.wss.impl.XWSSecurityRuntimeException;
 import com.sun.xml.wss.impl.configuration.DynamicApplicationContext;
 import com.sun.xml.wss.impl.policy.mls.AuthenticationTokenPolicy;
 import com.sun.xml.wss.saml.Assertion;
@@ -122,6 +123,11 @@ import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.metro.runtime.MetroConstants;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.security.AuthenticationException;
+import org.fabric3.spi.security.AuthenticationService;
+import org.fabric3.spi.security.SecuritySubject;
+import org.fabric3.spi.security.UsernamePasswordToken;
 
 /**
  * Partially implements the Metro security SPI for hosting runtimes. SAML and Kerberos operations are not supported.
@@ -131,6 +137,7 @@ import org.fabric3.host.runtime.HostInfo;
 public class F3SecurityEnvironment implements SecurityEnvironment {
     private static final String WSU_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
+    private AuthenticationService authenticationService;
     private HostInfo info;
     private CertificateValidator certificateValidator;
     private KeyStore keyStore;
@@ -148,9 +155,12 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     private final SimpleDateFormat calendarFormatter1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private final SimpleDateFormat calendarFormatter2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
 
-    public F3SecurityEnvironment(@Reference HostInfo info, @Reference CertificateValidator certificateValidator) {
-        this.info = info;
+    public F3SecurityEnvironment(@Reference AuthenticationService authenticationService,
+                                 @Reference CertificateValidator certificateValidator,
+                                 @Reference HostInfo info) {
+        this.authenticationService = authenticationService;
         this.certificateValidator = certificateValidator;
+        this.info = info;
     }
 
     @Property
@@ -189,12 +199,12 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         initTrustStore();
     }
 
-    public X509Certificate getDefaultCertificate(Map context) throws XWSSecurityException {
+    public X509Certificate getDefaultCertificate(Map context) throws XWSSecurityRuntimeException {
         checkEnabled();
         return getDefaultCertificateInternal(trustStore, context);
     }
 
-    public X509Certificate getCertificate(Map context, String alias, boolean forSigning) throws XWSSecurityException {
+    public X509Certificate getCertificate(Map context, String alias, boolean forSigning) throws XWSSecurityRuntimeException {
         checkEnabled();
         try {
             if (forSigning) {
@@ -210,7 +220,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
     }
 
@@ -219,25 +229,25 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         throw new UnsupportedOperationException();
     }
 
-    public PrivateKey getPrivateKey(Map context, String alias) throws XWSSecurityException {
+    public PrivateKey getPrivateKey(Map context, String alias) throws XWSSecurityRuntimeException {
         checkEnabled();
         try {
             return (PrivateKey) keyStore.getKey(alias, keyStorePassword.toCharArray());
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (UnrecoverableKeyException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
     }
 
-    public PublicKey getPublicKey(Map context, byte[] identifier) throws XWSSecurityException {
+    public PublicKey getPublicKey(Map context, byte[] identifier) throws XWSSecurityRuntimeException, XWSSecurityException {
         checkEnabled();
         return getCertificate(context, identifier).getPublicKey();
     }
 
-    public PublicKey getPublicKey(Map context, byte[] identifier, String valueType) throws XWSSecurityException {
+    public PublicKey getPublicKey(Map context, byte[] identifier, String valueType) throws XWSSecurityRuntimeException, XWSSecurityException {
         checkEnabled();
         if (MessageConstants.KEY_INDETIFIER_TYPE.equals(valueType)) {
             return getCertificate(context, identifier).getPublicKey();
@@ -245,7 +255,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         throw new UnsupportedOperationException();
     }
 
-    public X509Certificate getCertificate(Map context, byte[] identifier) throws XWSSecurityException {
+    public X509Certificate getCertificate(Map context, byte[] identifier) throws XWSSecurityRuntimeException, XWSSecurityException {
         checkEnabled();
         try {
             if (trustStore != null) {
@@ -268,9 +278,9 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
-        throw new XWSSecurityException("Certificate not found");
+        throw new XWSSecurityRuntimeException("Certificate not found");
     }
 
     public X509Certificate getCertificate(Map context, byte[] identifier, String valueType) throws XWSSecurityException {
@@ -281,7 +291,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         throw new UnsupportedOperationException();
     }
 
-    public PrivateKey getPrivateKey(Map context, X509Certificate certificate) throws XWSSecurityException {
+    public PrivateKey getPrivateKey(Map context, X509Certificate certificate) throws XWSSecurityRuntimeException {
         checkEnabled();
         try {
             Enumeration aliases = keyStore.aliases();
@@ -296,16 +306,16 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (UnrecoverableKeyException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
-        throw new XWSSecurityException("Private key not found");
+        throw new XWSSecurityRuntimeException("Private key not found");
     }
 
-    public PrivateKey getPrivateKey(Map context, BigInteger serialNumber, String issuerName) throws XWSSecurityException {
+    public PrivateKey getPrivateKey(Map context, BigInteger serialNumber, String issuerName) throws XWSSecurityRuntimeException {
         checkEnabled();
         try {
             Enumeration aliases = keyStore.aliases();
@@ -326,12 +336,12 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         } catch (Exception e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
-        throw new XWSSecurityException("Private key not found for serial number: " + serialNumber);
+        throw new XWSSecurityRuntimeException("Private key not found for serial number: " + serialNumber);
     }
 
-    public X509Certificate getCertificate(Map context, PublicKey publicKey, boolean forSign) throws XWSSecurityException {
+    public X509Certificate getCertificate(Map context, PublicKey publicKey, boolean forSign) throws XWSSecurityRuntimeException {
         checkEnabled();
         try {
             Enumeration aliases = trustStore.aliases();
@@ -347,12 +357,12 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         } catch (Exception e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
-        throw new XWSSecurityException("Certificate not found");
+        throw new XWSSecurityRuntimeException("Certificate not found");
     }
 
-    public PrivateKey getPrivateKey(Map context, byte[] identifier) throws XWSSecurityException {
+    public PrivateKey getPrivateKey(Map context, byte[] identifier) throws XWSSecurityRuntimeException, XWSSecurityException {
         checkEnabled();
         try {
             Enumeration aliases = keyStore.aliases();
@@ -376,13 +386,13 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         } catch (NoSuchAlgorithmException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (UnrecoverableKeyException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
-        throw new XWSSecurityException("Private key not found");
+        throw new XWSSecurityRuntimeException("Private key not found");
     }
 
     public PrivateKey getPrivateKey(Map context, byte[] identifier, String type) throws XWSSecurityException {
@@ -393,7 +403,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         throw new UnsupportedOperationException();
     }
 
-    public PrivateKey getPrivateKey(Map context, PublicKey publicKey, boolean forSign) throws XWSSecurityException {
+    public PrivateKey getPrivateKey(Map context, PublicKey publicKey, boolean forSign) throws XWSSecurityRuntimeException {
         checkEnabled();
         if (forSign) {
             throw new UnsupportedOperationException();
@@ -410,22 +420,22 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                     }
                 }
             } catch (KeyStoreException e) {
-                throw new XWSSecurityException(e);
+                throw new XWSSecurityRuntimeException(e);
             } catch (NoSuchAlgorithmException e) {
-                throw new XWSSecurityException(e);
+                throw new XWSSecurityRuntimeException(e);
             } catch (UnrecoverableKeyException e) {
-                throw new XWSSecurityException(e);
+                throw new XWSSecurityRuntimeException(e);
             }
         }
-        throw new XWSSecurityException("Private key not found");
+        throw new XWSSecurityRuntimeException("Private key not found");
     }
 
-    public PublicKey getPublicKey(Map context, BigInteger serialNumber, String issuerName) throws XWSSecurityException {
+    public PublicKey getPublicKey(Map context, BigInteger serialNumber, String issuerName) throws XWSSecurityRuntimeException {
         checkEnabled();
         return getCertificate(context, serialNumber, issuerName).getPublicKey();
     }
 
-    public X509Certificate getCertificate(Map context, BigInteger serialNumber, String issuerName) throws XWSSecurityException {
+    public X509Certificate getCertificate(Map context, BigInteger serialNumber, String issuerName) throws XWSSecurityRuntimeException {
         checkEnabled();
         try {
             if (trustStore != null) {
@@ -445,50 +455,60 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
-        throw new XWSSecurityException("Certificate key not found");
+        throw new XWSSecurityRuntimeException("Certificate key not found");
     }
 
-    public boolean authenticateUser(Map context, String username, String password) throws XWSSecurityException {
-        // FIXME
-        return true;
+    public boolean authenticateUser(Map context, String username, String password) throws XWSSecurityRuntimeException {
+        WorkContext workContext = (WorkContext) context.get(MetroConstants.WORK_CONTEXT);
+        if (workContext == null) {
+            // programming error
+            throw new AssertionError("Work context not set");
+        }
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        try {
+            SecuritySubject subject = authenticationService.authenticate(token);
+            workContext.setSubject(subject);
+            return true;
+        } catch (AuthenticationException e) {
+            throw new XWSSecurityRuntimeException(e);
+        }
     }
 
     public boolean authenticateUser(Map context, String username, String digest, String nonce, String created) throws XWSSecurityException {
-        // FIXME
-        return true;
+        throw new UnsupportedOperationException("Digest authentication not supported");
     }
 
-    public String getUsername(Map context) throws XWSSecurityException {
+    public String getUsername(Map context) {
         // username is configured as part of the binding in a composite. It is set using the BindingProvider API in
         // {@link org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor.}
         return (String) context.get(MetroConstants.USERNAME);
     }
 
-    public String getPassword(Map context) throws XWSSecurityException {
+    public String getPassword(Map context) {
         // password is configured as part of the binding in a composite. It is set using the BindingProvider API in
         // {@link org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor.}
         return (String) context.get(MetroConstants.PASSWORD);
     }
 
-    public String authenticateUser(Map context, String username) throws XWSSecurityException {
-        throw new UnsupportedOperationException();
+    public String authenticateUser(Map context, String username) {
+        throw new UnsupportedOperationException("Username + context authentication not supported");
     }
 
     public Subject getSubject() {
         throw new UnsupportedOperationException();
     }
 
-    public void validateTimestamp(Map context, Timestamp timestamp, long maxClockSkew, long freshnessLimit) throws XWSSecurityException {
+    public void validateTimestamp(Map context, Timestamp timestamp, long maxClockSkew, long freshnessLimit) {
         checkEnabled();
         validateTimestamp(context, timestamp.getCreated(), timestamp.getExpires(), maxClockSkew, freshnessLimit);
     }
 
-    public void validateTimestamp(Map context, String created, String expires, long maxClockSkew, long freshnessLimit) throws XWSSecurityException {
+    public void validateTimestamp(Map context, String created, String expires, long maxClockSkew, long freshnessLimit) {
         checkEnabled();
         if (expiresBeforeCreated(created, expires)) {
-            XWSSecurityException e = new XWSSecurityException("Message expired!");
+            XWSSecurityRuntimeException e = new XWSSecurityRuntimeException("Message expired!");
             QName name = new QName(WSU_NS, "MessageExpired", "wsu");
             WssSoapFaultException sfe = new WssSoapFaultException(name, "Message expired", null, null);
             sfe.initCause(e);
@@ -498,7 +518,8 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     }
 
 
-    public void validateCreationTime(Map context, String creationTime, long maxClockSkew, long timestampFreshnessLimit) throws XWSSecurityException {
+    public void validateCreationTime(Map context, String creationTime, long maxClockSkew, long timestampFreshnessLimit)
+            throws XWSSecurityRuntimeException {
         checkEnabled();
         SimpleDateFormat calendarFormatter1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         SimpleDateFormat calendarFormatter2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
@@ -510,23 +531,23 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
             try {
                 created = calendarFormatter2.parse(creationTime);
             } catch (java.text.ParseException e) {
-                throw new XWSSecurityException(e);
+                throw new XWSSecurityRuntimeException(e);
             }
         }
 
         Date current = getFreshnessAndSkewAdjustedDate(maxClockSkew, timestampFreshnessLimit);
 
         if (created.before(current)) {
-            throw new XWSSecurityException("The creation time is older than the current time");
+            throw new XWSSecurityRuntimeException("The creation time is older than the current time");
         }
 
         Date currentTime = getGMTDateWithSkewAdjusted(new GregorianCalendar(), maxClockSkew, true);
         if (currentTime.before(created)) {
-            throw new XWSSecurityException("The creation time is ahead of the current time.");
+            throw new XWSSecurityRuntimeException("The creation time is ahead of the current time.");
         }
     }
 
-    public boolean validateCertificate(X509Certificate certificate, Map context) throws XWSSecurityException {
+    public boolean validateCertificate(X509Certificate certificate, Map context) throws XWSSecurityRuntimeException {
         checkEnabled();
         return certificateValidator.validate(certificate, keyStore);
     }
@@ -555,21 +576,21 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         // no-op
     }
 
-    public void validateSAMLAssertion(Map context, Element assertion) throws XWSSecurityException {
+    public void validateSAMLAssertion(Map context, Element assertion) {
         throw new UnsupportedOperationException();
     }
 
-    public void validateSAMLAssertion(Map context, XMLStreamReader reader) throws XWSSecurityException {
+    public void validateSAMLAssertion(Map context, XMLStreamReader reader) {
         throw new UnsupportedOperationException();
     }
 
-    public Element locateSAMLAssertion(Map context, Element binding, String assertionId, Document ownerDoc) throws XWSSecurityException {
+    public Element locateSAMLAssertion(Map context, Element binding, String assertionId, Document ownerDoc) {
         throw new UnsupportedOperationException();
     }
 
     public AuthenticationTokenPolicy.SAMLAssertionBinding populateSAMLPolicy(Map fpcontext,
                                                                              AuthenticationTokenPolicy.SAMLAssertionBinding policy,
-                                                                             DynamicApplicationContext context) throws XWSSecurityException {
+                                                                             DynamicApplicationContext context) {
         throw new UnsupportedOperationException();
     }
 
@@ -595,7 +616,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         throw new UnsupportedOperationException();
     }
 
-    private boolean expiresBeforeCreated(String creationTime, String expirationTime) throws XWSSecurityException {
+    private boolean expiresBeforeCreated(String creationTime, String expirationTime) throws XWSSecurityRuntimeException {
         Date created;
         Date expires = null;
         try {
@@ -613,7 +634,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                         expires = calendarFormatter2.parse(expirationTime);
                     }
                 } catch (java.text.ParseException xpe) {
-                    throw new XWSSecurityException(xpe.getMessage());
+                    throw new XWSSecurityRuntimeException(xpe.getMessage());
                 }
             }
         }
@@ -657,7 +678,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     }
 
 
-    private X509Certificate getDefaultCertificateInternal(KeyStore store, Map context) throws XWSSecurityException {
+    private X509Certificate getDefaultCertificateInternal(KeyStore store, Map context) throws XWSSecurityRuntimeException {
         try {
             String alias = (String) context.get(MetroConstants.KEYSTORE_ALIAS);
             if (alias == null) {
@@ -687,11 +708,11 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                 }
             }
             if (alias == null) {
-                throw new XWSSecurityException("Unable to determine alias for default certificate in keystore");
+                throw new XWSSecurityRuntimeException("Unable to determine alias for default certificate in keystore");
             }
             return (X509Certificate) store.getCertificate(alias);
         } catch (KeyStoreException e) {
-            throw new XWSSecurityException(e);
+            throw new XWSSecurityRuntimeException(e);
         }
     }
 
@@ -794,12 +815,12 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         }
     }
 
-    private void checkEnabled() throws XWSSecurityException {
+    private void checkEnabled() throws XWSSecurityRuntimeException {
         if (keyStore == null) {
-            throw new XWSSecurityException("Keystore not configured");
+            throw new XWSSecurityRuntimeException("Keystore not configured");
         }
         if (trustStore == null) {
-            throw new XWSSecurityException("Truststore not configured");
+            throw new XWSSecurityRuntimeException("Truststore not configured");
         }
     }
 }

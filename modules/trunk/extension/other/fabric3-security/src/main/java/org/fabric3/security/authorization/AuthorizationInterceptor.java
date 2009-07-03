@@ -91,7 +91,7 @@ public class AuthorizationInterceptor implements Interceptor {
 
         WorkContext workContext = msg.getWorkContext();
 
-        AuthorizationResult result = authorizationService.hasRoles(workContext.getSubject(), roles);
+        AuthorizationResult result = authorizationService.hasRoles(workContext.getSubject().getJaasSubject(), roles);
         if (result.isSuccess()) {
             return next.invoke(msg);
         } else {

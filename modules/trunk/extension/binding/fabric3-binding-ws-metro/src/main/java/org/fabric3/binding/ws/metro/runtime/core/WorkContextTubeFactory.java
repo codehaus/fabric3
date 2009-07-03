@@ -35,21 +35,25 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime;
+package org.fabric3.binding.ws.metro.runtime.core;
+
+import javax.xml.ws.WebServiceException;
+
+import com.sun.xml.ws.api.pipe.Tube;
+import com.sun.xml.ws.assembler.ClientTubelineAssemblyContext;
+import com.sun.xml.ws.assembler.ServerTubelineAssemblyContext;
+import com.sun.xml.ws.assembler.TubeFactory;
 
 /**
- * Constants.
- *
  * @version $Rev$ $Date$
  */
-public interface MetroConstants {
+public class WorkContextTubeFactory implements TubeFactory {
+    public Tube createTube(ClientTubelineAssemblyContext context) throws WebServiceException {
+        throw new UnsupportedOperationException("Tube not supported in client tublines");
+    }
 
-    String KEYSTORE_ALIAS = "f3.keystore.alias";
-
-    String USERNAME = "f3.username";
-
-    String PASSWORD = "f3.password";
-
-    String WORK_CONTEXT = "f3.work.context";
+    public Tube createTube(ServerTubelineAssemblyContext context) throws WebServiceException {
+        return new WorkContextTube(context.getTubelineHead());
+    }
 
 }
