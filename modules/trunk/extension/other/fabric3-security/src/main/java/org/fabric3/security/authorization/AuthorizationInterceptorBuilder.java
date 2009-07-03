@@ -72,7 +72,7 @@ public class AuthorizationInterceptorBuilder implements InterceptorBuilder<Autho
      * @return An instance of the authorization interceptor.
      */
     public Interceptor build(AuthorizationInterceptorDefinition definition) throws BuilderException {
-        return new AuthorizationInterceptor(definition.getRoles(), authorizationService);
+        return new RoleBasedAuthorizationInterceptor(definition.getRoles(), authorizationService);
     }
 
 }

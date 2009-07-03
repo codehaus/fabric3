@@ -46,7 +46,7 @@ import org.fabric3.spi.wire.Interceptor;
  *
  * @version $Rev$ $Date$
  */
-public class AuthorizationInterceptor implements Interceptor {
+public class RoleBasedAuthorizationInterceptor implements Interceptor {
 
     private Interceptor next;
     private final String[] roles;
@@ -58,7 +58,7 @@ public class AuthorizationInterceptor implements Interceptor {
      * @param roles                Roles that need to be checked by this instance of the interceptor.
      * @param authorizationService AUthorization service extension to perform authorization.
      */
-    public AuthorizationInterceptor(String[] roles, AuthorizationService authorizationService) {
+    public RoleBasedAuthorizationInterceptor(String[] roles, AuthorizationService authorizationService) {
         this.roles = roles;
         this.authorizationService = authorizationService;
     }
