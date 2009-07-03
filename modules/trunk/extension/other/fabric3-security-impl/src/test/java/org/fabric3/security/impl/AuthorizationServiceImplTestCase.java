@@ -75,7 +75,6 @@ public class AuthorizationServiceImplTestCase extends TestCase {
 
         BasicSecuritySubject subject = new BasicSecuritySubject("foo", "bar", roles);
 
-
         List<String> subjectRoles = new ArrayList<String>();
         subjectRoles.add("role1");
         subjectRoles.add("role2");
