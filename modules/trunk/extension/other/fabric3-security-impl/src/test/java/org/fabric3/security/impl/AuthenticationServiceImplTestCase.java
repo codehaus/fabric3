@@ -37,45 +37,57 @@
 */
 package org.fabric3.security.impl;
 
-import org.osoa.sca.annotations.Reference;
+import java.util.Collections;
+
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
 
 import org.fabric3.spi.security.AuthenticationException;
 import org.fabric3.spi.security.AuthenticationService;
-import org.fabric3.spi.security.AuthenticationToken;
-import org.fabric3.spi.security.SecuritySubject;
 import org.fabric3.spi.security.UsernamePasswordToken;
 
 /**
- * Basic authentication and service.
- *
  * @version $Rev$ $Date$
  */
-public class AuthenticationServiceImpl implements AuthenticationService {
-    private SecurityStore store;
+public class AuthenticationServiceImplTestCase extends TestCase {
 
-    public AuthenticationServiceImpl(@Reference SecurityStore store) {
-        this.store = store;
+    public void testAuthenticate() throws Exception {
+        BasicSecuritySubject subject = new BasicSecuritySubject("foo", "bar", Collections.<Role>emptyList());
+        SecurityStore store = EasyMock.createMock(SecurityStore.class);
+        EasyMock.expect(store.find(EasyMock.eq("foo"))).andReturn(subject);
+        EasyMock.replay(store);
+        AuthenticationService service = new AuthenticationServiceImpl(store);
+        UsernamePasswordToken token = new UsernamePasswordToken("foo", "bar");
+        service.authenticate(token);
     }
 
-    public SecuritySubject authenticate(AuthenticationToken<?, ?> token) throws AuthenticationException {
-        if (token == null) {
-            throw new IllegalArgumentException("Null token");
-        }
-        if (!(token instanceof UsernamePasswordToken)) {
-            throw new UnsupportedOperationException("Token type not supported: " + token.getClass().getName());
-        }
-        UsernamePasswordToken userToken = (UsernamePasswordToken) token;
+    public void testAuthenticateNameFail() throws Exception {
+        SecurityStore store = EasyMock.createMock(SecurityStore.class);
+        EasyMock.expect(store.find(EasyMock.eq("foo"))).andReturn(null);
+        EasyMock.replay(store);
+        AuthenticationService service = new AuthenticationServiceImpl(store);
+        UsernamePasswordToken token = new UsernamePasswordToken("foo", "bar");
         try {
-            BasicSecuritySubject subject = store.find(userToken.getPrincipal());
-            if (subject == null) {
-                throw new InvalidAuthenticationException("Invalid authentication information");
-            }
-            if (!userToken.getCredentials().equals(subject.getPassword())) {
-                throw new InvalidAuthenticationException("Invalid authentication information");
-            }
-            return subject;
-        } catch (SecurityStoreException e) {
-            throw new AuthenticationException(e);
+            service.authenticate(token);
+            fail();
+        } catch (AuthenticationException e) {
+            // expected
         }
     }
+
+    public void testAuthenticatePasswordFail() throws Exception {
+        BasicSecuritySubject subject = new BasicSecuritySubject("foo", "bar", Collections.<Role>emptyList());
+        SecurityStore store = EasyMock.createMock(SecurityStore.class);
+        EasyMock.expect(store.find(EasyMock.eq("foo"))).andReturn(subject);
+        EasyMock.replay(store);
+        AuthenticationService service = new AuthenticationServiceImpl(store);
+        UsernamePasswordToken token = new UsernamePasswordToken("foo", "baz");
+        try {
+            service.authenticate(token);
+            fail();
+        } catch (AuthenticationException e) {
+            // expected
+        }
+    }
+
 }

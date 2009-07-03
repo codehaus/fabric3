@@ -37,45 +37,59 @@
 */
 package org.fabric3.security.impl;
 
-import org.osoa.sca.annotations.Reference;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.fabric3.spi.security.AuthenticationException;
-import org.fabric3.spi.security.AuthenticationService;
-import org.fabric3.spi.security.AuthenticationToken;
-import org.fabric3.spi.security.SecuritySubject;
-import org.fabric3.spi.security.UsernamePasswordToken;
+import junit.framework.TestCase;
+
+import org.fabric3.spi.security.AuthorizationService;
+import org.fabric3.spi.security.NotAuthorizedException;
 
 /**
- * Basic authentication and service.
- *
  * @version $Rev$ $Date$
  */
-public class AuthenticationServiceImpl implements AuthenticationService {
-    private SecurityStore store;
+public class AuthorizationServiceImplTestCase extends TestCase {
 
-    public AuthenticationServiceImpl(@Reference SecurityStore store) {
-        this.store = store;
-    }
+    public void testHasRole() throws Exception {
+        List<Role> roles = new ArrayList<Role>();
+        roles.add(new Role("role1"));
+        roles.add(new Role("role2"));
 
-    public SecuritySubject authenticate(AuthenticationToken<?, ?> token) throws AuthenticationException {
-        if (token == null) {
-            throw new IllegalArgumentException("Null token");
-        }
-        if (!(token instanceof UsernamePasswordToken)) {
-            throw new UnsupportedOperationException("Token type not supported: " + token.getClass().getName());
-        }
-        UsernamePasswordToken userToken = (UsernamePasswordToken) token;
+        BasicSecuritySubject subject = new BasicSecuritySubject("foo", "bar", roles);
+
+        AuthorizationService service = new AuthorizationServiceImpl();
+        service.checkRole(subject, "role1");
+
         try {
-            BasicSecuritySubject subject = store.find(userToken.getPrincipal());
-            if (subject == null) {
-                throw new InvalidAuthenticationException("Invalid authentication information");
-            }
-            if (!userToken.getCredentials().equals(subject.getPassword())) {
-                throw new InvalidAuthenticationException("Invalid authentication information");
-            }
-            return subject;
-        } catch (SecurityStoreException e) {
-            throw new AuthenticationException(e);
+            service.checkRole(subject, "role3");
+            fail();
+        } catch (NotAuthorizedException e) {
+            // expected
         }
     }
+
+    public void testHasRoles() throws Exception {
+        List<Role> roles = new ArrayList<Role>();
+        roles.add(new Role("role1"));
+        roles.add(new Role("role2"));
+
+        BasicSecuritySubject subject = new BasicSecuritySubject("foo", "bar", roles);
+
+
+        List<String> subjectRoles = new ArrayList<String>();
+        subjectRoles.add("role1");
+        subjectRoles.add("role2");
+        AuthorizationService service = new AuthorizationServiceImpl();
+        service.checkRoles(subject, subjectRoles);
+
+        subjectRoles.add("role3");
+        try {
+            service.checkRoles(subject, subjectRoles);
+            fail();
+        } catch (NotAuthorizedException e) {
+            // expected
+        }
+    }
+
+
 }

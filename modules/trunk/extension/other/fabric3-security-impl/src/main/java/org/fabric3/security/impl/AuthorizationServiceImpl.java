@@ -37,45 +37,40 @@
 */
 package org.fabric3.security.impl;
 
-import org.osoa.sca.annotations.Reference;
+import java.util.Collection;
 
-import org.fabric3.spi.security.AuthenticationException;
-import org.fabric3.spi.security.AuthenticationService;
-import org.fabric3.spi.security.AuthenticationToken;
+import org.fabric3.spi.security.AuthorizationException;
+import org.fabric3.spi.security.AuthorizationService;
+import org.fabric3.spi.security.NotAuthorizedException;
 import org.fabric3.spi.security.SecuritySubject;
-import org.fabric3.spi.security.UsernamePasswordToken;
 
 /**
- * Basic authentication and service.
+ * Basic implementation of the AuthorizationService.
  *
  * @version $Rev$ $Date$
  */
-public class AuthenticationServiceImpl implements AuthenticationService {
-    private SecurityStore store;
-
-    public AuthenticationServiceImpl(@Reference SecurityStore store) {
-        this.store = store;
+public class AuthorizationServiceImpl implements AuthorizationService {
+    public void checkRole(SecuritySubject subject, String role) throws AuthorizationException {
+        BasicSecuritySubject basicSubject = subject.getDelegate(BasicSecuritySubject.class);
+        if (!basicSubject.hasRole(role)) {
+            throw new NotAuthorizedException("Subject not authorized for role: " + role);
+        }
     }
 
-    public SecuritySubject authenticate(AuthenticationToken<?, ?> token) throws AuthenticationException {
-        if (token == null) {
-            throw new IllegalArgumentException("Null token");
-        }
-        if (!(token instanceof UsernamePasswordToken)) {
-            throw new UnsupportedOperationException("Token type not supported: " + token.getClass().getName());
-        }
-        UsernamePasswordToken userToken = (UsernamePasswordToken) token;
-        try {
-            BasicSecuritySubject subject = store.find(userToken.getPrincipal());
-            if (subject == null) {
-                throw new InvalidAuthenticationException("Invalid authentication information");
+    public void checkRoles(SecuritySubject subject, Collection<String> roles) throws AuthorizationException {
+        BasicSecuritySubject basicSubject = subject.getDelegate(BasicSecuritySubject.class);
+        for (String role : roles) {
+            if (!basicSubject.hasRole(role)) {
+                throw new NotAuthorizedException("Subject not authorized for role: " + role);
             }
-            if (!userToken.getCredentials().equals(subject.getPassword())) {
-                throw new InvalidAuthenticationException("Invalid authentication information");
-            }
-            return subject;
-        } catch (SecurityStoreException e) {
-            throw new AuthenticationException(e);
         }
+    }
+
+    public void checkPermission(SecuritySubject subject, String role) throws AuthorizationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public void checkPermissions(SecuritySubject subject, Collection<String> roles) throws AuthorizationException {
+        throw new UnsupportedOperationException();
     }
 }
