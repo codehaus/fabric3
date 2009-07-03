@@ -226,14 +226,14 @@ public class BrokerParser {
         }
     }
 
-    private BrokerConfiguration raiseInvalidConfiguration(String message, XMLStreamReader reader) throws InvalidConfigurationException {
+    private void raiseInvalidConfiguration(String message, XMLStreamReader reader) throws InvalidConfigurationException {
         Location location = reader.getLocation();
         int line = location.getLineNumber();
         int col = location.getColumnNumber();
         throw new InvalidConfigurationException(message + " [" + line + "," + col + "]");
     }
 
-    private BrokerConfiguration raiseInvalidConfiguration(String message, Throwable e, XMLStreamReader reader) throws InvalidConfigurationException {
+    private void raiseInvalidConfiguration(String message, Throwable e, XMLStreamReader reader) throws InvalidConfigurationException {
         Location location = reader.getLocation();
         int line = location.getLineNumber();
         int col = location.getColumnNumber();
