@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+ Fabric3
+ Copyright (c) 2009 Metaform Systems
+
+ Fabric3 integration tests are licensed under the Apache 2.0 license.
+ -->
+<definitions xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+             xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+             targetNamespace="urn:fabric3.org:policy"
+             xmlns:f3-policy="urn:fabric3.org:policy"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+             xmlns:wsp="http://www.w3.org/ns/ws-policy"
+             xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+             xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+
+    <policySet name="usernameTokenPolicy" provides="sca:authentication.message" appliesTo="binding.ws">
+        <Policy wsu:Id="UsernameTokenPolicy"
+                xmlns="http://www.w3.org/ns/ws-policy">
+            <wsp:ExactlyOne>
+                <wsp:All>
+                    <wsam:Addressing wsp:Optional="false"/>
+                    <sp:TransportBinding>
+                        <wsp:Policy>
+                            <sp:TransportToken>
+                                <wsp:Policy>
+                                    <sp:HttpsToken RequireClientCertificate="false"/>
+                                </wsp:Policy>
+                            </sp:TransportToken>
+                            <sp:Layout>
+                                <wsp:Policy>
+                                    <sp:Lax/>
+                                </wsp:Policy>
+                            </sp:Layout>
+                            <sp:IncludeTimestamp/>
+                            <sp:AlgorithmSuite>
+                                <wsp:Policy>
+                                    <sp:Basic128/>
+                                </wsp:Policy>
+                            </sp:AlgorithmSuite>
+                        </wsp:Policy>
+                    </sp:TransportBinding>
+                    <sp:Wss10/>
+                    <sp:SignedSupportingTokens>
+                        <wsp:Policy>
+                            <sp:UsernameToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+                                <wsp:Policy>
+                                    <sp:WssUsernameToken10/>
+                                </wsp:Policy>
+                            </sp:UsernameToken>
+                        </wsp:Policy>
+                    </sp:SignedSupportingTokens>
+                </wsp:All>
+            </wsp:ExactlyOne>
+        </Policy>
+    </policySet>
+    <!--<policySet name="X509TokenPolicy" provides="sca:authentication.message" appliesTo="binding.ws">-->
+        <!--<wsp:Policy wsu:Id="X509TokenPolicy">-->
+            <!--<wsp:ExactlyOne>-->
+                <!--<wsp:All>-->
+                    <!--<wsaws:UsingAddressing xmlns:wsaws="http://www.w3.org/2006/05/addressing/wsdl"/>-->
+                    <!--<sp:AsymmetricBinding>-->
+                        <!--<wsp:Policy>-->
+                            <!--<sp:InitiatorToken>-->
+                                <!--<wsp:Policy>-->
+                                    <!--<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">-->
+                                        <!--<wsp:Policy>-->
+                                            <!--<sp:WssX509V3Token10/>-->
+                                        <!--</wsp:Policy>-->
+                                    <!--</sp:X509Token>-->
+                                <!--</wsp:Policy>-->
+                            <!--</sp:InitiatorToken>-->
+                            <!--<sp:RecipientToken>-->
+                                <!--<wsp:Policy>-->
+                                    <!--<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">-->
+                                        <!--<wsp:Policy>-->
+                                            <!--<sp:RequireKeyIdentifierReference/>-->
+                                            <!--<sp:WssX509V3Token10/>-->
+                                        <!--</wsp:Policy>-->
+                                    <!--</sp:X509Token>-->
+                                <!--</wsp:Policy>-->
+                            <!--</sp:RecipientToken>-->
+                            <!--<sp:Layout>-->
+                                <!--<wsp:Policy>-->
+                                    <!--<sp:Strict/>-->
+                                <!--</wsp:Policy>-->
+                            <!--</sp:Layout>-->
+                            <!--<sp:IncludeTimestamp/>-->
+                            <!--<sp:OnlySignEntireHeadersAndBody/>-->
+                            <!--<sp:AlgorithmSuite>-->
+                                <!--<wsp:Policy>-->
+                                    <!--<sp:Basic128/>-->
+                                <!--</wsp:Policy>-->
+                            <!--</sp:AlgorithmSuite>-->
+                            <!--<sp:EncryptSignature/>-->
+                        <!--</wsp:Policy>-->
+                    <!--</sp:AsymmetricBinding>-->
+                    <!--<sp:Wss10>-->
+                        <!--<wsp:Policy>-->
+                            <!--<sp:MustSupportRefKeyIdentifier/>-->
+                            <!--<sp:MustSupportRefIssuerSerial/>-->
+                        <!--</wsp:Policy>-->
+                    <!--</sp:Wss10>-->
+                    <!--<sp:EncryptedParts>-->
+                        <!--<sp:Body/>-->
+                    <!--</sp:EncryptedParts>-->
+                    <!--<sp:SignedParts>-->
+                        <!--<sp:Body/>-->
+                        <!--<sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>-->
+                        <!--<sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing"/>-->
+                        <!--<sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing"/>-->
+                        <!--<sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing"/>-->
+                        <!--<sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing"/>-->
+                        <!--<sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing"/>-->
+                        <!--<sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing"/>-->
+                        <!--<sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm"/>-->
+                        <!--<sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm"/>-->
+                        <!--<sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm"/>-->
+                    <!--</sp:SignedParts>-->
+                <!--</wsp:All>-->
+            <!--</wsp:ExactlyOne>-->
+        <!--</wsp:Policy>-->
+    <!--</policySet>-->
+
+</definitions>

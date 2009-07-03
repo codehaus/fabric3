@@ -77,6 +77,11 @@
                             <version>1.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-security-impl</artifactId>
+                            <version>1.2-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
                             <groupId>org.objectweb.asm</groupId>
                             <artifactId>com.springsource.org.objectweb.asm</artifactId>
                             <version>3.1.0</version>
@@ -98,8 +103,20 @@
                         <![CDATA[
                         <config>
                             <web.server>
+                                <https enabled="true" port="8901"/>
                                 <http port="8900"/>
                             </web.server>
+                            <security>
+                                <keystore>fabric3-keystore.jks</keystore>
+                                <keystore.password>password</keystore.password>
+                                <cert.password>password</cert.password>
+                            </security>
+                            <users>
+                                <user>
+                                    <username>foo</username>
+                                    <password>bar</password>
+                                </user>
+                            </users>
                         </config>
                         ]]>
                     </systemConfig>
