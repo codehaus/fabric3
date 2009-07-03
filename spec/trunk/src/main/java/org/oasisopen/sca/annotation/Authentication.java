@@ -42,18 +42,35 @@
  */
 package org.oasisopen.sca.annotation;
 
+import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
+import static org.oasisopen.sca.Constants.SCA_PREFIX;
+
 /**
- * Annotation on a method that indicates that the method is non-blocking and communication with the service provider may use buffer the requests and
- * send them at some later time.
+ * The @Authentication annotation is used to indicate that the invocation requires authentication.
  *
- * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
+ * @version $Rev$ $Date$
  */
-@Target({METHOD})
+@Inherited
+@Target({TYPE, FIELD, METHOD, PARAMETER})
 @Retention(RUNTIME)
-public @interface OneWay {
+@Intent(Authentication.AUTHENTICATION)
+public @interface Authentication {
+    String AUTHENTICATION = SCA_PREFIX + "authentication";
+    String AUTHENTICATION_MESSAGE = AUTHENTICATION + ".message";
+    String AUTHENTICATION_TRANSPORT = AUTHENTICATION + ".transport";
+
+    /**
+     * List of authentication qualifiers (such as "message" or "transport").
+     *
+     * @return authentication qualifiers
+     */
+    @Qualifier String[] value() default "";
 }

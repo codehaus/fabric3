@@ -1,20 +1,44 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Fabric3
+ * Copyright (c) 2009 Metaform Systems
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Fabric3 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version, with the
+ * following exception:
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Linking this software statically or dynamically with other
+ * modules is making a combined work based on this software.
+ * Thus, the terms and conditions of the GNU General Public
+ * License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of this software
+ * give you permission to link this software with independent
+ * modules to produce an executable, regardless of the license
+ * terms of these independent modules, and to copy and distribute
+ * the resulting executable under terms of your choice, provided
+ * that you also meet, for each linked independent module, the
+ * terms and conditions of the license of that module. An
+ * independent module is a module which is not derived from or
+ * based on this software. If you modify this software, you may
+ * extend this exception to your version of the software, but
+ * you are not obligated to do so. If you do not wish to do so,
+ * delete this exception statement from your version.
+ *
+ * Fabric3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the
+ * GNU General Public License along with Fabric3.
+ * If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Based on artifacts from OASIS:
+ *
+ * Copyright(C) OASIS(R) 2005,2009. All Rights Reserved.
+ * OASIS trademark, IPR and other policies apply.
  */
 package org.oasisopen.sca.annotation;
 
@@ -31,23 +55,7 @@ import static org.oasisopen.sca.Constants.SCA_PREFIX;
 
 
 /**
- * Annotation denoting the intent that service operations require confidentiality.
- * <p/>
- * Applied to the injection site (field, method or constructor parameter) for a reference,
- * it indicates that all invocations through that reference require confidentiality.
- * <p/>
- * Applied to a interface method on a service contract, it indicates that all invocations
- * of that service operation require confidentiality; applied to the type of a service contract,
- * it indicates that all service operations on that interface require confidentiality.
- * <p/>
- * Applied to a method on an implementation class, it indicates that all invocations that
- * are dispatched to that implementation method (through any service) require confidentiality.
- * Applied to a interface implemented by an implementation class, it indicates that all
- * invocations that are dispatched to the implementation method for that interface operation
- * require confidentiality.
- * <p/>
- * Applied to an implementation class, it indicates that all invocations of that implementation
- * and that all invocations made by that implementation require confidentiality.
+ * The @Confidentiality annotation is used to indicate that the invocation requires confidentiality. 
  *
  * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */

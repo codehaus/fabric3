@@ -42,18 +42,35 @@
  */
 package org.oasisopen.sca.annotation;
 
+import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
+import static org.oasisopen.sca.Constants.SCA_PREFIX;
+
 /**
- * Annotation on a method that indicates that the method is non-blocking and communication with the service provider may use buffer the requests and
- * send them at some later time.
+ * The @Integrity annotation is used to indicate that the invocation requires integrity (ie no tampering of the messages between client and service).
  *
- * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
+ * @version $Rev$ $Date$
  */
-@Target({METHOD})
+@Inherited
+@Target({TYPE, FIELD, METHOD, PARAMETER})
 @Retention(RUNTIME)
-public @interface OneWay {
+@Intent(Integrity.INTEGRITY)
+public @interface Integrity {
+    String INTEGRITY = SCA_PREFIX + "integrity";
+    String INTEGRITY_MESSAGE = INTEGRITY + ".message";
+    String INTEGRITY_TRANSPORT = INTEGRITY + ".transport";
+
+    /**
+     * List of integrity qualifiers (such as "message" or "transport").
+     *
+     * @return integrity qualifiers
+     */
+    @Qualifier String[] value() default "";
 }
