@@ -70,6 +70,7 @@ import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.security.SecuritySubject;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -129,12 +130,14 @@ public class Axis2TargetInterceptor implements Interceptor {
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
         options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
 
-        Subject subject = msg.getWorkContext().getSubject().getJaasSubject();
-        if (subject != null && !subject.getPrincipals().isEmpty()) {
-            Principal primaryPrincipal = subject.getPrincipals().iterator().next();
-            options.setUserName(primaryPrincipal.getName());
+        SecuritySubject securitySubject = msg.getWorkContext().getSubject();
+        if (securitySubject != null) {
+            Subject subject = securitySubject.getJaasSubject();
+            if (subject != null && !subject.getPrincipals().isEmpty()) {
+                Principal primaryPrincipal = subject.getPrincipals().iterator().next();
+                options.setUserName(primaryPrincipal.getName());
+            }
         }
-
         applyOperationInfo(options);
         applyConfig(options);
 
