@@ -43,7 +43,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -90,8 +89,6 @@ public class IntentLoader implements TypeLoader<Intent> {
             }
         }
 
-        String description = null;
-
         String requiresVal = reader.getAttributeValue(null, "requires");
         Set<QName> requires = new HashSet<QName>();
         if (requiresVal != null) {
@@ -112,14 +109,9 @@ public class IntentLoader implements TypeLoader<Intent> {
 
         while (true) {
             switch (reader.next()) {
-            case START_ELEMENT:
-                if (DefinitionsLoader.DESCRIPTION.equals(reader.getName())) {
-                    description = reader.getElementText();
-                }
-                break;
             case END_ELEMENT:
                 if (DefinitionsLoader.INTENT.equals(reader.getName())) {
-                    return new Intent(qName, description, constrains, requires);
+                    return new Intent(qName, constrains, requires);
                 }
             }
         }

@@ -89,11 +89,10 @@ public final class Intent extends AbstractDefinition {
      * Initializes the name, description and the constrained artifacts.
      *
      * @param name        Name of the intent.
-     * @param description Description of the intent.
      * @param constrains  SCA artifact constrained by this intent.
      * @param requires    The intents this intent requires if this is a profile intent.
      */
-    public Intent(QName name, String description, QName constrains, Set<QName> requires) {
+    public Intent(QName name, QName constrains, Set<QName> requires) {
 
         super(name);
 

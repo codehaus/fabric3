@@ -93,7 +93,7 @@ public class DefaultPolicyRegistryTestCase extends TestCase {
         Resource resource = new Resource(new URL("file://test"), "text/xml");
         QName name = new QName("test", "intent");
         QNameSymbol symbol = new QNameSymbol(name);
-        Intent intent = new Intent(name, null, null, null);
+        Intent intent = new Intent(name, null, null);
         ResourceElement<QNameSymbol, Intent> element = new ResourceElement<QNameSymbol, Intent>(symbol, intent);
         resource.addResourceElement(element);
         contribution.addResource(resource);
