@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the configuration of a component reference.
+ * Represents a component reference.
  *
  * @version $Rev$ $Date$
  */

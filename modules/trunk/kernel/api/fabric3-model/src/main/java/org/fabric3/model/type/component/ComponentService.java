@@ -46,6 +46,8 @@ package org.fabric3.model.type.component;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
+ * Represents a component service.
+ *
  * @version $Rev$ $Date$
  */
 public class ComponentService extends ServiceDefinition {

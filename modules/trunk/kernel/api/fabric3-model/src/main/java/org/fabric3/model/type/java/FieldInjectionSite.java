@@ -46,6 +46,8 @@ package org.fabric3.model.type.java;
 import java.lang.reflect.Field;
 
 /**
+ * Represents a field that is injected into when a component implementation instance is instantiated.
+ *
  * @version $Rev$ $Date$
  */
 public class FieldInjectionSite extends InjectionSite {

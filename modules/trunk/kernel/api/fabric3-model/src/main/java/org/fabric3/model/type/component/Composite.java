@@ -56,7 +56,7 @@ import org.fabric3.model.type.PolicyAware;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
- * A specialization of component type for composite components.
+ * Represents a composite.
  *
  * @version $Rev$ $Date$
  */

@@ -47,6 +47,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 /**
+ * Represents a constaining type definition.
+ *
  * @version $Rev$ $Date$
  */
 public class ConstrainingType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {

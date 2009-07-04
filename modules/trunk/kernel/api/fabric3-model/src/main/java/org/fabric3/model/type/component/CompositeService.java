@@ -48,7 +48,7 @@ import java.net.URI;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
- * Representation of a service exposed by a composite component type.
+ * A service exposed by a composite.
  *
  * @version $Rev$ $Date$
  */

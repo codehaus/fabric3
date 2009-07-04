@@ -46,6 +46,8 @@ package org.fabric3.model.type.component;
 import javax.xml.namespace.QName;
 
 /**
+ * Base non-composite component type.
+ *
  * @version $Rev$ $Date$
  */
 public class ComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {

@@ -51,7 +51,7 @@ import org.fabric3.model.type.service.OperationDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
- * Represents a component reference
+ * Represents a component reference.
  *
  * @version $Rev$ $Date$
  */

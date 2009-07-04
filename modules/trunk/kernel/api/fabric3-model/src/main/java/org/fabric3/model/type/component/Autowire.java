@@ -44,7 +44,7 @@
 package org.fabric3.model.type.component;
 
 /**
- * Denotes if autowire is on, off or inherited.
+ * Denotes if autowire is on, off, or inherited.
  *
  * @version $Rev$ $Date$
  */

@@ -47,7 +47,7 @@ import org.fabric3.model.type.ModelObject;
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
- * Represents a resource definition. Resources are provisioned to runtime nodes.
+ * Represents a resource definition.
  *
  * @version $Rev$ $Date$
  */
@@ -84,6 +84,8 @@ public class ResourceDefinition extends ModelObject {
 
     /**
      * Returned the service contract for the resource.
+     *
+     * @return the service contract
      */
     public ServiceContract<?> getServiceContract() {
         return serviceContract;

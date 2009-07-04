@@ -47,6 +47,8 @@ import java.net.URI;
 import java.util.List;
 
 /**
+ * A reference exposed by a composite component typee.
+ *
  * @version $Rev$ $Date$
  */
 public class CompositeReference extends ReferenceDefinition {

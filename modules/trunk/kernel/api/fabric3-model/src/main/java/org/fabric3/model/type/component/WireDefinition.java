@@ -48,7 +48,7 @@ import java.net.URI;
 import org.fabric3.model.type.ModelObject;
 
 /**
- * Represents a wire specified in an assembly
+ * Represents a wire specified in a composite file.
  *
  * @version $Rev$ $Date$
  */

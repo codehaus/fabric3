@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 import org.oasisopen.sca.Constants;
 
 /**
- * A specialization of an implementation associated with composite components
+ * A represents a component implementation that is a composite
  *
  * @version $Rev$ $Date$
  */

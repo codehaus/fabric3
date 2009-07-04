@@ -52,19 +52,7 @@ import org.fabric3.model.type.CapabilityAware;
 import org.fabric3.model.type.ModelObject;
 
 /**
- * The definition of the configurable aspects of an implementation in terms of the services it exposes, the services it references, and properties
- * that can be used to configure it.
- * <p/>
- * A service represents an addressable interface provided by the implementation. Such a service may be the target of a wire from another component.
- * <p/>
- * A reference represents a requirement that an implementation has on a service provided by another component or by a resource outside the SCA system.
- * Such a reference may be the source of a wire to another component.
- * <p/>
- * A property allows the behaviour of the implementation to be configured through externally set values.
- * <p/>
- * A component type may also declare that it wishes to be initialized upon activation of the scope that contains it and may specify an order relative
- * to other eagerly initializing components. For example, an implementation that pre-loads some form of cache could declare that it should be eagerly
- * initialized at the start of the scope so that the cache load occured on startup rather than first use.
+ * Base component type representation.
  *
  * @version $Rev$ $Date$
  */

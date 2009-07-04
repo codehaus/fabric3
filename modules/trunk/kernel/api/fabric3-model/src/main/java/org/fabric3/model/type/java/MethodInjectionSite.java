@@ -46,6 +46,8 @@ package org.fabric3.model.type.java;
 import java.lang.reflect.Method;
 
 /**
+ * Represents a setter method that is injected into when a component implementation instance is instantiated.
+ *
  * @version $Rev$ $Date$
  */
 public class MethodInjectionSite extends InjectionSite {

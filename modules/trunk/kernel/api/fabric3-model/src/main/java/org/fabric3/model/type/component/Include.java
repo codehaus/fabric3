@@ -49,7 +49,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.model.type.ModelObject;
 
 /**
- * Model object that represents the include of a composite by value.
+ * Represents a composite include.
  *
  * @version $Rev$ $Date$
  */

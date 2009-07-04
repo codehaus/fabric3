@@ -50,7 +50,7 @@ import org.osoa.sca.Conversation;
 import org.fabric3.model.type.ModelObject;
 
 /**
- * An implementation scope that defines the lifecycle for implementation instances.
+ * Defines the lifecycle for implementation instances.
  *
  * @version $Rev$ $Date$
  * @param <T> the type of identifier used to identify instances of this scope

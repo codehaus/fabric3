@@ -54,7 +54,7 @@ import org.fabric3.model.type.AbstractPolicyAware;
 import org.fabric3.model.type.CapabilityAware;
 
 /**
- * The base representation of a binding specified in an assembly
+ * Base binding representation.
  *
  * @version $Rev$ $Date$
  */
