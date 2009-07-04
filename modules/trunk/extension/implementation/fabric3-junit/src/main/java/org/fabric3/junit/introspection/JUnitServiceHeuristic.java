@@ -51,10 +51,10 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.junit.scdl.JUnitServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
@@ -96,7 +96,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
 
         JUnitServiceContract testContract = generateTestContract(implClass);
         ServiceDefinition testService = new ServiceDefinition(TEST_SERVICE_NAME, testContract);
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
         TypeMapping typeMapping = context.getTypeMapping();
         componentType.add(testService);
         // if the class implements a single interface, use it, otherwise the contract is the class itself

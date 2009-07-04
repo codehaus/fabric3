@@ -54,8 +54,8 @@ import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
@@ -75,7 +75,7 @@ public class SystemServiceHeuristicTestCase extends TestCase {
     private IntrospectionHelper helper;
     private IntrospectionContext context;
     private SystemImplementation impl;
-    private PojoComponentType componentType;
+    private InjectingComponentType componentType;
     private ServiceContract<Type> serviceInterfaceContract;
     private ServiceContract<Type> noInterfaceContract;
     private IMocksControl control;
@@ -136,7 +136,7 @@ public class SystemServiceHeuristicTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         impl = new SystemImplementation();
-        componentType = new PojoComponentType();
+        componentType = new InjectingComponentType(NoInterface.class.getName());
         impl.setComponentType(componentType);
 
         noInterfaceContract = createServiceContract(NoInterface.class);

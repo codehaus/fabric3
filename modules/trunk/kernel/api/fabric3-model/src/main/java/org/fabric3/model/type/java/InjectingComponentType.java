@@ -66,11 +66,30 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     private Signature initMethod;
     private Signature destroyMethod;
     private final Map<String, CallbackDefinition> callbacks = new HashMap<String, CallbackDefinition>();
+    private String implClass;
 
     /**
-     * Default constructor.
+     * Constructor.
+     *
+     * @param implClass the class this component type represents.
+     */
+    public InjectingComponentType(String implClass) {
+        this.implClass = implClass;
+    }
+
+    /**
+     * Default constructor. Used primarily for testing.
      */
     public InjectingComponentType() {
+    }
+
+    /**
+     * Returns the java class name for this component type.
+     *
+     * @return the the java class name for this component type
+     */
+    public String getImplClass() {
+        return implClass;
     }
 
     /**

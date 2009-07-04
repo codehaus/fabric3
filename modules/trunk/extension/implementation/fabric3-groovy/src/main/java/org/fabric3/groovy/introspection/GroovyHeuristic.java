@@ -38,8 +38,8 @@
 package org.fabric3.groovy.introspection;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.Signature;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 
@@ -50,7 +50,7 @@ public class GroovyHeuristic implements HeuristicProcessor<GroovyImplementation>
 
     public void applyHeuristics(GroovyImplementation implementation, Class<?> implClass, IntrospectionContext context) {
 
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
 
         if (componentType.getConstructor() == null) {
             try {

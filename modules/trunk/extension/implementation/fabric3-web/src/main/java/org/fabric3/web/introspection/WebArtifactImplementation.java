@@ -41,14 +41,14 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * Represents the implementation of a web artifact such as a servlet or filter.
  *
  * @version $Rev$ $Date$
  */
-public class WebArtifactImplementation extends Implementation<PojoComponentType> {
+public class WebArtifactImplementation extends Implementation<InjectingComponentType> {
     private static final long serialVersionUID = -5415465119697665067L;
     public static final QName QNAME = new QName(Namespaces.IMPLEMENTATION, "webArtifact");
 

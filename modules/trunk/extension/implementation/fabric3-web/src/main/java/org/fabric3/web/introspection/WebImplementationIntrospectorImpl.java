@@ -44,8 +44,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -79,7 +79,7 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
         for (Class<?> artifact : artifacts) {
             // introspect each class and generate a component type that will be merged into the web component type
             WebArtifactImplementation artifactImpl = new WebArtifactImplementation();
-            PojoComponentType type = new PojoComponentType(artifact.getName());
+            InjectingComponentType type = new InjectingComponentType(artifact.getName());
             artifactImpl.setComponentType(type);
             TypeMapping typeMapping = helper.mapTypeParameters(artifact);
             IntrospectionContext childContext = new DefaultIntrospectionContext(context, typeMapping);
@@ -96,7 +96,7 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
         }
     }
 
-    private void validateComponentType(PojoComponentType type, IntrospectionContext context) {
+    private void validateComponentType(InjectingComponentType type, IntrospectionContext context) {
         for (ReferenceDefinition reference : type.getReferences().values()) {
             if (reference.getServiceContract().isConversational()) {
                 IllegalConversationalReferenceInjection failure = new IllegalConversationalReferenceInjection(reference, type.getImplClass());
@@ -109,12 +109,12 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
     /**
      * Merges the POJO component type into the web component type.
      *
-     * @param webType  the web component type to merge into
-     * @param pojoType the POJO component to merge
-     * @param context  the introspection context
+     * @param webType       the web component type to merge into
+     * @param componentType the component type to merge
+     * @param context       the introspection context
      */
-    private void mergeComponentTypes(WebComponentType webType, PojoComponentType pojoType, IntrospectionContext context) {
-        for (Map.Entry<String, ReferenceDefinition> entry : pojoType.getReferences().entrySet()) {
+    private void mergeComponentTypes(WebComponentType webType, InjectingComponentType componentType, IntrospectionContext context) {
+        for (Map.Entry<String, ReferenceDefinition> entry : componentType.getReferences().entrySet()) {
             String name = entry.getKey();
             ReferenceDefinition reference = webType.getReferences().get(name);
             if (reference != null) {
@@ -129,8 +129,8 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             }
         }
         // apply all injection sites
-        for (Map.Entry<InjectionSite, InjectableAttribute> entry : pojoType.getInjectionSites().entrySet()) {
-            webType.addMapping(pojoType.getImplClass(), entry.getKey(), entry.getValue());
+        for (Map.Entry<InjectionSite, InjectableAttribute> entry : componentType.getInjectionSites().entrySet()) {
+            webType.addMapping(componentType.getImplClass(), entry.getKey(), entry.getValue());
         }
     }
 

@@ -37,13 +37,11 @@
 */
 package org.fabric3.java.introspection;
 
-import java.net.URL;
-
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.java.control.JavaImplementationProcessor;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -52,7 +50,6 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.InvalidImplementation;
-import org.fabric3.spi.introspection.xml.LoaderException;
 
 /**
  * @version $Rev$ $Date$
@@ -72,7 +69,7 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
 
     public void introspect(JavaImplementation implementation, IntrospectionContext context) {
         String implClassName = implementation.getImplementationClass();
-        PojoComponentType componentType = new PojoComponentType(implClassName);
+        InjectingComponentType componentType = new InjectingComponentType(implClassName);
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);
 
@@ -112,12 +109,4 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
 
     }
 
-    PojoComponentType loadFromSidefile(URL url, IntrospectionContext introspectionContext) throws LoaderException {
-        // FIXME we need to merge the loaded componentType information with the introspection result
-        throw new UnsupportedOperationException();
-/*
-        PojoComponentType componentType = new PojoComponentType();
-        return loader.load(url, PojoComponentType.class, introspectionContext);
-*/
-    }
 }

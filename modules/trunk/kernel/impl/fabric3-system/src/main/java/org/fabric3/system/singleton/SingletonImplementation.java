@@ -47,12 +47,12 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * @version $Rev$ $Date$
  */
-public class SingletonImplementation extends Implementation<PojoComponentType> {
+public class SingletonImplementation extends Implementation<InjectingComponentType> {
     private static final long serialVersionUID = -3874858273451538661L;
     public static final QName IMPLEMENTATION_SINGLETON = new QName(Namespaces.IMPLEMENTATION, "singleton");
 
@@ -61,7 +61,7 @@ public class SingletonImplementation extends Implementation<PojoComponentType> {
     public SingletonImplementation() {
     }
 
-    public SingletonImplementation(PojoComponentType componentType, String implementationClass) {
+    public SingletonImplementation(InjectingComponentType componentType, String implementationClass) {
         super(componentType);
         this.implementationClass = implementationClass;
     }

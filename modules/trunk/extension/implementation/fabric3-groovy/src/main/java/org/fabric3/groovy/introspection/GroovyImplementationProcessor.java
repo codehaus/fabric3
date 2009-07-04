@@ -45,7 +45,7 @@ import groovy.lang.GroovyCodeSource;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -91,7 +91,7 @@ public class GroovyImplementationProcessor implements ImplementationProcessor<Gr
         if (implClass == null) {
             return;
         }
-        PojoComponentType componentType = new PojoComponentType(implClass.getName());
+        InjectingComponentType componentType = new InjectingComponentType(implClass.getName());
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);
 

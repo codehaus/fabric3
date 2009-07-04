@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.introspection.ImplementationArtifactNotFound;
 import org.fabric3.junit.scdl.JUnitImplementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -68,7 +68,7 @@ public class JUnitImplementationProcessorImpl implements JUnitImplementationProc
 
     public void introspect(JUnitImplementation implementation, IntrospectionContext context) {
         String implClassName = implementation.getImplementationClass();
-        PojoComponentType componentType = new PojoComponentType(implClassName);
+        InjectingComponentType componentType = new InjectingComponentType(implClassName);
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);
 

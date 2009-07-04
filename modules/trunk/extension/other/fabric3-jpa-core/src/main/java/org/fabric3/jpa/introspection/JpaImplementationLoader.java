@@ -54,8 +54,8 @@ import org.fabric3.java.control.JavaImplementationProcessor;
 import org.fabric3.jpa.ConversationalDaoImpl;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.model.type.java.FieldInjectionSite;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
@@ -119,7 +119,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
                 context.addWarnings(childContext.getWarnings());
             }
 
-            PojoComponentType pojoComponentType = implementation.getComponentType();
+            InjectingComponentType pojoComponentType = implementation.getComponentType();
 
             PersistenceContextResource resource = new PersistenceContextResource(
                     "unit", persistenceUnit, PersistenceContextType.TRANSACTION, factoryServiceContract, false);

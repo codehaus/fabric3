@@ -43,10 +43,10 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -77,7 +77,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
     public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component) throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();
         SystemImplementation implementation = definition.getImplementation();
-        PojoComponentType type = implementation.getComponentType();
+        InjectingComponentType type = implementation.getComponentType();
 
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
         providerDefinition.setReinjectable(true);

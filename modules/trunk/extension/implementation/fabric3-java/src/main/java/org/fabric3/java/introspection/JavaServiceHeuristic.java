@@ -45,8 +45,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
@@ -74,7 +74,7 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
     }
 
     public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
         TypeMapping typeMapping = context.getTypeMapping();
 
         // if any services have been defined, then there's nothing to do

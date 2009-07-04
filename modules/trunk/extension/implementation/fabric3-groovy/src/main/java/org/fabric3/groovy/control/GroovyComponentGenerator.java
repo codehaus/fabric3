@@ -50,9 +50,9 @@ import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -79,7 +79,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
         ComponentDefinition<GroovyImplementation> definition = component.getDefinition();
         GroovyImplementation implementation = definition.getImplementation();
-        PojoComponentType type = implementation.getComponentType();
+        InjectingComponentType type = implementation.getComponentType();
 
         // create the instance factory definition
         GroovyInstanceFactoryDefinition providerDefinition = new GroovyInstanceFactoryDefinition();

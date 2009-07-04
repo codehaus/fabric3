@@ -40,14 +40,14 @@ package org.fabric3.groovy.scdl;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * A component implemented in Groovy. The implementation can be a script in source or compiled form.
  *
  * @version $Rev$ $Date$
  */
-public class GroovyImplementation extends Implementation<PojoComponentType> {
+public class GroovyImplementation extends Implementation<InjectingComponentType> {
     private static final long serialVersionUID = -8092204063300139457L;
     public static final QName IMPLEMENTATION_GROOVY = new QName("http://www.fabric3.org/xmlns/groovy/1.0", "groovy");
 
@@ -62,7 +62,7 @@ public class GroovyImplementation extends Implementation<PojoComponentType> {
         this.className = className;
     }
 
-    public GroovyImplementation(String scriptName, String className, PojoComponentType componentType) {
+    public GroovyImplementation(String scriptName, String className, InjectingComponentType componentType) {
         super(componentType);
         this.scriptName = scriptName;
         this.className = className;

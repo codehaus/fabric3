@@ -39,8 +39,8 @@ package org.fabric3.system.introspection;
 
 import java.lang.reflect.Constructor;
 
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.Signature;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.AmbiguousConstructor;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
@@ -55,7 +55,7 @@ import org.fabric3.system.scdl.SystemImplementation;
 public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImplementation> {
 
     public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
 
         // if there is already a defined constructor then do nothing
         if (componentType.getConstructor() != null) {

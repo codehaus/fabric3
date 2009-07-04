@@ -42,7 +42,7 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
 import org.fabric3.java.control.JavaImplementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -69,7 +69,7 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
         control.replay();
         loader.introspect(impl, context);
 
-        PojoComponentType componentType = impl.getComponentType();
+        InjectingComponentType componentType = impl.getComponentType();
         assertNotNull(componentType);
         assertEquals(Simple.class.getName(), componentType.getImplClass());
         control.verify();

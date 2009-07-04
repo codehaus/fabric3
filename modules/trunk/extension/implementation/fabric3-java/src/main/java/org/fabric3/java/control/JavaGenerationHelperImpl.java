@@ -53,10 +53,10 @@ import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
@@ -83,7 +83,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
             throws GenerationException {
         ComponentDefinition<? extends JavaImplementation> logical = component.getDefinition();
         JavaImplementation implementation = logical.getImplementation();
-        PojoComponentType type = implementation.getComponentType();
+        InjectingComponentType type = implementation.getComponentType();
         String scope = type.getScope();
 
         // create the instance factory definition
@@ -132,7 +132,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        PojoComponentType type = source.getDefinition().getImplementation().getComponentType();
+        InjectingComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (CallbackDefinition entry : type.getCallbacks().values()) {
             // NB: This currently only supports the case where one callback injection site of the same type is on an implementation.

@@ -48,11 +48,11 @@ import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -60,7 +60,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  */
 public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
-    public Integer getInitLevel(ComponentDefinition<?> definition, PojoComponentType type) {
+    public Integer getInitLevel(ComponentDefinition<?> definition, InjectingComponentType type) {
         Integer initLevel = definition.getInitLevel();
         if (initLevel == null) {
             initLevel = type.getInitLevel();
@@ -72,11 +72,11 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         return method == null ? null : new Signature(method);
     }
 
-    public void processInjectionSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+    public void processInjectionSites(LogicalComponent<? extends Implementation<InjectingComponentType>> component,
                                       InstanceFactoryDefinition providerDefinition) {
 
-        Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
-        PojoComponentType type = implementation.getComponentType();
+        Implementation<InjectingComponentType> implementation = component.getDefinition().getImplementation();
+        InjectingComponentType type = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> mappings = type.getInjectionSites();
 
         // add injections for all the active constructor args

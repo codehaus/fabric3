@@ -62,8 +62,8 @@ import org.easymock.IMocksControl;
 
 import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.rs.scdl.RsBindingDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -105,7 +105,7 @@ public class RsHeuristicImplTestCase extends TestCase {
         heuristic.applyHeuristics(impl, uri, context);
 
 
-        PojoComponentType componentType = impl.getComponentType();
+        InjectingComponentType componentType = impl.getComponentType();
         assertNotNull(componentType);
         assertEquals(componentType.getServices().size(), 1);
         ServiceDefinition service = componentType.getServices().get("REST");
@@ -134,7 +134,7 @@ public class RsHeuristicImplTestCase extends TestCase {
         heuristic.applyHeuristics(impl, uri, context);
 
 
-        PojoComponentType componentType = impl.getComponentType();
+        InjectingComponentType componentType = impl.getComponentType();
         assertNotNull(componentType);
         assertEquals(componentType.getServices().size(), 1);
         ServiceDefinition service = componentType.getServices().get("REST");
@@ -156,7 +156,7 @@ public class RsHeuristicImplTestCase extends TestCase {
         context = EasyMock.createMock(IntrospectionContext.class);
         EasyMock.expect(context.getTargetClassLoader()).andStubReturn(getClass().getClassLoader());
         impl = new JavaImplementation();
-        impl.setComponentType(new PojoComponentType());
+        impl.setComponentType(new InjectingComponentType());
         control = EasyMock.createControl();
         helper = EasyMock.createNiceMock(IntrospectionHelper.class);
 

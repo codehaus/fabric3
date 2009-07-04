@@ -41,21 +41,42 @@ import java.lang.reflect.Method;
 
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * @version $Rev$ $Date$
  */
 public interface InstanceFactoryGenerationHelper {
-    Integer getInitLevel(ComponentDefinition<?> definition, PojoComponentType type);
 
+    /**
+     * Calculates the initialization level (e.g. eager or lazy) for the component.
+     *
+     * @param definition the component definition.
+     * @param type       the component type
+     * @return the initialization level
+     */
+    Integer getInitLevel(ComponentDefinition<?> definition, InjectingComponentType type);
+
+    /**
+     * Returns a signature for the method.
+     *
+     * @param method the method
+     * @return the signature
+     */
     Signature getSignature(Method method);
 
-    void processInjectionSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
+    /**
+     * Computes injectors for the component
+     *
+     * @param component          the component
+     * @param providerDefinition the instance factor definition for creating component implementation instances
+     */
+    void processInjectionSites(LogicalComponent<? extends Implementation<InjectingComponentType>> component,
+                               InstanceFactoryDefinition providerDefinition);
 
     /**
      * Set the actual values of the physical properties.

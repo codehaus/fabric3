@@ -50,8 +50,8 @@ import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -175,7 +175,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             String serviceName = contract.getInterfaceName();
             ServiceDefinition service = new ServiceDefinition(serviceName, contract);
 
-            PojoComponentType componentType = new PojoComponentType(implClassName);
+            InjectingComponentType componentType = new InjectingComponentType(implClassName);
             componentType.add(service);
 
             SingletonImplementation implementation = new SingletonImplementation(componentType, implClassName);
@@ -189,7 +189,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
 
     private <I> AtomicComponent<I> createPhysicalComponent(LogicalComponent<?> logicalComponent, I instance) {
         URI uri = logicalComponent.getUri();
-        PojoComponentType type = (PojoComponentType) logicalComponent.getDefinition().getComponentType();
+        InjectingComponentType type = (InjectingComponentType) logicalComponent.getDefinition().getComponentType();
         type.getInjectionSites();
         SingletonComponent<I> component = new SingletonComponent<I>(uri, instance, type.getInjectionSites());
         component.setClassLoaderId(BOOT_CONTRIBUTION);

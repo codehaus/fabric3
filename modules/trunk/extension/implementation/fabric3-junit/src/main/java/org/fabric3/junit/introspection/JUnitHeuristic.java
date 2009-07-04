@@ -55,11 +55,11 @@ import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
@@ -95,7 +95,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     }
 
     public void applyHeuristics(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
 
         serviceHeuristic.applyHeuristics(implementation, implClass, context);
 
@@ -125,7 +125,6 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
                 return new Signature(callback);
             } catch (NoSuchMethodException e) {
                 implClass = implClass.getSuperclass();
-                continue;
             }
         }
         return null;
@@ -155,7 +154,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     }
 
     private void evaluateConstructor(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         Constructor<?> constructor;
         try {
@@ -188,7 +187,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     }
 
     void evaluateSetters(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
         Set<Method> setters = helper.getInjectionMethods(implClass, componentType.getServices().values());
@@ -208,7 +207,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     }
 
     void evaluateFields(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
         Set<Field> fields = helper.getInjectionFields(implClass);
@@ -228,7 +227,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     }
 
 
-    private void processSite(PojoComponentType componentType,
+    private void processSite(InjectingComponentType componentType,
                              TypeMapping typeMapping,
                              String name,
                              Type parameterType,
@@ -252,13 +251,13 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
         }
     }
 
-    private void addProperty(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
+    private void addProperty(InjectingComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
         Property property = new Property(name, null);
         property.setMany(helper.isManyValued(typeMapping, parameterType));
         componentType.add(property, site);
     }
 
-    private void addReference(PojoComponentType componentType,
+    private void addReference(InjectingComponentType componentType,
                               TypeMapping typeMapping,
                               String name,
                               Type parameterType,

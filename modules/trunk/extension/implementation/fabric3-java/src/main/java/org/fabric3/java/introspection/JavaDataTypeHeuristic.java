@@ -56,8 +56,8 @@ import org.fabric3.java.control.JavaImplementation;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 
@@ -97,7 +97,7 @@ public class JavaDataTypeHeuristic implements HeuristicProcessor<JavaImplementat
 
     public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
 
-        PojoComponentType componentType = implementation.getComponentType();
+        InjectingComponentType componentType = implementation.getComponentType();
         Map<String, Property> properties = componentType.getProperties();
         for (Map.Entry<InjectionSite, InjectableAttribute> entry : componentType.getInjectionSites().entrySet()) {
             InjectionSite site = entry.getKey();

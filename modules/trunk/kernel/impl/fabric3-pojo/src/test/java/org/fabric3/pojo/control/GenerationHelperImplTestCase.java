@@ -53,10 +53,10 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -69,7 +69,7 @@ public class GenerationHelperImplTestCase extends TestCase {
     private LogicalComponent<MockImplementation> logicalComponent;
     private ComponentDefinition<MockImplementation> componentDefinition;
     private MockImplementation implementation;
-    private PojoComponentType componentType;
+    private InjectingComponentType componentType;
     private InjectableAttribute intProp;
     private InjectableAttribute stringProp;
 
@@ -92,7 +92,7 @@ public class GenerationHelperImplTestCase extends TestCase {
         super.setUp();
 
         helper = new GenerationHelperImpl();
-        componentType = new PojoComponentType(null);
+        componentType = new InjectingComponentType(null);
         implementation = new MockImplementation(componentType);
         componentDefinition = new ComponentDefinition<MockImplementation>("mock", implementation);
         logicalComponent = new LogicalComponent<MockImplementation>(null, componentDefinition, null);
@@ -102,8 +102,8 @@ public class GenerationHelperImplTestCase extends TestCase {
         stringProp = new InjectableAttribute(InjectableAttributeType.PROPERTY, "stringProp");
     }
 
-    private static class MockImplementation extends Implementation<PojoComponentType> {
-        private MockImplementation(PojoComponentType componentType) {
+    private static class MockImplementation extends Implementation<InjectingComponentType> {
+        private MockImplementation(InjectingComponentType componentType) {
             super(componentType);
         }
 

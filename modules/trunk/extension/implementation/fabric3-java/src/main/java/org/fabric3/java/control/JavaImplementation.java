@@ -42,14 +42,14 @@ import javax.xml.namespace.QName;
 import org.oasisopen.sca.Constants;
 
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * Represents a Java component implementation type.
  *
  * @version $$Rev$$ $$Date$$
  */
-public class JavaImplementation extends Implementation<PojoComponentType> {
+public class JavaImplementation extends Implementation<InjectingComponentType> {
     public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
     private static final long serialVersionUID = 8922589166061811190L;
     private String implementationClass;

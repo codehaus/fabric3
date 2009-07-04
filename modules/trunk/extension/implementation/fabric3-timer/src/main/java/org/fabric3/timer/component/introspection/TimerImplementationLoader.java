@@ -47,7 +47,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.control.JavaImplementationProcessor;
 import org.fabric3.java.introspection.ImplementationArtifactNotFound;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
@@ -92,7 +92,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
         TimerImplementation implementation = new TimerImplementation();
         if (!processImplementationClass(implementation, reader, context)) {
             // an error with the implementation class, return a dummy implementation
-            PojoComponentType type = new PojoComponentType();
+            InjectingComponentType type = new InjectingComponentType(null);
             implementation.setComponentType(type);
             return implementation;
         }

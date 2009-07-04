@@ -41,12 +41,12 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 
 /**
  * @version $Rev$ $Date$
  */
-public class JUnitImplementation extends Implementation<PojoComponentType> {
+public class JUnitImplementation extends Implementation<InjectingComponentType> {
     public static final QName IMPLEMENTATION_JUNIT = new QName(Namespaces.IMPLEMENTATION, "junit");
     private static final long serialVersionUID = -5048471724313487914L;
     private String implementationClass;

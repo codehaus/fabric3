@@ -45,7 +45,7 @@ package org.fabric3.system.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -78,7 +78,7 @@ public class SystemImplementationProcessorImpl implements ImplementationProcesso
 
     public void introspect(SystemImplementation implementation, IntrospectionContext context) {
         String implClassName = implementation.getImplementationClass();
-        PojoComponentType componentType = new PojoComponentType(implClassName);
+        InjectingComponentType componentType = new InjectingComponentType(implClassName);
         componentType.setScope("COMPOSITE");
         implementation.setComponentType(componentType);
 
