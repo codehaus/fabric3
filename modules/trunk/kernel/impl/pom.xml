@@ -31,7 +31,7 @@
 
 	<modules>
 		<module>fabric3-fabric</module>
-		<module>fabric3-introspection</module>
+		<module>fabric3-introspection-java</module>
 		<module>fabric3-jmx</module>
         <module>fabric3-jmx-agent</module>
 		<module>fabric3-loader</module>

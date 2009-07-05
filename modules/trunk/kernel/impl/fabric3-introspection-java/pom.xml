@@ -17,9 +17,9 @@
         <version>1.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-introspection</artifactId>
+    <artifactId>fabric3-introspection-java</artifactId>
     <name>Fabric3 Introspection</name>
-    <description>Fabric3 Introspection Implementation.</description>
+    <description>Fabric3 introspection implementation for Java artifacts.</description>
 
     <dependencies>
 
@@ -42,9 +42,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-introspection</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-introspection</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-introspection</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-introspection-java</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-introspection-java</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-introspection-java</url>
     </scm>
 
 </project>

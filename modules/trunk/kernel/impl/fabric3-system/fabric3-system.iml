@@ -19,7 +19,7 @@
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-introspection" exported="" />
+    <orderEntry type="module" module-name="fabric3-introspection-java" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module-library">
       <library name="stax:stax-api:1.0">

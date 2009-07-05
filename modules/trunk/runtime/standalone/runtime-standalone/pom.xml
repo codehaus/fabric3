@@ -52,7 +52,7 @@ licensed under the Apache 2.0 license.
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-introspection</artifactId>
+            <artifactId>fabric3-introspection-java</artifactId>
             <version>1.2-SNAPSHOT</version>
         </dependency>
 

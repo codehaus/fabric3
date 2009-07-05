@@ -58,7 +58,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-standalone-shutdown" exported="" />
-    <orderEntry type="module" module-name="fabric3-introspection" exported="" />
+    <orderEntry type="module" module-name="fabric3-introspection-java" exported="" />
     <orderEntry type="module" module-name="fabric3-standalone-host" exported="" />
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
