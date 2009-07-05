@@ -37,6 +37,9 @@
 */
 package org.fabric3.security.authorization;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
 
@@ -56,26 +59,13 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 @EagerInit
 public class AuthorizationInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
 
-    /**
-     * Generates the interceptor definition from the underlying policy infoset.
-     *
-     * @param policyDefinition Policy set definition.
-     * @param operation        Operation against which the interceptor is generated.
-     * @param logicalBinding   Logical binding on the service or reference.
-     * @return Physical interceptor definition.
-     */
-    public AuthorizationInterceptorDefinition generate(Element policyDefinition,
-                                                       Operation<?> operation,
-                                                       LogicalBinding<?> logicalBinding) {
-
+    public AuthorizationInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding) {
         String rolesAttribute = policyDefinition.getAttribute("roles");
         if (rolesAttribute == null) {
             throw new AssertionError("No roles are defined in the authorization policy");
         }
-        String[] roles = rolesAttribute.split(",");
-
+        List<String> roles = Arrays.asList(rolesAttribute.split(","));
         return new AuthorizationInterceptorDefinition(roles);
-
     }
 
 }

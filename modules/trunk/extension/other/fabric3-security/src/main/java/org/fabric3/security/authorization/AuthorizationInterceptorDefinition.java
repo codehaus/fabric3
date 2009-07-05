@@ -37,6 +37,8 @@
 */
 package org.fabric3.security.authorization;
 
+import java.util.List;
+
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
@@ -52,23 +54,23 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 public class AuthorizationInterceptorDefinition extends PhysicalInterceptorDefinition {
     private static final long serialVersionUID = -6234482688280435134L;
 
-    private String[] roles;
+    private List<String> roles;
 
     /**
      * Initializes the roles required to pass through this interceptor.
      *
-     * @param roles Roles required by the subject.
+     * @return roles required for authorization.
      */
-    public AuthorizationInterceptorDefinition(String[] roles) {
+    public AuthorizationInterceptorDefinition(List<String> roles) {
         this.roles = roles;
     }
 
     /**
-     * Gets the roles required to pass through this interceptor.
+     * Returns the roles required to pass through this interceptor.
      *
-     * @return Roles required by the subject.
+     * @return roles required for authorization.
      */
-    public String[] getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 

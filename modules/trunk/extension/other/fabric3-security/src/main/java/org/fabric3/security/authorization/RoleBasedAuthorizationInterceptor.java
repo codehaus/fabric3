@@ -37,68 +37,52 @@
 */
 package org.fabric3.security.authorization;
 
+import java.util.List;
+
+import org.fabric3.api.SecuritySubject;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.security.AuthorizationException;
+import org.fabric3.spi.security.AuthorizationService;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Interceptor for performing role based authorization.
+ * Interceptor for performing role-based authorization.
  *
  * @version $Rev$ $Date$
  */
 public class RoleBasedAuthorizationInterceptor implements Interceptor {
-
     private Interceptor next;
-    private final String[] roles;
+    private final List<String> roles;
     private final AuthorizationService authorizationService;
 
-    /**
-     * Initializes the roles required to pass through this interceptor and the user provided SPI extension for performing authorization.
-     *
-     * @param roles                Roles that need to be checked by this instance of the interceptor.
-     * @param authorizationService AUthorization service extension to perform authorization.
-     */
-    public RoleBasedAuthorizationInterceptor(String[] roles, AuthorizationService authorizationService) {
+    public RoleBasedAuthorizationInterceptor(List<String> roles, AuthorizationService authorizationService) {
         this.roles = roles;
         this.authorizationService = authorizationService;
     }
 
-    /**
-     * Gets the next interceptor in the chain.
-     *
-     * @return The next interceptor in the chain.
-     */
     public Interceptor getNext() {
         return next;
     }
 
-    /**
-     * Sets the next interceptor in the chain.
-     *
-     * @param next The next interceptor in the chain.
-     */
     public void setNext(Interceptor next) {
         this.next = next;
     }
 
-    /**
-     * Performs the authorization check. If succesful the next interceptor in the chain is invoked. If authorization fails, a fault is set on the
-     * message and returned to the preceding intereceptor in the chain.
-     *
-     * @param msg Message passed in by the preceding interceptor.
-     */
     public Message invoke(Message msg) {
-
         WorkContext workContext = msg.getWorkContext();
-
-        AuthorizationResult result = authorizationService.hasRoles(workContext.getSubject().getJaasSubject(), roles);
-        if (result.isSuccess()) {
+        try {
+            SecuritySubject subject = workContext.getSubject();
+            if (subject == null) {
+                msg.setBodyWithFault(new AuthorizationException("Subject not authenticated"));
+                return msg;
+            }
+            authorizationService.checkRoles(subject, roles);
             return next.invoke(msg);
-        } else {
-            msg.setBodyWithFault(result.getFault());
+        } catch (AuthorizationException e) {
+            msg.setBodyWithFault(e);
             return msg;
         }
-
     }
 
 }
