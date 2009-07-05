@@ -11,7 +11,8 @@ Public License. See the accompanying license file for details.
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="TransformersBootComposite"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="TransformComposite"
            autowire="true">
 
     <component name="PushTransformerRegistry">

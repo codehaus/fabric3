@@ -63,8 +63,7 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
     private final ContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
 
-    public SystemServiceHeuristic(@Reference ContractProcessor contractProcessor,
-                                  @Reference IntrospectionHelper helper) {
+    public SystemServiceHeuristic(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
         this.contractProcessor = contractProcessor;
         this.helper = helper;
     }

@@ -26,21 +26,21 @@
 
     <include name="RepositoryComposite" scdlResource="META-INF/repository.composite"/>
 
-    <include name="JavaIntrospectionComposite" scdlResource="org/fabric3/introspection/introspection.composite"/>
+    <include name="JavaIntrospectionComposite" scdlResource="META-INF/javaBootIntrospection.composite"/>
 
-    <include name="XMLIntrospectionComposite" scdlResource="org/fabric3/loader/loader.composite"/>
+    <include name="XMLIntrospectionComposite" scdlResource="META-INF/xmlIntrospection.composite"/>
 
-    <include name="PojoImplementationComposite" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
+    <include name="PojoComposite" scdlResource="META-INF/pojoImplementation.composite"/>
 
-    <include name="SystemImplementationComposite" scdlResource="org/fabric3/system/systemImplementation.composite"/>
+    <include name="PolicyComposite" scdlResource="META-INF/policy.composite"/>
 
-    <include name="SingletonImplementationComposite" scdlResource="org/fabric3/system/singletonImplementation.composite"/>
+    <include name="SystemImplementationComposite" scdlResource="META-INF/systemImplementation.composite"/>
 
-    <include name="JMXExtensionComposite" scdlResource="org/fabric3/jmx/jmx.composite"/>
+    <include name="SingletonImplementationComposite" scdlResource="META-INF/singletonImplementation.composite"/>
 
-    <include name="TransformComposite" scdlResource="org/fabric3/transform/transform.composite"/>
+    <include name="JMXComposite" scdlResource="META-INF/jmx.composite"/>
 
-    <include name="PolicyComposite" scdlResource="org/fabric3/policy/policy.composite"/>
+    <include name="TransformComposite" scdlResource="META-INF/transform.composite"/>
 
     <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.ApplicationLogicalComponentStore"/>

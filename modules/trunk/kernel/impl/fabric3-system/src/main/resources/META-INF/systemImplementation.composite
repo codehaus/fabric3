@@ -15,10 +15,10 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="org.fabric3.fabric.SystemImplementation"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="SystemImplementationComposite"
            autowire="true">
 
-    <!-- System implementation type -->
     <component name="SystemImplementationLoader" f3-core:key="f3-impl:implementation.system">
         <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
