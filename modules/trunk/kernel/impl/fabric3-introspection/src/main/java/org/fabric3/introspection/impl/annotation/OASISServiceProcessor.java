@@ -44,7 +44,6 @@
 package org.fabric3.introspection.impl.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 
 import org.oasisopen.sca.annotation.Service;
 import org.osoa.sca.annotations.Reference;
@@ -58,17 +57,22 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
+import org.fabric3.spi.introspection.policy.OperationPolicyIntrospector;
 
 /**
+ * Processes the @Service annotation on a component implementaiton class.
+ *
  * @version $Rev$ $Date$
  */
 public class OASISServiceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Service, I> {
     private final ContractProcessor contractProcessor;
     private PolicyAnnotationProcessor policyProcessor;
+    private OperationPolicyIntrospector policyIntrospector;
 
-    public OASISServiceProcessor(@Reference ContractProcessor contractProcessor) {
+    public OASISServiceProcessor(@Reference ContractProcessor contractProcessor, @Reference OperationPolicyIntrospector policyIntrospector) {
         super(Service.class);
         this.contractProcessor = contractProcessor;
+        this.policyIntrospector = policyIntrospector;
     }
 
     @Reference
@@ -81,26 +85,27 @@ public class OASISServiceProcessor<I extends Implementation<? extends InjectingC
         InjectingComponentType componentType = implementation.getComponentType();
 
         for (Class<?> service : annotation.interfaces()) {
-            ServiceDefinition definition = createDefinition(service, typeMapping, context);
+            ServiceDefinition definition = createDefinition(service, typeMapping, type, context);
             componentType.add(definition);
         }
 
         Class<?> service = annotation.value();
         if (!Void.class.equals(service)) {
-            ServiceDefinition definition = createDefinition(service, typeMapping, context);
+            ServiceDefinition definition = createDefinition(service, typeMapping, type, context);
             componentType.add(definition);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    private ServiceDefinition createDefinition(Class<?> service, TypeMapping typeMapping, IntrospectionContext context) {
-        ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, service, context);
+    private ServiceDefinition createDefinition(Class<?> service, TypeMapping typeMapping, Class<?> implClass, IntrospectionContext context) {
+        ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, service, context);
         ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
         Annotation[] annotations = service.getAnnotations();
         if (policyProcessor != null) {
             for (Annotation annotation : annotations) {
                 policyProcessor.process(annotation, definition, context);
             }
+            policyIntrospector.introspectPolicyOnOperations(serviceContract, implClass, context);
         }
         return definition;
     }

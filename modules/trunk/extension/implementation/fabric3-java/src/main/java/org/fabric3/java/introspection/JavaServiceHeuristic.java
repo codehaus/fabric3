@@ -38,7 +38,6 @@
 package org.fabric3.java.introspection;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
@@ -53,6 +52,7 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
+import org.fabric3.spi.introspection.policy.OperationPolicyIntrospector;
 
 /**
  * @version $Rev$ $Date$
@@ -61,11 +61,14 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;
     private PolicyAnnotationProcessor policyProcessor;
+    private OperationPolicyIntrospector policyIntrospector;
 
     public JavaServiceHeuristic(@Reference IntrospectionHelper helper,
-                                @Reference ContractProcessor contractProcessor) {
+                                @Reference ContractProcessor contractProcessor,
+                                @Reference OperationPolicyIntrospector policyIntrospector) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
+        this.policyIntrospector = policyIntrospector;
     }
 
     @Reference
@@ -86,17 +89,17 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
         Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
         if (interfaces.size() == 1) {
             Class<?> service = interfaces.iterator().next();
-            ServiceDefinition serviceDefinition = createServiceDefinition(service, typeMapping, context);
+            ServiceDefinition serviceDefinition = createServiceDefinition(service, typeMapping, implClass, context);
             componentType.add(serviceDefinition);
         } else {
-            ServiceDefinition serviceDefinition = createServiceDefinition(implClass, typeMapping, context);
+            ServiceDefinition serviceDefinition = createServiceDefinition(implClass, typeMapping, implClass, context);
             componentType.add(serviceDefinition);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
-        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
+    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, Class<?> implClass, IntrospectionContext context) {
+        ServiceContract<?> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
 
         ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
         Annotation[] annotations = serviceInterface.getAnnotations();
@@ -104,7 +107,11 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
             for (Annotation annotation : annotations) {
                 policyProcessor.process(annotation, definition, context);
             }
+
+            policyIntrospector.introspectPolicyOnOperations(contract, implClass, context);
+
         }
         return definition;
     }
+
 }

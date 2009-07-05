@@ -32,6 +32,10 @@
         <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
+    <component name="OperationPolicyIntrospector">
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.policy.DefaultOperationPolicyIntrospector"/>
+    </component>
+
     <!-- OASIS Specification Annotations -->
 
     <component name="OASISCallbackProcessor" f3-core:key="org.oasisopen.sca.annotation.Callback">
