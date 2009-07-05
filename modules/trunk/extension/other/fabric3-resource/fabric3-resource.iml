@@ -45,7 +45,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-introspection-java" exported="" />
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.2">
         <CLASSES>
