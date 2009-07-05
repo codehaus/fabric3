@@ -32,9 +32,9 @@
 	<modules>
 		<module>fabric3-fabric</module>
 		<module>fabric3-introspection-java</module>
+		<module>fabric3-introspection-xml</module>
 		<module>fabric3-jmx</module>
         <module>fabric3-jmx-agent</module>
-		<module>fabric3-loader</module>
         <module>fabric3-monitor</module>
 		<module>fabric3-pojo</module>
 		<module>fabric3-policy</module>
