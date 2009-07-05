@@ -18,58 +18,35 @@
            name="MavenRuntimeComposite"
            autowire="true">
 
-    <!-- include the maven runtime -->
-    <include name="MavenRuntime" scdlResource="META-INF/mavenRuntime.composite"/>
+    <include name="MavenRuntimeComposite" scdlResource="META-INF/mavenRuntime.composite"/>
 
-    <!-- include the thread pool -->
-    <include name="ThreadPool" scdlResource="META-INF/threadPool.composite"/>
+    <include name="ThreadPoolComposite" scdlResource="META-INF/threadPool.composite"/>
 
-    <!-- include host services configuration -->
-    <include name="HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
+    <include name="FabricComposite" scdlResource="META-INF/fabric.composite"/>
 
-    <!-- include monitor configuration -->
-    <include name="Monitor" scdlResource="org/fabric3/fabric/monitor.composite"/>
+    <include name="LocalProvisioningComposite" scdlResource="META-INF/localProvisioning.composite"/>
 
-    <!-- include policy configuration -->
-    <include name="Policy" scdlResource="org/fabric3/policy/policy.composite"/>
+    <include name="PolicyComposite" scdlResource="org/fabric3/policy/policy.composite"/>
 
-    <!-- include physical deployment configuration -->
-    <include name="Common" scdlResource="org/fabric3/fabric/common.composite"/>
+    <include name="IntrospectionComposite" scdlResource="org/fabric3/introspection/introspection.composite"/>
 
-    <!-- include physical deployment configuration -->
-    <include name="Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
+    <include name="LoaderComposite" scdlResource="org/fabric3/loader/loader.composite"/>
 
-    <!-- Introspection Components -->
-    <include name="Introspection" scdlResource="org/fabric3/introspection/introspection.composite"/>
-    <include name="Loader" scdlResource="org/fabric3/loader/loader.composite"/>
+    <include name="TransformComposite" scdlResource="org/fabric3/transform/transform.composite"/>
 
-    <!-- include deployment configuration -->
-    <include name="Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
+    <include name="PojoImplementationComposite" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
 
-    <include name="LocalProvisioning" scdlResource="org/fabric3/fabric/localProvisioning.composite"/>
+    <include name="SystemImplementationComposite" scdlResource="org/fabric3/system/systemImplementation.composite"/>
 
-    <!-- include transform configuration -->
-    <include name="Transform" scdlResource="org/fabric3/transform/transform.composite"/>
+    <include name="SingletonImplementationComposite" scdlResource="org/fabric3/system/singletonImplementation.composite"/>
 
-    <!-- Pojo implementation type -->
-    <include name="PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
+    <include name="JMXExtensionComposite" scdlResource="org/fabric3/jmx/jmx.composite"/>
 
-    <!-- System implementation type -->
-    <include name="SystemImplementation" scdlResource="org/fabric3/system/systemImplementation.composite"/>
-
-    <!-- Singleton implementation type -->
-    <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/system/singletonImplementation.composite"/>
-
-    <!-- JMX components -->
-    <include name="JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
-
-    <!-- Logical component store -->
     <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.ApplicationLogicalComponentStore"/>
         <property name="autowire" source="$systemConfig/domain/@autowire"/>
     </component>
 
-    <!-- Folder contribution handler -->
     <component name="FolderContributionHandler">
         <f3-impl:implementation.system class="org.fabric3.contribution.archive.ExplodedArchiveContributionHandler"/>
     </component>

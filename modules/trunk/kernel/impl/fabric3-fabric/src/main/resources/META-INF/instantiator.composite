@@ -15,14 +15,9 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="AssemblyBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-fabric"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="InstantiatorComposite"
            autowire="true">
-
-    <component name="LocalRoutingService">
-        <f3-impl:implementation.system class="org.fabric3.fabric.domain.LocalRoutingService"/>
-    </component>
-    <!-- this wire reinjects the routing service into the RuntimeDomain -->
-    <wire source="RuntimeDomain/routingService" target="LocalRoutingService"/>
 
     <component name="LogicalModelGenerator">
         <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl"/>
@@ -43,10 +38,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.component.WireInstantiatorImpl"/>
     </component>
 
-    <component name="LogicalComponentManager">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl"/>
-    </component>
-
     <component name="WiringService">
         <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.ResolutionServiceImpl"/>
         <reference name="explicitResolutionService" target="ExplicitTargetResolutionService"/>
@@ -55,10 +46,6 @@
 
     <component name="PromotionNormalizer">
         <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl"/>
-    </component>
-
-    <component name="DocumentLoader">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.documentloader.DocumentLoaderImpl"/>
     </component>
 
     <component name="TargetPromotionService">
@@ -75,6 +62,10 @@
 
     <component name="ServiceContractResolver">
         <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl"/>
+    </component>
+
+    <component name="DocumentLoader">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.documentloader.DocumentLoaderImpl"/>
     </component>
 
     <component name="Collector">

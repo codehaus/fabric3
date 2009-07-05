@@ -14,23 +14,10 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
-           name="DeploymentBootComposite"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="DeploymentComposite"
            autowire="true">
 
-    <!-- Content type resolver -->
-    <component name="ContentTypeResolver">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver"/>
-        <property name="extensionMap">
-            <xml>application/xml</xml>
-            <composite>text/vnd.fabric3.composite+xml</composite>
-            <zip>application/zip</zip>
-            <jar>application/zip</jar>
-            <definitions>text/vnd.fabric3.definitions+xml</definitions>
-            <wsdl>text/wsdl+xml</wsdl>
-        </property>
-    </component>
-
-    <!-- Contribution Service -->
     <component name="ContributionService">
         <f3-impl:implementation.system class="org.fabric3.contribution.ContributionServiceImpl"/>
     </component>
@@ -41,6 +28,22 @@
 
     <component name="DependencyService">
         <f3-impl:implementation.system class="org.fabric3.contribution.DependencyServiceImpl"/>
+    </component>
+
+    <component name="ClassLoaderWireGenerator" f3-core:key="org.fabric3.contribution.wire.JavaContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.contribution.generator.JavaContributionWireGeneratorImpl"/>
+    </component>
+
+    <component name="LocationContributionWireGenerator" f3-core:key="org.fabric3.contribution.wire.LocationContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.contribution.generator.LocationContributionWireGeneratorImpl"/>
+    </component>
+
+    <component name="ClasspathProcessorRegistry">
+        <f3-impl:implementation.system class="org.fabric3.contribution.ClasspathProcessorRegistryImpl"/>
+    </component>
+
+    <component name="JarClasspathProcessor">
+        <f3-impl:implementation.system class="org.fabric3.contribution.archive.JarClasspathProcessor"/>
     </component>
 
     <component name="ArchiveContributionProcessor">
@@ -118,6 +121,12 @@
     </component>
 
     <wire source="MetaDataStore/instantiatorRegistry" target="ContributionWireInstantiatorRegistry"/>
+
+    <component name="ProcessorRegistry">
+        <f3-impl:implementation.system class="org.fabric3.contribution.ProcessorRegistryImpl"/>
+    </component>
+    <!-- reinjects the metadata store after runtime bootstrap -->
+    <wire source="MetaDataStore/processorRegistry" target="ProcessorRegistry"/>
 
     <component name="QNameWireInstantiator" f3-core:key="org.fabric3.spi.contribution.manifest.QNameImport">
         <f3-impl:implementation.system class="org.fabric3.contribution.wire.QNameWireInstantiator"/>

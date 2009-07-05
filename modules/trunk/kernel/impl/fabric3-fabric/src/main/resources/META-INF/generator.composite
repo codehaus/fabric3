@@ -15,8 +15,27 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="CommandGeneratorsBootComposite"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="GeneratorComposite"
            autowire="true">
+
+    <component name="GeneratorRegistry">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.impl.GeneratorRegistryImpl"/>
+    </component>
+
+    <component name="PhysicalOperationMapper">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationMapperImpl"/>
+    </component>
+
+    <component name="Generator">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.impl.GeneratorImpl"/>
+    </component>
+    <!-- the wire forces a reinjection of the generator into the RuntimeDomain -->
+    <wire source="RuntimeDomain/generator" target="Generator"/>
+
+    <component name="PhysicalWireGenerator">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>
+    </component>
 
     <component name="ContributionCollator">
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.collator.ContributionCollatorImpl"/>
@@ -28,6 +47,17 @@
 
     <component name="ClassLoaderGenerator">
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
+    </component>
+
+    <component name="BindingSelector">
+        <f3-impl:implementation.system class="org.fabric3.fabric.binding.BindingSelectorImpl"/>
+        <reference name="logicalComponentManager" target="LogicalComponentManager"/>
+    </component>
+
+    <component name="ConfigurableBindingSelectionStrategy">
+        <f3-impl:implementation.system class="org.fabric3.fabric.binding.ConfigurableBindingSelectionStrategy"/>
+        <!-- allows users to configure the SCA binding preference through a systemConfig entry -->
+        <property name="scaBindingOrder" source="$systemConfig//bindings/binding.sca/provider.order"/>
     </component>
 
     <component name="ComponentBuildCommandGenerator">

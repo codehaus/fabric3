@@ -19,48 +19,29 @@
            name="WebappSystemComposite"
            autowire="true">
 
-    <!-- include the thread pool -->
-    <include name="ThreadPool" scdlResource="META-INF/threadPool.composite"/>
+    <include name="ThreadPoolComposite" scdlResource="META-INF/threadPool.composite"/>
 
-    <!-- include host services configuration -->
-    <include name="org.fabric3.fabric.host.services" scdlResource="org/fabric3/fabric/hostServices.composite"/>
+    <include name="PolicyComposite" scdlResource="org/fabric3/policy/policy.composite"/>
 
-    <!-- include monitor configuration -->
-    <include name="org.fabric3.fabric.Monitor" scdlResource="org/fabric3/fabric/monitor.composite"/>
+    <include name="FabricComposite" scdlResource="META-INF/fabric.composite"/>
 
-    <!-- include policy configuration -->
-    <include name="org.fabric3.fabric.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
+    <include name="LocalProvisioningComposite" scdlResource="META-INF/localProvisioning.composite"/>
 
-    <!-- include physical deployment configuration -->
-    <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
+    <include name="IntrospectionComposite" scdlResource="org/fabric3/introspection/introspection.composite"/>
 
-    <!-- include physical deployment configuration -->
-    <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
+    <include name="LoaderComposite" scdlResource="org/fabric3/loader/loader.composite"/>
 
-    <!-- Introspection Components -->
-    <include name="Introspection" scdlResource="org/fabric3/introspection/introspection.composite"/>
-    <include name="loader:loader" scdlResource="org/fabric3/loader/loader.composite"/>
+    <include name="RepositoryComposite" scdlResource="META-INF/repository.composite"/>
 
-    <!-- include deployment configuration -->
-    <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
-    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/repository.composite"/>
+    <include name="PojoImplementationComposite" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
 
-    <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/localProvisioning.composite"/>
+    <include name="SystemImplementationComposite" scdlResource="org/fabric3/system/systemImplementation.composite"/>
 
-    <!-- Pojo implementation type -->
-    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
+    <include name="SingletonImplementationComposite" scdlResource="org/fabric3/system/singletonImplementation.composite"/>
 
-    <!-- System implementation type -->
-    <include name="org.fabric3.launcher.SystemImplementation" scdlResource="org/fabric3/system/systemImplementation.composite"/>
+    <include name="JMXExtensionComposite" scdlResource="org/fabric3/jmx/jmx.composite"/>
 
-    <!-- Singleton implementation type -->
-    <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/system/singletonImplementation.composite"/>
-
-    <!-- JMX components -->
-    <include name="org.fabric3.jmx.JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
-
-    <!-- include transform configuration -->
-    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
+    <include name="TransformComposite" scdlResource="org/fabric3/transform/transform.composite"/>
 
     <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.ApplicationLogicalComponentStore"/>

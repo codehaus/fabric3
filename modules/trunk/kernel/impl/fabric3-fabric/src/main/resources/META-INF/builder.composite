@@ -14,14 +14,15 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-core="urn:fabric3.org:core"
-           name="PhysicalBootComposite"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="BuilderComposite"
            autowire="true">
 
     <component name="Connector">
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.ConnectorImpl"/>
     </component>
 
-    <component name="PhysicalComponentBuilderRegistry">
+    <component name="ComponentBuilderRegistry">
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry"/>
     </component>
 
@@ -42,4 +43,12 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.EnvironmentPropertyEvaluator"/>
     </component>
 
+    <component name="ClassLoaderBuilder">
+        <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
+    </component>
+
+    <component name="ClassLoaderWireBuilder">
+        <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderWireBuilderImpl"/>
+    </component>
+    
 </composite>

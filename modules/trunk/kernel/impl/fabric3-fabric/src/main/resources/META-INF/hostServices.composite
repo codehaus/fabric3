@@ -13,17 +13,13 @@
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           xmlns:f3-core="urn:fabric3.org:core"
-           name="LocalProvisioningBootComposite"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="HostServicesComposite"
            autowire="true">
 
-    <component name="LocalContributionUriEncoder">
-        <f3-impl:implementation.system
-                class="org.fabric3.contribution.LocalContributionUriEncoder"/>
+    <component name="XMLFactory">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.xml.XMLFactoryImpl"/>
+        <property name="input">com.ctc.wstx.stax.WstxInputFactory</property>
+        <property name="output">com.ctc.wstx.stax.WstxOutputFactory</property>
     </component>
-
-    <component name="LocalContributionUriResolver" f3-core:key="local">
-        <f3-impl:implementation.system class="org.fabric3.contribution.LocalContributionUriResolver"/>
-    </component>
-
 </composite>
