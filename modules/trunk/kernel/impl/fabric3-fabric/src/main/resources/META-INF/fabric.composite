@@ -32,9 +32,11 @@
 
     <include name="BuilderComposite" scdlLocation="builder.composite"/>
 
-    <include name="HostServicesComposite" scdlLocation="hostServices.composite"/>
+    <include name="HostServicesComposite" scdlLocation="services.composite"/>
 
     <include name="MonitorComposite" scdlLocation="monitor.composite"/>
+
+    <include name="LocalProvisioningComposite" scdlLocation="provisioning.composite"/>
 
     <include name="FormatComposite" scdlLocation="format.composite"/>
     

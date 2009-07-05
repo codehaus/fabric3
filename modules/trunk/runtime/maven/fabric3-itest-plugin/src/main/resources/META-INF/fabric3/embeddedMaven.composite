@@ -27,8 +27,6 @@
 
     <include name="XMLIntrospectionComposite" scdlResource="META-INF/xmlIntrospection.composite"/>
 
-    <include name="LocalProvisioningComposite" scdlResource="META-INF/localProvisioning.composite"/>
-
     <include name="PolicyComposite" scdlResource="META-INF/policy.composite"/>
 
     <include name="TransformComposite" scdlResource="META-INF/transform.composite"/>

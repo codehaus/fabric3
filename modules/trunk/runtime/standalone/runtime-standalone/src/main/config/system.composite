@@ -22,8 +22,6 @@
 
     <include name="FabricComposite" scdlResource="META-INF/fabric.composite"/>
 
-    <include name="LocalProvisioningComposite" scdlResource="META-INF/localProvisioning.composite"/>
-
     <include name="RepositoryComposite" scdlResource="META-INF/repository.composite"/>
 
     <include name="JavaIntrospectionComposite" scdlResource="META-INF/javaBootIntrospection.composite"/>

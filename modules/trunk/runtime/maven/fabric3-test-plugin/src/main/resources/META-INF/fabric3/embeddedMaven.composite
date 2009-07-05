@@ -26,8 +26,6 @@
 
     <include name="JavaIntrospectionComposite" scdlResource="META-INF/javaBootIntrospection.composite"/>
 
-    <include name="LocalProvisioningComposite" scdlResource="META-INF/localProvisioning.composite"/>
-
     <include name="XMLIntrospectionComposite" scdlResource="META-INF/xmlIntrospection.composite"/>
 
     <include name="TransformComposite" scdlResource="META-INF/transform.composite"/>
