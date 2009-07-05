@@ -94,4 +94,22 @@ public interface PolicyAware {
      * @param policySets the policySets this definition references
      */
     void setPolicySets(Set<QName> policySets);
+
+    /**
+     * Adds intent or policy metadata.
+     *
+     * @param name qualified name of the intent or policy
+     * @param data the metadata
+     */
+    void addMetadata(QName name, Object data);
+
+    /**
+     * Adds intent or policy metadata.
+     *
+     * @param name qualified name of the intent or policy
+     * @param type the metadata type
+     * @return the metadata or null if not found
+     */
+    <T> T getMetadta(QName name, Class<T> type);
+
 }

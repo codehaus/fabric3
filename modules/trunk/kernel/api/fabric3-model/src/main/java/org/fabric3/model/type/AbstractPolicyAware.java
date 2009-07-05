@@ -43,7 +43,9 @@
  */
 package org.fabric3.model.type;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -57,6 +59,7 @@ public abstract class AbstractPolicyAware extends ModelObject implements PolicyA
 
     private Set<QName> intents = new LinkedHashSet<QName>();
     private Set<QName> policySets = new LinkedHashSet<QName>();
+    private Map<QName, Object> metadata = new HashMap<QName, Object>();
 
     public Set<QName> getIntents() {
         return intents;
@@ -90,4 +93,11 @@ public abstract class AbstractPolicyAware extends ModelObject implements PolicyA
         this.policySets.addAll(policySets);
     }
 
+    public void addMetadata(QName name, Object data) {
+        metadata.put(name, data);
+    }
+
+    public <T> T getMetadta(QName name, Class<T> type) {
+        return type.cast(metadata.get(name));
+    }
 }

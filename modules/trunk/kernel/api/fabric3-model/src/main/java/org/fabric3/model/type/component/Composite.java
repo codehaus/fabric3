@@ -83,6 +83,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
     private QName constrainingType;
     private Set<QName> intents;
     private Set<QName> policySets;
+    private Map<QName, Object> metadata = new HashMap<QName, Object>();
 
     /**
      * Constructor defining the composite name.
@@ -343,6 +344,14 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
 
     public void setPolicySets(Set<QName> policySets) {
         this.policySets = policySets;
+    }
+
+    public void addMetadata(QName name, Object data) {
+        metadata.put(name, data);
+    }
+
+    public <T> T getMetadta(QName name, Class<T> type) {
+        return type.cast(metadata.get(name));
     }
 
     public int hashCode() {
