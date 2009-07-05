@@ -53,6 +53,7 @@ import org.oasisopen.sca.annotation.PolicySets;
 import org.oasisopen.sca.annotation.Qualifier;
 import org.oasisopen.sca.annotation.Requires;
 
+import org.fabric3.api.annotation.IntentMetaData;
 import org.fabric3.model.type.PolicyAware;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.PolicyAnnotationProcessor;
@@ -72,6 +73,13 @@ public class PolicyAnnotationProcessorImpl implements PolicyAnnotationProcessor 
         }
     }
 
+    /**
+     * Evaluates an requires annotation.
+     *
+     * @param annotation  the requires annotation
+     * @param modelObject the model object the requires annotation is associated with
+     * @param context     the current introspection context
+     */
     private void processRequires(Requires annotation, PolicyAware modelObject, IntrospectionContext context) {
         String[] intents = annotation.value();
         for (String intent : intents) {
@@ -85,6 +93,13 @@ public class PolicyAnnotationProcessorImpl implements PolicyAnnotationProcessor 
         }
     }
 
+    /**
+     * Evaluates a policy set annotation.
+     *
+     * @param annotation  the policy set annotation
+     * @param modelObject the model object the policy set is associated with
+     * @param context     the current introspection context
+     */
     private void processPolicySets(PolicySets annotation, PolicyAware modelObject, IntrospectionContext context) {
         String[] policySets = annotation.value();
         for (String set : policySets) {
@@ -98,46 +113,78 @@ public class PolicyAnnotationProcessorImpl implements PolicyAnnotationProcessor 
         }
     }
 
+    /**
+     * Evaluates an intent annotation.
+     *
+     * @param annotation  the intent annotation
+     * @param modelObject the model object the intent is associated with
+     * @param context     the current introspection context
+     */
     private void processIntentAnnotation(Annotation annotation, PolicyAware modelObject, IntrospectionContext context) {
         Class<? extends Annotation> annotClass = annotation.annotationType();
         if (annotClass.isAnnotationPresent(Intent.class)) {
             Intent intent = annotClass.getAnnotation(Intent.class);
             String val = intent.value();
             try {
-                String[] qualifiers = null;
-                for (Method method : annotClass.getMethods()) {
-                    if (method.isAnnotationPresent(Qualifier.class)) {
-                        // iterate methods until one with @Qualified is found
-                        Class<?> type = method.getReturnType();
-                        if (type.isArray() && (String.class.equals(type.getComponentType()))) {
-                            // multiple qualifiers as return type s String[]
-                            qualifiers = (String[]) method.invoke(annotation);
-                        } else if (String.class.equals(type)) {
-                            // single qualifier as return type s String[]
-                            String ret = (String) method.invoke(annotation);
-                            qualifiers = new String[]{ret};
-                        }
-                        break;
-                    }
-                }
+                String[] qualifiers = getMetadataValue(annotation, Qualifier.class, context);
+                QName name = null;
                 if (qualifiers == null || qualifiers.length < 1 || qualifiers[0].length() < 1) {
                     // no qualifiers
-                    QName name = QName.valueOf(val);
-                    modelObject.addIntent(name);
+                    name = QName.valueOf(val);
                 } else {
                     for (String qualifier : qualifiers) {
-                        QName name = QName.valueOf(qualifier);
-                        modelObject.addIntent(name);
+                        name = QName.valueOf(qualifier);
                     }
+                }
+                modelObject.addIntent(name);
+                String[] metadata = getMetadataValue(annotation, IntentMetaData.class, context);
+                if (metadata != null && metadata.length >= 1 && metadata[0].length() >= 1) {
+                    modelObject.addMetadata(name, metadata);
                 }
             } catch (IllegalArgumentException e) {
                 context.addError(new InvalidIntentName(val, e));
             } catch (IllegalAccessException e) {
-                context.addError(new InvalidIntentName(val, e));
+                context.addError(new InvalidAnnotation("Error reading annotation value " + annotClass.getName(), e));
             } catch (InvocationTargetException e) {
-                context.addError(new InvalidIntentName(val, e));
+                context.addError(new InvalidAnnotation("Error reading annotation value" + annotClass.getName(), e));
             }
         }
     }
+
+    /**
+     * Evaluates a metadata annotation on an intent annotation, e.g. @Qualifier or @IntentMetaData. Currently only String and String[] are supported.
+     *
+     * @param annotation         the intent annotation
+     * @param metadataAnnotClass the metadata annotation class
+     * @param context            the current introspection context
+     * @return the metadata values the metadata
+     * @throws IllegalAccessException    if an error occurs reading the annotation metadata
+     * @throws InvocationTargetException if an error occurs reading the annotation metadata
+     */
+    private String[] getMetadataValue(Annotation annotation, Class<? extends Annotation> metadataAnnotClass, IntrospectionContext context)
+            throws IllegalAccessException, InvocationTargetException {
+        Class<? extends Annotation> annotClass = annotation.annotationType();
+        for (Method method : annotClass.getMethods()) {
+            if (method.isAnnotationPresent(metadataAnnotClass)) {
+                // iterate methods until one with @Qualified is found
+                Class<?> type = method.getReturnType();
+                if (type.isArray() && (String.class.equals(type.getComponentType()))) {
+                    // multiple qualifiers as return type String[]
+                    return (String[]) method.invoke(annotation);
+                } else if (String.class.equals(type)) {
+                    // single qualifier as return type String[]
+                    String ret = (String) method.invoke(annotation);
+                    return new String[]{ret};
+                } else {
+                    String metadataName = metadataAnnotClass.getName();
+                    String annotationName = annotClass.getName();
+                    InvalidAnnotation error = new InvalidAnnotation("Value for " + metadataName + " must be String or String[]:  " + annotationName);
+                    context.addError(error);
+                }
+            }
+        }
+        return null;
+    }
+
 
 }
