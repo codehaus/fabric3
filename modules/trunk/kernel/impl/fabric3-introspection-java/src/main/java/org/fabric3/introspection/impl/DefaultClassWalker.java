@@ -77,7 +77,6 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
 
     /**
      * Constructor.
-     * <p/>
      */
     @org.osoa.sca.annotations.Constructor
     public DefaultClassWalker() {
