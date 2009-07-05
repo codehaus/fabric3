@@ -14,8 +14,7 @@ Public License. See the accompanying license file for details.
            xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="PlanLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
-        >
+           name="PlanLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:boot">
 
     <component name="DeploymentPlanIndexer">
         <f3-impl:implementation.system class="org.fabric3.loader.plan.DeploymentPlanIndexer"/>

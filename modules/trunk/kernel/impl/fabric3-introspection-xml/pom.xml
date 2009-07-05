@@ -18,9 +18,9 @@
         <version>1.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-loader</artifactId>
-    <name>Fabric3 SCDL Loader</name>
-    <description>Fabric3 loader for SCDL XML files.</description>
+    <artifactId>fabric3-introspection-xml</artifactId>
+    <name>Fabric3 XML Introspection</name>
+    <description>Fabric3 extension for processing XML assembly artifacts.</description>
 
     <dependencies>
 
@@ -58,9 +58,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-loader</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-loader</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-loader</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-introspection-xml</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-introspection-xml</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-introspection-xml</url>
     </scm>
 
 </project>
