@@ -10,7 +10,7 @@ Public License. See the accompanying license file for details.
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-core="urn:fabric3.org:core"
            name="JUnitExtension"
-           targetNamespace="urn:org.codehaus.fabric3"
+           targetNamespace="urn:fabric3.org:implementation"
            autowire="true">
 
     <component name="JUnitImplementationLoader" f3-core:key="f3-impl:junit">
