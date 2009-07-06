@@ -17,10 +17,10 @@ Public License. See the accompanying license file for details.
            name="LoaderCommonBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:boot">
 
     <component name="LoaderRegistry">
-        <f3-impl:implementation.system class="org.fabric3.loader.impl.LoaderRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.LoaderRegistryImpl"/>
     </component>
 
     <component name="LoaderHelper">
-        <f3-impl:implementation.system class="org.fabric3.loader.impl.DefaultLoaderHelper"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.DefaultLoaderHelper"/>
     </component>
 </composite>

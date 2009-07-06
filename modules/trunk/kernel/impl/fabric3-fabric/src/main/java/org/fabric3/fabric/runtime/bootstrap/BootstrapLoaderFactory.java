@@ -38,16 +38,16 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.loader.common.ComponentReferenceLoader;
-import org.fabric3.loader.common.ComponentServiceLoader;
-import org.fabric3.loader.common.PropertyLoader;
-import org.fabric3.loader.composite.ComponentLoader;
-import org.fabric3.loader.composite.CompositeLoader;
-import org.fabric3.loader.composite.IncludeLoader;
-import org.fabric3.loader.composite.PropertyValueLoader;
-import org.fabric3.loader.composite.WireLoader;
-import org.fabric3.loader.impl.DefaultLoaderHelper;
-import org.fabric3.loader.impl.LoaderRegistryImpl;
+import org.fabric3.introspection.xml.DefaultLoaderHelper;
+import org.fabric3.introspection.xml.LoaderRegistryImpl;
+import org.fabric3.introspection.xml.common.ComponentReferenceLoader;
+import org.fabric3.introspection.xml.common.ComponentServiceLoader;
+import org.fabric3.introspection.xml.common.PropertyLoader;
+import org.fabric3.introspection.xml.composite.ComponentLoader;
+import org.fabric3.introspection.xml.composite.CompositeLoader;
+import org.fabric3.introspection.xml.composite.IncludeLoader;
+import org.fabric3.introspection.xml.composite.PropertyValueLoader;
+import org.fabric3.introspection.xml.composite.WireLoader;
 import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;

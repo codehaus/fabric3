@@ -18,27 +18,27 @@ Public License. See the accompanying license file for details.
            targetNamespace="urn:maven:org.codehaus.fabric3:boot">
 
     <component name="DefinitionsLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.definitions.DefinitionsLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.definitions.DefinitionsLoader"/>
     </component>
 
     <component name="DefinitionsIndexer">
-        <f3-impl:implementation.system class="org.fabric3.loader.definitions.DefinitionsIndexer"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.definitions.DefinitionsIndexer"/>
     </component>
 
     <component name="IntentLoader" f3-core:key="sca:intent">
-        <f3-impl:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.definitions.IntentLoader"/>
     </component>
 
     <component name="PolicySetLoader" f3-core:key="sca:policySet">
-        <f3-impl:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.definitions.PolicySetLoader"/>
     </component>
 
     <component name="BindingTypeLoader" f3-core:key="sca:bindingType">
-        <f3-impl:implementation.system class="org.fabric3.loader.definitions.BindingTypeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.definitions.BindingTypeLoader"/>
     </component>
 
     <component name="ImplementationTypeLoader" f3-core:key="sca:implementationType">
-        <f3-impl:implementation.system class="org.fabric3.loader.definitions.ImplementationTypeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.definitions.ImplementationTypeLoader"/>
     </component>
 
 </composite>

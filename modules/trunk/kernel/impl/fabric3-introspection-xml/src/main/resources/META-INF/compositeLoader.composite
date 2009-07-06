@@ -19,44 +19,44 @@
 
     <!-- Common loader implementations -->
     <component name="OperationLoader" f3-core:key="sca:operation">
-        <f3-impl:implementation.system class="org.fabric3.loader.common.OperationLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.common.OperationLoader"/>
     </component>
     <component name="ComponentReferenceLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.common.ComponentReferenceLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.common.ComponentReferenceLoader"/>
     </component>
     <component name="ComponentServiceLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.common.ComponentServiceLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.common.ComponentServiceLoader"/>
     </component>
     <component name="PropertyLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.common.PropertyLoader"/>
     </component>
     <component name="JavaInterfaceLoader" f3-core:key="sca:interface.java">
-        <f3-impl:implementation.system class="org.fabric3.loader.common.JavaInterfaceLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.common.JavaInterfaceLoader"/>
     </component>
 
     <!-- Composite loader implementations -->
     <component name="PropertyValueLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.PropertyValueLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.PropertyValueLoader"/>
     </component>
     <component name="ComponentLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.ComponentLoader"/>
     </component>
     <component name="IncludeLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.IncludeLoader"/>
     </component>
     <component name="CompositeReferenceLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.CompositeReferenceLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.CompositeReferenceLoader"/>
     </component>
     <component name="CompositeServiceLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.CompositeServiceLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.CompositeServiceLoader"/>
     </component>
 
     <component name="WireLoader" f3-core:key="sca:wire">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.WireLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.WireLoader"/>
     </component>
 
     <component name="CompositeLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.CompositeLoader"/>
         <!-- explicitly wire composite property, service and reference laoders -->
         <reference name="service" target="CompositeServiceLoader"/>
         <reference name="reference" target="CompositeReferenceLoader"/>
@@ -65,11 +65,11 @@
 
     <!-- Composite implementation type -->
     <component name="ImplementationCompositeLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.composite.ImplementationCompositeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.composite.ImplementationCompositeLoader"/>
     </component>
 
     <component name="ComponentTypeLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.componentType.ComponentTypeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.xml.componentType.ComponentTypeLoader"/>
         <reference name="property" target="PropertyLoader"/>
     </component>
 </composite>
