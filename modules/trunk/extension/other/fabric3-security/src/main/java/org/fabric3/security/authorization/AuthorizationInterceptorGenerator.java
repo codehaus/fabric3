@@ -57,7 +57,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class AuthorizationInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
+public class AuthorizationInterceptorGenerator implements InterceptorDefinitionGenerator {
 
     public AuthorizationInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding) {
         String rolesAttribute = policyDefinition.getAttribute("roles");
