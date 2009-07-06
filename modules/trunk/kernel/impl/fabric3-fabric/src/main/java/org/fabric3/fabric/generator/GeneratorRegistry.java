@@ -51,12 +51,12 @@ import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, and {@link InterceptorDefinitionGenerator}s . Generators are responsible for
+ * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, and {@link InterceptorGenerator}s . Generators are responsible for
  * producing physical model objects that are provisioned to service nodes from their logical counterparts.
  *
  * @version $Rev$ $Date$
@@ -97,6 +97,6 @@ public interface GeneratorRegistry {
      * @return Interceptor definition generator
      * @throws GeneratorNotFoundException if no generator is registered for the policy extension type
      */
-    InterceptorDefinitionGenerator getInterceptorDefinitionGenerator(QName extensionName) throws GeneratorNotFoundException;
+    InterceptorGenerator getInterceptorDefinitionGenerator(QName extensionName) throws GeneratorNotFoundException;
 
 }

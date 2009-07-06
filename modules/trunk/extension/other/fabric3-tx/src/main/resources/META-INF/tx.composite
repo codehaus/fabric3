@@ -23,7 +23,7 @@ Public License. See the accompanying license file for details.
 
     <!-- Tx Interceptor Generator -->
     <component name="TxInterceptorGenerator" f3-core:key="{urn:fabric3.org:policy}transaction">
-        <f3-impl:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorDefinitionGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorGenerator"/>
     </component>
 
 </composite>

@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
 import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.type.LocalBindingDefinition;
@@ -54,7 +54,7 @@ import org.fabric3.spi.model.type.LocalBindingDefinition;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
+public class NonBlockingGenerator implements InterceptorGenerator {
 
     public PhysicalInterceptorDefinition generate(Element policyDefinition,
                                                   Operation<?> operation,

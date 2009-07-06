@@ -50,7 +50,7 @@ import org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -58,7 +58,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
+public class JaxbInterceptorGenerator implements InterceptorGenerator {
 
     public JaxbInterceptorDefinition generate(Element policySet, Operation<?> operation, LogicalBinding<?> logicalBinding)
             throws GenerationException {

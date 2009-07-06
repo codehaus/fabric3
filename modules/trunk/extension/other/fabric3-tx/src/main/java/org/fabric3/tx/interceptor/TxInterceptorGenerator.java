@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
 
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
@@ -52,7 +52,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class TxInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
+public class TxInterceptorGenerator implements InterceptorGenerator {
 
     public PhysicalInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding)
             throws GenerationException {

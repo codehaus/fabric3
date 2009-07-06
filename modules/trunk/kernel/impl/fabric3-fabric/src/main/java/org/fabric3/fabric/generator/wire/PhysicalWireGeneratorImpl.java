@@ -58,7 +58,7 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -386,7 +386,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Set<PhysicalInterceptorDefinition> interceptors = new LinkedHashSet<PhysicalInterceptorDefinition>();
         for (PolicySet policy : policies) {
             QName qName = policy.getExtensionName();
-            InterceptorDefinitionGenerator idg = generatorRegistry.getInterceptorDefinitionGenerator(qName);
+            InterceptorGenerator idg = generatorRegistry.getInterceptorDefinitionGenerator(qName);
             PhysicalInterceptorDefinition pid = idg.generate(policy.getExtension(), operation.getDefinition(), logicalBinding);
             if (pid != null) {
                 URI contributionClassLoaderId = logicalBinding.getParent().getParent().getDefinition().getContributionUri();

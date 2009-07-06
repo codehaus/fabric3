@@ -56,7 +56,7 @@ import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -69,7 +69,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     private Map<Class<?>, BindingGenerator<?>> bindingGenerators = new ConcurrentHashMap<Class<?>, BindingGenerator<?>>();
 
-    private Map<QName, InterceptorDefinitionGenerator> interceptorGenerators = new ConcurrentHashMap<QName, InterceptorDefinitionGenerator>();
+    private Map<QName, InterceptorGenerator> interceptorGenerators = new ConcurrentHashMap<QName, InterceptorGenerator>();
 
     private Map<Class<?>, ResourceWireGenerator<?>> resourceGenerators = new ConcurrentHashMap<Class<?>, ResourceWireGenerator<?>>();
 
@@ -89,7 +89,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @Reference(required = false)
-    public void setInterceptorGenerators(Map<QName, InterceptorDefinitionGenerator> interceptorGenerators) {
+    public void setInterceptorGenerators(Map<QName, InterceptorGenerator> interceptorGenerators) {
         this.interceptorGenerators = interceptorGenerators;
     }
 
@@ -132,7 +132,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         return (ResourceWireGenerator<T>) resourceGenerators.get(clazz);
     }
 
-    public InterceptorDefinitionGenerator getInterceptorDefinitionGenerator(QName extensionName)
+    public InterceptorGenerator getInterceptorDefinitionGenerator(QName extensionName)
             throws GeneratorNotFoundException {
         if (!interceptorGenerators.containsKey(extensionName)) {
             throw new GeneratorNotFoundException(extensionName);

@@ -22,7 +22,7 @@ Public License. See the accompanying license file for details.
 
     <!-- Jaxb Databinding Interceptor Generator -->
     <component name="JaxbInterceptorGenerator" f3-core:key="{urn:fabric3.org:policy}dataBinding.jaxb">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.jaxb.JaxbInterceptorDefinitionGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.jaxb.JaxbInterceptorGenerator"/>
     </component>
 
     <!--Jaxws Introspector -->

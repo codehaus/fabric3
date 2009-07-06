@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
 
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 
 /**
@@ -57,7 +57,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class AuthorizationInterceptorGenerator implements InterceptorDefinitionGenerator {
+public class AuthorizationInterceptorGenerator implements InterceptorGenerator {
 
     public AuthorizationInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding) {
         String rolesAttribute = policyDefinition.getAttribute("roles");

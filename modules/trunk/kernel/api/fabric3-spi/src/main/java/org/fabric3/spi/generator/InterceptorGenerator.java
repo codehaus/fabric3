@@ -50,23 +50,22 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
- * Interface for the interceptor definition generator.
+ * Implementations are responsible for generating command metadata used to provision wire interceptors to runtimes.
  *
  * @version $Rev$ $Date$
  */
-public interface InterceptorDefinitionGenerator {
+public interface InterceptorGenerator {
 
     /**
      * Generates an interceptor definition from the policy set extension. Implementations may return null if an interceptor should not be added to a
      * wire.
      *
-     * @param policyDefinition Policy set definition.
-     * @param operation        Operation against which the interceptor is generated.
-     * @param logicalBinding   Logical binding on the service or reference.
+     * @param policy         policy set definition.
+     * @param operation      operation the interceptor is generated for.
+     * @param logicalBinding logical binding on the service or reference.
      * @return Physical interceptor definition or null if an interceptor should not be added.
-     * @throws GenerationException i an exception occurs during generation
+     * @throws GenerationException if an exception occurs during generation
      */
-    PhysicalInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding)
-            throws GenerationException;
+    PhysicalInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> logicalBinding) throws GenerationException;
 
 }
