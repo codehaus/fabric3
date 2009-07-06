@@ -28,8 +28,6 @@
 
     <include name="ExecutorsComposite" scdlLocation="executors.composite"/>
 
-    <include name="ContributionComposite" scdlLocation="contribution.composite"/>
-
     <include name="BuilderComposite" scdlLocation="builder.composite"/>
 
     <include name="HostServicesComposite" scdlLocation="services.composite"/>
