@@ -63,7 +63,7 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.UnknownInjectionType;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Heuristic processor that locates unannotated Property and Reference dependencies.

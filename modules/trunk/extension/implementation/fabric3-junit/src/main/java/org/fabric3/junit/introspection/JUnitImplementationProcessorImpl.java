@@ -40,7 +40,7 @@ package org.fabric3.junit.introspection;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.introspection.ImplementationArtifactNotFound;
-import org.fabric3.junit.scdl.JUnitImplementation;
+import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;

@@ -62,7 +62,7 @@ import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * @version $Rev$ $Date$

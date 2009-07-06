@@ -50,14 +50,14 @@ import javax.ws.rs.ext.Provider;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
 import org.fabric3.model.type.service.ServiceContract;
-import org.fabric3.rs.scdl.RsBindingDefinition;
+import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;

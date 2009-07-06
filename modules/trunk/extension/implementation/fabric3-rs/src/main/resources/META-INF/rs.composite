@@ -25,8 +25,8 @@ Public License. See the accompanying license file for details.
     </component>
 
     <!-- Rs Binding Generator -->
-    <component name="RsBindingGenerator" f3-core:key="org.fabric3.rs.scdl.RsBindingDefinition">
-        <f3-impl:implementation.system class="org.fabric3.rs.control.RsBindingGenerator"/>
+    <component name="RsBindingGenerator" f3-core:key="org.fabric3.rs.model.RsBindingDefinition">
+        <f3-impl:implementation.system class="org.fabric3.rs.generator.RsBindingGenerator"/>
     </component>
 
     <!-- Rs Binding Wire Attachers  -->

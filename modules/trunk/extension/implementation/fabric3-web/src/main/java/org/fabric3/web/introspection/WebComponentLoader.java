@@ -59,6 +59,7 @@ import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.web.model.WebImplementation;
 
 /**
  * Loads <code><implementation.web></code> from a composite.

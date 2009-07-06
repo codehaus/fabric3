@@ -55,7 +55,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 public class DefaultTargetPromotionServiceTestCase extends TestCase {
 

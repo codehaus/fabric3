@@ -55,7 +55,7 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Loads information for a system implementation

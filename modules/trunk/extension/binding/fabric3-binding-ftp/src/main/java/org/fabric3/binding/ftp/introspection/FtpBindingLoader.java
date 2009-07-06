@@ -47,8 +47,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
-import org.fabric3.binding.ftp.scdl.TransferMode;
+import org.fabric3.binding.ftp.model.FtpBindingDefinition;
+import org.fabric3.binding.ftp.model.TransferMode;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;

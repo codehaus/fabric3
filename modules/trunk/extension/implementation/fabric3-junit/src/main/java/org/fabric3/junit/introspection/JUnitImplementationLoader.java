@@ -43,8 +43,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.junit.scdl.JUnitBindingDefinition;
-import org.fabric3.junit.scdl.JUnitImplementation;
+import org.fabric3.junit.model.JUnitBindingDefinition;
+import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderUtil;

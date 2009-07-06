@@ -47,7 +47,7 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
+import org.fabric3.binding.ftp.model.FtpBindingDefinition;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 

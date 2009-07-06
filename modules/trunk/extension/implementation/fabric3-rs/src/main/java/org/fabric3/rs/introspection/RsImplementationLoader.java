@@ -45,7 +45,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.spi.introspection.xml.InvalidValue;

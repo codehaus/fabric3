@@ -21,7 +21,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="TimerComponentGenerator" f3-core:key="org.fabric3.timer.component.model.TimerImplementation">
-        <f3-impl:implementation.system class="org.fabric3.timer.component.control.TimerComponentGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.timer.component.generator.TimerComponentGenerator"/>
     </component>
 
 

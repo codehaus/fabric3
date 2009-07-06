@@ -26,7 +26,7 @@
     </component>
 
     <component name="GenerationHelperImpl">
-        <f3-impl:implementation.system class="org.fabric3.pojo.control.GenerationHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.pojo.generator.GenerationHelperImpl"/>
     </component>
 
     <component name="BuildHelperImpl">

@@ -31,12 +31,12 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.junit.introspection.JUnitServiceHeuristic"/>
     </component>
 
-    <component name="JUnitComponentGenerator" f3-core:key="org.fabric3.junit.scdl.JUnitImplementation">
-        <f3-impl:implementation.system class="org.fabric3.junit.control.JUnitComponentGenerator"/>
+    <component name="JUnitComponentGenerator" f3-core:key="org.fabric3.junit.model.JUnitImplementation">
+        <f3-impl:implementation.system class="org.fabric3.junit.generator.JUnitComponentGenerator"/>
     </component>
 
-    <component f3-core:key="org.fabric3.junit.scdl.JUnitBindingDefinition" name="JUnitBindingGenerator">
-        <f3-impl:implementation.system class="org.fabric3.junit.control.JUnitBindingGenerator"/>
+    <component f3-core:key="org.fabric3.junit.model.JUnitBindingDefinition" name="JUnitBindingGenerator">
+        <f3-impl:implementation.system class="org.fabric3.junit.generator.JUnitBindingGenerator"/>
     </component>
 
     <component f3-core:key="org.fabric3.junit.provision.JUnitWireSourceDefinition" name="JunitSourceWireAttacher">

@@ -72,7 +72,7 @@ import org.fabric3.system.introspection.SystemHeuristic;
 import org.fabric3.system.introspection.SystemImplementationProcessorImpl;
 import org.fabric3.system.introspection.SystemServiceHeuristic;
 import org.fabric3.system.introspection.SystemUnannotatedHeuristic;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Instantiates an ImplementationProcessor for introspecting system components. System components are composite-scoped and support the standard SCA

@@ -76,7 +76,7 @@ import org.fabric3.spi.introspection.validation.InvalidCompositeException;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.

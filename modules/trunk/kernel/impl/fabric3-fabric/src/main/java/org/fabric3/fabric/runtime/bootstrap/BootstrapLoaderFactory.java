@@ -54,7 +54,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.system.introspection.SystemImplementationLoader;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Factory class for an implementation of Loader that can handle system SCDL.

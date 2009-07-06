@@ -45,7 +45,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.AmbiguousConstructor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.NoConstructorFound;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Heuristic that selects the constructor to use.

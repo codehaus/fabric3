@@ -49,8 +49,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Namespaces;
-import org.fabric3.java.control.JavaImplementation;
-import org.fabric3.java.control.JavaImplementationProcessor;
+import org.fabric3.java.introspection.JavaImplementationProcessor;
+import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.jpa.ConversationalDaoImpl;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.model.type.java.FieldInjectionSite;

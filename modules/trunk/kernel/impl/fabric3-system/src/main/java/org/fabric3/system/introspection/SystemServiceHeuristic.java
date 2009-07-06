@@ -52,7 +52,7 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.model.type.JMXBinding;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Heuristic that identifies the services provided by an implementation class.

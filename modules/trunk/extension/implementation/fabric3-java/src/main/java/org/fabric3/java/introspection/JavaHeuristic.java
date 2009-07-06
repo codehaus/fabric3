@@ -47,7 +47,7 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
@@ -63,12 +63,12 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AmbiguousConstructor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.NoConstructorFound;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.UnknownInjectionType;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$

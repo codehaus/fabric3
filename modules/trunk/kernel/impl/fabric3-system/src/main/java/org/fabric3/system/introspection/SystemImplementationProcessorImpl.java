@@ -56,7 +56,7 @@ import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.spi.introspection.java.annotation.InvalidImplementation;
 import org.fabric3.spi.introspection.java.annotation.MissingResource;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Loads a system component type

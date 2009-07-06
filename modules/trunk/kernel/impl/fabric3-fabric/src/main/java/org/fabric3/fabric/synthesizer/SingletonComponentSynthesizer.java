@@ -71,7 +71,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.synthesize.InvalidServiceContractException;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.singleton.SingletonComponent;
 import org.fabric3.system.singleton.SingletonImplementation;
 

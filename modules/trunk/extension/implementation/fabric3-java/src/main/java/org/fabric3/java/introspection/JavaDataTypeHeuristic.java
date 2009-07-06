@@ -52,7 +52,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
-import org.fabric3.java.control.JavaImplementation;
+import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;

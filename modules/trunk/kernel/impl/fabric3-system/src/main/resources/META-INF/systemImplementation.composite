@@ -62,8 +62,8 @@
         <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemUnannotatedHeuristic"/>
     </component>
 
-    <component name="SystemComponentGenerator" f3-core:key="org.fabric3.system.scdl.SystemImplementation">
-        <f3-impl:implementation.system class="org.fabric3.system.control.SystemComponentGenerator"/>
+    <component name="SystemComponentGenerator" f3-core:key="org.fabric3.system.model.SystemImplementation">
+        <f3-impl:implementation.system class="org.fabric3.system.generator.SystemComponentGenerator"/>
     </component>
 
 </composite>

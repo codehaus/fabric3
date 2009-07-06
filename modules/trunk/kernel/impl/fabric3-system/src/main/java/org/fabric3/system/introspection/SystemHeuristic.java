@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.model.SystemImplementation;
 
 /**
  * Controls the order in which system implementation heuristics are applied.
