@@ -14,7 +14,7 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="urn:maven:org.codehaus.fabric3:boot"
-           name="HostServicesComposite"
+           name="ServicesComposite"
            autowire="true">
 
     <component name="XMLFactory">
