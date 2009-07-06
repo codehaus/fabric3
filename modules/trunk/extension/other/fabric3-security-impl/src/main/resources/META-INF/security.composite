@@ -22,6 +22,10 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.security.impl.AuthenticationServiceImpl"/>
     </component>
 
+    <component name="Authorization">
+        <f3-impl:implementation.system class="org.fabric3.security.impl.AuthorizationServiceImpl"/>
+    </component>
+
     <component name="FileSecurityStore">
         <f3-impl:implementation.system class="org.fabric3.security.impl.FileSecurityStore"/>
         <property name="securityConfiguration" source="$systemConfig/users"/>
