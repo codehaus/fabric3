@@ -42,9 +42,9 @@ import java.lang.reflect.Constructor;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.AmbiguousConstructor;
-import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.NoConstructorFound;
+import org.fabric3.spi.introspection.java.annotation.AmbiguousConstructor;
+import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.annotation.NoConstructorFound;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

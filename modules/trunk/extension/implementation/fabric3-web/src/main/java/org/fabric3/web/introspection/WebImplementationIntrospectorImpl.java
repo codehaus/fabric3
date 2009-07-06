@@ -50,7 +50,7 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassWalker;
 
 /**
  * Default implementation of WebImplementationIntrospector.

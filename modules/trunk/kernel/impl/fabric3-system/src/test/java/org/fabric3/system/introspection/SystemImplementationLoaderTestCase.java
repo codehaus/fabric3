@@ -52,7 +52,7 @@ import org.easymock.EasyMock;
 
 import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

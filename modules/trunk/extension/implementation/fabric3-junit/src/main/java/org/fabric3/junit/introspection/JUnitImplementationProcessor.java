@@ -38,7 +38,7 @@
 package org.fabric3.junit.introspection;
 
 import org.fabric3.junit.scdl.JUnitImplementation;
-import org.fabric3.spi.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 
 /**
  * @version $Rev$ $Date$

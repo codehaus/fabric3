@@ -48,7 +48,7 @@ import org.fabric3.loader.composite.PropertyValueLoader;
 import org.fabric3.loader.composite.WireLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
-import org.fabric3.spi.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;

@@ -51,11 +51,11 @@ import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.ClassWalker;
-import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.ImplementationProcessor;
-import org.fabric3.spi.introspection.java.InvalidImplementation;
-import org.fabric3.spi.introspection.java.MissingResource;
+import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.annotation.InvalidImplementation;
+import org.fabric3.spi.introspection.java.annotation.MissingResource;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

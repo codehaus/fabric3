@@ -59,7 +59,7 @@ import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 
 /**
  * Heuristic that determines the XML type of Java properties.

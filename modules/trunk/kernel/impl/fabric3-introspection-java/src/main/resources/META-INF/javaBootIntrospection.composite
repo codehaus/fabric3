@@ -21,130 +21,130 @@
            autowire="true">
 
     <component name="DefaultIntrospectionHelper">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultIntrospectionHelper"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.DefaultIntrospectionHelper"/>
     </component>
 
     <component name="DefaultContractProcessor">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.contract.DefaultContractProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.contract.DefaultContractProcessor"/>
     </component>
 
     <component name="ClassWalker">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.DefaultClassWalker"/>
     </component>
 
     <component name="OperationPolicyIntrospector">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.policy.DefaultOperationPolicyIntrospector"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.policy.DefaultOperationPolicyIntrospector"/>
     </component>
 
     <!-- OASIS Specification Annotations -->
 
     <component name="OASISCallbackProcessor" f3-core:key="org.oasisopen.sca.annotation.Callback">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISCallbackProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISCallbackProcessor"/>
     </component>
 
     <component name="OASISContextProcessor" f3-core:key="org.oasisopen.sca.annotation.Context">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISContextProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISContextProcessor"/>
     </component>
 
     <component name="OASISDestroyProcessor" f3-core:key="org.oasisopen.sca.annotation.Destroy">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISDestroyProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISDestroyProcessor"/>
     </component>
 
     <component name="OASISEagerInitProcessor" f3-core:key="org.oasisopen.sca.annotation.EagerInit">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISEagerInitProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISEagerInitProcessor"/>
     </component>
 
     <component name="OASISInitProcessor" f3-core:key="org.oasisopen.sca.annotation.Init">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISInitProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISInitProcessor"/>
     </component>
 
     <component name="OASISPropertyProcessor" f3-core:key="org.oasisopen.sca.annotation.Property">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISPropertyProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISPropertyProcessor"/>
     </component>
 
     <component name="OASISReferenceProcessor" f3-core:key="org.oasisopen.sca.annotation.Reference">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISReferenceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISReferenceProcessor"/>
     </component>
 
     <component name="OASISRemotableProcessor" f3-core:key="org.oasisopen.sca.annotation.Remotable">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISRemotableProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISRemotableProcessor"/>
     </component>
 
     <component name="OASISScopeProcessor" f3-core:key="org.oasisopen.sca.annotation.Scope">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISScopeProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISScopeProcessor"/>
     </component>
 
     <component name="OASISServiceProcessor" f3-core:key="org.oasisopen.sca.annotation.Service">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.OASISServiceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.OASISServiceProcessor"/>
     </component>
 
 
     <!-- OSOA Specification Annotations -->
 
     <component name="CallbackProcessor" f3-core:key="org.osoa.sca.annotations.Callback">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.CallbackProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.CallbackProcessor"/>
     </component>
 
     <component name="ContextProcessor" f3-core:key="org.osoa.sca.annotations.Context">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ContextProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.ContextProcessor"/>
     </component>
 
     <component name="ConversationIDProcessor" f3-core:key="org.osoa.sca.annotations.ConversationID">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationIDProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.ConversationIDProcessor"/>
     </component>
 
     <component name="DestroyProcessor" f3-core:key="org.osoa.sca.annotations.Destroy">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.DestroyProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.DestroyProcessor"/>
     </component>
 
     <component name="EagerInitProcessor" f3-core:key="org.osoa.sca.annotations.EagerInit">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.EagerInitProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.EagerInitProcessor"/>
     </component>
 
     <component name="InitProcessor" f3-core:key="org.osoa.sca.annotations.Init">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.InitProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.InitProcessor"/>
     </component>
 
     <component name="PropertyProcessor" f3-core:key="org.osoa.sca.annotations.Property">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.PropertyProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.PropertyProcessor"/>
     </component>
 
     <component name="ReferenceProcessor" f3-core:key="org.osoa.sca.annotations.Reference">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ReferenceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.ReferenceProcessor"/>
     </component>
 
     <component name="RemotableProcessor" f3-core:key="org.osoa.sca.annotations.Remotable">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.RemotableProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.RemotableProcessor"/>
     </component>
 
     <component name="ScopeProcessor" f3-core:key="org.osoa.sca.annotations.Scope">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ScopeProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.ScopeProcessor"/>
     </component>
 
     <component name="ServiceProcessor" f3-core:key="org.osoa.sca.annotations.Service">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ServiceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.ServiceProcessor"/>
     </component>
 
     <!--Fabric3 Annotations -->
 
     <component name="ConversationProcessor" f3-core:key="org.fabric3.api.annotation.scope.Conversation">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.ConversationProcessor"/>
     </component>
 
     <component name="CompositeProcessor" f3-core:key="org.fabric3.api.annotation.scope.Composite">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.CompositeProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.CompositeProcessor"/>
     </component>
 
     <component name="RequestProcessor" f3-core:key="org.fabric3.api.annotation.scope.Request">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.RequestProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.RequestProcessor"/>
     </component>
 
     <component name="StatelessProcessor" f3-core:key="org.fabric3.api.annotation.scope.Stateless">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.StatelessProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.StatelessProcessor"/>
     </component>
 
     <component name="PolicyAnnotationProcessor">
-        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.PolicyAnnotationProcessorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.annotation.PolicyAnnotationProcessorImpl"/>
     </component>
 
 </composite>

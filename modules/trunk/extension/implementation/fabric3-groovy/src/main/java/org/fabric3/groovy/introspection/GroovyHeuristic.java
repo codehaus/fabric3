@@ -41,7 +41,7 @@ import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 
 /**
  * @version $Rev$ $Date$

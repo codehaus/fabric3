@@ -55,8 +55,8 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 
 /**
  * @version $Rev$ $Date$

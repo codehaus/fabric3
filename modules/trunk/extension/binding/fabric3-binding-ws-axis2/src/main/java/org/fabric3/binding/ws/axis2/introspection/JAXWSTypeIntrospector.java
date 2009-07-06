@@ -43,7 +43,7 @@ import javax.jws.WebMethod;
 import org.fabric3.binding.ws.axis2.common.Constant;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.contract.OperationIntrospector;
+import org.fabric3.spi.introspection.java.contract.OperationIntrospector;
 
 /**
  * Introspects operations for the presence of JAX-WS annotations. JAX-WS annotations are used to configure the Axis2 engine.

@@ -59,7 +59,7 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;

@@ -71,7 +71,7 @@ import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.spi.introspection.validation.InvalidCompositeException;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;

@@ -48,7 +48,7 @@ import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$

@@ -55,7 +55,7 @@ import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.MissingResource;
+import org.fabric3.spi.introspection.java.annotation.MissingResource;
 import org.fabric3.spi.xml.XMLFactory;
 
 /**
