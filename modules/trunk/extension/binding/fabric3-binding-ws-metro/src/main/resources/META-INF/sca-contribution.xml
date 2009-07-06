@@ -9,14 +9,17 @@ Public License. See the accompanying license file for details.
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="urn:fabric3.org:binding" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+              xmlns:f3-binding="urn:fabric3.org:binding"
+              xmlns:f3-core="urn:fabric3.org:core"
+              f3-core:extension="true">
     <import.java package="org.fabric3.spi.*" version="1.2"/>
     <import.java package="org.fabric3.binding.ws.provision" version="1.2"/>
     <import.java package="org.fabric3.binding.ws.model" version="1.2"/>
     <import.java package="org.objectweb.asm" version="3.1.0"/>
     <import.java package="org.objectweb.asm.signature" version="3.1.0"/>
-    <deployable composite="ns:MetroControllerExtension" modes="controller vm"/>
-    <deployable composite="ns:MetroParticipantExtension" modes="participant vm"/>
-    <deployable composite="ns:MetroBinding"/>
+    <deployable composite="f3-binding:MetroControllerExtension" modes="controller vm"/>
+    <deployable composite="f3-binding:MetroParticipantExtension" modes="participant vm"/>
+    <deployable composite="f3-binding:MetroBinding"/>
     <f3-core:provides name="jaxb"/>
 </contribution>

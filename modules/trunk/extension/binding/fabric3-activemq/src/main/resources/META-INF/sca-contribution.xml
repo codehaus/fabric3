@@ -10,7 +10,7 @@ Public License. See the accompanying license file for details.
     $Rev$ $Date$
 -->
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-              xmlns:ns="org.codehaus.fabric3"
+              xmlns:f3-binding="urn:fabric3.org:binding"
               xmlns:f3-core="urn:fabric3.org:core"
               f3-core:required-capabilities="transaction"
               f3-core:capabilities="jms"
@@ -20,7 +20,7 @@ Public License. See the accompanying license file for details.
     <import.java package="org.fabric3.binding.jms.common" version="1.2"/>
     <import.java package="org.fabric3.binding.jms.model" version="1.2"/>
     <import.java package="org.fabric3.binding.jms.runtime.factory" version="1.2"/>
-    <deployable composite="ns:ActiveMQRuntimeExtension" modes="participant vm"/>
-    <deployable composite="ns:ActiveMQControllerExtension" modes="controller vm"/>
+    <deployable composite="f3-binding:ActiveMQRuntimeExtension" modes="participant vm"/>
+    <deployable composite="f3-binding:ActiveMQControllerExtension" modes="controller vm"/>
     <f3-core:extends name="jms"/>
 </contribution>

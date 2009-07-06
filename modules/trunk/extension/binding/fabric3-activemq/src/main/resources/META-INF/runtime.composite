@@ -18,7 +18,7 @@
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           targetNamespace="org.codehaus.fabric3"
+           targetNamespace="urn:fabric3.org:binding"
            name="ActiveMQRuntimeExtension"
            autowire="true">
 

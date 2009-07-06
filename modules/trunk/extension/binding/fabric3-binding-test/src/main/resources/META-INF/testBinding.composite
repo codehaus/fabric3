@@ -23,7 +23,7 @@ destination uri the reference should flow invocations to as in:
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-binding="urn:fabric3.org:binding"
-           targetNamespace="org.codehaus.fabric3"
+           targetNamespace="urn:fabric3.org:binding"
            name="TestBindingExtension">
 
     <component name="BindingChannel">

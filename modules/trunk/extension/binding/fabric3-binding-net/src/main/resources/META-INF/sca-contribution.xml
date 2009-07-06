@@ -9,11 +9,14 @@ Public License. See the accompanying license file for details.
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="org.codehaus.fabric3" xmlns:f3-core="urn:fabric3.org:core" f3-core:extension="true">
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+              xmlns:f3-binding="urn:fabric3.org:binding"
+              xmlns:f3-core="urn:fabric3.org:core"
+              f3-core:extension="true">
     <import.java package="org.fabric3.spi.*" version="1.2"/>
-    <deployable composite="ns:NetBindingControllerExtension" modes="controller vm"/>
-    <deployable composite="ns:NetBindingParticipantExtension" modes="participant vm"/>
-    <deployable composite="ns:NetBinding"/>
+    <deployable composite="f3-binding:NetBindingControllerExtension" modes="controller vm"/>
+    <deployable composite="f3-binding:NetBindingParticipantExtension" modes="participant vm"/>
+    <deployable composite="f3-binding:NetBinding"/>
     <f3-core:provides name="binding.net"/>
 
 </contribution>
