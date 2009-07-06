@@ -14,7 +14,7 @@ Public License. See the accompanying license file for details.
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-policy="urn:fabric3.org:policy"
            xmlns:f3-core="urn:fabric3.org:core"
-           targetNamespace="org.codehaus.fabric3"
+           targetNamespace="urn:fabric3.org:databinding"
            name="DataBindingJAXBExtension">
 
     <component name="String2Jaxb">
