@@ -26,23 +26,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry"/>
     </component>
 
-    <component name="ExpressionExpander">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.ExpressionExpanderImpl"/>
-    </component>
-
-    <!-- add the default evaluators. Host properties override system properties which override environment properties -->
-    <component name="HostPropertiesExpressionEvaluator" f3-core:key="100">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.HostPropertiesExpressionEvaluator"/>
-    </component>
-
-    <component name="SystemPropertyEvaluator" f3-core:key="101">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.SystemPropertyEvaluator"/>
-    </component>
-
-    <component name="EnvironmentPropertyEvaluator" f3-core:key="102">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.EnvironmentPropertyEvaluator"/>
-    </component>
-
     <component name="ClassLoaderBuilder">
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
     </component>

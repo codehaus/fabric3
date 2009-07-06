@@ -20,13 +20,13 @@
 
     <include name="DomainComposite" scdlLocation="domain.composite"/>
 
-    <include name="ScopeComposite" scdlLocation="scope.composite"/>
+    <include name="ComponentComposite" scdlLocation="component.composite"/>
 
     <include name="InstantiatorComposite" scdlLocation="instantiator.composite"/>
 
     <include name="GeneratorComposite" scdlLocation="generator.composite"/>
 
-    <include name="ExecutorsComposite" scdlLocation="executors.composite"/>
+    <include name="ExecutorComposite" scdlLocation="executor.composite"/>
 
     <include name="BuilderComposite" scdlLocation="builder.composite"/>
 
@@ -34,8 +34,6 @@
 
     <include name="MonitorComposite" scdlLocation="monitor.composite"/>
 
-    <include name="LocalProvisioningComposite" scdlLocation="provisioning.composite"/>
+    <include name="BindingComposite" scdlLocation="binding.composite"/>
 
-    <include name="FormatComposite" scdlLocation="format.composite"/>
-    
 </composite>

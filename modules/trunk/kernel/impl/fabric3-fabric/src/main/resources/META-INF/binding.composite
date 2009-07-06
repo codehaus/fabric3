@@ -15,7 +15,7 @@
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-core="urn:fabric3.org:core"
            targetNamespace="urn:maven:org.codehaus.fabric3:boot"
-           name="EncodersComposite"
+           name="BindingComposite"
            autowire="true">
 
     <component name="JDKParameterEncoderFactory" f3-core:key="jdk">

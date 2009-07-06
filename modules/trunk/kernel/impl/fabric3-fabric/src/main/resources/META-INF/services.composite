@@ -13,6 +13,7 @@
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
            targetNamespace="urn:maven:org.codehaus.fabric3:boot"
            name="ServicesComposite"
            autowire="true">
@@ -38,5 +39,23 @@
             <wsdl>text/wsdl+xml</wsdl>
         </property>
     </component>
-    
+
+    <component name="ExpressionExpander">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.ExpressionExpanderImpl"/>
+    </component>
+
+    <!-- add the default evaluators. Host properties override system properties which override environment properties -->
+    <component name="HostPropertiesExpressionEvaluator" f3-core:key="100">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.HostPropertiesExpressionEvaluator"/>
+    </component>
+
+    <component name="SystemPropertyEvaluator" f3-core:key="101">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.SystemPropertyEvaluator"/>
+    </component>
+
+    <component name="EnvironmentPropertyEvaluator" f3-core:key="102">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.EnvironmentPropertyEvaluator"/>
+    </component>
+
+
 </composite>
