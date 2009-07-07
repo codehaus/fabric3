@@ -73,33 +73,38 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component) throws GenerationException {
-        JavaComponentDefinition physical = new JavaComponentDefinition();
-        return generationHelper.generate(component, physical);
+        JavaComponentDefinition definition = new JavaComponentDefinition();
+        generationHelper.generate(definition, component);
+        return definition;
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source, LogicalReference reference, Policy policy)
             throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        return generationHelper.generateWireSource(source, wireDefinition, reference, policy);
+        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        generationHelper.generateWireSource(definition, reference, policy);
+        return definition;
     }
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        return generationHelper.generateCallbackWireSource(source, wireDefinition, serviceContract, policy);
+        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);
+        return definition;
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source, LogicalResource<?> resource)
             throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        return generationHelper.generateResourceWireSource(source, resource, wireDefinition);
+        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        generationHelper.generateResourceWireSource(definition, resource);
+        return definition;
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<JavaImplementation> target, Policy policy)
             throws GenerationException {
-        JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
-        return generationHelper.generateWireTarget(service, target, wireDefinition, policy);
+        JavaWireTargetDefinition definition = new JavaWireTargetDefinition();
+        generationHelper.generateWireTarget(definition, service);
+        return definition;
     }
 
 }

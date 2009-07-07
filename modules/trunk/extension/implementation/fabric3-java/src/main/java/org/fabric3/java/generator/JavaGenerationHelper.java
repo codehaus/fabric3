@@ -47,36 +47,64 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * Handles generation operations for Java components and specialized subtypes.
+ * Handles generation for Java components and specialized subtypes.
  *
  * @version $Rev$ $Date$
  */
 public interface JavaGenerationHelper {
 
-    JavaComponentDefinition generate(LogicalComponent<? extends JavaImplementation> component, JavaComponentDefinition physical)
-            throws GenerationException;
+    /**
+     * Populates the JavaComponentDefinition with generation information
+     *
+     * @param definition the JavaComponentDefinition to populate
+     * @param component  the component being generated
+     * @throws GenerationException if there is an error generating the JavaComponentDefinition
+     */
+    void generate(JavaComponentDefinition definition, LogicalComponent<? extends JavaImplementation> component) throws GenerationException;
 
-    PhysicalWireSourceDefinition generateWireSource(LogicalComponent<? extends JavaImplementation> source,
-                                                    JavaWireSourceDefinition wireDefinition,
-                                                    LogicalReference reference,
-                                                    Policy policy) throws GenerationException;
+    /**
+     * Populates the JavaWireSourceDefinition with reference wiring information.
+     *
+     * @param definition the JavaWireSourceDefinition to populate
+     * @param reference  the reference the wire is being generated for
+     * @param policy     the effective wire policy
+     * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
+     */
+    void generateWireSource(JavaWireSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException;
 
-    PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<? extends JavaImplementation> source,
-                                                            JavaWireSourceDefinition wireDefinition,
-                                                            ServiceContract<?> serviceContract,
-                                                            Policy policy) throws GenerationException;
+    /**
+     * Populates the JavaWireSourceDefinition with callback wiring information.
+     *
+     * @param definition      the JavaWireSourceDefinition to populate
+     * @param component       the component to be injected with the callback, i.e. the component providing the forward service
+     * @param serviceContract the callback service contract
+     * @param policy          the effective wire policy
+     * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
+     */
+    void generateCallbackWireSource(JavaWireSourceDefinition definition,
+                                    LogicalComponent<? extends JavaImplementation> component,
+                                    ServiceContract<?> serviceContract,
+                                    Policy policy) throws GenerationException;
 
-    PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<? extends JavaImplementation> source,
-                                                            LogicalResource<?> resource,
-                                                            JavaWireSourceDefinition wireDefinition) throws GenerationException;
+    /**
+     * Populates the JavaWireTargetDefinition with wiring information.
+     *
+     * @param definition the JavaWireTargetDefinition to populate
+     * @param service    the target service for the wire
+     * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
+     */
+    void generateWireTarget(JavaWireTargetDefinition definition, LogicalService service) throws GenerationException;
 
-    PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                    LogicalComponent<? extends JavaImplementation> target,
-                                                    JavaWireTargetDefinition wireDefinition,
-                                                    Policy policy) throws GenerationException;
+    /**
+     * Populates the JavaWireSourceDefinition with resource wiring information.
+     *
+     * @param definition the JavaWireSourceDefinition to populate
+     * @param resource   the resource to be wired
+     * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
+     */
+    void generateResourceWireSource(JavaWireSourceDefinition definition, LogicalResource<?> resource) throws GenerationException;
+
 }

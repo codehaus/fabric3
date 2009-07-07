@@ -75,32 +75,35 @@ public class TimerComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<TimerImplementation> component) throws GenerationException {
-        TimerComponentDefinition physical = new TimerComponentDefinition();
-        generationHelper.generate(component, physical);
+        TimerComponentDefinition definition = new TimerComponentDefinition();
+        generationHelper.generate(definition, component);
         TimerImplementation implementation = component.getDefinition().getImplementation();
-        physical.setTransactional(implementation.getIntents().contains(MANAGED_TRANSACTION));
+        definition.setTransactional(implementation.getIntents().contains(MANAGED_TRANSACTION));
         TriggerData data = implementation.getTriggerData();
-        physical.setTriggerData(data);
-        return physical;
+        definition.setTriggerData(data);
+        return definition;
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<TimerImplementation> source, LogicalReference reference, Policy policy)
             throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        return generationHelper.generateWireSource(source, wireDefinition, reference, policy);
+        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        generationHelper.generateWireSource(definition, reference, policy);
+        return definition;
     }
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<TimerImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        return generationHelper.generateCallbackWireSource(source, wireDefinition, serviceContract, policy);
+        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);
+        return definition;
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<TimerImplementation> source, LogicalResource<?> resource)
             throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        return generationHelper.generateResourceWireSource(source, resource, wireDefinition);
+        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        generationHelper.generateResourceWireSource(definition, resource);
+        return definition;
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<TimerImplementation> target, Policy policy)

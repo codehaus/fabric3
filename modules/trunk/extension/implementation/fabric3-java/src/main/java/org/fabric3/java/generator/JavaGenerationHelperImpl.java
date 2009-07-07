@@ -48,8 +48,10 @@ import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
+import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.CallbackDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
+import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.java.InjectableAttribute;
@@ -65,8 +67,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.InteractionType;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -80,8 +80,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         this.helper = helper;
     }
 
-    public JavaComponentDefinition generate(LogicalComponent<? extends JavaImplementation> component, JavaComponentDefinition physical)
-            throws GenerationException {
+    public void generate(JavaComponentDefinition definition, LogicalComponent<? extends JavaImplementation> component) throws GenerationException {
         ComponentDefinition<? extends JavaImplementation> logical = component.getDefinition();
         JavaImplementation implementation = logical.getImplementation();
         InjectingComponentType type = implementation.getComponentType();
@@ -97,43 +96,36 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         helper.processInjectionSites(component, providerDefinition);
 
         // create the physical component definition
-        physical.setScope(scope);
-        physical.setInitLevel(helper.getInitLevel(logical, type));
-        physical.setMaxAge(type.getMaxAge());
-        physical.setMaxIdleTime(type.getMaxIdleTime());
-        physical.setProviderDefinition(providerDefinition);
-        helper.processPropertyValues(component, physical);
-        // generate the classloader resource definition
-        return physical;
+        definition.setScope(scope);
+        definition.setInitLevel(helper.getInitLevel(logical, type));
+        definition.setMaxAge(type.getMaxAge());
+        definition.setMaxIdleTime(type.getMaxIdleTime());
+        definition.setProviderDefinition(providerDefinition);
+        helper.processPropertyValues(component, definition);
     }
 
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<? extends JavaImplementation> source,
-                                                           JavaWireSourceDefinition wireDefinition,
-                                                           LogicalReference reference,
-                                                           Policy policy) throws GenerationException {
+    public void generateWireSource(JavaWireSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
 
-        wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
-        wireDefinition.setInterfaceName(interfaceName);
+        definition.setUri(uri);
+        definition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
+        definition.setInterfaceName(interfaceName);
         // assume for now that any wire from a Java component can be optimized
-        wireDefinition.setOptimizable(true);
+        definition.setOptimizable(true);
 
         boolean conversational = serviceContract.isConversational();
         List<LogicalOperation> operations = reference.getOperations();
-        calculateConversationalPolicy(wireDefinition, operations, policy, conversational);
-        return wireDefinition;
+        calculateConversationalPolicy(definition, operations, policy, conversational);
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<? extends JavaImplementation> source,
-                                                                   JavaWireSourceDefinition wireDefinition,
-                                                                   ServiceContract<?> serviceContract,
-                                                                   Policy policy) throws GenerationException {
+    public void generateCallbackWireSource(JavaWireSourceDefinition definition, LogicalComponent<? extends JavaImplementation> component,
+                                           ServiceContract<?> serviceContract,
+                                           Policy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        InjectingComponentType type = source.getDefinition().getImplementation().getComponentType();
+        InjectingComponentType type = component.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (CallbackDefinition entry : type.getCallbacks().values()) {
             // NB: This currently only supports the case where one callback injection site of the same type is on an implementation.
@@ -148,16 +140,13 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
             throw new CallbackSiteNotFound("Callback injection site not found for type: " + interfaze, interfaze);
         }
 
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.CALLBACK, name));
-        wireDefinition.setInterfaceName(interfaceName);
-        wireDefinition.setUri(URI.create(source.getUri().toString() + "#" + name));
-        wireDefinition.setOptimizable(false);
-        return wireDefinition;
+        definition.setValueSource(new InjectableAttribute(InjectableAttributeType.CALLBACK, name));
+        definition.setInterfaceName(interfaceName);
+        definition.setUri(URI.create(component.getUri().toString() + "#" + name));
+        definition.setOptimizable(false);
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<? extends JavaImplementation> source,
-                                                                   LogicalResource<?> resource,
-                                                                   JavaWireSourceDefinition wireDefinition) throws GenerationException {
+    public void generateResourceWireSource(JavaWireSourceDefinition wireDefinition, LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
@@ -165,52 +154,46 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
-        return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<? extends JavaImplementation> target,
-                                                           JavaWireTargetDefinition wireDefinition,
-                                                           Policy policy) throws GenerationException {
+    public void generateWireTarget(JavaWireTargetDefinition definition, LogicalService service) throws GenerationException {
+        LogicalComponent<?> component = service.getParent();
         URI uri;
-        if (service != null) {
-            uri = service.getUri();
-        } else {
-            // no service specified, use the default
-            uri = target.getUri();
-        }
-        wireDefinition.setUri(uri);
+        uri = service.getUri();
+        definition.setUri(uri);
 
-        // assume for now that only wires to composite scope components can be optimized
-        String scope = target.getDefinition().getImplementation().getComponentType().getScope();
-        wireDefinition.setOptimizable("COMPOSITE".equals(scope));
-        return wireDefinition;
+        // assume only wires to composite scope components can be optimized
+        ComponentDefinition<? extends Implementation<?>> componentDefinition = component.getDefinition();
+        Implementation<?> implementation = componentDefinition.getImplementation();
+        AbstractComponentType<?, ?, ?, ?> componentType = implementation.getComponentType();
+        String scope = componentType.getScope();
+        definition.setOptimizable("COMPOSITE".equals(scope));
     }
 
 
     /**
      * Determines if the wire propagates conversations. Conversational propagation is handled by the source component.
      *
-     * @param wireDefinition the source wire defintion
+     * @param definition     the source wire defintion
      * @param operations     the logical operations
      * @param policy         the set of policies for the wire
      * @param conversational true if the contract is conversational
      */
-    private void calculateConversationalPolicy(JavaWireSourceDefinition wireDefinition,
+    private void calculateConversationalPolicy(JavaWireSourceDefinition definition,
                                                List<LogicalOperation> operations,
                                                Policy policy,
                                                boolean conversational) {
         for (LogicalOperation operation : operations) {
             for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
                 if (PROPAGATES_CONVERSATION_POLICY.equals(policySet.getName())) {
-                    wireDefinition.setInteractionType(InteractionType.PROPAGATES_CONVERSATION);
+                    definition.setInteractionType(InteractionType.PROPAGATES_CONVERSATION);
                     // conversational propagation is for the entire reference so set it an return
                     return;
                 }
             }
         }
         if (conversational) {
-            wireDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
+            definition.setInteractionType(InteractionType.CONVERSATIONAL);
         }
 
     }
