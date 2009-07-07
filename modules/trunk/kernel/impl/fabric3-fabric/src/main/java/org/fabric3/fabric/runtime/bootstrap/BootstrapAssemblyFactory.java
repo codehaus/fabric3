@@ -77,27 +77,27 @@ import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
 import org.fabric3.fabric.executor.ReferenceConnectionCommandExecutor;
 import org.fabric3.fabric.executor.StartComponentCommandExecutor;
 import org.fabric3.fabric.executor.StartContextCommandExecutor;
-import org.fabric3.fabric.generator.collator.ContributionCollator;
-import org.fabric3.fabric.generator.collator.ContributionCollatorImpl;
 import org.fabric3.fabric.generator.Generator;
-import org.fabric3.fabric.generator.impl.GeneratorImpl;
 import org.fabric3.fabric.generator.GeneratorRegistry;
-import org.fabric3.fabric.generator.impl.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl;
+import org.fabric3.fabric.generator.collator.ContributionCollator;
+import org.fabric3.fabric.generator.collator.ContributionCollatorImpl;
 import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
 import org.fabric3.fabric.generator.context.StartContextCommandGenerator;
 import org.fabric3.fabric.generator.context.StartContextCommandGeneratorImpl;
 import org.fabric3.fabric.generator.context.StopContextCommandGenerator;
 import org.fabric3.fabric.generator.context.StopContextCommandGeneratorImpl;
+import org.fabric3.fabric.generator.impl.GeneratorImpl;
+import org.fabric3.fabric.generator.impl.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.PhysicalOperationMapper;
 import org.fabric3.fabric.generator.wire.PhysicalOperationMapperImpl;
-import org.fabric3.fabric.generator.wire.WireGenerator;
-import org.fabric3.fabric.generator.wire.WireGeneratorImpl;
 import org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator;
+import org.fabric3.fabric.generator.wire.WireGenerator;
+import org.fabric3.fabric.generator.wire.WireGeneratorImpl;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl;
 import org.fabric3.fabric.instantiator.PromotionNormalizer;
@@ -156,13 +156,13 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.system.generator.SystemComponentGenerator;
+import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
 import org.fabric3.system.provision.SystemWireTargetDefinition;
 import org.fabric3.system.runtime.SystemComponentBuilder;
 import org.fabric3.system.runtime.SystemSourceWireAttacher;
 import org.fabric3.system.runtime.SystemTargetWireAttacher;
-import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.singleton.SingletonComponentGenerator;
 import org.fabric3.system.singleton.SingletonImplementation;
 import org.fabric3.system.singleton.SingletonSourceWireAttacher;
@@ -180,6 +180,8 @@ import org.fabric3.transform.dom2java.generics.list.String2ListOfString;
 import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
 
 /**
+ * Bootstraps services required for instantiation, generation, and deployment.
+ *
  * @version $Rev$ $Date$
  */
 public class BootstrapAssemblyFactory {
