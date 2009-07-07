@@ -92,7 +92,7 @@ public class NonBlockingInterceptorTestCase extends TestCase {
         next = EasyMock.createMock(Interceptor.class);
         EasyMock.expect(next.invoke(EasyMock.isA(Message.class))).andReturn(new MessageImpl());
         EasyMock.replay(next);
-        NonBlockingInvocationMonitor monitor = EasyMock.createNiceMock(NonBlockingInvocationMonitor.class);
+        NonBlockingMonitor monitor = EasyMock.createNiceMock(NonBlockingMonitor.class);
         interceptor = new NonBlockingInterceptor(workScheduler, monitor);
         interceptor.setNext(next);
     }

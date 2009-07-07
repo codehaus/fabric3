@@ -35,30 +35,15 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.async.control;
+package org.fabric3.async.runtime;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.w3c.dom.Element;
-
-import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
-import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.fabric3.spi.policy.PolicyMetadata;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * Creates {@link NonBlockingInterceptorDefinition}s for one-way operations.
- *
  * @version $Rev$ $Date$
  */
-@EagerInit
-public class NonBlockingGenerator implements InterceptorGenerator {
+public interface NonBlockingMonitor {
 
-    public PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated) {
-        if (!collocated) {
-            // if the wire is not local, do not add the interceptor as non-blocking behavior is handled by the binding infrastructure
-            return null;
-        }
-        return new NonBlockingInterceptorDefinition();
-    }
+    @Severe
+    void onError(Throwable e);
 }

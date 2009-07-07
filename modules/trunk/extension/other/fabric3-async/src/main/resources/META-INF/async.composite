@@ -23,7 +23,7 @@
            autowire="true">
 
     <component name="NonBlockingGenerator" f3-core:key="{urn:fabric3.org:policy}oneWayPolicy">
-        <f3-impl:implementation.system class="org.fabric3.async.control.NonBlockingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.async.generator.NonBlockingGenerator"/>
     </component>
 
     <component f3-core:key="org.fabric3.async.provision.NonBlockingInterceptorDefinition" name="NonBlockingInterceptorBuilder">

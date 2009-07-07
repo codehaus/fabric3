@@ -40,6 +40,7 @@ package org.fabric3.async.runtime;
 import java.util.List;
 import java.util.Map;
 
+import org.fabric3.api.SecuritySubject;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
@@ -54,13 +55,20 @@ import org.fabric3.spi.wire.Interceptor;
 public class AsyncRequest extends DefaultPausableWork {
     private final Interceptor next;
     private final Message message;
+    private SecuritySubject subject;
     private List<CallFrame> stack;
     private Map<String, Object> headers;
-    private NonBlockingInvocationMonitor monitor;
+    private NonBlockingMonitor monitor;
 
-    public AsyncRequest(Interceptor next, Message message, List<CallFrame> stack, Map<String, Object> headers, NonBlockingInvocationMonitor monitor) {
+    public AsyncRequest(Interceptor next,
+                        Message message,
+                        SecuritySubject subject,
+                        List<CallFrame> stack,
+                        Map<String, Object> headers,
+                        NonBlockingMonitor monitor) {
         this.next = next;
         this.message = message;
+        this.subject = subject;
         this.stack = stack;
         this.headers = headers;
         this.monitor = monitor;
@@ -74,6 +82,7 @@ public class AsyncRequest extends DefaultPausableWork {
         if (headers != null) {
             newWorkContext.addHeaders(headers);
         }
+        newWorkContext.setSubject(subject);
         message.setWorkContext(newWorkContext);
         Message ret = next.invoke(message);
         if (ret.isFault()) {

@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.fabric3.api.SecuritySubject;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
@@ -58,10 +59,10 @@ public class NonBlockingInterceptor implements Interceptor {
     protected static final Message RESPONSE = new ImmutableMessage();
 
     private final WorkScheduler workScheduler;
-    private NonBlockingInvocationMonitor monitor;
+    private NonBlockingMonitor monitor;
     private Interceptor next;
 
-    public NonBlockingInterceptor(WorkScheduler workScheduler, NonBlockingInvocationMonitor monitor) {
+    public NonBlockingInterceptor(WorkScheduler workScheduler, NonBlockingMonitor monitor) {
         this.workScheduler = workScheduler;
         this.monitor = monitor;
     }
@@ -81,7 +82,8 @@ public class NonBlockingInterceptor implements Interceptor {
             // clone the headers to avoid multiple threads seeing changes
             newHeaders = new HashMap<String, Object>(headers);
         }
-        AsyncRequest request = new AsyncRequest(next, msg, newStack, newHeaders, monitor);
+        SecuritySubject subject = workContext.getSubject();
+        AsyncRequest request = new AsyncRequest(next, msg, subject, newStack, newHeaders, monitor);
         workScheduler.scheduleWork(request);
         return RESPONSE;
     }

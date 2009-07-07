@@ -53,9 +53,9 @@ import org.fabric3.spi.wire.Interceptor;
  */
 public class NonBlockingInterceptorBuilder implements InterceptorBuilder<NonBlockingInterceptorDefinition> {
     private WorkScheduler scheduler;
-    private NonBlockingInvocationMonitor monitor;
+    private NonBlockingMonitor monitor;
 
-    public NonBlockingInterceptorBuilder(@Reference WorkScheduler scheduler, @Monitor NonBlockingInvocationMonitor monitor) {
+    public NonBlockingInterceptorBuilder(@Reference WorkScheduler scheduler, @Monitor NonBlockingMonitor monitor) {
         this.scheduler = scheduler;
         this.monitor = monitor;
     }
