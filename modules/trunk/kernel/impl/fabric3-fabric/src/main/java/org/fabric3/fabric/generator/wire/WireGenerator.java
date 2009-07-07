@@ -49,7 +49,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 /**
  * Generates physical wire definitions to provision a logical wire. The number of physical wires generated from a logical wire will vary. A
  * unidirectional wire (i.e. no callback) to a collocated target service will generate one physical wire. A bidirectional wire (i.e. with a callback)
- * to a collocated service will generate two physical wires. A unidirecitonal wire to a remote service offered by an SCA component will generate two
+ * to a collocated service will generate two physical wires. A unidirecitonal wire to a remote service offered by a component will generate two
  * physical wires:
  * <pre>
  * <ul>
@@ -57,7 +57,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  * <li>One from the transport on the target runtime to the target service.
  * </ul>
  * </pre>
- * Likewise, a bidirectional wire to a remote service offered by an SCA component will generate four wires:
+ * A bidirectional wire to a remote service offered by a component will generate four wires:
  * <pre>
  * <ul>
  * <li>One from the source reference to the transport
@@ -69,7 +69,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  *
  * @version $Rev$ $Date$
  */
-public interface PhysicalWireGenerator {
+public interface WireGenerator {
 
     /**
      * Generates a PhysicalWireDefinition for the resource.
@@ -93,6 +93,16 @@ public interface PhysicalWireGenerator {
     PhysicalWireDefinition generateBoundServiceWire(LogicalService service, LogicalBinding<?> binding, URI callbackUri) throws GenerationException;
 
     /**
+     * Generates a PhysicalWireDefinition for callback wire from a component to the callback service provided by a forward service
+     *
+     * @param service the logical service which provides the callback service
+     * @param binding the callback binding
+     * @return the physical wire definition.
+     * @throws GenerationException if an error ocurrs during generation
+     */
+    PhysicalWireDefinition generateBoundCallbackServiceWire(LogicalService service, LogicalBinding<?> binding) throws GenerationException;
+
+    /**
      * Generates a PhysicalWireDefinition for a bound reference.
      *
      * @param reference the reference
@@ -111,16 +121,6 @@ public interface PhysicalWireGenerator {
      * @throws GenerationException if an error ocurrs during generation
      */
     PhysicalWireDefinition generateBoundCallbackReferenceWire(LogicalReference reference, LogicalBinding<?> binding) throws GenerationException;
-
-    /**
-     * Generates a PhysicalWireDefinition for callback wire from a component to the callback service provided by a forward service
-     *
-     * @param service the logical service which provides the callback service
-     * @param binding the callback binding
-     * @return the physical wire definition.
-     * @throws GenerationException if an error ocurrs during generation
-     */
-    PhysicalWireDefinition generateBoundCallbackServiceWire(LogicalService service, LogicalBinding<?> binding) throws GenerationException;
 
     /**
      * Generates a PhysicalWireDefinition for a wire between collocated components.

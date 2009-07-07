@@ -68,7 +68,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class LocalWireCommandGenerator implements CommandGenerator {
 
-    private PhysicalWireGenerator physicalWireGenerator;
+    private WireGenerator wireGenerator;
     private LogicalComponentManager applicationLCM;
     private LogicalComponentManager runtimeLCM;
     private int order;
@@ -76,12 +76,12 @@ public class LocalWireCommandGenerator implements CommandGenerator {
     /**
      * Constructor used during bootstrap.
      *
-     * @param physicalWireGenerator the bootstrap physical wire generator
+     * @param wireGenerator the bootstrap physical wire generator
      * @param runtimeLCM            the bootstrap LogicalComponentManager
      * @param order                 the order value for commands generated
      */
-    public LocalWireCommandGenerator(PhysicalWireGenerator physicalWireGenerator, LogicalComponentManager runtimeLCM, int order) {
-        this.physicalWireGenerator = physicalWireGenerator;
+    public LocalWireCommandGenerator(WireGenerator wireGenerator, LogicalComponentManager runtimeLCM, int order) {
+        this.wireGenerator = wireGenerator;
         this.runtimeLCM = runtimeLCM;
         this.order = order;
     }
@@ -91,17 +91,17 @@ public class LocalWireCommandGenerator implements CommandGenerator {
      * containing system components and the application domain containing end-user components. On runtime nodes, the application domain may not be
      * active, in which case a null value may be injected.
      *
-     * @param physicalWireGenerator the bootstrap physical wire generator
+     * @param wireGenerator the bootstrap physical wire generator
      * @param runtimeLCM            the LogicalComponentManager associated with the runtime domain
      * @param applicationLCM        the LogicalComponentManager associated with the application domain
      * @param order                 the order value for commands generated
      */
     @Constructor
-    public LocalWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
+    public LocalWireCommandGenerator(@Reference WireGenerator wireGenerator,
                                      @Reference(name = "runtimeLCM") LogicalComponentManager runtimeLCM,
                                      @Reference(name = "applicationLCM") LogicalComponentManager applicationLCM,
                                      @Property(name = "order") int order) {
-        this.physicalWireGenerator = physicalWireGenerator;
+        this.wireGenerator = wireGenerator;
         this.runtimeLCM = runtimeLCM;
         this.applicationLCM = applicationLCM;
         this.order = order;
@@ -156,20 +156,20 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             LogicalReference reference = logicalWire.getSource();
             boolean attach = true;
             if (target.getState() == LogicalState.MARKED || logicalWire.getState() == LogicalState.MARKED) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedWire(reference, targetService);
+                PhysicalWireDefinition pwd = wireGenerator.generateCollocatedWire(reference, targetService);
                 attach = false;
                 DetachWireCommand detachCommand = new DetachWireCommand();
                 detachCommand.setPhysicalWireDefinition(pwd);
                 command.add(detachCommand);
             } else if (reinjection || !incremental || logicalWire.getState() == LogicalState.NEW || target.getState() == LogicalState.NEW) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedWire(reference, targetService);
+                PhysicalWireDefinition pwd = wireGenerator.generateCollocatedWire(reference, targetService);
                 AttachWireCommand attachCommand = new AttachWireCommand();
                 attachCommand.setPhysicalWireDefinition(pwd);
                 command.add(attachCommand);
             }
             // generate physical callback wires if the forward service is bidirectional
             if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {   
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedCallbackWire(targetService, reference);
+                PhysicalWireDefinition pwd = wireGenerator.generateCollocatedCallbackWire(targetService, reference);
                 if (attach) {
                     AttachWireCommand attachCommand = new AttachWireCommand();
                     attachCommand.setPhysicalWireDefinition(pwd);

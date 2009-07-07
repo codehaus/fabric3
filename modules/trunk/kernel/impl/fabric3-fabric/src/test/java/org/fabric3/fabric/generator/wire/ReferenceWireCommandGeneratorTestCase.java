@@ -60,7 +60,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 public class ReferenceWireCommandGeneratorTestCase extends TestCase {
 
     private ReferenceWireCommandGenerator generator;
-    private PhysicalWireGenerator wireGenerator;
+    private WireGenerator wireGenerator;
 
     @SuppressWarnings({"unchecked"})
     public void testIncrementalAttach() throws Exception {
@@ -219,7 +219,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        wireGenerator = EasyMock.createMock(PhysicalWireGenerator.class);
+        wireGenerator = EasyMock.createMock(WireGenerator.class);
         generator = new ReferenceWireCommandGenerator(wireGenerator, 0);
     }
 

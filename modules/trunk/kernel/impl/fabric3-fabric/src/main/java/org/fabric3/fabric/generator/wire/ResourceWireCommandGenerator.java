@@ -57,11 +57,11 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  */
 public class ResourceWireCommandGenerator implements CommandGenerator {
 
-    private final PhysicalWireGenerator physicalWireGenerator;
+    private final WireGenerator wireGenerator;
     private final int order;
 
-    public ResourceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order") int order) {
-        this.physicalWireGenerator = physicalWireGenerator;
+    public ResourceWireCommandGenerator(@Reference WireGenerator wireGenerator, @Property(name = "order") int order) {
+        this.wireGenerator = wireGenerator;
         this.order = order;
     }
 
@@ -78,7 +78,7 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
         ConnectionCommand command = new ConnectionCommand();
         for (LogicalResource<?> resource : component.getResources()) {
             AttachWireCommand attachWireCommand = new AttachWireCommand();
-            PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(resource);
+            PhysicalWireDefinition pwd = wireGenerator.generateResourceWire(resource);
             attachWireCommand.setPhysicalWireDefinition(pwd);
             command.add(attachWireCommand);
         }

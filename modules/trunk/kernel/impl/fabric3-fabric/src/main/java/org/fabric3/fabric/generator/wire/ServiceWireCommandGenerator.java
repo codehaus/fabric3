@@ -69,11 +69,11 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  * @version $Revision$ $Date$
  */
 public class ServiceWireCommandGenerator implements CommandGenerator {
-    private final PhysicalWireGenerator physicalWireGenerator;
+    private final WireGenerator wireGenerator;
     private final int order;
 
-    public ServiceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order") int order) {
-        this.physicalWireGenerator = physicalWireGenerator;
+    public ServiceWireCommandGenerator(@Reference WireGenerator wireGenerator, @Property(name = "order") int order) {
+        this.wireGenerator = wireGenerator;
         this.order = order;
     }
 
@@ -131,7 +131,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
 
             for (LogicalBinding<?> binding : service.getBindings()) {
                 if (binding.getState() == LogicalState.NEW || binding.getState() == LogicalState.NEW || !incremental) {
-                    PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, callbackUri);
+                    PhysicalWireDefinition pwd = wireGenerator.generateBoundServiceWire(service, binding, callbackUri);
                     if (LogicalState.MARKED == component.getState()) {
                         DetachWireCommand detachWireCommand = new DetachWireCommand();
                         detachWireCommand.setPhysicalWireDefinition(pwd);
@@ -149,7 +149,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
                     && (callbackBinding.getState() == LogicalState.NEW
                     || callbackBinding.getState() == LogicalState.MARKED
                     || !incremental)) {
-                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackServiceWire(service, callbackBinding);
+                PhysicalWireDefinition callbackPwd = wireGenerator.generateBoundCallbackServiceWire(service, callbackBinding);
                 if (LogicalState.MARKED == component.getState()) {
                     DetachWireCommand detachWireCommand = new DetachWireCommand();
                     detachWireCommand.setPhysicalWireDefinition(callbackPwd);

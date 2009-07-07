@@ -64,7 +64,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 public class LocalWireCommandGeneratorTestCase extends TestCase {
 
     private LocalWireCommandGenerator generator;
-    private PhysicalWireGenerator wireGenerator;
+    private WireGenerator wireGenerator;
     private LogicalComponentManager lcm;
 
     @SuppressWarnings({"unchecked"})
@@ -261,7 +261,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        wireGenerator = EasyMock.createMock(PhysicalWireGenerator.class);
+        wireGenerator = EasyMock.createMock(WireGenerator.class);
         lcm = EasyMock.createMock(LogicalComponentManager.class);
         generator = new LocalWireCommandGenerator(wireGenerator, null, lcm, 0);
     }

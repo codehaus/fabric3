@@ -81,11 +81,11 @@ import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
 
 /**
- * Default implementation of PhysicalWireGenerator.
+ * Default implementation of WireGenerator.
  *
  * @version $Rev$ $Date$
  */
-public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
+public class WireGeneratorImpl implements WireGenerator {
 
     private final GeneratorRegistry generatorRegistry;
     private final PolicyResolver policyResolver;
@@ -98,9 +98,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
      * @param policyResolver    the policy resolver
      * @param mapper            the physical operation helper
      */
-    public PhysicalWireGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
-                                     @Reference PolicyResolver policyResolver,
-                                     @Reference PhysicalOperationMapper mapper) {
+    public WireGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
+                             @Reference PolicyResolver policyResolver,
+                             @Reference PhysicalOperationMapper mapper) {
         this.generatorRegistry = generatorRegistry;
         this.policyResolver = policyResolver;
         this.mapper = mapper;
