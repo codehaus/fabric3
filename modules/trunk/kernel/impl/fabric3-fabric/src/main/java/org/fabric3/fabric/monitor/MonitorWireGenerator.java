@@ -50,15 +50,12 @@ import org.fabric3.spi.model.instance.LogicalResource;
 @EagerInit
 public class MonitorWireGenerator implements ResourceWireGenerator<MonitorResource> {
 
-    public MonitorWireTargetDefinition generateWireTargetDefinition(LogicalResource<MonitorResource> resource) throws GenerationException {
-
+    public MonitorWireTargetDefinition generateWireTarget(LogicalResource<MonitorResource> resource) throws GenerationException {
         LogicalComponent<?> component = resource.getParent();
-
         MonitorWireTargetDefinition definition = new MonitorWireTargetDefinition();
         definition.setMonitorType(resource.getResourceDefinition().getServiceContract().getQualifiedInterfaceName());
         definition.setUri(component.getUri());
         definition.setOptimizable(true);
-
         return definition;
     }
 }

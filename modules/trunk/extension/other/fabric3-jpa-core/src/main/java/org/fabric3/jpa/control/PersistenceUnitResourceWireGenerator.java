@@ -51,15 +51,12 @@ import org.fabric3.spi.model.instance.LogicalResource;
 @EagerInit
 public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerator<PersistenceUnitResource> {
 
-    public PersistenceUnitWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource)
+    public PersistenceUnitWireTargetDefinition generateWireTarget(LogicalResource<PersistenceUnitResource> logicalResource)
             throws GenerationException {
-
         PersistenceUnitWireTargetDefinition pwtd = new PersistenceUnitWireTargetDefinition();
         pwtd.setOptimizable(true);
         pwtd.setUnitName(logicalResource.getResourceDefinition().getUnitName());
-
         return pwtd;
-
     }
 
 }

@@ -56,7 +56,7 @@ public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator
 
     private static final String SYSTEM_URI = "fabric3://runtime/";
 
-    public SystemSourcedWireTargetDefinition generateWireTargetDefinition(LogicalResource<SystemSourcedResource> logicalResource)
+    public SystemSourcedWireTargetDefinition generateWireTarget(LogicalResource<SystemSourcedResource> logicalResource)
             throws GenerationException {
 
         SystemSourcedResource resourceDefinition = logicalResource.getResourceDefinition();

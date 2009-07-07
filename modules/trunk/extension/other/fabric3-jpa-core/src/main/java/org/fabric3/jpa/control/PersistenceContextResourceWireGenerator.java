@@ -53,7 +53,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
 @EagerInit
 public class PersistenceContextResourceWireGenerator implements ResourceWireGenerator<PersistenceContextResource> {
 
-    public PersistenceContextWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceContextResource> logicalResource)
+    public PersistenceContextWireTargetDefinition generateWireTarget(LogicalResource<PersistenceContextResource> logicalResource)
             throws GenerationException {
         PersistenceContextResource resource = logicalResource.getResourceDefinition();
         String unitName = resource.getUnitName();

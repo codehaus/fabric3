@@ -55,6 +55,6 @@ public interface ResourceWireGenerator<RD extends ResourceDefinition> {
      * @return Source wire definition.
      * @throws GenerationException if there was a problem generating the wire
      */
-    PhysicalWireTargetDefinition generateWireTargetDefinition(LogicalResource<RD> logicalResource) throws GenerationException;
+    PhysicalWireTargetDefinition generateWireTarget(LogicalResource<RD> logicalResource) throws GenerationException;
 
 }

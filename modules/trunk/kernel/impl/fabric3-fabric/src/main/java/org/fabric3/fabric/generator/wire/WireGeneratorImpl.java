@@ -117,7 +117,7 @@ public class WireGeneratorImpl implements WireGenerator {
         pwsd.setClassLoaderId(component.getDefinition().getContributionUri());
         // Generates the target side of the wire
         ResourceWireGenerator targetGenerator = getGenerator(resourceDefinition);
-        PhysicalWireTargetDefinition pwtd = targetGenerator.generateWireTargetDefinition(resource);
+        PhysicalWireTargetDefinition pwtd = targetGenerator.generateWireTarget(resource);
         pwtd.setClassLoaderId(resource.getParent().getDefinition().getContributionUri());
         boolean optimizable = pwtd.isOptimizable();
 
