@@ -99,15 +99,13 @@ public class TimerComponentGenerator implements ComponentGenerator<LogicalCompon
         return definition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<TimerImplementation> source, LogicalResource<?> resource)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
         generationHelper.generateResourceWireSource(definition, resource);
         return definition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<TimerImplementation> target, Policy policy)
-            throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         throw new UnsupportedOperationException("Cannot wire to timer components");
     }
 }

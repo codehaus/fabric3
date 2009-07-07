@@ -83,17 +83,15 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
         return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<SingletonImplementation> logical, Policy policy)
-            throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
-        URI uri = logical.getUri().resolve(service.getUri());
+        URI uri = service.getUri();
         wireDefinition.setUri(uri);
         wireDefinition.setOptimizable(true);
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SingletonImplementation> source, LogicalResource<?> resource)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         SingletonWireSourceDefinition wireDefinition = new SingletonWireSourceDefinition();
         URI uri = resource.getUri();
         wireDefinition.setOptimizable(true);

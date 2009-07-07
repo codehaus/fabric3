@@ -239,17 +239,15 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<XQueryImplementation> component, Policy policy)
-            throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         XQueryComponentWireTargetDefinition targetDefinition = new XQueryComponentWireTargetDefinition();
         targetDefinition.setUri(service.getUri());
         return targetDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<XQueryImplementation> source, LogicalResource<?> resource)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
-        sourceDefinition.setUri(source.getUri());
+        sourceDefinition.setUri(resource.getParent().getUri());
         return sourceDefinition;
     }
 }

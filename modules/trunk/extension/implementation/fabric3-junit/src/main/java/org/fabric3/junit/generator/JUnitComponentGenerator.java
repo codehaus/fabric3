@@ -130,9 +130,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JUnitImplementation> source,
-                                                                   LogicalResource<?> resource)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
 
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
@@ -149,9 +147,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return contract.getQualifiedInterfaceName();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<JUnitImplementation> target,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;

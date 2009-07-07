@@ -113,7 +113,7 @@ public class WireGeneratorImpl implements WireGenerator {
         LogicalComponent<?> component = resource.getParent();
         // Generates the source side of the wire
         ComponentGenerator sourceGenerator = getGenerator(component);
-        PhysicalWireSourceDefinition pwsd = sourceGenerator.generateResourceWireSource(component, resource);
+        PhysicalWireSourceDefinition pwsd = sourceGenerator.generateResourceWireSource(resource);
         pwsd.setClassLoaderId(component.getDefinition().getContributionUri());
         // Generates the target side of the wire
         ResourceWireGenerator targetGenerator = getGenerator(resourceDefinition);
@@ -145,7 +145,7 @@ public class WireGeneratorImpl implements WireGenerator {
 
         ComponentGenerator targetGenerator = getGenerator(target);
         // generate metadata for the target side of the wire
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, target, targetPolicy);
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, targetPolicy);
         targetDefinition.setClassLoaderId(target.getDefinition().getContributionUri());
         ServiceContract<?> callbackContract = reference.getDefinition().getServiceContract().getCallbackContract();
         if (callbackContract != null) {
@@ -192,7 +192,7 @@ public class WireGeneratorImpl implements WireGenerator {
                 sourceGenerator.generateCallbackWireSource(sourceComponent, contract, sourcePolicy);
         sourceDefinition.setClassLoaderId(sourceComponent.getDefinition().getContributionUri());
         PhysicalWireTargetDefinition targetDefinition =
-                targetGenerator.generateWireTarget(callbackService, targetComponent, targetPolicy);
+                targetGenerator.generateWireTarget(callbackService, targetPolicy);
         targetDefinition.setClassLoaderId(targetComponent.getDefinition().getContributionUri());
         targetDefinition.setCallback(true);
         PhysicalWireDefinition wireDefinition =
@@ -237,7 +237,7 @@ public class WireGeneratorImpl implements WireGenerator {
         }
 
         ComponentGenerator targetGenerator = getGenerator(component);
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, component, targetPolicy);
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, targetPolicy);
         targetDefinition.setClassLoaderId(targetService.getParent().getDefinition().getContributionUri());
         targetDefinition.setCallbackUri(callbackUri);
         BindingGenerator sourceGenerator = getGenerator(binding);
@@ -311,7 +311,7 @@ public class WireGeneratorImpl implements WireGenerator {
         PhysicalWireSourceDefinition sourceDefinition =
                 bindingGenerator.generateWireSource(binding, callbackContract, logicalOperations, targetPolicy);
         sourceDefinition.setClassLoaderId(binding.getParent().getParent().getDefinition().getContributionUri());
-        PhysicalWireTargetDefinition targetDefinition = componentGenerator.generateWireTarget(callbackService, component, sourcePolicy);
+        PhysicalWireTargetDefinition targetDefinition = componentGenerator.generateWireTarget(callbackService, sourcePolicy);
         targetDefinition.setClassLoaderId(callbackService.getParent().getDefinition().getContributionUri());
         targetDefinition.setCallback(true);
         Set<PhysicalOperationDefinition> operation = generateOperations(logicalOperations, policyResult, binding);

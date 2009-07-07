@@ -125,23 +125,14 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<GroovyImplementation> target,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
-        URI uri;
-        if (service != null) {
-            uri = service.getUri();
-        } else {
-            // no service specified, use the default
-            uri = target.getUri();
-        }
+        URI uri = service.getUri();
         wireDefinition.setUri(uri);
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<GroovyImplementation> source, LogicalResource<?> resource)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
         return wireDefinition;

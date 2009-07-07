@@ -55,44 +55,24 @@ import org.fabric3.spi.policy.Policy;
 @EagerInit
 public class MockComponentGenerator implements ComponentGenerator<LogicalComponent<ImplementationMock>> {
 
-    /**
-     * Generates the component definition.
-     */
     public MockComponentDefinition generate(LogicalComponent<ImplementationMock> component) throws GenerationException {
-
         MockComponentDefinition componentDefinition = new MockComponentDefinition();
-
         ImplementationMock implementationMock = component.getDefinition().getImplementation();
         MockComponentType componentType = implementationMock.getComponentType();
-
         componentDefinition.setInterfaces(implementationMock.getMockedInterfaces());
-
         componentDefinition.setScope(componentType.getScope());
-
-
         return componentDefinition;
-
     }
 
-    /**
-     * Generates the wire target definition.
-     */
-    public MockWireTargetDefinition generateWireTarget(LogicalService service,
-                                                       LogicalComponent<ImplementationMock> component,
-                                                       Policy policy) throws GenerationException {
-
+    public MockWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         MockWireTargetDefinition definition = new MockWireTargetDefinition();
         definition.setUri(service.getUri());
         ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
-
         definition.setMockedInterface(serviceContract.getQualifiedInterfaceName());
-
         return definition;
-
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<ImplementationMock> component,
-                                                                   LogicalResource<?> resource) {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) {
         throw new UnsupportedOperationException("Mock objects cannot have resources");
     }
 

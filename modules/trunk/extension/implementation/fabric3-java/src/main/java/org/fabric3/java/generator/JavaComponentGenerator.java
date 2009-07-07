@@ -93,17 +93,15 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return definition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source, LogicalResource<?> resource)
-            throws GenerationException {
-        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
-        generationHelper.generateResourceWireSource(definition, resource);
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+        JavaWireTargetDefinition definition = new JavaWireTargetDefinition();
+        generationHelper.generateWireTarget(definition, service);
         return definition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<JavaImplementation> target, Policy policy)
-            throws GenerationException {
-        JavaWireTargetDefinition definition = new JavaWireTargetDefinition();
-        generationHelper.generateWireTarget(definition, service);
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
+        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        generationHelper.generateResourceWireSource(definition, resource);
         return definition;
     }
 

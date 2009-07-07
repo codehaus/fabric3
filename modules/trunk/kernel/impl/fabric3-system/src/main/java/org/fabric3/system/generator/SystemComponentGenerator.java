@@ -57,10 +57,10 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
 import org.fabric3.system.provision.SystemWireTargetDefinition;
-import org.fabric3.system.model.SystemImplementation;
 
 /**
  * @version $Rev$ $Date$
@@ -118,16 +118,14 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<SystemImplementation> logical, Policy policy)
-            throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source, LogicalResource<?> resource)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setOptimizable(true);
