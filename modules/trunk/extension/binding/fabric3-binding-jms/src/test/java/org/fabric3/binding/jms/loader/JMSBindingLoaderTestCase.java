@@ -127,7 +127,7 @@ public class JMSBindingLoaderTestCase extends TestCase {
                 break;
             }
         }
-        JmsBindingMetadata metadata = jmsBinding.getMetadata();
+        JmsBindingMetadata metadata = jmsBinding.getJmsMetadata();
         HeadersDefinition headers = metadata.getHeaders();
         assertEquals("CorrelationId", headers.getJMSCorrelationId());
         assertEquals("ThisType", headers.getJMSType());

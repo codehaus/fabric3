@@ -105,14 +105,14 @@ public class JmsBindingDefinition extends BindingDefinition {
     /**
      * @return the metadata
      */
-    public JmsBindingMetadata getMetadata() {
+    public JmsBindingMetadata getJmsMetadata() {
         return metadata;
     }
 
     /**
      * @param metadata the metadata to set
      */
-    public void setMetadata(JmsBindingMetadata metadata) {
+    public void setJmsMetadata(JmsBindingMetadata metadata) {
         this.metadata = metadata;
     }
 

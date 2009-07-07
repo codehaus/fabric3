@@ -175,7 +175,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 name = reader.getName().getLocalPart();
                 if ("binding.jms".equals(name)) {
                     // needed for callbacks
-                    String destination = bd.getMetadata().getDestination().getName();
+                    String destination = bd.getJmsMetadata().getDestination().getName();
                     URI bindingUri = URI.create("jms:" + destination);
                     bd.setGeneratedTargetUri(bindingUri);
                     return bd;

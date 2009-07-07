@@ -180,7 +180,7 @@ public class ActiveMQBindingProvider implements BindingProvider {
             metadata.setConnectionFactory(factoryDefinition);
         }
         JmsBindingDefinition definition = new JmsBindingDefinition(metadata, null);
-        definition.setMetadata(metadata);
+        definition.setJmsMetadata(metadata);
         return definition;
     }
 
