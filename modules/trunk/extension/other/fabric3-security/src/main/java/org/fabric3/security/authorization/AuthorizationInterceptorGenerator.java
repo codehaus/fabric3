@@ -43,11 +43,10 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
 
-import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
@@ -59,11 +58,11 @@ import org.fabric3.spi.policy.PolicyMetadata;
 public class AuthorizationInterceptorGenerator implements InterceptorGenerator {
     private static final QName AUTHORIZATION = new QName("urn:fabric3.org:policy", "authorization");
 
-    public AuthorizationInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata)
+    public AuthorizationInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated)
             throws GenerationException {
         String[] roles = metadata.get(AUTHORIZATION, String[].class);
         if (roles == null) {
-            LogicalComponent component = binding.getParent().getParent();
+            LogicalComponent component = operation.getParent().getParent();
             throw new GenerationException("No roles specified for authorization intent on component: " + component.getUri());
         }
         return new AuthorizationInterceptorDefinition(Arrays.asList(roles));

@@ -40,9 +40,8 @@ package org.fabric3.policy.interceptor.simple;
 import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
 
-import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
@@ -53,7 +52,7 @@ import org.fabric3.spi.policy.PolicyMetadata;
 @EagerInit
 public class SimpleInterceptorGenerator implements InterceptorGenerator {
 
-    public SimpleInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata) {
+    public SimpleInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated) {
         String interceptorClass = policy.getAttribute("class");
         return new SimpleInterceptorDefinition(interceptorClass);
     }

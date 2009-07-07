@@ -80,7 +80,6 @@ public interface WireGenerator {
      */
     PhysicalWireDefinition generateResourceWire(LogicalResource<?> resource) throws GenerationException;
 
-
     /**
      * Generates a PhysicalWireDefinition for a bound service.
      *

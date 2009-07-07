@@ -51,7 +51,7 @@ import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.policy.PolicyMetadata;
 
@@ -61,16 +61,17 @@ import org.fabric3.spi.policy.PolicyMetadata;
 @EagerInit
 public class JaxbInterceptorGenerator implements InterceptorGenerator {
 
-    public JaxbInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata)
+    public JaxbInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated)
             throws GenerationException {
 
-        boolean service = binding.getParent() instanceof LogicalService;
+        boolean service = operation.getParent() instanceof LogicalService;
 
         // This assumes a Java interface contract
 
-        List<? extends DataType<?>> inputTypes = operation.getInputType().getLogical();
-        List<? extends DataType<?>> faultTypes = operation.getFaultTypes();
-        DataType<?> outputType = operation.getOutputType();
+        Operation<?> definition = operation.getDefinition();
+        List<? extends DataType<?>> inputTypes = definition.getInputType().getLogical();
+        List<? extends DataType<?>> faultTypes = definition.getFaultTypes();
+        DataType<?> outputType = definition.getOutputType();
 
         Set<String> classNames = new HashSet<String>(inputTypes.size() + 1);
 

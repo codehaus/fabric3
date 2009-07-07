@@ -41,12 +41,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
 
 import org.fabric3.async.provision.NonBlockingInterceptorDefinition;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.fabric3.spi.model.type.LocalBindingDefinition;
 import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
@@ -57,11 +54,9 @@ import org.fabric3.spi.policy.PolicyMetadata;
 @EagerInit
 public class NonBlockingGenerator implements InterceptorGenerator {
 
-    public PhysicalInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata)
-            throws GenerationException {
-        if (!binding.getDefinition().equals(LocalBindingDefinition.INSTANCE)) {
-            // if a binding is assigned other than a local one, do not add the interceptor as non-blocking behavior is provided by the
-            // binding infrastructure
+    public PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated) {
+        if (!collocated) {
+            // if the wire is not local, do not add the interceptor as non-blocking behavior is handled by the binding infrastructure
             return null;
         }
         return new NonBlockingInterceptorDefinition();

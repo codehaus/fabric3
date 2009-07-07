@@ -45,13 +45,12 @@ package org.fabric3.spi.generator;
 
 import org.w3c.dom.Element;
 
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
- * Implementations are responsible for generating command metadata used to provision wire interceptors to runtimes.
+ * Implementations are responsible for generating PhysicalInterceptorDefinitions which are used to create runtime component wires.
  *
  * @version $Rev$ $Date$
  */
@@ -61,14 +60,14 @@ public interface InterceptorGenerator {
      * Generates an interceptor definition from the policy set extension. Implementations may return null if an interceptor should not be added to a
      * wire.
      *
-     * @param policy    policy set definition.
-     * @param operation operation the interceptor is generated for.
-     * @param binding   logical binding on the service or reference.
-     * @param metadata  intent or policy metadata keyed by policy/intent qualified name
-     * @return Physical interceptor definition or null if an interceptor should not be added.
+     * @param policy     policy set definition
+     * @param metadata   intent or policy metadata keyed by policy/intent qualified name
+     * @param operation  operation the interceptor is generated for
+     * @param collocated true if the wire is collocated, i.e. does not have a remote transport binding
+     * @return the PhysicalInterceptorDefinition
      * @throws GenerationException if an exception occurs during generation
      */
-    PhysicalInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata)
+    PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated)
             throws GenerationException;
 
 }
