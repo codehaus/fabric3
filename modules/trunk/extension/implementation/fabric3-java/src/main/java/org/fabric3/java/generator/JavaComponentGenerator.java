@@ -78,8 +78,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return definition;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source, LogicalReference reference, Policy policy)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
         generationHelper.generateWireSource(definition, reference, policy);
         return definition;

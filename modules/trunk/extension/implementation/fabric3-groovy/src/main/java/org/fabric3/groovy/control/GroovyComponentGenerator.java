@@ -101,10 +101,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
-                                                           LogicalReference reference,
-                                                           Policy policy)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();

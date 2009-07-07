@@ -77,13 +77,24 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * PhysicalWireSourceDefinition is specific to the component implementation type and used when the wire is attached to its source on a service
      * node.
      *
-     * @param source    the logical component for the wire source
      * @param reference the source logical reference
      * @param policy    the provided intents and policy sets
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireSourceDefinition generateWireSource(C source, LogicalReference reference, Policy policy) throws GenerationException;
+    PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException;
+
+    /**
+     * Generates a {@link PhysicalWireTargetDefinition} used to attach a wire to a target component. Metadata contained in the
+     * PhysicalWireSourceDefinition is specific to the component implementation type and used when the wire is attached to its target on a service
+     * node.
+     *
+     * @param service the target logical service
+     * @param policy  the provided intents and policy sets
+     * @return the metadata used to attach the wire to its target on the service node
+     * @throws GenerationException if an error occurs during the generation process
+     */
+    PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a wire for a callback service to a source component. Metadata contained in the
@@ -98,18 +109,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      */
     PhysicalWireSourceDefinition generateCallbackWireSource(C source, ServiceContract<?> serviceContract, Policy policy)
             throws GenerationException;
-
-    /**
-     * Generates a {@link PhysicalWireTargetDefinition} used to attach a wire to a target component. Metadata contained in the
-     * PhysicalWireSourceDefinition is specific to the component implementation type and used when the wire is attached to its target on a service
-     * node.
-     *
-     * @param service the target logical service
-     * @param policy  the provided intents and policy sets
-     * @return the metadata used to attach the wire to its target on the service node
-     * @throws GenerationException if an error occurs during the generation process
-     */
-    PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a resource to a source component. Metadata contained in the

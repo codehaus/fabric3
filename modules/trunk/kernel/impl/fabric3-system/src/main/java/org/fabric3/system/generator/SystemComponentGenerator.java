@@ -97,9 +97,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source, LogicalReference reference, Policy policy)
-            throws GenerationException {
-
+    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setOptimizable(true);
@@ -108,7 +106,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
         wireDefinition.setInterfaceName(interfaceName);
-
         return wireDefinition;
     }
 

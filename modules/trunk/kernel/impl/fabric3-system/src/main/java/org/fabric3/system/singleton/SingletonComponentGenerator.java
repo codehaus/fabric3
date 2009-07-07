@@ -71,9 +71,7 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SingletonImplementation> source,
-                                                           LogicalReference reference,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         SingletonWireSourceDefinition wireDefinition = new SingletonWireSourceDefinition();
         URI uri = reference.getUri();
         wireDefinition.setOptimizable(true);

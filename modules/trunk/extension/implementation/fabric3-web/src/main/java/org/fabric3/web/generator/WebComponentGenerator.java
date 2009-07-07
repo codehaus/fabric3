@@ -118,9 +118,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         return physical;
     }
 
-    public WebComponentWireSourceDefinition generateWireSource(LogicalComponent<WebImplementation> source, LogicalReference reference, Policy policy)
-            throws GenerationException {
-
+    public WebComponentWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         WebComponentWireSourceDefinition sourceDefinition = new WebComponentWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         if (reference.getDefinition().getServiceContract().isConversational()) {

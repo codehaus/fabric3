@@ -103,9 +103,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JUnitImplementation> source,
-                                                           LogicalReference reference,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);

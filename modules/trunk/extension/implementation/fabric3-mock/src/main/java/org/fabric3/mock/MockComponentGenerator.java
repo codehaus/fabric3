@@ -76,9 +76,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         throw new UnsupportedOperationException("Mock objects cannot have resources");
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationMock> component,
-                                                           LogicalReference reference,
-                                                           Policy policy) {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) {
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }
 

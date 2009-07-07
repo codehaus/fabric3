@@ -205,11 +205,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         }
     }
 
-    public XQueryComponentWireSourceDefinition generateWireSource(LogicalComponent<XQueryImplementation> source,
-                                                                  LogicalReference reference,
-                                                                  Policy policy)
-            throws GenerationException {
-
+    public XQueryComponentWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         if (reference.getDefinition().getServiceContract().isConversational()) {

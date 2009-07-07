@@ -155,7 +155,7 @@ public class WireGeneratorImpl implements WireGenerator {
         }
 
         ComponentGenerator sourceGenerator = getGenerator(source);
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, sourcePolicy);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(reference, sourcePolicy);
         sourceDefinition.setClassLoaderId(source.getDefinition().getContributionUri());
         sourceDefinition.setKey(target.getDefinition().getKey());
 
@@ -280,7 +280,7 @@ public class WireGeneratorImpl implements WireGenerator {
 
         ComponentGenerator sourceGenerator = getGenerator(component);
 
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, reference, sourcePolicy);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(reference, sourcePolicy);
         sourceDefinition.setClassLoaderId(component.getDefinition().getContributionUri());
 
         Set<PhysicalOperationDefinition> operation = generateOperations(operations, policyResult, binding);
