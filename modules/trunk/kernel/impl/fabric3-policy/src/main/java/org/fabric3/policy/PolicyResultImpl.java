@@ -73,6 +73,10 @@ public class PolicyResultImpl implements PolicyResult {
         return interceptedPolicySets.get(operation);
     }
 
+    public PolicyMetadata getMetadata() {
+        return metadata;
+    }
+
     void addSourceIntents(LogicalOperation operation, Set<Intent> intents) {
         sourcePolicy.addIntents(operation, intents);
     }
@@ -103,10 +107,6 @@ public class PolicyResultImpl implements PolicyResult {
                 interceptedSets.add(policySet);
             }
         }
-    }
-
-    public PolicyMetadata getMetadata() {
-        return metadata;
     }
 
 }
