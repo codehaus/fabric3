@@ -53,6 +53,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
  * @version $Rev$ $Date$
@@ -60,10 +61,10 @@ import org.fabric3.spi.model.instance.LogicalService;
 @EagerInit
 public class JaxbInterceptorGenerator implements InterceptorGenerator {
 
-    public JaxbInterceptorDefinition generate(Element policySet, Operation<?> operation, LogicalBinding<?> logicalBinding)
+    public JaxbInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata)
             throws GenerationException {
 
-        boolean service = logicalBinding.getParent() instanceof LogicalService;
+        boolean service = binding.getParent() instanceof LogicalService;
 
         // This assumes a Java interface contract
 

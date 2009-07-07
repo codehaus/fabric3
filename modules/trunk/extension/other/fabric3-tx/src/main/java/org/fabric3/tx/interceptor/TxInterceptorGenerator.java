@@ -45,6 +45,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
  * Interceptor definition generator for suspend transaction policy extensions.
@@ -54,9 +55,9 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 @EagerInit
 public class TxInterceptorGenerator implements InterceptorGenerator {
 
-    public PhysicalInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding)
+    public PhysicalInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata)
             throws GenerationException {
-        String action = policyDefinition.getAttribute("action");
+        String action = policy.getAttribute("action");
         return new TxInterceptorDefinition(TxAction.valueOf(action));
     }
 }

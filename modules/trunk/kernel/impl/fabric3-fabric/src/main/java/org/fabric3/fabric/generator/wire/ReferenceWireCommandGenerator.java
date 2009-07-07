@@ -56,8 +56,8 @@ import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generates commands to attach component reference wires to their transports for components being deployed or commands to detach reference wires for
- * components being undeployed.
+ * Generates commands to attach reference wires to their transports for components being deployed or commands to detach reference wires for components
+ * being undeployed.
  *
  * @version $Rev$ $Date$
  */
@@ -120,7 +120,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         if (LogicalState.MARKED == component.getState() || LogicalState.MARKED == logicalBinding.getState()) {
             PhysicalWireDefinition wireDefinition;
             if (callback) {
-                wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding);
+                wireDefinition = physicalWireGenerator.generateBoundCallbackReferenceWire(logicalReference, logicalBinding);
             } else {
                 wireDefinition = physicalWireGenerator.generateBoundReferenceWire(logicalReference, logicalBinding);
             }
@@ -131,7 +131,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         } else if (LogicalState.NEW == logicalBinding.getState() || !incremental || reinjection) {
             PhysicalWireDefinition wireDefinition;
             if (callback) {
-                wireDefinition = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, logicalBinding);
+                wireDefinition = physicalWireGenerator.generateBoundCallbackReferenceWire(logicalReference, logicalBinding);
             } else {
                 wireDefinition = physicalWireGenerator.generateBoundReferenceWire(logicalReference, logicalBinding);
             }

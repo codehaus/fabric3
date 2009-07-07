@@ -55,7 +55,7 @@ public interface Policy {
      * @param operation Operation for which requested intents are provided.
      * @return Requested intents that are provided.
      */
-    public List<QName> getProvidedIntents(LogicalOperation operation);
+    List<QName> getProvidedIntents(LogicalOperation operation);
 
     /**
      * Policy sets that are provided by the binding or implemenenation for the requested operation.
@@ -63,20 +63,20 @@ public interface Policy {
      * @param operation Operation for which requested intents are provided.
      * @return Resolved policy sets that are provided.
      */
-    public List<PolicySet> getProvidedPolicySets(LogicalOperation operation);
+    List<PolicySet> getProvidedPolicySets(LogicalOperation operation);
 
     /**
      * Intents that are provided by the binding or implemenenation for all operations.
      *
      * @return Requested intents that are provided.
      */
-    public List<QName> getProvidedIntents();
+    List<QName> getProvidedIntents();
 
     /**
      * Policy sets that are provided by the binding or implemenenation for all operations.
      *
      * @return Resolved policy sets that are provided mapped to their operation.
      */
-    public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets();
+    Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets();
 
 }

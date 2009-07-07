@@ -50,6 +50,7 @@ import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
  * No-op resolver used during bootstrap.
@@ -80,9 +81,14 @@ public class NullPolicyResolver implements PolicyResolver {
     }
 
     private static class NullPolicyResult implements PolicyResult {
+        private PolicyMetadata metadata = new PolicyMetadata();
 
         public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
             return Collections.emptyList();
+        }
+
+        public PolicyMetadata getMetadata() {
+            return metadata;
         }
 
         public Policy getSourcePolicy() {

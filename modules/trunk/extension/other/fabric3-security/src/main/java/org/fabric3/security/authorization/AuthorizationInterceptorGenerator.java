@@ -38,34 +38,35 @@
 package org.fabric3.security.authorization;
 
 import java.util.Arrays;
-import java.util.List;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
 
 import org.fabric3.model.type.service.Operation;
+import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
- * Generates the physical interceptor definition from the underlying policy infoset. An example for the policy definition is shown below,
- * <p/>
- * <f3-policy:authorization roles="ADMIN,USER"/>
- * <p/>
- * where the namespace prefix f3-policy maps to the uri urn:fabric3.org:policy.
+ * Generates interceptors that perform role-based authorization checks for a service invocation.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class AuthorizationInterceptorGenerator implements InterceptorGenerator {
+    private static final QName AUTHORIZATION = new QName("urn:fabric3.org:policy", "authorization");
 
-    public AuthorizationInterceptorDefinition generate(Element policyDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding) {
-        String rolesAttribute = policyDefinition.getAttribute("roles");
-        if (rolesAttribute == null) {
-            throw new AssertionError("No roles are defined in the authorization policy");
+    public AuthorizationInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata)
+            throws GenerationException {
+        String[] roles = metadata.get(AUTHORIZATION, String[].class);
+        if (roles == null) {
+            LogicalComponent component = binding.getParent().getParent();
+            throw new GenerationException("No roles specified for authorization intent on component: " + component.getUri());
         }
-        List<String> roles = Arrays.asList(rolesAttribute.split(","));
-        return new AuthorizationInterceptorDefinition(roles);
+        return new AuthorizationInterceptorDefinition(Arrays.asList(roles));
     }
 
 }

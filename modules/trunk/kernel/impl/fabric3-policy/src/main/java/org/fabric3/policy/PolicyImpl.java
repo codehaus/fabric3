@@ -55,14 +55,9 @@ import org.fabric3.spi.policy.Policy;
  */
 public class PolicyImpl implements Policy {
 
-    private final Map<LogicalOperation, List<Intent>> intentMap = new HashMap<LogicalOperation, List<Intent>>();
-    private final Map<LogicalOperation, List<PolicySet>> policySetMap = new HashMap<LogicalOperation, List<PolicySet>>();
+    private Map<LogicalOperation, List<Intent>> intentMap = new HashMap<LogicalOperation, List<Intent>>();
+    private Map<LogicalOperation, List<PolicySet>> policySetMap = new HashMap<LogicalOperation, List<PolicySet>>();
 
-    /**
-     * Intents that are provided by the binding or implemenenation for all operations.
-     *
-     * @return Requested intents that are provided.
-     */
     public List<QName> getProvidedIntents() {
         List<QName> ret = new LinkedList<QName>();
         for (LogicalOperation operation : intentMap.keySet()) {
@@ -71,21 +66,10 @@ public class PolicyImpl implements Policy {
         return ret;
     }
 
-    /**
-     * Policy sets that are provided by the binding or implemenenation for all operations.
-     *
-     * @return Resolved policy sets that are provided.
-     */
     public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets() {
         return policySetMap;
     }
 
-    /**
-     * Gets the intents that are provided by the component or binding types that are requested by the operation.
-     *
-     * @param operation Operation against which the intent was requested.
-     * @return All intents that are provided.
-     */
     public List<QName> getProvidedIntents(LogicalOperation operation) {
         List<QName> ret = new LinkedList<QName>();
         for (Intent intent : intentMap.get(operation)) {
@@ -94,23 +78,10 @@ public class PolicyImpl implements Policy {
         return ret;
     }
 
-    /**
-     * Gets all the policy sets that are provided by the component implementation or binding type that were resolved against the intents requested
-     * against the operation.
-     *
-     * @param operation Operation against which the intent was requested.
-     * @return Resolved policy sets.
-     */
     public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
         return policySetMap.get(operation);
     }
 
-    /**
-     * Adds an intent that is requested on the operation and provided by the component implementation or binding type.
-     *
-     * @param operation Operation against which the intent was requested.
-     * @param intents   Intents that are provided.
-     */
     void addIntents(LogicalOperation operation, Set<Intent> intents) {
 
         if (!intentMap.containsKey(operation)) {
@@ -121,12 +92,6 @@ public class PolicyImpl implements Policy {
 
     }
 
-    /**
-     * Adds a policy set mapped to the intent that is requested on the operation and provided by the component implementation or binding type.
-     *
-     * @param operation  Operation against which the intent was requested.
-     * @param policySets Resolved policy sets.
-     */
     void addPolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
 
         if (!policySetMap.containsKey(operation)) {

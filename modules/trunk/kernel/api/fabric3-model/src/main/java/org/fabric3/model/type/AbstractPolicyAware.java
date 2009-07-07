@@ -97,7 +97,11 @@ public abstract class AbstractPolicyAware extends ModelObject implements PolicyA
         metadata.put(name, data);
     }
 
-    public <T> T getMetadta(QName name, Class<T> type) {
+    public <T> T getMetadata(QName name, Class<T> type) {
         return type.cast(metadata.get(name));
+    }
+
+    public Map<QName, Object> getMetadata() {
+        return metadata;
     }
 }

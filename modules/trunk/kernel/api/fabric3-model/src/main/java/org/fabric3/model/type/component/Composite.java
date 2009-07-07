@@ -350,8 +350,12 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
         metadata.put(name, data);
     }
 
-    public <T> T getMetadta(QName name, Class<T> type) {
+    public <T> T getMetadata(QName name, Class<T> type) {
         return type.cast(metadata.get(name));
+    }
+
+    public Map<QName, Object> getMetadata() {
+        return metadata;
     }
 
     public int hashCode() {

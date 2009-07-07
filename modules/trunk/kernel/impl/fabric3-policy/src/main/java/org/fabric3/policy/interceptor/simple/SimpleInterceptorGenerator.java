@@ -43,6 +43,7 @@ import org.w3c.dom.Element;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
  * Interceptor definition generator for simple policy set extensions.
@@ -52,8 +53,8 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 @EagerInit
 public class SimpleInterceptorGenerator implements InterceptorGenerator {
 
-    public SimpleInterceptorDefinition generate(Element policySetDefinition, Operation<?> operation, LogicalBinding<?> logicalBinding) {
-        String interceptorClass = policySetDefinition.getAttribute("class");
+    public SimpleInterceptorDefinition generate(Element policy, Operation<?> operation, LogicalBinding<?> binding, PolicyMetadata metadata) {
+        String interceptorClass = policy.getAttribute("class");
         return new SimpleInterceptorDefinition(interceptorClass);
     }
 

@@ -39,6 +39,8 @@ package org.fabric3.security.authorization;
 
 import java.util.List;
 
+import org.oasisopen.sca.ServiceRuntimeException;
+
 import org.fabric3.api.SecuritySubject;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
@@ -74,13 +76,13 @@ public class RoleBasedAuthorizationInterceptor implements Interceptor {
         try {
             SecuritySubject subject = workContext.getSubject();
             if (subject == null) {
-                msg.setBodyWithFault(new AuthorizationException("Subject not authenticated"));
+                msg.setBodyWithFault(new ServiceRuntimeException("Subject not authenticated"));
                 return msg;
             }
             authorizationService.checkRoles(subject, roles);
             return next.invoke(msg);
         } catch (AuthorizationException e) {
-            msg.setBodyWithFault(e);
+            msg.setBodyWithFault(new ServiceRuntimeException(e));
             return msg;
         }
     }

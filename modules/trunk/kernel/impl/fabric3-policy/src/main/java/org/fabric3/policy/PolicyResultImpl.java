@@ -47,6 +47,7 @@ import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.PolicyMetadata;
 import org.fabric3.spi.policy.PolicyResult;
 
 /**
@@ -56,6 +57,7 @@ public class PolicyResultImpl implements PolicyResult {
 
     private final PolicyImpl sourcePolicy = new PolicyImpl();
     private final PolicyImpl targetPolicy = new PolicyImpl();
+    private PolicyMetadata metadata = new PolicyMetadata();
 
     private final Map<LogicalOperation, List<PolicySet>> interceptedPolicySets = new HashMap<LogicalOperation, List<PolicySet>>();
 
@@ -101,8 +103,10 @@ public class PolicyResultImpl implements PolicyResult {
                 interceptedSets.add(policySet);
             }
         }
-
     }
 
+    public PolicyMetadata getMetadata() {
+        return metadata;
+    }
 
 }

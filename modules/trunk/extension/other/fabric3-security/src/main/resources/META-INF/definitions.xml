@@ -6,18 +6,19 @@
 Fabric3 is licensed under modified terms of the GNU General
 Public License. See the accompanying license file for details.
 -->
-<definitions xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" targetNamespace="urn:fabric3.org:policy">
+<definitions xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+             targetNamespace="urn:fabric3.org:policy"
+             xmlns:f3-policy="urn:fabric3.org:policy">
 
-    <intent name="authorization" constrains="binding">
+    <intent name="authorization" constrains="implementation">
         <description>
             Unqualified intent for authorization.
         </description>
     </intent>
 
-    <intent name="authorization.message" constrains="binding">
-        <description>
-            Message level authorization.
-        </description>
-    </intent>
+    <policySet name="authorizationPolicy" provides="f3-policy:authorization" f3-policy:phase="INTERCEPTION">
+        <f3-policy:authorization/>
+    </policySet>
+
 
 </definitions>

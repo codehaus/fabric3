@@ -135,7 +135,6 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         boolean reinjection = isReinjection(logicalReference, incremental);
 
         for (LogicalWire logicalWire : logicalReference.getWires()) {
-            LogicalComponent<?> component = logicalReference.getParent();
 
             URI uri = logicalWire.getTargetUri();
             LogicalComponent<?> target = findTarget(logicalWire);
@@ -169,8 +168,8 @@ public class LocalWireCommandGenerator implements CommandGenerator {
                 command.add(attachCommand);
             }
             // generate physical callback wires if the forward service is bidirectional
-            if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedCallbackWire(target, reference);
+            if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {   
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateCollocatedCallbackWire(targetService, reference);
                 if (attach) {
                     AttachWireCommand attachCommand = new AttachWireCommand();
                     attachCommand.setPhysicalWireDefinition(pwd);

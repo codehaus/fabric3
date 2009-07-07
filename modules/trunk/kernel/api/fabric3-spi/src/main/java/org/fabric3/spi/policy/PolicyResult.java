@@ -69,19 +69,32 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 public interface PolicyResult {
 
     /**
-     * @return Policies and intents provided at the source end.
+     * Returns policies and intents provided at the source end of a wire.
+     *
+     * @return policies and intents provided at the source end of a wire
      */
-    public Policy getSourcePolicy();
+    Policy getSourcePolicy();
 
     /**
-     * @return Policies and intents provided at the target end.
+     * Returns policies and intents provided at the target end of a wire.
+     *
+     * @return policies and intents provided at the target end of a wire
      */
-    public Policy getTargetPolicy();
+    Policy getTargetPolicy();
 
     /**
-     * @param operation Operation against which interceptors are defined.
+     * Returns policies and intents that are enforced by an interceptor.
+     *
+     * @param operation operation against which interceptors are defined.
      * @return Interceptors that are defined against the operation.
      */
-    public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation);
+    List<PolicySet> getInterceptedPolicySets(LogicalOperation operation);
+
+    /**
+     * Returns metadata for the intents and policy sets.
+     *
+     * @return metadata for the intents and policy sets
+     */
+    PolicyMetadata getMetadata();
 
 }

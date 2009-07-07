@@ -83,11 +83,11 @@ public interface PolicyResolver {
     /**
      * Resolves all the interaction and implementation intents for the operations on wire.
      *
-     * @param operations    the operations to resolve policies for
-     * @param sourceBinding Source binding.
-     * @param targetBinding Target binding.
-     * @param source        Source component.
-     * @param target        Target component.
+     * @param operations    the operations to resolve policies for. This can be forward or callback operations.
+     * @param sourceBinding the source binding.
+     * @param targetBinding the target binding.
+     * @param source        the source component.
+     * @param target        the target component.
      * @return Policy resolution result.
      * @throws PolicyResolutionException If unable to resolve any policies.
      */

@@ -41,7 +41,6 @@ import java.net.URI;
 
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -111,7 +110,7 @@ public interface PhysicalWireGenerator {
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    PhysicalWireDefinition generateBoundCallbackRerenceWire(LogicalReference reference, LogicalBinding<?> binding) throws GenerationException;
+    PhysicalWireDefinition generateBoundCallbackReferenceWire(LogicalReference reference, LogicalBinding<?> binding) throws GenerationException;
 
     /**
      * Generates a PhysicalWireDefinition for callback wire from a component to the callback service provided by a forward service
@@ -136,13 +135,11 @@ public interface PhysicalWireGenerator {
     /**
      * Generates a PhysicalWireDefinition for a callback wire between collocated components.
      *
-     * @param component the component originating the callback, which is the target of the forward wire
+     * @param service   the service originating the callback, which is the target of the forward wire
      * @param reference the reference the forward wire is injected on
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
-     * @FIXME JFM passing in the LogicalReference doesn't seem right but the policy generation appears to need it. Look to remove.
      */
-    public PhysicalWireDefinition generateCollocatedCallbackWire(LogicalComponent<?> component, LogicalReference reference)
-            throws GenerationException;
+    public PhysicalWireDefinition generateCollocatedCallbackWire(LogicalService service, LogicalReference reference) throws GenerationException;
 
 }

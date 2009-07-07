@@ -48,10 +48,13 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.definitions.PolicyPhase;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.policy.helper.ImplementationPolicyHelper;
 import org.fabric3.policy.helper.InteractionPolicyHelper;
 import org.fabric3.policy.infoset.PolicyEvaluationException;
 import org.fabric3.policy.infoset.PolicyEvaluator;
+import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalAttachPoint;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -62,6 +65,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.PolicyMetadata;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
@@ -138,11 +142,16 @@ public class DefaultPolicyResolver implements PolicyResolver {
             policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
 
             if (target != null) {
-                policies = implementationPolicyHelper.resolve(target, operation);
+                Bindable parent = targetBinding.getParent();
+                // resolve policies using the target (as opposed to source) operation so target implementaton policies are included
+                LogicalOperation targetOperation = matchOperation(operation, parent);
+                policies = implementationPolicyHelper.resolve(target, targetOperation);
+                // add policy metadata to the result
+                policyResult.getMetadata().addAll(targetOperation.getDefinition().getMetadata());
+                // important: use reference side operation as the key
                 policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
                 policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
             }
-
         }
 
         return policyResult;
@@ -364,7 +373,39 @@ public class DefaultPolicyResolver implements PolicyResolver {
                 || component.getDefinition().getImplementation().isType(IMPLEMENTATION_SINGLETON));
     }
 
+    /**
+     * Matches operation definitions on the source and target sides of a wire so that policy sets and intents can be determined. Note that if the
+     * source operation belongs to a service, the wire is a callback wire.
+     *
+     * @param operation the source operation to match against.
+     * @param bindable  the target bindable.
+     * @return the matching operation
+     */
+    private LogicalOperation matchOperation(LogicalOperation operation, Bindable bindable) {
+        String name = operation.getDefinition().getName();
+        DataType<?> inputType = operation.getDefinition().getInputType();
+        DataType<?> outputType = operation.getDefinition().getOutputType();
+
+        List<LogicalOperation> operations;
+        if (bindable instanceof LogicalReference) {
+            // target is a reference so this is a callback
+            operations = bindable.getCallbackOperations();
+        } else {
+            operations = bindable.getOperations();
+        }
+        for (LogicalOperation candidate : operations) {
+            if (name.equals(candidate.getDefinition().getName())) {
+                Operation definition = candidate.getDefinition();
+                if (outputType.equals(definition.getOutputType()) && inputType.equals(definition.getInputType())) {
+                    return candidate;
+                }
+            }
+        }
+        throw new AssertionError("No matching operation for " + name);
+    }
+
     private static class NullPolicyResult implements PolicyResult {
+        private PolicyMetadata metadata = new PolicyMetadata();
 
         public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
             return Collections.emptyList();
@@ -376,6 +417,10 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
         public Policy getTargetPolicy() {
             return new NullPolicy();
+        }
+
+        public PolicyMetadata getMetadata() {
+            return metadata;
         }
 
     }
@@ -396,6 +441,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
         public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets() {
             return Collections.emptyMap();
         }
+
     }
 
 

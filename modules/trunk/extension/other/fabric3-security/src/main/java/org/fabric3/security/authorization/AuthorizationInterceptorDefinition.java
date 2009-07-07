@@ -42,12 +42,7 @@ import java.util.List;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
- * Interceptor definition for enforcing authorization. This is built from the underlying policy definition. An example for the policy definition is
- * shown below,
- * <p/>
- * <f3-policy:authorization roles="ADMIN,USER"/>
- * <p/>
- * where the namespace prefix f3-policy maps to the uri urn:fabric3.org:policy.
+ * Interceptor definition for enforcing authorization.
  *
  * @version $Rev$ $Date$
  */
@@ -57,16 +52,16 @@ public class AuthorizationInterceptorDefinition extends PhysicalInterceptorDefin
     private List<String> roles;
 
     /**
-     * Initializes the roles required to pass through this interceptor.
+     * Constructor.
      *
-     * @return roles required for authorization.
+     * @param roles the roles required to invoke the service operation.
      */
     public AuthorizationInterceptorDefinition(List<String> roles) {
         this.roles = roles;
     }
 
     /**
-     * Returns the roles required to pass through this interceptor.
+     * Returns the roles required to invoke the service operation.
      *
      * @return roles required for authorization.
      */

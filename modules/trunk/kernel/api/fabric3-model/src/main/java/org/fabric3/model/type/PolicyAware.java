@@ -43,6 +43,7 @@
  */
 package org.fabric3.model.type;
 
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -110,6 +111,13 @@ public interface PolicyAware {
      * @param type the metadata type
      * @return the metadata or null if not found
      */
-    <T> T getMetadta(QName name, Class<T> type);
+    <T> T getMetadata(QName name, Class<T> type);
+
+    /**
+     * Returns all policy-related metadata defined for the model object.
+     *
+     * @return all policy-related metadata
+     */
+    public Map<QName, Object> getMetadata();
 
 }
