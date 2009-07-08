@@ -95,6 +95,17 @@
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-security</artifactId>
+                            <version>1.2-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-security-impl</artifactId>
+                            <version>1.2-SNAPSHOT</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
                             <version>1.2-SNAPSHOT</version>
                         </dependency>
@@ -109,6 +120,22 @@
                             <version>1.5.0</version>
                         </dependency>
                     </extensions>
+                    <systemConfig>
+                        <![CDATA[
+                        <config>
+                            <users>
+                                <user>
+                                    <username>foo</username>
+                                    <password>bar</password>
+                                    <roles>
+                                       <role>role1</role>
+                                       <role>role2</role>
+                                     </roles>
+                                </user>
+                            </users>
+                        </config>
+                        ]]>
+                    </systemConfig>
                 </configuration>
                 <executions>
                     <execution>

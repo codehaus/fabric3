@@ -69,4 +69,20 @@
         <implementation.java class="org.fabric3.policy.tx.PropagatesTransactionService"/>
     </component>
 
+
+    <!--Security tests -->
+    <component name="SecureServiceTest">
+        <f3-impl:junit class="org.fabric3.policy.security.SecureServiceTest">
+            <configuration>
+                <username>foo</username>
+                <password>bar</password>
+            </configuration>
+        </f3-impl:junit>
+        <reference name="secureRoleService" target="SecureRolesService"/>
+    </component>
+
+    <component name="SecureRolesService">
+        <implementation.java class="org.fabric3.policy.security.SecureRolesServiceImpl"/>
+    </component>
+
 </composite>
