@@ -55,10 +55,6 @@ import org.fabric3.spi.policy.PolicyMetadata;
 public class NonBlockingGenerator implements InterceptorGenerator {
 
     public PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated) {
-        if (!collocated) {
-            // if the wire is not local, do not add the interceptor as non-blocking behavior is handled by the binding infrastructure
-            return null;
-        }
         return new NonBlockingInterceptorDefinition();
     }
 }
