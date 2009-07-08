@@ -40,11 +40,15 @@ package org.fabric3.junit.runtime;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.junit.common.ContextConfiguration;
 import org.fabric3.junit.provision.JUnitWireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.security.AuthenticationService;
+import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.test.spi.TestWireHolder;
 
@@ -54,13 +58,33 @@ import org.fabric3.test.spi.TestWireHolder;
 @EagerInit
 public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitWireSourceDefinition> {
     private TestWireHolder holder;
+    private AuthenticationService authenticationService;
 
     public JunitSourceWireAttacher(@Reference TestWireHolder holder) {
         this.holder = holder;
     }
 
+    @Reference(required = false)
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
     public void attachToSource(JUnitWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        final String testName = source.getTestName();
+        String testName = source.getTestName();
+        ContextConfiguration configuration = source.getConfiguration();
+        if (configuration != null) {
+            if (authenticationService == null) {
+                throw new WiringException("Security information set for the test but a security extension has not been installed in the runtime");
+            }
+            // configuration an authentication interceptor to set the subject on the work context
+            for (InvocationChain chain : wire.getInvocationChains()) {
+                Interceptor next = chain.getHeadInterceptor();
+                String username = configuration.getUsername();
+                String password = configuration.getPassword();
+                AuthenticatingInterceptor interceptor = new AuthenticatingInterceptor(username, password, authenticationService, next);
+                chain.addInterceptor(0, interceptor);
+            }
+        }
         holder.add(testName, wire);
     }
 

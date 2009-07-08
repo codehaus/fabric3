@@ -43,6 +43,7 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.junit.model.JUnitBindingDefinition;
 import org.fabric3.junit.provision.JUnitWireSourceDefinition;
+import org.fabric3.junit.common.ContextConfiguration;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
@@ -66,7 +67,8 @@ public class JUnitBindingGenerator implements BindingGenerator<JUnitBindingDefin
                                                         Policy policy) throws GenerationException {
         ComponentDefinition<?> definition = bindingDefinition.getParent().getParent().getDefinition();
         String testName = definition.getName();
-        return new JUnitWireSourceDefinition(testName);
+        ContextConfiguration configuration = bindingDefinition.getDefinition().getConfiguration();
+        return new JUnitWireSourceDefinition(testName, configuration);
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JUnitBindingDefinition> bindingDefinition,

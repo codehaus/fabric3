@@ -37,22 +37,48 @@
 */
 package org.fabric3.junit.provision;
 
+import org.fabric3.junit.common.ContextConfiguration;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
+ * PhysicalWireSourceDefinition for the JUnit implementation type.
+ *
  * @version $Rev$ $Date$
  */
 public class JUnitWireSourceDefinition extends PhysicalWireSourceDefinition {
     private static final long serialVersionUID = 750231487385651182L;
 
     private String testName;
+    private ContextConfiguration configuration;
 
-    public JUnitWireSourceDefinition(String testName) {
+    /**
+     * Constructor.
+     *
+     * @param testName      the test name to execute
+     * @param configuration the context configuration or null if a context is not configured
+     */
+    public JUnitWireSourceDefinition(String testName, ContextConfiguration configuration) {
         this.testName = testName;
+        this.configuration = configuration;
     }
 
+    /**
+     * Returns the test name.
+     *
+     * @return the test name
+     */
     public String getTestName() {
         return testName;
     }
+
+    /**
+     * Returns the context configuration that must be established prior to an invocation or null if a context is not configured.
+     *
+     * @return the context configuration or null
+     */
+    public ContextConfiguration getConfiguration() {
+        return configuration;
+    }
+
 }
 

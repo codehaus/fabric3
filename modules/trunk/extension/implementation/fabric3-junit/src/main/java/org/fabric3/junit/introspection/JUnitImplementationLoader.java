@@ -37,17 +37,19 @@
 */
 package org.fabric3.junit.introspection;
 
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.junit.common.ContextConfiguration;
 import org.fabric3.junit.model.JUnitBindingDefinition;
 import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
@@ -63,19 +65,58 @@ public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation
         this.implementationProcessor = implementationProcessor;
     }
 
-    public JUnitImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
-        validateAttributes(reader, introspectionContext);
+    public JUnitImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
         String className = reader.getAttributeValue(null, "class");
-        LoaderUtil.skipToEndElement(reader);
 
-        JUnitImplementation impl = new JUnitImplementation(className);
-        implementationProcessor.introspect(impl, introspectionContext);
+        JUnitImplementation definition = new JUnitImplementation(className);
+        implementationProcessor.introspect(definition, context);
         // Add bindings so wires are generated to the test operations. These wires will be used by the testing runtime to dispatch to the
         // JUnit components
-        for (ServiceDefinition definition : impl.getComponentType().getServices().values()) {
-            definition.addBinding(new JUnitBindingDefinition());
+        ContextConfiguration configuration = loadConfiguration(reader, context);
+        for (ServiceDefinition serviceDefinition : definition.getComponentType().getServices().values()) {
+            JUnitBindingDefinition bindingDefinition = new JUnitBindingDefinition(configuration);
+            serviceDefinition.addBinding(bindingDefinition);
         }
-        return impl;
+        return definition;
+    }
+
+    private ContextConfiguration loadConfiguration(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        ContextConfiguration configuration = null;
+        String name;
+        while (true) {
+            switch (reader.next()) {
+            case START_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("configuration".equals(name)) {
+                    configuration = new ContextConfiguration();
+                }
+                if ("username".equals(name)) {
+                    if (configuration == null) {
+                        InvalidContextConfiguraton error =
+                                new InvalidContextConfiguraton("Username element must be contained within a configuration element", reader);
+                        context.addError(error);
+                    } else {
+                        configuration.setUsername(reader.getElementText());
+                    }
+                } else if ("password".equals(name)) {
+                    if (configuration == null) {
+                        InvalidContextConfiguraton error =
+                                new InvalidContextConfiguraton("Password element must be contained within a configuration element", reader);
+                        context.addError(error);
+                    } else {
+                        configuration.setPassword(reader.getElementText());
+                    }
+                }
+                break;
+            case END_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("junit".equals(name)) {
+                    return configuration;
+                }
+                break;
+            }
+        }
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {

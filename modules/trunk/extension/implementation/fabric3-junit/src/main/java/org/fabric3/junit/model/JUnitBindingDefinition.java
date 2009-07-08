@@ -40,6 +40,7 @@ package org.fabric3.junit.model;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.Namespaces;
+import org.fabric3.junit.common.ContextConfiguration;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
@@ -48,8 +49,34 @@ import org.fabric3.model.type.component.BindingDefinition;
 public class JUnitBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = -1306543849900003084L;
     private static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.junit");
+    private ContextConfiguration configuration;
 
-    public JUnitBindingDefinition() {
+    /**
+     * Constructor.
+     *
+     * @param configuration the context configuration or null if not set
+     */
+    public JUnitBindingDefinition(ContextConfiguration configuration) {
         super(null, BINDING_QNAME, null);
+        this.configuration = configuration;
     }
+
+    /**
+     * Returns the context configuration that must be established prior to an invocation or null if a context is not configured.
+     *
+     * @return the context configuration or null
+     */
+    public ContextConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * Sets the context configuration that must be established prior to an invocation or null if a context is not configured.
+     *
+     * @param configuration the configuration
+     */
+    public void setConfiguration(ContextConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
 }
