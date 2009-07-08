@@ -54,7 +54,7 @@ import org.fabric3.spi.policy.PolicyMetadata;
 @EagerInit
 public class NonBlockingGenerator implements InterceptorGenerator {
 
-    public PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated) {
+    public PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation) {
         return new NonBlockingInterceptorDefinition();
     }
 }

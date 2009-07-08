@@ -52,7 +52,7 @@ import org.fabric3.spi.policy.PolicyMetadata;
 @EagerInit
 public class SimpleInterceptorGenerator implements InterceptorGenerator {
 
-    public SimpleInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated) {
+    public SimpleInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation) {
         String interceptorClass = policy.getAttribute("class");
         return new SimpleInterceptorDefinition(interceptorClass);
     }

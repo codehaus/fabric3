@@ -61,8 +61,7 @@ import org.fabric3.spi.policy.PolicyMetadata;
 @EagerInit
 public class JaxbInterceptorGenerator implements InterceptorGenerator {
 
-    public JaxbInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated)
-            throws GenerationException {
+    public JaxbInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation) throws GenerationException {
 
         boolean service = operation.getParent() instanceof LogicalService;
 

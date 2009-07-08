@@ -58,7 +58,7 @@ import org.fabric3.spi.policy.PolicyMetadata;
 public class AuthorizationInterceptorGenerator implements InterceptorGenerator {
     private static final QName AUTHORIZATION = new QName("urn:fabric3.org:policy", "authorization");
 
-    public AuthorizationInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated)
+    public AuthorizationInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation)
             throws GenerationException {
         String[] roles = metadata.get(AUTHORIZATION, String[].class);
         if (roles == null) {

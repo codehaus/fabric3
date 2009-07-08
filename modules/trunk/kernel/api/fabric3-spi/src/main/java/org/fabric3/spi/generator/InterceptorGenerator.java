@@ -60,14 +60,12 @@ public interface InterceptorGenerator {
      * Generates an interceptor definition from the policy set extension. Implementations may return null if an interceptor should not be added to a
      * wire.
      *
-     * @param policy     policy set definition
-     * @param metadata   intent or policy metadata keyed by policy/intent qualified name
-     * @param operation  operation the interceptor is generated for
-     * @param collocated true if the wire is collocated, i.e. does not have a remote transport binding
+     * @param policy    policy set definition
+     * @param metadata  intent or policy metadata keyed by policy/intent qualified name
+     * @param operation operation the interceptor is generated for
      * @return the PhysicalInterceptorDefinition
      * @throws GenerationException if an exception occurs during generation
      */
-    PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation, boolean collocated)
-            throws GenerationException;
+    PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation) throws GenerationException;
 
 }
