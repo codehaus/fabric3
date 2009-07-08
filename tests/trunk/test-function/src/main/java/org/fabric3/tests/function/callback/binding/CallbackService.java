@@ -45,7 +45,6 @@ import org.fabric3.tests.function.callback.common.CallbackData;
  * @version $Rev$ $Date$
  */
 public interface CallbackService {
-    @OneWay
     void onCallback(CallbackData data);
 
 }

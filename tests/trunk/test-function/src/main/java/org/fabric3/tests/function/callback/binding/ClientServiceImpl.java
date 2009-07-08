@@ -56,7 +56,6 @@ public class ClientServiceImpl implements ClientService, CallbackService {
         forwardService.invoke(data);
     }
 
-    @OneWay
     public void onCallback(CallbackData data) {
         data.callback();
         data.getLatch().countDown();

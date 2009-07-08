@@ -38,7 +38,6 @@
 package org.fabric3.tests.function.callback.binding;
 
 import org.oasisopen.sca.annotation.Callback;
-import org.oasisopen.sca.annotation.OneWay;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 
@@ -50,7 +49,6 @@ public class ForwardServiceImpl implements ForwardService {
     protected CallbackService callbackService;
 
 
-    @OneWay
     public void invoke(CallbackData data) {
         callbackService.onCallback(data);
     }
