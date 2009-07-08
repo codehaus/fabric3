@@ -67,7 +67,7 @@ public class PolicyEvaluatorImpl implements PolicyEvaluator {
         }
     }
 
-    public boolean doesApply(String appliesToXPath, LogicalComponent<?> target) throws PolicyEvaluationException {
+    public boolean doesApply(String appliesToXPath, LogicalScaArtifact<?> target) throws PolicyEvaluationException {
         try {
             LogicalModelXPath xpath = new LogicalModelXPath(appliesToXPath);
             Object selected = xpath.evaluate(target);

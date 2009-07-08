@@ -63,11 +63,11 @@ public interface PolicyEvaluator {
      * Determines if the XPath expression applies to the target component, i.e. selects it or one of its children.
      *
      * @param appliesToXPath the XPath expression
-     * @param target         the target component
+     * @param target         the target logical artifact to resolve against
      * @return true if the expression applies
      * @throws PolicyEvaluationException if there is an exception evaluating the expression
      */
-    boolean doesApply(String appliesToXPath, LogicalComponent<?> target) throws PolicyEvaluationException;
+    boolean doesApply(String appliesToXPath, LogicalScaArtifact<?> target) throws PolicyEvaluationException;
 
     /**
      * Returns true if the given XPath expression attaches to the target starting at the given context.

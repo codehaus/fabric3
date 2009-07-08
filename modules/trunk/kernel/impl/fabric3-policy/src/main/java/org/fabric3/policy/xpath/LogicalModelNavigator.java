@@ -224,6 +224,13 @@ public class LogicalModelNavigator extends DefaultNavigator implements NamedAcce
 
                 }
             }
+        } else if (contextNode instanceof LogicalBinding) {
+            LogicalBinding<?> binding = (LogicalBinding<?>) contextNode;
+            if (localName.equals(binding.getDefinition().getType().getLocalPart())) {
+                List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
+                bindings.add(binding);
+                return bindings.iterator();
+            }
         }
         return JaxenConstants.EMPTY_ITERATOR;
     }

@@ -50,7 +50,6 @@ import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.policy.infoset.PolicyEvaluator;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyRegistry;
@@ -124,8 +123,8 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
             return Collections.emptySet();
         }
 
-        LogicalComponent<?> target = binding.getParent().getParent();
-        Set<PolicySet> policies = resolvePolicies(requiredIntents, target);
+        // resolve policies against the binding
+        Set<PolicySet> policies = resolvePolicies(requiredIntents, binding);
         if (!requiredIntents.isEmpty()) {
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }

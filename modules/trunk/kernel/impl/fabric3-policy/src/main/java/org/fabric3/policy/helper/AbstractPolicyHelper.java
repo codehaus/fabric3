@@ -46,7 +46,6 @@ import javax.xml.namespace.QName;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.policy.infoset.PolicyEvaluator;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
@@ -72,16 +71,17 @@ public class AbstractPolicyHelper {
      * Resolves intents to policies.
      *
      * @param requiredIntents the intents to resolve
-     * @param target          the target component to resolve against
+     * @param target          the logical artifact to resolve against
      * @return the resolved policy sets
      * @throws PolicyResolutionException if there is an error during resolution
      */
-    protected Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents, LogicalComponent<?> target) throws PolicyResolutionException {
+    protected Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents, LogicalScaArtifact<?> target) throws PolicyResolutionException {
 
         Set<PolicySet> policies = new LinkedHashSet<PolicySet>();
 
         Collection<PolicySet> definitions = policyRegistry.getAllDefinitions(PolicySet.class);
-        // calculate appliesTo
+        // Calculate appliesTo by first determining if the policy set provides the intent and then matching its appliesTo expression
+        // against the logical artifact given as a target
         for (PolicySet policySet : definitions) {
             Iterator<Intent> iterator = requiredIntents.iterator();
             while (iterator.hasNext()) {
