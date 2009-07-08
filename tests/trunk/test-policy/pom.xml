@@ -132,6 +132,13 @@
                                        <role>role2</role>
                                      </roles>
                                 </user>
+                                <user>
+                                    <username>baz</username>
+                                    <password>fred</password>
+                                    <roles>
+                                       <role>role1</role>
+                                     </roles>
+                                </user>
                             </users>
                         </config>
                         ]]>

@@ -81,6 +81,17 @@
         <reference name="secureRoleService" target="SecureRolesService"/>
     </component>
 
+    <!-- test authorization  -->
+    <component name="NotAuthorizedSecureServiceTest">
+        <f3-impl:junit class="org.fabric3.policy.security.NotAuthorizedSecureServiceTest">
+            <configuration>
+                <username>baz</username>
+                <password>fred</password>
+            </configuration>
+        </f3-impl:junit>
+        <reference name="secureRoleService" target="SecureRolesService"/>
+    </component>
+
     <component name="SecureRolesService">
         <implementation.java class="org.fabric3.policy.security.SecureRolesServiceImpl"/>
     </component>

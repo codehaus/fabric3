@@ -37,20 +37,26 @@
 */
 package org.fabric3.policy.security;
 
-import org.oasisopen.sca.annotation.Scope;
-
-import org.fabric3.api.annotation.security.RolesAllowed;
+import junit.framework.TestCase;
+import org.oasisopen.sca.ServiceRuntimeException;
+import org.oasisopen.sca.annotation.Reference;
 
 /**
  * @version $Rev$ $Date$
  */
-@Scope("COMPOSITE")
-public class SecureRolesServiceImpl implements SecureService {
+public class NotAuthorizedSecureServiceTest extends TestCase {
 
-    @RolesAllowed({"role1", "role2"})
-    public void call() {
-        // just test that the method is called
+    @Reference
+    protected SecureService secureRoleService;
+
+    public void testRoleBasedAuthorization() throws Exception {
+        try {
+            secureRoleService.call();
+            fail();
+        } catch (ServiceRuntimeException e) {
+            // expected
+        }
+
     }
-
 
 }
