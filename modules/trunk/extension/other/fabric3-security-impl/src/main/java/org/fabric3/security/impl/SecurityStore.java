@@ -44,5 +44,12 @@ package org.fabric3.security.impl;
  */
 public interface SecurityStore {
 
+    /**
+     * Looks up a subject based on user name
+     *
+     * @param username the user name
+     * @return the subject or null if not found
+     * @throws SecurityStoreException if an error occurs performing the lookup
+     */
     BasicSecuritySubject find(String username) throws SecurityStoreException;
 }
