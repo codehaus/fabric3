@@ -44,7 +44,9 @@ import javax.xml.stream.XMLOutputFactory;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLModel;
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 
+import org.fabric3.binding.ws.metro.MetroBindingMonitor;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
@@ -59,7 +61,9 @@ public class WsdlResourceProcessorTestCase extends TestCase {
 
     @SuppressWarnings({"unchecked"})
     public void testIndexAndProcess() throws Exception {
-        WsdlResourceProcessor processor = new WsdlResourceProcessor(null, new MockXMLFactory());
+        MetroBindingMonitor monitor = EasyMock.createNiceMock(MetroBindingMonitor.class);
+        EasyMock.replay(monitor);
+        WsdlResourceProcessor processor = new WsdlResourceProcessor(null, new MockXMLFactory(), monitor);
         URL wsdl = Thread.currentThread().getContextClassLoader().getResource("Weather.wsdl");
         Contribution contribution = new Contribution(URI.create("test"));
         processor.index(contribution, wsdl, null);

@@ -59,6 +59,9 @@ public interface MetroBindingMonitor {
     @Info
     void endpointRemoved(String path);
 
+    @Info
+    void message(String path);
+
     @Severe
     void error(Throwable e);
 

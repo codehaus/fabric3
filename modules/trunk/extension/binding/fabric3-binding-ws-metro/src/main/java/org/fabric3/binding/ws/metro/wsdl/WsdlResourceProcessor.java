@@ -46,8 +46,10 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.ws.WebServiceException;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+import com.sun.xml.ws.resources.ClientMessages;
 import com.sun.xml.ws.wsdl.parser.RuntimeWSDLParser;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -56,6 +58,8 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.ws.metro.MetroBindingMonitor;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ProcessorRegistry;
@@ -80,10 +84,12 @@ public class WsdlResourceProcessor implements ResourceProcessor {
     private static final EntityResolver RESOLVER = new NullResolver();
 
     private ProcessorRegistry registry;
+    private MetroBindingMonitor monitor;
     private XMLInputFactory xmlFactory;
 
-    public WsdlResourceProcessor(@Reference ProcessorRegistry registry, @Reference XMLFactory xmlFactory) {
+    public WsdlResourceProcessor(@Reference ProcessorRegistry registry, @Reference XMLFactory xmlFactory, @Monitor MetroBindingMonitor monitor) {
         this.registry = registry;
+        this.monitor = monitor;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
@@ -116,8 +122,8 @@ public class WsdlResourceProcessor implements ResourceProcessor {
 
             String name = reader.getAttributeValue(null, "name");
             if (name == null) {
-                context.addError(new MissingAttribute("WSDL name not specified", reader));
-                return;
+                // synthesize a name
+                name = url.toString();
             }
 
             QNameSymbol symbol = new QNameSymbol(new QName(targetNamespace, name));
@@ -153,6 +159,7 @@ public class WsdlResourceProcessor implements ResourceProcessor {
     public void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException {
         InputStream stream = null;
         ClassLoader old = Thread.currentThread().getContextClassLoader();
+        URL wsdlLocation = resource.getUrl();
         try {
             // The JAX-WS RI dynamically loads classes using TCCL
             Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
@@ -160,9 +167,16 @@ public class WsdlResourceProcessor implements ResourceProcessor {
             StreamSource source = new StreamSource(stream);
 
             // delegate to the Metro WSDL parser
-            WSDLModel model = RuntimeWSDLParser.parse(null, source, RESOLVER, false, null);
+            WSDLModel model = RuntimeWSDLParser.parse(wsdlLocation, source, RESOLVER, false, null);
             ResourceElement<QNameSymbol, WSDLModel> element = (ResourceElement<QNameSymbol, WSDLModel>) resource.getResourceElements().get(0);
             element.setValue(model);
+        } catch (WebServiceException e) {
+            String message = ClientMessages.WSDL_CONTAINS_NO_SERVICE(wsdlLocation);
+            if (message.equals(e.getMessage())) {
+                monitor.message("Ignoring WSDL as it does not contain a service definition: " + wsdlLocation);
+                return;
+            }
+            throw e;
         } catch (XMLStreamException e) {
             throw new InstallException(e);
         } catch (IOException e) {
