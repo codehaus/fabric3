@@ -49,6 +49,7 @@ import org.easymock.EasyMock;
 import org.fabric3.model.type.definitions.BindingType;
 import org.fabric3.model.type.definitions.ImplementationType;
 import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.IntentType;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
@@ -93,7 +94,7 @@ public class DefaultPolicyRegistryTestCase extends TestCase {
         Resource resource = new Resource(new URL("file://test"), "text/xml");
         QName name = new QName("test", "intent");
         QNameSymbol symbol = new QNameSymbol(name);
-        Intent intent = new Intent(name, null, null);
+        Intent intent = new Intent(name, null, null, IntentType.INTERACTION);
         ResourceElement<QNameSymbol, Intent> element = new ResourceElement<QNameSymbol, Intent>(symbol, intent);
         resource.addResourceElement(element);
         contribution.addResource(resource);

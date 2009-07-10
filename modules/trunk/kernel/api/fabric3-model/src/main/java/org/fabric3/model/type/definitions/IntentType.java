@@ -48,6 +48,6 @@ package org.fabric3.model.type.definitions;
  */
 public enum IntentType {
 
-    INTERACTION, IMPLEMENTATION;
+    INTERACTION, IMPLEMENTATION
 
 }

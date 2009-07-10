@@ -54,64 +54,39 @@ import org.oasisopen.sca.Constants;
  * @version $Rev$ $Date$
  */
 public final class Intent extends AbstractDefinition {
+    private static final long serialVersionUID = -3075153359030949561L;
 
-    /**
-     * Binding QName
-     */
     public static final QName BINDING = new QName(Constants.SCA_NS, "binding");
-
-    /**
-     * Implementation QName
-     */
     public static final QName IMPLEMENTATION = new QName(Constants.SCA_NS, "implementation");
 
-    /**
-     * Intent type.
-     */
     private IntentType intentType;
-
-    /**
-     * Name of the qualifiable intent if this is a qualified intent .
-     */
     private QName qualifiable;
-
-    /**
-     * Whether this intent requires other intents.
-     */
     private Set<QName> requires;
-
-    /**
-     * Constrained type.
-     */
     private QName constrains;
 
     /**
      * Initializes the name, description and the constrained artifacts.
      *
-     * @param name        Name of the intent.
-     * @param constrains  SCA artifact constrained by this intent.
-     * @param requires    The intents this intent requires if this is a profile intent.
+     * @param name       the name of the intent.
+     * @param constrains the SCA artifact constrained by this intent.
+     * @param requires   the intents this intent requires if this is a profile intent.
+     * @param intentType the intent type (interaction or implementation)
      */
-    public Intent(QName name, QName constrains, Set<QName> requires) {
-
+    public Intent(QName name, QName constrains, Set<QName> requires, IntentType intentType) {
         super(name);
-
         if (constrains != null) {
             if (!BINDING.equals(constrains) && !IMPLEMENTATION.equals(constrains)) {
                 throw new IllegalArgumentException("Intents can constrain only bindings or implementations");
             }
-            intentType = BINDING.equals(constrains) ? IntentType.INTERACTION : IntentType.IMPLEMENTATION;
             this.constrains = constrains;
         }
-
+        this.intentType = intentType;
         String localPart = name.getLocalPart();
         if (localPart.indexOf('.') > 0) {
             String qualifiableName = localPart.substring(0, localPart.indexOf('.') + 1);
             qualifiable = new QName(name.getNamespaceURI(), qualifiableName);
         }
-
         this.requires = requires;
-
     }
 
     /**

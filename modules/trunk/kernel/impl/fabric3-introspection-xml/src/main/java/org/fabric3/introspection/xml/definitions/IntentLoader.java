@@ -49,6 +49,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.IntentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
@@ -88,7 +89,16 @@ public class IntentLoader implements TypeLoader<Intent> {
                 return null;
             }
         }
-
+        IntentType intentType = IntentType.INTERACTION;
+        String intentTypeVal = reader.getAttributeValue(null, "intentType");
+        if (intentTypeVal != null) {
+            try {
+                intentType = IntentType.valueOf(intentTypeVal.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                context.addError(new UnrecognizedAttribute("Unknown intentType value: " + intentTypeVal, reader));
+                return null;
+            }
+        }
         String requiresVal = reader.getAttributeValue(null, "requires");
         Set<QName> requires = new HashSet<QName>();
         if (requiresVal != null) {
@@ -111,7 +121,7 @@ public class IntentLoader implements TypeLoader<Intent> {
             switch (reader.next()) {
             case END_ELEMENT:
                 if (DefinitionsLoader.INTENT.equals(reader.getName())) {
-                    return new Intent(qName, constrains, requires);
+                    return new Intent(qName, constrains, requires, intentType);
                 }
             }
         }
