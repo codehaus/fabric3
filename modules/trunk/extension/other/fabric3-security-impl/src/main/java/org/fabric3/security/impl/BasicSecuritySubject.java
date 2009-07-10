@@ -47,6 +47,8 @@ import javax.security.auth.Subject;
 import org.fabric3.api.SecuritySubject;
 
 /**
+ * SecuritySubject for the Fabric3 basic security implementation.
+ *
  * @version $Rev$ $Date$
  */
 public class BasicSecuritySubject implements SecuritySubject {
