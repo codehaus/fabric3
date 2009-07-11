@@ -13,27 +13,12 @@ Public License. See the accompanying license file for details.
         targetNamespace="urn:fabric3.org:policy"
         xmlns:f3-policy="urn:fabric3.org:policy">
 
-    <!-- Begins a transaction if one not already in progress and commits it -->
-    <policySet name="managedTransactionPolicy" provides="sca:managedTransaction">
-        <f3-policy:transaction action="BEGIN"/>
-    </policySet>
-
     <policySet name="oasisManagedTransactionPolicy" provides="oasis:managedTransaction">
         <f3-policy:transaction action="BEGIN"/>
     </policySet>
 
-    <!-- Suspends the transaction if one already in progress and resumes it -->
-    <policySet name="suspendsTransactionPolicy" provides="sca:suspendsTransaction" >
-        <f3-policy:transaction action="SUSPEND"/>
-    </policySet>
-
     <policySet name="oasisSuspendsTransactionPolicy" provides="oasis:suspendsTransaction" >
         <f3-policy:transaction action="SUSPEND"/>
-    </policySet>
-
-    <!-- No op -->
-    <policySet name="propagatesTransactionPolicy" provides="sca:propagatesTransaction" >
-        <f3-policy:transaction action="PROPOGATE"/>
     </policySet>
 
     <policySet name="oasisPropagatesTransactionPolicy" provides="oasis:propagatesTransaction" >
