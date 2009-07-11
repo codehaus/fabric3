@@ -14,25 +14,19 @@ Public License. See the accompanying license file for details.
         xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
         xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
 
-    <intent name="transactional" constrains="binding">
-        <description>Transactional intent</description>
+    <intent name="intercepted" constrains="binding">
+        <description>Intercepted intent</description>
     </intent>
 
-    <policySet name="transactionalPolicy" appliesTo="sca:binding.ws" provides="f3-policy:transactional">
+    <policySet name="interceptedPolicy" appliesTo="sca:binding.foo" provides="f3-policy:intercepted">
         <f3-policy:interceptor class="FooInterceptor"/>
     </policySet>
 
-    <policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://domain/EchoService#Axis2EchoService">
-        <wsp:Policy>
-            <sp:UsernameToken>
-                <wsp:Policy>
-                    <sp:WssUsernameToken11/>
-                </wsp:Policy>
-            </sp:UsernameToken>
-        </wsp:Policy>
+    <policySet name="providedPolicy" appliesTo="sca:binding.fo" provides="f3-policy:provided">
+        <f3-policy:someElement f3-policy:phase="provided"/>
     </policySet>
 
-    <policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://domain/EchoTest#service">
+    <policySet name="wsPolicy" provides="sca:authentication.message" appliesTo="fabric3://domain/FooService">
         <wsp:Policy>
             <sp:UsernameToken>
                 <wsp:Policy>

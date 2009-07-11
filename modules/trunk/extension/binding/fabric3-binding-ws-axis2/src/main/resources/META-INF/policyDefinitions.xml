@@ -23,7 +23,7 @@ Public License. See the accompanying license file for details.
     </intent>
 
     <!-- Databinding policy for services -->
-    <policySet name="jaxbPolicyService" provides="f3-policy:dataBinding.jaxb" f3-policy:phase="INTERCEPTION">
+    <policySet name="jaxbPolicyService" provides="f3-policy:dataBinding.jaxb">
         <f3-policy:dataBinding.jaxb/>
     </policySet>
 

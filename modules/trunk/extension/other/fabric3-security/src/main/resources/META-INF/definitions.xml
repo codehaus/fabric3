@@ -16,7 +16,7 @@ Public License. See the accompanying license file for details.
         </description>
     </intent>
 
-    <policySet name="authorizationPolicy" provides="f3-policy:authorization" f3-policy:phase="INTERCEPTION">
+    <policySet name="authorizationPolicy" provides="f3-policy:authorization">
         <f3-policy:authorization/>
     </policySet>
 

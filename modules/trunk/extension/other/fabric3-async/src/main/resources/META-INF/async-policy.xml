@@ -4,8 +4,8 @@
              xmlns:f3-policy="urn:fabric3.org:policy"
              targetNamespace="urn:fabric3.org:binding">
 
-    <policySet name="oneWayPolicy" provides="sca:oneWay" f3-policy:phase="INTERCEPTION" appliesTo="f3-core:binding.local">
-        <f3-policy:oneWayPolicy/>
+    <policySet name="oneWayPolicy" provides="sca:oneWay" appliesTo="f3-core:binding.local">
+        <f3-policy:oneWayPolicy f3-policy:phase="INTERCEPTION"/>
     </policySet>
 
 </definitions>

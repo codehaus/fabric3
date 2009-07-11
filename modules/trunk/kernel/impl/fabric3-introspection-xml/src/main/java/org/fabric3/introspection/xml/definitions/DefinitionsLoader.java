@@ -71,7 +71,7 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 
 /**
- * Loader for definitions.
+ * Loader for policy definitions.
  *
  * @version $Rev$ $Date$
  */
@@ -89,8 +89,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
     private XmlResourceElementLoaderRegistry elementLoaderRegistry;
     private Loader loaderRegistry;
 
-    public DefinitionsLoader(@Reference XmlResourceElementLoaderRegistry elementLoaderRegistry,
-                             @Reference Loader loader) {
+    public DefinitionsLoader(@Reference XmlResourceElementLoaderRegistry elementLoaderRegistry,  @Reference Loader loader) {
         this.elementLoaderRegistry = elementLoaderRegistry;
         this.loaderRegistry = loader;
     }
@@ -106,14 +105,11 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
 
     public void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
             throws InstallException, XMLStreamException {
+
         validateAttributes(reader, context);
-
         List<AbstractDefinition> definitions = new ArrayList<AbstractDefinition>();
-
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
-
         IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, loader, targetNamespace);
-
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:

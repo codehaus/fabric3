@@ -128,20 +128,30 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
         String appliesTo = policyElement.getAttribute("appliesTo");
         String attachTo = policyElement.getAttribute("attachTo");
 
-        String sPhase = policyElement.getAttributeNS(Namespaces.POLICY, "phase");
-        PolicyPhase phase;
-        if (sPhase != null && !"".equals(sPhase.trim())) {
-            phase = PolicyPhase.valueOf(sPhase);
-        } else {
-            phase = PolicyPhase.PROVIDED;
-        }
-
         Element extension = null;
         NodeList children = policyElement.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             if (children.item(i) instanceof Element) {
                 extension = (Element) children.item(i);
                 break;
+            }
+        }
+
+        // Determine the phase: if the policy language is in the F3 namespace, default to interception phase. Otherwise default to provided phase.
+        PolicyPhase phase = PolicyPhase.PROVIDED;
+        if (extension != null && Namespaces.POLICY.equals(extension.getNamespaceURI())) {
+            String phaseAttr = extension.getAttributeNS(Namespaces.POLICY, "phase");
+            if (phaseAttr != null && phaseAttr.length() > 0) {
+                try {
+                    phase = PolicyPhase.valueOf(phaseAttr.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    UnrecognizedAttribute failure = new UnrecognizedAttribute("Invalid phase: " + phaseAttr, reader);
+                    context.addError(failure);
+                    return null;
+                }
+
+            } else {
+                phase = PolicyPhase.INTERCEPTION;
             }
         }
         URI uri = context.getContributionUri();

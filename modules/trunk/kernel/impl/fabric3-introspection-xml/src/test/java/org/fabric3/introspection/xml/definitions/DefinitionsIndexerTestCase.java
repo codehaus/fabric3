@@ -38,7 +38,9 @@
 package org.fabric3.introspection.xml.definitions;
 
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -48,7 +50,6 @@ import junit.framework.TestCase;
 import org.fabric3.host.Namespaces;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
@@ -56,25 +57,29 @@ import org.fabric3.spi.introspection.IntrospectionContext;
  * @version $Rev: 7275 $ $Date: 2009-07-05 21:54:59 +0200 (Sun, 05 Jul 2009) $
  */
 public class DefinitionsIndexerTestCase extends TestCase {
-    DefinitionsIndexer loader;
-    private XMLStreamReader reader;
+    private static final QName INTERCEPTED_INTENT = new QName(Namespaces.POLICY, "intercepted");
+    private static final QName PROVIDED_INTENT = new QName(Namespaces.POLICY, "provided");
+    private static final QName PROVIDED_POLICY = new QName(Namespaces.POLICY, "providedPolicy");
+    private static final QName INTERCEPTED_POLICY = new QName(Namespaces.POLICY, "interceptedPolicy");
+    private static final QName WS_POLICY = new QName(Namespaces.POLICY, "wsPolicy");
 
+    private DefinitionsIndexer loader;
+    private XMLStreamReader reader;
+    private Set<QName> qNames = new HashSet<QName>();
+
+    @SuppressWarnings({"SuspiciousMethodCalls"})
     public void testIndex() throws Exception {
         Resource resource = new Resource(null, "foo");
         IntrospectionContext context = new DefaultIntrospectionContext();
         loader.index(resource, reader, context);
 
-        List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
-        assertNotNull(resourceElements);
-        assertEquals(4, resourceElements.size());
-
-        ResourceElement<?, ?> intentResourceElement = resourceElements.get(0);
-        QNameSymbol symbol = (QNameSymbol) intentResourceElement.getSymbol();
-        assertEquals(new QName(Namespaces.POLICY, "transactional"), symbol.getKey());
-
-        ResourceElement<?, ?> policySetResourceElement = resourceElements.get(1);
-        symbol = (QNameSymbol) policySetResourceElement.getSymbol();
-        assertEquals(new QName(Namespaces.POLICY, "transactionalPolicy"), symbol.getKey());
+        List<ResourceElement<?, ?>> elements = resource.getResourceElements();
+        assertNotNull(elements);
+        assertEquals(4, elements.size());
+        for (ResourceElement<?, ?> element : elements) {
+            Object key = element.getSymbol().getKey();
+            assertTrue(qNames.contains(key));
+        }
     }
 
     protected void setUp() throws Exception {
@@ -83,5 +88,10 @@ public class DefinitionsIndexerTestCase extends TestCase {
         InputStream stream = getClass().getResourceAsStream("definitions.xml");
         reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
         reader.nextTag();
+        qNames.add(INTERCEPTED_INTENT);
+        qNames.add(PROVIDED_INTENT);
+        qNames.add(PROVIDED_POLICY);
+        qNames.add(INTERCEPTED_POLICY);
+        qNames.add(WS_POLICY);
     }
 }

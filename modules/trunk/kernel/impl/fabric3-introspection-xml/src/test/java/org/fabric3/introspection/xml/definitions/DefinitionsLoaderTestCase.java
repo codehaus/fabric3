@@ -54,9 +54,11 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.introspection.xml.DefaultLoaderHelper;
 import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicyPhase;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.Symbol;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -70,62 +72,113 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
  */
 public class DefinitionsLoaderTestCase extends TestCase {
 
-    public static final QName TRANSACTIONAL_QNAME =
-            new QName(Namespaces.POLICY, "transactional");
-    public static final QName BINDING_QNAME = new QName("http://docs.oasis-open.org/ns/opencsa/sca/200903", "binding");
-    public static final QName TRX_POLICY_QNAME =
-            new QName(Namespaces.POLICY, "transactionalPolicy");
-    public static final QName SERVER_SEC_POLICY =
-            new QName(Namespaces.POLICY, "testServerPolicy");
-    public static final QName CLIENT_SEC_POLICY =
-            new QName(Namespaces.POLICY, "testClientPolicy");
+    private static final Object WS_POLICY_NS = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+
+    private static final QName BINDING_QNAME = new QName("http://docs.oasis-open.org/ns/opencsa/sca/200903", "binding");
+    private static final QName INTERCEPTED_INTENT = new QName(Namespaces.POLICY, "intercepted");
+    private static final QName PROVIDED_INTENT = new QName(Namespaces.POLICY, "provided");
+    private static final QName PROVIDED_POLICY = new QName(Namespaces.POLICY, "providedPolicy");
+    private static final QName INTERCEPTED_POLICY = new QName(Namespaces.POLICY, "interceptedPolicy");
+    private static final QName WS_POLICY = new QName(Namespaces.POLICY, "wsPolicy");
 
     private DefinitionsLoader loader;
     private Resource resource;
     private XMLStreamReader reader;
 
 
-    @SuppressWarnings({"unchecked", "deprecation"})
+    @SuppressWarnings({"unchecked"})
     public void testLoad() throws Exception {
 
         IntrospectionContext context = new DefaultIntrospectionContext();
         loader.load(reader, null, resource, context, null);
 
-        List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
-        assertNotNull(resourceElements);
-        assertEquals(4, resourceElements.size());
+        List<ResourceElement<?, ?>> elements = resource.getResourceElements();
+        assertEquals(4, elements.size());
 
-        ResourceElement<QNameSymbol, AbstractDefinition> intentResourceElement =
-                (ResourceElement<QNameSymbol, AbstractDefinition>) resourceElements.get(0);
-        assertNotNull(intentResourceElement);
+        verifyIntent(elements);
+        verifyInterceptedPolicy(elements);
+        verifyProvidedPolicy(elements);
+        verifyWsPolicy(elements);
 
-        QNameSymbol symbol = intentResourceElement.getSymbol();
-        assertEquals(TRANSACTIONAL_QNAME, symbol.getKey());
+    }
 
-        Intent intent = (Intent) intentResourceElement.getValue();
-        assertNotNull(intent);
-        assertEquals(TRANSACTIONAL_QNAME, intent.getName());
-        assertTrue(intent.doesConstrain(BINDING_QNAME));
-        assertFalse(intent.isProfile());
-        assertFalse(intent.isQualified());
-        assertNull(intent.getQualifiable());
-        assertEquals(0, intent.getRequires().size());
+    @SuppressWarnings({"unchecked"})
+    private void verifyIntent(List<ResourceElement<?, ?>> elements) {
+        boolean verified = false;
+        for (ResourceElement<?, ?> element : elements) {
+            Symbol symbol = element.getSymbol();
+            if (INTERCEPTED_INTENT.equals(symbol.getKey())) {
+                Intent intent = (Intent) element.getValue();
+                assertNotNull(intent);
+                assertEquals(INTERCEPTED_INTENT, intent.getName());
+                assertTrue(intent.doesConstrain(BINDING_QNAME));
+                assertFalse(intent.isProfile());
+                assertFalse(intent.isQualified());
+                assertNull(intent.getQualifiable());
+                assertEquals(0, intent.getRequires().size());
+                verified = true;
 
-        ResourceElement<QNameSymbol, AbstractDefinition> policySetResourceElement =
-                (ResourceElement<QNameSymbol, AbstractDefinition>) resourceElements.get(1);
-        assertNotNull(policySetResourceElement);
+            }
+        }
+        assertTrue(verified);
+    }
 
-        symbol = policySetResourceElement.getSymbol();
-        assertEquals(TRX_POLICY_QNAME, symbol.getKey());
+    private void verifyInterceptedPolicy(List<ResourceElement<?, ?>> elements) {
+        boolean verified = false;
+        for (ResourceElement<?, ?> element : elements) {
+            Symbol symbol = element.getSymbol();
+            if (INTERCEPTED_POLICY.equals(symbol.getKey())) {
+                PolicySet policySet = (PolicySet) element.getValue();
+                assertNotNull(policySet);
+                assertEquals(INTERCEPTED_POLICY, policySet.getName());
+                assertTrue(policySet.doesProvide(INTERCEPTED_INTENT));
 
-        PolicySet policySet = (PolicySet) policySetResourceElement.getValue();
-        assertEquals(TRX_POLICY_QNAME, policySet.getName());
-        assertTrue(policySet.doesProvide(TRANSACTIONAL_QNAME));
+                QName extensionName = policySet.getExtensionName();
+                assertEquals(Namespaces.POLICY, extensionName.getNamespaceURI());
+                assertEquals("interceptor", extensionName.getLocalPart());
+                assertEquals(PolicyPhase.INTERCEPTION, policySet.getPhase());
+                verified = true;
+            }
+        }
+        assertTrue(verified);
+    }
 
-        QName extensionName = policySet.getExtensionName();
-        assertEquals("interceptor", extensionName.getLocalPart());
-        assertEquals(Namespaces.POLICY, extensionName.getNamespaceURI());
+    private void verifyProvidedPolicy(List<ResourceElement<?, ?>> elements) {
+        boolean verified = false;
+        for (ResourceElement<?, ?> element : elements) {
+            Symbol symbol = element.getSymbol();
+            if (PROVIDED_POLICY.equals(symbol.getKey())) {
+                PolicySet policySet = (PolicySet) element.getValue();
+                assertNotNull(policySet);
+                assertEquals(PROVIDED_POLICY, policySet.getName());
+                assertTrue(policySet.doesProvide(PROVIDED_INTENT));
 
+                QName extensionName = policySet.getExtensionName();
+                assertEquals(Namespaces.POLICY, extensionName.getNamespaceURI());
+                assertEquals("someElement", extensionName.getLocalPart());
+                assertEquals(PolicyPhase.PROVIDED, policySet.getPhase());
+                verified = true;
+            }
+        }
+        assertTrue(verified);
+    }
+
+    private void verifyWsPolicy(List<ResourceElement<?, ?>> elements) {
+        boolean verified = false;
+        for (ResourceElement<?, ?> element : elements) {
+            Symbol symbol = element.getSymbol();
+            if (WS_POLICY.equals(symbol.getKey())) {
+                PolicySet policySet = (PolicySet) element.getValue();
+                assertNotNull(policySet);
+                assertEquals(WS_POLICY, policySet.getName());
+
+                QName extensionName = policySet.getExtensionName();
+                assertEquals(WS_POLICY_NS, extensionName.getNamespaceURI());
+                assertEquals("Policy", extensionName.getLocalPart());
+                verified = true;
+            }
+        }
+        assertTrue(verified);
     }
 
     protected void setUp() throws Exception {
@@ -142,17 +195,13 @@ public class DefinitionsLoaderTestCase extends TestCase {
         // setup indexed resource
         resource = new Resource(null, "application/xml");
         // setup up indexed resource elements
-        ResourceElement<QNameSymbol, ?> element =
-                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(TRANSACTIONAL_QNAME));
+        ResourceElement<QNameSymbol, ?> element = new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(INTERCEPTED_INTENT));
         resource.addResourceElement(element);
-        element =
-                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(TRX_POLICY_QNAME));
+        element = new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(PROVIDED_POLICY));
         resource.addResourceElement(element);
-        element =
-                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(SERVER_SEC_POLICY));
+        element = new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(INTERCEPTED_POLICY));
         resource.addResourceElement(element);
-        element =
-                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(CLIENT_SEC_POLICY));
+        element = new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(WS_POLICY));
         resource.addResourceElement(element);
 
         // setup reader
