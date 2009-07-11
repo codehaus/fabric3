@@ -663,6 +663,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-rs/fabric3-rs.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-rs/fabric3-rs.iml" group="implementations" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-sca-intents/fabric3-sca-intents.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-sca-intents/fabric3-sca-intents.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-sca-taglib/fabric3-sca-taglib.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-sca-taglib/fabric3-sca-taglib.iml" group="other/web" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-impl/fabric3-security-impl.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-impl/fabric3-security-impl.iml" group="other" />
@@ -693,7 +694,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-xquery/fabric3-xquery.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-xquery/fabric3-xquery.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" group="poms" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-intents/runtime-security-intents.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-intents/runtime-security-intents.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" group="tests" />
