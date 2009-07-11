@@ -38,7 +38,6 @@
 		<module>fabric3-contribution-war</module>
 		<module>fabric3-conversation-propagation</module>
 		<module>fabric3-db-h2</module>
-		<!--module>fabric3-db-exist</module-->
 		<module>fabric3-ftp-server</module>
 		<module>fabric3-ftp-spi</module>
 		<module>fabric3-jdk-proxy</module>
@@ -51,7 +50,7 @@
 		<module>fabric3-resource</module>
 		<module>fabric3-sca-taglib</module>
 		<module>fabric3-security</module>
-		<module>fabric3-security-intents</module>
+		<module>fabric3-sca-intents</module>
 		<module>fabric3-security-impl</module>
 		<module>fabric3-tx</module>
 		<module>fabric3-tx-jotm</module>
