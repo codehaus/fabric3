@@ -8,17 +8,10 @@ Public License. See the accompanying license file for details.
  -->
 <definitions
         xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-        xmlns:oasis="http://docs.oasis-open.org/ns/opencsa/sca/200903"
         targetNamespace="http://docs.oasis-open.org/ns/opencsa/sca/200903">
 
 
     <intent name="authentication" constrains="binding">
-        <description>
-            Inidicates the client needs to authenticate before interaction.
-        </description>
-    </intent>
-
-    <intent name="oasis:authentication" constrains="binding">
         <description>
             Inidicates the client needs to authenticate before interaction.
         </description>
@@ -30,19 +23,7 @@ Public License. See the accompanying license file for details.
         </description>
     </intent>
 
-    <intent name="oasis:confidentiality" constrains="binding">
-        <description>
-            Inidicates the interaction needs confidentiality.
-        </description>
-    </intent>
-
     <intent name="integrity" constrains="binding">
-        <description>
-            Inidicates the interaction needs integrity.
-        </description>
-    </intent>
-
-    <intent name="oasis:integrity" constrains="binding">
         <description>
             Inidicates the interaction needs integrity.
         </description>
@@ -54,19 +35,7 @@ Public License. See the accompanying license file for details.
         </description>
     </intent>
 
-    <intent name="oasis:authentication.message" constrains="binding">
-        <description>
-            Inidicates the client needs to message level authenticate before interaction.
-        </description>
-    </intent>
-
     <intent name="confidentiality.message" constrains="binding">
-        <description>
-            Inidicates the interaction needs message level confidentiality.
-        </description>
-    </intent>
-
-    <intent name="oasis:confidentiality.message" constrains="binding">
         <description>
             Inidicates the interaction needs message level confidentiality.
         </description>
@@ -78,19 +47,7 @@ Public License. See the accompanying license file for details.
         </description>
     </intent>
 
-    <intent name="oasis:integrity.message" constrains="binding">
-        <description>
-            Inidicates the interaction needs message level integrity.
-        </description>
-    </intent>
-
     <intent name="authentication.transport" constrains="binding">
-        <description>
-            Inidicates the client needs to transport level authenticate before interaction.
-        </description>
-    </intent>
-
-    <intent name="oasis:authentication.transport" constrains="binding">
         <description>
             Inidicates the client needs to transport level authenticate before interaction.
         </description>
@@ -102,19 +59,7 @@ Public License. See the accompanying license file for details.
         </description>
     </intent>
 
-    <intent name="oasis:confidentiality.transport" constrains="binding">
-        <description>
-            Inidicates the interaction needs transport level confidentiality.
-        </description>
-    </intent>
-
     <intent name="integrity.transport" constrains="binding">
-        <description>
-            Inidicates the interaction needs transport level integrity.
-        </description>
-    </intent>
-
-    <intent name="oasis:integrity.transport" constrains="binding">
         <description>
             Inidicates the interaction needs transport level integrity.
         </description>
