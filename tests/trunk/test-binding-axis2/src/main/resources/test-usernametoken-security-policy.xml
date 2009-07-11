@@ -14,7 +14,7 @@
     <policySet name="testServerUsernameTokenAuthrizationPolicy"
                provides="f3-policy:authorization.message"
                appliesTo="binding.ws and sca:OperationRef('Axis2EchoService/echoWsUsernameToken')"
-               f3-policy:phase="INTERCEPTION">
+               >
         <f3-policy:authorization roles="ADMIN"/>
     </policySet>
 
