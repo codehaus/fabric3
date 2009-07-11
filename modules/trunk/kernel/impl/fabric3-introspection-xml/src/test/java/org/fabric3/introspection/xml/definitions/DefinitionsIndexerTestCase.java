@@ -58,6 +58,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
  */
 public class DefinitionsIndexerTestCase extends TestCase {
     private static final QName INTERCEPTED_INTENT = new QName(Namespaces.POLICY, "intercepted");
+    private static final QName QUALIFIER_INTENT = new QName(Namespaces.POLICY, "qualifier");
     private static final QName PROVIDED_INTENT = new QName(Namespaces.POLICY, "provided");
     private static final QName PROVIDED_POLICY = new QName(Namespaces.POLICY, "providedPolicy");
     private static final QName INTERCEPTED_POLICY = new QName(Namespaces.POLICY, "interceptedPolicy");
@@ -75,7 +76,7 @@ public class DefinitionsIndexerTestCase extends TestCase {
 
         List<ResourceElement<?, ?>> elements = resource.getResourceElements();
         assertNotNull(elements);
-        assertEquals(4, elements.size());
+        assertEquals(5, elements.size());
         for (ResourceElement<?, ?> element : elements) {
             Object key = element.getSymbol().getKey();
             assertTrue(qNames.contains(key));
@@ -89,6 +90,7 @@ public class DefinitionsIndexerTestCase extends TestCase {
         reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
         reader.nextTag();
         qNames.add(INTERCEPTED_INTENT);
+        qNames.add(QUALIFIER_INTENT);
         qNames.add(PROVIDED_INTENT);
         qNames.add(PROVIDED_POLICY);
         qNames.add(INTERCEPTED_POLICY);

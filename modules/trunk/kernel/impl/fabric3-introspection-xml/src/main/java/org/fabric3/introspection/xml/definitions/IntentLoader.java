@@ -43,18 +43,22 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.oasisopen.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.IntentType;
+import org.fabric3.model.type.definitions.Qualifier;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
@@ -64,8 +68,9 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
  * @version $Rev$ $Date$
  */
 public class IntentLoader implements TypeLoader<Intent> {
+    private static final QName QUALIFIER = new QName(Constants.SCA_NS, "qualifier");
 
-    private final LoaderHelper helper;
+    private LoaderHelper helper;
 
     public IntentLoader(@Reference LoaderHelper helper) {
         this.helper = helper;
@@ -116,12 +121,24 @@ public class IntentLoader implements TypeLoader<Intent> {
                 }
             }
         }
-
+        Set<Qualifier> qualifiers = new HashSet<Qualifier>();
         while (true) {
             switch (reader.next()) {
+            case START_ELEMENT:
+                if (QUALIFIER.equals(reader.getName())) {
+                    String nameAttr = reader.getAttributeValue(null, "name");
+                    if (nameAttr == null) {
+                        context.addError(new MissingAttribute("Qualifier name not specified", reader));
+                        return null;
+                    }
+                    String defaultStr = reader.getAttributeValue(null, "default");
+                    Qualifier qualifier = new Qualifier(nameAttr, Boolean.valueOf(defaultStr));
+                    qualifiers.add(qualifier);
+                }
+                break;
             case END_ELEMENT:
                 if (DefinitionsLoader.INTENT.equals(reader.getName())) {
-                    return new Intent(qName, constrains, requires, intentType);
+                    return new Intent(qName, constrains, requires, qualifiers, intentType, false);
                 }
             }
         }

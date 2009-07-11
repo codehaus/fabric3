@@ -40,6 +40,7 @@ package org.fabric3.fabric.policy;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.namespace.QName;
 
@@ -51,6 +52,7 @@ import org.fabric3.model.type.definitions.ImplementationType;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.IntentType;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.definitions.Qualifier;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.Resource;
@@ -94,7 +96,7 @@ public class DefaultPolicyRegistryTestCase extends TestCase {
         Resource resource = new Resource(new URL("file://test"), "text/xml");
         QName name = new QName("test", "intent");
         QNameSymbol symbol = new QNameSymbol(name);
-        Intent intent = new Intent(name, null, null, IntentType.INTERACTION);
+        Intent intent = new Intent(name, null, null, Collections.<Qualifier>emptySet(), IntentType.INTERACTION, false);
         ResourceElement<QNameSymbol, Intent> element = new ResourceElement<QNameSymbol, Intent>(symbol, intent);
         resource.addResourceElement(element);
         contribution.addResource(resource);

@@ -18,6 +18,12 @@ Public License. See the accompanying license file for details.
         <description>Intercepted intent</description>
     </intent>
 
+    <intent name="qualifier" constrains="binding">
+        <description>Qualifier intent</description>
+        <qualifier name="qualifier1" default="true"/>
+        <qualifier name="qualifier2"/>
+    </intent>
+
     <policySet name="interceptedPolicy" appliesTo="sca:binding.foo" provides="f3-policy:intercepted">
         <f3-policy:interceptor class="FooInterceptor"/>
     </policySet>

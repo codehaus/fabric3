@@ -63,17 +63,23 @@ public final class Intent extends AbstractDefinition {
     private QName qualifiable;
     private Set<QName> requires;
     private QName constrains;
+    private Set<Qualifier> qualifiers;
+    private boolean defaultIntent;
 
     /**
      * Initializes the name, description and the constrained artifacts.
      *
-     * @param name       the name of the intent.
-     * @param constrains the SCA artifact constrained by this intent.
-     * @param requires   the intents this intent requires if this is a profile intent.
-     * @param intentType the intent type (interaction or implementation)
+     * @param name          the name of the intent.
+     * @param constrains    the SCA artifact constrained by this intent.
+     * @param requires      the intents this intent requires if this is a profile intent
+     * @param qualifiers    any qualifiers defined inline using the <qualifier> element
+     * @param intentType    the intent type (interaction or implementation)
+     * @param defaultIntent true if this is a default qualified intent
      */
-    public Intent(QName name, QName constrains, Set<QName> requires, IntentType intentType) {
+    public Intent(QName name, QName constrains, Set<QName> requires, Set<Qualifier> qualifiers, IntentType intentType, boolean defaultIntent) {
         super(name);
+        this.qualifiers = qualifiers;
+        this.defaultIntent = defaultIntent;
         if (constrains != null) {
             if (!BINDING.equals(constrains) && !IMPLEMENTATION.equals(constrains)) {
                 throw new IllegalArgumentException("Intents can constrain only bindings or implementations");
@@ -135,6 +141,16 @@ public final class Intent extends AbstractDefinition {
     }
 
     /**
+     * Returns a set of qualifiers defined inline using the <qualifier> element. Note that this method does not return qualifiers defined using a
+     * distinct <intent> element.
+     *
+     * @return the qualified intnets
+     */
+    public Set<Qualifier> getQualifiers() {
+        return qualifiers;
+    }
+
+    /**
      * Whether this intent constrains the specified type.
      *
      * @param type Type of the SCA artifact.
@@ -144,4 +160,21 @@ public final class Intent extends AbstractDefinition {
         return type.equals(constrains);
     }
 
+    /**
+     * Returns true if this is a default qualified intent.
+     *
+     * @return true if this is a default qualified intent
+     */
+    public boolean isDefault() {
+        return defaultIntent;
+    }
+
+    /**
+     * Returns what this intent constrains.
+     *
+     * @return what this intent constrains
+     */
+    public QName getConstrains() {
+        return constrains;
+    }
 }

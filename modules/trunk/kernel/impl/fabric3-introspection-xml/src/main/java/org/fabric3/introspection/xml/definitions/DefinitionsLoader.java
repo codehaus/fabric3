@@ -39,7 +39,9 @@ package org.fabric3.introspection.xml.definitions;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -56,7 +58,9 @@ import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.BindingType;
 import org.fabric3.model.type.definitions.ImplementationType;
 import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.IntentType;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.definitions.Qualifier;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.ResourceElementNotFoundException;
@@ -89,7 +93,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
     private XmlResourceElementLoaderRegistry elementLoaderRegistry;
     private Loader loaderRegistry;
 
-    public DefinitionsLoader(@Reference XmlResourceElementLoaderRegistry elementLoaderRegistry,  @Reference Loader loader) {
+    public DefinitionsLoader(@Reference XmlResourceElementLoaderRegistry elementLoaderRegistry, @Reference Loader loader) {
         this.elementLoaderRegistry = elementLoaderRegistry;
         this.loaderRegistry = loader;
     }
@@ -161,6 +165,9 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                         // xcv should not throw?
                         throw new ResourceElementNotFoundException("Definition not found: " + id, id);
                     }
+                    if (candidate instanceof Intent) {
+                        expandQualifiers((Intent) candidate, resource);
+                    }
                 }
                 if (childContext.hasErrors()) {
                     context.addErrors(childContext.getErrors());
@@ -172,6 +179,29 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
             }
         }
 
+    }
+
+    /**
+     * Creates Intent instances from qualifier entries defined in a unqualified (parent) intent.
+     *
+     * @param intent   the unqualified intent
+     * @param resource the contribution resource containing the intents
+     */
+    private void expandQualifiers(Intent intent, Resource resource) {
+        for (Qualifier qualifier : intent.getQualifiers()) {
+            String ns = intent.getName().getNamespaceURI();
+            String localPart = intent.getName().getLocalPart();
+            QName qualifierName = new QName(ns, localPart + "." + qualifier.getName());
+            QName constrains = intent.getConstrains();
+            Set<QName> requires = intent.getRequires();
+            IntentType intentType = intent.getIntentType();
+            boolean def = qualifier.isDefault();
+            Intent qualified = new Intent(qualifierName, constrains, requires, Collections.<Qualifier>emptySet(), intentType, def);
+            QNameSymbol symbol = new QNameSymbol(qualifierName);
+            ResourceElement<QNameSymbol, AbstractDefinition> element = new ResourceElement<QNameSymbol, AbstractDefinition>(symbol);
+            element.setValue(qualified);
+            resource.addResourceElement(element);
+        }
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {

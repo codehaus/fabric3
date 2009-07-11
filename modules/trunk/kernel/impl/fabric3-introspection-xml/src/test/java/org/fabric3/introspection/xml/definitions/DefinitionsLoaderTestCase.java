@@ -76,6 +76,9 @@ public class DefinitionsLoaderTestCase extends TestCase {
 
     private static final QName BINDING_QNAME = new QName("http://docs.oasis-open.org/ns/opencsa/sca/200903", "binding");
     private static final QName INTERCEPTED_INTENT = new QName(Namespaces.POLICY, "intercepted");
+    private static final QName QUALIFIER_INTENT = new QName(Namespaces.POLICY, "qualifier");
+    private static final QName QUALIFIER_QUALFIED1_INTENT = new QName(Namespaces.POLICY, "qualifier.qualifier1");
+    private static final QName QUALIFIER_QUALFIED2_INTENT = new QName(Namespaces.POLICY, "qualifier.qualifier2");
     private static final QName PROVIDED_INTENT = new QName(Namespaces.POLICY, "provided");
     private static final QName PROVIDED_POLICY = new QName(Namespaces.POLICY, "providedPolicy");
     private static final QName INTERCEPTED_POLICY = new QName(Namespaces.POLICY, "interceptedPolicy");
@@ -93,9 +96,10 @@ public class DefinitionsLoaderTestCase extends TestCase {
         loader.load(reader, null, resource, context, null);
 
         List<ResourceElement<?, ?>> elements = resource.getResourceElements();
-        assertEquals(4, elements.size());
+        assertEquals(7, elements.size());
 
         verifyIntent(elements);
+        verifyQualifierIntent(elements);
         verifyInterceptedPolicy(elements);
         verifyProvidedPolicy(elements);
         verifyWsPolicy(elements);
@@ -121,6 +125,20 @@ public class DefinitionsLoaderTestCase extends TestCase {
             }
         }
         assertTrue(verified);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private void verifyQualifierIntent(List<ResourceElement<?, ?>> elements) {
+        // verify intents with qualifier elements are expanded
+        int count = 0;
+        for (ResourceElement<?, ?> element : elements) {
+            Symbol symbol = element.getSymbol();
+            Object key = symbol.getKey();
+            if (QUALIFIER_INTENT.equals(key) || QUALIFIER_QUALFIED1_INTENT.equals(key) || QUALIFIER_QUALFIED2_INTENT.equals(key)) {
+                count++;
+            }
+        }
+        assertEquals(3, count);
     }
 
     private void verifyInterceptedPolicy(List<ResourceElement<?, ?>> elements) {
@@ -196,6 +214,8 @@ public class DefinitionsLoaderTestCase extends TestCase {
         resource = new Resource(null, "application/xml");
         // setup up indexed resource elements
         ResourceElement<QNameSymbol, ?> element = new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(INTERCEPTED_INTENT));
+        resource.addResourceElement(element);
+        element = new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(QUALIFIER_INTENT));
         resource.addResourceElement(element);
         element = new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(PROVIDED_POLICY));
         resource.addResourceElement(element);

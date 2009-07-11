@@ -110,8 +110,7 @@ public class DefinitionsIndexer implements XmlIndexer {
                     NamespaceContext namespaceContext = reader.getNamespaceContext();
                     QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
                     QNameSymbol symbol = new QNameSymbol(name);
-                    ResourceElement<QNameSymbol, AbstractDefinition> element =
-                            new ResourceElement<QNameSymbol, AbstractDefinition>(symbol);
+                    ResourceElement<QNameSymbol, AbstractDefinition> element = new ResourceElement<QNameSymbol, AbstractDefinition>(symbol);
                     resource.addResourceElement(element);
                     break;
                 case XMLStreamConstants.END_DOCUMENT:
