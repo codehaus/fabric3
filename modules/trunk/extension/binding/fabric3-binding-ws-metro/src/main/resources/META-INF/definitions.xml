@@ -8,45 +8,52 @@ Public License. See the accompanying license file for details.
 -->
 <definitions xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
              xmlns:f3-policy="urn:fabric3.org:policy"
-             targetNamespace="urn:fabric3.org:policy">
+             targetNamespace="http://docs.oasis-open.org/ns/opencsa/sca/200903">
 
-    <intent name="messageOptimisation" constrains="binding">
+    <bindingType name="binding.ws" mayProvide="f3-policy:messageOptimisation
+                                                f3-policy:protocolBinding.soap11
+                                                f3-policy:protocolBinding.soap12
+                                                f3-policy:protocolBinding.xsoap12
+                                                f3-policy:protocolBinding.rest
+                                                f3-policy:schemaValidation"/>
+
+    <intent name="f3-policy:messageOptimisation" constrains="binding">
         <description>
             Optimise transfer of binary files.
         </description>
     </intent>
 
-    <intent name="protocolBinding" constrains="binding">
+    <intent name="f3-policy:protocolBinding" constrains="binding">
         <description>
             Unqualified intent for using SOAP 1.1, SOAP 1.2, HTTP etc.
         </description>
     </intent>
 
-    <intent name="protocolBinding.soap11" constrains="binding">
+    <intent name="f3-policy:protocolBinding.soap11" constrains="binding">
         <description>
             Qualified intent for using SOAP 1.1.
         </description>
     </intent>
 
-    <intent name="protocolBinding.soap12" constrains="binding">
+    <intent name="f3-policy:protocolBinding.soap12" constrains="binding">
         <description>
             Unqualified intent for using SOAP 1.2.
         </description>
     </intent>
 
-    <intent name="protocolBinding.xsoap12" constrains="binding">
+    <intent name="f3-policy:protocolBinding.xsoap12" constrains="binding">
         <description>
             Unqualified intent for using SOAP 1.2 and WSDL generation with Metro.
         </description>
     </intent>
 
-    <intent name="protocolBinding.rest" constrains="binding">
+    <intent name="f3-policy:protocolBinding.rest" constrains="binding">
         <description>
             Unqualified intent for using HTTP.
         </description>
     </intent>
 
-    <intent name="validateSchema">
+    <intent name="f3-policy:validateSchema">
         <description>
             Intent for requesting schema validation.
         </description>
