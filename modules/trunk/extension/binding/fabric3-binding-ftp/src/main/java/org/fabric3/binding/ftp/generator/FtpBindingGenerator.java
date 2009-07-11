@@ -139,17 +139,17 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
 
         PolicySet policySet = policySets.iterator().next();
 
-        QName policyQName = policySet.getExtensionName();
+        QName policyQName = policySet.getExpressionName();
         if (!policyQName.equals(Constants.POLICY_QNAME)) {
             throw new GenerationException("Unexpected policy element " + policyQName);
         }
 
-        Element policyElement = policySet.getExtension();
-        String user = policyElement.getAttribute("user");
+        Element expression = policySet.getExpression();
+        String user = expression.getAttribute("user");
         if (user == null) {
             throw new GenerationException("User name not specified in security policy");
         }
-        String password = policyElement.getAttribute("password");
+        String password = expression.getAttribute("password");
         if (password == null) {
             throw new GenerationException("Password not specified in security policy");
         }

@@ -133,9 +133,9 @@ public class DefinitionsLoaderTestCase extends TestCase {
                 assertEquals(INTERCEPTED_POLICY, policySet.getName());
                 assertTrue(policySet.doesProvide(INTERCEPTED_INTENT));
 
-                QName extensionName = policySet.getExtensionName();
-                assertEquals(Namespaces.POLICY, extensionName.getNamespaceURI());
-                assertEquals("interceptor", extensionName.getLocalPart());
+                QName expressionName = policySet.getExpressionName();
+                assertEquals(Namespaces.POLICY, expressionName.getNamespaceURI());
+                assertEquals("interceptor", expressionName.getLocalPart());
                 assertEquals(PolicyPhase.INTERCEPTION, policySet.getPhase());
                 verified = true;
             }
@@ -153,9 +153,9 @@ public class DefinitionsLoaderTestCase extends TestCase {
                 assertEquals(PROVIDED_POLICY, policySet.getName());
                 assertTrue(policySet.doesProvide(PROVIDED_INTENT));
 
-                QName extensionName = policySet.getExtensionName();
-                assertEquals(Namespaces.POLICY, extensionName.getNamespaceURI());
-                assertEquals("someElement", extensionName.getLocalPart());
+                QName expressionName = policySet.getExpressionName();
+                assertEquals(Namespaces.POLICY, expressionName.getNamespaceURI());
+                assertEquals("someElement", expressionName.getLocalPart());
                 assertEquals(PolicyPhase.PROVIDED, policySet.getPhase());
                 verified = true;
             }
@@ -172,9 +172,9 @@ public class DefinitionsLoaderTestCase extends TestCase {
                 assertNotNull(policySet);
                 assertEquals(WS_POLICY, policySet.getName());
 
-                QName extensionName = policySet.getExtensionName();
-                assertEquals(WS_POLICY_NS, extensionName.getNamespaceURI());
-                assertEquals("Policy", extensionName.getLocalPart());
+                QName expressionName = policySet.getExpressionName();
+                assertEquals(WS_POLICY_NS, expressionName.getNamespaceURI());
+                assertEquals("Policy", expressionName.getLocalPart());
                 verified = true;
             }
         }

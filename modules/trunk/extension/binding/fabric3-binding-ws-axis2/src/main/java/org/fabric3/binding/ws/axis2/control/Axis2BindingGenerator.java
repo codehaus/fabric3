@@ -136,7 +136,7 @@ public class Axis2BindingGenerator implements BindingGenerator<WsBindingDefiniti
 
             for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
 
-                Element policyDefinition = policySet.getExtension();
+                Element policyDefinition = policySet.getExpression();
                 QName qname = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
                 if (POLICY_ELEMENT.equals(qname)) {
                     throw new Axis2GenerationException("Unknow policy element " + qname);

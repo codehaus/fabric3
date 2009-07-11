@@ -383,9 +383,9 @@ public class WireGeneratorImpl implements WireGenerator {
 
         Set<PhysicalInterceptorDefinition> interceptors = new LinkedHashSet<PhysicalInterceptorDefinition>();
         for (PolicySet policy : policies) {
-            QName qName = policy.getExtensionName();
-            InterceptorGenerator generator = generatorRegistry.getInterceptorDefinitionGenerator(qName);
-            PhysicalInterceptorDefinition pid = generator.generate(policy.getExtension(), metadata, operation);
+            QName expressionName = policy.getExpressionName();
+            InterceptorGenerator generator = generatorRegistry.getInterceptorDefinitionGenerator(expressionName);
+            PhysicalInterceptorDefinition pid = generator.generate(policy.getExpression(), metadata, operation);
             if (pid != null) {
                 URI contributionClassLoaderId = operation.getParent().getParent().getDefinition().getContributionUri();
                 pid.setWireClassLoaderId(contributionClassLoaderId);

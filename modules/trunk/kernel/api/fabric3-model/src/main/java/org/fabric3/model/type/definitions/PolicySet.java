@@ -57,66 +57,47 @@ import org.w3c.dom.Element;
 public final class PolicySet extends AbstractDefinition {
     private static final long serialVersionUID = -4507145141780962741L;
 
-    /**
-     * Intents provided by this policy set.
-     */
-    private final Set<QName> provides;
-    private URI contributionUri;
-
-    /**
-     * Policy set extension
-     */
-    private final Element extension;
-
-    /**
-     * XPath expression for the apples to attribute.
-     */
+    private final Set<QName> providedIntents;
+    private final Element expression;
     private final String appliesTo;
-
-    /**
-     * XPath expression for the attach to attribute.
-     */
     private final String attachTo;
-
-    /**
-     * The phase at which the policy is applied.
-     */
     private final PolicyPhase phase;
+    private URI contributionUri;
 
     /**
      * Initializes the state for the policy set.
      *
-     * @param name            Name of the policy set.
-     * @param provides        Intents provided by this policy set.
-     * @param appliesTo       XPath expression for the applies to attribute.
-     * @param attachTo        XPath expression for the attach to attribute.
-     * @param extension       Extension for the policy set.
-     * @param phase           The phase at which the policy is applied.
-     * @param contributionUri the contribution this policy set is contained in
+     * @param name            the name of the policy set.
+     * @param providedIntents the intents provided by this policy set.
+     * @param appliesTo       the XPath expression for the applies to attribute.
+     * @param attachTo        the XPath expression for the attach to attribute.
+     * @param expression      the policy set expression. The expression is a DOM representing the parsed policy configuration.
+     * @param phase           the phase at which the policy is applied.
+     * @param uri             the URI of the contribution this policy set is contained in
      */
-    public PolicySet(QName name, Set<QName> provides, String appliesTo, String attachTo, Element extension, PolicyPhase phase, URI contributionUri) {
+    public PolicySet(QName name, Set<QName> providedIntents, String appliesTo, String attachTo, Element expression, PolicyPhase phase, URI uri) {
         super(name);
-        this.provides = provides;
+        this.providedIntents = providedIntents;
         this.attachTo = "".equals(attachTo) ? null : attachTo;
         this.appliesTo = "".equals(appliesTo) ? null : appliesTo;
-        this.extension = extension;
+        this.expression = expression;
         this.phase = phase;
-        this.contributionUri = contributionUri;
+        this.contributionUri = uri;
     }
 
     /**
-     * XPath expression to the element to which the policy set applies.
+     * Returns the XPath expression to the element to which the policy set applies.
      *
-     * @return The apples to XPath expression.
+     * @return the apples to XPath expression.
      */
     public String getAppliesTo() {
         return appliesTo;
     }
 
     /**
-     * XPath expression to the element to which the policy set attaches.
+     * Return the XPath expression to the element to which the policy set attaches.
      *
-     * @return The attaches to XPath expression.
+     * @return the attaches to XPath expression.
      */
     public String getAttachTo() {
         return attachTo;
@@ -129,7 +110,7 @@ public final class PolicySet extends AbstractDefinition {
      * @return True if this policy set provides to the specified intent.
      */
     public boolean doesProvide(QName intent) {
-        return provides.contains(intent);
+        return providedIntents.contains(intent);
     }
 
     /**
@@ -139,32 +120,41 @@ public final class PolicySet extends AbstractDefinition {
      * @return True if this policy set provides to the specified intent.
      */
     public boolean doesProvide(Set<QName> intents) {
-        return provides.containsAll(intents);
+        return providedIntents.containsAll(intents);
     }
 
     /**
-     * @return Extension for the policy set.
+     * Returns the policy set expression. The expression is an opaque DOM containing the parsed policy expression, which may be a Fabric3 policy
+     * expression, a WS-Policy expression, or a custom policy language.
+     *
+     * @return the policy set expression.
      */
-    public Element getExtension() {
-        return extension;
+    public Element getExpression() {
+        return expression;
     }
 
     /**
-     * @return Qualified name of the extension element.
+     * Returns the qualified name of the policy expression element.
+     *
+     * @return the qualified name of the policy expression element
      */
-    public QName getExtensionName() {
-        return new QName(extension.getNamespaceURI(), extension.getLocalName());
+    public QName getExpressionName() {
+        return new QName(expression.getNamespaceURI(), expression.getLocalName());
     }
 
     /**
-     * @return Gets the policy phase.
+     * Returns the policy phase.
+     *
+     * @return the policy phase
      */
     public PolicyPhase getPhase() {
         return phase;
     }
 
     /**
-     * @return Gets the contribution this policy set is contained in.
+     * Returns the contribution this policy set is contained in.
+     *
+     * @return the contribution this policy set is contained in
      */
     public URI getContributionUri() {
         return contributionUri;
@@ -181,9 +171,9 @@ public final class PolicySet extends AbstractDefinition {
         if (appliesTo != null ? !appliesTo.equals(policySet.appliesTo) : policySet.appliesTo != null) return false;
         if (attachTo != null ? !attachTo.equals(policySet.attachTo) : policySet.attachTo != null) return false;
         if (contributionUri != null ? !contributionUri.equals(policySet.contributionUri) : policySet.contributionUri != null) return false;
-        if (extension != null ? !extension.equals(policySet.extension) : policySet.extension != null) return false;
+        if (expression != null ? !expression.equals(policySet.expression) : policySet.expression != null) return false;
         if (phase != policySet.phase) return false;
-        if (provides != null ? !provides.equals(policySet.provides) : policySet.provides != null) return false;
+        if (providedIntents != null ? !providedIntents.equals(policySet.providedIntents) : policySet.providedIntents != null) return false;
 
         return true;
     }
@@ -191,9 +181,9 @@ public final class PolicySet extends AbstractDefinition {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (provides != null ? provides.hashCode() : 0);
+        result = 31 * result + (providedIntents != null ? providedIntents.hashCode() : 0);
         result = 31 * result + (contributionUri != null ? contributionUri.hashCode() : 0);
-        result = 31 * result + (extension != null ? extension.hashCode() : 0);
+        result = 31 * result + (expression != null ? expression.hashCode() : 0);
         result = 31 * result + (appliesTo != null ? appliesTo.hashCode() : 0);
         result = 31 * result + (attachTo != null ? attachTo.hashCode() : 0);
         result = 31 * result + (phase != null ? phase.hashCode() : 0);

@@ -76,12 +76,12 @@ public class GenerationHelper {
         for (Map.Entry<LogicalOperation, List<PolicySet>> entry : policy.getProvidedPolicySets().entrySet()) {
             String operationName = entry.getKey().getDefinition().getName();
             for (PolicySet policySet : entry.getValue()) {
-                Element expression = policySet.getExtension();
+                Element expression = policySet.getExpression();
                 Node node = expression.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
                 if (node == null) {
                     URI uri = policySet.getContributionUri();
-                    QName extensionName = policySet.getExtensionName();
-                    throw new GenerationException("Invalid policy in contribution " + uri + ". No id specified: " + extensionName);
+                    QName expressionName = policySet.getExpressionName();
+                    throw new GenerationException("Invalid policy in contribution " + uri + ". No id specified: " + expressionName);
                 }
                 String id = node.getNodeValue();
 
