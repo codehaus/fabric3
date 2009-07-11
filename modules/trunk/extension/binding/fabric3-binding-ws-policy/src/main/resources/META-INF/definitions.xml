@@ -18,7 +18,7 @@ Public License. See the accompanying license file for details.
              xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
              xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
 
-    <policySet name="usernameTokenPolicy" provides="sca:clientAuthentication.message" appliesTo="binding.ws">
+    <policySet name="usernameTokenPolicy" provides="sca:clientAuthentication.message" appliesTo="sca:binding.ws">
         <Policy wsu:Id="UsernameTokenPolicy" xmlns="http://www.w3.org/ns/ws-policy">
             <wsp:ExactlyOne>
                 <wsp:All>
