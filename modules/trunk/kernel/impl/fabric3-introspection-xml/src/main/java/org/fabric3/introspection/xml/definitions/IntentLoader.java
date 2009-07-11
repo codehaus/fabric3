@@ -131,7 +131,8 @@ public class IntentLoader implements TypeLoader<Intent> {
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"name".equals(name) && !"constrains".equals(name) && !"requires".equals(name)) {
+            if (!"name".equals(name) && !"constrains".equals(name) && !"requires".equals(name) && !"excludes".equals(name)
+                    && !"intentType".equals(name) && !"appliesTo".equals(name) && !"mutuallyExclusive".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
