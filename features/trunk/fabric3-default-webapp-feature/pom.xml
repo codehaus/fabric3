@@ -70,7 +70,7 @@ Public License. See the accompanying license file for details.
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-security-intents</artifactId>
+                            <artifactId>fabric3-sca-intents</artifactId>
                             <version>1.2-SNAPSHOT</version>
                         </dependency>
 
