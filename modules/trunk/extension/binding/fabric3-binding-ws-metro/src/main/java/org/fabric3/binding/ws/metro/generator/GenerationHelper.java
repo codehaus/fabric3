@@ -38,11 +38,14 @@
 
 package org.fabric3.binding.ws.metro.generator;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.jws.WebMethod;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
@@ -50,6 +53,8 @@ import org.w3c.dom.Node;
 
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.Policy;
@@ -66,15 +71,16 @@ public class GenerationHelper {
     /**
      * Normalizes policy sets by mapping policy expressions to the operations they are attached to.
      *
-     * @param policy the policy for the wire
+     * @param serviceClass the service endpoint class
+     * @param policy       the policy for the wire
      * @return the normalized mappings
      * @throws GenerationException if the policy expression is invalid
      */
-    public static List<PolicyExpressionMapping> createMappings(Policy policy) throws GenerationException {
+    public static List<PolicyExpressionMapping> createMappings(Policy policy, Class<?> serviceClass) throws GenerationException {
         // temporarily store mappings keyed by policy expression id
         Map<String, PolicyExpressionMapping> mappings = new HashMap<String, PolicyExpressionMapping>();
         for (Map.Entry<LogicalOperation, List<PolicySet>> entry : policy.getProvidedPolicySets().entrySet()) {
-            String operationName = entry.getKey().getDefinition().getName();
+            Operation definition = entry.getKey().getDefinition();
             for (PolicySet policySet : entry.getValue()) {
                 Element expression = policySet.getExpression();
                 Node node = expression.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
@@ -90,10 +96,57 @@ public class GenerationHelper {
                     mapping = new PolicyExpressionMapping(id, expression);
                     mappings.put(id, mapping);
                 }
-                mapping.addOperation(operationName);
+                String operationName = getWsdlName(definition, serviceClass);
+                mapping.addOperationName(operationName);
             }
         }
         return new ArrayList<PolicyExpressionMapping>(mappings.values());
+    }
+
+    /**
+     * Returns the WSDL name for an operation following JAX-WS rules. Namely, if present the <code>@WebMethod.operationName()</code> attribute value
+     * is used, otherwise the default operation name is returned.
+     *
+     * @param operation    the operation definition
+     * @param serviceClass the implementation class
+     * @return the WSDL operation name
+     */
+    private static String getWsdlName(Operation operation, Class<?> serviceClass) {
+        Method method = findMethod(operation, serviceClass);
+        WebMethod annotation = method.getAnnotation(WebMethod.class);
+        if (annotation == null || annotation.operationName().length() < 1) {
+            return operation.getName();
+        }
+        return annotation.operationName();
+    }
+
+    /**
+     * Returns a Method corresponding to the operation definition on a service implementation class.
+     *
+     * @param operation    the operation definition
+     * @param serviceClass the implementation class
+     * @return the method
+     */
+    @SuppressWarnings({"unchecked"})
+    private static Method findMethod(Operation operation, Class<?> serviceClass) {
+        DataType<List<DataType>> input = operation.getInputType();
+        Class<?>[] params = new Class<?>[input.getLogical().size()];
+        int i = 0;
+        for (DataType<Type> type : input.getLogical()) {
+            Type logical = type.getLogical();
+            if (!(logical instanceof Class)) {
+                // not possible
+                throw new AssertionError();
+            }
+            params[i] = (Class<?>) logical;
+            i++;
+        }
+        try {
+            return serviceClass.getMethod(operation.getName(), params);
+        } catch (NoSuchMethodException e) {
+            // should not happen
+            throw new AssertionError(e);
+        }
     }
 
 

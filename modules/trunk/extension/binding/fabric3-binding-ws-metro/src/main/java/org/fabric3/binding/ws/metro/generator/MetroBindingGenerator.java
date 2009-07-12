@@ -55,7 +55,9 @@ import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.model.WsBindingDefinition;
+import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -70,22 +72,31 @@ import org.fabric3.spi.policy.Policy;
 public class MetroBindingGenerator implements BindingGenerator<WsBindingDefinition> {
     private EndpointResolver endpointResolver;
     private EndpointSynthesizer synthesizer;
+    private ClassLoaderRegistry classLoaderRegistry;
 
-    public MetroBindingGenerator(@Reference EndpointResolver endpointResolver, @Reference EndpointSynthesizer synthesizer) {
+    public MetroBindingGenerator(@Reference EndpointResolver endpointResolver,
+                                 @Reference EndpointSynthesizer synthesizer,
+                                 @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.endpointResolver = endpointResolver;
         this.synthesizer = synthesizer;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public MetroWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                         ServiceContract<?> contract,
                                                         List<LogicalOperation> operations,
                                                         Policy policy) throws GenerationException {
+        if (!(contract instanceof JavaServiceContract)) {
+            throw new UnsupportedOperationException("Support for non-Java contracts not yet implemented");
+        }
+        JavaServiceContract javaContract = (JavaServiceContract) contract;
+        Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
         URL wsdlLocation = getWsdlLocation(definition);
         ServiceEndpointDefinition endpointDefinition;
         URI targetUri = binding.getDefinition().getTargetUri();
         if (targetUri != null) {
-            endpointDefinition = synthesizer.synthesizeServiceEndpoint(contract, targetUri);
+            endpointDefinition = synthesizer.synthesizeServiceEndpoint(javaContract, serviceClass, targetUri);
         } else {
             // TODO error check WSDL element in binding loader
             // no targetUri specified, check wsdlElement
@@ -95,7 +106,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         }
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
-        List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
+        List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
         return new MetroWireSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
     }
 
@@ -103,6 +114,11 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
                                                         ServiceContract<?> contract,
                                                         List<LogicalOperation> operations,
                                                         Policy policy) throws GenerationException {
+        if (!(contract instanceof JavaServiceContract)) {
+            throw new UnsupportedOperationException("Support for non-Java contracts not yet implemented");
+        }
+        JavaServiceContract javaContract = (JavaServiceContract) contract;
+        Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
         URL wsdlLocation = getWsdlLocation(definition);
         URI targetUri = binding.getDefinition().getTargetUri();
@@ -111,7 +127,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
             try {
                 // TODO get rid of need to decode
                 URL url = new URL(URLDecoder.decode(targetUri.toASCIIString(), "UTF-8"));
-                endpointDefinition = synthesizer.synthesizeReferenceEndpoint(contract, url);
+                endpointDefinition = synthesizer.synthesizeReferenceEndpoint(javaContract, serviceClass, url);
             } catch (MalformedURLException e) {
                 throw new GenerationException(e);
             } catch (UnsupportedEncodingException e) {
@@ -127,7 +143,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
 
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
-        List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
+        List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
 
         // obtain security information such as username/password
         SecurityConfiguration configuration = null;
@@ -158,6 +174,24 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
             }
         }
         return wsdlLocation;
+    }
+
+    private Class<?> loadServiceClass(LogicalBinding<WsBindingDefinition> binding, JavaServiceContract javaContract) {
+        URI classLoaderUri = binding.getParent().getParent().getDefinition().getContributionUri();
+        // check if a namespace is assigned
+        ClassLoader loader = classLoaderRegistry.getClassLoader(classLoaderUri);
+        if (loader == null) {
+            // programming error
+            throw new AssertionError("Classloader not found: " + classLoaderUri);
+        }
+        Class<?> clazz;
+        try {
+            clazz = loader.loadClass(javaContract.getInterfaceClass());
+        } catch (ClassNotFoundException e) {
+            // programming error
+            throw new AssertionError(e);
+        }
+        return clazz;
     }
 
 

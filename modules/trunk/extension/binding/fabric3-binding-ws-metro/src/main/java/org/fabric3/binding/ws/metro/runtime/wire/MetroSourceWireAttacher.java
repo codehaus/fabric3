@@ -149,22 +149,25 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             }
             File generatedWsdl = null;
             List<File> generatedSchemas = null;
-            if (!source.getMappings().isEmpty()) {
-                // if policy is configured for the endpoint, generate a WSDL with the policy attachments
-                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, false);
-                generatedWsdl = artifacts.getWsdl();
-                generatedSchemas = artifacts.getSchemas();
-                for (PolicyExpressionMapping mapping : source.getMappings()) {
-                    policyAttacher.attach(generatedWsdl, mapping.getOperations(), mapping.getPolicyExpression());
-                }
-                wsdlUrl = generatedWsdl.toURI().toURL();
-            }
-            ClassLoader extensionClassLoader = updateClassLoader(seiClass);
-
-            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
             ClassLoader old = Thread.currentThread().getContextClassLoader();
+            ClassLoader extensionClassLoader = updateClassLoader(seiClass);
             BindingID bindingID;
+            WebServiceFeature[] features;
             try {
+                Thread.currentThread().setContextClassLoader(seiClass.getClassLoader());
+                if (!source.getMappings().isEmpty()) {
+                    // if policy is configured for the endpoint, generate a WSDL with the policy attachments
+                    GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, false);
+                    generatedWsdl = artifacts.getWsdl();
+                    generatedSchemas = artifacts.getSchemas();
+                    for (PolicyExpressionMapping mapping : source.getMappings()) {
+                        policyAttacher.attach(generatedWsdl, mapping.getOperationNames(), mapping.getPolicyExpression());
+                    }
+                    wsdlUrl = generatedWsdl.toURI().toURL();
+                }
+
+
+                features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
                 Thread.currentThread().setContextClassLoader(extensionClassLoader);
                 bindingID = bindingIdResolver.resolveBindingId(requestedIntents, requestedPolicySets);
             } finally {

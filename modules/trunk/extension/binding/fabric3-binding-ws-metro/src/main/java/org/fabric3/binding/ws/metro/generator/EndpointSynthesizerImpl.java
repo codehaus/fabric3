@@ -39,12 +39,12 @@ package org.fabric3.binding.ws.metro.generator;
 
 import java.net.URI;
 import java.net.URL;
+import javax.jws.WebService;
 import javax.xml.namespace.QName;
 
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.model.type.service.JavaServiceContract;
-import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * Default EndpointSynthesizer implementation.
@@ -53,32 +53,138 @@ import org.fabric3.model.type.service.ServiceContract;
  */
 public class EndpointSynthesizerImpl implements EndpointSynthesizer {
 
-    public ReferenceEndpointDefinition synthesizeReferenceEndpoint(ServiceContract<?> contract, URL url) throws UnsupportedContractException {
-        if (!(contract instanceof JavaServiceContract)) {
-            throw new UnsupportedContractException("Service contract type not supported: " + contract.getClass());
+    public ReferenceEndpointDefinition synthesizeReferenceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URL url) {
+        WebService annotation = serviceClass.getAnnotation(WebService.class);
+        if (annotation != null) {
+            return createDefinition(annotation, serviceClass, url);
+        } else {
+            return createDefaultDefinition(serviceClass, url);
         }
-        JavaServiceContract javaContract = (JavaServiceContract) contract;
-        String qualifedName = javaContract.getInterfaceClass();
-        String packageName = qualifedName.substring(0, qualifedName.lastIndexOf('.'));
-        String namespace = deriveNamespace(packageName);
-        String unqualifiedName = qualifedName.substring(qualifedName.lastIndexOf('.') + 1);
-        QName serviceName = new QName(namespace, unqualifiedName + "Service");
-        QName portName = new QName(namespace, unqualifiedName + "Port");
-        return new ReferenceEndpointDefinition(serviceName, portName, url);
     }
 
-    public ServiceEndpointDefinition synthesizeServiceEndpoint(ServiceContract<?> contract, URI uri) throws UnsupportedContractException {
-        if (!(contract instanceof JavaServiceContract)) {
-            throw new UnsupportedContractException("Service contract type not supported: " + contract.getClass());
+    public ServiceEndpointDefinition synthesizeServiceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URI uri) {
+        WebService annotation = serviceClass.getAnnotation(WebService.class);
+        if (annotation != null) {
+            return createDefinition(annotation, serviceClass, uri);
+        } else {
+            return createDefaultDefinition(serviceClass, uri);
         }
-        JavaServiceContract javaContract = (JavaServiceContract) contract;
-        String qualifedName = javaContract.getInterfaceClass();
-        String packageName = qualifedName.substring(0, qualifedName.lastIndexOf('.'));
-        String unqualifiedName = qualifedName.substring(qualifedName.lastIndexOf('.') + 1);
+    }
+
+    /**
+     * Creates a ReferenceEndpointDefinition following JAX-WS rules (section 3.11) for deriving service and port names from a class containing an
+     * <code>@WebService</code> annotation.
+     *
+     * @param annotation   the annotation
+     * @param serviceClass the service class
+     * @param url          the target endpoint URL
+     * @return the ServiceEndpointDefinition
+     */
+    private ReferenceEndpointDefinition createDefinition(WebService annotation, Class<?> serviceClass, URL url) {
+        String namespace = getNamespace(annotation, serviceClass);
+        QName serviceQName = getServiceName(annotation, serviceClass, namespace);
+        QName portQName = getPortName(annotation, serviceClass, namespace);
+        return new ReferenceEndpointDefinition(serviceQName, portQName, url);
+    }
+
+    /**
+     * Creates a ReferenceEndpointDefinition following JAX-WS rules (section 3.11) for deriving default service and port names from a class.
+     *
+     * @param serviceClass the service class
+     * @param url          the target endpoint URL
+     * @return the ServiceEndpointDefinition
+     */
+    private ReferenceEndpointDefinition createDefaultDefinition(Class<?> serviceClass, URL url) {
+        String packageName = serviceClass.getPackage().getName();
+        String className = serviceClass.getSimpleName();
         String namespace = deriveNamespace(packageName);
-        QName serviceName = new QName(namespace, unqualifiedName + "Service");
-        QName portName = new QName(namespace, unqualifiedName + "Port");
-        return new ServiceEndpointDefinition(serviceName, portName, uri);
+        QName serviceQName = new QName(namespace, className + "Service");
+        QName portQName = new QName(namespace, className + "Port");
+        return new ReferenceEndpointDefinition(serviceQName, portQName, url);
+    }
+
+    /**
+     * Creates a ServiceEndpointDefinition following JAX-WS rules (section 3.11) for deriving service and port names from a class containing an
+     * <code>@WebService</code> annotation.
+     *
+     * @param annotation   the annotation
+     * @param serviceClass the service class
+     * @param uri          the service path
+     * @return the ServiceEndpointDefinition
+     */
+    private ServiceEndpointDefinition createDefinition(WebService annotation, Class<?> serviceClass, URI uri) {
+        String namespace = getNamespace(annotation, serviceClass);
+        QName serviceQName = getServiceName(annotation, serviceClass, namespace);
+        QName portQName = getPortName(annotation, serviceClass, namespace);
+        return new ServiceEndpointDefinition(serviceQName, portQName, uri);
+    }
+
+    /**
+     * Creates a ServiceEndpointDefinition following JAX-WS rules (section 3.11) for deriving default service and port names from a class.
+     *
+     * @param serviceClass the service class
+     * @param uri          the service path
+     * @return the ServiceEndpointDefinition
+     */
+    private ServiceEndpointDefinition createDefaultDefinition(Class<?> serviceClass, URI uri) {
+        String packageName = serviceClass.getPackage().getName();
+        String className = serviceClass.getSimpleName();
+        String namespace = deriveNamespace(packageName);
+        QName serviceQName = new QName(namespace, className + "Service");
+        QName portQName = new QName(namespace, className + "Port");
+        return new ServiceEndpointDefinition(serviceQName, portQName, uri);
+    }
+
+    /**
+     * Returns the endpoint namespace according to JAX-WS rules.
+     *
+     * @param annotation   the WebService annotation on the endpoint implementation
+     * @param serviceClass the endpoint implementation
+     * @return the namsespace
+     */
+    private String getNamespace(WebService annotation, Class<?> serviceClass) {
+        String namespace = annotation.targetNamespace();
+        if (namespace.length() < 1) {
+            String packageName = serviceClass.getPackage().getName();
+            namespace = deriveNamespace(packageName);
+        }
+        return namespace;
+    }
+
+    /**
+     * Returns the WSDL service name according to JAX-WS rules.
+     *
+     * @param annotation   the WebService annotation on the endpoint implementation
+     * @param serviceClass the endpoint implementation
+     * @param namespace    the namespace
+     * @return the service name
+     */
+    private QName getServiceName(WebService annotation, Class<?> serviceClass, String namespace) {
+        String serviceName = annotation.serviceName();
+        if (serviceName.length() < 1) {
+            serviceName = serviceClass.getSimpleName() + "Service";
+        }
+        return new QName(namespace, serviceName);
+    }
+
+    /**
+     * Returns the WSDL port name according to JAX-WS rules.
+     *
+     * @param annotation   the WebService annotation on the endpoint implementation
+     * @param serviceClass the endpoint implementation
+     * @param namespace    the namespace
+     * @return the service name
+     */
+    private QName getPortName(WebService annotation, Class<?> serviceClass, String namespace) {
+        String portName = annotation.portName();
+        if (portName.length() < 1) {
+            if (annotation.name().length() < 1) {
+                portName = serviceClass.getSimpleName() + "Port";
+            } else {
+                portName = annotation.name() + "Port";
+            }
+        }
+        return new QName(namespace, portName);
     }
 
     /**

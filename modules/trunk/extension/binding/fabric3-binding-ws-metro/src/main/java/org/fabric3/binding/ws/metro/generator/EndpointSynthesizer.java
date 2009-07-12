@@ -42,10 +42,10 @@ import java.net.URL;
 
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.service.JavaServiceContract;
 
 /**
- * Synthesizes endpoint information from a service contract.
+ * Synthesizes endpoint information from a Java service contract.
  *
  * @version $Rev$ $Date$
  */
@@ -54,21 +54,21 @@ public interface EndpointSynthesizer {
     /**
      * Synthesize reference endpoint information.
      *
-     * @param contract the service contract
-     * @param url      the target endpoint URL
+     * @param contract     the service contract
+     * @param serviceClass the service endpoint implementation
+     * @param url          the target endpoint URL
      * @return the     endpoint information
-     * @throws UnsupportedContractException if an unsupported service contract type is passed as an argument
      */
-    ReferenceEndpointDefinition synthesizeReferenceEndpoint(ServiceContract<?> contract, URL url) throws UnsupportedContractException;
+    ReferenceEndpointDefinition synthesizeReferenceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URL url);
 
     /**
      * Synthesize service endpoint information.
      *
-     * @param contract    the service contract
-     * @param servicePath the relative service path
+     * @param contract     the service contract
+     * @param serviceClass the service endpoint implementation
+     * @param servicePath  the relative service path
      * @return the     endpoint information
-     * @throws UnsupportedContractException if an unsupported service contract type is passed as an argument
      */
-    ServiceEndpointDefinition synthesizeServiceEndpoint(ServiceContract<?> contract, URI servicePath) throws UnsupportedContractException;
+    ServiceEndpointDefinition synthesizeServiceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URI servicePath);
 
 }

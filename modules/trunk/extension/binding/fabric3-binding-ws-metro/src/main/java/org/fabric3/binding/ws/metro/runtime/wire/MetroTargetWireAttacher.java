@@ -135,7 +135,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                 GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, true);
                 generatedWsdl = artifacts.getWsdl();
                 for (PolicyExpressionMapping mapping : target.getMappings()) {
-                    policyAttacher.attach(generatedWsdl, mapping.getOperations(), mapping.getPolicyExpression());
+                    policyAttacher.attach(generatedWsdl, mapping.getOperationNames(), mapping.getPolicyExpression());
                 }
             }
 

@@ -44,8 +44,11 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 /**
- * Maps policy expressions to the operations they are attached to. Operation overloading is not supported (which is also a limitation of how Metro is
- * configured).
+ * Maps policy expressions to the WSDL operations they are attached to. Note that operation names may not correspond to a Java method name on the
+ * service implementation class as the WSDL operation name may be specified using the <code>@WebMethod.operationName()</code> attribute. In this case,
+ * the WSDL operation name will correspond to the attribute value and not the method name.
+ * <p/>
+ * Operation overloading is not supported.
  *
  * @version $Rev$ $Date$
  */
@@ -76,11 +79,11 @@ public class PolicyExpressionMapping implements Serializable {
         return policyExpression;
     }
 
-    public void addOperation(String name) {
+    public void addOperationName(String name) {
         operations.add(name);
     }
 
-    public List<String> getOperations() {
+    public List<String> getOperationNames() {
         return operations;
     }
 
