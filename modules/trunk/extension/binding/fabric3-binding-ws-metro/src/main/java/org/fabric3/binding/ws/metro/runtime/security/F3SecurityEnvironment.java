@@ -121,12 +121,12 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import org.fabric3.api.SecuritySubject;
 import org.fabric3.binding.ws.metro.runtime.MetroConstants;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.security.AuthenticationException;
 import org.fabric3.spi.security.AuthenticationService;
-import org.fabric3.api.SecuritySubject;
 import org.fabric3.spi.security.UsernamePasswordToken;
 
 /**
@@ -771,20 +771,12 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
             } else if (dir != null) {
                 trustStoreHandle = new File(dir, "config" + File.separator + "fabric3-truststore.jks");
                 if (!trustStoreHandle.exists()) {
+                    defaultTrustStore();
                     return;
                 }
             } else {
-                if (keyStore != null) {
-                    // default the truststore to the keystore if it is not explicitly configured
-                    trustStore = keyStore;
-                    trustStorePassword = keyStorePassword;
-                    trustStoreType = keyStoreType;
-                    System.setProperty("javax.net.ssl.trustStore", keyStoreHandle.getCanonicalPath());
-                    return;
-                } else {
-                    // skip truststore initialization as it is not setup
-                    return;
-                }
+                defaultTrustStore();
+                return;
             }
             char[] trustStorePasswordChars = null;
             if (trustStorePassword != null) {
@@ -812,6 +804,16 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void defaultTrustStore() throws IOException {
+        if (keyStore != null) {
+            // default the truststore to the keystore if it is not explicitly configured
+            trustStore = keyStore;
+            trustStorePassword = keyStorePassword;
+            trustStoreType = keyStoreType;
+            System.setProperty("javax.net.ssl.trustStore", keyStoreHandle.getCanonicalPath());
         }
     }
 
