@@ -80,10 +80,7 @@ public class WsdlGeneratorImpl implements WsdlGenerator {
         generator.doGeneration();
 
         // resolve the generated XSD files
-        // TODO support multiple schema artifacts
-        List<File> schemas = new ArrayList<File>();
-        schemas.add(wsdlResolver.getSchema());
-
+        List<File> schemas = new ArrayList<File>(wsdlResolver.getSchemas());
         return new GeneratedArtifacts(wsdlResolver.getConcreteWsdl(), schemas);
     }
 }

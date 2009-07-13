@@ -40,6 +40,8 @@ package org.fabric3.binding.ws.metro.runtime.policy;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.Holder;
@@ -58,7 +60,7 @@ public class WsdlFileResolver implements WSDLResolver {
     private File directory;
     private boolean client;
     private File concreteWsdl;
-    private File schema;
+    private List<File> schemas;
 
 
     /**
@@ -72,6 +74,7 @@ public class WsdlFileResolver implements WSDLResolver {
         this.packageName = packageName;
         this.directory = directory;
         this.client = client;
+        schemas = new ArrayList<File>();
     }
 
     public Result getWSDL(String fileName) {
@@ -95,8 +98,8 @@ public class WsdlFileResolver implements WSDLResolver {
         return concreteWsdl;
     }
 
-    public File getSchema() {
-        return schema;
+    public List<File> getSchemas() {
+        return schemas;
     }
 
     private File createFile(String fileName) {
@@ -109,7 +112,8 @@ public class WsdlFileResolver implements WSDLResolver {
         if (namespace.equals("")) {
             return null;
         }
-        schema = createFile(fileName);
+        File schema = createFile(fileName);
+        schemas.add(schema);
         return toResult(schema);
     }
 
