@@ -77,10 +77,14 @@ public class MetroTargetInterceptor implements Interceptor {
     }
 
     public Message invoke(Message msg) {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Object[] payload = (Object[]) msg.getBody();
             Object proxy = proxyFactory.getInstance();
             configureSecurity(((BindingProvider) proxy));
+            // Metro stubs attempt to load classes using TCCL (e.g. StAX provider classes) that are visible the extension classloader and not
+            // visible to the application classloader.
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
             Object ret = method.invoke(proxy, payload);
             return new MessageImpl(ret, false, null);
         } catch (InaccessibleWSDLException e) {
@@ -91,6 +95,8 @@ public class MetroTargetInterceptor implements Interceptor {
             return new MessageImpl(e.getTargetException(), true, null);
         } catch (ObjectCreationException e) {
             throw new ServiceRuntimeException(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
         }
     }
 

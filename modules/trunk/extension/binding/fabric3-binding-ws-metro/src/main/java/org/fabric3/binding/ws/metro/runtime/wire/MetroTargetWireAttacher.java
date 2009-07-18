@@ -39,22 +39,23 @@ package org.fabric3.binding.ws.metro.runtime.wire;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
-import org.fabric3.binding.ws.metro.runtime.core.LazyProxyObjectFactory;
+import org.fabric3.binding.ws.metro.runtime.core.MetroProxyObjectFactory;
 import org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.GeneratedArtifacts;
@@ -71,6 +72,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.xml.XMLFactory;
 
 /**
  * Creates invocation chains for invoking a target web service.
@@ -78,6 +80,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
+
     private ClassLoaderRegistry registry;
     private FeatureResolver resolver;
     private InterfaceGenerator interfaceGenerator;
@@ -85,6 +88,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
     private WsdlPolicyAttacher policyAttacher;
     private SecurityEnvironment securityEnvironment;
     private WorkScheduler scheduler;
+    private XMLInputFactory xmlInputFactory;
+
 
     public MetroTargetWireAttacher(@Reference ClassLoaderRegistry registry,
                                    @Reference FeatureResolver resolver,
@@ -92,7 +97,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                                    @Reference WsdlGenerator wsdlGenerator,
                                    @Reference WsdlPolicyAttacher policyAttacher,
                                    @Reference SecurityEnvironment securityEnvironment,
-                                   @Reference WorkScheduler scheduler) {
+                                   @Reference WorkScheduler scheduler,
+                                   @Reference XMLFactory xmlFactory) {
         this.registry = registry;
         this.resolver = resolver;
         this.interfaceGenerator = interfaceGenerator;
@@ -100,6 +106,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
         this.policyAttacher = policyAttacher;
         this.securityEnvironment = securityEnvironment;
         this.scheduler = scheduler;
+        this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target, Wire wire) throws WiringException {
@@ -107,7 +114,6 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
         try {
             ReferenceEndpointDefinition endpointDefinition = target.getEndpointDefinition();
             QName serviceName = endpointDefinition.getServiceName();
-            URL url = endpointDefinition.getUrl();
             String interfaze = target.getInterface();
             URI classLoaderId = source.getClassLoaderId();
             List<QName> requestedIntents = target.getRequestedIntents();
@@ -119,15 +125,10 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             Class<?> seiClass = classLoader.loadClass(interfaze);
             if (!seiClass.isAnnotationPresent(WebService.class)) {
                 // if the service interface is not annotated, generate an implementing class that is
-                // TODO make sure the WSDL is correct
                 seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
             }
 
             URL wsdlLocation = target.getWsdlLocation();
-            if (wsdlLocation == null) {
-                // default to the target URL with ?wsdl appended since most WS stacks support this
-                wsdlLocation = new URL(url.toString() + "?wsdl");
-            }
 
             File generatedWsdl = null;
             if (!target.getMappings().isEmpty()) {
@@ -135,12 +136,20 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                 GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, true);
                 generatedWsdl = artifacts.getWsdl();
                 for (PolicyExpressionMapping mapping : target.getMappings()) {
-                    policyAttacher.attach(generatedWsdl, mapping.getOperationNames(), mapping.getPolicyExpression());
+                    List<String> names = mapping.getOperationNames();
+                    Element expression = mapping.getPolicyExpression();
+                    policyAttacher.attach(generatedWsdl, names, expression);
                 }
             }
 
-            ObjectFactory<?> proxyFactory =
-                    new LazyProxyObjectFactory(wsdlLocation, serviceName, seiClass, features, generatedWsdl, scheduler, securityEnvironment);
+            ObjectFactory<?> proxyFactory = new MetroProxyObjectFactory(endpointDefinition,
+                                                                        wsdlLocation,
+                                                                        generatedWsdl,
+                                                                        seiClass,
+                                                                        features,
+                                                                        scheduler,
+                                                                        securityEnvironment,
+                                                                        xmlInputFactory);
 
             Method[] methods = seiClass.getDeclaredMethods();
             SecurityConfiguration configuration = target.getConfiguration();
@@ -157,8 +166,6 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             }
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
-        } catch (MalformedURLException e) {
-            throw new WiringException(e);
         } catch (WsdlGenerationException e) {
             throw new WiringException(e);
         } catch (PolicyAttachmentException e) {
@@ -172,6 +179,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
     }
 
     public void detachFromTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target) throws WiringException {
+        // no-op
     }
 
 }

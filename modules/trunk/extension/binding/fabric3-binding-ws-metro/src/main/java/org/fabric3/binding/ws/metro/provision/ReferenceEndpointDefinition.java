@@ -49,19 +49,22 @@ import javax.xml.namespace.QName;
 public class ReferenceEndpointDefinition implements Serializable {
     private static final long serialVersionUID = -7422624061436929193L;
     private QName serviceName;
-    private QName portName;
+    private boolean defaultServiceName;
+    private QName portTypeName;
     private URL url;
 
     /**
      * Constructor.
      *
-     * @param serviceName the qualified name of the target service
-     * @param portName    the qualified name of the target port
-     * @param url         the endpoint URL
+     * @param serviceName        the qualified name of the target service
+     * @param defaultServiceName true if the service name is a default and may be overriden by introspecting WSDL
+     * @param portTypeName       the qualified name of the target port type
+     * @param url                the endpoint URL
      */
-    public ReferenceEndpointDefinition(QName serviceName, QName portName, URL url) {
+    public ReferenceEndpointDefinition(QName serviceName, boolean defaultServiceName, QName portTypeName, URL url) {
         this.serviceName = serviceName;
-        this.portName = portName;
+        this.defaultServiceName = defaultServiceName;
+        this.portTypeName = portTypeName;
         this.url = url;
     }
 
@@ -75,12 +78,26 @@ public class ReferenceEndpointDefinition implements Serializable {
     }
 
     /**
-     * Returns the qualified port name.
+     * Returns true if the service name is a default and may be overriden by introspecting WSDL. If a service name is not specified using the
+     * <code>WebService.serviceName</code> annotation attribute, it is calculated according to JAX-WS mapping rules. However, web services stacks such
+     * as WCF (.NET) adopt different defaulting schemes. To accomodate this, during reference proxy creation, the Fabric3 runtime will introspect the
+     * target WSDL to determine the actual service name if the default name is not valid. The actual name will be determined by mapping the portType
+     * name to a service defined in the WSDL. Note this can only be done if the WSDL contains exactly one service that uses the portType. Otherwise, a
+     * serviceName will need to be explicitly specified using the <code>WebService</code> annotation or wsdlElement attribute of binding.ws.
+     *
+     * @return true if the service name is a default and may be overriden by introspecting WSDL
+     */
+    public boolean isDefaultServiceName() {
+        return defaultServiceName;
+    }
+
+    /**
+     * Returns the qualified port type name.
      *
      * @return the qualified port name
      */
-    public QName getPortName() {
-        return portName;
+    public QName getPortTypeName() {
+        return portTypeName;
     }
 
     /**

@@ -134,7 +134,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             List<InvocationChain> invocationChains = wire.getInvocationChains();
             URI classLoaderId = source.getClassLoaderId();
             String interfaze = source.getInterface();
-            URL wsdlUrl = source.getWsdlLocation();
+            URL wsdlLocation = source.getWsdlLocation();
             List<QName> requestedIntents = source.getRequestedIntents();
             List<PolicySet> requestedPolicySets = null;
 
@@ -163,7 +163,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                     for (PolicyExpressionMapping mapping : source.getMappings()) {
                         policyAttacher.attach(generatedWsdl, mapping.getOperationNames(), mapping.getPolicyExpression());
                     }
-                    wsdlUrl = generatedWsdl.toURI().toURL();
+                    wsdlLocation = generatedWsdl.toURI().toURL();
                 }
 
 
@@ -185,7 +185,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             metroServlet.registerService(seiClass,
                                          serviceName,
                                          portName,
-                                         wsdlUrl,
+                                         wsdlLocation,
                                          path,
                                          invoker,
                                          features,

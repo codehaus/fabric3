@@ -44,6 +44,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
+import javax.jws.WebService;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
@@ -92,7 +93,6 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         JavaServiceContract javaContract = (JavaServiceContract) contract;
         Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
-        URL wsdlLocation = getWsdlLocation(definition);
         ServiceEndpointDefinition endpointDefinition;
         URI targetUri = binding.getDefinition().getTargetUri();
         if (targetUri != null) {
@@ -104,6 +104,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
             QName deployable = binding.getParent().getParent().getDeployable();
             endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri);
         }
+        URL wsdlLocation = getWsdlLocation(definition, serviceClass);
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
@@ -120,7 +121,6 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         JavaServiceContract javaContract = (JavaServiceContract) contract;
         Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
-        URL wsdlLocation = getWsdlLocation(definition);
         URI targetUri = binding.getDefinition().getTargetUri();
         ReferenceEndpointDefinition endpointDefinition;
         if (targetUri != null) {
@@ -141,6 +141,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
             endpointDefinition = endpointResolver.resolveReferenceEndpoint(deployable, uri);
         }
 
+        URL wsdlLocation = getWsdlLocation(definition, serviceClass);
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
@@ -159,21 +160,31 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
     /**
      * Returns the WSDL location if one is defined in the binding configuration or null.
      *
-     * @param definition the binding configuration
+     * @param definition   the binding configuration
+     * @param serviceClass the service endpoint interface
      * @return the WSDL location or null
      * @throws GenerationException if the WSDL location is invalid
      */
-    private URL getWsdlLocation(WsBindingDefinition definition) throws GenerationException {
-        URL wsdlLocation = null;
-        String location = definition.getWsdlLocation();
-        if (location != null) {
-            try {
-                wsdlLocation = new URL(location);
-            } catch (MalformedURLException e) {
-                throw new GenerationException(e);
+    private URL getWsdlLocation(WsBindingDefinition definition, Class<?> serviceClass) throws GenerationException {
+        try {
+            String location = definition.getWsdlLocation();
+            if (location != null) {
+                return new URL(location);
             }
+            WebService annotation = serviceClass.getAnnotation(WebService.class);
+            if (annotation != null) {
+                String wsdlLocation = annotation.wsdlLocation();
+                if (wsdlLocation.length() > 0) {
+                    return new URL(wsdlLocation);
+                } else {
+                    return null;
+                }
+            }
+        } catch (MalformedURLException e) {
+            throw new GenerationException(e);
         }
-        return wsdlLocation;
+        return null;
+
     }
 
     private Class<?> loadServiceClass(LogicalBinding<WsBindingDefinition> binding, JavaServiceContract javaContract) {

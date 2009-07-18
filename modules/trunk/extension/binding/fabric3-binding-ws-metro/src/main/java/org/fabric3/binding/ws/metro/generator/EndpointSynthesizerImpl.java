@@ -82,9 +82,9 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
      */
     private ReferenceEndpointDefinition createDefinition(WebService annotation, Class<?> serviceClass, URL url) {
         String namespace = getNamespace(annotation, serviceClass);
-        QName serviceQName = getServiceName(annotation, serviceClass, namespace);
-        QName portQName = getPortName(annotation, serviceClass, namespace);
-        return new ReferenceEndpointDefinition(serviceQName, portQName, url);
+        ServiceNameResult result = getServiceName(annotation, serviceClass, namespace);
+        QName portTypeQName = getPortTypeName(annotation, serviceClass, namespace);
+        return new ReferenceEndpointDefinition(result.getServiceName(), result.isDefaultServiceName(), portTypeQName, url);
     }
 
     /**
@@ -100,7 +100,7 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
         String namespace = deriveNamespace(packageName);
         QName serviceQName = new QName(namespace, className + "Service");
         QName portQName = new QName(namespace, className + "Port");
-        return new ReferenceEndpointDefinition(serviceQName, portQName, url);
+        return new ReferenceEndpointDefinition(serviceQName, true, portQName, url);
     }
 
     /**
@@ -114,7 +114,8 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
      */
     private ServiceEndpointDefinition createDefinition(WebService annotation, Class<?> serviceClass, URI uri) {
         String namespace = getNamespace(annotation, serviceClass);
-        QName serviceQName = getServiceName(annotation, serviceClass, namespace);
+        EndpointSynthesizerImpl.ServiceNameResult result = getServiceName(annotation, serviceClass, namespace);
+        QName serviceQName = result.getServiceName();
         QName portQName = getPortName(annotation, serviceClass, namespace);
         return new ServiceEndpointDefinition(serviceQName, portQName, uri);
     }
@@ -159,12 +160,14 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
      * @param namespace    the namespace
      * @return the service name
      */
-    private QName getServiceName(WebService annotation, Class<?> serviceClass, String namespace) {
+    private ServiceNameResult getServiceName(WebService annotation, Class<?> serviceClass, String namespace) {
         String serviceName = annotation.serviceName();
-        if (serviceName.length() < 1) {
+        boolean defaulted = serviceName.length() < 1;
+        if (defaulted) {
             serviceName = serviceClass.getSimpleName() + "Service";
         }
-        return new QName(namespace, serviceName);
+        QName qName = new QName(namespace, serviceName);
+        return new ServiceNameResult(qName, defaulted);
     }
 
     /**
@@ -173,7 +176,7 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
      * @param annotation   the WebService annotation on the endpoint implementation
      * @param serviceClass the endpoint implementation
      * @param namespace    the namespace
-     * @return the service name
+     * @return the port name
      */
     private QName getPortName(WebService annotation, Class<?> serviceClass, String namespace) {
         String portName = annotation.portName();
@@ -185,6 +188,22 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
             }
         }
         return new QName(namespace, portName);
+    }
+
+    /**
+     * Returns the WSDL port type name according to JAX-WS/JSR-181 rules.
+     *
+     * @param annotation   the WebService annotation on the endpoint implementation
+     * @param serviceClass the endpoint implementation
+     * @param namespace    the namespace
+     * @return the port type name
+     */
+    private QName getPortTypeName(WebService annotation, Class<?> serviceClass, String namespace) {
+        String portTypeName = annotation.name();
+        if (portTypeName.length() < 1) {
+            portTypeName = serviceClass.getSimpleName() + "Port";
+        }
+        return new QName(namespace, portTypeName);
     }
 
     /**
@@ -208,4 +227,21 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
         return builder.toString();
     }
 
+    private class ServiceNameResult {
+        private QName serviceName;
+        private boolean defaultServiceName;
+
+        private ServiceNameResult(QName serviceName, boolean defaultServiceName) {
+            this.serviceName = serviceName;
+            this.defaultServiceName = defaultServiceName;
+        }
+
+        public QName getServiceName() {
+            return serviceName;
+        }
+
+        public boolean isDefaultServiceName() {
+            return defaultServiceName;
+        }
+    }
 }

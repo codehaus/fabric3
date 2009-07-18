@@ -130,7 +130,7 @@ public class EndpointResolverImpl implements EndpointResolver {
             throw new EndpointResolutionException("WSDL port not found: " + fragment);
         }
         URL url = port.getAddress().getURL();
-        return new ReferenceEndpointDefinition(serviceName, portName, url);
+        return new ReferenceEndpointDefinition(serviceName, false, portName, url);
     }
 
     @SuppressWarnings({"unchecked"})
