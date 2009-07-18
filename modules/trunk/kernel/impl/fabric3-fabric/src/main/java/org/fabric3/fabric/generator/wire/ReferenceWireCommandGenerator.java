@@ -86,7 +86,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
             boolean reinjection = isReinjection(logicalReference, incremental);
 
             for (LogicalBinding<?> logicalBinding : logicalReference.getBindings()) {
-                generateCommand(logicalReference, logicalBinding, command, incremental, reinjection, false);
+                generateCommand(component, logicalReference, logicalBinding, command, incremental, reinjection, false);
             }
             if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
                 List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
@@ -99,7 +99,7 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
                                 "specified on reference: " + uri);
                     }
                     LogicalBinding<?> callbackBinding = callbackBindings.get(0);
-                    generateCommand(logicalReference, callbackBinding, command, incremental, reinjection, true);
+                    generateCommand(component, logicalReference, callbackBinding, command, incremental, reinjection, true);
                 }
             }
 
@@ -110,13 +110,13 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         return command;
     }
 
-    private void generateCommand(LogicalReference logicalReference,
+    private void generateCommand(LogicalComponent<?> component,
+                                 LogicalReference logicalReference,
                                  LogicalBinding<?> logicalBinding,
                                  ConnectionCommand command,
                                  boolean incremental,
                                  boolean reinjection,
                                  boolean callback) throws GenerationException {
-        LogicalComponent<?> component = logicalReference.getParent();
         if (LogicalState.MARKED == component.getState() || LogicalState.MARKED == logicalBinding.getState()) {
             PhysicalWireDefinition wireDefinition;
             if (callback) {

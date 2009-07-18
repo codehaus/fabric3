@@ -149,7 +149,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
                 }
             }
             if (!bindings.isEmpty()) {
-                reference.overrideBindings(bindings);
+                reference.overrideBindings(resetParent(bindings, reference));
             }
             if (!wiresFromPromotedReferences.isEmpty()) {
                 for (LogicalWire promotedWire : wiresFromPromotedReferences) {
