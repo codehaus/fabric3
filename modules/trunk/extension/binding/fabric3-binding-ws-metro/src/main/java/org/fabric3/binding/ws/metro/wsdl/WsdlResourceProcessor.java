@@ -173,7 +173,7 @@ public class WsdlResourceProcessor implements ResourceProcessor {
         } catch (WebServiceException e) {
             String message = ClientMessages.WSDL_CONTAINS_NO_SERVICE(wsdlLocation);
             if (message.equals(e.getMessage())) {
-                monitor.message("Ignoring WSDL as it does not contain a service definition: " + wsdlLocation);
+                monitor.message("Skipping WSDL parsing as it does not contain a service definition: " + wsdlLocation);
                 return;
             }
             throw e;
