@@ -50,7 +50,6 @@
                 <module>test-timer-quartz</module>
                 <module>test-timer-implementation</module>
                 <module>test-mock</module>
-                <module>test-binding-axis2</module>
                 <module>test-binding-jms</module>
                 <module>test-binding-ftp</module>
                 <module>test-binding-metro</module>
