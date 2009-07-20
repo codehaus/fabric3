@@ -56,6 +56,11 @@ public class ClassLoaderObjectInputStream extends ObjectInputStream {
     }
 
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-        return loader.loadClass(desc.getName());
+        // Note ClassLoader.loadClass() cannot be used as it does not work with Object arrays.
+        // See:
+        //      http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6446627
+        // and:
+        //      http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6434149
+        return Class.forName(desc.getName(), true, loader);
     }
 }
