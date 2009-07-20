@@ -27,16 +27,6 @@
         <service name="FtpDataTransferService">
             <f3-binding:binding.ftp uri="/"/>
         </service>
-        <reference name="wsDataTransferService">
-            <binding.ws uri="http://localhost:8900/axis2/upload"/>
-        </reference>
-    </component>
-
-    <component name="WsService">
-        <implementation.java class="org.fabric3.tests.binding.ftp.WsDataTransferServiceImpl"/>
-        <service name="WsDataTransferService">
-            <binding.ws uri="upload"/>
-        </service>
     </component>
 
 </composite>

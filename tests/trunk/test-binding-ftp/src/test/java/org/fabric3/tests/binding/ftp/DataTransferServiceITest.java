@@ -60,7 +60,7 @@ public class DataTransferServiceITest extends TestCase {
     public void testTransfer() throws Exception {
 
         String fileName = "/resources/test.dat";
-        InputStream data = new ByteArrayInputStream("TEST".getBytes());
+        InputStream data = new ByteArrayInputStream("test".getBytes());
 
         ftpDataTransferService.transferData(fileName, data);
 

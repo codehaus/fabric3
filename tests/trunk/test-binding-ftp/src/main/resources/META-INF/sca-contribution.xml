@@ -8,5 +8,4 @@
     $Rev$ $Date$
 -->
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903">
-    <import.java package="org.apache.axiom.*" version="1.2.5"/>
 </contribution>
