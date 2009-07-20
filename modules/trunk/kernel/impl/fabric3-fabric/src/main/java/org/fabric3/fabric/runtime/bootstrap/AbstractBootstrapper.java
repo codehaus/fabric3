@@ -315,14 +315,8 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void synthesizeContributions() throws InitializationException {
         try {
-            String jvmVersion = System.getProperty("java.specification.version");
-            if ("1.6".equals(jvmVersion)) {
-                // export packages included in JDK 6
-                synthesizeContribution(HOST_CONTRIBUTION, Java5HostExports.getExports(), hostClassLoader);
-            } else {
-                // export packages included in JDK 5
-                synthesizeContribution(HOST_CONTRIBUTION, Java5HostExports.getExports(), hostClassLoader);
-            }
+            // export packages included in JDK 6
+            synthesizeContribution(HOST_CONTRIBUTION, Java6HostExports.getExports(), hostClassLoader);
             // add default boot exports
             exportedPackages.putAll(BootExports.getExports());
             synthesizeContribution(BOOT_CONTRIBUTION, exportedPackages, bootClassLoader);
