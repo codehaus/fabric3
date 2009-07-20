@@ -55,6 +55,7 @@ import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.runtime.MaskingClassLoader;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
@@ -78,6 +79,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
     private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
     private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
     private static final String JOIN_DOMAIN_TIMEOUT = "fabric3.join.domain.timeout";
+    private static final String HIDE_PACKAGES = "fabric3.hidden.packages";
 
     private final File installDirectory;
     private RuntimeLifecycleCoordinator coordinator;
@@ -169,6 +171,12 @@ public class Fabric3Server implements Fabric3ServerMBean {
             File hostDir = BootstrapHelper.getDirectory(installDirectory, "host");
 
             ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+            String hiddenPackageString = (String) props.get(HIDE_PACKAGES);
+            if (hiddenPackageString != null && hiddenPackageString.length() > 0) {
+                // mask hidden JDK and system classpath packages
+                String[] hiddenPackages = hiddenPackageString.split(",");
+                systemClassLoader = new MaskingClassLoader(systemClassLoader, hiddenPackages);
+            }
             ClassLoader hostLoader = BootstrapHelper.createClassLoader(systemClassLoader, hostDir);
             ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 

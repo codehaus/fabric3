@@ -37,15 +37,23 @@
 */
 package org.fabric3.xapool;
 
+import java.sql.Array;
+import java.sql.Blob;
 import java.sql.CallableStatement;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.NClob;
 import java.sql.PreparedStatement;
+import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
+import java.sql.Struct;
 import java.util.Map;
+import java.util.Properties;
 import javax.sql.XAConnection;
 
 public class TransactedConnection implements Connection {
@@ -241,6 +249,50 @@ public class TransactedConnection implements Connection {
         return wrappedConnection.prepareStatement(sql, columnNames);
     }
 
+    public Clob createClob() throws SQLException {
+        return wrappedConnection.createClob();
+    }
+
+    public Blob createBlob() throws SQLException {
+        return wrappedConnection.createBlob();
+    }
+
+    public NClob createNClob() throws SQLException {
+        return wrappedConnection.createNClob();
+    }
+
+    public SQLXML createSQLXML() throws SQLException {
+        return wrappedConnection.createSQLXML();
+    }
+
+    public boolean isValid(int i) throws SQLException {
+        return wrappedConnection.isValid(i);
+    }
+
+    public void setClientInfo(String s, String s1) throws SQLClientInfoException {
+        wrappedConnection.setClientInfo(s, s1);
+    }
+
+    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+        wrappedConnection.setClientInfo(properties);
+    }
+
+    public String getClientInfo(String s) throws SQLException {
+        return wrappedConnection.getClientInfo(s);
+    }
+
+    public Properties getClientInfo() throws SQLException {
+        return wrappedConnection.getClientInfo();
+    }
+
+    public Array createArrayOf(String s, Object[] objects) throws SQLException {
+        return createArrayOf(s, objects);
+    }
+
+    public Struct createStruct(String s, Object[] objects) throws SQLException {
+        return wrappedConnection.createStruct(s, objects);
+    }
+
     /**
      * Delegate operation.
      */
@@ -325,4 +377,11 @@ public class TransactedConnection implements Connection {
         wrappedConnection.setTypeMap(map);
     }
 
+    public <T> T unwrap(Class<T> tClass) throws SQLException {
+        return null;
+    }
+
+    public boolean isWrapperFor(Class<?> aClass) throws SQLException {
+        return false;
+    }
 }

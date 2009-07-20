@@ -68,6 +68,7 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
+import org.fabric3.host.runtime.MaskingClassLoader;
 import org.fabric3.maven.MavenEmbeddedRuntime;
 import org.fabric3.util.io.FileHelper;
 
@@ -276,6 +277,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     protected File outputDirectory;
 
+    /**
+     * JDK and system classpath packages to hide from the runtime classpath.
+     *
+     * @parameter
+     */
+    public String[] hiddenPackages = new String[]{"javax.xml.bind.", "javax.xml.ws."};
+
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         if (!testScdl.exists()) {
@@ -344,6 +352,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
         Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
 
         ClassLoader parentClassLoader = getClass().getClassLoader();
+        if (hiddenPackages.length > 0) {
+            // mask hidden JDK and system classpath packages
+            parentClassLoader = new MaskingClassLoader(parentClassLoader, hiddenPackages);
+        }
+
+
         ClassLoader hostClassLoader = createHostClassLoader(parentClassLoader, hostArtifacts);
         ClassLoader bootClassLoader = createBootClassLoader(hostClassLoader, runtimeArtifacts);
 

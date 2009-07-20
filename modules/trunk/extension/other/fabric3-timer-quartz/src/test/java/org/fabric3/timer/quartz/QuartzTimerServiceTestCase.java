@@ -45,7 +45,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
 
@@ -57,7 +56,6 @@ import org.fabric3.host.work.WorkScheduler;
  */
 public class QuartzTimerServiceTestCase extends TestCase {
     private QuartzTimerService timerService;
-    private TransactionManager tm;
 
     public void testNonTransactionalScheduler() throws Exception {
         TestRunnable runnable = new TestRunnable(2);
@@ -105,19 +103,19 @@ public class QuartzTimerServiceTestCase extends TestCase {
                 return null;
             }
 
-            public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks) throws InterruptedException {
+            public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> callables) throws InterruptedException {
                 return null;
             }
 
-            public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
+            public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> callables, long l, TimeUnit timeUnit) throws InterruptedException {
                 return null;
             }
 
-            public <T> T invokeAny(Collection<Callable<T>> tasks) throws InterruptedException, ExecutionException {
+            public <T> T invokeAny(Collection<? extends Callable<T>> callables) throws InterruptedException, ExecutionException {
                 return null;
             }
 
-            public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
+            public <T> T invokeAny(Collection<? extends Callable<T>> callables, long l, TimeUnit timeUnit)
                     throws InterruptedException, ExecutionException, TimeoutException {
                 return null;
             }
@@ -126,7 +124,7 @@ public class QuartzTimerServiceTestCase extends TestCase {
 
             }
         };
-        timerService = new QuartzTimerService(workScheduler, tm);
+        timerService = new QuartzTimerService(workScheduler, null);
         timerService.setTransactional(false);
         timerService.init();
     }
