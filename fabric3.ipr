@@ -608,7 +608,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-net/fabric3-binding-net.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-net/fabric3-binding-net.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" group="bindings" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-policy/fabric3-binding-ws-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-policy/fabric3-binding-ws-policy.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" group="other/web" />
@@ -696,7 +695,6 @@
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" group="poms" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ftp/test-binding-ftp.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ftp/test-binding-ftp.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" group="tests" />
