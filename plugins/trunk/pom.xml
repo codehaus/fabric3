@@ -33,7 +33,6 @@
     <modules>
         <module>fabric3-contribution-plugin</module>
         <module>fabric3-webapp-plugin</module>
-        <module>fabric3-feature-set-plugin</module>
     </modules>
 
   <scm>
