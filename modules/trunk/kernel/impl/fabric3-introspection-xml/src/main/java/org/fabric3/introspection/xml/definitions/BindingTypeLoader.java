@@ -79,8 +79,8 @@ public class BindingTypeLoader implements TypeLoader<BindingType> {
         validateAttributes(reader, context);
 
         String name = reader.getAttributeValue(null, "name");
-        QName qName = new QName(context.getTargetNamespace(), name);
-
+        QName qName = LoaderUtil.getQName(name, context.getTargetNamespace(), reader.getNamespaceContext());
+        
         Set<QName> alwaysProvides;
         try {
             alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
