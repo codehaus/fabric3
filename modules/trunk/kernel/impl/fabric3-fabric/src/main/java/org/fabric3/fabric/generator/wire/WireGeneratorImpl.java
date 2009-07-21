@@ -74,6 +74,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.LocalBindingDefinition;
+import org.fabric3.spi.model.type.RemoteBindingDefinition;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyMetadata;
 import org.fabric3.spi.policy.PolicyResolutionException;
@@ -86,7 +87,6 @@ import org.fabric3.spi.policy.PolicyResult;
  * @version $Rev$ $Date$
  */
 public class WireGeneratorImpl implements WireGenerator {
-
     private final GeneratorRegistry generatorRegistry;
     private final PolicyResolver policyResolver;
     private final PhysicalOperationMapper mapper;
@@ -219,7 +219,8 @@ public class WireGeneratorImpl implements WireGenerator {
             contract = service.getDefinition().getServiceContract();
         }
 
-        LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, service);
+        LogicalBinding<RemoteBindingDefinition> targetBinding =
+                new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, service);
 
         PolicyResult policyResult = resolvePolicies(logicalService.getOperations(), binding, targetBinding, null, component);
         Policy sourcePolicy = policyResult.getSourcePolicy();
@@ -259,7 +260,8 @@ public class WireGeneratorImpl implements WireGenerator {
         LogicalComponent component = reference.getParent();
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
-        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
+        LogicalBinding<RemoteBindingDefinition> sourceBinding =
+                new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, reference);
 
         PolicyResult policyResult = resolvePolicies(reference.getOperations(), sourceBinding, binding, component, null);
         Policy sourcePolicy = policyResult.getSourcePolicy();
@@ -299,7 +301,8 @@ public class WireGeneratorImpl implements WireGenerator {
 
         LogicalService callbackService = component.getService(callbackContract.getInterfaceName());
 
-        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
+        LogicalBinding<RemoteBindingDefinition> sourceBinding =
+                new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, reference);
 
         List<LogicalOperation> logicalOperations = reference.getCallbackOperations();
         PolicyResult policyResult = resolvePolicies(logicalOperations, sourceBinding, binding, component, null);
@@ -334,7 +337,8 @@ public class WireGeneratorImpl implements WireGenerator {
         }
         ServiceContract<?> callbackContract = contract.getCallbackContract();
 
-        LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, service);
+        LogicalBinding<RemoteBindingDefinition> sourceBinding =
+                new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, service);
         List<LogicalOperation> callbackOperations = service.getCallbackOperations();
         PolicyResult policyResult = resolvePolicies(callbackOperations, sourceBinding, binding, component, null);
         Policy targetPolicy = policyResult.getSourcePolicy();
