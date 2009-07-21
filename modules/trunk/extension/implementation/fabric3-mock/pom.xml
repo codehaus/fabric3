@@ -21,20 +21,6 @@ Public License. See the accompanying license file for details.
     <name>Fabric3 Mock Extension</name>
     <description>Fabric3 extension for mocking references.</description>
 
-    <properties>
-        <f3Shared>
-            <![CDATA[
-	            <dependencies>
-		            <dependency>
-                        <groupId>org.easymock</groupId>
-                        <artifactId>easymock</artifactId>
-                        <version>2.2</version>
-                    </dependency>
-		        </dependencies>
-            ]]>
-        </f3Shared>
-    </properties>
-
     <dependencies>
 
         <dependency>
