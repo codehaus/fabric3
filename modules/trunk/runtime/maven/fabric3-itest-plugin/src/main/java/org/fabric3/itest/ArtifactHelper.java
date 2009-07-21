@@ -122,7 +122,7 @@ public class ArtifactHelper {
         for (Artifact artifact : projectArtifacts) {
             try {
                 String scope = artifact.getScope();
-                if (hostArtifacts.contains(artifact) || Artifact.SCOPE_PROVIDED.equals(scope) || "f3-extension".equals(scope)) {
+                if (hostArtifacts.contains(artifact) || Artifact.SCOPE_PROVIDED.equals(scope)) {
                     continue;
                 }
                 File pathElement = artifact.getFile();
