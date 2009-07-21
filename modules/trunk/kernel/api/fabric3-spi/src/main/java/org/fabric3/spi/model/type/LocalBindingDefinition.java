@@ -43,7 +43,7 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * Represents a wire between collocated components.
+ * Represents binding information for a wire between collocated components.
  *
  * @version $Rev$ $Date$
  */
