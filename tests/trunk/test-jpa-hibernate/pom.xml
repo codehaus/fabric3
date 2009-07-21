@@ -83,15 +83,13 @@
                 <configuration>
                     <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
-                    <features>
-                        <!-- JPA Hibernate Extensions -->
-                        <dependency>
+                    <profiles>
+                        <profile>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-hibernate-jotm-feature</artifactId>
+                            <artifactId>profile-jpa</artifactId>
                             <version>1.2-SNAPSHOT</version>
-                            <type>xml</type>
-                        </dependency>
-                    </features>
+                        </profile>
+                    </profiles>
                     <extensions>
                         <!-- Test Extension to Install the Datasource -->
                         <dependency>

@@ -35,12 +35,6 @@
             <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-api</artifactId>
-            <version>1.2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -55,24 +49,13 @@
                 <version>1.2-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
-                    <extensions>
-                        <dependency>
+                    <profiles>
+                        <profile>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-ftp-spi</artifactId>
+                            <artifactId>profile-ftp</artifactId>
                             <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-ftp-server</artifactId>
-                            <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-ftp</artifactId>
-                            <version>1.2-SNAPSHOT</version>
-                        </dependency>
-
-                    </extensions>
+                        </profile>
+                    </profiles>
                     <systemConfig>
                         <![CDATA[
                         <config>

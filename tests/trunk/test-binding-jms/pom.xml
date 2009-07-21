@@ -59,54 +59,13 @@
                 <version>1.2-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
-                    <extensions>
-                        <dependency>
-                            <groupId>javax.jms</groupId>
-                            <artifactId>com.springsource.javax.jms</artifactId>
-                            <version>1.1.0</version>
-                            <scope>provided</scope>
-                        </dependency>
-                        <dependency>
+                    <profiles>
+                        <profile>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-jms</artifactId>
+                            <artifactId>profile-jms</artifactId>
                             <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-activemq</artifactId>
-                            <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jaxb</artifactId>
-                            <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-databinding-jaxb</artifactId>
-                            <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx</artifactId>
-                            <version>1.2-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.transaction</groupId>
-                            <artifactId>com.springsource.javax.transaction</artifactId>
-                            <version>1.1.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.resource</groupId>
-                            <artifactId>com.springsource.javax.resource</artifactId>
-                            <version>1.5.0</version>
-                        </dependency>
-                    </extensions>
+                        </profile>
+                    </profiles>
                     <systemConfig>
                         <![CDATA[
                                <config>
