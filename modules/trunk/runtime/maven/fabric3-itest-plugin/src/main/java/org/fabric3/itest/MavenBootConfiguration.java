@@ -9,8 +9,6 @@ import java.util.Set;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.logging.Log;
 
-import org.fabric3.featureset.FeatureSet;
-
 public class MavenBootConfiguration {
     private URL systemScdl;
     private String managementDomain;
@@ -21,8 +19,7 @@ public class MavenBootConfiguration {
     private ClassLoader bootClassLoader;
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
-    private Dependency[] extensions;
-    private List<FeatureSet> featureSets;
+    private Set<Dependency> extensions;
     private Log log;
     private ExtensionHelper extensionHelper;
     private List<URL> policyUrls;
@@ -99,20 +96,12 @@ public class MavenBootConfiguration {
         this.moduleDependencies = moduleDependencies;
     }
 
-    public Dependency[] getExtensions() {
+    public Set<Dependency> getExtensions() {
         return extensions;
     }
 
-    public void setExtensions(Dependency[] extensions) {
+    public void setExtensions(Set<Dependency> extensions) {
         this.extensions = extensions;
-    }
-
-    public List<FeatureSet> getFeatureSets() {
-        return featureSets;
-    }
-
-    public void setFeatureSets(List<FeatureSet> featureSets) {
-        this.featureSets = featureSets;
     }
 
     public Log getLog() {
@@ -138,4 +127,5 @@ public class MavenBootConfiguration {
     public void setPolicyUrls(List<URL> policyUrls) {
         this.policyUrls = policyUrls;
     }
+
 }

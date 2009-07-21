@@ -44,7 +44,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -54,7 +53,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.xml.sax.InputSource;
 
-import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.Names;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
@@ -87,8 +85,7 @@ public class MavenRuntimeBooter {
     private ClassLoader bootClassLoader;
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
-    private org.apache.maven.model.Dependency[] extensions;
-    private List<FeatureSet> featureSets;
+    private Set<org.apache.maven.model.Dependency> extensions;
     private Log log;
 
 
@@ -107,7 +104,6 @@ public class MavenRuntimeBooter {
         hostClassLoader = configuration.getHostClassLoader();
         moduleDependencies = configuration.getModuleDependencies();
         extensions = configuration.getExtensions();
-        featureSets = configuration.getFeatureSets();
         log = configuration.getLog();
         extensionHelper = configuration.getExtensionHelper();
     }
@@ -158,7 +154,7 @@ public class MavenRuntimeBooter {
         exportedPackages.put("org.fabric3.maven", Names.VERSION);
         configuration.setExportedPackages(exportedPackages);
         // process extensions
-        extensionHelper.processExtensions(configuration, extensions, featureSets);
+        extensionHelper.processExtensions(configuration, extensions);
 
         configuration.setRuntime(runtime);
 
@@ -184,7 +180,7 @@ public class MavenRuntimeBooter {
 
     private void bootRuntime() throws MojoExecutionException {
         try {
-            log.info("Starting Embedded Fabric3 Runtime ...");
+            log.info("Starting Fabric3 Runtime ...");
             coordinator.bootPrimordial();
             coordinator.initialize();
             coordinator.recover();

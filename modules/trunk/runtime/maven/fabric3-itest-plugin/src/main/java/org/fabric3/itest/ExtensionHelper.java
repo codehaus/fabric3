@@ -42,6 +42,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 
-import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.BootConfiguration;
@@ -58,24 +58,15 @@ import org.fabric3.host.runtime.BootConfiguration;
  * @version $Rev$ $Date$
  */
 public class ExtensionHelper {
-
     public ArtifactHelper artifactHelper;
 
-    public void processExtensions(BootConfiguration configuration,
-                                  Dependency[] extensions,
-                                  List<FeatureSet> featureSets) throws MojoExecutionException {
-        List<URL> extensionUrls = resolveDependencies(extensions);
-
-        if (featureSets != null) {
-            for (FeatureSet featureSet : featureSets) {
-                extensionUrls.addAll(processFeatures(featureSet));
-            }
-        }
+    public void processExtensions(BootConfiguration configuration, Set<Dependency> extensions) throws MojoExecutionException {
+        Set<URL> extensionUrls = resolveDependencies(extensions);
         List<ContributionSource> sources = createContributionSources(extensionUrls);
         configuration.setExtensionContributions(sources);
     }
 
-    private List<ContributionSource> createContributionSources(List<URL> urls) {
+    private List<ContributionSource> createContributionSources(Set<URL> urls) {
         List<ContributionSource> sources = new ArrayList<ContributionSource>();
         for (URL extensionUrl : urls) {
             // it's ok to assume archives are uniquely named since most server environments have a single deploy directory
@@ -86,15 +77,8 @@ public class ExtensionHelper {
         return sources;
     }
 
-    private List<URL> processFeatures(FeatureSet featureSet) throws MojoExecutionException {
-        Set<Dependency> dependencies = featureSet.getExtensions();
-        return resolveDependencies(featureSet.getExtensions().toArray(new Dependency[dependencies.size()]));
-    }
-
-    private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
-
-        List<URL> urls = new ArrayList<URL>();
-
+    private Set<URL> resolveDependencies(Set<Dependency> dependencies) throws MojoExecutionException {
+        Set<URL> urls = new HashSet<URL>();
         if (dependencies != null) {
             for (Dependency dependency : dependencies) {
                 Artifact artifact = artifactHelper.resolve(dependency);
@@ -105,9 +89,7 @@ public class ExtensionHelper {
                 }
             }
         }
-
         return urls;
-
     }
 
 }

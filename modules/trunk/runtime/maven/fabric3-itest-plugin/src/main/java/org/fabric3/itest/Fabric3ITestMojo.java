@@ -50,11 +50,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -64,10 +63,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.xml.sax.SAXException;
 
 import org.fabric3.api.annotation.logging.Severe;
-import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.runtime.MaskingClassLoader;
 import org.fabric3.maven.MavenEmbeddedRuntime;
 import org.fabric3.util.io.FileHelper;
@@ -193,7 +190,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
      *
      * @parameter
      */
-    public Dependency[] extensions;
+    public Dependency[] extensions = new Dependency[0];
+
+    /**
+     * Set of profiles for the runtime.
+     *
+     * @parameter
+     */
+    public Dependency[] profiles = new Dependency[0];
 
     /**
      * Set of runtime extension artifacts that should be deployed to the runtime expressed as feature sets.
@@ -345,11 +349,15 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     private MavenBootConfiguration createBootConfiguration() throws MojoExecutionException {
 
-        List<FeatureSet> featureSets = resolveFeatureSets();
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
-        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared, featureSets);
+        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared);
         Set<Artifact> dependencies = artifactHelper.calculateDependencies();
         Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
+
+        Set<Dependency> expandedExtensions = new HashSet<Dependency>();
+        expandedExtensions.addAll(getCoreExtensions());
+        expandedExtensions.addAll(Arrays.asList(extensions));
+        expandedExtensions.addAll(artifactHelper.expandProfileExtensions(profiles));
 
         ClassLoader parentClassLoader = getClass().getClassLoader();
         if (hiddenPackages.length > 0) {
@@ -368,8 +376,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setLog(getLog());
         configuration.setExtensionHelper(extensionHelper);
 
-        configuration.setFeatureSets(featureSets);
-        configuration.setExtensions(extensions);
+        configuration.setExtensions(expandedExtensions);
 
         configuration.setModuleDependencies(moduleDependencies);
         configuration.setOutputDirectory(outputDirectory);
@@ -436,50 +443,77 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
     }
 
-    /**
-     * Resolves configured feature sets to load as runtime extensions.
-     *
-     * @return the resolved set of FeatureSets
-     * @throws MojoExecutionException if a resolution error occurs
+    /***
+     * Returns the core runtime extensions as a set of dependencies
+     * @return  the extensions
      */
-    private List<FeatureSet> resolveFeatureSets() throws MojoExecutionException {
-        List<Dependency> featurestoInstall = getFeaturesToInstall();
-        // Resolved feature sets
-        List<FeatureSet> featureSets = new LinkedList<FeatureSet>();
+    private Set<Dependency> getCoreExtensions() {
+        Set<Dependency> extensions = new HashSet<Dependency>();
 
-        if (!featurestoInstall.isEmpty()) {
-            for (Dependency feature : featurestoInstall) {
-                Artifact artifact = artifactHelper.resolve(feature);
-                try {
-                    FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
-                    featureSets.add(featureSet);
-                } catch (ParserConfigurationException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                } catch (SAXException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                } catch (IOException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                }
-            }
-        }
-        return featureSets;
-    }
+        Dependency dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-jdk-proxy");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
 
-    private List<Dependency> getFeaturesToInstall() {
-        List<Dependency> featuresToInstall = new ArrayList<Dependency>();
+        dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-java");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
 
-        if (features != null) {
-            featuresToInstall.addAll(Arrays.asList(features));
-        }
-        if (!excludeDefaultFeatures) {
-            Dependency dependency = new Dependency();
-            dependency.setArtifactId("fabric3-default-feature");
-            dependency.setGroupId("org.codehaus.fabric3");
-            dependency.setVersion(runtimeVersion);
-            dependency.setType("xml");
-            featuresToInstall.add(dependency);
-        }
-        return featuresToInstall;
+        dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-async");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
+
+        dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-conversation-propagation");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
+
+        dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-sca-intents");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
+
+        dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-resource");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
+
+        dependency = new Dependency();
+        dependency.setGroupId("javax.transaction");
+        dependency.setArtifactId("com.springsource.javax.transaction");
+        dependency.setVersion("1.1.0");
+        dependency.setType("jar");
+        extensions.add(dependency);
+
+        dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-maven-extension");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
+
+        dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-junit");
+        dependency.setVersion(runtimeVersion);
+        dependency.setType("jar");
+        extensions.add(dependency);
+
+        return extensions;
     }
 
     public interface MojoMonitor {
