@@ -50,7 +50,7 @@ import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.ContextStartException;
-import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenRuntime;
 
 /**
  * Deploys a test composite.
@@ -77,7 +77,7 @@ public class TestDeployer {
         this.buildDirectory = buildDirectory;
     }
 
-    public void deploy(MavenEmbeddedRuntime runtime) throws MojoExecutionException {
+    public void deploy(MavenRuntime runtime) throws MojoExecutionException {
         try {
             if (compositeName == null) {
                 URL testScdlURL = testScdl.toURI().toURL();
@@ -95,7 +95,7 @@ public class TestDeployer {
         }
     }
 
-    private void deployTestComposite(MavenEmbeddedRuntime runtime, URL testScdlURL)
+    private void deployTestComposite(MavenRuntime runtime, URL testScdlURL)
             throws DeploymentException, ContributionException, ContextStartException, MojoExecutionException {
         try {
             log.info("Deploying test composite from " + testScdl);
@@ -114,7 +114,7 @@ public class TestDeployer {
         }
     }
 
-    private void deployTestComposite(MavenEmbeddedRuntime runtime)
+    private void deployTestComposite(MavenRuntime runtime)
             throws ContributionException, DeploymentException, ContextStartException, MojoExecutionException {
         try {
             QName qName = new QName(compositeNamespace, compositeName);

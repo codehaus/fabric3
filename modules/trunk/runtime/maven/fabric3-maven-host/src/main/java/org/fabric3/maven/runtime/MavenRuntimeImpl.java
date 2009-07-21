@@ -58,7 +58,7 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.maven.CompositeQNameService;
 import org.fabric3.maven.InvalidResourceException;
-import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenRuntime;
 import org.fabric3.maven.MavenHostInfo;
 import org.fabric3.maven.ModuleContributionSource;
 import org.fabric3.maven.TestSuiteFactory;
@@ -68,10 +68,10 @@ import org.fabric3.maven.TestSuiteFactory;
  *
  * @version $Rev$ $Date$
  */
-public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenEmbeddedRuntime {
+public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenRuntime {
     private static final URI CONTRIBUTION_URI = URI.create("iTestContribution");
 
-    public MavenEmbeddedRuntimeImpl() {
+    public MavenRuntimeImpl() {
         super(MavenHostInfo.class, null);
     }
 

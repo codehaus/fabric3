@@ -62,7 +62,7 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
-import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenRuntime;
 
 /**
  * @version $Rev$ $Date$
@@ -70,7 +70,7 @@ import org.fabric3.maven.MavenEmbeddedRuntime;
 public class MavenRuntimeBooter {
     private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
     private static final String DEFAULT_SYSTEM_CONFIG_DIR = "test-classes" + File.separator + "META-INF" + File.separator;
-    private static final String RUNTIME_IMPL = "org.fabric3.maven.runtime.MavenEmbeddedRuntimeImpl";
+    private static final String RUNTIME_IMPL = "org.fabric3.maven.runtime.MavenRuntimeImpl";
     private static final String BOOTSTRAPPER_IMPL = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
     private static final String COORDINATOR_IMPL = "org.fabric3.fabric.runtime.DefaultCoordinator";
     private static final String DOMAIN = "fabric3://domain";
@@ -90,7 +90,7 @@ public class MavenRuntimeBooter {
 
 
     private RuntimeLifecycleCoordinator coordinator;
-    private MavenEmbeddedRuntime runtime;
+    private MavenRuntime runtime;
     private ExtensionHelper extensionHelper;
 
     public MavenRuntimeBooter(MavenBootConfiguration configuration) {
@@ -109,7 +109,7 @@ public class MavenRuntimeBooter {
     }
 
     @SuppressWarnings({"unchecked"})
-    public MavenEmbeddedRuntime boot() throws MojoExecutionException {
+    public MavenRuntime boot() throws MojoExecutionException {
         runtime = createRuntime();
         BootConfiguration configuration = createBootConfiguration();
         coordinator = instantiate(RuntimeLifecycleCoordinator.class, COORDINATOR_IMPL, bootClassLoader);
@@ -118,9 +118,9 @@ public class MavenRuntimeBooter {
         return runtime;
     }
 
-    private MavenEmbeddedRuntime createRuntime() {
+    private MavenRuntime createRuntime() {
         MonitorFactory monitorFactory = new MavenMonitorFactory(log, "f3");
-        MavenEmbeddedRuntime runtime = instantiate(MavenEmbeddedRuntime.class, RUNTIME_IMPL, bootClassLoader);
+        MavenRuntime runtime = instantiate(MavenRuntime.class, RUNTIME_IMPL, bootClassLoader);
         runtime.setMonitorFactory(monitorFactory);
         runtime.setHostClassLoader(hostClassLoader);
 

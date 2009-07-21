@@ -60,7 +60,7 @@ import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
-import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenRuntime;
 
 /**
  * Executes integration tests.
@@ -78,7 +78,7 @@ public class TestRunner {
         this.log = log;
     }
 
-    public void executeTests(MavenEmbeddedRuntime runtime) throws MojoExecutionException, MojoFailureException {
+    public void executeTests(MavenRuntime runtime) throws MojoExecutionException, MojoFailureException {
         SurefireTestSuite testSuite;
         testSuite = runtime.createTestSuite();
         log.info("Executing tests...");

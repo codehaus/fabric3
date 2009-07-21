@@ -66,7 +66,7 @@ import org.apache.maven.project.MavenProject;
 
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.host.runtime.MaskingClassLoader;
-import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenRuntime;
 import org.fabric3.util.io.FileHelper;
 
 /**
@@ -308,7 +308,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         MavenRuntimeBooter booter = new MavenRuntimeBooter(configuration);
 
-        MavenEmbeddedRuntime runtime = booter.boot();
+        MavenRuntime runtime = booter.boot();
         try {
             TestDeployer deployer;
             if (compositeName == null) {
