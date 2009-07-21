@@ -40,7 +40,6 @@
             <modules>
                 <module>test-function</module>
                 <module>test-policy</module>
-                <module>bookstore</module>
                 <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
                 <module>test-jpa-core</module>
