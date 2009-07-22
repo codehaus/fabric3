@@ -43,8 +43,6 @@ import javax.xml.namespace.QName;
 import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.developer.JAXWSProperties;
 
-import org.fabric3.model.type.definitions.PolicySet;
-
 /**
  * Default implementation of the binding Id resolver.
  *
@@ -55,11 +53,10 @@ public class DefaultBindingIdResolver implements BindingIdResolver {
     /**
      * Resolves bindings based on the requested intents and policy sets.
      *
-     * @param requestedIntents    Intents requested on the bindings.
-     * @param requestedPolicySets Policy sets requested on the bindings.
+     * @param requestedIntents Intents requested on the bindings.
      * @return Resolved binding Id.
      */
-    public BindingID resolveBindingId(List<QName> requestedIntents, List<PolicySet> requestedPolicySets) {
+    public BindingID resolveBindingId(List<QName> requestedIntents) {
 
         BindingID bindingID = BindingID.SOAP11_HTTP;
         if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_SOAP12)) {

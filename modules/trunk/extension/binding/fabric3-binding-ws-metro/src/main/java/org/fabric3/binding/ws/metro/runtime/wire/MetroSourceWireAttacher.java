@@ -169,7 +169,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
 
                 features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
                 Thread.currentThread().setContextClassLoader(extensionClassLoader);
-                bindingID = bindingIdResolver.resolveBindingId(requestedIntents, requestedPolicySets);
+                bindingID = bindingIdResolver.resolveBindingId(requestedIntents);
             } finally {
                 Thread.currentThread().setContextClassLoader(old);
             }
