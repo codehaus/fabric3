@@ -102,6 +102,8 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
             throw new AssertionError("Loader not positioned on the <contribution> element: " + element);
         }
         validateContributionAttributes(reader, context);
+        boolean extension = Boolean.valueOf(reader.getAttributeValue(Namespaces.CORE, "extension"));
+        manifest.setExtension(extension);
         parseCapabilities(reader, manifest);
         while (true) {
             int event = reader.next();
@@ -220,7 +222,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
     private void validateContributionAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"capabilities".equals(name) && !"required-capabilities".equals(name)) {
+            if (!"extension".equals(name) && !"capabilities".equals(name) && !"required-capabilities".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
