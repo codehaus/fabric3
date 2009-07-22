@@ -62,13 +62,6 @@ public class TxInterceptor implements Interceptor {
     private TxAction txAction;
     private TxMonitor monitor;
 
-    /**
-     * Initializes the transaction manager.
-     *
-     * @param transactionManager Transaction manager to be initialized.
-     * @param txAction           Transaction action.
-     * @param monitor            Transaction monitor.
-     */
     public TxInterceptor(TransactionManager transactionManager, TxAction txAction, TxMonitor monitor) {
         this.transactionManager = transactionManager;
         this.txAction = txAction;
