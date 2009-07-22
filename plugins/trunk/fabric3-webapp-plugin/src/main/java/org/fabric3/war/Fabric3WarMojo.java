@@ -47,8 +47,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -58,8 +56,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -77,11 +73,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * Add Fabric3 runtime dependencies to a webapp. The webapp runtime loads user and runtime libraries using the webapp classloader. Consequently, all
@@ -175,25 +166,11 @@ public class Fabric3WarMojo extends AbstractMojo {
     public Dependency[] extensions;
 
     /**
-     * Set of extension artifacts that should be deployed to the runtime expressed as feature sets.
-     *
-     * @parameter
-     */
-    public Dependency[] features;
-
-    /**
-     * Whether to exclude default features.
-     *
-     * @parameter
-     */
-    public boolean excludeDefaultFeatures;
-
-    /**
      * The default version of the runtime to use.
      *
      * @parameter expression="RELEASE"
      */
-    public String runTimeVersion;
+    public String runtimeVersion;
 
     /**
      * Exclude any embedded dependencies from extensions.
@@ -210,8 +187,6 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @required
      */
     public MavenProject project;
-
-    private DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
     public Fabric3WarMojo() throws ParserConfigurationException {
     }
@@ -230,10 +205,10 @@ public class Fabric3WarMojo extends AbstractMojo {
 
     private void installRuntime() throws MojoExecutionException, IOException {
 
-        getLog().info("Using fabric3 runtime version " + runTimeVersion);
+        getLog().info("Using fabric3 runtime version " + runtimeVersion);
 
         if (bootLibs == null) {
-            Dependency dependancy = new Dependency("org.codehaus.fabric3.webapp", "fabric3-webapp-host", runTimeVersion);
+            Dependency dependancy = new Dependency("org.codehaus.fabric3.webapp", "fabric3-webapp-host", runtimeVersion);
             bootLibs = new Dependency[]{dependancy};
         }
 
@@ -251,72 +226,22 @@ public class Fabric3WarMojo extends AbstractMojo {
 
     private void installExtensions() throws MojoExecutionException {
 
-        try {
-
-            Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
-            if (extensions != null) {
-                for (Dependency extension : extensions) {
-                    if (extension.getVersion() == null) {
-                        resolveDependencyVersion(extension);
-                    }
-                    uniqueExtensions.add(extension);
+        Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
+        if (extensions != null) {
+            for (Dependency extension : extensions) {
+                if (extension.getVersion() == null) {
+                    resolveDependencyVersion(extension);
                 }
+                uniqueExtensions.add(extension);
             }
-
-            List<Dependency> featuresToInstall = getFeaturesToInstall();
-
-            if (!featuresToInstall.isEmpty()) {
-                for (Dependency feature : featuresToInstall) {
-                    if (feature.getVersion() == null) {
-                        resolveDependencyVersion(feature);
-                    }
-                    Artifact featureArtifact = feature.getArtifact(artifactFactory);
-                    featureArtifact = resolveArtifact(featureArtifact, false).iterator().next();
-
-                    Document featureSetDoc = db.parse(featureArtifact.getFile());
-
-                    NodeList extensionList = featureSetDoc.getElementsByTagName("extension");
-
-                    for (int i = 0; i < extensionList.getLength(); i++) {
-
-                        Element extensionElement = (Element) extensionList.item(i);
-
-                        Element artifactIdElement = (Element) extensionElement.getElementsByTagName("artifactId").item(0);
-                        Element groupIdElement = (Element) extensionElement.getElementsByTagName("groupId").item(0);
-                        Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
-
-                        Dependency extension =
-                                new Dependency(groupIdElement.getTextContent(), artifactIdElement.getTextContent(), versionElement.getTextContent());
-
-                        uniqueExtensions.add(extension);
-
-                    }
-                }
-            }
-            processExtensions(BOOT_PATH, "f3Extensions.properties", uniqueExtensions);
-
-        } catch (SAXParseException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (SAXException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
         }
 
-    }
+        uniqueExtensions.addAll(getCoreExtensions());
 
-    private List<Dependency> getFeaturesToInstall() {
-        List<Dependency> featuresToInstall = new ArrayList<Dependency>();
 
-        if (features != null) {
-            featuresToInstall.addAll(Arrays.asList(features));
-        }
-        if (!excludeDefaultFeatures) {
-            Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-default-webapp-feature", runTimeVersion);
-            dependency.setType("xml");
-            featuresToInstall.add(dependency);
-        }
-        return featuresToInstall;
+        processExtensions(BOOT_PATH, "f3Extensions.properties", uniqueExtensions);
+
+
     }
 
     private void processExtensions(String extenstionsPath, String extensionProperties, Set<Dependency> extensions) throws MojoExecutionException {
@@ -387,8 +312,11 @@ public class Fabric3WarMojo extends AbstractMojo {
     private void resolveDependencyVersion(Dependency extension) {
         List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
         for (org.apache.maven.model.Dependency dependecy : dependencies) {
-            if (dependecy.getGroupId().equals(extension.getGroupId())
-                    && dependecy.getArtifactId().equals(extension.getArtifactId())) {
+            if (!dependecy.getGroupId().startsWith("org.fabric3")){
+                // hack: do not set version of non-F3 dependencies
+                continue;
+            }
+            if (dependecy.getGroupId().equals(extension.getGroupId()) && dependecy.getArtifactId().equals(extension.getArtifactId())) {
                 extension.setVersion(dependecy.getVersion());
 
             }
@@ -440,4 +368,43 @@ public class Fabric3WarMojo extends AbstractMojo {
         }
 
     }
+
+    /**
+     * Returns the core runtime extensions as a set of dependencies
+     *
+     * @return the extensions
+     */
+    private Set<Dependency> getCoreExtensions() {
+        Set<Dependency> extensions = new HashSet<Dependency>();
+
+        Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-jdk-proxy", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("org.codehaus.fabric3", "fabric3-java", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("org.codehaus.fabric3", "fabric3-async", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("org.codehaus.fabric3", "fabric3-conversation-propagation", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("org.codehaus.fabric3", "fabric3-sca-intents", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("org.codehaus.fabric3", "fabric3-resource", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("org.codehaus.fabric3", "fabric3-web", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("org.codehaus.fabric3.webapp", "fabric3-webapp-extension", runtimeVersion);
+        extensions.add(dependency);
+
+        dependency = new Dependency("javax.transaction", "com.springsource.javax.transaction", "1.1.0");
+        extensions.add(dependency);
+
+        return extensions;
+    }
+
 }
