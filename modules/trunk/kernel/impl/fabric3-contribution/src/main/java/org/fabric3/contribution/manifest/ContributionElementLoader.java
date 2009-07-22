@@ -102,8 +102,6 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
             throw new AssertionError("Loader not positioned on the <contribution> element: " + element);
         }
         validateContributionAttributes(reader, context);
-        boolean extension = Boolean.valueOf(reader.getAttributeValue(Namespaces.CORE, "extension"));
-        manifest.setExtension(extension);
         parseCapabilities(reader, manifest);
         while (true) {
             int event = reader.next();

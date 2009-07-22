@@ -74,7 +74,6 @@ public class SyntheticDirectoryContributionProcessor extends AbstractContributio
         File root = FileHelper.toFile(sourceUrl);
         assert root.isDirectory();
         ContributionManifest manifest = contribution.getManifest();
-        manifest.setExtension(true);
         manifest.addExtend(root.getName());
     }
 

@@ -71,7 +71,6 @@ public class ContributionElementLoaderTestCase extends TestCase {
     public void testDispatch() throws Exception {
         ContributionManifest manifest = loader.load(reader, null);
         control.verify();
-        assertTrue(manifest.isExtension());
         assertEquals(1, manifest.getDeployables().size());
         assertEquals(DEPLOYABLE, manifest.getDeployables().get(0).getName());
         assertEquals(1, manifest.getExports().size());
