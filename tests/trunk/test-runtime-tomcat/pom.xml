@@ -91,7 +91,7 @@
                 </executions>
                 <configuration>
                     <!-- use the latest version of the runtime -->
-                    <runTimeVersion>1.2-SNAPSHOT</runTimeVersion>
+                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
 
                     <extensions>
                         <!-- include the Groovy extension to verify extensions are handled correctly -->
