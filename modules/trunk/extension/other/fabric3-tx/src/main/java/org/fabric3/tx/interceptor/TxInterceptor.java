@@ -47,9 +47,10 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.oasisopen.sca.ServiceRuntimeException;
+
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.tx.TxException;
 
 /**
  * Enforces transaction policy for a wire operation.
@@ -113,65 +114,65 @@ public class TxInterceptor implements Interceptor {
 
     }
 
-    private void setRollbackOnly() {
+    private void setRollbackOnly() throws ServiceRuntimeException {
         try {
             monitor.markedForRollback(hashCode());
             transactionManager.setRollbackOnly();
         } catch (SystemException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         }
     }
 
-    private Transaction getTransaction() {
+    private Transaction getTransaction() throws ServiceRuntimeException {
         try {
             return transactionManager.getTransaction();
         } catch (SystemException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         }
     }
 
-    private void rollback() {
+    private void rollback() throws ServiceRuntimeException {
         try {
             monitor.rolledback(hashCode());
             transactionManager.rollback();
         } catch (SystemException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         }
     }
 
-    private void begin() {
+    private void begin() throws ServiceRuntimeException {
         try {
             transactionManager.begin();
         } catch (NotSupportedException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (SystemException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         }
     }
 
-    private void suspend() {
+    private void suspend() throws ServiceRuntimeException {
         try {
             monitor.suspended(hashCode());
             transactionManager.suspend();
         } catch (SystemException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         }
     }
 
-    private void resume(Transaction transaction) {
+    private void resume(Transaction transaction) throws ServiceRuntimeException {
         try {
             monitor.resumed(hashCode());
             transactionManager.resume(transaction);
         } catch (SystemException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (InvalidTransactionException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (IllegalStateException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         }
     }
 
-    private void commit() {
+    private void commit() throws ServiceRuntimeException {
         try {
             if (transactionManager.getStatus() != Status.STATUS_MARKED_ROLLBACK) {
                 monitor.committed(hashCode());
@@ -180,17 +181,17 @@ public class TxInterceptor implements Interceptor {
                 rollback();
             }
         } catch (SystemException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (IllegalStateException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (SecurityException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (HeuristicMixedException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (HeuristicRollbackException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         } catch (RollbackException e) {
-            throw new TxException(e);
+            throw new ServiceRuntimeException(e);
         }
     }
 
