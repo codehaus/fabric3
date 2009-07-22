@@ -59,11 +59,11 @@ public class DefaultBindingIdResolver implements BindingIdResolver {
     public BindingID resolveBindingId(List<QName> requestedIntents) {
 
         BindingID bindingID = BindingID.SOAP11_HTTP;
-        if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_SOAP12)) {
+        if (requestedIntents.contains(MayProvideIntents.PROTOCOL_SOAP12)) {
             bindingID = BindingID.SOAP12_HTTP;
-        } else if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_X_SOAP12)) {
+        } else if (requestedIntents.contains(MayProvideIntents.PROTOCOL_X_SOAP12)) {
             bindingID = BindingID.X_SOAP12_HTTP;
-        } else if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_REST)) {
+        } else if (requestedIntents.contains(MayProvideIntents.PROTOCOL_REST)) {
             bindingID = BindingID.parse(JAXWSProperties.REST_BINDING);
         }
 

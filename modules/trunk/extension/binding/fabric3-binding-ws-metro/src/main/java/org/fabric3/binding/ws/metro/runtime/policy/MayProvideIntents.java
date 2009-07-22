@@ -42,11 +42,11 @@ import javax.xml.namespace.QName;
 import org.fabric3.host.Namespaces;
 
 /**
- * List of may provided intents.
+ * List of may provide intents.
  *
  * @version $Rev$ $Date$
  */
-public class MayProvidedIntents {
+public class MayProvideIntents {
 
     public static QName MESSAGE_OPTIMISATION = new QName(Namespaces.POLICY, "messageOptimisation");
     public static QName PROTOCOL_X_SOAP12 = new QName(Namespaces.POLICY, "protocolBinding.xsoap12");
@@ -58,7 +58,7 @@ public class MayProvidedIntents {
     /**
      * Private constructor for constant class.
      */
-    private MayProvidedIntents() {
+    private MayProvideIntents() {
     }
 
 }
