@@ -66,7 +66,7 @@ public class DefaultFeatureResolver implements FeatureResolver {
         if (requestedIntents.contains(MayProvideIntents.MESSAGE_OPTIMISATION)) {
             features.add(new MTOMFeature());
         }
-        if (requestedIntents.contains(MayProvideIntents.PROTOCOL_REST)) {
+        if (requestedIntents.contains(MayProvideIntents.REST)) {
             features.add(new BindingTypeFeature(JAXWSProperties.REST_BINDING));
         }
 
