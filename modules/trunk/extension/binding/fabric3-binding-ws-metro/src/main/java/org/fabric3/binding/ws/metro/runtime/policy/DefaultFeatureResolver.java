@@ -47,23 +47,20 @@ import javax.xml.ws.soap.MTOMFeature;
 import com.sun.xml.ws.developer.BindingTypeFeature;
 import com.sun.xml.ws.developer.JAXWSProperties;
 
-import org.fabric3.model.type.definitions.PolicySet;
-
 /**
  * Default implementation of FeatureResolver.Â
- *  
+ *
  * @version $Rev$ $Date$
  */
 public class DefaultFeatureResolver implements FeatureResolver {
 
     /**
-     * Translates the requested intents and policy sets to web service features.
+     * Translates the requested intents to web service features.
      *
      * @param requestedIntents    Requested intents.
-     * @param requestedPolicySets Requested policy sets.
      * @return Rsolved feature sets.
      */
-    public WebServiceFeature[] getFeatures(List<QName> requestedIntents, List<PolicySet> requestedPolicySets) {
+    public WebServiceFeature[] getFeatures(List<QName> requestedIntents) {
 
         List<WebServiceFeature> features = new LinkedList<WebServiceFeature>();
         if (requestedIntents.contains(MayProvidedIntents.MESSAGE_OPTIMISATION)) {

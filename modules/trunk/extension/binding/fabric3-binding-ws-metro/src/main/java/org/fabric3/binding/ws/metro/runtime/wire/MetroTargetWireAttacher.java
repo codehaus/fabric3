@@ -64,7 +64,6 @@ import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -117,10 +116,9 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             String interfaze = target.getInterface();
             URI classLoaderId = source.getClassLoaderId();
             List<QName> requestedIntents = target.getRequestedIntents();
-            List<PolicySet> requestedPolicySets = null;
 
             ClassLoader classLoader = registry.getClassLoader(classLoaderId);
-            WebServiceFeature[] features = resolver.getFeatures(requestedIntents, requestedPolicySets);
+            WebServiceFeature[] features = resolver.getFeatures(requestedIntents);
 
             Class<?> seiClass = classLoader.loadClass(interfaze);
             if (!seiClass.isAnnotationPresent(WebService.class)) {

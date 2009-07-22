@@ -41,8 +41,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
-import org.fabric3.model.type.definitions.PolicySet;
-
 /**
  * Resolves the set of features corresponding to intents and policy sets for a bound service or reference.
  *
@@ -53,10 +51,9 @@ public interface FeatureResolver {
     /**
      * Translates the requested intents and policy sets to web service features.
      *
-     * @param requestedIntents    Requested intents.
-     * @param requestedPolicySets Requested policy sets.
+     * @param requestedIntents Requested intents.
      * @return Rsolved feature sets.
      */
-    WebServiceFeature[] getFeatures(List<QName> requestedIntents, List<PolicySet> requestedPolicySets);
+    WebServiceFeature[] getFeatures(List<QName> requestedIntents);
 
 }

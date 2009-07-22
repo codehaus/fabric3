@@ -68,7 +68,6 @@ import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -136,7 +135,6 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             String interfaze = source.getInterface();
             URL wsdlLocation = source.getWsdlLocation();
             List<QName> requestedIntents = source.getRequestedIntents();
-            List<PolicySet> requestedPolicySets = null;
 
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
 
@@ -167,7 +165,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                 }
 
 
-                features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
+                features = featureResolver.getFeatures(requestedIntents);
                 Thread.currentThread().setContextClassLoader(extensionClassLoader);
                 bindingID = bindingIdResolver.resolveBindingId(requestedIntents);
             } finally {
