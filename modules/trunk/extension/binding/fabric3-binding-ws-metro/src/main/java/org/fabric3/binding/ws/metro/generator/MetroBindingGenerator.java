@@ -150,9 +150,14 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         SecurityConfiguration configuration = null;
         Map<String, String> securityConfiguration = definition.getConfiguration();
         if (securityConfiguration != null) {
-            String username = securityConfiguration.get("username");
-            String password = securityConfiguration.get("password");
-            configuration = new SecurityConfiguration(username, password);
+            String alias = securityConfiguration.get("alias");
+            if (alias != null) {
+                configuration = new SecurityConfiguration(alias);
+            } else {
+                String username = securityConfiguration.get("username");
+                String password = securityConfiguration.get("password");
+                configuration = new SecurityConfiguration(username, password);
+            }
         }
         return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings, configuration);
     }

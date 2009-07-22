@@ -49,10 +49,26 @@ public class SecurityConfiguration implements Serializable {
 
     private String username;
     private String password;
+    private String alias;
 
+    /**
+     * Consturctor specifying the username/password for authenitcation.
+     *
+     * @param username the username
+     * @param password the password
+     */
     public SecurityConfiguration(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    /**
+     * Consturctor specifying the X.509 certificate alias to use for authenitcation.
+     *
+     * @param alias the alias
+     */
+    public SecurityConfiguration(String alias) {
+        this.alias = alias;
     }
 
     public String getUsername() {
@@ -61,5 +77,9 @@ public class SecurityConfiguration implements Serializable {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 }

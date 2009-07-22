@@ -681,27 +681,33 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
     private X509Certificate getDefaultCertificateInternal(KeyStore store, Map context) throws XWSSecurityRuntimeException {
         try {
             String alias = (String) context.get(MetroConstants.KEYSTORE_ALIAS);
-            if (alias == null) {
-                Object obj = context.get(XWSSConstants.CERTIFICATE_PROPERTY);
-                if (obj instanceof X509Certificate) {
-                    return (X509Certificate) obj;
+            if (alias != null) {
+                Certificate certificate = store.getCertificate(alias);
+                if (certificate == null) {
+                    throw new XWSSecurityRuntimeException("Certificate not found for alias in keystore: " + alias);
+                } else if (!(certificate instanceof X509Certificate)) {
+                    throw new XWSSecurityRuntimeException("Not an X.509 certificate: " + alias);
                 }
+                return (X509Certificate) certificate;
             }
-            if (alias == null) {
-                Enumeration aliases = store.aliases();
-                while (aliases.hasMoreElements()) {
-                    String currentAlias = (String) aliases.nextElement();
-                    if (store.isKeyEntry(currentAlias)) {
-                        Certificate thisCertificate = store.getCertificate(currentAlias);
-                        if (thisCertificate != null) {
-                            if (thisCertificate instanceof X509Certificate) {
-                                if (alias == null) {
-                                    alias = currentAlias;
-                                } else {
-                                    // Not unique!
-                                    alias = null;
-                                    break;
-                                }
+            Object obj = context.get(XWSSConstants.CERTIFICATE_PROPERTY);
+            if (obj instanceof X509Certificate) {
+                return (X509Certificate) obj;
+            }
+            // if the keystore has only one key, use it
+            Enumeration aliases = store.aliases();
+            while (aliases.hasMoreElements()) {
+                String currentAlias = (String) aliases.nextElement();
+                if (store.isKeyEntry(currentAlias)) {
+                    Certificate thisCertificate = store.getCertificate(currentAlias);
+                    if (thisCertificate != null) {
+                        if (thisCertificate instanceof X509Certificate) {
+                            if (alias == null) {
+                                alias = currentAlias;
+                            } else {
+                                // Not unique!
+                                alias = null;
+                                break;
                             }
                         }
                     }
