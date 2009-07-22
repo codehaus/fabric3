@@ -12,10 +12,9 @@ Public License. See the accompanying license file for details.
         xmlns:f3-policy="urn:fabric3.org:policy"
         targetNamespace="urn:fabric3.org:policy">
 
-    <!-- Propagates conversation is defined as an interaction intent that must be handled by the component impplementation type -->
     <intent name="propagatesConversation" constrains="binding">
         <description>
-            Used to indicate a conversation is propagated through a reference.
+            Propagates a conversation through a reference.
         </description>
     </intent>
 
