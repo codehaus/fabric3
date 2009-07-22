@@ -220,7 +220,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
     private void validateContributionAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"extension".equals(name) && !"capabilities".equals(name) && !"required-capabilities".equals(name)) {
+            if (!"capabilities".equals(name) && !"required-capabilities".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
