@@ -52,10 +52,11 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.tx.TxException;
 
 /**
+ * Enforces transaction policy for a wire operation.
+ *
  * @version $Rev$ $Date$
  */
 public class TxInterceptor implements Interceptor {
-
     private Interceptor next;
     private TransactionManager transactionManager;
     private TxAction txAction;

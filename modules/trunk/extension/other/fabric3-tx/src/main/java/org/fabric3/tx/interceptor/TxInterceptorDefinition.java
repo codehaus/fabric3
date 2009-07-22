@@ -40,6 +40,8 @@ package org.fabric3.tx.interceptor;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
+ * Defines a transaction operation configuration for a wire invocation chain.
+ *
  * @version $Rev$ $Date$
  */
 public class TxInterceptorDefinition extends PhysicalInterceptorDefinition {

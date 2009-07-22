@@ -43,10 +43,6 @@ import org.fabric3.host.Fabric3RuntimeException;
  * @version $Rev$ $Date$
  */
 public class TxException extends Fabric3RuntimeException {
-
-    /**
-     * Serial version UID.
-     */
     private static final long serialVersionUID = -7133317647521054046L;
 
     /**

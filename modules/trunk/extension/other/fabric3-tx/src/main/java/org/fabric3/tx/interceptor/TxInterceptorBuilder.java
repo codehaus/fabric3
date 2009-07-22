@@ -47,10 +47,11 @@ import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
+ * Creates a TxInterceptor for a wire invocation chain.
+ *
  * @version $Rev$ $Date$
  */
 public class TxInterceptorBuilder implements InterceptorBuilder<TxInterceptorDefinition> {
-
     private TransactionManager transactionManager;
     private TxMonitor monitor;
 

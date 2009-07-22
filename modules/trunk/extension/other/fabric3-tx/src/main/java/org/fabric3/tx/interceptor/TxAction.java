@@ -38,6 +38,8 @@
 package org.fabric3.tx.interceptor;
 
 /**
+ * Defines the possible transaction operations when a client invokes a service.
+ *
  * @version $Rev$ $Date$
  */
 public enum TxAction {

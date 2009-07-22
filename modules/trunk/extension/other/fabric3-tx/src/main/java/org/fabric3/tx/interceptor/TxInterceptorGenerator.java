@@ -46,7 +46,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
- * Interceptor definition generator for suspend transaction policy extensions.
+ * Generates metadata for creating a TxInterceptor on a wire invocation chain.
  *
  * @version $Rev$ $Date$
  */
