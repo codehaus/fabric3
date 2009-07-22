@@ -35,26 +35,26 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.tx.interceptor;
+package org.fabric3.tx;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.w3c.dom.Element;
+
+import org.fabric3.spi.generator.InterceptorGenerator;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
- * Defines a transaction operation configuration for a wire invocation chain.
+ * Generates metadata for creating a TxInterceptor on a wire invocation chain.
  *
  * @version $Rev$ $Date$
  */
-public class TxInterceptorDefinition extends PhysicalInterceptorDefinition {
-    private static final long serialVersionUID = 5601171801790816606L;
+@EagerInit
+public class TxInterceptorGenerator implements InterceptorGenerator {
 
-    private final TxAction txAction;
-
-    public TxInterceptorDefinition(TxAction txAction) {
-        this.txAction = txAction;
+    public PhysicalInterceptorDefinition generate(Element policy, PolicyMetadata metadata, LogicalOperation operation) {
+        String action = policy.getAttribute("action");
+        return new TxInterceptorDefinition(TxAction.valueOf(action));
     }
-
-    public final TxAction getAction() {
-        return txAction;
-    }
-
 }

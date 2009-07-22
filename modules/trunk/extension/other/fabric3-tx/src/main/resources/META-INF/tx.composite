@@ -16,14 +16,12 @@ Public License. See the accompanying license file for details.
            name="TxExtension"
            autowire="true">
 
-    <!-- Tx Interceptor Builder -->
-    <component name="TxInterceptorBuilder" f3-core:key="org.fabric3.tx.interceptor.TxInterceptorDefinition">
-        <f3-impl:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorBuilder"/>
+    <component name="TxInterceptorBuilder" f3-core:key="org.fabric3.tx.TxInterceptorDefinition">
+        <f3-impl:implementation.system class="org.fabric3.tx.TxInterceptorBuilder"/>
     </component>
 
-    <!-- Tx Interceptor Generator -->
     <component name="TxInterceptorGenerator" f3-core:key="{urn:fabric3.org:policy}transaction">
-        <f3-impl:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.tx.TxInterceptorGenerator"/>
     </component>
 
 </composite>

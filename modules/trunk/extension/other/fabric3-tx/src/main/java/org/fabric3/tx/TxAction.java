@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.tx.interceptor;
+package org.fabric3.tx;
 
 /**
  * Defines the possible transaction operations when a client invokes a service.
