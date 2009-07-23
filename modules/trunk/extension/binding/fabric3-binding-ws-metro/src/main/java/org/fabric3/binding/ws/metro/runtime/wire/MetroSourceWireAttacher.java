@@ -72,7 +72,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
@@ -145,17 +144,19 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                 // TODO make sure the WSDL is correct
                 seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
             }
+
+            BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
+            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents);
+
             File generatedWsdl = null;
             List<File> generatedSchemas = null;
+
             ClassLoader old = Thread.currentThread().getContextClassLoader();
-            ClassLoader extensionClassLoader = updateClassLoader(seiClass);
-            BindingID bindingID;
-            WebServiceFeature[] features;
             try {
                 Thread.currentThread().setContextClassLoader(seiClass.getClassLoader());
                 if (!source.getMappings().isEmpty()) {
                     // if policy is configured for the endpoint, generate a WSDL with the policy attachments
-                    GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, false);
+                    GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, bindingId, false);
                     generatedWsdl = artifacts.getWsdl();
                     generatedSchemas = artifacts.getSchemas();
                     for (PolicyExpressionMapping mapping : source.getMappings()) {
@@ -163,11 +164,6 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                     }
                     wsdlLocation = generatedWsdl.toURI().toURL();
                 }
-
-
-                features = featureResolver.getFeatures(requestedIntents);
-                Thread.currentThread().setContextClassLoader(extensionClassLoader);
-                bindingID = bindingIdResolver.resolveBindingId(requestedIntents);
             } finally {
                 Thread.currentThread().setContextClassLoader(old);
             }
@@ -187,7 +183,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                                          path,
                                          invoker,
                                          features,
-                                         bindingID,
+                                         bindingId,
                                          generatedWsdl,
                                          generatedSchemas);
             monitor.endpointProvisioned(path);
@@ -222,27 +218,6 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
 
     public void attachObjectFactory(MetroWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) {
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Updates the application classloader with visibility to Meto classes. Metro requires a Metro proxy interface to be visible to the classloader
-     * that loaded the SEI class.To enable this, dynamically add the Metro extension classloader as a parent to the classloader that loaded the SEI
-     * class if the host supports classloader isolation. Note that the latter may be different than the application classloader (e.g. in the Maven
-     * iTest runtime, the SEI class will be loaded by the host classloader, not the classloader representing the application
-     *
-     * @param seiClass the service interface
-     * @return the updated classloader
-     */
-    private ClassLoader updateClassLoader(Class<?> seiClass) {
-        ClassLoader seiClassLoader = seiClass.getClassLoader();
-        ClassLoader extensionClassLoader = getClass().getClassLoader();
-        if (seiClassLoader instanceof MultiParentClassLoader) {
-            MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
-            if (!multiParentClassLoader.getParents().contains(extensionClassLoader)) {
-                multiParentClassLoader.addParent(extensionClassLoader);
-            }
-        }
-        return extensionClassLoader;
     }
 
 

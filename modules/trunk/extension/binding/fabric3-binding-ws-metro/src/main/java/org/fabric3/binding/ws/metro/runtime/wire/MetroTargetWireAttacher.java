@@ -48,6 +48,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.wss.SecurityEnvironment;
+import com.sun.xml.ws.api.BindingID;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
@@ -63,6 +64,7 @@ import org.fabric3.binding.ws.metro.runtime.policy.PolicyAttachmentException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
+import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -81,6 +83,7 @@ import org.fabric3.spi.xml.XMLFactory;
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
 
     private ClassLoaderRegistry registry;
+    private BindingIdResolver bindingIdResolver;
     private FeatureResolver resolver;
     private InterfaceGenerator interfaceGenerator;
     private WsdlGenerator wsdlGenerator;
@@ -91,6 +94,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
 
 
     public MetroTargetWireAttacher(@Reference ClassLoaderRegistry registry,
+                                   @Reference BindingIdResolver bindingIdResolver,
                                    @Reference FeatureResolver resolver,
                                    @Reference InterfaceGenerator interfaceGenerator,
                                    @Reference WsdlGenerator wsdlGenerator,
@@ -99,6 +103,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                                    @Reference WorkScheduler scheduler,
                                    @Reference XMLFactory xmlFactory) {
         this.registry = registry;
+        this.bindingIdResolver = bindingIdResolver;
         this.resolver = resolver;
         this.interfaceGenerator = interfaceGenerator;
         this.wsdlGenerator = wsdlGenerator;
@@ -129,9 +134,10 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             URL wsdlLocation = target.getWsdlLocation();
 
             File generatedWsdl = null;
+            BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
             if (!target.getMappings().isEmpty()) {
                 // if policy is configured for the endpoint, generate a WSDL with the policy attachments
-                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, true);
+                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, bindingId, true);
                 generatedWsdl = artifacts.getWsdl();
                 for (PolicyExpressionMapping mapping : target.getMappings()) {
                     List<String> names = mapping.getOperationNames();

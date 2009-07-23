@@ -289,7 +289,8 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
         }
         throw new ObjectCreationException(
                 "The web service endpoint does not expose a valid WSDL at a known metadata location, e.g. <service url>?wsdl. " +
-                        "Please specify a valid location using the @WebService annotation on the reference interface");
+                        "Check to make sure the endpoint address is correct. If it is, please specify a valid location using the @WebService " +
+                        "annotation on the reference interface.");
     }
 
     /**

@@ -40,6 +40,7 @@ package org.fabric3.binding.ws.metro.runtime.policy;
 import java.io.File;
 import javax.xml.namespace.QName;
 
+import com.sun.xml.ws.api.BindingID;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
@@ -56,7 +57,7 @@ public class WsdlGeneratorImplTestCase extends TestCase {
         EasyMock.expect(info.getTempDir()).andReturn(new File("."));
         EasyMock.replay(info);
         WsdlGenerator generator = new WsdlGeneratorImpl(info);
-        GeneratedArtifacts generated = generator.generate(HelloWorldPortType.class, serviceName, false);
+        GeneratedArtifacts generated = generator.generate(HelloWorldPortType.class, serviceName, BindingID.SOAP11_HTTP, false);
         // only verify file exists and do not verify the WSDL contents - we assume the underlying Metro WSDL generator is correct
         assertTrue(generated.getWsdl().exists());
     }

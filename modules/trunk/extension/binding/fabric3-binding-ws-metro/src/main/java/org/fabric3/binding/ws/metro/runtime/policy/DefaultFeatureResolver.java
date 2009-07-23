@@ -37,27 +37,40 @@
  */
 package org.fabric3.binding.ws.metro.runtime.policy;
 
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.soap.MTOMFeature;
+import javax.xml.ws.soap.SOAPBinding;
 
+import com.sun.xml.ws.binding.SOAPBindingImpl;
 import com.sun.xml.ws.developer.BindingTypeFeature;
 import com.sun.xml.ws.developer.JAXWSProperties;
 
 /**
- * Default implementation of FeatureResolver.Â
+ * Default implementation of FeatureResolver.
  *
  * @version $Rev$ $Date$
  */
 public class DefaultFeatureResolver implements FeatureResolver {
+    private Field field;
+
+    public DefaultFeatureResolver() {
+        try {
+            field = WebServiceFeature.class.getDeclaredField("enabled");
+            field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError(e);
+        }
+    }
 
     /**
      * Translates the requested intents to web service features.
      *
-     * @param requestedIntents    Requested intents.
+     * @param requestedIntents Requested intents.
      * @return Rsolved feature sets.
      */
     public WebServiceFeature[] getFeatures(List<QName> requestedIntents) {
@@ -66,16 +79,33 @@ public class DefaultFeatureResolver implements FeatureResolver {
         if (requestedIntents.contains(MayProvideIntents.MESSAGE_OPTIMISATION)) {
             features.add(new MTOMFeature());
         }
-        if (requestedIntents.contains(MayProvideIntents.REST)) {
-            features.add(new BindingTypeFeature(JAXWSProperties.REST_BINDING));
-        }
 
+        if (requestedIntents.contains(MayProvideIntents.SOAP1_1)) {
+            features.add(createFeature(SOAPBinding.SOAP11HTTP_BINDING));
+        } else if (requestedIntents.contains(MayProvideIntents.SOAP1_2)) {
+            features.add(createFeature(SOAPBindingImpl.SOAP12HTTP_BINDING));
+        } else if (requestedIntents.contains(MayProvideIntents.X_SOAP1_2)) {
+            features.add(createFeature(SOAPBindingImpl.X_SOAP12HTTP_BINDING));
+        } else if (requestedIntents.contains(MayProvideIntents.REST)) {
+            features.add(createFeature(JAXWSProperties.REST_BINDING));
+        }
         features.add(new AddressingFeature());
         WebServiceFeature[] webServiceFeatures = new WebServiceFeature[features.size()];
         webServiceFeatures = features.toArray(webServiceFeatures);
 
         return webServiceFeatures;
 
+    }
+
+    private BindingTypeFeature createFeature(String bindingQName) {
+        BindingTypeFeature feature = new BindingTypeFeature(bindingQName);
+        // hack to enable the protected field that is not properly set
+        try {
+            field.set(feature, true);
+        } catch (IllegalAccessException e) {
+            throw new AssertionError(e);
+        }
+        return feature;
     }
 
 }

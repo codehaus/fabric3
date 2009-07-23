@@ -39,6 +39,8 @@ package org.fabric3.binding.ws.metro.runtime.policy;
 
 import javax.xml.namespace.QName;
 
+import com.sun.xml.ws.api.BindingID;
+
 /**
  * Generates temporary WSDL documents from an SEI or implementation class. The returned generated abstract WSDL is used to attach policy expressions
  * with the resulting document passed to the Metro infrastructure when an endpoint is provisioned. Since generation and policy attachment are
@@ -53,9 +55,10 @@ public interface WsdlGenerator {
      *
      * @param seiClass     the SEI or implementaiton class
      * @param serviceQName the service qualified name
-     * @param client       true if client WSDL is being generated
-     * @return the handles to the generated WSDL and schemas.
+     * @param bindingId    the SOAP version to use
+     * @param client       true if client WSDL is being generated  @return the handles to the generated WSDL and schemas.
+     * @return a handle to the generated WSDLs and XSDs
      * @throws WsdlGenerationException if an error occurs during generation
      */
-    GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, boolean client) throws WsdlGenerationException;
+    GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, BindingID bindingId, boolean client) throws WsdlGenerationException;
 }
