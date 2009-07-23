@@ -40,6 +40,8 @@ package org.fabric3.tests.binding.metro;
 import junit.framework.TestCase;
 import org.oasisopen.sca.annotation.Reference;
 
+import org.fabric3.tests.binding.metro.weather.WeatherFault;
+import org.fabric3.tests.binding.metro.weather.WeatherFaultException;
 import org.fabric3.tests.binding.metro.weather.WeatherPortType;
 import org.fabric3.tests.binding.metro.weather.WeatherRequest;
 import org.fabric3.tests.binding.metro.weather.WeatherResponse;
@@ -50,29 +52,27 @@ public class JaxbTest extends TestCase {
     protected WeatherPortType weatherPortType;
 
     public void testWeather() throws Exception {
-
         WeatherRequest weatherRequest = new WeatherRequest();
         weatherRequest.setCity("New York");
 
         WeatherResponse weatherResponse = weatherPortType.getWeather(weatherRequest);
+
         assertNotNull(weatherResponse);
         assertEquals("SUNNY", weatherResponse.getForecast());
         assertEquals(12.0, weatherResponse.getTemperature());
     }
 
     public void testWeatherFault() throws Exception {
-
-//        WeatherRequest weatherRequest = new WeatherRequest();
-//        weatherRequest.setCity("London");
-//
-//        try {
-//            weatherPortType.getWeather(weatherRequest);
-//            fail("Exception expected");
-//        } catch (WeatherFaultException e) {
-//            WeatherFault fault = e.getFaultInfo();
-//            assertEquals("1234", fault.getCode());
-//            assertEquals("London is always wet", fault.getDetail());
-//        }
+        WeatherRequest weatherRequest = new WeatherRequest();
+        weatherRequest.setCity("London");
+        try {
+            weatherPortType.getWeather(weatherRequest);
+            fail("Exception expected");
+        } catch (WeatherFaultException e) {
+            WeatherFault fault = e.getFaultInfo();
+            assertEquals("1234", fault.getCode());
+            assertEquals("London is always wet", fault.getDetail());
+        }
 
     }
 
