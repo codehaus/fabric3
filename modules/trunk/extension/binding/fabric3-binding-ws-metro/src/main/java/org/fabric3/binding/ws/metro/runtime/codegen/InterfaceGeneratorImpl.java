@@ -53,7 +53,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Service;
 
 /**
- * Default implementation of InterfaceGenerator.
+ * Default implementation of InterfaceGenerator that uses ASM to generate a subclass of the original type with JAX-WS annotations.
  *
  * @version $Rev$ $Date$
  */
