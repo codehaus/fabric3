@@ -43,12 +43,27 @@ import javax.jws.WebService;
 import org.oasisopen.sca.annotation.OneWay;
 
 /**
+ * Utility methods for wire attachers.
+ *
  * @version $Rev$ $Date$
  */
 public class WireAttacherHelper {
     private WireAttacherHelper() {
     }
 
+    /**
+     * Determines if a service interface or class needs to be enhanced with JAX-WS annotations. Enhancement via bytecode generation will need to be
+     * done if:
+     * <pre>
+     * <ul>
+     * <li> The class does not contain a <code>WebService</code> annotation
+     * <li> The class contains a method marked with the <code>org.oasisopen.sca.annotation.OneWay</code> annotation
+     * </ul>
+     * </pre>
+     *
+     * @param clazz the class to check
+     * @return true if the class needs to be enhanced
+     */
     public static boolean doGeneration(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(WebService.class)) {
             // @WebService is required by Metro
