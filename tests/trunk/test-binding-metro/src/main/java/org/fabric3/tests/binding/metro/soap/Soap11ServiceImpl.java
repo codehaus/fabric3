@@ -35,20 +35,12 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.tests.binding.metro;
+package org.fabric3.tests.binding.metro.soap;
 
-import junit.framework.TestCase;
-import org.oasisopen.sca.annotation.Reference;
+public class Soap11ServiceImpl implements Soap11Service {
 
-import org.fabric3.tests.binding.metro.hello.HelloWorldPortType;
-
-public class SimpleTypeTest extends TestCase {
-
-    @Reference
-    protected HelloWorldPortType helloWorldPortType;
-
-    public void testHello() throws Exception {
-        assertEquals("Hello, Foo", helloWorldPortType.sayHello("Foo"));
+    public String sayHello(String name) {
+        return "Hello, " + name;
     }
 
 }

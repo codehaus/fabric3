@@ -35,20 +35,12 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.tests.binding.metro;
+package org.fabric3.tests.binding.metro.security;
 
-import junit.framework.TestCase;
-import org.oasisopen.sca.annotation.Reference;
+public class SecureServiceImpl implements SecureService {
 
-import org.fabric3.tests.binding.metro.bookstore.SearchService;
-
-public class RestTest extends TestCase {
-
-    @Reference
-    protected SearchService searchService;
-
-    public void testSearch() throws Exception {
-        searchService.search("William Shakespeare");
+    public String sayHello(String name) {
+        return "Hello, " + name;
     }
 
 }

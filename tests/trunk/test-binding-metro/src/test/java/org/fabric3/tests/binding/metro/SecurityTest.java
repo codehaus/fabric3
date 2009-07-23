@@ -40,15 +40,15 @@ package org.fabric3.tests.binding.metro;
 import junit.framework.TestCase;
 import org.oasisopen.sca.annotation.Reference;
 
-import org.fabric3.tests.binding.metro.bookstore.SearchService;
+import org.fabric3.tests.binding.metro.security.SecureService;
 
-public class RestTest extends TestCase {
+public class SecurityTest extends TestCase {
 
     @Reference
-    protected SearchService searchService;
+    protected SecureService service;
 
-    public void testSearch() throws Exception {
-        searchService.search("William Shakespeare");
+    public void testAuthenticatedInvocation() throws Exception {
+        assertEquals("Hello, Foo", service.sayHello("Foo"));
     }
 
 }
