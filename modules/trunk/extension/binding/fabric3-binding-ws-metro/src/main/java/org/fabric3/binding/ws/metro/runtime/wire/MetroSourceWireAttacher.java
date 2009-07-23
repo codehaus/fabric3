@@ -72,6 +72,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
@@ -144,6 +145,8 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
                 // TODO make sure the WSDL is correct
                 seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
             }
+            // update the classloader
+            updateClassLoader(seiClass);
 
             BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents);
@@ -220,5 +223,23 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Updates the application classloader with visibility to Meto classes. Metro requires a Metro proxy interface to be visible to the classloader
+     * that loaded the SEI class.To enable this, dynamically add the Metro extension classloader as a parent to the classloader that loaded the SEI
+     * class if the host supports classloader isolation. Note that the latter may be different than the application classloader (e.g. in the Maven
+     * iTest runtime, the SEI class will be loaded by the host classloader, not the classloader representing the application
+     *
+     * @param seiClass the service interface
+     */
+    private void updateClassLoader(Class<?> seiClass) {
+        ClassLoader seiClassLoader = seiClass.getClassLoader();
+        ClassLoader extensionClassLoader = getClass().getClassLoader();
+        if (seiClassLoader instanceof MultiParentClassLoader) {
+            MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
+            if (!multiParentClassLoader.getParents().contains(extensionClassLoader)) {
+                multiParentClassLoader.addParent(extensionClassLoader);
+            }
+        }
+    }
 
 }
