@@ -59,8 +59,12 @@ import org.fabric3.spi.wire.Interceptor;
  * @version $Rev$ $Date$
  */
 public class MetroTargetInterceptor implements Interceptor {
+    // blank response for one-way operations 
+    private static final Message NULL_RESPONSE = new MessageImpl();
+
     private ObjectFactory<?> proxyFactory;
     private Method method;
+    private boolean oneWay;
     private SecurityConfiguration configuration;
 
     /**
@@ -68,11 +72,13 @@ public class MetroTargetInterceptor implements Interceptor {
      *
      * @param proxyFactory  the service proxy factory
      * @param method        method corresponding to the invoked operation
+     * @param oneWay        true if the operation is non-blocking
      * @param configuration the security configuration or null if security is not configured
      */
-    public MetroTargetInterceptor(ObjectFactory<?> proxyFactory, Method method, SecurityConfiguration configuration) {
+    public MetroTargetInterceptor(ObjectFactory<?> proxyFactory, Method method, boolean oneWay, SecurityConfiguration configuration) {
         this.proxyFactory = proxyFactory;
         this.method = method;
+        this.oneWay = oneWay;
         this.configuration = configuration;
     }
 
@@ -85,8 +91,13 @@ public class MetroTargetInterceptor implements Interceptor {
             // Metro stubs attempt to load classes using TCCL (e.g. StAX provider classes) that are visible the extension classloader and not
             // visible to the application classloader.
             Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-            Object ret = method.invoke(proxy, payload);
-            return new MessageImpl(ret, false, null);
+            if (oneWay) {
+                method.invoke(proxy, payload);
+                return NULL_RESPONSE;
+            } else {
+                Object ret = method.invoke(proxy, payload);
+                return new MessageImpl(ret, false, null);
+            }
         } catch (InaccessibleWSDLException e) {
             throw new ServiceRuntimeException(e);
         } catch (IllegalAccessException e) {

@@ -44,7 +44,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
-import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 
@@ -58,6 +57,7 @@ import org.fabric3.binding.ws.metro.MetroBindingMonitor;
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
+import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServiceInvoker;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
@@ -67,7 +67,6 @@ import org.fabric3.binding.ws.metro.runtime.policy.PolicyAttachmentException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
-import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -141,7 +140,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
 
             // load the service interface
             Class<?> seiClass = classLoader.loadClass(interfaze);
-            if (!seiClass.isAnnotationPresent(WebService.class)) {
+            if (WireAttacherHelper.doGeneration(seiClass)) {
                 // if the service interface is not annotated, generate an implementing class that is
                 // TODO make sure the WSDL is correct
                 seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);

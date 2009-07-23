@@ -16,7 +16,8 @@ Public License. See the accompanying license file for details.
                                                 sca:SOAP.1_2
                                                 f3-policy:protocolBinding.xsoap12
                                                 f3-policy:protocolBinding.rest
-                                                f3-policy:schemaValidation"/>
+                                                f3-policy:schemaValidation
+                                                sca:oneWay"/>
 
     <intent name="f3-policy:messageOptimization" constrains="binding">
         <description>

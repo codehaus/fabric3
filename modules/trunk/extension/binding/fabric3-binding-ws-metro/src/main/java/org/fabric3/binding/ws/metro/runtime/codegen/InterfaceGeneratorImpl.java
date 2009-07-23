@@ -41,6 +41,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.CodeSource;
 import java.security.SecureClassLoader;
+import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
@@ -92,29 +93,31 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
 
     private byte[] generate(ClassWriter cw,
                             String className,
-                            Class clazz,
+                            Class<?> clazz,
                             String targetNamespace,
                             String wsdlLocation,
                             String serviceName,
                             String portName) {
         String[] interfaces = {clazz.getName().replace('.', '/')};
         cw.visit(V1_5, ACC_INTERFACE | ACC_PUBLIC, className, null, "java/lang/Object", interfaces);
-        // add @WebService
-        AnnotationVisitor av = cw.visitAnnotation(getSignature(WebService.class), true);
-        if (targetNamespace != null) {
-            av.visit("targetNamespace", targetNamespace);
-        }
-        if (wsdlLocation != null) {
-            av.visit("wsdlLocation", wsdlLocation);
-        }
-        if (serviceName != null) {
-            av.visit("serviceName", serviceName);
-        }
-        if (portName != null) {
-            av.visit("portName", portName);
-        }
-        av.visitEnd();
 
+        if (!clazz.isAnnotationPresent(WebService.class)) {
+            // add @WebService if it is not present
+            AnnotationVisitor av = cw.visitAnnotation(getSignature(WebService.class), true);
+            if (targetNamespace != null) {
+                av.visit("targetNamespace", targetNamespace);
+            }
+            if (wsdlLocation != null) {
+                av.visit("wsdlLocation", wsdlLocation);
+            }
+            if (serviceName != null) {
+                av.visit("serviceName", serviceName);
+            }
+            if (portName != null) {
+                av.visit("portName", portName);
+            }
+            av.visitEnd();
+        }
         Method[] methods = clazz.getMethods();
         for (Method m : methods) {
             generateMethod(cw, m);
@@ -127,13 +130,18 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
         MethodVisitor mv;
         String signature = getSignature(m);
         mv = cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, m.getName(), signature, null, null);
-        // add @WebMethod
-        AnnotationVisitor av = mv.visitAnnotation(getSignature(WebMethod.class), true);
-        av.visitEnd();
-        if (m.isAnnotationPresent(OneWay.class) || m.isAnnotationPresent(org.osoa.sca.annotations.OneWay.class)) {
-            // add the JAX-WS one-way equivalent
-            AnnotationVisitor oneWay = mv.visitAnnotation(getSignature(javax.jws.Oneway.class), true);
-            oneWay.visitEnd();
+
+        if (!m.isAnnotationPresent(WebMethod.class)) {
+            // add @WebMethod if it is not present
+            AnnotationVisitor av = mv.visitAnnotation(getSignature(WebMethod.class), true);
+            av.visitEnd();
+        }
+        if (!m.isAnnotationPresent(Oneway.class)) {
+            if (m.isAnnotationPresent(OneWay.class) || m.isAnnotationPresent(org.osoa.sca.annotations.OneWay.class)) {
+                // add the JAX-WS one-way equivalent
+                AnnotationVisitor oneWay = mv.visitAnnotation(getSignature(Oneway.class), true);
+                oneWay.visitEnd();
+            }
         }
         mv.visitEnd();
     }

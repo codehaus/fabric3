@@ -42,13 +42,12 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.ws.WebServiceFeature;
 
-import com.sun.xml.wss.SecurityEnvironment;
 import com.sun.xml.ws.api.BindingID;
+import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
@@ -56,16 +55,16 @@ import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
+import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
 import org.fabric3.binding.ws.metro.runtime.core.MetroProxyObjectFactory;
 import org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor;
+import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.GeneratedArtifacts;
 import org.fabric3.binding.ws.metro.runtime.policy.PolicyAttachmentException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
-import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
-import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -127,7 +126,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             WebServiceFeature[] features = resolver.getFeatures(requestedIntents);
 
             Class<?> seiClass = classLoader.loadClass(interfaze);
-            if (!seiClass.isAnnotationPresent(WebService.class)) {
+            if (WireAttacherHelper.doGeneration(seiClass)) {
                 // if the service interface is not annotated, generate an implementing class that is
                 seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
             }
@@ -166,7 +165,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                         break;
                     }
                 }
-                MetroTargetInterceptor targetInterceptor = new MetroTargetInterceptor(proxyFactory, method, configuration);
+                boolean oneWay = chain.getPhysicalOperation().isOneWay();
+                MetroTargetInterceptor targetInterceptor = new MetroTargetInterceptor(proxyFactory, method, oneWay, configuration);
                 chain.addInterceptor(targetInterceptor);
             }
         } catch (ClassNotFoundException e) {
