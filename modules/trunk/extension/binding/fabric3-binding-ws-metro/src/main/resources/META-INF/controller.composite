@@ -32,7 +32,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="InterfaceGenerator">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.InterfaceGeneratorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGeneratorImpl"/>
     </component>
 
 </composite>

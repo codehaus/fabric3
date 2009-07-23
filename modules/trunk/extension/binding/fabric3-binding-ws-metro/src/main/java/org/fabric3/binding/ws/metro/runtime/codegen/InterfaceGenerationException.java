@@ -35,28 +35,23 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.wire;
+package org.fabric3.binding.ws.metro.runtime.codegen;
+
+import org.fabric3.spi.builder.WiringException;
 
 /**
- * Generates an interface with JAX-WS annotations from another interface. This allows classes with non-annotated interfaces to be used with Metro,
- * which requires interfaces that define service endpoints to be annotated. Specifically, adds @WebService to the generated interface, @WebMethod to
- * all methods, and @Oneway to methods marked with the SCA @OneWay annotation.
+ * Denotes an error generating an annotated interface.
  *
  * @version $Rev$ $Date$
  */
-public interface InterfaceGenerator {
+public class InterfaceGenerationException extends WiringException {
+    private static final long serialVersionUID = -921047598001767778L;
 
-    /**
-     * Generates the annotated interface from another interface
-     *
-     * @param interfaze       the source interface
-     * @param targetNamespace the target namespace to use with the @WebService annotation or null.
-     * @param wsdlLocation    the WSDL location to use with the @WebService annotation or null.
-     * @param serviceName     the service name to use with the @WebService annotation or null.
-     * @param portName        the port name to use with the @WebService annotation or null.
-     * @return the generated interface
-     * @throws InterfaceGenerationException if an error generating the exception occurs
-     */
-    Class<?> generateAnnotatedInterface(Class interfaze, String targetNamespace, String wsdlLocation, String serviceName, String portName)
-            throws InterfaceGenerationException;
+    public InterfaceGenerationException(String message) {
+        super(message);
+    }
+
+    public InterfaceGenerationException(Throwable cause) {
+        super(cause);
+    }
 }

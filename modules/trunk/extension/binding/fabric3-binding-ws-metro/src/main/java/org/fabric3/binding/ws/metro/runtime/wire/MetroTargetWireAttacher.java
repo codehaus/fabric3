@@ -65,6 +65,7 @@ import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
 import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
+import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;

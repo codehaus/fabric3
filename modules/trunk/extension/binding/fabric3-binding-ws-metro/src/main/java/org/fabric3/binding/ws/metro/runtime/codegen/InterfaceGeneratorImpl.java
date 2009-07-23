@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.wire;
+package org.fabric3.binding.ws.metro.runtime.codegen;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
