@@ -8,9 +8,10 @@
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" name="MetroTestComposite">
 
-    <include name="SecurityPolicyTest" />
-    <include name="SOAPPolicyTest" />
     <include name="JaxbTest"/>
+    <include name="InteractionTest" />
+    <include name="SOAPPolicyTest" />
+    <include name="SecurityPolicyTest" />
     <include name="MtomTest" />
     <include name="RestTest" />
 
