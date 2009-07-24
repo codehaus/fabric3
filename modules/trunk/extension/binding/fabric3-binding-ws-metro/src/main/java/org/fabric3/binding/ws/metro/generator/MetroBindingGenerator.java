@@ -134,7 +134,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
                 throw new GenerationException(e);
             }
         } else {
-            // no targetUri specified, introspect from wsdlElement
+            // no target uri specified, introspect from wsdlElement
             URI uri = URI.create(definition.getWsdlElement());
             QName deployable = binding.getParent().getParent().getDeployable();
             endpointDefinition = endpointResolver.resolveReferenceEndpoint(deployable, uri, wsdlLocation);
