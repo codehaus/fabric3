@@ -99,8 +99,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         if (targetUri != null) {
             endpointDefinition = synthesizer.synthesizeServiceEndpoint(javaContract, serviceClass, targetUri);
         } else {
-            // TODO error check WSDL element in binding loader
-            // no targetUri specified, check wsdlElement
+            // no target uri specified, check wsdlElement
             URI uri = URI.create(binding.getDefinition().getWsdlElement());
             QName deployable = binding.getParent().getParent().getDeployable();
             endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri, wsdlLocation);
