@@ -83,8 +83,11 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
     private ReferenceEndpointDefinition createDefinition(WebService annotation, Class<?> serviceClass, URL url) {
         String namespace = getNamespace(annotation, serviceClass);
         ServiceNameResult result = getServiceName(annotation, serviceClass, namespace);
+        QName serviceQName = result.getServiceName();
+        boolean defaultService = result.isDefaultServiceName();
+        QName portQName = getPortName(annotation, serviceClass, namespace);
         QName portTypeQName = getPortTypeName(annotation, serviceClass, namespace);
-        return new ReferenceEndpointDefinition(result.getServiceName(), result.isDefaultServiceName(), portTypeQName, url);
+        return new ReferenceEndpointDefinition(serviceQName, defaultService, portQName, portTypeQName, url);
     }
 
     /**
@@ -99,8 +102,9 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
         String className = serviceClass.getSimpleName();
         String namespace = deriveNamespace(packageName);
         QName serviceQName = new QName(namespace, className + "Service");
-        QName portQName = new QName(namespace, className + "Port");
-        return new ReferenceEndpointDefinition(serviceQName, true, portQName, url);
+        QName portQName =  new QName(namespace, className + "Port");
+        QName portTypeQName =  new QName(namespace, className);
+        return new ReferenceEndpointDefinition(serviceQName, true, portQName, portTypeQName, url);
     }
 
     /**
@@ -201,7 +205,7 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
     private QName getPortTypeName(WebService annotation, Class<?> serviceClass, String namespace) {
         String portTypeName = annotation.name();
         if (portTypeName.length() < 1) {
-            portTypeName = serviceClass.getSimpleName() + "Port";
+            portTypeName = serviceClass.getSimpleName();
         }
         return new QName(namespace, portTypeName);
     }

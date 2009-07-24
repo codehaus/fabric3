@@ -50,4 +50,8 @@ public class EndpointResolutionException extends GenerationException {
     public EndpointResolutionException(String message) {
         super(message);
     }
+
+    public EndpointResolutionException(Throwable cause) {
+        super(cause);
+    }
 }

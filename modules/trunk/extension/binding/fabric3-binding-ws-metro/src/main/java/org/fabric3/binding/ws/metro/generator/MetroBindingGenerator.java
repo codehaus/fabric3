@@ -93,6 +93,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         JavaServiceContract javaContract = (JavaServiceContract) contract;
         Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
+        URL wsdlLocation = getWsdlLocation(definition, serviceClass);
         ServiceEndpointDefinition endpointDefinition;
         URI targetUri = binding.getDefinition().getTargetUri();
         if (targetUri != null) {
@@ -102,9 +103,8 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
             // no targetUri specified, check wsdlElement
             URI uri = URI.create(binding.getDefinition().getWsdlElement());
             QName deployable = binding.getParent().getParent().getDeployable();
-            endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri);
+            endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri, wsdlLocation);
         }
-        URL wsdlLocation = getWsdlLocation(definition, serviceClass);
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
@@ -121,8 +121,9 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         JavaServiceContract javaContract = (JavaServiceContract) contract;
         Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
-        URI targetUri = binding.getDefinition().getTargetUri();
+        URI targetUri = definition.getTargetUri();
         ReferenceEndpointDefinition endpointDefinition;
+        URL wsdlLocation = getWsdlLocation(definition, serviceClass);
         if (targetUri != null) {
             try {
                 // TODO get rid of need to decode
@@ -134,14 +135,12 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
                 throw new GenerationException(e);
             }
         } else {
-            // TODO error check WSDL element in binding loader
             // no targetUri specified, introspect from wsdlElement
-            URI uri = URI.create(binding.getDefinition().getWsdlElement());
+            URI uri = URI.create(definition.getWsdlElement());
             QName deployable = binding.getParent().getParent().getDeployable();
-            endpointDefinition = endpointResolver.resolveReferenceEndpoint(deployable, uri);
+            endpointDefinition = endpointResolver.resolveReferenceEndpoint(deployable, uri, wsdlLocation);
         }
 
-        URL wsdlLocation = getWsdlLocation(definition, serviceClass);
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);

@@ -84,6 +84,7 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
     private URL wsdlLocation;
     private QName serviceName;
     private boolean serviceNameDefault;
+    private QName portName;
     private QName portTypeName;
     private Class<?> seiClass;
     private WebServiceFeature[] features;
@@ -117,6 +118,7 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
         this.serviceName = endpointDefinition.getServiceName();
         this.serviceNameDefault = endpointDefinition.isDefaultServiceName();
         this.portTypeName = endpointDefinition.getPortTypeName();
+        this.portName = endpointDefinition.getPortName();
         this.endpointUrl = endpointDefinition.getUrl();
         this.wsdlLocation = wsdlLocation;
         this.seiClass = seiClass;
@@ -179,7 +181,8 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
             }
             // use the kernel scheduler for dispatching
             service.setExecutor(scheduler);
-            return service.getPort(seiClass, features);
+            service.getPorts();
+            return service.getPort(portName, seiClass, features);
         } catch (InaccessibleWSDLException e) {
             throw new ObjectCreationException(e);
         } catch (MalformedURLException e) {

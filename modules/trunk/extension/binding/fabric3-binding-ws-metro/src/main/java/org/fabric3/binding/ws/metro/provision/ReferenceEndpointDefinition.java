@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 public class ReferenceEndpointDefinition implements Serializable {
     private static final long serialVersionUID = -7422624061436929193L;
     private QName serviceName;
+    private QName portName;
     private boolean defaultServiceName;
     private QName portTypeName;
     private URL url;
@@ -58,12 +59,14 @@ public class ReferenceEndpointDefinition implements Serializable {
      *
      * @param serviceName        the qualified name of the target service
      * @param defaultServiceName true if the service name is a default and may be overriden by introspecting WSDL
+     * @param portName           the port name
      * @param portTypeName       the qualified name of the target port type
      * @param url                the endpoint URL
      */
-    public ReferenceEndpointDefinition(QName serviceName, boolean defaultServiceName, QName portTypeName, URL url) {
+    public ReferenceEndpointDefinition(QName serviceName, boolean defaultServiceName, QName portName, QName portTypeName, URL url) {
         this.serviceName = serviceName;
         this.defaultServiceName = defaultServiceName;
+        this.portName = portName;
         this.portTypeName = portTypeName;
         this.url = url;
     }
@@ -92,9 +95,18 @@ public class ReferenceEndpointDefinition implements Serializable {
     }
 
     /**
-     * Returns the qualified port type name.
+     * Returns the qualified port name.
      *
      * @return the qualified port name
+     */
+    public QName getPortName() {
+        return portName;
+    }
+
+    /**
+     * Returns the qualified port type name.
+     *
+     * @return the qualified port type name
      */
     public QName getPortTypeName() {
         return portTypeName;
