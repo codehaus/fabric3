@@ -144,7 +144,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         List<QName> requestedIntents = policy.getProvidedIntents();
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
 
-        // obtain security information such as username/password
+        // obtain security information 
         SecurityConfiguration configuration = null;
         Map<String, String> securityConfiguration = definition.getConfiguration();
         if (securityConfiguration != null) {
