@@ -42,8 +42,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -221,8 +221,10 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
         }
         InputStream stream = null;
         try {
-            // locate the service name by looking up the port type
-            List<QName> found = new ArrayList<QName>();
+            // Locate the service name by looking up the port type.
+            // Use a Set to filter duplicate service names in the case that multiple ports from the same service use the same portType.
+            // In that case, the service can be computed
+            Set<QName> found = new HashSet<QName>();
             stream = wsdlLocation.openStream();
             StreamSource source = new StreamSource(stream);
             WSDLModel model = RuntimeWSDLParser.parse(wsdlLocation, source, RESOLVER, false, null);
@@ -234,13 +236,13 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
                 }
             }
             if (found.size() > 1) {
-                throw new ObjectCreationException("Cannot determine the default service name as multiple services using portType " + portTypeName +
+                throw new ObjectCreationException("Cannot determine the default service name as multiple ports using portType " + portTypeName +
                         " were found in the WSDL document: " + wsdlLocation);
             } else if (found.isEmpty()) {
                 throw new ObjectCreationException("No default service for portType" + portTypeName + " found in WSDL: " + wsdlLocation);
             } else {
                 // retry creating the service
-                QName defaultServiceName = found.get(0);
+                QName defaultServiceName = found.iterator().next();
                 service = WSService.create(wsdlLocation, defaultServiceName, params);
             }
         } catch (IOException e1) {
