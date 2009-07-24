@@ -61,6 +61,7 @@ import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
@@ -125,7 +126,10 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             introspectionContext.addError(failure);
         }
 
-        //LoaderUtil.skipToEndElement(reader);
+        if (bd != null && bd.getTargetUri() == null && bd.getWsdlElement() == null) {
+            MissingAttribute error = new MissingAttribute("Either a targetUri or wsdlElement must be specified on the web service binding", reader);
+            introspectionContext.addError(error);
+        }
         return bd;
 
     }
