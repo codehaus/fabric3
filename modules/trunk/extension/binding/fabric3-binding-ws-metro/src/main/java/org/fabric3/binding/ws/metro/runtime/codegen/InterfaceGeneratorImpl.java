@@ -104,6 +104,9 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
         if (!clazz.isAnnotationPresent(WebService.class)) {
             // add @WebService if it is not present
             AnnotationVisitor av = cw.visitAnnotation(getSignature(WebService.class), true);
+            // Set the port type name attribate to the original class name. This corresponds to Java-to-WSDL mappings as defined in 
+            // the JAX-WS specification (section 3.11)
+            av.visit("name", clazz.getSimpleName());
             if (targetNamespace != null) {
                 av.visit("targetNamespace", targetNamespace);
             }
