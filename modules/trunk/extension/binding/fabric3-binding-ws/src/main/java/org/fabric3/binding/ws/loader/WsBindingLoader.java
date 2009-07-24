@@ -116,8 +116,6 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             //Load optional config parameters
             loadConfig(bd, reader);
 
-            // TODO Add rest of the WSDL support
-
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The web services binding URI is not a valid: " + uri, reader);
             introspectionContext.addError(failure);
@@ -127,11 +125,11 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
         }
 
         if (bd != null && bd.getTargetUri() == null && bd.getWsdlElement() == null) {
-            MissingAttribute error = new MissingAttribute("Either a targetUri or wsdlElement must be specified on the web service binding", reader);
+            MissingAttribute error =
+                    new MissingAttribute("Either a uri or wsdlElement attribute must be specified on the web service binding", reader);
             introspectionContext.addError(error);
         }
         return bd;
-
     }
 
     private void loadConfig(WsBindingDefinition bd, XMLStreamReader reader) throws XMLStreamException {
