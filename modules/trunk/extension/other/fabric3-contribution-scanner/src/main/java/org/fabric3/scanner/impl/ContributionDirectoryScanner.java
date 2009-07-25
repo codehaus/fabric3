@@ -44,8 +44,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -103,6 +106,8 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private final ScannerMonitor monitor;
     private final Domain domain;
     private Map<String, URI> processed = new HashMap<String, URI>();
+    private Set<File> ignored = new HashSet<File>();
+
     private FileSystemResourceFactoryRegistry registry;
     private File path;
 
@@ -166,6 +171,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             File[] files = path.listFiles();
             processRemovals(files);
             processFiles(files);
+            processIgnored();
         } catch (RuntimeException e) {
             monitor.error(e);
         }
@@ -215,7 +221,6 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
 
     private synchronized void processFiles(File[] files) {
         boolean wait = false;
-        List<File> ignored = new ArrayList<File>();
         for (File file : files) {
             try {
                 String name = file.getName();
@@ -241,6 +246,9 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     }
                     if (resource == null) {
                         // not a known type, ignore
+                        if (!name.startsWith(".") && !name.endsWith(".txt") && !ignored.contains(file)) {
+                            monitor.ignored(name);
+                        }
                         ignored.add(file);
                         continue;
                     }
@@ -260,11 +268,11 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             }
         }
         if (!wait) {
-            sortAndProcessChanges(files, ignored);
+            sortAndProcessChanges(files);
         }
     }
 
-    private void sortAndProcessChanges(File[] files, List<File> ignored) {
+    private void sortAndProcessChanges(File[] files) {
         try {
             List<File> updates = new ArrayList<File>();
             List<File> additions = new ArrayList<File>();
@@ -385,7 +393,6 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         }
     }
 
-
     private synchronized void processRemovals(File[] files) {
         Map<String, File> index = new HashMap<String, File>(files.length);
         for (File file : files) {
@@ -399,7 +406,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             if (index.get(filename) == null) {
                 // artifact was removed
                 try {
-                    // check that the resurce was not deleted by another process
+                    // check that the resource was not deleted by another process
                     if (contributionService.exists(uri)) {
                         List<Deployable> deployables = contributionService.getDeployables(uri);
                         for (Deployable deployable : deployables) {
@@ -419,6 +426,15 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         }
         for (String removedName : removed) {
             processed.remove(removedName);
+        }
+    }
+
+    private synchronized void processIgnored() {
+        for (Iterator<File> iter = ignored.iterator(); iter.hasNext();) {
+            File file = iter.next();
+            if (!file.exists()) {
+                iter.remove();
+            }
         }
     }
 

@@ -72,6 +72,14 @@ public interface ScannerMonitor {
     void updated(String name);
 
     /**
+     * Called when a file type is not recognized and ignored.
+     *
+     * @param name the file name
+     */
+    @Info
+    void ignored(String name);
+
+    /**
      * Called when a general error is encountered processing a contribution
      *
      * @param e the error
