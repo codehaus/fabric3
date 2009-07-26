@@ -46,7 +46,7 @@ package org.fabric3.runtime.standalone;
 import org.fabric3.host.runtime.Fabric3Runtime;
 
 /**
- * Extends the Fabric3 runtime to add the behavious to deploy an application SCDL.
+ * API for the Standalone runtime.
  *
  * @version $Revision$ $Date$
  */
