@@ -48,8 +48,6 @@ import java.net.URI;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.model.type.java.InjectableAttribute;
-
 /**
  * Represents the source side of a wire.
  *
@@ -60,7 +58,6 @@ public class PhysicalWireSourceDefinition implements Serializable {
 
     private URI uri;
     private URI classLoaderId;
-    private InjectableAttribute injectableAttribute;
     private boolean optimizable;
     private Document key;
     private InteractionType type = InteractionType.STATELESS;
@@ -101,24 +98,6 @@ public class PhysicalWireSourceDefinition implements Serializable {
         this.classLoaderId = classLoaderId;
     }
 
-
-    /**
-     * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
-     *
-     * @return the value source for this wire
-     */
-    public InjectableAttribute getValueSource() {
-        return injectableAttribute;
-    }
-
-    /**
-     * Sets the value source for this wire.
-     *
-     * @param injectableAttribute the value source for this wire
-     */
-    public void setValueSource(InjectableAttribute injectableAttribute) {
-        this.injectableAttribute = injectableAttribute;
-    }
 
     /**
      * Returns whether the source side of the wire is optimizable.

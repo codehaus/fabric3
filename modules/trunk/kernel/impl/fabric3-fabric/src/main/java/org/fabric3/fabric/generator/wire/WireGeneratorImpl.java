@@ -393,7 +393,7 @@ public class WireGeneratorImpl implements WireGenerator {
             if (pid != null) {
                 URI contributionClassLoaderId = operation.getParent().getParent().getDefinition().getContributionUri();
                 pid.setWireClassLoaderId(contributionClassLoaderId);
-                pid.setPolicyClassLoaderid(policy.getContributionUri());
+                pid.setPolicyClassLoaderId(policy.getContributionUri());
                 interceptors.add(pid);
             }
         }

@@ -71,7 +71,7 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
     }
 
     public WebComponent build(WebComponentDefinition definition) throws BuilderException {
-        URI componentId = definition.getComponentId();
+        URI uri = definition.getComponentUri();
         QName deployable = definition.getDeployable();
         // TODO fix properties
         Map<String, ObjectFactory<?>> propertyFactories = Collections.emptyMap();
@@ -80,7 +80,7 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
         ClassLoader cl = activator.getWebComponentClassLoader(classLoaderId);
         URI archiveUri = definition.getContributionUri();
         String contextUrl = definition.getContextUrl();
-        return new WebComponent(componentId,
+        return new WebComponent(uri,
                                 contextUrl,
                                 deployable,
                                 archiveUri,

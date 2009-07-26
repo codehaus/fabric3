@@ -78,7 +78,7 @@ public class MockComponentBuilder<T> implements ComponentBuilder<MockComponentDe
 
         ObjectFactory<T> objectFactory = new MockObjectFactory<T>(mockedInterfaces, classLoader, control);
 
-        return new MockComponent<T>(componentDefinition.getComponentId(), objectFactory);
+        return new MockComponent<T>(componentDefinition.getComponentUri(), objectFactory);
 
     }
 

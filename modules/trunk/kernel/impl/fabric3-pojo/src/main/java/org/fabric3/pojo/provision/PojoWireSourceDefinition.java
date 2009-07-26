@@ -43,6 +43,7 @@
  */
 package org.fabric3.pojo.provision;
 
+import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -50,6 +51,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  */
 public class PojoWireSourceDefinition extends PhysicalWireSourceDefinition {
     private String interfaceName;
+    private InjectableAttribute injectableAttribute;
 
     /**
      * Returns the name of the Java interface for the service contract.
@@ -68,5 +70,24 @@ public class PojoWireSourceDefinition extends PhysicalWireSourceDefinition {
     public void setInterfaceName(String interfaceName) {
         this.interfaceName = interfaceName;
     }
+
+    /**
+     * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
+     *
+     * @return the value source for this wire
+     */
+    public InjectableAttribute getValueSource() {
+        return injectableAttribute;
+    }
+
+    /**
+     * Sets the value source for this wire.
+     *
+     * @param injectableAttribute the value source for this wire
+     */
+    public void setValueSource(InjectableAttribute injectableAttribute) {
+        this.injectableAttribute = injectableAttribute;
+    }
+
 
 }

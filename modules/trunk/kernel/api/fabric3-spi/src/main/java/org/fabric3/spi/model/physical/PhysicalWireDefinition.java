@@ -48,10 +48,8 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 /**
- * Model class representing the portable definition of a wire.
- * <p/>
- * The definition describes a wire between a source component and a target component, defining how the wire should be attached at both ends. It also
- * describes the operations available on the wire, and whether the connection between the two components can be optimized.
+ * Used to provision a wire on a runtime. Contains metadata for attaching the wire to a source transport or component and target transport or
+ * component.
  *
  * @version $Rev$ $Date$
  */

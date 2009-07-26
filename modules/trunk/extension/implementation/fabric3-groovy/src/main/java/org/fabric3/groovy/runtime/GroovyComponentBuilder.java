@@ -69,7 +69,7 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
     }
 
     public GroovyComponent<T> build(GroovyComponentDefinition definition) throws BuilderException {
-        URI componentId = definition.getComponentId();
+        URI componentId = definition.getComponentUri();
         int initLevel = definition.getInitLevel();
         QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());

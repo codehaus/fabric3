@@ -89,7 +89,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
     }
 
     public TimerComponent<T> build(TimerComponentDefinition definition) throws BuilderException {
-        URI componentId = definition.getComponentId();
+        URI uri = definition.getComponentUri();
         int initLevel = definition.getInitLevel();
         QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
@@ -113,7 +113,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
         } else {
             timerService = nonTrxTimerService;
         }
-        TimerComponent<T> component = new TimerComponent<T>(componentId,
+        TimerComponent<T> component = new TimerComponent<T>(uri,
                                                             provider,
                                                             scopeContainer,
                                                             deployable,

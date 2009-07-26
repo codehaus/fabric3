@@ -296,7 +296,7 @@ public class ExtensionGeneratorImpl implements ExtensionGenerator {
                                      String zone, GenerationType type) throws GenerationException {
         for (PhysicalOperationDefinition operation : wireCommand.getPhysicalWireDefinition().getOperations()) {
             for (PhysicalInterceptorDefinition interceptor : operation.getInterceptors()) {
-                URI contributionUri = interceptor.getPolicyClassLoaderid();
+                URI contributionUri = interceptor.getPolicyClassLoaderId();
                 Contribution contribution = store.find(contributionUri);
                 if (findContribution(contribution, contributions)) {
                     // the interceptor is bundled with user contribution so skip

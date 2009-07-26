@@ -98,7 +98,7 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
                                                 null);
         definition = new SystemComponentDefinition();
         definition.setDeployable(deployable);
-        definition.setComponentId(componentId);
+        definition.setComponentUri(componentId);
         definition.setClassLoaderId(classLoaderId);
         definition.setScope("COMPOSITE");
         definition.setInitLevel(-1);

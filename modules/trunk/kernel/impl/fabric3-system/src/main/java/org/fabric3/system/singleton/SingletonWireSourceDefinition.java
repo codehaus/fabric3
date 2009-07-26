@@ -38,9 +38,32 @@
 package org.fabric3.system.singleton;
 
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.model.type.java.InjectableAttribute;
 
 /**
  * @version $Rev$ $Date$
  */
 public class SingletonWireSourceDefinition extends PhysicalWireSourceDefinition {
+    private static final long serialVersionUID = -8954551053778417834L;
+    private InjectableAttribute injectableAttribute;
+
+    /**
+     * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
+     *
+     * @return the value source for this wire
+     */
+    public InjectableAttribute getValueSource() {
+        return injectableAttribute;
+    }
+
+    /**
+     * Sets the value source for this wire.
+     *
+     * @param injectableAttribute the value source for this wire
+     */
+    public void setValueSource(InjectableAttribute injectableAttribute) {
+        this.injectableAttribute = injectableAttribute;
+    }
+
+
 }

@@ -84,7 +84,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
     }
 
     public JavaComponent<T> build(JavaComponentDefinition definition) throws BuilderException {
-        URI componentId = definition.getComponentId();
+        URI uri = definition.getComponentUri();
         int initLevel = definition.getInitLevel();
         QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
@@ -102,7 +102,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         createPropertyFactories(definition, provider);
 
-        JavaComponent<T> component = new JavaComponent<T>(componentId,
+        JavaComponent<T> component = new JavaComponent<T>(uri,
                                                           provider,
                                                           scopeContainer,
                                                           deployable,

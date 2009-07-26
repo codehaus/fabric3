@@ -43,7 +43,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * A definition used to provision classloaders on a runtime.
+ * Used to provision classloaders on a runtime. Defined classloaders correspond to a contribution.
  *
  * @version $Rev$ $Date$
  */
@@ -95,7 +95,7 @@ public class PhysicalClassLoaderDefinition implements Serializable {
     }
 
     /**
-     * Returns the URI of the contributions associated with this classloader as an ordered Set. Order is guaranteed for set iteration.
+     * Returns the URI of the contribution associated with this classloader.
      *
      * @return the URI
      */

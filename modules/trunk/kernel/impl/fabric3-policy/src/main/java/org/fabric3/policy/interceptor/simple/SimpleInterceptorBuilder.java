@@ -62,7 +62,7 @@ public class SimpleInterceptorBuilder implements InterceptorBuilder<SimpleInterc
     public Interceptor build(SimpleInterceptorDefinition definition) throws BuilderException {
 
         String className = definition.getInterceptorClass();
-        URI classLoaderUri = definition.getPolicyClassLoaderid();
+        URI classLoaderUri = definition.getPolicyClassLoaderId();
         ClassLoader loader = registry.getClassLoader(classLoaderUri);
         if (loader == null) {
             // this is really a programming error

@@ -48,14 +48,14 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 /**
- * Represents a physical component model.
+ * Used to provision a component on a runtime.
  *
  * @version $Rev$ $Date$
  */
 public abstract class PhysicalComponentDefinition implements Serializable {
     private static final long serialVersionUID = -4354673356182365263L;
 
-    private URI componentId;
+    private URI uri;
     private String scope;
     private QName deployable;
     private int initLevel;
@@ -64,21 +64,21 @@ public abstract class PhysicalComponentDefinition implements Serializable {
     private URI classLoaderId;
 
     /**
-     * Gets the component id.
+     * Gets the component URI.
      *
      * @return Component id.
      */
-    public URI getComponentId() {
-        return componentId;
+    public URI getComponentUri() {
+        return uri;
     }
 
     /**
-     * Sets the component id.
+     * Sets the component URI.
      *
-     * @param componentId the component id
+     * @param uri the component id
      */
-    public void setComponentId(URI componentId) {
-        this.componentId = componentId;
+    public void setComponentUri(URI uri) {
+        this.uri = uri;
     }
 
     /**
@@ -136,18 +136,18 @@ public abstract class PhysicalComponentDefinition implements Serializable {
     }
 
     /**
-     * Gets the scope for the component.
+     * Gets the component scope.
      *
-     * @return The scope for the component.
+     * @return the component scope.
      */
     public String getScope() {
         return scope;
     }
 
     /**
-     * Sets the scope for the component.
+     * Sets the component scope.
      *
-     * @param scope The scope for the component.
+     * @param scope the component scope.
      */
     public void setScope(String scope) {
         this.scope = scope;
@@ -197,17 +197,17 @@ public abstract class PhysicalComponentDefinition implements Serializable {
         }
 
         PhysicalComponentDefinition other = (PhysicalComponentDefinition) obj;
-        return super.equals(componentId.equals(other.getComponentId()));
+        return super.equals(uri.equals(other.getComponentUri()));
 
     }
 
     @Override
     public int hashCode() {
-        return componentId.hashCode();
+        return uri.hashCode();
     }
 
     @Override
     public String toString() {
-        return componentId.toString();
+        return uri.toString();
     }
 }
