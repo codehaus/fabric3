@@ -57,7 +57,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.config.TcpConfig;
-import org.fabric3.binding.net.provision.TcpWireTargetDefinition;
+import org.fabric3.binding.net.provision.TcpTargetDefinition;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
@@ -68,7 +68,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -77,7 +77,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDefinition> {
+public class TcpTargetWireAttacher implements TargetWireAttacher<TcpTargetDefinition> {
     private long connectTimeout = 10000;
     private int retries = 0;
     private NetBindingMonitor monitor;
@@ -138,7 +138,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         }
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, TcpWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, TcpTargetDefinition target, Wire wire) throws WiringException {
         String wireFormat = target.getConfig().getWireFormat();
         if (wireFormat == null) {
             wireFormat = tcpWireFormat;
@@ -158,15 +158,15 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         }
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, TcpWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, TcpTargetDefinition target) throws WiringException {
         // no-op
     }
 
-    public ObjectFactory<?> createObjectFactory(TcpWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(TcpTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(TcpWireTargetDefinition target, InvocationChain chain, MessageEncoder messageEncoder, ParameterEncoder parameterEncoder)
+    private void attachOneWay(TcpTargetDefinition target, InvocationChain chain, MessageEncoder messageEncoder, ParameterEncoder parameterEncoder)
             throws WiringException {
         TcpConfig config = target.getConfig();
         int retryCount = this.retries;
@@ -198,7 +198,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpWireTargetDe
         chain.addInterceptor(interceptor);
     }
 
-    private void attachRequestResponse(TcpWireTargetDefinition target,
+    private void attachRequestResponse(TcpTargetDefinition target,
                                        InvocationChain chain,
                                        MessageEncoder messageEncoder,
                                        ParameterEncoder parameterEncoder) throws WiringException {

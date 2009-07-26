@@ -55,7 +55,7 @@ import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
+import org.fabric3.binding.jms.provision.JmsTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
@@ -68,7 +68,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -78,7 +78,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision$ $Date$
  */
-public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDefinition> {
+public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefinition> {
     private AdministeredObjectResolver resolver;
     private ClassLoaderRegistry classLoaderRegistry;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
@@ -100,7 +100,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         this.messageFormatters = messageFormatters;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, JmsWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, JmsTargetDefinition target, Wire wire) throws WiringException {
 
         WireConfiguration wireConfiguration = new WireConfiguration();
         ClassLoader classloader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
@@ -126,15 +126,15 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, JmsWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, JmsTargetDefinition target) throws WiringException {
         // no-op
     }
 
-    public ObjectFactory<?> createObjectFactory(JmsWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(JmsTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    private void resolveAdministeredObjects(JmsWireTargetDefinition target, WireConfiguration wireConfiguration) throws WiringException {
+    private void resolveAdministeredObjects(JmsTargetDefinition target, WireConfiguration wireConfiguration) throws WiringException {
         JmsBindingMetadata metadata = target.getMetadata();
         Hashtable<String, String> env = metadata.getEnv();
 
@@ -169,7 +169,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
      * @param target                      the target definition
      * @param connectionFactoryDefinition the connection factory definition
      */
-    private void checkDefaults(JmsWireTargetDefinition target, ConnectionFactoryDefinition connectionFactoryDefinition) {
+    private void checkDefaults(JmsTargetDefinition target, ConnectionFactoryDefinition connectionFactoryDefinition) {
         String name = connectionFactoryDefinition.getName();
         if (name == null) {
             if (TransactionType.GLOBAL == target.getTransactionType()) {

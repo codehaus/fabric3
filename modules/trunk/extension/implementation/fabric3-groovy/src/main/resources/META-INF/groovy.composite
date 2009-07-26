@@ -43,12 +43,12 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder"/>
     </component>
 
-    <component name="GroovySourceWireAttacher" f3-core:key="org.fabric3.groovy.provision.GroovyWireSourceDefinition">
+    <component name="GroovySourceWireAttacher" f3-core:key="org.fabric3.groovy.provision.GroovySourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovySourceWireAttacher"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="GroovyTargetWireAttacher" f3-core:key="org.fabric3.groovy.provision.GroovyWireTargetDefinition">
+    <component name="GroovyTargetWireAttacher" f3-core:key="org.fabric3.groovy.provision.GroovyTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyTargetWireAttacher"/>
     </component>
 </composite>

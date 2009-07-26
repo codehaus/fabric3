@@ -49,8 +49,8 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
-import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.MetroSourceDefinition;
+import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
@@ -83,7 +83,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public MetroWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
+    public MetroSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                         ServiceContract<?> contract,
                                                         List<LogicalOperation> operations,
                                                         Policy policy) throws GenerationException {
@@ -107,10 +107,10 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         String interfaze = contract.getQualifiedInterfaceName();
         List<QName> requestedIntents = policy.getProvidedIntents();
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
-        return new MetroWireSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
+        return new MetroSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
     }
 
-    public MetroWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
+    public MetroTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         ServiceContract<?> contract,
                                                         List<LogicalOperation> operations,
                                                         Policy policy) throws GenerationException {
@@ -157,7 +157,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
                 configuration = new SecurityConfiguration(username, password);
             }
         }
-        return new MetroWireTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings, configuration);
+        return new MetroTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings, configuration);
     }
 
     /**

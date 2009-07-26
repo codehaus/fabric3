@@ -44,7 +44,7 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.net.provision.TcpWireSourceDefinition;
+import org.fabric3.binding.net.provision.TcpSourceDefinition;
 import org.fabric3.binding.net.runtime.TransportService;
 import org.fabric3.binding.net.runtime.WireHolder;
 import org.fabric3.spi.ObjectFactory;
@@ -54,7 +54,7 @@ import org.fabric3.spi.binding.format.ParameterEncoderFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -63,7 +63,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDefinition> {
+public class TcpSourceWireAttacher implements SourceWireAttacher<TcpSourceDefinition> {
     private TransportService service;
     private Map<String, ParameterEncoderFactory> formatterFactories = new HashMap<String, ParameterEncoderFactory>();
     private ClassLoaderRegistry classLoaderRegistry;
@@ -79,7 +79,7 @@ public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDe
     }
 
 
-    public void attachToSource(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(TcpSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         URI uri = source.getUri();
         if (uri.getScheme() != null) {
             throw new WiringException("Absolute URIs not supported: " + uri);
@@ -103,16 +103,16 @@ public class TcpSourceWireAttacher implements SourceWireAttacher<TcpWireSourceDe
         service.registerTcp(sourceUri, wireHolder);
     }
 
-    public void detachFromSource(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(TcpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         service.unregisterTcp(source.getUri().toString());
     }
 
-    public void attachObjectFactory(TcpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(TcpSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachObjectFactory(TcpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(TcpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

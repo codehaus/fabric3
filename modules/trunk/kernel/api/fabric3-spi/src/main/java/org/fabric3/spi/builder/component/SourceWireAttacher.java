@@ -45,19 +45,16 @@ package org.fabric3.spi.builder.component;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Component that handles attachment and detachment of a wires to a source component or binding.
- * <p/>
- * Implementations attach physical wires to component implementations so that the implementation can invoke other components. These may be for
- * references or for callbacks.
+ * Attachmes and detachs a wire to a source component or transport binding.
  *
  * @version $Rev$ $Date$
  */
-public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
+public interface SourceWireAttacher<PSD extends PhysicalSourceDefinition> {
     /**
      * Attaches a wire to a source component or an incoming binding.
      *
@@ -66,27 +63,26 @@ public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
      * @param wire   the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
-    void attachToSource(PWSD source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException;
-
+    void attachToSource(PSD source, PhysicalTargetDefinition target, Wire wire) throws WiringException;
 
     /**
-     * Attaches an ObjectFactory to a source component.
+     * Attaches an ObjectFactory that returns a direct target instance to a source component.
      *
      * @param source        the definition of the component reference to attach to
      * @param objectFactory an ObjectFactory that can produce values compatible with the reference
      * @param target        the target definition for the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
-    void attachObjectFactory(PWSD source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) throws WiringException;
+    void attachObjectFactory(PSD source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target) throws WiringException;
 
     /**
-     * Detaches a wire from a source component.
+     * Detaches a wire from a source component or transport binding.
      *
      * @param source metadata for the source side of the wire
      * @param target metadata for the target side of the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
-    void detachFromSource(PWSD source, PhysicalWireTargetDefinition target) throws WiringException;
+    void detachFromSource(PSD source, PhysicalTargetDefinition target) throws WiringException;
 
     /**
      * detaches an ObjectFactory from a source component.
@@ -95,7 +91,7 @@ public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
      * @param target the target definition for the wire
      * @throws WiringException if an exception occurs during the deattach operation
      */
-    void detachObjectFactory(PWSD source, PhysicalWireTargetDefinition target) throws WiringException;
+    void detachObjectFactory(PSD source, PhysicalTargetDefinition target) throws WiringException;
 
 
 }

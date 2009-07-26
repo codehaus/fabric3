@@ -56,8 +56,8 @@ import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -96,9 +96,9 @@ public class ConnectorImplTestCase extends TestCase {
         builders = new HashMap<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?>>();
         connector.setInterceptorBuilders(builders);
 
-        PhysicalWireSourceDefinition sourceDefinition = new PhysicalWireSourceDefinition();
+        PhysicalSourceDefinition sourceDefinition = new PhysicalSourceDefinition();
         sourceDefinition.setUri(URI.create("source"));
-        PhysicalWireTargetDefinition targetDefinition = new PhysicalWireTargetDefinition();
+        PhysicalTargetDefinition targetDefinition = new PhysicalTargetDefinition();
         targetDefinition.setUri(URI.create("target"));
         Set<PhysicalOperationDefinition> operations = new HashSet<PhysicalOperationDefinition>();
         definition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);

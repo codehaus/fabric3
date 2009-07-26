@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -57,21 +57,21 @@ public class TestBindingSourceWireAttacher implements SourceWireAttacher<TestBin
         this.channel = channel;
     }
 
-    public void attachToSource(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(TestBindingSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         // register the wire to the bound service so it can be invoked through the channel from a bound reference
         URI callbackUri = target.getCallbackUri();
         channel.registerDestinationWire(source.getUri(), wire, callbackUri);
     }
 
-    public void detachFromSource(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(TestBindingSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public void detachObjectFactory(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(TestBindingSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(TestBindingSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+    public void attachObjectFactory(TestBindingSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition definition)
             throws WiringException {
         throw new AssertionError();
     }

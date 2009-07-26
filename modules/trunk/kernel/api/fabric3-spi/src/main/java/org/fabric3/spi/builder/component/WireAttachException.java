@@ -48,7 +48,7 @@ import java.net.URI;
 import org.fabric3.spi.builder.WiringException;
 
 /**
- * Thrown when an error is encountered attaching a wire
+ * Thrown when an error is encountered attaching a wire to a component or transport.
  *
  * @version $Rev$ $Date$
  */

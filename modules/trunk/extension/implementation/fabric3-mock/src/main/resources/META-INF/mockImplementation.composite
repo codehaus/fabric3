@@ -38,12 +38,12 @@ Public License. See the accompanying license file for details.
     </component>
 
     <!-- Target Wire attacher -->
-    <component name="MockTargetWireAttacher" f3-core:key="org.fabric3.mock.MockWireTargetDefinition">
+    <component name="MockTargetWireAttacher" f3-core:key="org.fabric3.mock.MockTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.mock.MockTargetWireAttacher"/>
     </component>
 
     <!-- Source Wire attacher -->
-    <component name="MockSourceWireAttacher" f3-core:key="org.fabric3.mock.MockWireSourceDefinition">
+    <component name="MockSourceWireAttacher" f3-core:key="org.fabric3.mock.MockSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.mock.MockSourceWireAttacher"/>
     </component>
 

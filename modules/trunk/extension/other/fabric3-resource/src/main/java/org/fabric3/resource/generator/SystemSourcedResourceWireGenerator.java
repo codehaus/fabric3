@@ -42,7 +42,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.resource.model.SystemSourcedResource;
-import org.fabric3.resource.model.SystemSourcedWireTargetDefinition;
+import org.fabric3.resource.model.SystemSourcedTargetDefinition;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -56,7 +56,7 @@ public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator
 
     private static final String SYSTEM_URI = "fabric3://runtime/";
 
-    public SystemSourcedWireTargetDefinition generateWireTarget(LogicalResource<SystemSourcedResource> logicalResource)
+    public SystemSourcedTargetDefinition generateWireTarget(LogicalResource<SystemSourcedResource> logicalResource)
             throws GenerationException {
 
         SystemSourcedResource resourceDefinition = logicalResource.getResourceDefinition();
@@ -68,7 +68,7 @@ public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator
 
         URI targetUri = URI.create(SYSTEM_URI + mappedName);
 
-        SystemSourcedWireTargetDefinition wtd = new SystemSourcedWireTargetDefinition();
+        SystemSourcedTargetDefinition wtd = new SystemSourcedTargetDefinition();
         wtd.setOptimizable(true);
         wtd.setUri(targetUri);
 

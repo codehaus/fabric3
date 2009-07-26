@@ -42,14 +42,14 @@ import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.jmx.provision.JMXWireSourceDefinition;
+import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.spi.policy.Policy;
 
@@ -59,13 +59,13 @@ import org.fabric3.spi.policy.Policy;
 @EagerInit
 public class JMXBindingGenerator implements BindingGenerator<JMXBinding> {
 
-    public JMXWireSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding,
+    public JMXSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding,
                                                       ServiceContract<?> contract,
                                                       List<LogicalOperation> operations,
                                                       Policy policy) throws GenerationException {
         Bindable logicalService = binding.getParent();
 
-        JMXWireSourceDefinition definition = new JMXWireSourceDefinition();
+        JMXSourceDefinition definition = new JMXSourceDefinition();
         URI uri = binding.getUri();
         if (uri == null) {
             uri = logicalService.getUri();
@@ -76,7 +76,7 @@ public class JMXBindingGenerator implements BindingGenerator<JMXBinding> {
         return definition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding,
+    public PhysicalTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding,
                                                            ServiceContract<?> contract,
                                                            List<LogicalOperation> operations,
                                                            Policy policy) throws GenerationException {

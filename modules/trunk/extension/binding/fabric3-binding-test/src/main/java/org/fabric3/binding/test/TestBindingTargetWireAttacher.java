@@ -46,7 +46,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -62,7 +62,7 @@ public class TestBindingTargetWireAttacher implements TargetWireAttacher<TestBin
         this.channel = channel;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, TestBindingTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, TestBindingTargetDefinition target, Wire wire) throws WiringException {
         for (InvocationChain chain : wire.getInvocationChains()) {
             URI destination;
             if (target.isCallback()) {
@@ -77,7 +77,7 @@ public class TestBindingTargetWireAttacher implements TargetWireAttacher<TestBin
         }
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, TestBindingTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, TestBindingTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

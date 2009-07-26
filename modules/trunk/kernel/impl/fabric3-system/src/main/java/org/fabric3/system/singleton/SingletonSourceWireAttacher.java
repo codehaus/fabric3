@@ -52,7 +52,7 @@ import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
@@ -63,26 +63,26 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class SingletonSourceWireAttacher implements SourceWireAttacher<SingletonWireSourceDefinition> {
+public class SingletonSourceWireAttacher implements SourceWireAttacher<SingletonSourceDefinition> {
     private final ComponentManager manager;
 
     public SingletonSourceWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
     }
 
-    public void attachToSource(SingletonWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(SingletonSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(SingletonWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(SingletonSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachObjectFactory(SingletonWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(SingletonSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void attachObjectFactory(SingletonWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(SingletonSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SingletonComponent<?> sourceComponent = (SingletonComponent<?>) manager.getComponent(sourceId);

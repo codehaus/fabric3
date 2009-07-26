@@ -34,7 +34,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <!-- Wire Attacher for System Sourced Resources -->
-    <component name="SystemSourcedResourceWireAttacher" f3-core:key="org.fabric3.resource.model.SystemSourcedWireTargetDefinition">
+    <component name="SystemSourcedResourceWireAttacher" f3-core:key="org.fabric3.resource.model.SystemSourcedTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher"/>
     </component>
 

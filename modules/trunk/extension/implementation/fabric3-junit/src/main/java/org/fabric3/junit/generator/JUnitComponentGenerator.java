@@ -43,8 +43,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
-import org.fabric3.java.provision.JavaWireSourceDefinition;
-import org.fabric3.java.provision.JavaWireTargetDefinition;
+import org.fabric3.java.provision.JavaSourceDefinition;
+import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Scope;
@@ -62,8 +62,8 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -103,12 +103,12 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
 
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+        JavaSourceDefinition wireDefinition = new JavaSourceDefinition();
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
@@ -122,19 +122,19 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<JUnitImplementation> source,
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<JUnitImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
+    public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
 
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
 
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+        JavaSourceDefinition wireDefinition = new JavaSourceDefinition();
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
@@ -145,8 +145,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return contract.getQualifiedInterfaceName();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
-        JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+        JavaTargetDefinition wireDefinition = new JavaTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
     }

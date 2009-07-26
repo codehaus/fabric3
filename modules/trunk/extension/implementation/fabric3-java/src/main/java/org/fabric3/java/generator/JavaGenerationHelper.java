@@ -39,8 +39,8 @@ package org.fabric3.java.generator;
 
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.java.provision.JavaComponentDefinition;
-import org.fabric3.java.provision.JavaWireSourceDefinition;
-import org.fabric3.java.provision.JavaWireTargetDefinition;
+import org.fabric3.java.provision.JavaSourceDefinition;
+import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -73,7 +73,7 @@ public interface JavaGenerationHelper {
      * @param policy     the effective wire policy
      * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
      */
-    void generateWireSource(JavaWireSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException;
+    void generateWireSource(JavaSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException;
 
     /**
      * Populates the JavaWireSourceDefinition with callback wiring information.
@@ -84,7 +84,7 @@ public interface JavaGenerationHelper {
      * @param policy          the effective wire policy
      * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
      */
-    void generateCallbackWireSource(JavaWireSourceDefinition definition,
+    void generateCallbackWireSource(JavaSourceDefinition definition,
                                     LogicalComponent<? extends JavaImplementation> component,
                                     ServiceContract<?> serviceContract,
                                     Policy policy) throws GenerationException;
@@ -96,7 +96,7 @@ public interface JavaGenerationHelper {
      * @param service    the target service for the wire
      * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
      */
-    void generateWireTarget(JavaWireTargetDefinition definition, LogicalService service) throws GenerationException;
+    void generateWireTarget(JavaTargetDefinition definition, LogicalService service) throws GenerationException;
 
     /**
      * Populates the JavaWireSourceDefinition with resource wiring information.
@@ -105,6 +105,6 @@ public interface JavaGenerationHelper {
      * @param resource   the resource to be wired
      * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
      */
-    void generateResourceWireSource(JavaWireSourceDefinition definition, LogicalResource<?> resource) throws GenerationException;
+    void generateResourceWireSource(JavaSourceDefinition definition, LogicalResource<?> resource) throws GenerationException;
 
 }

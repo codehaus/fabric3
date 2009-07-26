@@ -42,14 +42,14 @@ import javax.persistence.EntityManagerFactory;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
+import org.fabric3.jpa.provision.PersistenceUnitTargetDefinition;
 import org.fabric3.jpa.spi.EmfBuilderException;
 import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -57,7 +57,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class PersistenceUnitWireAttacher implements TargetWireAttacher<PersistenceUnitWireTargetDefinition> {
+public class PersistenceUnitWireAttacher implements TargetWireAttacher<PersistenceUnitTargetDefinition> {
 
     private final EmfBuilder emfBuilder;
     private EmfClassLoaderService classLoaderService;
@@ -73,15 +73,15 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
         this.classLoaderService = classLoaderService;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, PersistenceUnitTargetDefinition target, Wire wire) throws WiringException {
         throw new AssertionError();
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, PersistenceUnitTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public ObjectFactory<?> createObjectFactory(PersistenceUnitWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(PersistenceUnitTargetDefinition target) throws WiringException {
 
         final String unitName = target.getUnitName();
         URI classLoaderUri = target.getClassLoaderId();

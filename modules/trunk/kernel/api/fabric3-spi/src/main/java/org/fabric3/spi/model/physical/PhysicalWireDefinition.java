@@ -56,25 +56,25 @@ import javax.xml.namespace.QName;
 public class PhysicalWireDefinition implements Serializable {
     private static final long serialVersionUID = 995196092611674935L;
 
-    private PhysicalWireSourceDefinition source;
-    private PhysicalWireTargetDefinition target;
+    private PhysicalSourceDefinition source;
+    private PhysicalTargetDefinition target;
     private QName sourceDeployable;
     private QName targetDeployable;
 
     private final Set<PhysicalOperationDefinition> operations;
     private boolean optimizable;
 
-    public PhysicalWireDefinition(PhysicalWireSourceDefinition source,
-                                  PhysicalWireTargetDefinition target,
+    public PhysicalWireDefinition(PhysicalSourceDefinition source,
+                                  PhysicalTargetDefinition target,
                                   Set<PhysicalOperationDefinition> operations) {
         this.source = source;
         this.target = target;
         this.operations = operations;
     }
 
-    public PhysicalWireDefinition(PhysicalWireSourceDefinition source,
+    public PhysicalWireDefinition(PhysicalSourceDefinition source,
                                   QName sourceDeployable,
-                                  PhysicalWireTargetDefinition target,
+                                  PhysicalTargetDefinition target,
                                   QName targetDeployable,
                                   Set<PhysicalOperationDefinition> operations) {
         this.source = source;
@@ -134,7 +134,7 @@ public class PhysicalWireDefinition implements Serializable {
      *
      * @return the physical definition for the source side of the wire
      */
-    public PhysicalWireSourceDefinition getSource() {
+    public PhysicalSourceDefinition getSource() {
         return source;
     }
 
@@ -143,7 +143,7 @@ public class PhysicalWireDefinition implements Serializable {
      *
      * @param source the physical definition for the source side of the wire
      */
-    public void setSource(PhysicalWireSourceDefinition source) {
+    public void setSource(PhysicalSourceDefinition source) {
         this.source = source;
     }
 
@@ -152,7 +152,7 @@ public class PhysicalWireDefinition implements Serializable {
      *
      * @return the physical definition for the target side of the wire
      */
-    public PhysicalWireTargetDefinition getTarget() {
+    public PhysicalTargetDefinition getTarget() {
         return target;
     }
 
@@ -161,7 +161,7 @@ public class PhysicalWireDefinition implements Serializable {
      *
      * @param target the physical definition for the target side of the wire
      */
-    public void setTarget(PhysicalWireTargetDefinition target) {
+    public void setTarget(PhysicalTargetDefinition target) {
         this.target = target;
     }
 

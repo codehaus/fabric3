@@ -30,7 +30,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <!-- Rs Binding Wire Attachers  -->
-    <component name="RsSourceWireAttacher" f3-core:key="org.fabric3.rs.provision.RsWireSourceDefinition">
+    <component name="RsSourceWireAttacher" f3-core:key="org.fabric3.rs.provision.RsSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.rs.runtime.RsSourceWireAttacher"/>
     </component>
 

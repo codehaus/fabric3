@@ -43,7 +43,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
+import org.fabric3.groovy.provision.GroovyTargetDefinition;
 import org.fabric3.pojo.component.InvokerInterceptor;
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.spi.ObjectFactory;
@@ -54,7 +54,7 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
@@ -65,15 +65,15 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTargetDefinition> {
+public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyTargetDefinition> {
     private final ComponentManager manager;
 
     public GroovyTargetWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               GroovyWireTargetDefinition targetDefinition,
+    public void attachToTarget(PhysicalSourceDefinition sourceDefinition,
+                               GroovyTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
@@ -120,7 +120,7 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTa
         // TODO handle callbacks
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, GroovyWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, GroovyTargetDefinition target) throws WiringException {
         // no-op
     }
 
@@ -132,7 +132,7 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyWireTa
         return new InvokerInterceptor<T>(method, callback, endsConvesation, component, scopeContainer);
     }
 
-    public ObjectFactory<?> createObjectFactory(GroovyWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(GroovyTargetDefinition target) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         PojoComponent<?> targetComponent = (PojoComponent<?>) manager.getComponent(targetId);
         return targetComponent.createObjectFactory();

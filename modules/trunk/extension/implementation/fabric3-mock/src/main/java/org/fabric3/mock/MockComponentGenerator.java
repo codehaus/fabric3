@@ -46,7 +46,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -64,26 +64,26 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         return componentDefinition;
     }
 
-    public MockWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
-        MockWireTargetDefinition definition = new MockWireTargetDefinition();
+    public MockTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+        MockTargetDefinition definition = new MockTargetDefinition();
         definition.setUri(service.getUri());
         ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
         definition.setMockedInterface(serviceContract.getQualifiedInterfaceName());
         return definition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) {
+    public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) {
         throw new UnsupportedOperationException("Mock objects cannot have resources");
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) {
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationMock> source,
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationMock> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
-        return new MockWireSourceDefinition();
+        return new MockSourceDefinition();
     }
 
 }

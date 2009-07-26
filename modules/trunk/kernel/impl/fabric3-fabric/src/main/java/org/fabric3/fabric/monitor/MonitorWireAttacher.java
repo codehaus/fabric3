@@ -46,7 +46,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -56,7 +56,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class MonitorWireAttacher implements TargetWireAttacher<MonitorWireTargetDefinition> {
+public class MonitorWireAttacher implements TargetWireAttacher<MonitorTargetDefinition> {
     private final MonitorFactory monitorFactory;
     private final ClassLoaderRegistry classLoaderRegistry;
 
@@ -65,15 +65,15 @@ public class MonitorWireAttacher implements TargetWireAttacher<MonitorWireTarget
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, MonitorWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, MonitorTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, MonitorWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, MonitorTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public ObjectFactory<?> createObjectFactory(MonitorWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(MonitorTargetDefinition target) throws WiringException {
         try {
             Class<?> type = classLoaderRegistry.loadClass(target.getClassLoaderId(), target.getMonitorType());
             Object monitor = monitorFactory.getMonitor(type, target.getUri());

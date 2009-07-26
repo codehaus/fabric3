@@ -44,8 +44,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.provision.GroovyComponentDefinition;
 import org.fabric3.groovy.provision.GroovyInstanceFactoryDefinition;
-import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
-import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
+import org.fabric3.groovy.provision.GroovySourceDefinition;
+import org.fabric3.groovy.provision.GroovyTargetDefinition;
 import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
@@ -60,8 +60,8 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -101,12 +101,12 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
 
-        GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
+        GroovySourceDefinition wireDefinition = new GroovySourceDefinition();
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
@@ -116,21 +116,21 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<GroovyImplementation> source,
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<GroovyImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
-        GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+        GroovyTargetDefinition wireDefinition = new GroovyTargetDefinition();
         URI uri = service.getUri();
         wireDefinition.setUri(uri);
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
-        GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
+    public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
+        GroovySourceDefinition wireDefinition = new GroovySourceDefinition();
         wireDefinition.setUri(resource.getUri());
         return wireDefinition;
     }

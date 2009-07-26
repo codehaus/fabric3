@@ -19,7 +19,7 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.jmx.control.JMXBindingGenerator"/>
     </component>
 
-    <component name="JMXWireAttacher" f3-core:key="org.fabric3.jmx.provision.JMXWireSourceDefinition">
+    <component name="JMXWireAttacher" f3-core:key="org.fabric3.jmx.provision.JMXSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.jmx.runtime.JMXWireAttacher"/>
     </component>
 

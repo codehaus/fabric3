@@ -58,7 +58,7 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
+import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
@@ -72,7 +72,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -81,7 +81,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision$ $Date$
  */
-public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDefinition>, JmsSourceWireAttacherMBean {
+public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefinition>, JmsSourceWireAttacherMBean {
     private TransactionHandler transactionHandler;
     private JmsHost jmsHost;
     private ClassLoaderRegistry classLoaderRegistry;
@@ -109,7 +109,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         this.messageFormatters = messageFormatters;
     }
 
-    public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         ServiceListenerConfiguration configuration = new ServiceListenerConfiguration();
         configuration.setServiceUri(target.getUri());
         ClassLoader classloader = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
@@ -138,7 +138,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         }
     }
 
-    public void detachFromSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(JmsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         try {
             jmsHost.unregisterListener(target.getUri());
         } catch (JmsHostException e) {
@@ -146,16 +146,16 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         }
     }
 
-    public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+    public void attachObjectFactory(JmsSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition definition)
             throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachObjectFactory(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(JmsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    private void resolveAdministeredObjects(JmsWireSourceDefinition source, ServiceListenerConfiguration configuration) throws WiringException {
+    private void resolveAdministeredObjects(JmsSourceDefinition source, ServiceListenerConfiguration configuration) throws WiringException {
         try {
             JmsBindingMetadata metadata = source.getMetadata();
             Hashtable<String, String> env = metadata.getEnv();
@@ -185,8 +185,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     }
 
     private WireHolder createWireHolder(Wire wire,
-                                        JmsWireSourceDefinition source,
-                                        PhysicalWireTargetDefinition target,
+                                        JmsSourceDefinition source,
+                                        PhysicalTargetDefinition target,
                                         ServiceListenerConfiguration configuration) throws WiringException {
         String callbackUri = null;
         if (target.getCallbackUri() != null) {
@@ -236,7 +236,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
      * @param target                      the source definition
      * @param connectionFactoryDefinition the connection factory definition
      */
-    private void checkDefaults(JmsWireSourceDefinition target, ConnectionFactoryDefinition connectionFactoryDefinition) {
+    private void checkDefaults(JmsSourceDefinition target, ConnectionFactoryDefinition connectionFactoryDefinition) {
         String name = connectionFactoryDefinition.getName();
         if (name == null) {
             if (TransactionType.GLOBAL == target.getTransactionType()) {

@@ -46,8 +46,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.Namespaces;
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.java.provision.JavaComponentDefinition;
-import org.fabric3.java.provision.JavaWireSourceDefinition;
-import org.fabric3.java.provision.JavaWireTargetDefinition;
+import org.fabric3.java.provision.JavaSourceDefinition;
+import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.CallbackDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
@@ -105,7 +105,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
     }
 
 
-    public void generateWireSource(JavaWireSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException {
+    public void generateWireSource(JavaSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
@@ -121,7 +121,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         calculateConversationalPolicy(definition, operations, policy, conversational);
     }
 
-    public void generateCallbackWireSource(JavaWireSourceDefinition definition, LogicalComponent<? extends JavaImplementation> component,
+    public void generateCallbackWireSource(JavaSourceDefinition definition, LogicalComponent<? extends JavaImplementation> component,
                                            ServiceContract<?> serviceContract,
                                            Policy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
@@ -146,7 +146,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         definition.setOptimizable(false);
     }
 
-    public void generateResourceWireSource(JavaWireSourceDefinition wireDefinition, LogicalResource<?> resource) throws GenerationException {
+    public void generateResourceWireSource(JavaSourceDefinition wireDefinition, LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
@@ -156,7 +156,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         wireDefinition.setInterfaceName(interfaceName);
     }
 
-    public void generateWireTarget(JavaWireTargetDefinition definition, LogicalService service) throws GenerationException {
+    public void generateWireTarget(JavaTargetDefinition definition, LogicalService service) throws GenerationException {
         LogicalComponent<?> component = service.getParent();
         URI uri;
         uri = service.getUri();
@@ -179,7 +179,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
      * @param policy         the set of policies for the wire
      * @param conversational true if the contract is conversational
      */
-    private void calculateConversationalPolicy(JavaWireSourceDefinition definition,
+    private void calculateConversationalPolicy(JavaSourceDefinition definition,
                                                List<LogicalOperation> operations,
                                                Policy policy,
                                                boolean conversational) {

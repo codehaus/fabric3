@@ -32,11 +32,11 @@ Public License. See the accompanying license file for details.
 
     <!-- HTTP channel infrastructure -->
 
-    <component name="HttpSourceWireAttacher" f3-core:key="org.fabric3.binding.net.provision.HttpWireSourceDefinition">
+    <component name="HttpSourceWireAttacher" f3-core:key="org.fabric3.binding.net.provision.HttpSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.http.HttpSourceWireAttacher"/>
     </component>
 
-    <component name="HttpTargetWireAttacher" f3-core:key="org.fabric3.binding.net.provision.HttpWireTargetDefinition">
+    <component name="HttpTargetWireAttacher" f3-core:key="org.fabric3.binding.net.provision.HttpTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.http.HttpTargetWireAttacher"/>
         <!-- set optional configuration from the system configuration domain property -->
         <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>
@@ -46,11 +46,11 @@ Public License. See the accompanying license file for details.
 
     <!-- TCP channel infrastructure -->
 
-    <component name="TcpSourceWireAttacher" f3-core:key="org.fabric3.binding.net.provision.TcpWireSourceDefinition">
+    <component name="TcpSourceWireAttacher" f3-core:key="org.fabric3.binding.net.provision.TcpSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.tcp.TcpSourceWireAttacher"/>
     </component>
 
-    <component name="TcpTargetWireAttacher" f3-core:key="org.fabric3.binding.net.provision.TcpWireTargetDefinition">
+    <component name="TcpTargetWireAttacher" f3-core:key="org.fabric3.binding.net.provision.TcpTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.net.runtime.tcp.TcpTargetWireAttacher"/>
         <!-- set optional configuration from the system configuration domain property -->
         <property name="connectTimeout" source="$systemConfig//net.binding/@connectTimeout"/>

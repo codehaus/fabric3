@@ -47,11 +47,11 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.model.physical.InteractionType;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.web.provision.WebComponentWireSourceDefinition;
+import org.fabric3.web.provision.WebComponentSourceDefinition;
 
 /**
  * Source WireAttacher for web components.
@@ -59,14 +59,14 @@ import org.fabric3.web.provision.WebComponentWireSourceDefinition;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebComponentWireSourceDefinition> {
+public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebComponentSourceDefinition> {
     private ComponentManager manager;
 
     public WebComponentSourceWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
     }
 
-    public void attachToSource(WebComponentWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(WebComponentSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(source.getUri());
         String referenceName = source.getUri().getFragment();
         InteractionType interactionType = source.getInteractionType();
@@ -78,15 +78,15 @@ public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebCom
         }
     }
 
-    public void detachFromSource(WebComponentWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(WebComponentSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public void detachObjectFactory(WebComponentWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(WebComponentSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(WebComponentWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(WebComponentSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(source.getUri());
         String referenceName = source.getUri().getFragment();

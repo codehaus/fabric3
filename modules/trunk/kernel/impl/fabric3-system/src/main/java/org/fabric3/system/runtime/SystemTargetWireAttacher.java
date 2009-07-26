@@ -57,18 +57,18 @@ import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.system.provision.SystemWireTargetDefinition;
+import org.fabric3.system.provision.SystemTargetDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTargetDefinition> {
+public class SystemTargetWireAttacher implements TargetWireAttacher<SystemTargetDefinition> {
 
     private final ComponentManager manager;
     private final ClassLoaderRegistry classLoaderRegistry;
@@ -79,7 +79,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTa
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, SystemWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, SystemTargetDefinition target, Wire wire) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         SystemComponent<?> targetComponent = (SystemComponent<?>) manager.getComponent(targetId);
 
@@ -115,7 +115,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTa
         }
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, SystemWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, SystemTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
@@ -123,7 +123,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTa
         return new SystemInvokerInterceptor<T>(method, scopeContainer, component);
     }
 
-    public ObjectFactory<?> createObjectFactory(SystemWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(SystemTargetDefinition target) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         SystemComponent<?> targetComponent = (SystemComponent<?>) manager.getComponent(targetId);
         return targetComponent.createObjectFactory();

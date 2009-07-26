@@ -15,11 +15,11 @@ Public License. See the accompanying license file for details.
            name="MetroParticipantExtension"
            autowire="true">
 
-    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition" name="MetroSourceWireAttacher">
+    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroSourceDefinition" name="MetroSourceWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroSourceWireAttacher"/>
     </component>
 
-    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition" name="MetroTargetWireAttacher">
+    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroTargetDefinition" name="MetroTargetWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroTargetWireAttacher"/>
     </component>
 

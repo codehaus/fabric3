@@ -54,13 +54,13 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
-import org.fabric3.system.provision.SystemWireSourceDefinition;
-import org.fabric3.system.provision.SystemWireTargetDefinition;
+import org.fabric3.system.provision.SystemSourceDefinition;
+import org.fabric3.system.provision.SystemTargetDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -97,9 +97,9 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
         URI uri = reference.getUri();
-        SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
+        SystemSourceDefinition wireDefinition = new SystemSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
@@ -109,22 +109,22 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<SystemImplementation> source,
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<SystemImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
-        SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+        SystemTargetDefinition wireDefinition = new SystemTargetDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
+    public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
-        SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
+        SystemSourceDefinition wireDefinition = new SystemSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));

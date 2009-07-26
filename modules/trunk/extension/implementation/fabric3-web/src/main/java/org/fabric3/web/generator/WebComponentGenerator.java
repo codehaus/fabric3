@@ -65,13 +65,13 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.model.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
-import org.fabric3.web.provision.WebComponentWireSourceDefinition;
+import org.fabric3.web.provision.WebComponentSourceDefinition;
 import static org.fabric3.web.provision.WebConstants.SERVLET_CONTEXT_SITE;
 import static org.fabric3.web.provision.WebConstants.SESSION_CONTEXT_SITE;
 import org.fabric3.web.provision.WebContextInjectionSite;
@@ -118,8 +118,8 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         return physical;
     }
 
-    public WebComponentWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
-        WebComponentWireSourceDefinition sourceDefinition = new WebComponentWireSourceDefinition();
+    public WebComponentSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+        WebComponentSourceDefinition sourceDefinition = new WebComponentSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         if (reference.getDefinition().getServiceContract().isConversational()) {
             sourceDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
@@ -127,17 +127,17 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         return sourceDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<WebImplementation> source,
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<WebImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
         return null;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
+    public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         return null;
     }
 

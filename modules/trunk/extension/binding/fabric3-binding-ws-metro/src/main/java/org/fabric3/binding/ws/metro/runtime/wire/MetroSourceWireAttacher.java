@@ -54,7 +54,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ws.metro.MetroBindingMonitor;
-import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
+import org.fabric3.binding.ws.metro.provision.MetroSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
@@ -74,7 +74,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -83,7 +83,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSourceDefinition> {
+public class MetroSourceWireAttacher implements SourceWireAttacher<MetroSourceDefinition> {
     private ServletHost servletHost;
     private ClassLoaderRegistry classLoaderRegistry;
     private FeatureResolver featureResolver;
@@ -124,7 +124,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         metroServlet = new MetroServlet(scheduler, securityEnvironment);
     }
 
-    public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(MetroSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         try {
             ServiceEndpointDefinition endpointDefinition = source.getEndpointDefinition();
             QName serviceName = endpointDefinition.getServiceName();
@@ -203,7 +203,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         }
     }
 
-    public void detachFromSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(MetroSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         try {
             ServiceEndpointDefinition endpointDefinition = source.getEndpointDefinition();
             URI servicePath = endpointDefinition.getServicePath();
@@ -216,10 +216,10 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         }
     }
 
-    public void detachObjectFactory(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target) {
+    public void detachObjectFactory(MetroSourceDefinition source, PhysicalTargetDefinition target) {
     }
 
-    public void attachObjectFactory(MetroWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) {
+    public void attachObjectFactory(MetroSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target) {
         throw new UnsupportedOperationException();
     }
 

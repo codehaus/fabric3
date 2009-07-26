@@ -57,8 +57,8 @@ import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -70,8 +70,8 @@ import org.fabric3.spi.wire.Wire;
  */
 public class ConnectorImpl implements Connector {
     private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?>> interceptorBuilders;
-    private Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers;
-    private Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers;
+    private Map<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>> sourceAttachers;
+    private Map<Class<? extends PhysicalTargetDefinition>, TargetWireAttacher<? extends PhysicalTargetDefinition>> targetAttachers;
 
     public ConnectorImpl() {
     }
@@ -82,25 +82,25 @@ public class ConnectorImpl implements Connector {
     }
 
     @Reference(required = false)
-    public void setSourceAttachers(Map<Class<? extends PhysicalWireSourceDefinition>,
-            SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers) {
+    public void setSourceAttachers(Map<Class<? extends PhysicalSourceDefinition>,
+            SourceWireAttacher<? extends PhysicalSourceDefinition>> sourceAttachers) {
         this.sourceAttachers = sourceAttachers;
     }
 
     @Reference
-    public void setTargetAttachers(Map<Class<? extends PhysicalWireTargetDefinition>,
-            TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers) {
+    public void setTargetAttachers(Map<Class<? extends PhysicalTargetDefinition>,
+            TargetWireAttacher<? extends PhysicalTargetDefinition>> targetAttachers) {
         this.targetAttachers = targetAttachers;
     }
 
     public void connect(PhysicalWireDefinition definition) throws BuilderException {
-        PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
-        SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);
+        PhysicalSourceDefinition sourceDefinition = definition.getSource();
+        SourceWireAttacher<PhysicalSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);
         if (sourceAttacher == null) {
             throw new AttacherNotFoundException("Source attacher not found for type: " + sourceDefinition.getClass());
         }
-        PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
-        TargetWireAttacher<PhysicalWireTargetDefinition> targetAttacher = getAttacher(targetDefinition);
+        PhysicalTargetDefinition targetDefinition = definition.getTarget();
+        TargetWireAttacher<PhysicalTargetDefinition> targetAttacher = getAttacher(targetDefinition);
         if (targetAttacher == null) {
             throw new AttacherNotFoundException("Target attacher not found for type: " + targetDefinition.getClass());
         }
@@ -116,17 +116,17 @@ public class ConnectorImpl implements Connector {
     }
 
     public void disconnect(PhysicalWireDefinition definition) throws BuilderException {
-        PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
-        SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);
+        PhysicalSourceDefinition sourceDefinition = definition.getSource();
+        SourceWireAttacher<PhysicalSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);
         if (sourceAttacher == null) {
             throw new AttacherNotFoundException("Source attacher not found for type: " + sourceDefinition.getClass());
         }
 
-        PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
+        PhysicalTargetDefinition targetDefinition = definition.getTarget();
         if (definition.isOptimizable()) {
             sourceAttacher.detachObjectFactory(sourceDefinition, targetDefinition);
         } else {
-            TargetWireAttacher<PhysicalWireTargetDefinition> targetAttacher = getAttacher(targetDefinition);
+            TargetWireAttacher<PhysicalTargetDefinition> targetAttacher = getAttacher(targetDefinition);
             if (targetAttacher == null) {
                 throw new AttacherNotFoundException("Target attacher not found for type: " + targetDefinition.getClass());
             }
@@ -157,12 +157,12 @@ public class ConnectorImpl implements Connector {
     }
 
     @SuppressWarnings("unchecked")
-    protected <PWSD extends PhysicalWireSourceDefinition> SourceWireAttacher<PWSD> getAttacher(PWSD source) {
-        return (SourceWireAttacher<PWSD>) sourceAttachers.get(source.getClass());
+    protected <PSD extends PhysicalSourceDefinition> SourceWireAttacher<PSD> getAttacher(PSD source) {
+        return (SourceWireAttacher<PSD>) sourceAttachers.get(source.getClass());
     }
 
     @SuppressWarnings("unchecked")
-    protected <PWSD extends PhysicalWireTargetDefinition> TargetWireAttacher<PWSD> getAttacher(PWSD target) {
-        return (TargetWireAttacher<PWSD>) targetAttachers.get(target.getClass());
+    protected <PSD extends PhysicalTargetDefinition> TargetWireAttacher<PSD> getAttacher(PSD target) {
+        return (TargetWireAttacher<PSD>) targetAttachers.get(target.getClass());
     }
 }

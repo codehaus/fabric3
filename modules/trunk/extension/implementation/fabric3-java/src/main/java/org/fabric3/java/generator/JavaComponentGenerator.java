@@ -42,8 +42,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.java.provision.JavaComponentDefinition;
-import org.fabric3.java.provision.JavaWireSourceDefinition;
-import org.fabric3.java.provision.JavaWireTargetDefinition;
+import org.fabric3.java.provision.JavaSourceDefinition;
+import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -53,8 +53,8 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -78,28 +78,28 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return definition;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
-        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+        JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateWireSource(definition, reference, policy);
         return definition;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
-        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+        JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);
         return definition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
-        JavaWireTargetDefinition definition = new JavaWireTargetDefinition();
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+        JavaTargetDefinition definition = new JavaTargetDefinition();
         generationHelper.generateWireTarget(definition, service);
         return definition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
-        JavaWireSourceDefinition definition = new JavaWireSourceDefinition();
+    public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
+        JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateResourceWireSource(definition, resource);
         return definition;
     }

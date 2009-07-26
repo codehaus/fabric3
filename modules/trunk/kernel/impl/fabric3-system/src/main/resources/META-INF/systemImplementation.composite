@@ -28,12 +28,12 @@
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="SystemSourceWireAttacher" f3-core:key="org.fabric3.system.provision.SystemWireSourceDefinition">
+    <component name="SystemSourceWireAttacher" f3-core:key="org.fabric3.system.provision.SystemSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="SystemTargetWireAttacher" f3-core:key="org.fabric3.system.provision.SystemWireTargetDefinition">
+    <component name="SystemTargetWireAttacher" f3-core:key="org.fabric3.system.provision.SystemTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemTargetWireAttacher"/>
     </component>
 

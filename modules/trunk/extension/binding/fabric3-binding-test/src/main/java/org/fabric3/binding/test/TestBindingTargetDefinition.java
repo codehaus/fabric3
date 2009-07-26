@@ -37,12 +37,12 @@
 */
 package org.fabric3.binding.test;
 
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 
 /**
  * Marks a reference bound to <code>binding.test</code>.
  *
  * @version $Rev$ $Date$
  */
-public class TestBindingTargetDefinition extends PhysicalWireTargetDefinition {
+public class TestBindingTargetDefinition extends PhysicalTargetDefinition {
 }

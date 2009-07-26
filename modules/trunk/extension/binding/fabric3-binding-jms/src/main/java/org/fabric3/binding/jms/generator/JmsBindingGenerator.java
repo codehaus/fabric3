@@ -56,8 +56,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.model.JmsBindingDefinition;
-import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
-import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
+import org.fabric3.binding.jms.provision.JmsSourceDefinition;
+import org.fabric3.binding.jms.provision.JmsTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
@@ -87,7 +87,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         this.introspector = introspector;
     }
 
-    public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
+    public JmsSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       ServiceContract<?> contract,
                                                       List<LogicalOperation> operations,
                                                       Policy policy) throws GenerationException {
@@ -97,10 +97,10 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getJmsMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
         URI uri = logicalBinding.getDefinition().getTargetUri();
-        return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType);
+        return new JmsSourceDefinition(uri, metadata, payloadTypes, transactionType);
     }
 
-    public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
+    public JmsTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       ServiceContract<?> contract,
                                                       List<LogicalOperation> operations,
                                                       Policy policy) throws GenerationException {
@@ -110,7 +110,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         URI uri = logicalBinding.getDefinition().getTargetUri();
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getJmsMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
-        return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType);
+        return new JmsTargetDefinition(uri, metadata, payloadTypes, transactionType);
     }
 
     /*

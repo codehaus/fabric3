@@ -57,7 +57,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.net.NetBindingMonitor;
 import org.fabric3.binding.net.config.HttpConfig;
-import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
+import org.fabric3.binding.net.provision.HttpTargetDefinition;
 import org.fabric3.binding.net.runtime.OneWayClientHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
@@ -68,7 +68,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -77,7 +77,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTargetDefinition> {
+public class HttpTargetWireAttacher implements TargetWireAttacher<HttpTargetDefinition> {
     private long connectTimeout = 10000;
     private int retries = 0;
     private String httpWireFormat = "jaxb";
@@ -133,7 +133,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         }
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, HttpWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, HttpTargetDefinition target, Wire wire) throws WiringException {
         ParameterEncoder parameterEncoder = getWireFormatter(target, wire);
         for (InvocationChain chain : wire.getInvocationChains()) {
             if (chain.getPhysicalOperation().isOneWay()) {
@@ -144,15 +144,15 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         }
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, HttpWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, HttpTargetDefinition target) throws WiringException {
         // no-op
     }
 
-    public ObjectFactory<?> createObjectFactory(HttpWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(HttpTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    private void attachOneWay(HttpWireTargetDefinition target, ParameterEncoder parameterEncoder, InvocationChain chain) throws WiringException {
+    private void attachOneWay(HttpTargetDefinition target, ParameterEncoder parameterEncoder, InvocationChain chain) throws WiringException {
 
         HttpConfig config = target.getConfig();
         int retryCount = this.retries;
@@ -189,7 +189,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
     }
 
 
-    private void attachRequestResponse(HttpWireTargetDefinition target, ParameterEncoder parameterEncoder, InvocationChain chain)
+    private void attachRequestResponse(HttpTargetDefinition target, ParameterEncoder parameterEncoder, InvocationChain chain)
             throws WiringException {
 
         HttpConfig config = target.getConfig();
@@ -225,7 +225,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpWireTarget
         chain.addInterceptor(interceptor);
     }
 
-    private ParameterEncoder getWireFormatter(HttpWireTargetDefinition target, Wire wire) throws WiringException {
+    private ParameterEncoder getWireFormatter(HttpTargetDefinition target, Wire wire) throws WiringException {
         try {
             String wireFormat = target.getConfig().getWireFormat();
             if (wireFormat == null) {

@@ -41,11 +41,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.junit.common.ContextConfiguration;
-import org.fabric3.junit.provision.JUnitWireSourceDefinition;
+import org.fabric3.junit.provision.JUnitSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.security.AuthenticationService;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -56,7 +56,7 @@ import org.fabric3.test.spi.TestWireHolder;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitWireSourceDefinition> {
+public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitSourceDefinition> {
     private TestWireHolder holder;
     private AuthenticationService authenticationService;
 
@@ -69,7 +69,7 @@ public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitWireSour
         this.authenticationService = authenticationService;
     }
 
-    public void attachToSource(JUnitWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(JUnitSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         String testName = source.getTestName();
         ContextConfiguration configuration = source.getConfiguration();
         if (configuration != null) {
@@ -88,16 +88,16 @@ public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitWireSour
         holder.add(testName, wire);
     }
 
-    public void attachObjectFactory(JUnitWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(JUnitSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(JUnitWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(JUnitSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachObjectFactory(JUnitWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(JUnitSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 }

@@ -42,7 +42,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
+import org.fabric3.groovy.provision.GroovySourceDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
@@ -53,7 +53,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -66,7 +66,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<GroovyWireSourceDefinition> {
+public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<GroovySourceDefinition> {
     private final ComponentManager manager;
     private final ProxyService proxyService;
     private final ClassLoaderRegistry classLoaderRegistry;
@@ -81,7 +81,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToSource(GroovyWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+    public void attachToSource(GroovySourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
             throws WiringException {
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
@@ -117,18 +117,18 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         }
     }
 
-    public void detachFromSource(GroovyWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(GroovySourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         detachObjectFactory(source, target);
     }
 
-    public void detachObjectFactory(GroovyWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(GroovySourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         URI sourceName = UriHelper.getDefragmentedName(source.getUri());
         GroovyComponent<?> component = (GroovyComponent) manager.getComponent(sourceName);
         InjectableAttribute injectableAttribute = source.getValueSource();
         component.removeObjectFactory(injectableAttribute);
     }
 
-    public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+    public void attachObjectFactory(GroovySourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition definition)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         GroovyComponent<?> sourceComponent = (GroovyComponent<?>) manager.getComponent(sourceId);

@@ -66,13 +66,13 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.xquery.provision.XQueryComponentDefinition;
-import org.fabric3.xquery.provision.XQueryComponentWireSourceDefinition;
-import org.fabric3.xquery.provision.XQueryComponentWireTargetDefinition;
+import org.fabric3.xquery.provision.XQueryComponentSourceDefinition;
+import org.fabric3.xquery.provision.XQueryComponentTargetDefinition;
 import org.fabric3.xquery.scdl.XQueryComponentType;
 import org.fabric3.xquery.scdl.XQueryImplementation;
 import org.fabric3.xquery.scdl.XQueryProperty;
@@ -205,8 +205,8 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         }
     }
 
-    public XQueryComponentWireSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
-        XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
+    public XQueryComponentSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+        XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         if (reference.getDefinition().getServiceContract().isConversational()) {
             sourceDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
@@ -214,10 +214,10 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<XQueryImplementation> source,
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<XQueryImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
-        XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
+        XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (Map.Entry<String, ServiceDefinition> entry : type.getServices().entrySet()) {
@@ -235,14 +235,14 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
-        XQueryComponentWireTargetDefinition targetDefinition = new XQueryComponentWireTargetDefinition();
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+        XQueryComponentTargetDefinition targetDefinition = new XQueryComponentTargetDefinition();
         targetDefinition.setUri(service.getUri());
         return targetDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
-        XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
+    public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
+        XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
         sourceDefinition.setUri(resource.getParent().getUri());
         return sourceDefinition;
     }

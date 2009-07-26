@@ -41,7 +41,7 @@ import javax.persistence.PersistenceContextType;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.jpa.provision.PersistenceContextWireTargetDefinition;
+import org.fabric3.jpa.provision.PersistenceContextTargetDefinition;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.ResourceWireGenerator;
@@ -53,13 +53,13 @@ import org.fabric3.spi.model.instance.LogicalResource;
 @EagerInit
 public class PersistenceContextResourceWireGenerator implements ResourceWireGenerator<PersistenceContextResource> {
 
-    public PersistenceContextWireTargetDefinition generateWireTarget(LogicalResource<PersistenceContextResource> logicalResource)
+    public PersistenceContextTargetDefinition generateWireTarget(LogicalResource<PersistenceContextResource> logicalResource)
             throws GenerationException {
         PersistenceContextResource resource = logicalResource.getResourceDefinition();
         String unitName = resource.getUnitName();
         boolean multiThreaded = resource.isMultiThreaded();
         boolean extended = PersistenceContextType.EXTENDED == resource.getType();
-        PersistenceContextWireTargetDefinition definition = new PersistenceContextWireTargetDefinition();
+        PersistenceContextTargetDefinition definition = new PersistenceContextTargetDefinition();
         definition.setUnitName(unitName);
         definition.setOptimizable(true);
         definition.setExtended(extended);

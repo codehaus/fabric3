@@ -49,11 +49,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ftp.provision.FtpSecurity;
-import org.fabric3.binding.ftp.provision.FtpWireTargetDefinition;
+import org.fabric3.binding.ftp.provision.FtpTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.InvocationChain;
@@ -62,7 +62,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * @version $Rev$ $Date$
  */
-public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDefinition> {
+public class FtpTargetWireAttacher implements TargetWireAttacher<FtpTargetDefinition> {
     private ExpressionExpander expander;
     private FtpInterceptorMonitor monitor;
 
@@ -71,7 +71,7 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
         this.monitor = monitor;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, FtpWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, FtpTargetDefinition target, Wire wire) throws WiringException {
 
         InvocationChain invocationChain = wire.getInvocationChains().iterator().next();
         URI uri = expandUri(target.getUri());
@@ -101,11 +101,11 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
 
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, FtpWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, FtpTargetDefinition target) throws WiringException {
         // no-op
     }
 
-    public ObjectFactory<?> createObjectFactory(FtpWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(FtpTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

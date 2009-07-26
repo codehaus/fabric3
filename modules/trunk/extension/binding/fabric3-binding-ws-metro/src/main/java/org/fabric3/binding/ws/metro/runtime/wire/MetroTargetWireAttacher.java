@@ -51,7 +51,7 @@ import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
-import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
@@ -70,7 +70,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.xml.XMLFactory;
@@ -80,7 +80,7 @@ import org.fabric3.spi.xml.XMLFactory;
  *
  * @version $Rev$ $Date$
  */
-public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
+public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDefinition> {
 
     private ClassLoaderRegistry registry;
     private BindingIdResolver bindingIdResolver;
@@ -113,7 +113,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
         this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, MetroTargetDefinition target, Wire wire) throws WiringException {
 
         try {
             ReferenceEndpointDefinition endpointDefinition = target.getEndpointDefinition();
@@ -179,11 +179,11 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
 
     }
 
-    public ObjectFactory<?> createObjectFactory(MetroWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(MetroTargetDefinition target) throws WiringException {
         return null;
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, MetroTargetDefinition target) throws WiringException {
         // no-op
     }
 

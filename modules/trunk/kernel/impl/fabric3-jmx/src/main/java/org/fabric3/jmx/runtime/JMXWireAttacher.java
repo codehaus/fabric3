@@ -56,12 +56,12 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.jmx.provision.JMXWireSourceDefinition;
+import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 
@@ -69,7 +69,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefinition> {
+public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> {
 
     private static final String DOMAIN = "f3-management";
     private final MBeanServer mBeanServer;
@@ -84,15 +84,15 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         this.subDomain = subDomain;
     }
 
-    public void attachToSource(JMXWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(JMXSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(JMXWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(JMXSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(JMXWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(JMXSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         if (mBeanServer == null) {
             return;
@@ -115,7 +115,7 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         }
     }
 
-    public void detachObjectFactory(JMXWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(JMXSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

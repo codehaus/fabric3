@@ -45,40 +45,40 @@ package org.fabric3.spi.builder.component;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Component that handles attachment and detachment of wires to a target component or binding.
+ * Attachmes and detachs a wire to a target component or transport binding.
  *
  * @version $Rev$ $Date$
  */
-public interface TargetWireAttacher<PWTD extends PhysicalWireTargetDefinition> {
+public interface TargetWireAttacher<PWTD extends PhysicalTargetDefinition> {
     /**
-     * Attaches a wire to a target component or outgoing binding.
+     * Attaches a wire to a target component or outgoing transport binding.
      *
      * @param source metadata for performing the attach
      * @param target metadata for performing the attach
      * @param wire   the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
-    void attachToTarget(PhysicalWireSourceDefinition source, PWTD target, Wire wire) throws WiringException;
+    void attachToTarget(PhysicalSourceDefinition source, PWTD target, Wire wire) throws WiringException;
 
     /**
-     * Detaches a wire from a target component or outgoing binding.
+     * Detaches a wire from a target component or outgoing transport binding.
      *
      * @param source metadata for performing the attach
      * @param target metadata for performing the attach
      * @throws WiringException if an exception occurs during the detach operation
      */
-    void detachFromTarget(PhysicalWireSourceDefinition source, PWTD target) throws WiringException;
+    void detachFromTarget(PhysicalSourceDefinition source, PWTD target) throws WiringException;
 
     /**
-     * Create an ObjectFactory that can return values compatible with this wire.
+     * Create an ObjectFactory that returns a direct target instance.
      *
      * @param target metadata for performing the attach
-     * @return an ObjectFactory that can return values compatible with this wire
+     * @return an ObjectFactory that returns the target instance
      * @throws WiringException if an exception occurs during the attach operation
      */
     ObjectFactory<?> createObjectFactory(PWTD target) throws WiringException;

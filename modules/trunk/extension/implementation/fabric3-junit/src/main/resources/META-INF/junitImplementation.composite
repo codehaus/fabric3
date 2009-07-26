@@ -39,7 +39,7 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.junit.generator.JUnitBindingGenerator"/>
     </component>
 
-    <component f3-core:key="org.fabric3.junit.provision.JUnitWireSourceDefinition" name="JunitSourceWireAttacher">
+    <component f3-core:key="org.fabric3.junit.provision.JUnitSourceDefinition" name="JunitSourceWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.junit.runtime.JunitSourceWireAttacher"/>
     </component>
 

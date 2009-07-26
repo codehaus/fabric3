@@ -42,13 +42,13 @@ import javax.transaction.TransactionManager;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.jpa.provision.PersistenceContextWireTargetDefinition;
+import org.fabric3.jpa.provision.PersistenceContextTargetDefinition;
 import org.fabric3.jpa.spi.EmfBuilderException;
 import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -56,7 +56,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class PersistenceContextWireAttacher implements TargetWireAttacher<PersistenceContextWireTargetDefinition> {
+public class PersistenceContextWireAttacher implements TargetWireAttacher<PersistenceContextTargetDefinition> {
     private EmfBuilder emfBuilder;
     private EmfClassLoaderService classLoaderService;
     private TransactionManager tm;
@@ -80,7 +80,7 @@ public class PersistenceContextWireAttacher implements TargetWireAttacher<Persis
         this.tm = tm;
     }
 
-    public ObjectFactory<?> createObjectFactory(PersistenceContextWireTargetDefinition definition) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(PersistenceContextTargetDefinition definition) throws WiringException {
         String unitName = definition.getUnitName();
         boolean extended = definition.isExtended();
         URI classLoaderId = definition.getClassLoaderId();
@@ -103,11 +103,11 @@ public class PersistenceContextWireAttacher implements TargetWireAttacher<Persis
         }
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceContextWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, PersistenceContextTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, PersistenceContextWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, PersistenceContextTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

@@ -48,7 +48,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Implementations return an interceptor, creating one if necessary
+ * Builds an interceptor for a wire invocation chain. 
  *
  * @version $Rev$ $Date$
  */

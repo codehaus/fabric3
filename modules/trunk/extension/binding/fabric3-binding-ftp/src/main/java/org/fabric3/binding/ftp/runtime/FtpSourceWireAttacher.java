@@ -44,12 +44,12 @@ import java.net.URLDecoder;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.ftp.provision.FtpWireSourceDefinition;
+import org.fabric3.binding.ftp.provision.FtpSourceDefinition;
 import org.fabric3.ftp.spi.FtpLetContainer;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.Wire;
@@ -57,7 +57,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * @version $Rev$ $Date$
  */
-public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDefinition> {
+public class FtpSourceWireAttacher implements SourceWireAttacher<FtpSourceDefinition> {
 
     private FtpLetContainer ftpLetContainer;
     private ExpressionExpander expander;
@@ -78,7 +78,7 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
         this.monitor = monitor;
     }
 
-    public void attachToSource(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target, final Wire wire) throws WiringException {
+    public void attachToSource(FtpSourceDefinition source, PhysicalTargetDefinition target, final Wire wire) throws WiringException {
         URI uri = source.getUri();
         String servicePath = expandUri(uri).getSchemeSpecificPart();
         if (servicePath.startsWith("//")) {
@@ -93,15 +93,15 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
 
     }
 
-    public void detachFromSource(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(FtpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachObjectFactory(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(FtpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void attachObjectFactory(FtpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+    public void attachObjectFactory(FtpSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition definition)
             throws WiringException {
         throw new UnsupportedOperationException();
     }

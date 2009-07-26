@@ -41,12 +41,12 @@ licensed under the Apache 2.0 license.
     </component>
 
     <!-- JMS Source Wire Attacher -->
-    <component f3-core:key="org.fabric3.binding.jms.provision.JmsWireSourceDefinition" name="JmsSourceWireAttacher">
+    <component f3-core:key="org.fabric3.binding.jms.provision.JmsSourceDefinition" name="JmsSourceWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher"/>
     </component>
 
     <!-- JMS Target Wire Attacher -->
-    <component f3-core:key="org.fabric3.binding.jms.provision.JmsWireTargetDefinition" name="JmsTargetWireAttacher">
+    <component f3-core:key="org.fabric3.binding.jms.provision.JmsTargetDefinition" name="JmsTargetWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher"/>
     </component>
 

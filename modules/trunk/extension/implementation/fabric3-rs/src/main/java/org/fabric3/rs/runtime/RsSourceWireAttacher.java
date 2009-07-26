@@ -52,7 +52,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.rs.provision.RsWireSourceDefinition;
+import org.fabric3.rs.provision.RsSourceDefinition;
 import org.fabric3.rs.runtime.rs.RsWebApplication;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -65,7 +65,7 @@ import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -74,7 +74,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefinition> {
+public class RsSourceWireAttacher implements SourceWireAttacher<RsSourceDefinition> {
 
     private final ClassLoaderRegistry classLoaderRegistry;
     private RsWireAttacherMonitor monitor;
@@ -97,7 +97,7 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
         monitor.extensionStopped();
     }
 
-    public void attachToSource(RsWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+    public void attachToSource(RsSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
             throws WireAttachException {
 
         URI sourceUri = sourceDefinition.getUri();
@@ -124,19 +124,19 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
 
     }
 
-    public void detachFromSource(RsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(RsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         URI uri = source.getUri();
         String mapping = creatingMappingUri(uri);
         servletHost.unregisterMapping(mapping);
         monitor.removedEndpoint(source.getUri());
     }
 
-    public void attachObjectFactory(RsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(RsSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         throw new AssertionError();
     }
 
-    public void detachObjectFactory(RsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(RsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
@@ -148,7 +148,7 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
         return servletMapping;
     }
 
-    private void provision(RsWireSourceDefinition sourceDefinition, Wire wire, RsWebApplication application) throws ClassNotFoundException {
+    private void provision(RsSourceDefinition sourceDefinition, Wire wire, RsWebApplication application) throws ClassNotFoundException {
 
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
 

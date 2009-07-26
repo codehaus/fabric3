@@ -47,19 +47,19 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.InteractionType;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.xquery.provision.XQueryComponentWireSourceDefinition;
-import org.fabric3.xquery.provision.XQueryComponentWireTargetDefinition;
+import org.fabric3.xquery.provision.XQueryComponentSourceDefinition;
+import org.fabric3.xquery.provision.XQueryComponentTargetDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class XQueryComponentTargetWireAttacher implements TargetWireAttacher<XQueryComponentWireTargetDefinition> {
+public class XQueryComponentTargetWireAttacher implements TargetWireAttacher<XQueryComponentTargetDefinition> {
 
     private ComponentManager manager;
 
@@ -67,7 +67,7 @@ public class XQueryComponentTargetWireAttacher implements TargetWireAttacher<XQu
         this.manager = manager;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, XQueryComponentWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalSourceDefinition source, XQueryComponentTargetDefinition target, Wire wire) throws WiringException {
         URI targetURI = UriHelper.getDefragmentedName(target.getUri());
         String serviceName = target.getUri().getFragment();
         InteractionType interactionType = source.getInteractionType();
@@ -76,15 +76,15 @@ public class XQueryComponentTargetWireAttacher implements TargetWireAttacher<XQu
 
     }
 
-    public void detachFromTarget(PhysicalWireSourceDefinition source, XQueryComponentWireTargetDefinition target) throws WiringException {
+    public void detachFromTarget(PhysicalSourceDefinition source, XQueryComponentTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public void detachFromTarget(XQueryComponentWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromTarget(XQueryComponentSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         throw new AssertionError();
     }
 
-    public ObjectFactory<?> createObjectFactory(XQueryComponentWireTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(XQueryComponentTargetDefinition target) throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(target.getUri());
         String referenceName = target.getUri().getFragment();
         XQueryComponent component = (XQueryComponent) manager.getComponent(sourceUri);

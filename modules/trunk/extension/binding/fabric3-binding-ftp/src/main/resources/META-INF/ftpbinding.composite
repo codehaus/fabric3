@@ -29,11 +29,11 @@ Public License. See the accompanying license file for details.
     </component>
 
     <!-- Ftp Wire Attachers -->
-    <component name="FtpSourceWireAttacher" f3-core:key="org.fabric3.binding.ftp.provision.FtpWireSourceDefinition">
+    <component name="FtpSourceWireAttacher" f3-core:key="org.fabric3.binding.ftp.provision.FtpSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ftp.runtime.FtpSourceWireAttacher"/>
     </component>
 
-    <component name="FtpTargetWireAttacher" f3-core:key="org.fabric3.binding.ftp.provision.FtpWireTargetDefinition">
+    <component name="FtpTargetWireAttacher" f3-core:key="org.fabric3.binding.ftp.provision.FtpTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ftp.runtime.FtpTargetWireAttacher"/>
     </component>
 

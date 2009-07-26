@@ -40,30 +40,30 @@ package org.fabric3.mock;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MockSourceWireAttacher implements SourceWireAttacher<MockWireSourceDefinition> {
+public class MockSourceWireAttacher implements SourceWireAttacher<MockSourceDefinition> {
 
-    public void attachObjectFactory(MockWireSourceDefinition arg0, ObjectFactory<?> arg1, PhysicalWireTargetDefinition definition)
+    public void attachObjectFactory(MockSourceDefinition arg0, ObjectFactory<?> arg1, PhysicalTargetDefinition definition)
             throws WiringException {
         // Empty implementation; we don't want to attach anything to the mock
     }
 
-    public void attachToSource(MockWireSourceDefinition arg0, PhysicalWireTargetDefinition arg1, Wire arg2)
+    public void attachToSource(MockSourceDefinition arg0, PhysicalTargetDefinition arg1, Wire arg2)
             throws WiringException {
         // Empty implementation; we don't want to attach anything to the mock
     }
 
-    public void detachFromSource(MockWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(MockSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
 
-    public void detachObjectFactory(MockWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(MockSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

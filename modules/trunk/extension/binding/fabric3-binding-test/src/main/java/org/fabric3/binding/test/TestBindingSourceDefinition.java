@@ -37,12 +37,12 @@
 */
 package org.fabric3.binding.test;
 
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
  * Marks a service bound to <code>binding.test</code>.
  *
  * @version $Rev$ $Date$
  */
-public class TestBindingSourceDefinition extends PhysicalWireSourceDefinition {
+public class TestBindingSourceDefinition extends PhysicalSourceDefinition {
 }

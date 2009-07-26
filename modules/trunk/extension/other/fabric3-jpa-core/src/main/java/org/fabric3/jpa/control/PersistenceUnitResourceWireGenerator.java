@@ -39,7 +39,7 @@ package org.fabric3.jpa.control;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
+import org.fabric3.jpa.provision.PersistenceUnitTargetDefinition;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.ResourceWireGenerator;
@@ -51,9 +51,9 @@ import org.fabric3.spi.model.instance.LogicalResource;
 @EagerInit
 public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerator<PersistenceUnitResource> {
 
-    public PersistenceUnitWireTargetDefinition generateWireTarget(LogicalResource<PersistenceUnitResource> logicalResource)
+    public PersistenceUnitTargetDefinition generateWireTarget(LogicalResource<PersistenceUnitResource> logicalResource)
             throws GenerationException {
-        PersistenceUnitWireTargetDefinition pwtd = new PersistenceUnitWireTargetDefinition();
+        PersistenceUnitTargetDefinition pwtd = new PersistenceUnitTargetDefinition();
         pwtd.setOptimizable(true);
         pwtd.setUnitName(logicalResource.getResourceDefinition().getUnitName());
         return pwtd;

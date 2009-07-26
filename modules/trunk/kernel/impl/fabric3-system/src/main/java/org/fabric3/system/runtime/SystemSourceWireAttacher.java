@@ -57,19 +57,19 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.system.provision.SystemWireSourceDefinition;
+import org.fabric3.system.provision.SystemSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<SystemWireSourceDefinition> {
+public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<SystemSourceDefinition> {
 
     private final ComponentManager manager;
     private ProxyService proxyService;
@@ -93,7 +93,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         this.proxyService = proxyService;
     }
 
-    public void attachToSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(SystemSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         if (proxyService == null) {
             throw new WiringException("Attempt to inject a non-optimized wire during runtime boostrap.");
         }
@@ -124,18 +124,18 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         }
     }
 
-    public void detachFromSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(SystemSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         detachObjectFactory(source, target);
     }
 
-    public void detachObjectFactory(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(SystemSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         URI sourceName = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> component = (SystemComponent) manager.getComponent(sourceName);
         InjectableAttribute injectableAttribute = source.getValueSource();
         component.removeObjectFactory(injectableAttribute);
     }
 
-    public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(SystemSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);

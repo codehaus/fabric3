@@ -48,7 +48,7 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
- * Interface for building components from physical component definitions.
+ * Builds a component for an implementation type on a runtime.
  *
  * @version $Rev$ $Date$
  */

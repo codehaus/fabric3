@@ -44,7 +44,7 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.net.provision.HttpWireSourceDefinition;
+import org.fabric3.binding.net.provision.HttpSourceDefinition;
 import org.fabric3.binding.net.runtime.TransportService;
 import org.fabric3.binding.net.runtime.WireHolder;
 import org.fabric3.spi.ObjectFactory;
@@ -54,7 +54,7 @@ import org.fabric3.spi.binding.format.ParameterEncoderFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -63,7 +63,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSourceDefinition> {
+public class HttpSourceWireAttacher implements SourceWireAttacher<HttpSourceDefinition> {
     private TransportService service;
     private ClassLoaderRegistry classLoaderRegistry;
     private Map<String, ParameterEncoderFactory> formatterFactories = new HashMap<String, ParameterEncoderFactory>();
@@ -78,7 +78,7 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
         this.formatterFactories = formatterFactories;
     }
 
-    public void attachToSource(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(HttpSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         URI uri = source.getUri();
         if (uri.getScheme() != null) {
             throw new WiringException("Absolute URIs not supported: " + uri);
@@ -102,16 +102,16 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpWireSource
         service.registerHttp(sourceUri, wireHolder);
     }
 
-    public void detachFromSource(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(HttpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         service.unregisterHttp(source.getUri().toString());
     }
 
-    public void attachObjectFactory(HttpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(HttpSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachObjectFactory(HttpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(HttpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

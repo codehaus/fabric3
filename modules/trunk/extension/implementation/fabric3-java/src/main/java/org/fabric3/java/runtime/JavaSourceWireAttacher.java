@@ -42,7 +42,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.provision.JavaWireSourceDefinition;
+import org.fabric3.java.provision.JavaSourceDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
@@ -53,7 +53,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -66,7 +66,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<JavaWireSourceDefinition> {
+public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<JavaSourceDefinition> {
 
     private final ComponentManager manager;
     private final ProxyService proxyService;
@@ -80,7 +80,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         this.proxyService = proxyService;
     }
 
-    public void attachToSource(JavaWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+    public void attachToSource(JavaSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
             throws WiringException {
 
         URI sourceUri = sourceDefinition.getUri();
@@ -118,18 +118,18 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         }
     }
 
-    public void detachFromSource(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachFromSource(JavaSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         detachObjectFactory(source, target);
     }
 
-    public void detachObjectFactory(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+    public void detachObjectFactory(JavaSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         URI sourceName = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> component = (JavaComponent) manager.getComponent(sourceName);
         InjectableAttribute injectableAttribute = source.getValueSource();
         component.removeObjectFactory(injectableAttribute);
     }
 
-    public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+    public void attachObjectFactory(JavaSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);

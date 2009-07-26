@@ -40,15 +40,15 @@ package org.fabric3.binding.net.generator;
 import java.util.List;
 
 import org.fabric3.binding.net.model.TcpBindingDefinition;
-import org.fabric3.binding.net.provision.TcpWireSourceDefinition;
-import org.fabric3.binding.net.provision.TcpWireTargetDefinition;
+import org.fabric3.binding.net.provision.TcpSourceDefinition;
+import org.fabric3.binding.net.provision.TcpTargetDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -58,22 +58,22 @@ import org.fabric3.spi.policy.Policy;
  */
 public class TcpBindingGenerator implements BindingGenerator<TcpBindingDefinition> {
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<TcpBindingDefinition> binding,
+    public PhysicalSourceDefinition generateWireSource(LogicalBinding<TcpBindingDefinition> binding,
                                                            ServiceContract<?> contract,
                                                            List<LogicalOperation> operations,
                                                            Policy policy) throws GenerationException {
-        TcpWireSourceDefinition sourceDefinition = new TcpWireSourceDefinition();
+        TcpSourceDefinition sourceDefinition = new TcpSourceDefinition();
         TcpBindingDefinition bindingDefinition = binding.getDefinition();
         sourceDefinition.setConfig(bindingDefinition.getConfig());
         sourceDefinition.setUri(bindingDefinition.getTargetUri());
         return sourceDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<TcpBindingDefinition> binding,
+    public PhysicalTargetDefinition generateWireTarget(LogicalBinding<TcpBindingDefinition> binding,
                                                            ServiceContract<?> contract,
                                                            List<LogicalOperation> operations,
                                                            Policy policy) throws GenerationException {
-        TcpWireTargetDefinition targetDefinition = new TcpWireTargetDefinition();
+        TcpTargetDefinition targetDefinition = new TcpTargetDefinition();
         TcpBindingDefinition bindingDefinition = binding.getDefinition();
         targetDefinition.setConfig(bindingDefinition.getConfig());
         targetDefinition.setUri(binding.getDefinition().getTargetUri());

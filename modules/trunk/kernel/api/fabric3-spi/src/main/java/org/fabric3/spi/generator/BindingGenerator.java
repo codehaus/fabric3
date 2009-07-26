@@ -49,12 +49,12 @@ import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * Generates {@link PhysicalWireSourceDefinition}s and {@link PhysicalWireTargetDefinition}s for a resolved binding.
+ * Generates {@link PhysicalSourceDefinition}s and {@link PhysicalTargetDefinition}s for a resolved binding.
  *
  * @version $Rev$ $Date$
  */
@@ -70,7 +70,7 @@ public interface BindingGenerator<BD extends BindingDefinition> {
      * @return Physical wire source definition.
      * @throws GenerationException if an error is raised during generation
      */
-    PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding,
+    PhysicalSourceDefinition generateWireSource(LogicalBinding<BD> binding,
                                                     ServiceContract<?> contract,
                                                     List<LogicalOperation> operations,
                                                     Policy policy) throws GenerationException;
@@ -85,7 +85,7 @@ public interface BindingGenerator<BD extends BindingDefinition> {
      * @return Physical wire target definition.
      * @throws GenerationException if an error is raised during generation
      */
-    PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding,
+    PhysicalTargetDefinition generateWireTarget(LogicalBinding<BD> binding,
                                                     ServiceContract<?> contract,
                                                     List<LogicalOperation> operations,
                                                     Policy policy) throws GenerationException;

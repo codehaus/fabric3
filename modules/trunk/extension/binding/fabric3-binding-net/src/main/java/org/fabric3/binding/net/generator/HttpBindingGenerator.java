@@ -40,15 +40,15 @@ package org.fabric3.binding.net.generator;
 import java.util.List;
 
 import org.fabric3.binding.net.model.HttpBindingDefinition;
-import org.fabric3.binding.net.provision.HttpWireSourceDefinition;
-import org.fabric3.binding.net.provision.HttpWireTargetDefinition;
+import org.fabric3.binding.net.provision.HttpSourceDefinition;
+import org.fabric3.binding.net.provision.HttpTargetDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -58,22 +58,22 @@ import org.fabric3.spi.policy.Policy;
  */
 public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinition> {
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<HttpBindingDefinition> binding,
+    public PhysicalSourceDefinition generateWireSource(LogicalBinding<HttpBindingDefinition> binding,
                                                            ServiceContract<?> contract,
                                                            List<LogicalOperation> operations,
                                                            Policy policy) throws GenerationException {
-        HttpWireSourceDefinition sourceDefinition = new HttpWireSourceDefinition();
+        HttpSourceDefinition sourceDefinition = new HttpSourceDefinition();
         HttpBindingDefinition bindingDefinition = binding.getDefinition();
         sourceDefinition.setConfig(bindingDefinition.getConfig());
         sourceDefinition.setUri(bindingDefinition.getTargetUri());
         return sourceDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<HttpBindingDefinition> binding,
+    public PhysicalTargetDefinition generateWireTarget(LogicalBinding<HttpBindingDefinition> binding,
                                                            ServiceContract<?> contract,
                                                            List<LogicalOperation> operations,
                                                            Policy policy) throws GenerationException {
-        HttpWireTargetDefinition targetDefinition = new HttpWireTargetDefinition();
+        HttpTargetDefinition targetDefinition = new HttpTargetDefinition();
         HttpBindingDefinition bindingDefinition = binding.getDefinition();
         targetDefinition.setConfig(bindingDefinition.getConfig());
         targetDefinition.setUri(binding.getDefinition().getTargetUri());

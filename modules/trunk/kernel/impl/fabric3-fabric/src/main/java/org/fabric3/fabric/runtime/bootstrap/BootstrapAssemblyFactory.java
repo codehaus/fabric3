@@ -117,7 +117,7 @@ import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService
 import org.fabric3.fabric.monitor.MonitorResource;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
-import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
+import org.fabric3.fabric.monitor.MonitorTargetDefinition;
 import org.fabric3.fabric.policy.NullPolicyResolver;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
@@ -126,7 +126,7 @@ import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.jmx.control.JMXBindingGenerator;
-import org.fabric3.jmx.provision.JMXWireSourceDefinition;
+import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.jmx.runtime.JMXWireAttacher;
 import org.fabric3.pojo.generator.GenerationHelperImpl;
 import org.fabric3.pojo.instancefactory.BuildHelperImpl;
@@ -147,8 +147,8 @@ import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.generator.ClassLoaderWireGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
@@ -158,8 +158,8 @@ import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.system.generator.SystemComponentGenerator;
 import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
-import org.fabric3.system.provision.SystemWireSourceDefinition;
-import org.fabric3.system.provision.SystemWireTargetDefinition;
+import org.fabric3.system.provision.SystemSourceDefinition;
+import org.fabric3.system.provision.SystemTargetDefinition;
 import org.fabric3.system.runtime.SystemComponentBuilder;
 import org.fabric3.system.runtime.SystemSourceWireAttacher;
 import org.fabric3.system.runtime.SystemTargetWireAttacher;
@@ -167,8 +167,8 @@ import org.fabric3.system.singleton.SingletonComponentGenerator;
 import org.fabric3.system.singleton.SingletonImplementation;
 import org.fabric3.system.singleton.SingletonSourceWireAttacher;
 import org.fabric3.system.singleton.SingletonTargetWireAttacher;
-import org.fabric3.system.singleton.SingletonWireSourceDefinition;
-import org.fabric3.system.singleton.SingletonWireTargetDefinition;
+import org.fabric3.system.singleton.SingletonSourceDefinition;
+import org.fabric3.system.singleton.SingletonTargetDefinition;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Boolean;
 import org.fabric3.transform.dom2java.String2Class;
@@ -285,19 +285,19 @@ public class BootstrapAssemblyFactory {
 
         registry.register(SystemComponentDefinition.class, builder);
 
-        Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers =
-                new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
-        sourceAttachers.put(SystemWireSourceDefinition.class,
+        Map<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>> sourceAttachers =
+                new ConcurrentHashMap<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>>();
+        sourceAttachers.put(SystemSourceDefinition.class,
                             new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
-        sourceAttachers.put(SingletonWireSourceDefinition.class, new SingletonSourceWireAttacher(componentManager));
+        sourceAttachers.put(SingletonSourceDefinition.class, new SingletonSourceWireAttacher(componentManager));
 
-        sourceAttachers.put(JMXWireSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxSubDomain));
+        sourceAttachers.put(JMXSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxSubDomain));
 
-        Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers =
-                new ConcurrentHashMap<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>>();
-        targetAttachers.put(SingletonWireTargetDefinition.class, new SingletonTargetWireAttacher(componentManager));
-        targetAttachers.put(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager, classLoaderRegistry));
-        targetAttachers.put(MonitorWireTargetDefinition.class, new MonitorWireAttacher(monitorFactory, classLoaderRegistry));
+        Map<Class<? extends PhysicalTargetDefinition>, TargetWireAttacher<? extends PhysicalTargetDefinition>> targetAttachers =
+                new ConcurrentHashMap<Class<? extends PhysicalTargetDefinition>, TargetWireAttacher<? extends PhysicalTargetDefinition>>();
+        targetAttachers.put(SingletonTargetDefinition.class, new SingletonTargetWireAttacher(componentManager));
+        targetAttachers.put(SystemTargetDefinition.class, new SystemTargetWireAttacher(componentManager, classLoaderRegistry));
+        targetAttachers.put(MonitorTargetDefinition.class, new MonitorWireAttacher(monitorFactory, classLoaderRegistry));
 
         ConnectorImpl connector = new ConnectorImpl();
         connector.setSourceAttachers(sourceAttachers);

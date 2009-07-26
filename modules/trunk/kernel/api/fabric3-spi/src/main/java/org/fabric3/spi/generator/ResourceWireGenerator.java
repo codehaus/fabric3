@@ -39,7 +39,7 @@ package org.fabric3.spi.generator;
 
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.model.instance.LogicalResource;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 
 /**
  * Wire generator for resources.
@@ -55,6 +55,6 @@ public interface ResourceWireGenerator<RD extends ResourceDefinition> {
      * @return Source wire definition.
      * @throws GenerationException if there was a problem generating the wire
      */
-    PhysicalWireTargetDefinition generateWireTarget(LogicalResource<RD> logicalResource) throws GenerationException;
+    PhysicalTargetDefinition generateWireTarget(LogicalResource<RD> logicalResource) throws GenerationException;
 
 }

@@ -56,12 +56,12 @@ Public License. See the accompanying license file for details.
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="JavaSourceWireAttacher" f3-core:key="org.fabric3.java.provision.JavaWireSourceDefinition">
+    <component name="JavaSourceWireAttacher" f3-core:key="org.fabric3.java.provision.JavaSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.java.runtime.JavaSourceWireAttacher"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="JavaTargetWireAttacher" f3-core:key="org.fabric3.java.provision.JavaWireTargetDefinition">
+    <component name="JavaTargetWireAttacher" f3-core:key="org.fabric3.java.provision.JavaTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.java.runtime.JavaTargetWireAttacher"/>
     </component>
 
