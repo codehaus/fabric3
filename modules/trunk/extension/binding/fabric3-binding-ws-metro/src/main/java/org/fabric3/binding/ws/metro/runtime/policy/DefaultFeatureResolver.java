@@ -49,6 +49,13 @@ import javax.xml.ws.soap.SOAPBinding;
 import com.sun.xml.ws.binding.SOAPBindingImpl;
 import com.sun.xml.ws.developer.BindingTypeFeature;
 import com.sun.xml.ws.developer.JAXWSProperties;
+import com.sun.xml.ws.rx.rm.ReliableMessagingFeature;
+import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_ACK_REQUESTED_INTERVAL;
+import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_CLOSE_SEQUENCE_OPERATION_TIMEOUT;
+import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_DESTINATION_BUFFER_QUOTA;
+import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_MESSAGE_RETRANSMISSION_INTERVAL;
+import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_SEQUENCE_INACTIVITY_TIMEOUT;
+import static com.sun.xml.ws.rx.rm.RmVersion.WSRM200702;
 
 /**
  * Default implementation of FeatureResolver.
@@ -74,30 +81,41 @@ public class DefaultFeatureResolver implements FeatureResolver {
      * @return Rsolved feature sets.
      */
     public WebServiceFeature[] getFeatures(List<QName> requestedIntents) {
-
         List<WebServiceFeature> features = new LinkedList<WebServiceFeature>();
-        if (requestedIntents.contains(MayProvideIntents.MESSAGE_OPTIMISATION)) {
+        if (requestedIntents.contains(MayProvideIntents.MESSAGE_OPTIMIZATION)) {
             features.add(new MTOMFeature());
         }
-
-        if (requestedIntents.contains(MayProvideIntents.SOAP1_1)) {
-            features.add(createFeature(SOAPBinding.SOAP11HTTP_BINDING));
-        } else if (requestedIntents.contains(MayProvideIntents.SOAP1_2)) {
-            features.add(createFeature(SOAPBindingImpl.SOAP12HTTP_BINDING));
-        } else if (requestedIntents.contains(MayProvideIntents.X_SOAP1_2)) {
-            features.add(createFeature(SOAPBindingImpl.X_SOAP12HTTP_BINDING));
-        } else if (requestedIntents.contains(MayProvideIntents.REST)) {
-            features.add(createFeature(JAXWSProperties.REST_BINDING));
-        }
+        resolveBinding(requestedIntents, features);
+        resolveReliableMessaging(requestedIntents, features);
         features.add(new AddressingFeature());
         WebServiceFeature[] webServiceFeatures = new WebServiceFeature[features.size()];
         webServiceFeatures = features.toArray(webServiceFeatures);
-
         return webServiceFeatures;
-
     }
 
-    private BindingTypeFeature createFeature(String bindingQName) {
+    private void resolveBinding(List<QName> requestedIntents, List<WebServiceFeature> features) {
+        if (requestedIntents.contains(MayProvideIntents.SOAP1_1)) {
+            features.add(createBindingFeature(SOAPBinding.SOAP11HTTP_BINDING));
+        } else if (requestedIntents.contains(MayProvideIntents.SOAP1_2)) {
+            features.add(createBindingFeature(SOAPBindingImpl.SOAP12HTTP_BINDING));
+        } else if (requestedIntents.contains(MayProvideIntents.X_SOAP1_2)) {
+            features.add(createBindingFeature(SOAPBindingImpl.X_SOAP12HTTP_BINDING));
+        } else if (requestedIntents.contains(MayProvideIntents.REST)) {
+            features.add(createBindingFeature(JAXWSProperties.REST_BINDING));
+        }
+    }
+
+    private void resolveReliableMessaging(List<QName> requestedIntents, List<WebServiceFeature> features) {
+        if (requestedIntents.contains(MayProvideIntents.AT_LEAST_ONCE)) {
+            features.add(createReliableMessagingFeature(ReliableMessagingFeature.DeliveryAssurance.AT_LEAST_ONCE));
+        } else if (requestedIntents.contains(MayProvideIntents.AT_MOST_ONCE)) {
+            features.add(createReliableMessagingFeature(ReliableMessagingFeature.DeliveryAssurance.AT_MOST_ONCE));
+        } else if (requestedIntents.contains(MayProvideIntents.EXACTLY_ONCE)) {
+            features.add(createReliableMessagingFeature(ReliableMessagingFeature.DeliveryAssurance.EXACTLY_ONCE));
+        }
+    }
+
+    private BindingTypeFeature createBindingFeature(String bindingQName) {
         BindingTypeFeature feature = new BindingTypeFeature(bindingQName);
         // hack to enable the protected field that is not properly set
         try {
@@ -108,4 +126,19 @@ public class DefaultFeatureResolver implements FeatureResolver {
         return feature;
     }
 
+    private WebServiceFeature createReliableMessagingFeature(ReliableMessagingFeature.DeliveryAssurance delivery) {
+        // TODO values should be configurable
+        return new ReliableMessagingFeature(true,
+                                            WSRM200702,
+                                            DEFAULT_SEQUENCE_INACTIVITY_TIMEOUT,
+                                            DEFAULT_DESTINATION_BUFFER_QUOTA,
+                                            false,
+                                            delivery,
+                                            ReliableMessagingFeature.SecurityBinding.getDefault(),
+                                            DEFAULT_MESSAGE_RETRANSMISSION_INTERVAL,
+                                            ReliableMessagingFeature.BackoffAlgorithm.getDefault(),
+                                            DEFAULT_ACK_REQUESTED_INTERVAL,
+                                            DEFAULT_CLOSE_SEQUENCE_OPERATION_TIMEOUT);
+
+    }
 }

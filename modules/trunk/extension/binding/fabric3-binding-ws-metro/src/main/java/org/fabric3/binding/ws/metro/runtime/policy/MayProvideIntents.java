@@ -44,17 +44,23 @@ import org.oasisopen.sca.Constants;
 import org.fabric3.host.Namespaces;
 
 /**
- * List of may provide intents.
+ * List of intents that may be provided by Metro.
  *
  * @version $Rev$ $Date$
  */
 public class MayProvideIntents {
 
-    public static QName MESSAGE_OPTIMISATION = new QName(Namespaces.POLICY, "messageOptimization");
+    public static QName MESSAGE_OPTIMIZATION = new QName(Namespaces.POLICY, "messageOptimization");
+
     public static QName SOAP1_1 = new QName(Constants.SCA_NS, "SOAP.1_1");
     public static QName SOAP1_2 = new QName(Constants.SCA_NS, "SOAP.1_2");
     public static QName X_SOAP1_2 = new QName(Namespaces.POLICY, "protocolBinding.xsoap12");
     public static QName REST = new QName(Namespaces.POLICY, "protocolBinding.rest");
+
+    public static QName AT_LEAST_ONCE = new QName(Constants.SCA_NS, "atLeastOnce");
+    public static QName AT_MOST_ONCE = new QName(Constants.SCA_NS, "atMostOnce");
+    public static QName EXACTLY_ONCE = new QName(Constants.SCA_NS, "exactlyOnce");
+
     public static QName SCHEMA_VALIDATION = new QName(Namespaces.POLICY, "schemaValidation");
 
     /**
