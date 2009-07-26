@@ -30,7 +30,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-            <module>fabric3-groovy</module>
             <module>fabric3-java</module>
             <module>fabric3-junit</module>
             <module>fabric3-mock</module>
