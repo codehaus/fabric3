@@ -46,7 +46,7 @@ package org.fabric3.spi.generator;
 import org.fabric3.host.Fabric3Exception;
 
 /**
- * Base generation exception
+ * Base generation exception.
  *
  * @version $Rev$ $Date$
  */
