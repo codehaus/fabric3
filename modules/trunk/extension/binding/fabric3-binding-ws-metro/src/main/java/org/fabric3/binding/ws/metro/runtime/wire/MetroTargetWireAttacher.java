@@ -76,7 +76,7 @@ import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.xml.XMLFactory;
 
 /**
- * Creates invocation chains for invoking a target web service.
+ * Creates an interceptor for invoking a web service endpoint.
  *
  * @version $Rev$ $Date$
  */

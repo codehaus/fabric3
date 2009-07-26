@@ -79,7 +79,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Source wire attacher that provisions services.
+ * Source wire attacher that provisions web service endpoints.
  *
  * @version $Rev$ $Date$
  */
