@@ -55,7 +55,7 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.cm.ComponentManager;
 
 /**
  * Eagerly initializes a component on a service node.

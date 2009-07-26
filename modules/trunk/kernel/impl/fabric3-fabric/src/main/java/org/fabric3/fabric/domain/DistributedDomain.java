@@ -53,7 +53,7 @@ import org.fabric3.spi.domain.DomainListener;
 import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
  * Implements a distributed domain containing user-defined services.

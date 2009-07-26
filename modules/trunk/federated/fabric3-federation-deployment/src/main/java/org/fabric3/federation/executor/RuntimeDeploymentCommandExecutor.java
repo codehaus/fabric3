@@ -58,7 +58,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.event.EventService;
 
 /**
  * A CommandExecutor that processes deployment commands on a participant node.

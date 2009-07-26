@@ -47,8 +47,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.spi.services.repository.Repository;
-import org.fabric3.spi.services.repository.RepositoryException;
+import org.fabric3.spi.repository.Repository;
+import org.fabric3.spi.repository.RepositoryException;
 
 /**
  * A Repository implementation that delegates to a set of local and remote Maven repositories.

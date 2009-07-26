@@ -19,17 +19,17 @@
            autowire="true">
 
     <component name="XMLFactory">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.xml.XMLFactoryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.xml.XMLFactoryImpl"/>
         <property name="input">com.ctc.wstx.stax.WstxInputFactory</property>
         <property name="output">com.ctc.wstx.stax.WstxOutputFactory</property>
     </component>
 
     <component name="EventService">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.event.EventServiceImpl"/>
     </component>
 
     <component name="ContentTypeResolver">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.contenttype.ExtensionMapContentTypeResolver"/>
         <property name="extensionMap">
             <xml>application/xml</xml>
             <composite>text/vnd.fabric3.composite+xml</composite>
@@ -41,20 +41,20 @@
     </component>
 
     <component name="ExpressionExpander">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.ExpressionExpanderImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.expression.ExpressionExpanderImpl"/>
     </component>
 
     <!-- add the default evaluators. Host properties override system properties which override environment properties -->
     <component name="HostPropertiesExpressionEvaluator" f3-core:key="100">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.HostPropertiesExpressionEvaluator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.expression.HostPropertiesExpressionEvaluator"/>
     </component>
 
     <component name="SystemPropertyEvaluator" f3-core:key="101">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.SystemPropertyEvaluator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.expression.SystemPropertyEvaluator"/>
     </component>
 
     <component name="EnvironmentPropertyEvaluator" f3-core:key="102">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.expression.EnvironmentPropertyEvaluator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.expression.EnvironmentPropertyEvaluator"/>
     </component>
 
 

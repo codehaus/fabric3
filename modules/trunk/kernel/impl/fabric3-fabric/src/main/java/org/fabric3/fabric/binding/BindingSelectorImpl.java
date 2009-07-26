@@ -53,7 +53,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
 
 /**

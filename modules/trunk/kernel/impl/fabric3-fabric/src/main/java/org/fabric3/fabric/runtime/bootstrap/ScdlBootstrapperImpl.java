@@ -59,7 +59,7 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
-import org.fabric3.fabric.services.xml.XMLFactoryImpl;
+import org.fabric3.fabric.xml.XMLFactoryImpl;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.monitor.MonitorFactory;

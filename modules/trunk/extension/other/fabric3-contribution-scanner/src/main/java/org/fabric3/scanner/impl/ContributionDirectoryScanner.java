@@ -74,12 +74,12 @@ import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scanner.spi.FileSystemResource;
 import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
-import org.fabric3.spi.services.VoidService;
-import org.fabric3.spi.services.event.DomainRecover;
-import org.fabric3.spi.services.event.EventService;
-import org.fabric3.spi.services.event.Fabric3Event;
-import org.fabric3.spi.services.event.Fabric3EventListener;
-import org.fabric3.spi.services.event.RuntimeStart;
+import org.fabric3.spi.VoidService;
+import org.fabric3.spi.event.DomainRecover;
+import org.fabric3.spi.event.EventService;
+import org.fabric3.spi.event.Fabric3Event;
+import org.fabric3.spi.event.Fabric3EventListener;
+import org.fabric3.spi.event.RuntimeStart;
 
 /**
  * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain and any deployable components

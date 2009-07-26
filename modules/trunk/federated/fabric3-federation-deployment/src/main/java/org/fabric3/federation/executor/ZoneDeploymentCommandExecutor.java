@@ -61,7 +61,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.RuntimeService;

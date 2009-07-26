@@ -53,9 +53,9 @@ import org.fabric3.fabric.classloader.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
-import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
-import org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl;
-import org.fabric3.fabric.services.lcm.TransientLogicalComponentStore;
+import org.fabric3.fabric.cm.ComponentManagerImpl;
+import org.fabric3.fabric.lcm.LogicalComponentManagerImpl;
+import org.fabric3.fabric.lcm.TransientLogicalComponentStore;
 import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.ContextStartException;
@@ -76,10 +76,10 @@ import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.WorkContextTunnel;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.LogicalComponentStore;
-import org.fabric3.spi.services.lcm.ReadException;
+import org.fabric3.spi.cm.ComponentManager;
+import org.fabric3.spi.lcm.LogicalComponentManager;
+import org.fabric3.spi.lcm.LogicalComponentStore;
+import org.fabric3.spi.lcm.ReadException;
 
 /**
  * @version $Rev$ $Date$

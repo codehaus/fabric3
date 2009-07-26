@@ -63,9 +63,9 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.allocator.NoZonesAvailableException;
-import org.fabric3.spi.services.event.DomainRecover;
-import org.fabric3.spi.services.event.EventService;
-import org.fabric3.spi.services.event.Fabric3EventListener;
+import org.fabric3.spi.event.DomainRecover;
+import org.fabric3.spi.event.EventService;
+import org.fabric3.spi.event.Fabric3EventListener;
 import org.fabric3.spi.xml.XMLFactory;
 
 /**

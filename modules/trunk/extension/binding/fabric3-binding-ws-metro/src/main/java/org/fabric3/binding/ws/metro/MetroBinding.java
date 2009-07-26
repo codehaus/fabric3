@@ -46,7 +46,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.spi.services.VoidService;
+import org.fabric3.spi.VoidService;
 
 /**
  * Reports the status of the Metro binding extension and sets the log level for the underlying Metro stack.

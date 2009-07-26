@@ -51,11 +51,11 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.binding.ftp.provision.FtpTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.expression.ExpressionExpander;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
-import org.fabric3.spi.services.expression.ExpressionExpander;
-import org.fabric3.spi.services.expression.ExpressionExpansionException;
+import org.fabric3.spi.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 

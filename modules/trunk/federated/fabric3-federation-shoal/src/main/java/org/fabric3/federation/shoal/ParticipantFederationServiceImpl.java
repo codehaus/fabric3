@@ -55,7 +55,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.topology.RuntimeService;
 
 /**

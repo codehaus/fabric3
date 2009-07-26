@@ -44,7 +44,7 @@ import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
  * @version $Rev$ $Date$

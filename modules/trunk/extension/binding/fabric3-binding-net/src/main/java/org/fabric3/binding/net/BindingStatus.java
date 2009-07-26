@@ -42,7 +42,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.spi.services.VoidService;
+import org.fabric3.spi.VoidService;
 
 /**
  * Reports the status of the binding extension.

@@ -64,7 +64,7 @@ import org.fabric3.spi.contribution.ResolutionException;
 import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.cm.ComponentManager;
 
 /**
  * Default implementation of ClassLoaderBuilder.

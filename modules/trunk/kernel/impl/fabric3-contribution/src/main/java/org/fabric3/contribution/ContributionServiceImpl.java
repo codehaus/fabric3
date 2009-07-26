@@ -91,10 +91,10 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.introspection.validation.ValidationUtils;
-import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.repository.Repository;
-import org.fabric3.spi.services.repository.RepositoryException;
+import org.fabric3.spi.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.contenttype.ContentTypeResolver;
+import org.fabric3.spi.repository.Repository;
+import org.fabric3.spi.repository.RepositoryException;
 
 /**
  * Default ContributionService implementation

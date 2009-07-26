@@ -54,10 +54,10 @@ import org.fabric3.federation.command.PaticipantSyncCommand;
 import org.fabric3.federation.command.ZoneSyncCommand;
 import org.fabric3.federation.event.RuntimeSynchronized;
 import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
-import org.fabric3.spi.services.event.EventService;
-import org.fabric3.spi.services.event.Fabric3Event;
-import org.fabric3.spi.services.event.Fabric3EventListener;
-import org.fabric3.spi.services.event.RuntimeStart;
+import org.fabric3.spi.event.EventService;
+import org.fabric3.spi.event.Fabric3Event;
+import org.fabric3.spi.event.Fabric3EventListener;
+import org.fabric3.spi.event.RuntimeStart;
 import org.fabric3.spi.topology.RuntimeService;
 import org.fabric3.spi.topology.ZoneManager;
 

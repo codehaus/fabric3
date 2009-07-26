@@ -27,7 +27,7 @@
     </component>
 
     <component name="LogicalComponentManager">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.lcm.LogicalComponentManagerImpl"/>
     </component>
 
     <component name="LocalRoutingService">

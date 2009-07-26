@@ -58,7 +58,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
 
 /**

@@ -55,7 +55,7 @@ import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.RuntimeDomainMBean;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
  * @version $Rev$ $Date$

@@ -70,9 +70,9 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionServiceListener;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.services.event.EventService;
-import org.fabric3.spi.services.event.Fabric3EventListener;
-import org.fabric3.spi.services.event.RuntimeRecover;
+import org.fabric3.spi.event.EventService;
+import org.fabric3.spi.event.Fabric3EventListener;
+import org.fabric3.spi.event.RuntimeRecover;
 import org.fabric3.spi.xml.XMLFactory;
 
 /**

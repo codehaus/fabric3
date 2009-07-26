@@ -89,8 +89,8 @@ import org.fabric3.spi.policy.PolicyActivationException;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.WriteException;
+import org.fabric3.spi.lcm.LogicalComponentManager;
+import org.fabric3.spi.lcm.WriteException;
 
 /**
  * Base class for a domain.

@@ -54,7 +54,7 @@ import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;

@@ -57,11 +57,11 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.spi.policy.PolicyActivationException;
-import org.fabric3.spi.services.event.DomainRecover;
-import org.fabric3.spi.services.event.EventService;
-import org.fabric3.spi.services.event.JoinDomain;
-import org.fabric3.spi.services.event.RuntimeRecover;
-import org.fabric3.spi.services.event.RuntimeStart;
+import org.fabric3.spi.event.DomainRecover;
+import org.fabric3.spi.event.EventService;
+import org.fabric3.spi.event.JoinDomain;
+import org.fabric3.spi.event.RuntimeRecover;
+import org.fabric3.spi.event.RuntimeStart;
 
 /**
  * Default implementation of a RuntimeLifecycleCoordinator.

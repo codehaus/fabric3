@@ -37,7 +37,7 @@
 */
 package org.fabric3.federation.event;
 
-import org.fabric3.spi.services.event.Fabric3Event;
+import org.fabric3.spi.event.Fabric3Event;
 
 /**
  * Denotes when a runtime is synchronized with the domain.
