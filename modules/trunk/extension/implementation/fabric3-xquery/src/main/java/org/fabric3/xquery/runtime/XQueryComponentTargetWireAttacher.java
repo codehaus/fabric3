@@ -67,7 +67,7 @@ public class XQueryComponentTargetWireAttacher implements TargetWireAttacher<XQu
         this.manager = manager;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, XQueryComponentTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, XQueryComponentTargetDefinition target, Wire wire) throws WiringException {
         URI targetURI = UriHelper.getDefragmentedName(target.getUri());
         String serviceName = target.getUri().getFragment();
         InteractionType interactionType = source.getInteractionType();
@@ -76,7 +76,7 @@ public class XQueryComponentTargetWireAttacher implements TargetWireAttacher<XQu
 
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, XQueryComponentTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, XQueryComponentTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

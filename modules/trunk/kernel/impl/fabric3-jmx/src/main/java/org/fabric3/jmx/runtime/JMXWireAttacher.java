@@ -84,11 +84,11 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> 
         this.subDomain = subDomain;
     }
 
-    public void attachToSource(JMXSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(JMXSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(JMXSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(JMXSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

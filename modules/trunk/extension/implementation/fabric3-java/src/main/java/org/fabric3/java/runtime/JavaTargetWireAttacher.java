@@ -47,11 +47,11 @@ import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.pojo.component.InvokerInterceptor;
 import org.fabric3.pojo.provision.PojoSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
@@ -76,8 +76,7 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaTargetDefi
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition sourceDefinition, JavaTargetDefinition targetDefinition, Wire wire)
-            throws WireAttachException {
+    public void attach(PhysicalSourceDefinition sourceDefinition, JavaTargetDefinition targetDefinition, Wire wire) throws WireAttachException {
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
         assert component instanceof JavaComponent;
@@ -133,7 +132,7 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaTargetDefi
         }
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, JavaTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, JavaTargetDefinition target) throws WiringException {
         // no-op
     }
 

@@ -50,7 +50,7 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Attachmes and detachs a wire to a source component or transport binding.
+ * Attaches and detachs a wire to a source component or transport binding.
  *
  * @version $Rev$ $Date$
  */
@@ -63,7 +63,7 @@ public interface SourceWireAttacher<PSD extends PhysicalSourceDefinition> {
      * @param wire   the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
-    void attachToSource(PSD source, PhysicalTargetDefinition target, Wire wire) throws WiringException;
+    void attach(PSD source, PhysicalTargetDefinition target, Wire wire) throws WiringException;
 
     /**
      * Attaches an ObjectFactory that returns a direct target instance to a source component.
@@ -82,7 +82,7 @@ public interface SourceWireAttacher<PSD extends PhysicalSourceDefinition> {
      * @param target metadata for the target side of the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
-    void detachFromSource(PSD source, PhysicalTargetDefinition target) throws WiringException;
+    void detach(PSD source, PhysicalTargetDefinition target) throws WiringException;
 
     /**
      * detaches an ObjectFactory from a source component.
@@ -92,6 +92,5 @@ public interface SourceWireAttacher<PSD extends PhysicalSourceDefinition> {
      * @throws WiringException if an exception occurs during the deattach operation
      */
     void detachObjectFactory(PSD source, PhysicalTargetDefinition target) throws WiringException;
-
 
 }

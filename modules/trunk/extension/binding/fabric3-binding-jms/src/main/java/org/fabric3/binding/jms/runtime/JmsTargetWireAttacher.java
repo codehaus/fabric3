@@ -100,7 +100,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
         this.messageFormatters = messageFormatters;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, JmsTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, JmsTargetDefinition target, Wire wire) throws WiringException {
 
         WireConfiguration wireConfiguration = new WireConfiguration();
         ClassLoader classloader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
@@ -126,7 +126,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
 
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, JmsTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, JmsTargetDefinition target) throws WiringException {
         // no-op
     }
 

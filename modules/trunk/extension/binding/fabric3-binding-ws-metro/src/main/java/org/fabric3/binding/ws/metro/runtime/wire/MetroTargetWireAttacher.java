@@ -113,7 +113,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
         this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, MetroTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, MetroTargetDefinition target, Wire wire) throws WiringException {
 
         try {
             ReferenceEndpointDefinition endpointDefinition = target.getEndpointDefinition();
@@ -183,7 +183,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
         return null;
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, MetroTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, MetroTargetDefinition target) throws WiringException {
         // no-op
     }
 

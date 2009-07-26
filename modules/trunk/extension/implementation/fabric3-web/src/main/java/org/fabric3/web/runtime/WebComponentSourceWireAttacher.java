@@ -66,7 +66,7 @@ public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebCom
         this.manager = manager;
     }
 
-    public void attachToSource(WebComponentSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(WebComponentSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(source.getUri());
         String referenceName = source.getUri().getFragment();
         InteractionType interactionType = source.getInteractionType();
@@ -78,7 +78,7 @@ public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebCom
         }
     }
 
-    public void detachFromSource(WebComponentSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(WebComponentSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

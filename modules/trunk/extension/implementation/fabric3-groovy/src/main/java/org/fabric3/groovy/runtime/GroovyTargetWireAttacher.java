@@ -72,7 +72,7 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyTarget
         this.manager = manager;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition sourceDefinition,
+    public void attach(PhysicalSourceDefinition sourceDefinition,
                                GroovyTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
@@ -120,7 +120,7 @@ public class GroovyTargetWireAttacher implements TargetWireAttacher<GroovyTarget
         // TODO handle callbacks
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, GroovyTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, GroovyTargetDefinition target) throws WiringException {
         // no-op
     }
 

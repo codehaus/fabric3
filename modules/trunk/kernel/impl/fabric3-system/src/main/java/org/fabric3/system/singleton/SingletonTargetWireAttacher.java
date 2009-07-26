@@ -63,11 +63,11 @@ public class SingletonTargetWireAttacher implements TargetWireAttacher<Singleton
         this.manager = manager;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, SingletonTargetDefinition target, Wire wire)
+    public void attach(PhysicalSourceDefinition source, SingletonTargetDefinition target, Wire wire)
             throws WiringException {
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, SingletonTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, SingletonTargetDefinition target) throws WiringException {
     }
 
     public ObjectFactory<?> createObjectFactory(SingletonTargetDefinition target) throws WiringException {

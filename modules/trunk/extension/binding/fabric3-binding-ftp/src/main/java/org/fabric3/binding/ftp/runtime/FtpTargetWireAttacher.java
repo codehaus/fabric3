@@ -71,7 +71,7 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpTargetDefini
         this.monitor = monitor;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, FtpTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, FtpTargetDefinition target, Wire wire) throws WiringException {
 
         InvocationChain invocationChain = wire.getInvocationChains().iterator().next();
         URI uri = expandUri(target.getUri());
@@ -101,7 +101,7 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpTargetDefini
 
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, FtpTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, FtpTargetDefinition target) throws WiringException {
         // no-op
     }
 

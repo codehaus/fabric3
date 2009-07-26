@@ -103,11 +103,11 @@ public class PersistenceContextWireAttacher implements TargetWireAttacher<Persis
         }
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, PersistenceContextTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, PersistenceContextTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, PersistenceContextTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, PersistenceContextTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

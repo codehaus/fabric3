@@ -61,12 +61,12 @@ public class SystemSourcedResourceWireAttacher implements TargetWireAttacher<Sys
         this.manager = manager;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, SystemSourcedTargetDefinition target, Wire wire)
+    public void attach(PhysicalSourceDefinition source, SystemSourcedTargetDefinition target, Wire wire)
             throws WiringException {
         throw new AssertionError();
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, SystemSourcedTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, SystemSourcedTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

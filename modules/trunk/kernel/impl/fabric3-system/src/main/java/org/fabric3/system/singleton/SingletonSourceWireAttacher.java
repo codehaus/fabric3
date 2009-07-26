@@ -70,11 +70,11 @@ public class SingletonSourceWireAttacher implements SourceWireAttacher<Singleton
         this.manager = manager;
     }
 
-    public void attachToSource(SingletonSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(SingletonSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(SingletonSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(SingletonSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

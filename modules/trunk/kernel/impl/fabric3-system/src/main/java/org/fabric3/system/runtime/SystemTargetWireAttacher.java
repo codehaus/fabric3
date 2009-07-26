@@ -79,7 +79,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemTarget
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, SystemTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, SystemTargetDefinition target, Wire wire) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         SystemComponent<?> targetComponent = (SystemComponent<?>) manager.getComponent(targetId);
 
@@ -115,7 +115,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemTarget
         }
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, SystemTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, SystemTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

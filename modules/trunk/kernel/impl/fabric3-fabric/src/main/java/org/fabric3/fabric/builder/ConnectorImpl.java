@@ -110,8 +110,8 @@ public class ConnectorImpl implements Connector {
             sourceAttacher.attachObjectFactory(sourceDefinition, objectFactory, targetDefinition);
         } else {
             Wire wire = createWire(definition);
-            sourceAttacher.attachToSource(sourceDefinition, targetDefinition, wire);
-            targetAttacher.attachToTarget(sourceDefinition, targetDefinition, wire);
+            sourceAttacher.attach(sourceDefinition, targetDefinition, wire);
+            targetAttacher.attach(sourceDefinition, targetDefinition, wire);
         }
     }
 
@@ -130,8 +130,8 @@ public class ConnectorImpl implements Connector {
             if (targetAttacher == null) {
                 throw new AttacherNotFoundException("Target attacher not found for type: " + targetDefinition.getClass());
             }
-            targetAttacher.detachFromTarget(sourceDefinition, targetDefinition);
-            sourceAttacher.detachFromSource(sourceDefinition, targetDefinition);
+            targetAttacher.detach(sourceDefinition, targetDefinition);
+            sourceAttacher.detach(sourceDefinition, targetDefinition);
         }
     }
 

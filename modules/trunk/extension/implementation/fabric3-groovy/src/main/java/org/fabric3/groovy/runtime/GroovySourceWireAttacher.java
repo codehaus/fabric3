@@ -81,7 +81,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToSource(GroovySourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
+    public void attach(GroovySourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
             throws WiringException {
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
@@ -117,7 +117,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         }
     }
 
-    public void detachFromSource(GroovySourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(GroovySourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         detachObjectFactory(source, target);
     }
 

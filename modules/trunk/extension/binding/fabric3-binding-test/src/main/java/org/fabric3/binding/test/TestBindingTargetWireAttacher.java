@@ -62,7 +62,7 @@ public class TestBindingTargetWireAttacher implements TargetWireAttacher<TestBin
         this.channel = channel;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, TestBindingTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, TestBindingTargetDefinition target, Wire wire) throws WiringException {
         for (InvocationChain chain : wire.getInvocationChains()) {
             URI destination;
             if (target.isCallback()) {
@@ -77,7 +77,7 @@ public class TestBindingTargetWireAttacher implements TargetWireAttacher<TestBin
         }
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, TestBindingTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, TestBindingTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

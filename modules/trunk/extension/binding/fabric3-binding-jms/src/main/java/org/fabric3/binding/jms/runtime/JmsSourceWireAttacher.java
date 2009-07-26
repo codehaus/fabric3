@@ -109,7 +109,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         this.messageFormatters = messageFormatters;
     }
 
-    public void attachToSource(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         ServiceListenerConfiguration configuration = new ServiceListenerConfiguration();
         configuration.setServiceUri(target.getUri());
         ClassLoader classloader = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
@@ -138,7 +138,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         }
     }
 
-    public void detachFromSource(JmsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(JmsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         try {
             jmsHost.unregisterListener(target.getUri());
         } catch (JmsHostException e) {

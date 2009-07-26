@@ -57,13 +57,13 @@ public class TestBindingSourceWireAttacher implements SourceWireAttacher<TestBin
         this.channel = channel;
     }
 
-    public void attachToSource(TestBindingSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(TestBindingSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         // register the wire to the bound service so it can be invoked through the channel from a bound reference
         URI callbackUri = target.getCallbackUri();
         channel.registerDestinationWire(source.getUri(), wire, callbackUri);
     }
 
-    public void detachFromSource(TestBindingSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(TestBindingSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

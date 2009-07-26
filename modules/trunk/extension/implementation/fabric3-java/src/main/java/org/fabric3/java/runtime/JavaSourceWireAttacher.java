@@ -52,9 +52,9 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
@@ -80,9 +80,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         this.proxyService = proxyService;
     }
 
-    public void attachToSource(JavaSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
-            throws WiringException {
-
+    public void attach(JavaSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire) throws WiringException {
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         JavaComponent<?> source = (JavaComponent) manager.getComponent(sourceName);
@@ -118,7 +116,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         }
     }
 
-    public void detachFromSource(JavaSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(JavaSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         detachObjectFactory(source, target);
     }
 

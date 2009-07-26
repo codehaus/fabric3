@@ -65,11 +65,11 @@ public class MonitorWireAttacher implements TargetWireAttacher<MonitorTargetDefi
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, MonitorTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, MonitorTargetDefinition target, Wire wire) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, MonitorTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, MonitorTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

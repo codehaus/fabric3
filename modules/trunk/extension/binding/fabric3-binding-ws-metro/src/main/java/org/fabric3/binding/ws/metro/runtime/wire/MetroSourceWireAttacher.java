@@ -124,7 +124,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroSourceDe
         metroServlet = new MetroServlet(scheduler, securityEnvironment);
     }
 
-    public void attachToSource(MetroSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(MetroSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         try {
             ServiceEndpointDefinition endpointDefinition = source.getEndpointDefinition();
             QName serviceName = endpointDefinition.getServiceName();
@@ -203,7 +203,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroSourceDe
         }
     }
 
-    public void detachFromSource(MetroSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(MetroSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         try {
             ServiceEndpointDefinition endpointDefinition = source.getEndpointDefinition();
             URI servicePath = endpointDefinition.getServicePath();

@@ -73,11 +73,11 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
         this.classLoaderService = classLoaderService;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, PersistenceUnitTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, PersistenceUnitTargetDefinition target, Wire wire) throws WiringException {
         throw new AssertionError();
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, PersistenceUnitTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, PersistenceUnitTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

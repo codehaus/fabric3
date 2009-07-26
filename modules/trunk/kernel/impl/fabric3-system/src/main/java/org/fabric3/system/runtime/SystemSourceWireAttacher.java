@@ -93,7 +93,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         this.proxyService = proxyService;
     }
 
-    public void attachToSource(SystemSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(SystemSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         if (proxyService == null) {
             throw new WiringException("Attempt to inject a non-optimized wire during runtime boostrap.");
         }
@@ -124,7 +124,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         }
     }
 
-    public void detachFromSource(SystemSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(SystemSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         detachObjectFactory(source, target);
     }
 

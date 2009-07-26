@@ -79,7 +79,7 @@ public class TcpSourceWireAttacher implements SourceWireAttacher<TcpSourceDefini
     }
 
 
-    public void attachToSource(TcpSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(TcpSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         URI uri = source.getUri();
         if (uri.getScheme() != null) {
             throw new WiringException("Absolute URIs not supported: " + uri);
@@ -103,7 +103,7 @@ public class TcpSourceWireAttacher implements SourceWireAttacher<TcpSourceDefini
         service.registerTcp(sourceUri, wireHolder);
     }
 
-    public void detachFromSource(TcpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(TcpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         service.unregisterTcp(source.getUri().toString());
     }
 

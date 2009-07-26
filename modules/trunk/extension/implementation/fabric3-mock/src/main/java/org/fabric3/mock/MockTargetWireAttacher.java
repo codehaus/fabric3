@@ -73,7 +73,7 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockTargetDefi
         this.control = control;
     }
 
-    public void attachToTarget(PhysicalSourceDefinition sourceDefinition,
+    public void attach(PhysicalSourceDefinition sourceDefinition,
                                MockTargetDefinition wireTargetDefinition,
                                Wire wire) throws WireAttachException {
 
@@ -91,7 +91,7 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockTargetDefi
 
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, MockTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, MockTargetDefinition target) throws WiringException {
         // no-op
     }
 

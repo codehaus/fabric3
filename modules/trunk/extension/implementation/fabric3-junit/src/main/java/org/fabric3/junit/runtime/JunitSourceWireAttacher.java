@@ -69,7 +69,7 @@ public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitSourceDe
         this.authenticationService = authenticationService;
     }
 
-    public void attachToSource(JUnitSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(JUnitSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         String testName = source.getTestName();
         ContextConfiguration configuration = source.getConfiguration();
         if (configuration != null) {
@@ -93,7 +93,7 @@ public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitSourceDe
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(JUnitSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(JUnitSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

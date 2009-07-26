@@ -138,7 +138,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpTargetDefini
         }
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, TcpTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, TcpTargetDefinition target, Wire wire) throws WiringException {
         String wireFormat = target.getConfig().getWireFormat();
         if (wireFormat == null) {
             wireFormat = tcpWireFormat;
@@ -158,7 +158,7 @@ public class TcpTargetWireAttacher implements TargetWireAttacher<TcpTargetDefini
         }
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, TcpTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, TcpTargetDefinition target) throws WiringException {
         // no-op
     }
 

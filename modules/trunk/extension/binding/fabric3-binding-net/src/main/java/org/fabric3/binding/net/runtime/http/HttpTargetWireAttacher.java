@@ -133,7 +133,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpTargetDefi
         }
     }
 
-    public void attachToTarget(PhysicalSourceDefinition source, HttpTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, HttpTargetDefinition target, Wire wire) throws WiringException {
         ParameterEncoder parameterEncoder = getWireFormatter(target, wire);
         for (InvocationChain chain : wire.getInvocationChains()) {
             if (chain.getPhysicalOperation().isOneWay()) {
@@ -144,7 +144,7 @@ public class HttpTargetWireAttacher implements TargetWireAttacher<HttpTargetDefi
         }
     }
 
-    public void detachFromTarget(PhysicalSourceDefinition source, HttpTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, HttpTargetDefinition target) throws WiringException {
         // no-op
     }
 

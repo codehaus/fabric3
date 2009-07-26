@@ -78,7 +78,7 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpSourceDefi
         this.formatterFactories = formatterFactories;
     }
 
-    public void attachToSource(HttpSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(HttpSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         URI uri = source.getUri();
         if (uri.getScheme() != null) {
             throw new WiringException("Absolute URIs not supported: " + uri);
@@ -102,7 +102,7 @@ public class HttpSourceWireAttacher implements SourceWireAttacher<HttpSourceDefi
         service.registerHttp(sourceUri, wireHolder);
     }
 
-    public void detachFromSource(HttpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(HttpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         service.unregisterHttp(source.getUri().toString());
     }
 

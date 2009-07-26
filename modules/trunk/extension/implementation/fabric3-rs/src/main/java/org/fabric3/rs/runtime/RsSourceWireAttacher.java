@@ -97,7 +97,7 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsSourceDefiniti
         monitor.extensionStopped();
     }
 
-    public void attachToSource(RsSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
+    public void attach(RsSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)
             throws WireAttachException {
 
         URI sourceUri = sourceDefinition.getUri();
@@ -124,7 +124,7 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsSourceDefiniti
 
     }
 
-    public void detachFromSource(RsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(RsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         URI uri = source.getUri();
         String mapping = creatingMappingUri(uri);
         servletHost.unregisterMapping(mapping);

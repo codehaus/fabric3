@@ -78,7 +78,7 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpSourceDefini
         this.monitor = monitor;
     }
 
-    public void attachToSource(FtpSourceDefinition source, PhysicalTargetDefinition target, final Wire wire) throws WiringException {
+    public void attach(FtpSourceDefinition source, PhysicalTargetDefinition target, final Wire wire) throws WiringException {
         URI uri = source.getUri();
         String servicePath = expandUri(uri).getSchemeSpecificPart();
         if (servicePath.startsWith("//")) {
@@ -93,7 +93,7 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpSourceDefini
 
     }
 
-    public void detachFromSource(FtpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
+    public void detach(FtpSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
