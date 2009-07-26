@@ -35,70 +35,62 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.fabric.services.documentloader;
+package org.fabric3.fabric.documentloader;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.fabric3.util.io.IOHelper;
-
 /**
- * Default implementation that creates a new DocumentBuilder for every invocation.
- * <p/>
- * URI resolution is handled by the underlying JAXP implementation.
+ * Service interface for loading XML documents from a file as DOM objects.
  *
  * @version $Rev$ $Date$
  */
-public class DocumentLoaderImpl implements DocumentLoader {
-    private static final DocumentBuilderFactory DOCUMENT_FACTORY;
+public interface DocumentLoader {
+    /**
+     * Loads a Document from a local file.
+     *
+     * @param file the file containing the XML document
+     * @return the content of the file as a Document
+     * @throws IOException  if there was a problem reading the file
+     * @throws SAXException if there was a problem with the document
+     */
+    Document load(File file) throws IOException, SAXException;
 
-    static {
-        DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
-        DOCUMENT_FACTORY.setNamespaceAware(true);
-    }
+    /**
+     * Loads a Document from a physical resource.
+     *
+     * @param url the location of the resource
+     * @return the content of the resource as a Document
+     * @throws IOException  if there was a problem reading the resource
+     * @throws SAXException if there was a problem with the document
+     */
+    Document load(URL url) throws IOException, SAXException;
 
-    public Document load(File file) throws IOException, SAXException {
-        DocumentBuilder builder = getBuilder();
-        return builder.parse(file);
-    }
+    /**
+     * Loads a Document from a logical resource.
+     * <p/>
+     * How the resource is converted to a physical location is implementation defined.
+     *
+     * @param uri the logical location of the resource
+     * @return the content of the resource as a Document
+     * @throws IOException  if there was a problem reading the resource
+     * @throws SAXException if there was a problem with the document
+     */
+    Document load(URI uri) throws IOException, SAXException;
 
-    public Document load(URL url) throws IOException, SAXException {
-        InputStream stream = url.openStream();
-        try {
-            stream = new BufferedInputStream(stream);
-            DocumentBuilder builder = getBuilder();
-            return builder.parse(stream);
-        } finally {
-            IOHelper.closeQueitly(stream);
-        }
-    }
-
-    public Document load(URI uri) throws IOException, SAXException {
-        DocumentBuilder builder = getBuilder();
-        return builder.parse(uri.toString());
-    }
-
-    public Document load(InputSource source) throws IOException, SAXException {
-        DocumentBuilder builder = getBuilder();
-        return builder.parse(source);
-    }
-
-    private DocumentBuilder getBuilder() {
-        try {
-            return DOCUMENT_FACTORY.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError(e);
-        }
-    }
+    /**
+     * Loads a Document from a logical source.
+     *
+     * @param source the source of the document text
+     * @return the content as a Document
+     * @throws IOException  if there was a problem reading the content
+     * @throws SAXException if there was a problem with the document
+     */
+    Document load(InputSource source) throws IOException, SAXException;
 }

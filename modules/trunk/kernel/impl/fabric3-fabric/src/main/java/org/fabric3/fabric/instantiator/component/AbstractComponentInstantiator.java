@@ -59,7 +59,7 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.InstantiationContext;
-import org.fabric3.fabric.services.documentloader.DocumentLoader;
+import org.fabric3.fabric.documentloader.DocumentLoader;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
