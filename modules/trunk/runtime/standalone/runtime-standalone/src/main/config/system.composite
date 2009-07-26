@@ -61,7 +61,7 @@
     </component>
 
     <component name="FSArtifactCache">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.artifact.FSArtifactCache"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.artifact.FSArtifactCache"/>
     </component>
 
     <component name="SyntheticDirectoryContributionProcessor">

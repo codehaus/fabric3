@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.fabric.services.artifact;
+package org.fabric3.fabric.artifact;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,8 +51,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.artifact.ArtifactCache;
-import org.fabric3.spi.services.artifact.CacheException;
+import org.fabric3.spi.artifact.ArtifactCache;
+import org.fabric3.spi.artifact.CacheException;
 import org.fabric3.util.io.FileHelper;
 
 /**

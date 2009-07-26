@@ -49,8 +49,8 @@ import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.ResolutionException;
-import org.fabric3.spi.services.artifact.ArtifactCache;
-import org.fabric3.spi.services.artifact.CacheException;
+import org.fabric3.spi.artifact.ArtifactCache;
+import org.fabric3.spi.artifact.CacheException;
 
 /**
  * Resolves contributions using the <code>http</code> scheme, copying them to a local archive store.

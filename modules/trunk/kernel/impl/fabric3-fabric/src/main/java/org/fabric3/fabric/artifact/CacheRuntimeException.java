@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.fabric.services.artifact;
+package org.fabric3.fabric.artifact;
 
 import org.fabric3.host.Fabric3RuntimeException;
 
