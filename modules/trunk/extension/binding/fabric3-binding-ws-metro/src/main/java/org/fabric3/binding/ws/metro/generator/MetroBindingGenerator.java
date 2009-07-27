@@ -56,6 +56,7 @@ import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.model.WsBindingDefinition;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -74,19 +75,22 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
     private EndpointResolver endpointResolver;
     private EndpointSynthesizer synthesizer;
     private ClassLoaderRegistry classLoaderRegistry;
+    private HostInfo info;
 
     public MetroBindingGenerator(@Reference EndpointResolver endpointResolver,
                                  @Reference EndpointSynthesizer synthesizer,
-                                 @Reference ClassLoaderRegistry classLoaderRegistry) {
+                                 @Reference ClassLoaderRegistry classLoaderRegistry,
+                                 @Reference HostInfo info) {
         this.endpointResolver = endpointResolver;
         this.synthesizer = synthesizer;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.info = info;
     }
 
     public MetroSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
-                                                        ServiceContract<?> contract,
-                                                        List<LogicalOperation> operations,
-                                                        Policy policy) throws GenerationException {
+                                                    ServiceContract<?> contract,
+                                                    List<LogicalOperation> operations,
+                                                    Policy policy) throws GenerationException {
         if (!(contract instanceof JavaServiceContract)) {
             throw new UnsupportedOperationException("Support for non-Java contracts not yet implemented");
         }
@@ -111,9 +115,9 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
     }
 
     public MetroTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
-                                                        ServiceContract<?> contract,
-                                                        List<LogicalOperation> operations,
-                                                        Policy policy) throws GenerationException {
+                                                    ServiceContract<?> contract,
+                                                    List<LogicalOperation> operations,
+                                                    Policy policy) throws GenerationException {
         if (!(contract instanceof JavaServiceContract)) {
             throw new UnsupportedOperationException("Support for non-Java contracts not yet implemented");
         }
@@ -191,12 +195,19 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
     }
 
     private Class<?> loadServiceClass(LogicalBinding<WsBindingDefinition> binding, JavaServiceContract javaContract) {
-        URI classLoaderUri = binding.getParent().getParent().getDefinition().getContributionUri();
-        // check if a namespace is assigned
-        ClassLoader loader = classLoaderRegistry.getClassLoader(classLoaderUri);
-        if (loader == null) {
-            // programming error
-            throw new AssertionError("Classloader not found: " + classLoaderUri);
+        ClassLoader loader;
+        if (info.supportsClassLoaderIsolation()) {
+
+
+            URI classLoaderUri = binding.getParent().getParent().getDefinition().getContributionUri();
+            // check if a namespace is assigned
+            loader = classLoaderRegistry.getClassLoader(classLoaderUri);
+            if (loader == null) {
+                // programming error
+                throw new AssertionError("Classloader not found: " + classLoaderUri);
+            }
+        } else {
+            loader = Thread.currentThread().getContextClassLoader();
         }
         Class<?> clazz;
         try {

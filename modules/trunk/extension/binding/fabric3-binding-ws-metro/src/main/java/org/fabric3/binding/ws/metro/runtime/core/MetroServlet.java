@@ -81,6 +81,7 @@ public class MetroServlet extends WSServlet {
     private WorkScheduler scheduler;
     private SecurityEnvironment securityEnvironment;
 
+    private List<RegistrationHolder> holders = new ArrayList<RegistrationHolder>();
     private ServletAdapterFactory servletAdapterFactory = new ServletAdapterFactory();
     private volatile F3ServletDelegate delegate;
     private F3Container container;
@@ -123,7 +124,19 @@ public class MetroServlet extends WSServlet {
         } finally {
             Thread.currentThread().setContextClassLoader(classLoader);
         }
-
+        // register services
+        for (RegistrationHolder holder : holders) {
+            registerService(holder.getSei(),
+                            holder.getServiceName(),
+                            holder.getPortName(),
+                            holder.getWsdlUrl(),
+                            holder.getServicePath(),
+                            holder.getInvoker(),
+                            holder.getFeatures(),
+                            holder.getBindingID(),
+                            holder.getWsitConfiguration(),
+                            holder.getSchemas());
+        }
     }
 
     /**
@@ -151,6 +164,20 @@ public class MetroServlet extends WSServlet {
                                 File wsitConfiguration,
                                 List<File> schemas) {
 
+        if (delegate == null) {
+            // servlet has not be initalized, delay service registration
+            delayRegisterService(sei,
+                                 serviceName,
+                                 portName,
+                                 wsdlUrl,
+                                 servicePath,
+                                 invoker,
+                                 features,
+                                 bindingID,
+                                 wsitConfiguration,
+                                 schemas);
+            return;
+        }
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         ClassLoader seiClassLoader = sei.getClassLoader();
@@ -206,6 +233,38 @@ public class MetroServlet extends WSServlet {
     }
 
     /**
+     * Used to delay service registration until after the MetroServlet has been initialized. This can happen in the webapp runtime where registering
+     * services may happen before the servlet container has fully initialized.
+     * <p/>
+     * TODO Remove this method when the webapp runtime is replaced
+     *
+     * @param sei               service endpoint interface.
+     * @param serviceName       service name
+     * @param portName          port name
+     * @param wsdlUrl           Optional URL to the WSDL document.
+     * @param servicePath       Relative path on which the service is provisioned.
+     * @param invoker           Invoker for receiving the web service request.
+     * @param features          Web service features to enable.
+     * @param bindingID         Binding ID to use.
+     * @param wsitConfiguration the generated WSDL used for WSIT configuration or null if no policy is configured
+     * @param schemas           the handles to schemas (XSDs) imported by the WSDL or null if none exist
+     */
+    private void delayRegisterService(Class<?> sei,
+                                      QName serviceName,
+                                      QName portName,
+                                      URL wsdlUrl,
+                                      String servicePath,
+                                      MetroServiceInvoker invoker,
+                                      WebServiceFeature[] features,
+                                      BindingID bindingID,
+                                      File wsitConfiguration,
+                                      List<File> schemas) {
+        RegistrationHolder holder =
+                new RegistrationHolder(sei, serviceName, portName, wsdlUrl, servicePath, invoker, features, bindingID, wsitConfiguration, schemas);
+        holders.add(holder);
+    }
+
+    /**
      * Unregisters a service endpoint.
      *
      * @param path the endpoint path
@@ -235,4 +294,80 @@ public class MetroServlet extends WSServlet {
         return delegate;
     }
 
+
+    private class RegistrationHolder {
+        private Class<?> sei;
+        private QName serviceName;
+        private QName portName;
+        private URL wsdlUrl;
+        private String servicePath;
+        private MetroServiceInvoker invoker;
+        private WebServiceFeature[] features;
+        private BindingID bindingID;
+        private File wsitConfiguration;
+        private List<File> schemas;
+
+        public RegistrationHolder(Class<?> sei,
+                                  QName serviceName,
+                                  QName portName,
+                                  URL wsdlUrl,
+                                  String servicePath,
+                                  MetroServiceInvoker invoker,
+                                  WebServiceFeature[] features,
+                                  BindingID bindingID,
+                                  File wsitConfiguration,
+                                  List<File> schemas) {
+
+            this.sei = sei;
+            this.serviceName = serviceName;
+            this.portName = portName;
+            this.wsdlUrl = wsdlUrl;
+            this.servicePath = servicePath;
+            this.invoker = invoker;
+            this.features = features;
+            this.bindingID = bindingID;
+            this.wsitConfiguration = wsitConfiguration;
+            this.schemas = schemas;
+        }
+
+        public Class<?> getSei() {
+            return sei;
+        }
+
+        public QName getServiceName() {
+            return serviceName;
+        }
+
+        public QName getPortName() {
+            return portName;
+        }
+
+        public URL getWsdlUrl() {
+            return wsdlUrl;
+        }
+
+        public String getServicePath() {
+            return servicePath;
+        }
+
+        public MetroServiceInvoker getInvoker() {
+            return invoker;
+        }
+
+        public WebServiceFeature[] getFeatures() {
+            return features;
+        }
+
+        public BindingID getBindingID() {
+            return bindingID;
+        }
+
+        public File getWsitConfiguration() {
+            return wsitConfiguration;
+        }
+
+        public List<File> getSchemas() {
+            return schemas;
+        }
+    }
 }
