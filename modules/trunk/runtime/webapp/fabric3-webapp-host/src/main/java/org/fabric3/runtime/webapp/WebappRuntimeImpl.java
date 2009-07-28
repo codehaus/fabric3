@@ -84,9 +84,9 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     public void deploy(QName qName, URI componentId) throws ContributionException, DeploymentException {
         try {
             // contribute the war to the application domain
-            Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
-            listener = getSystemComponent(F3RequestListener.class, F3RequestListener.LISTENER_URI);
-            ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+            Domain domain = getComponent(Domain.class, APPLICATION_DOMAIN_URI);
+            listener = getComponent(F3RequestListener.class, F3RequestListener.LISTENER_URI);
+            ContributionService contributionService = getComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI contributionUri = new URI("file", qName.getLocalPart(), null);
             WarContributionSource source = new WarContributionSource(contributionUri);
             contributionService.contribute(source);
@@ -102,7 +102,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     public ServletRequestInjector getRequestInjector() {
         if (requestInjector == null) {
             URI uri = URI.create(Names.RUNTIME_NAME + "/servletHost");
-            requestInjector = getSystemComponent(ServletRequestInjector.class, uri);
+            requestInjector = getComponent(ServletRequestInjector.class, uri);
         }
         return requestInjector;
     }
@@ -126,7 +126,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     private HttpSessionListener getSessionListener() {
         if (sessionListener == null) {
             URI uri = URI.create(Names.RUNTIME_NAME + "/WebApplicationActivator");
-            sessionListener = getSystemComponent(HttpSessionListener.class, uri);
+            sessionListener = getComponent(HttpSessionListener.class, uri);
         }
         return sessionListener;
     }

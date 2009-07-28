@@ -30,8 +30,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>fabric3-standalone-api</module>
-		<module>fabric3-standalone-host</module>
 		<module>fabric3-standalone-server</module>
 		<module>fabric3-standalone-shutdown</module>
 		<module>fabric3-standalone-admin</module>

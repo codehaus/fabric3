@@ -81,6 +81,18 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         return tempDir;
     }
 
+    public File getConfigDirectory() {
+        return null;
+    }
+
+    public File getModeConfigDirectory() {
+        return null;
+    }
+
+    public File getRepositoryDirectory() {
+        return null;
+    }
+
     public Properties getHostProperties() {
         return hostProperties;
     }

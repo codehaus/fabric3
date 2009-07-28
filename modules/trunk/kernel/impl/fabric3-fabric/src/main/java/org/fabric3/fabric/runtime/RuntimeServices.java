@@ -94,5 +94,5 @@ public interface RuntimeServices {
      * @return the MetaDataStore used to index contribution resources
      */
     MetaDataStore getMetaDataStore();
-
+ 
 }

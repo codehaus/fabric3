@@ -87,6 +87,18 @@ public class WebappHostInfoImpl implements WebappHostInfo {
         throw new UnsupportedOperationException();
     }
 
+    public File getConfigDirectory() {
+        return null;
+    }
+
+    public File getModeConfigDirectory() {
+        return null;
+    }
+
+    public File getRepositoryDirectory() {
+        return null;
+    }
+
     public String getProperty(String name, String defaultValue) {
         String val = servletContext.getInitParameter(name);
         return val == null ? defaultValue : val;

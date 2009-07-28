@@ -50,6 +50,7 @@ import org.apache.maven.surefire.suite.SurefireTestSuite;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.runtime.ContextStartException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 
 /**
@@ -86,6 +87,14 @@ public interface MavenRuntime extends Fabric3Runtime<MavenHostInfo> {
      *                               this case the errors should be reported back to the user.
      */
     QName deploy(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
+
+    /**
+     * Starts a component context.
+     *
+     * @param compositeId the context id
+     * @throws ContextStartException if an error starting the context is encountered
+     */
+    void startContext(QName compositeId) throws ContextStartException;
 
     /**
      * Creates a test suite for testing components in the deployed composite.

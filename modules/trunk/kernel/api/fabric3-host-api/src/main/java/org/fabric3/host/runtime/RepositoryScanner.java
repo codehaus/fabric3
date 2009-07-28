@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.runtime.standalone.server;
+package org.fabric3.host.runtime;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -60,8 +60,7 @@ import org.xml.sax.SAXException;
 import org.fabric3.host.Namespaces;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
-import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.runtime.standalone.SyntheticContributionSource;
+import org.fabric3.host.contribution.SyntheticContributionSource;
 
 /**
  * Scans a repository for extension and user contributions.

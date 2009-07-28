@@ -43,6 +43,7 @@
  */
 package org.fabric3.host.runtime;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -59,9 +60,11 @@ public class BootConfiguration {
     private Fabric3Runtime<?> runtime;
     private Bootstrapper bootstrapper;
     private ClassLoader bootClassLoader;
+    private List<ComponentRegistration> registrations = new ArrayList<ComponentRegistration>();
     private List<ContributionSource> extensionContributions = Collections.emptyList();
     private List<ContributionSource> userContributions = Collections.emptyList();
     private Map<String, String> exportedPackages = new HashMap<String, String>();
+
 
     public Fabric3Runtime<?> getRuntime() {
         return runtime;
@@ -85,6 +88,14 @@ public class BootConfiguration {
 
     public void setBootClassLoader(ClassLoader bootClassLoader) {
         this.bootClassLoader = bootClassLoader;
+    }
+
+    public List<ComponentRegistration> getRegistrations() {
+        return registrations;
+    }
+
+    public void addRegistration(ComponentRegistration registration) {
+        this.registrations.add(registration);
     }
 
     public Map<String, String> getExportedPackages() {

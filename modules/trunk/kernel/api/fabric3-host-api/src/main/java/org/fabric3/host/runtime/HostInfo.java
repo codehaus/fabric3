@@ -93,6 +93,28 @@ public interface HostInfo {
     File getTempDir();
 
     /**
+     * Returns the directory containing this runtime's configuration.
+     *
+     * @return the directory containing this runtime's configuration or null if the runtime does not support external configuration
+     */
+    File getConfigDirectory();
+
+    /**
+     * Returns the directory containing this runtime's boot-mode specific configuration.
+     *
+     * @return the directory containing this runtime's boot-mode specific configuration or null if the runtime does not support external
+     *         configuration
+     */
+    File getModeConfigDirectory();
+
+    /**
+     * Returns the runtime repository directory.
+     *
+     * @return the runtime repository directory or null if the runtime provisions extensions from an external source
+     */
+    File getRepositoryDirectory();
+
+    /**
      * Return the value of the named property.
      *
      * @param name         the name of the property

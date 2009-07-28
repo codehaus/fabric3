@@ -41,27 +41,20 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.runtime.standalone;
+package org.fabric3.fabric.runtime;
 
-import org.fabric3.host.Fabric3Exception;
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.runtime.HostInfo;
 
 /**
- * Denotes an error bootstrapping the runtime.
+ * The default Fabric3Runtime implementation.
  *
  * @version $Rev$ $Date$
  */
-public class BootstrapException extends Fabric3Exception {
-    private static final long serialVersionUID = -5481231211452396895L;
+public class DefaultRuntime extends AbstractRuntime<HostInfo> {
 
-    public BootstrapException(Throwable cause) {
-        super(cause);
+    public DefaultRuntime(MonitorFactory factory) {
+        super(HostInfo.class, factory);
     }
 
-    public BootstrapException(String message) {
-        super(message);
-    }
-
-    public BootstrapException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

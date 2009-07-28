@@ -35,14 +35,12 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.runtime.standalone;
+package org.fabric3.host.contribution;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-
-import org.fabric3.host.contribution.ContributionSource;
 
 /**
  * ContributionSource for a directory that serves as a synthetic composite. For example, a datasource directory that contains JDBC drivers.

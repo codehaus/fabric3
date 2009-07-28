@@ -45,38 +45,33 @@ package org.fabric3.fabric.runtime;
 
 import java.net.URI;
 import javax.management.MBeanServer;
-import javax.xml.namespace.QName;
 
 import org.fabric3.contribution.MetaDataStoreImpl;
 import org.fabric3.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.classloader.ClassLoaderRegistryImpl;
+import org.fabric3.fabric.cm.ComponentManagerImpl;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
-import org.fabric3.fabric.cm.ComponentManagerImpl;
 import org.fabric3.fabric.lcm.LogicalComponentManagerImpl;
 import org.fabric3.fabric.lcm.TransientLogicalComponentStore;
 import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.host.runtime.ContextStartException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.model.type.component.Autowire;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.ProcessorRegistry;
-import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.WorkContextTunnel;
-import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.lcm.LogicalComponentStore;
 import org.fabric3.spi.lcm.ReadException;
@@ -88,50 +83,17 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     private Class<HI> hostInfoType;
     private MBeanServer mbServer;
     private String jmxSubDomain;
-    private WorkScheduler workScheduler;
 
-    /**
-     * Information provided by the host about its runtime environment.
-     */
     private HI hostInfo;
-
-    /**
-     * MonitorFactory provided by the host for directing events to its management framework.
-     */
     private MonitorFactory monitorFactory;
-
-    /**
-     * The LogicalComponentManager that manages all logical components in this runtime.
-     */
     private LogicalComponentManager logicalComponentManager;
-
-    /**
-     * The ComponentManager that manages all physical components in this runtime.
-     */
     private ComponentManager componentManager;
-
-    /**
-     * The ScopeContainer used to managed system component instances.
-     */
     private ScopeContainer scopeContainer;
-
-    /**
-     * The ClassLoaderRegristy that manages all runtime classloaders.
-     */
     private ClassLoaderRegistry classLoaderRegistry;
-
-    /**
-     * The MetaDataStore that indexes contribution metadata and artifacts.
-     */
     private MetaDataStore metaDataStore;
-
-    /**
-     * The ScopeRegistry that manages runtime ScopeContainers
-     */
     private ScopeRegistry scopeRegistry;
 
     private ClassLoader hostClassLoader;
-
 
     protected AbstractRuntime(Class<HI> runtimeInfoType, MonitorFactory monitorFactory) {
         this.hostInfoType = runtimeInfoType;
@@ -210,7 +172,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         scopeContainer.stopAllContexts(workContext);
     }
 
-    public <I> I getSystemComponent(Class<I> service, URI uri) {
+    public <I> I getComponent(Class<I> service, URI uri) {
         if (RuntimeServices.class.equals(service)) {
             return service.cast(this);
         }
@@ -229,17 +191,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
             throw new AssertionError(e);
         } finally {
             WorkContextTunnel.setThreadWorkContext(oldContext);
-        }
-    }
-
-    public void startContext(QName deployable) throws ContextStartException {
-        WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(deployable);
-        workContext.addCallFrame(frame);
-        try {
-            scopeContainer.startContext(workContext);
-        } catch (GroupInitializationException e) {
-            throw new ContextStartException(e);
         }
     }
 
@@ -267,11 +218,4 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         return scopeRegistry;
     }
 
-    public WorkScheduler getWorkScheduler() {
-        return workScheduler;
-    }
-
-    public void setWorkScheduler(WorkScheduler workScheduler) {
-        this.workScheduler = workScheduler;
-    }
 }

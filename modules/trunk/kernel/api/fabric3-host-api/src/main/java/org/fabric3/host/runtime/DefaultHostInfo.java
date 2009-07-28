@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.runtime.standalone;
+package org.fabric3.host.runtime;
 
 import java.io.File;
 import java.net.URI;
@@ -50,9 +50,11 @@ import java.util.Properties;
 import org.fabric3.host.RuntimeMode;
 
 /**
+ * Default HostInfo implementation.
+ *
  * @version $Rev$ $Date$
  */
-public class StandaloneHostInfoImpl implements StandaloneHostInfo {
+public class DefaultHostInfo implements HostInfo {
     private final RuntimeMode runtimeMode;
     private final URI domain;
     private final File baseDir;
@@ -76,15 +78,15 @@ public class StandaloneHostInfoImpl implements StandaloneHostInfo {
      * @param tempDirectory       the directory for writing temporary files
      * @param dataDirectory       the directory for writing persistent data that survives restarts
      */
-    public StandaloneHostInfoImpl(RuntimeMode runtimeMode,
-                                  URI domain,
-                                  File baseDir,
-                                  File repositoryDirectory,
-                                  File configDir,
-                                  File modeConfigDir,
-                                  Properties properties,
-                                  File tempDirectory,
-                                  File dataDirectory) {
+    public DefaultHostInfo(RuntimeMode runtimeMode,
+                           URI domain,
+                           File baseDir,
+                           File repositoryDirectory,
+                           File configDir,
+                           File modeConfigDir,
+                           Properties properties,
+                           File tempDirectory,
+                           File dataDirectory) {
         this.runtimeMode = runtimeMode;
         this.domain = domain;
         this.baseDir = baseDir;

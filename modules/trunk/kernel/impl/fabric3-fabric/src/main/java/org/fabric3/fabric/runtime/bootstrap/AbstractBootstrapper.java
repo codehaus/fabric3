@@ -44,18 +44,19 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import javax.management.MBeanServer;
 
 import org.w3c.dom.Document;
 
 import org.fabric3.contribution.manifest.ContributionExport;
+import org.fabric3.fabric.documentloader.DocumentLoader;
+import org.fabric3.fabric.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.runtime.FabricNames;
 import org.fabric3.fabric.runtime.RuntimeServices;
-import org.fabric3.fabric.documentloader.DocumentLoader;
-import org.fabric3.fabric.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.synthesizer.SingletonComponentSynthesizer;
 import org.fabric3.host.Names;
 import static org.fabric3.host.Names.BOOT_CONTRIBUTION;
@@ -65,6 +66,7 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.ComponentRegistration;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
@@ -72,6 +74,7 @@ import org.fabric3.introspection.java.DefaultIntrospectionHelper;
 import org.fabric3.introspection.java.contract.DefaultContractProcessor;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.contribution.Contribution;
@@ -82,11 +85,10 @@ import org.fabric3.spi.contribution.manifest.JavaExport;
 import org.fabric3.spi.contribution.manifest.PackageInfo;
 import org.fabric3.spi.contribution.manifest.PackageVersion;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
-import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.cm.ComponentManager;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.lcm.LogicalComponentManager;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.xml.XMLFactory;
@@ -138,6 +140,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
     public void bootRuntimeDomain(Fabric3Runtime<?> runtime,
                                   ClassLoader bootClassLoader,
+                                  List<ComponentRegistration> components,
                                   Map<String, String> exportedPackages) throws InitializationException {
 
         this.runtime = runtime;
@@ -149,7 +152,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         monitorFactory = runtime.getMonitorFactory();
         HostInfo hostInfo = runtime.getHostInfo();
 
-        RuntimeServices runtimeServices = runtime.getSystemComponent(RuntimeServices.class, RUNTIME_SERVICES);
+        RuntimeServices runtimeServices = runtime.getComponent(RuntimeServices.class, RUNTIME_SERVICES);
         logicalComponetManager = runtimeServices.getLogicalComponentManager();
         componentManager = runtimeServices.getComponentManager();
         domain = logicalComponetManager.getRootComponent();
@@ -166,7 +169,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
                                                         scopeContainer);
 
         // register primordial components provided by the runtime itself
-        registerRuntimeComponents();
+        registerRuntimeComponents(components);
 
         runtimeDomain = BootstrapAssemblyFactory.createDomain(monitorFactory,
                                                               classLoaderRegistry,
@@ -252,10 +255,12 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     /**
      * Registers the primordial runtime components.
      *
+     * @param registrations host components to register
      * @throws InitializationException if there is an error during registration
      */
     @SuppressWarnings({"unchecked"})
-    private <T extends HostInfo> void registerRuntimeComponents() throws InitializationException {
+    private <T extends HostInfo, S, I extends S> void registerRuntimeComponents(List<ComponentRegistration> registrations)
+            throws InitializationException {
 
         // services available through the outward facing Fabric3Runtime API
         registerComponent("MonitorFactory", MonitorFactory.class, monitorFactory, true);
@@ -276,6 +281,15 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         registerComponent("ScopeRegistry", ScopeRegistry.class, scopeRegistry, true);
 
         registerComponent("MetaDataStore", MetaDataStore.class, metaDataStore, true);
+
+        // register other components provided by the host environment
+        for (ComponentRegistration registration : registrations) {
+            String name = registration.getName();
+            Class<S> service = (Class<S>) registration.getService();
+            I instance = (I) registration.getInstance();
+            boolean introspect = registration.isIntrospect();
+            registerComponent(name, service, instance, introspect);
+        }
     }
 
     /**
@@ -285,9 +299,9 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void registerDomain() throws InitializationException {
         registerComponent("RuntimeDomain", Domain.class, runtimeDomain, true);
-        // the following is a hack to initialize the Domain and MetaDataStore so they may be reinjected
-        runtime.getSystemComponent(Domain.class, Names.RUNTIME_DOMAIN_SERVICE_URI);
-        runtime.getSystemComponent(MetaDataStore.class, FabricNames.METADATA_STORE_URI);
+        // the following initializes the Domain and MetaDataStore so they may be reinjected
+        runtime.getComponent(Domain.class, Names.RUNTIME_DOMAIN_SERVICE_URI);
+        runtime.getComponent(MetaDataStore.class, FabricNames.METADATA_STORE_URI);
     }
 
 

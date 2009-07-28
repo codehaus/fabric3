@@ -34,22 +34,50 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.runtime.standalone;
-
-import org.fabric3.host.runtime.Fabric3Runtime;
+*/
+package org.fabric3.host.runtime;
 
 /**
- * API for the Standalone runtime.
+ * Records an extension component provided by the host environment that must be registered with the runtime domain.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public interface StandaloneRuntime extends Fabric3Runtime<StandaloneHostInfo> {
+public class ComponentRegistration {
+    private String name;
+    private Class<?> service;
+    private Object instance;
+    private boolean introspect;
 
+    /**
+     * Constructor.
+     *
+     * @param name       the component name
+     * @param service    the component service contract
+     * @param instance   the component instance
+     * @param introspect true if the component should be introspected and a component type generated
+     * @param <S>        the service contract type
+     * @param <I>        the component instance
+     */
+    public <S, I extends S> ComponentRegistration(String name, Class<S> service, I instance, boolean introspect) {
+        this.name = name;
+        this.service = service;
+        this.instance = instance;
+        this.introspect = introspect;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Class<?> getService() {
+        return service;
+    }
+
+    public Object getInstance() {
+        return instance;
+    }
+
+    public boolean isIntrospect() {
+        return introspect;
+    }
 }

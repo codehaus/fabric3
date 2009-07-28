@@ -56,12 +56,16 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
+import org.fabric3.host.runtime.ContextStartException;
 import org.fabric3.maven.CompositeQNameService;
 import org.fabric3.maven.InvalidResourceException;
 import org.fabric3.maven.MavenRuntime;
 import org.fabric3.maven.MavenHostInfo;
 import org.fabric3.maven.ModuleContributionSource;
 import org.fabric3.maven.TestSuiteFactory;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.component.GroupInitializationException;
 
 /**
  * Default Maven runtime implementation.
@@ -79,8 +83,8 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
         ModuleContributionSource source = new ModuleContributionSource(CONTRIBUTION_URI, base);
         // contribute the Maven project to the application domain
         ContributionService contributionService =
-                getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-        Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+                getComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+        Domain domain = getComponent(Domain.class, APPLICATION_DOMAIN_URI);
         contributionService.contribute(source);
         // activate the deployable composite in the domain
         domain.include(qName);
@@ -90,10 +94,10 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
         try {
             ModuleContributionSource source = new ModuleContributionSource(CONTRIBUTION_URI, base);
 
-            ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-            Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+            ContributionService contributionService = getComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+            Domain domain = getComponent(Domain.class, APPLICATION_DOMAIN_URI);
             contributionService.contribute(source);
-            CompositeQNameService qNameService = getSystemComponent(CompositeQNameService.class, CompositeQNameService.SERVICE_URI);
+            CompositeQNameService qNameService = getComponent(CompositeQNameService.class, CompositeQNameService.SERVICE_URI);
             QName deployable = qNameService.getQName(CONTRIBUTION_URI, scdlLocation);
             if (deployable == null) {
                 throw new DeploymentException("Test composite not found:" + scdlLocation);
@@ -106,9 +110,20 @@ public class MavenRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements 
 
     }
 
+    public void startContext(QName deployable) throws ContextStartException {
+        WorkContext workContext = new WorkContext();
+        CallFrame frame = new CallFrame(deployable);
+        workContext.addCallFrame(frame);
+        try {
+            getScopeContainer().startContext(workContext);
+        } catch (GroupInitializationException e) {
+            throw new ContextStartException(e);
+        }
+    }
+
     @SuppressWarnings({"unchecked"})
     public SurefireTestSuite createTestSuite() {
-        TestSuiteFactory factory = getSystemComponent(TestSuiteFactory.class, TestSuiteFactory.FACTORY_URI);
+        TestSuiteFactory factory = getComponent(TestSuiteFactory.class, TestSuiteFactory.FACTORY_URI);
         return factory.createTestSuite();
     }
 }

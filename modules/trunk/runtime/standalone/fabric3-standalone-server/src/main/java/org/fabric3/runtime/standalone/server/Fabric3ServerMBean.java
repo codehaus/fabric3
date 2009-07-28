@@ -56,14 +56,7 @@ public interface Fabric3ServerMBean {
 
     /**
      * Shuts down a runtime specified by the bootpath.
-     *
-     * @param bootPath Bootpath for the runtime.
      */
-    public void shutdownRuntime(String bootPath);
-
-    /**
-     * Starts the server.
-     */
-    public void shutdown();
+    public void shutdownRuntime();
 
 }

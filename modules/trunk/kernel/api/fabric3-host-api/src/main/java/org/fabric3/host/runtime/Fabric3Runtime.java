@@ -39,7 +39,6 @@ package org.fabric3.host.runtime;
 
 import java.net.URI;
 import javax.management.MBeanServer;
-import javax.xml.namespace.QName;
 
 import org.fabric3.host.monitor.MonitorFactory;
 
@@ -116,6 +115,16 @@ public interface Fabric3Runtime<HI extends HostInfo> {
     void setMBeanServer(MBeanServer mbServer);
 
     /**
+     * Returns the system component providing the designated service.
+     *
+     * @param service the service interface required
+     * @param uri     the id of the system component
+     * @param <I>     the Java type for the service interface
+     * @return an implementation of the requested service
+     */
+    <I> I getComponent(Class<I> service, URI uri);
+
+    /**
      * Returns the JMX sub domain this runtime should use.
      *
      * @return the JMX sub domain this runtime should use
@@ -144,23 +153,5 @@ public interface Fabric3Runtime<HI extends HostInfo> {
      * @throws ShutdownException if there is an error destroying the runtime
      */
     void destroy() throws ShutdownException;
-
-    /**
-     * Returns the system component providing the designated service.
-     *
-     * @param service the service interface required
-     * @param uri     the id of the system component
-     * @param <I>     the Java type for the service interface
-     * @return an implementation of the requested service
-     */
-    <I> I getSystemComponent(Class<I> service, URI uri);
-
-    /**
-     * Starts a component context.
-     *
-     * @param compositeId the context id
-     * @throws ContextStartException if an error starting the context is encountered
-     */
-    void startContext(QName compositeId) throws ContextStartException;
 
 }

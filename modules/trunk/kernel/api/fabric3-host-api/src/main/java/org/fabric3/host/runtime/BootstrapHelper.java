@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.runtime.standalone;
+package org.fabric3.host.runtime;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -60,9 +60,6 @@ import java.util.jar.JarFile;
 
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.runtime.ScdlBootstrapper;
 
 /**
  * Utility class for boostrap related operations.
@@ -78,7 +75,7 @@ public final class BootstrapHelper {
     private static final String DEFAULT_MONITOR_FACTORY = "org.fabric3.monitor.impl.JavaLoggingMonitorFactory";
     private static final String BOOTSTRAPPER_CLASS = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
     private static final String COORDINATOR_CLASS = "org.fabric3.fabric.runtime.DefaultCoordinator";
-    private static final String RUNTIME_CLASS = "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl";
+    private static final String RUNTIME_CLASS = "org.fabric3.fabric.runtime.DefaultRuntime";
 
     private BootstrapHelper() {
     }
@@ -217,8 +214,8 @@ public final class BootstrapHelper {
         }
     }
 
-    public static StandaloneHostInfo createHostInfo(RuntimeMode runtimeMode, File baseDir, File configDir, File modeConfigDir, Properties props)
-            throws BootstrapException, IOException {
+    public static HostInfo createHostInfo(RuntimeMode runtimeMode, File baseDir, File configDir, File modeConfigDir, Properties props)
+            throws InitializationException, IOException {
 
         File repositoryDir = getDirectory(baseDir, "repository");
         File tempDir = getDirectory(baseDir, "tmp");
@@ -232,58 +229,59 @@ public final class BootstrapHelper {
             if (domainName != null) {
                 domain = new URI(domainName);
             } else {
-                throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
+                throw new InitializationException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(runtimeMode, domain, baseDir, repositoryDir, configDir, modeConfigDir, props, tempDir, dataDir);
+            return new DefaultHostInfo(runtimeMode, domain, baseDir, repositoryDir, configDir, modeConfigDir, props, tempDir, dataDir);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }
 
     }
 
-    public static MonitorFactory createDefaultMonitorFactory(ClassLoader classLoader) throws BootstrapException {
+    public static MonitorFactory createDefaultMonitorFactory(ClassLoader classLoader) throws InitializationException {
         return createMonitorFactory(classLoader, DEFAULT_MONITOR_FACTORY);
     }
 
-    public static MonitorFactory createMonitorFactory(ClassLoader classLoader, String factoryClass) throws BootstrapException {
+    public static MonitorFactory createMonitorFactory(ClassLoader classLoader, String factoryClass) throws InitializationException {
         try {
             Class<?> monitorClass = Class.forName(factoryClass, true, classLoader);
             return (MonitorFactory) monitorClass.newInstance();
         } catch (ClassNotFoundException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (IllegalAccessException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (InstantiationException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         }
     }
 
-    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo,
-                                                  ClassLoader hostClassLoader,
-                                                  ClassLoader bootClassLoader,
-                                                  MonitorFactory monitorFactory) throws BootstrapException {
+    @SuppressWarnings({"unchecked"})
+    public static Fabric3Runtime<HostInfo> createRuntime(HostInfo hostInfo,
+                                                         ClassLoader hostClassLoader,
+                                                         ClassLoader bootClassLoader,
+                                                         MonitorFactory monitorFactory) throws InitializationException {
         try {
             Class<?> implClass = Class.forName(RUNTIME_CLASS, true, bootClassLoader);
             Constructor<?> ctor = implClass.getConstructor(MonitorFactory.class);
-            StandaloneRuntime runtime = (StandaloneRuntime) ctor.newInstance(monitorFactory);
+            Fabric3Runtime<HostInfo> runtime = (Fabric3Runtime<HostInfo>) ctor.newInstance(monitorFactory);
             runtime.setHostClassLoader(hostClassLoader);
             runtime.setHostInfo(hostInfo);
             return runtime;
         } catch (IllegalAccessException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (InstantiationException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (ClassNotFoundException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (NoSuchMethodException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (InvocationTargetException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         }
     }
 
-    public static Bootstrapper createBootstrapper(StandaloneHostInfo hostInfo, ClassLoader bootClassLoader) throws BootstrapException {
+    public static Bootstrapper createBootstrapper(HostInfo hostInfo, ClassLoader bootClassLoader) throws InitializationException {
         try {
             Class<?> implClass = Class.forName(BOOTSTRAPPER_CLASS, true, bootClassLoader);
             ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
@@ -300,29 +298,28 @@ public final class BootstrapHelper {
             }
             return bootstrapper;
         } catch (IllegalAccessException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (MalformedURLException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (InstantiationException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (ClassNotFoundException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         }
 
     }
 
     @SuppressWarnings({"unchecked"})
-    public static RuntimeLifecycleCoordinator createCoordinator(ClassLoader bootClassLoader)
-            throws BootstrapException {
+    public static RuntimeLifecycleCoordinator createCoordinator(ClassLoader bootClassLoader) throws InitializationException {
         try {
             Class<?> implClass = Class.forName(COORDINATOR_CLASS, true, bootClassLoader);
             return (RuntimeLifecycleCoordinator) implClass.newInstance();
         } catch (ClassNotFoundException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (IllegalAccessException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         } catch (InstantiationException e) {
-            throw new BootstrapException(e);
+            throw new InitializationException(e);
         }
     }
 

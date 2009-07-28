@@ -53,16 +53,17 @@ import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
+import org.fabric3.host.runtime.BootstrapHelper;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.Fabric3Runtime;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.MaskingClassLoader;
+import org.fabric3.host.runtime.RepositoryScanner;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.ScanResult;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
-import org.fabric3.runtime.standalone.BootstrapException;
-import org.fabric3.runtime.standalone.BootstrapHelper;
-import org.fabric3.runtime.standalone.StandaloneHostInfo;
-import org.fabric3.runtime.standalone.StandaloneRuntime;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. The class boots a Fabric3 runtime and launches a daemon
@@ -83,7 +84,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
     private final File installDirectory;
     private RuntimeLifecycleCoordinator coordinator;
-    private RmiAgent agent;
     private ServerMonitor monitor;
 
     /**
@@ -98,7 +98,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         RuntimeMode runtimeMode = getRuntimeMode(args);
         String jmxDomain = System.getProperty(JMX_DOMAIN, "standalone");
         server.startRuntime(runtimeMode, jmxDomain);
-        server.shutdownRuntime(jmxDomain);
+        server.shutdownRuntime();
 
         System.exit(0);
     }
@@ -128,8 +128,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     public final void startRuntime(RuntimeMode runtimeMode, String jmxDomain) {
-        StandaloneHostInfo hostInfo;
-        StandaloneRuntime runtime;
+        HostInfo hostInfo;
+        Fabric3Runtime<HostInfo> runtime;
         try {
             //  calculate config directories based on the mode the runtime is booted in
             File configDir = BootstrapHelper.getDirectory(installDirectory, "config");
@@ -200,6 +200,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             // boot the JMX agent
             String jmxString = props.getProperty(JMX_PORT, "1099");
             String[] tokens = jmxString.split("-");
+            RmiAgent agent;
             if (tokens.length == 1) {
                 // port specified
                 int jmxPort = parsePortNumber(jmxString, "JMX");
@@ -259,13 +260,13 @@ public class Fabric3Server implements Fabric3ServerMBean {
         return port;
     }
 
-    public final void shutdownRuntime(String bootPath) {
+    public final void shutdownRuntime() {
 
         try {
             if (coordinator != null) {
                 coordinator.shutdown();
             }
-            monitor.stopped(bootPath);
+            monitor.stopped();
         } catch (ShutdownException ex) {
             monitor.runError(ex);
             throw new Fabric3ServerException(ex);
@@ -280,9 +281,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
 
-    private BootConfiguration createBootConfiguration(StandaloneRuntime runtime, ClassLoader bootClassLoader)
-            throws BootstrapException, InitializationException {
-        StandaloneHostInfo hostInfo = runtime.getHostInfo();
+    private BootConfiguration createBootConfiguration(Fabric3Runtime<HostInfo> runtime, ClassLoader bootClassLoader) throws InitializationException {
+        HostInfo hostInfo = runtime.getHostInfo();
         BootConfiguration configuration = new BootConfiguration();
         configuration.setBootClassLoader(bootClassLoader);
 
@@ -309,7 +309,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         void started(String mode, String domain, int jmxPort, int monitorPort);
 
         @Info
-        void stopped(String domain);
+        void stopped();
 
     }
 

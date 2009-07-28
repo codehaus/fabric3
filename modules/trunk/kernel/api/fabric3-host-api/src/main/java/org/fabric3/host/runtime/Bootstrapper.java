@@ -43,6 +43,7 @@
  */
 package org.fabric3.host.runtime;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,11 +58,13 @@ public interface Bootstrapper {
      *
      * @param runtime          the runtime to initialize the domain for
      * @param bootClassLoader  the bootstrap classloader
+     * @param registrations    extension components provided by the host runtime
      * @param exportedPackages the Java packages exported by the boot contribution
      * @throws InitializationException if there was a problem bootstrapping the runtime
      */
     public void bootRuntimeDomain(Fabric3Runtime<?> runtime,
                                   ClassLoader bootClassLoader,
+                                  List<ComponentRegistration> registrations,
                                   Map<String, String> exportedPackages) throws InitializationException;
 
     /**
