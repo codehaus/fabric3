@@ -153,7 +153,7 @@ public final class Intent extends AbstractDefinition {
     /**
      * Whether this intent constrains the specified type.
      *
-     * @param type Type of the SCA artifact.
+     * @param type the type of the SCA artifact.
      * @return True if this intent constrains the specified type.
      */
     public boolean doesConstrain(QName type) {
