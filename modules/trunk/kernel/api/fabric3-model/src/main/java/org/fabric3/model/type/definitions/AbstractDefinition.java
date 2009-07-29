@@ -48,6 +48,8 @@ import javax.xml.namespace.QName;
 import org.fabric3.model.type.ModelObject;
 
 /**
+ * Base policy definition type.
+ *
  * @version $Rev$ $Date$
  */
 public abstract class AbstractDefinition extends ModelObject {
@@ -56,39 +58,28 @@ public abstract class AbstractDefinition extends ModelObject {
     private final QName name;
 
     /**
-     * @param name Name of the definition object.
+     * Constructor.
+     *
+     * @param name qualified mame of the definition object.
      */
     public AbstractDefinition(QName name) {
         this.name = name;
     }
 
     /**
-     * @return Qualified name of the definition.
+     * Returns the qualified name of the definition.
+     *
+     * @return the qualified name of the definition
      */
     public final QName getName() {
         return name;
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object other) {
-
-        if (other == null) {
-            return false;
-        }
-
-        if (this.getClass() != other.getClass()) {
-            return false;
-        }
-
-        return ((AbstractDefinition) other).name.equals(name);
+        return other != null && this.getClass() == other.getClass() && ((AbstractDefinition) other).name.equals(name);
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return name.hashCode();
