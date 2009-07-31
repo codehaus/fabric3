@@ -51,6 +51,7 @@ import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ws.metro.MetroBindingMonitor;
@@ -134,7 +135,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroSourceDe
             URI classLoaderId = source.getClassLoaderId();
             String interfaze = source.getInterface();
             URL wsdlLocation = source.getWsdlLocation();
-            List<QName> requestedIntents = source.getRequestedIntents();
+            List<QName> requestedIntents = source.getIntents();
 
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
 
@@ -157,14 +158,14 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroSourceDe
             ClassLoader old = Thread.currentThread().getContextClassLoader();
             try {
                 Thread.currentThread().setContextClassLoader(seiClass.getClassLoader());
-                if (!source.getMappings().isEmpty()) {
+                if (!source.getPolicies().isEmpty() ||  !source.getMappings().isEmpty()) {
                     // if policy is configured for the endpoint, generate a WSDL with the policy attachments
                     GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, bindingId, false);
                     generatedWsdl = artifacts.getWsdl();
                     generatedSchemas = artifacts.getSchemas();
-                    for (PolicyExpressionMapping mapping : source.getMappings()) {
-                        policyAttacher.attach(generatedWsdl, mapping.getOperationNames(), mapping.getPolicyExpression());
-                    }
+                    List<Element> policyExpressions = source.getPolicies();
+                    List<PolicyExpressionMapping> mappings = source.getMappings();
+                    policyAttacher.attach(generatedWsdl, policyExpressions, mappings);
                     wsdlLocation = generatedWsdl.toURI().toURL();
                 }
             } finally {

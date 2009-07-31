@@ -35,40 +35,47 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.policy.helper;
+package org.fabric3.spi.policy;
 
-import java.util.Set;
+import java.util.List;
 
-import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.PolicyResolutionException;
+import org.fabric3.spi.model.instance.LogicalComponent;
+
 
 /**
+ * Applies policy using external policy attachment.
+ *
  * @version $Rev$ $Date$
  */
-public interface InteractionPolicyHelper {
+public interface PolicyAttacher {
 
     /**
-     * Returns the set of intents that need to be explictly provided by the binding. These are the intents requested by the user and available in the
-     * <code>mayProvide</code> list of intents declared by the binding type.
+     * Attaches all active PolicySets (i.e. those that use external attachment) to the component hierarchy.
      *
-     * @param binding   the binding binding for which intents are to be resolved.
-     * @param operation the operation for which the provided intents are to be computed.
-     * @return Set of intents that need to be explictly provided by the binding.
-     * @throws PolicyResolutionException If there are any unidentified intents.
+     * @param component   the top-most component to evaluate external attachments against
+     * @param incremental true if the attachment is performed as part of an incremental deployment
+     * @throws PolicyResolutionException if an error occurs evaluating the policies
      */
-    Set<Intent> getProvidedIntents(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException;
+    void attachPolicies(LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException;
 
     /**
-     * Returns the set of policies explicitly declared for the operation and those that satisfy the intents not provided by the binding type.
+     * Attaches PolicySets (i.e. those that use external attachment) to the component hierarchy.
      *
-     * @param binding   the binding for which policies are to be resolved.
-     * @param operation the operation for which the intents are to be resolved.
-     * @return Set of resolved policies.
-     * @throws PolicyResolutionException If all intents cannot be resolved.
+     * @param policySets  the policy sets to attach
+     * @param component   the top-most component to evaluate external attachments against
+     * @param incremental true if the attachment is performed as part of an incremental deployment
+     * @throws PolicyResolutionException if an error occurs evaluating the policies
      */
-    Set<PolicySet> resolve(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException;
+    void attachPolicies(List<PolicySet> policySets, LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException;
+
+    /**
+     * Detaches PolicySets (i.e. those that use external attachment) to the component hierarchy.
+     *
+     * @param policySets the policy sets to detach
+     * @param component  the top-most component to evaluate external attachments against
+     * @throws PolicyResolutionException if an error occurs evaluating the policies
+     */
+    void detachPolicies(List<PolicySet> policySets, LogicalComponent<?> component) throws PolicyResolutionException;
 
 }

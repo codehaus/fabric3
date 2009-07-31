@@ -38,7 +38,9 @@
 package org.fabric3.policy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +48,7 @@ import java.util.Set;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.spi.policy.PolicyMetadata;
 import org.fabric3.spi.policy.PolicyResult;
 
@@ -55,42 +57,70 @@ import org.fabric3.spi.policy.PolicyResult;
  */
 public class PolicyResultImpl implements PolicyResult {
 
-    private final PolicyImpl sourcePolicy = new PolicyImpl();
-    private final PolicyImpl targetPolicy = new PolicyImpl();
+    private final EffectivePolicyImpl sourcePolicy = new EffectivePolicyImpl();
+    private final EffectivePolicyImpl targetPolicy = new EffectivePolicyImpl();
+    private final Set<PolicySet> interceptedEndpointPolicySets = new HashSet<PolicySet>();
     private PolicyMetadata metadata = new PolicyMetadata();
-
     private final Map<LogicalOperation, List<PolicySet>> interceptedPolicySets = new HashMap<LogicalOperation, List<PolicySet>>();
 
-    public Policy getSourcePolicy() {
+    public EffectivePolicy getSourcePolicy() {
         return sourcePolicy;
     }
 
-    public Policy getTargetPolicy() {
+    public EffectivePolicy getTargetPolicy() {
         return targetPolicy;
     }
 
+    public Set<PolicySet> getInterceptedEndpointPolicySets() {
+        return interceptedEndpointPolicySets;
+    }
+
     public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
-        return interceptedPolicySets.get(operation);
+        List<PolicySet> sets = interceptedPolicySets.get(operation);
+        if (sets == null) {
+            return Collections.emptyList();
+        }
+        return sets;
     }
 
     public PolicyMetadata getMetadata() {
         return metadata;
     }
 
+    void addSourceEndpointIntents(Set<Intent> intents) {
+        sourcePolicy.addEndpointIntents(intents);
+    }
+
     void addSourceIntents(LogicalOperation operation, Set<Intent> intents) {
         sourcePolicy.addIntents(operation, intents);
+    }
+
+    void addTargetEndpointIntents(Set<Intent> intents) {
+        targetPolicy.addEndpointIntents(intents);
     }
 
     void addTargetIntents(LogicalOperation operation, Set<Intent> intents) {
         targetPolicy.addIntents(operation, intents);
     }
 
+    void addSourceEndpointPolicySets(Set<PolicySet> policySets) {
+        sourcePolicy.addEndpointPolicySets(policySets);
+    }
+
     void addSourcePolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
         sourcePolicy.addPolicySets(operation, policySets);
     }
 
+    void addTargetEndpointPolicySets(Set<PolicySet> policySets) {
+        targetPolicy.addEndpointPolicySets(policySets);
+    }
+
     void addTargetPolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
         targetPolicy.addPolicySets(operation, policySets);
+    }
+
+    public void addInterceptedEndpointPolicySets(Set<PolicySet> policySets) {
+        interceptedEndpointPolicySets.addAll(policySets);
     }
 
     void addInterceptedPolicySets(LogicalOperation operation, Set<PolicySet> policySets) {

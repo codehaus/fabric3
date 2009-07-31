@@ -55,7 +55,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.timer.component.model.TimerImplementation;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
@@ -84,15 +84,15 @@ public class TimerComponentGenerator implements ComponentGenerator<LogicalCompon
         return definition;
     }
 
-    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateWireSource(definition, reference, policy);
         return definition;
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<TimerImplementation> source,
-                                                                   ServiceContract<?> serviceContract,
-                                                                   Policy policy) throws GenerationException {
+                                                               ServiceContract<?> serviceContract,
+                                                               EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);
         return definition;
@@ -104,7 +104,7 @@ public class TimerComponentGenerator implements ComponentGenerator<LogicalCompon
         return definition;
     }
 
-    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException("Cannot wire to timer components");
     }
 }

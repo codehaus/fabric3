@@ -58,6 +58,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
+
 /**
  * Default implementation of WsdlPolicyAttacher. Policy expression attachement is performed by cloning the policy expression element and appending it
  * to the list of operations.
@@ -75,29 +77,13 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
         DOCUMENT_FACTORY.setNamespaceAware(true);
     }
 
-    public void attach(File wsdl, List<String> operationNames, Element policy) throws PolicyAttachmentException {
+    public void attach(File wsdl, List<Element> endpointPolicies, List<PolicyExpressionMapping> mappings) throws PolicyAttachmentException {
         try {
             DocumentBuilder builder = DOCUMENT_FACTORY.newDocumentBuilder();
             Document document = builder.parse(new BufferedInputStream(new FileInputStream(wsdl)));
-            Element root = document.getDocumentElement();
-            Node clone = policy.cloneNode(true);
-            document.adoptNode(clone);
-            root.appendChild(clone);
 
-            // calculate the policy id to use in the PolicyReference element
-            Node item = clone.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
-            if (item == null) {
-                throw new PolicyAttachmentException("Missing id in policy expression:" + wsdl.getName());
-            }
-            String id = "#" + item.getNodeValue();
-
-            // add the policy id to the operations elements for the portType
-            Node portTypeNode = findChildNode(root, "portType");
-            if (portTypeNode == null) {
-                throw new PolicyAttachmentException("portType element missing: " + wsdl.getName());
-            }
-
-            addPolicyReferenceToOperation(portTypeNode, operationNames, id);
+            attachEndpointPolicies(document, endpointPolicies, wsdl);
+            attachOperationPolicies(document, mappings, wsdl);
 
             // Write the DOM representing the abstract WSDL back to the file
             Source source = new DOMSource(document);
@@ -113,12 +99,65 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
         } catch (IOException e) {
             throw new PolicyAttachmentException(e);
         }
+
+    }
+
+    private void attachEndpointPolicies(Document document, List<Element> endpointPolicies, File wsdl) throws PolicyAttachmentException {
+        Element root = document.getDocumentElement();
+        for (Element policy : endpointPolicies) {
+            Node clone = policy.cloneNode(true);
+            document.adoptNode(clone);
+            root.appendChild(clone);
+
+            // calculate the policy id to use in the PolicyReference element
+            Node item = clone.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
+            if (item == null) {
+                throw new PolicyAttachmentException("Missing id in policy expression:" + wsdl.getName());
+            }
+            String id = "#" + item.getNodeValue();
+            // add the policy id to the wsdl binding
+            Node bindingNode = findChildNode(root, "binding");
+            if (bindingNode == null) {
+                throw new PolicyAttachmentException("Binding element missing: " + wsdl.getName());
+            }
+
+            // attach the reference to the binding node
+            Element reference = bindingNode.getOwnerDocument().createElementNS(WS_POLICY_NS, "PolicyReference");
+            reference.setAttribute("URI", id);
+            bindingNode.appendChild(reference);
+        }
+    }
+
+    private void attachOperationPolicies(Document document, List<PolicyExpressionMapping> mappings, File wsdl) throws PolicyAttachmentException {
+        Element root = document.getDocumentElement();
+        for (PolicyExpressionMapping mapping : mappings) {
+            Element policy = mapping.getPolicyExpression();
+            List<String> operationNames = mapping.getOperationNames();
+            Node clone = policy.cloneNode(true);
+            document.adoptNode(clone);
+            root.appendChild(clone);
+
+            // calculate the policy id to use in the PolicyReference element
+            Node item = clone.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
+            if (item == null) {
+                throw new PolicyAttachmentException("Missing id in policy expression:" + wsdl.getName());
+            }
+            String id = "#" + item.getNodeValue();
+
+            // add the policy id to the wsdl binding
+            Node portTypeNode = findChildNode(root, "portType");
+            if (portTypeNode == null) {
+                throw new PolicyAttachmentException("Port type element missing: " + wsdl.getName());
+            }
+
+            addPolicyReferenceToOperation(portTypeNode, operationNames, id);
+        }
     }
 
     /**
      * Adds a policy reference to the WSDL operation definition using the WS-Policy PolicyReference element.
      *
-     * @param node           the node representing the operation
+     * @param node           the operation node
      * @param operationNames the list of operations the policy applies to
      * @param id             the policy reference id, e.g. "#SomePolicy"
      */

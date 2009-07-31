@@ -38,6 +38,7 @@
 package org.fabric3.fabric.generator.wire;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -70,12 +71,12 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.type.LocalBindingDefinition;
 import org.fabric3.spi.model.type.RemoteBindingDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.spi.policy.PolicyMetadata;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
@@ -140,8 +141,8 @@ public class WireGeneratorImpl implements WireGenerator {
         LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, service);
 
         PolicyResult policyResult = resolvePolicies(reference.getOperations(), sourceBinding, targetBinding, source, target);
-        Policy sourcePolicy = policyResult.getSourcePolicy();
-        Policy targetPolicy = policyResult.getTargetPolicy();
+        EffectivePolicy sourcePolicy = policyResult.getSourcePolicy();
+        EffectivePolicy targetPolicy = policyResult.getTargetPolicy();
 
         ComponentGenerator targetGenerator = getGenerator(target);
         // generate metadata for the target side of the wire
@@ -185,8 +186,8 @@ public class WireGeneratorImpl implements WireGenerator {
         ComponentGenerator sourceGenerator = getGenerator(sourceComponent);
         ComponentGenerator targetGenerator = getGenerator(targetComponent);
         PolicyResult policyResult = resolvePolicies(service.getCallbackOperations(), sourceBinding, targetBinding, sourceComponent, targetComponent);
-        Policy sourcePolicy = policyResult.getSourcePolicy();
-        Policy targetPolicy = policyResult.getTargetPolicy();
+        EffectivePolicy sourcePolicy = policyResult.getSourcePolicy();
+        EffectivePolicy targetPolicy = policyResult.getTargetPolicy();
         Set<PhysicalOperationDefinition> callbackOperations = generateOperations(reference.getCallbackOperations(), policyResult);
         PhysicalSourceDefinition sourceDefinition =
                 sourceGenerator.generateCallbackWireSource(sourceComponent, contract, sourcePolicy);
@@ -223,8 +224,8 @@ public class WireGeneratorImpl implements WireGenerator {
                 new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, service);
 
         PolicyResult policyResult = resolvePolicies(logicalService.getOperations(), binding, targetBinding, null, component);
-        Policy sourcePolicy = policyResult.getSourcePolicy();
-        Policy targetPolicy = policyResult.getTargetPolicy();
+        EffectivePolicy sourcePolicy = policyResult.getSourcePolicy();
+        EffectivePolicy targetPolicy = policyResult.getTargetPolicy();
 
 
         URI targetUri = service.getPromotedUri();
@@ -264,8 +265,8 @@ public class WireGeneratorImpl implements WireGenerator {
                 new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, reference);
 
         PolicyResult policyResult = resolvePolicies(reference.getOperations(), sourceBinding, binding, component, null);
-        Policy sourcePolicy = policyResult.getSourcePolicy();
-        Policy targetPolicy = policyResult.getTargetPolicy();
+        EffectivePolicy sourcePolicy = policyResult.getSourcePolicy();
+        EffectivePolicy targetPolicy = policyResult.getTargetPolicy();
 
         BindingGenerator targetGenerator = getGenerator(binding);
         List<LogicalOperation> operations = reference.getOperations();
@@ -306,8 +307,8 @@ public class WireGeneratorImpl implements WireGenerator {
 
         List<LogicalOperation> logicalOperations = reference.getCallbackOperations();
         PolicyResult policyResult = resolvePolicies(logicalOperations, sourceBinding, binding, component, null);
-        Policy sourcePolicy = policyResult.getSourcePolicy();
-        Policy targetPolicy = policyResult.getTargetPolicy();
+        EffectivePolicy sourcePolicy = policyResult.getSourcePolicy();
+        EffectivePolicy targetPolicy = policyResult.getTargetPolicy();
         BindingGenerator bindingGenerator = getGenerator(binding);
         ComponentGenerator componentGenerator = getGenerator(component);
 
@@ -341,8 +342,8 @@ public class WireGeneratorImpl implements WireGenerator {
                 new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, service);
         List<LogicalOperation> callbackOperations = service.getCallbackOperations();
         PolicyResult policyResult = resolvePolicies(callbackOperations, sourceBinding, binding, component, null);
-        Policy targetPolicy = policyResult.getSourcePolicy();
-        Policy sourcePolicy = policyResult.getTargetPolicy();
+        EffectivePolicy targetPolicy = policyResult.getSourcePolicy();
+        EffectivePolicy sourcePolicy = policyResult.getTargetPolicy();
 
         ComponentGenerator componentGenerator = getGenerator(component);
         PhysicalSourceDefinition sourceDefinition = componentGenerator.generateCallbackWireSource(component, callbackContract, sourcePolicy);
@@ -362,13 +363,21 @@ public class WireGeneratorImpl implements WireGenerator {
             throws GenerationException {
 
         Set<PhysicalOperationDefinition> physicalOperations = new HashSet<PhysicalOperationDefinition>(operations.size());
+        Set<PolicySet> endpointPolicySets;
+        if (policyResult != null) {
+            endpointPolicySets = policyResult.getInterceptedEndpointPolicySets();
+        } else {
+            endpointPolicySets = Collections.emptySet();
+        }
 
         for (LogicalOperation operation : operations) {
             PhysicalOperationDefinition physicalOperation = mapper.map(operation.getDefinition());
             if (policyResult != null) {
                 List<PolicySet> policies = policyResult.getInterceptedPolicySets(operation);
+                List<PolicySet> allPolicies = new ArrayList<PolicySet>(endpointPolicySets);
+                allPolicies.addAll(policies);
                 PolicyMetadata metadata = policyResult.getMetadata();
-                Set<PhysicalInterceptorDefinition> interceptors = generateInterceptorDefinitions(policies, operation, metadata);
+                Set<PhysicalInterceptorDefinition> interceptors = generateInterceptorDefinitions(allPolicies, operation, metadata);
                 physicalOperation.setInterceptors(interceptors);
             }
             physicalOperations.add(physicalOperation);

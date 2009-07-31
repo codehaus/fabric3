@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.policy.helper;
+package org.fabric3.policy.resolver;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -49,51 +49,75 @@ import org.fabric3.model.type.definitions.BindingType;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.policy.infoset.PolicyEvaluator;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
  * @version $Rev$ $Date$
  */
-public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements InteractionPolicyHelper {
+public class InteractionPolicyResolverImpl extends AbstractPolicyResolver implements InteractionPolicyResolver {
 
-    public InteractionPolicyHelperImpl(@Reference PolicyRegistry policyRegistry,
-                                       @Reference LogicalComponentManager lcm,
-                                       @Reference PolicyEvaluator policyEvaluator) {
+    public InteractionPolicyResolverImpl(@Reference PolicyRegistry policyRegistry,
+                                         @Reference LogicalComponentManager lcm,
+                                         @Reference PolicyEvaluator policyEvaluator) {
         super(policyRegistry, lcm, policyEvaluator);
     }
 
-    public Set<Intent> getProvidedIntents(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException {
-
+    public Set<Intent> resolveProvidedIntents(LogicalOperation operation, LogicalBinding binding) throws PolicyResolutionException {
+        Set<Intent> requiredIntents = getOperationIntents(operation);
         QName type = binding.getDefinition().getType();
-        BindingType bindingType = policyRegistry.getDefinition(type, BindingType.class);
-
-        // FIXME This should not happen, all binding types should be registsred
-        if (bindingType == null) {
-            return Collections.emptySet();
-        }
-
-        Set<QName> mayProvidedIntents = bindingType.getMayProvide();
-
-        Set<Intent> requiredIntents = getRequestedIntents(binding, operation);
-
-        Set<Intent> intentsToBeProvided = new LinkedHashSet<Intent>();
-        for (Intent intent : requiredIntents) {
-            if (mayProvidedIntents.contains(intent.getName())) {
-                intentsToBeProvided.add(intent);
-            }
-        }
-
-        return intentsToBeProvided;
+        return filterProvidedIntents(type, requiredIntents);
 
     }
 
+    public Set<Intent> resolveProvidedIntents(LogicalBinding binding) throws PolicyResolutionException {
+        Set<Intent> requiredIntents = aggregateBindingIntents(binding);
+        QName type = binding.getDefinition().getType();
+        return filterProvidedIntents(type, requiredIntents);
+    }
 
-    public Set<PolicySet> resolve(LogicalBinding<?> binding, LogicalOperation operation) throws PolicyResolutionException {
+    public Set<PolicySet> resolvePolicySets(LogicalBinding binding) throws PolicyResolutionException {
+        QName type = binding.getDefinition().getType();
+        BindingType bindingType = policyRegistry.getDefinition(type, BindingType.class);
+
+        Set<QName> alwaysProvidedIntents = new LinkedHashSet<QName>();
+        Set<QName> mayProvidedIntents = new LinkedHashSet<QName>();
+
+        if (bindingType != null) {
+            // tolderate a bnding type not being registered
+            alwaysProvidedIntents = bindingType.getAlwaysProvide();
+            mayProvidedIntents = bindingType.getMayProvide();
+        }
+
+        // resolve policies against the binding
+        Set<Intent> requiredIntents = aggregateBindingIntents(binding);
+        Set<Intent> requiredIntentsCopy = new HashSet<Intent>(requiredIntents);
+        // Remove intents that are provided
+        for (Intent intent : requiredIntentsCopy) {
+            QName intentName = intent.getName();
+            if (alwaysProvidedIntents.contains(intentName) || mayProvidedIntents.contains(intentName)) {
+                requiredIntents.remove(intent);
+            }
+        }
+        Set<PolicySet> policies = resolvePolicies(requiredIntents, binding);
+        if (!requiredIntents.isEmpty()) {
+            throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
+        }
+
+        Set<QName> policySets = aggregateBindingPolicySets(binding);
+        for (QName name : policySets) {
+            PolicySet policySet = policyRegistry.getDefinition(name, PolicySet.class);
+            policies.add(policySet);
+        }
+
+        return policies;
+    }
+
+    public Set<PolicySet> resolvePolicySets(LogicalOperation operation, LogicalBinding binding) throws PolicyResolutionException {
 
         QName type = binding.getDefinition().getType();
         BindingType bindingType = policyRegistry.getDefinition(type, BindingType.class);
@@ -107,7 +131,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
             mayProvidedIntents = bindingType.getMayProvide();
         }
 
-        Set<Intent> requiredIntents = getRequestedIntents(binding, operation);
+        Set<Intent> requiredIntents = getOperationIntents(operation);
         Set<Intent> requiredIntentsCopy = new HashSet<Intent>(requiredIntents);
 
         // Remove intents that are provided
@@ -117,7 +141,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
                 requiredIntents.remove(intent);
             }
         }
-        Set<QName> policySets = aggregatePolicySets(binding, operation);
+        Set<QName> policySets = getOperationPolicySets(operation);
         if (requiredIntents.isEmpty() && policySets.isEmpty()) {
             // short-circuit intent resolution
             return Collections.emptySet();
@@ -138,44 +162,64 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
 
     }
 
-    private Set<Intent> getRequestedIntents(LogicalBinding<?> logicalBinding, LogicalOperation operation) throws PolicyResolutionException {
-
-        // Aggregate all the intents from the ancestors
+    private Set<Intent> getOperationIntents(LogicalOperation operation) throws PolicyResolutionException {
         Set<QName> intentNames = new LinkedHashSet<QName>();
         intentNames.addAll(operation.getIntents());
-        intentNames.addAll(logicalBinding.getDefinition().getIntents());
-        intentNames.addAll(aggregateIntents(logicalBinding));
-
-        // Expand all the profile intents
-        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
-
-        // Remove intents not applicable to the artifact
-        filterInvalidIntents(Intent.BINDING, requiredIntents);
-
-        return requiredIntents;
-
+        return expandAndFilterIntents(intentNames);
     }
 
-    /**
-     * Aggregates policy sets from ancestors.
-     *
-     * @param binding   the binding
-     * @param operation the operaton
-     * @return the agreggated policy sets
-     */
-    private Set<QName> aggregatePolicySets(LogicalBinding<?> binding, LogicalOperation operation) {
+    private Set<Intent> aggregateBindingIntents(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
+        // Aggregate all the intents from the ancestors
+        Set<QName> intentNames = new LinkedHashSet<QName>();
+        intentNames.addAll(logicalBinding.getDefinition().getIntents());
+        intentNames.addAll(aggregateIntents(logicalBinding));
+        return expandAndFilterIntents(intentNames);
+    }
+
+    private Set<Intent> expandAndFilterIntents(Set<QName> intentNames) throws PolicyResolutionException {
+        // Expand all the profile intents
+        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
+        // Remove intents not applicable to the artifact
+        filterInvalidIntents(Intent.BINDING, requiredIntents);
+        return requiredIntents;
+    }
+
+    private Set<QName> getOperationPolicySets(LogicalOperation operation) {
         LogicalScaArtifact<?> temp = operation;
         Set<QName> policySetNames = new LinkedHashSet<QName>();
         while (temp != null) {
             policySetNames.addAll(temp.getPolicySets());
             temp = temp.getParent();
         }
-        // also attach policy sets specified on the binding
-        for (QName name : binding.getPolicySets()) {
-            policySetNames.add(name);
+        return policySetNames;
+    }
+
+
+    private Set<QName> aggregateBindingPolicySets(LogicalBinding<?> binding) {
+        LogicalScaArtifact<?> temp = binding;
+        Set<QName> policySetNames = new LinkedHashSet<QName>();
+        while (temp != null) {
+            policySetNames.addAll(temp.getPolicySets());
+            temp = temp.getParent();
         }
         return policySetNames;
     }
 
+    private Set<Intent> filterProvidedIntents(QName type, Set<Intent> requiredIntents) {
+        BindingType bindingType = policyRegistry.getDefinition(type, BindingType.class);
+        if (bindingType == null) {
+            // tolerate a binding type not being reigstered
+            return Collections.emptySet();
+        }
+        Set<QName> mayProvidedIntents = bindingType.getMayProvide();
+        Set<Intent> intentsToBeProvided = new LinkedHashSet<Intent>();
+        for (Intent intent : requiredIntents) {
+            if (mayProvidedIntents.contains(intent.getName())) {
+                intentsToBeProvided.add(intent);
+            }
+        }
+        return intentsToBeProvided;
+
+    }
 
 }

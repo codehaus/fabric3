@@ -38,34 +38,62 @@
 package org.fabric3.spi.policy;
 
 import java.util.List;
+import java.util.Set;
+import java.util.Map;
 
-import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalOperation;
 
-
 /**
- * Attaches and resolves policy.
+ * Represents the policy sets and intents that are to be applied to an endpoint and its operations.
  *
  * @version $Rev$ $Date$
  */
-public interface PolicyResolver {
+public interface EffectivePolicy {
 
     /**
-     * Resolves all the interaction and implementation intents for the operations of a wire.
+     * Returns effective intents configured for an endpoint that are handled natively (provided) by the binding or implementation extension.
      *
-     * @param operations    the operations to resolve policies for. This can be forward or callback operations.
-     * @param sourceBinding the source binding.
-     * @param targetBinding the target binding.
-     * @param source        the source component.
-     * @param target        the target component.
-     * @return Policy resolution result.
-     * @throws PolicyResolutionException If unable to resolve any policies.
+     * @return the endpoint intents
      */
-    PolicyResult resolvePolicies(List<LogicalOperation> operations,
-                                 LogicalBinding<?> sourceBinding,
-                                 LogicalBinding<?> targetBinding,
-                                 LogicalComponent<?> source,
-                                 LogicalComponent<?> target) throws PolicyResolutionException;
+    Set<Intent> getEndpointIntents();
+
+    /**
+     * Returns effective policy sets configured for an endpoint that are handled natively (provided) by the binding or implementation extension.
+     *
+     * @return the endpoint policy sets
+     */
+    Set<PolicySet> getEndpointPolicySets();
+
+    /**
+     * Returns effective intents configured for an operation that are handled natively (provided) by the binding or implementation extension.
+     *
+     * @param operation the operation
+     * @return the provided intents
+     */
+    List<Intent> getIntents(LogicalOperation operation);
+
+    /**
+     * Returns intents configured for all endpoint operations that are handled natively (provided) by the binding extension.
+     *
+     * @return the provided intents
+     */
+    List<Intent> getOperationIntents();
+
+    /**
+     * Returns the effective policy sets for the the requested operation.
+     *
+     * @param operation the operation
+     * @return the resolved policy sets
+     */
+    List<PolicySet> getPolicySets(LogicalOperation operation);
+
+    /**
+     * Returns the effective policy sets for all operations.
+     *
+     * @return Resolved policy sets that are provided mapped to their operation.
+     */
+    Map<LogicalOperation, List<PolicySet>> getOperationPolicySets();
 
 }

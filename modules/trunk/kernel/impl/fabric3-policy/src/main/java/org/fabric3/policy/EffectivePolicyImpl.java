@@ -39,65 +39,73 @@ package org.fabric3.policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * @version $Rev$ $Date$
  */
-public class PolicyImpl implements Policy {
+public class EffectivePolicyImpl implements EffectivePolicy {
+    private Set<Intent> endpointIntents = new HashSet<Intent>();
+    private Set<PolicySet> endpointPolicySets = new HashSet<PolicySet>();
 
     private Map<LogicalOperation, List<Intent>> intentMap = new HashMap<LogicalOperation, List<Intent>>();
     private Map<LogicalOperation, List<PolicySet>> policySetMap = new HashMap<LogicalOperation, List<PolicySet>>();
 
-    public List<QName> getProvidedIntents() {
-        List<QName> ret = new LinkedList<QName>();
+    public Set<Intent> getEndpointIntents() {
+        return endpointIntents;
+    }
+
+    public Set<PolicySet> getEndpointPolicySets() {
+        return endpointPolicySets;
+    }
+
+    public List<Intent> getOperationIntents() {
+        List<Intent> ret = new ArrayList<Intent>();
         for (LogicalOperation operation : intentMap.keySet()) {
-            ret.addAll(getProvidedIntents(operation));
+            ret.addAll(getIntents(operation));
         }
         return ret;
     }
 
-    public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets() {
+    public Map<LogicalOperation, List<PolicySet>> getOperationPolicySets() {
         return policySetMap;
     }
 
-    public List<QName> getProvidedIntents(LogicalOperation operation) {
-        List<QName> ret = new LinkedList<QName>();
-        for (Intent intent : intentMap.get(operation)) {
-            ret.add(intent.getName());
-        }
-        return ret;
+    public List<Intent> getIntents(LogicalOperation operation) {
+        return intentMap.get(operation);
     }
 
-    public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
+    public List<PolicySet> getPolicySets(LogicalOperation operation) {
         return policySetMap.get(operation);
     }
 
-    void addIntents(LogicalOperation operation, Set<Intent> intents) {
+    void addEndpointIntents(Set<Intent> intents) {
+        endpointIntents.addAll(intents);
+    }
 
+    void addEndpointPolicySets(Set<PolicySet> policySets) {
+        endpointPolicySets.addAll(policySets);
+    }
+
+    void addIntents(LogicalOperation operation, Set<Intent> intents) {
         if (!intentMap.containsKey(operation)) {
             intentMap.put(operation, new ArrayList<Intent>());
         }
-
         intentMap.get(operation).addAll(intents);
-
     }
 
     void addPolicySets(LogicalOperation operation, Set<PolicySet> policySets) {
-
         if (!policySetMap.containsKey(operation)) {
             policySetMap.put(operation, new ArrayList<PolicySet>());
         }
-
         policySetMap.get(operation).addAll(policySets);
     }
 

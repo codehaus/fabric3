@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.policy.helper;
+package org.fabric3.policy.resolver;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -50,37 +50,38 @@ import org.fabric3.model.type.definitions.ImplementationType;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.policy.infoset.PolicyEvaluator;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper implements ImplementationPolicyHelper {
+public class ImplementationPolicyResolverImpl extends AbstractPolicyResolver implements ImplementationPolicyResolver {
 
-    public ImplementationPolicyHelperImpl(@Reference PolicyRegistry policyRegistry,
-                                          @Reference LogicalComponentManager lcm,
-                                          @Reference PolicyEvaluator policyEvaluator) {
+    public ImplementationPolicyResolverImpl(@Reference PolicyRegistry policyRegistry,
+                                            @Reference LogicalComponentManager lcm,
+                                            @Reference PolicyEvaluator policyEvaluator) {
         super(policyRegistry, lcm, policyEvaluator);
     }
 
-    public Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, LogicalOperation operation) throws PolicyResolutionException {
-        Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
+
+    public Set<Intent> resolveProvidedIntents(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException {
+        Implementation<?> implementation = component.getDefinition().getImplementation();
         QName type = implementation.getType();
         ImplementationType implementationType = policyRegistry.getDefinition(type, ImplementationType.class);
 
-        // FIXME This should not happen, all implementation types should be registsred
         if (implementationType == null) {
+            // tolerate not having a registered implementation type definition
             return Collections.emptySet();
         }
 
         Set<QName> mayProvidedIntents = implementationType.getMayProvide();
 
-        Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
+        Set<Intent> requiredIntents = getRequestedIntents(component, operation);
 
         Set<Intent> intentsToBeProvided = new LinkedHashSet<Intent>();
         for (Intent intent : requiredIntents) {
@@ -92,22 +93,22 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
 
     }
 
-    public Set<PolicySet> resolve(LogicalComponent<?> logicalComponent, LogicalOperation operation) throws PolicyResolutionException {
+    public Set<PolicySet> resolvePolicySets(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException {
 
-        Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
+        Implementation<?> implementation = component.getDefinition().getImplementation();
         QName type = implementation.getType();
         ImplementationType implementationType = policyRegistry.getDefinition(type, ImplementationType.class);
 
         Set<QName> alwaysProvidedIntents = new LinkedHashSet<QName>();
         Set<QName> mayProvidedIntents = new LinkedHashSet<QName>();
 
-        // FIXME This should not happen, all implementation types should be registsred
         if (implementationType != null) {
+            // tolerate not having a registered implementation type definition
             alwaysProvidedIntents = implementationType.getAlwaysProvide();
             mayProvidedIntents = implementationType.getMayProvide();
         }
 
-        Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
+        Set<Intent> requiredIntents = getRequestedIntents(component, operation);
         Set<Intent> requiredIntentsCopy = new HashSet<Intent>(requiredIntents);
 
         // Remove intents that are provided
@@ -117,12 +118,12 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
                 requiredIntents.remove(intent);
             }
         }
-        Set<QName> policySets = aggregatePolicySets(operation, logicalComponent);
+        Set<QName> policySets = aggregatePolicySets(operation, component);
         if (requiredIntents.isEmpty() && policySets.isEmpty()) {
             // short-circuit intent resolution
             return Collections.emptySet();
         }
-        Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalComponent);
+        Set<PolicySet> policies = resolvePolicies(requiredIntents, component);
         if (!requiredIntents.isEmpty()) {
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }
@@ -172,5 +173,5 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         return policySetNames;
     }
 
-            
-        }
+
+}

@@ -23,27 +23,26 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.policy.infoset.PolicyEvaluatorImpl"/>
     </component>
 
-    <!-- Interception policy helper -->
-    <component name="InteractionPolicyHelper">
-        <f3-impl:implementation.system class="org.fabric3.policy.helper.InteractionPolicyHelperImpl"/>
+    <component name="InteractionPolicyResolver">
+        <f3-impl:implementation.system class="org.fabric3.policy.resolver.InteractionPolicyResolverImpl"/>
     </component>
 
-    <!-- Implementation policy helper -->
-    <component name="ImplementationPolicyHelper">
-        <f3-impl:implementation.system class="org.fabric3.policy.helper.ImplementationPolicyHelperImpl"/>
+    <component name="ImplementationPolicyResolver">
+        <f3-impl:implementation.system class="org.fabric3.policy.resolver.ImplementationPolicyResolverImpl"/>
     </component>
 
-    <!-- Policy resolver -->
     <component name="DefaultPolicyResolver">
         <f3-impl:implementation.system class="org.fabric3.policy.DefaultPolicyResolver"/>
     </component>
 
-    <!-- Simple interceptor builder -->
+    <component name="DefaultPolicyAttacher">
+        <f3-impl:implementation.system class="org.fabric3.policy.DefaultPolicyAttacher"/>
+    </component>
+
     <component name="SimpleInterceptorBuilder" f3-core:key="org.fabric3.policy.interceptor.simple.SimpleInterceptorDefinition">
         <f3-impl:implementation.system class="org.fabric3.policy.interceptor.simple.SimpleInterceptorBuilder"/>
     </component>
 
-    <!-- Simple interceptor generator -->
     <component name="SimpleInterceptorDefinitionGenerator" f3-core:key="{urn:fabric3.org:policy}interceptor">
         <f3-impl:implementation.system class="org.fabric3.policy.interceptor.simple.SimpleInterceptorGenerator"/>
     </component>

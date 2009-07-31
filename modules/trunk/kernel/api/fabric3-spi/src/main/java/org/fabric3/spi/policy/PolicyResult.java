@@ -38,19 +38,29 @@
 package org.fabric3.spi.policy;
 
 import java.util.List;
+import java.util.Set;
 
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalOperation;
 
 /**
- * Result of resolving intents and policy sets on a wire. The policies are resolved for the source and target bindings as well as the source and
- * target component types. A wire can be between two components or between a component and a binding.
+ * Result of resolving intents and policy sets configured on a wire. 
+ *
+ *
+ * The policies are resolved for the source and target bindings as well as the source and
+ * target component implementation types. A wire can be between two components or between a component and a binding.
  * <p/>
- * For a wire between two components, the result will include: <ol>
+ * For a wire between two components, the result will include:
+ * <ol>
  * <p/>
  * <li>Implementation intents that are requested for each operation on the source side and may be provided by the source component implementation
- * type. <li>Implementation intents that are requested for each operation on the target side and may be provided by the target component
- * implementation type. <li>Policy sets that map to implementation intents on each operation on the source side and understood by the source component
+ * type.
+ * <p/>
+ * <li>Implementation intents that are requested for each operation on the target side and may be provided by the target component
+ * implementation type.
+ * <p/>
+ * <li>Policy sets that map to implementation intents on each operation on the source side and understood by the source component
+ * <p/>
  * implementation type. <li>Policy sets that map to implementation intents on each operation on the target side and understood by the target component
  * implementation type. <li>Policy sets that map to implementation intents on each operation on the source and target side that are implemented using
  * interceptors. </ol> For a wire between a binding and a component (service binding), the result will include: <ol> <li>Interaction intents that are
@@ -73,20 +83,27 @@ public interface PolicyResult {
      *
      * @return policies and intents provided at the source end of a wire
      */
-    Policy getSourcePolicy();
+    EffectivePolicy getSourcePolicy();
 
     /**
      * Returns policies and intents provided at the target end of a wire.
      *
      * @return policies and intents provided at the target end of a wire
      */
-    Policy getTargetPolicy();
+    EffectivePolicy getTargetPolicy();
 
     /**
-     * Returns policies and intents that are enforced by an interceptor.
+     * Returns policies that are enforced at the endpoint level, i.e. for all operations.
+     *
+     * @return the policy sets
+     */
+    Set<PolicySet> getInterceptedEndpointPolicySets();
+
+    /**
+     * Returns policy sets that are enforced by an interceptor for an operation.
      *
      * @param operation operation against which interceptors are defined.
-     * @return Interceptors that are defined against the operation.
+     * @return the policy sets
      */
     List<PolicySet> getInterceptedPolicySets(LogicalOperation operation);
 

@@ -42,12 +42,15 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.metro.provision.MetroSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
@@ -57,6 +60,8 @@ import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -64,7 +69,7 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Generates PhysicalWireSourceDefinitions and PhysicalWireTargetDefinitions for the Metro web services binding.
@@ -90,10 +95,11 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
     public MetroSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                     ServiceContract<?> contract,
                                                     List<LogicalOperation> operations,
-                                                    Policy policy) throws GenerationException {
+                                                    EffectivePolicy policy) throws GenerationException {
         if (!(contract instanceof JavaServiceContract)) {
             throw new UnsupportedOperationException("Support for non-Java contracts not yet implemented");
         }
+
         JavaServiceContract javaContract = (JavaServiceContract) contract;
         Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
@@ -108,19 +114,36 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
             QName deployable = binding.getParent().getParent().getDeployable();
             endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri, wsdlLocation);
         }
+
         String interfaze = contract.getQualifiedInterfaceName();
-        List<QName> requestedIntents = policy.getProvidedIntents();
+
+        // handle endpoint-level intents provided by Metro
+        List<QName> intentNames = new ArrayList<QName>();
+        Set<Intent> endpointIntents = policy.getEndpointIntents();
+        for (Intent intent : endpointIntents) {
+            intentNames.add(intent.getName());
+        }
+
+        // handle endpoint-level policies
+        List<Element> policyExpressions = new ArrayList<Element>();
+        for (PolicySet policySet : policy.getEndpointPolicySets()) {
+            policyExpressions.add(policySet.getExpression());
+        }
+
+        // Note operation level provided intents are not currently supported. Intents are mapped to JAX-WS features, which are per endpoint.
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
-        return new MetroSourceDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings);
+
+        return new MetroSourceDefinition(endpointDefinition, wsdlLocation, interfaze, intentNames, policyExpressions, mappings);
     }
 
     public MetroTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                     ServiceContract<?> contract,
                                                     List<LogicalOperation> operations,
-                                                    Policy policy) throws GenerationException {
+                                                    EffectivePolicy policy) throws GenerationException {
         if (!(contract instanceof JavaServiceContract)) {
             throw new UnsupportedOperationException("Support for non-Java contracts not yet implemented");
         }
+
         JavaServiceContract javaContract = (JavaServiceContract) contract;
         Class<?> serviceClass = loadServiceClass(binding, javaContract);
         WsBindingDefinition definition = binding.getDefinition();
@@ -145,23 +168,28 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         }
 
         String interfaze = contract.getQualifiedInterfaceName();
-        List<QName> requestedIntents = policy.getProvidedIntents();
+
+        Set<Intent> endpointIntents = policy.getEndpointIntents();
+        List<QName> intentNames = new ArrayList<QName>();
+        for (Intent intent : endpointIntents) {
+            intentNames.add(intent.getName());
+        }
+
+        // handle endpoint-level policies
+        List<Element> policyExpressions = new ArrayList<Element>();
+        for (PolicySet policySet : policy.getEndpointPolicySets()) {
+            policyExpressions.add(policySet.getExpression());
+        }
+
+        // Note operation level provided intents are not currently supported. Intents are mapped to JAX-WS features, which are per endpoint.
+
+        // map operation-level policies
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
 
         // obtain security information 
-        SecurityConfiguration configuration = null;
-        Map<String, String> securityConfiguration = definition.getConfiguration();
-        if (securityConfiguration != null) {
-            String alias = securityConfiguration.get("alias");
-            if (alias != null) {
-                configuration = new SecurityConfiguration(alias);
-            } else {
-                String username = securityConfiguration.get("username");
-                String password = securityConfiguration.get("password");
-                configuration = new SecurityConfiguration(username, password);
-            }
-        }
-        return new MetroTargetDefinition(endpointDefinition, wsdlLocation, interfaze, requestedIntents, mappings, configuration);
+        SecurityConfiguration configuration = createSecurityConfiguration(definition);
+
+        return new MetroTargetDefinition(endpointDefinition, wsdlLocation, interfaze, intentNames, policyExpressions, mappings, configuration);
     }
 
     /**
@@ -194,11 +222,39 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
 
     }
 
+    /**
+     * Parses security information and creates a security configuration.
+     *
+     * @param definition the binding definition
+     * @return the security configuration
+     */
+    private SecurityConfiguration createSecurityConfiguration(WsBindingDefinition definition) {
+        SecurityConfiguration configuration = null;
+        Map<String, String> securityConfiguration = definition.getConfiguration();
+        if (securityConfiguration != null) {
+            String alias = securityConfiguration.get("alias");
+            if (alias != null) {
+                configuration = new SecurityConfiguration(alias);
+            } else {
+                String username = securityConfiguration.get("username");
+                String password = securityConfiguration.get("password");
+                configuration = new SecurityConfiguration(username, password);
+            }
+        }
+        return configuration;
+    }
+
+    /**
+     * Loads a service contract class in either a host environment that supports classloader isolation or one that does not, in which case the TCCL is
+     * used.
+     *
+     * @param binding      the binding defintion
+     * @param javaContract the contract
+     * @return the loaded class
+     */
     private Class<?> loadServiceClass(LogicalBinding<WsBindingDefinition> binding, JavaServiceContract javaContract) {
         ClassLoader loader;
         if (info.supportsClassLoaderIsolation()) {
-
-
             URI classLoaderUri = binding.getParent().getParent().getDefinition().getContributionUri();
             // check if a namespace is assigned
             loader = classLoaderRegistry.getClassLoader(classLoaderUri);

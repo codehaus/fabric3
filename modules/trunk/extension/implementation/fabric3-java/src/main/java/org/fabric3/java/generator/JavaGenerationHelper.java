@@ -47,7 +47,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Handles generation for Java components and specialized subtypes.
@@ -73,7 +73,7 @@ public interface JavaGenerationHelper {
      * @param policy     the effective wire policy
      * @throws GenerationException if there is an error generating the JavaWireSourceDefinition
      */
-    void generateWireSource(JavaSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException;
+    void generateWireSource(JavaSourceDefinition definition, LogicalReference reference, EffectivePolicy policy) throws GenerationException;
 
     /**
      * Populates the JavaWireSourceDefinition with callback wiring information.
@@ -87,7 +87,7 @@ public interface JavaGenerationHelper {
     void generateCallbackWireSource(JavaSourceDefinition definition,
                                     LogicalComponent<? extends JavaImplementation> component,
                                     ServiceContract<?> serviceContract,
-                                    Policy policy) throws GenerationException;
+                                    EffectivePolicy policy) throws GenerationException;
 
     /**
      * Populates the JavaWireTargetDefinition with wiring information.

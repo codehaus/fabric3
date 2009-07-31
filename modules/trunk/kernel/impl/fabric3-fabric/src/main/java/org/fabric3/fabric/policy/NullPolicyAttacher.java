@@ -35,48 +35,34 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.policy;
+package org.fabric3.fabric.policy;
 
 import java.util.List;
-import java.util.Map;
-import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.model.instance.LogicalOperation;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.policy.PolicyAttacher;
+import org.fabric3.spi.policy.PolicyResolutionException;
+
 
 /**
+ * No-op attacher used during bootstrap.
+ *
  * @version $Rev$ $Date$
  */
-public interface Policy {
+public class NullPolicyAttacher implements PolicyAttacher {
 
-    /**
-     * Intents that are provided by the binding or implemenenation for the requested operation.
-     *
-     * @param operation Operation for which requested intents are provided.
-     * @return Requested intents that are provided.
-     */
-    List<QName> getProvidedIntents(LogicalOperation operation);
+    public void attachPolicies(LogicalComponent<?> component, boolean incremental) {
+        // no-op
+    }
 
-    /**
-     * Policy sets that are provided by the binding or implemenenation for the requested operation.
-     *
-     * @param operation Operation for which requested intents are provided.
-     * @return Resolved policy sets that are provided.
-     */
-    List<PolicySet> getProvidedPolicySets(LogicalOperation operation);
+    public void attachPolicies(List<PolicySet> policySets, LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException {
+        // no-op
+    }
 
-    /**
-     * Intents that are provided by the binding or implemenenation for all operations.
-     *
-     * @return Requested intents that are provided.
-     */
-    List<QName> getProvidedIntents();
+    public void detachPolicies(List<PolicySet> policySets, LogicalComponent<?> component) throws PolicyResolutionException {
+        // no-op
+    }
 
-    /**
-     * Policy sets that are provided by the binding or implemenenation for all operations.
-     *
-     * @return Resolved policy sets that are provided mapped to their operation.
-     */
-    Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets();
 
 }

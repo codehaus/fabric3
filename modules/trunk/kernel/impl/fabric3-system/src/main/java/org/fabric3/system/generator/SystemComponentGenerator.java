@@ -56,7 +56,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
 import org.fabric3.system.provision.SystemSourceDefinition;
@@ -97,7 +97,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         return physical;
     }
 
-    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         URI uri = reference.getUri();
         SystemSourceDefinition wireDefinition = new SystemSourceDefinition();
         wireDefinition.setOptimizable(true);
@@ -110,12 +110,12 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<SystemImplementation> source,
-                                                                   ServiceContract<?> serviceContract,
-                                                                   Policy policy) throws GenerationException {
+                                                               ServiceContract<?> serviceContract,
+                                                               EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
         SystemTargetDefinition wireDefinition = new SystemTargetDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(service.getUri());

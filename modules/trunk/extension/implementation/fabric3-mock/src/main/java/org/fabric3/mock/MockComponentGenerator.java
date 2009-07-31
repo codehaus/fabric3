@@ -47,7 +47,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * @version $Rev$ $Date$
@@ -64,7 +64,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         return componentDefinition;
     }
 
-    public MockTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+    public MockTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
         MockTargetDefinition definition = new MockTargetDefinition();
         definition.setUri(service.getUri());
         ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
@@ -76,13 +76,13 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         throw new UnsupportedOperationException("Mock objects cannot have resources");
     }
 
-    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) {
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationMock> source,
-                                                                   ServiceContract<?> serviceContract,
-                                                                   Policy policy) throws GenerationException {
+                                                               ServiceContract<?> serviceContract,
+                                                               EffectivePolicy policy) throws GenerationException {
         return new MockSourceDefinition();
     }
 

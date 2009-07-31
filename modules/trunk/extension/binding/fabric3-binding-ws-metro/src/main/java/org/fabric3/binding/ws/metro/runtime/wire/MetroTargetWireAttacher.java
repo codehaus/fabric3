@@ -120,7 +120,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
             QName serviceName = endpointDefinition.getServiceName();
             String interfaze = target.getInterface();
             URI classLoaderId = source.getClassLoaderId();
-            List<QName> requestedIntents = target.getRequestedIntents();
+            List<QName> requestedIntents = target.getIntents();
 
             ClassLoader classLoader = registry.getClassLoader(classLoaderId);
             WebServiceFeature[] features = resolver.getFeatures(requestedIntents);
@@ -135,15 +135,13 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
 
             File generatedWsdl = null;
             BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
-            if (!target.getMappings().isEmpty()) {
+            if (!target.getPolicies().isEmpty() || !target.getMappings().isEmpty()) {
                 // if policy is configured for the endpoint, generate a WSDL with the policy attachments
                 GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, bindingId, true);
                 generatedWsdl = artifacts.getWsdl();
-                for (PolicyExpressionMapping mapping : target.getMappings()) {
-                    List<String> names = mapping.getOperationNames();
-                    Element expression = mapping.getPolicyExpression();
-                    policyAttacher.attach(generatedWsdl, names, expression);
-                }
+                List<Element> policyExpressions = target.getPolicies();
+                List<PolicyExpressionMapping> mappings = target.getMappings();
+                policyAttacher.attach(generatedWsdl, policyExpressions, mappings);
             }
 
             ObjectFactory<?> proxyFactory = new MetroProxyObjectFactory(endpointDefinition,

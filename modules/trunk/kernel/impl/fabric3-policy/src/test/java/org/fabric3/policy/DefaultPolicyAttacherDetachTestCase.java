@@ -61,23 +61,23 @@ import org.fabric3.spi.model.instance.LogicalState;
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultPolicyResolverDetachTestCase extends TestCase {
+public class DefaultPolicyAttacherDetachTestCase extends TestCase {
     private static final QName POLICY_SET = new QName("urn:test", "testPolicy");
     private LogicalComponent child1;
-    private DefaultPolicyResolver resolver;
+    private DefaultPolicyAttacher attacher;
     private LogicalService child1Service;
     private LogicalReference child1Reference;
     private LogicalBinding child1ReferenceBinding;
 
     public void testDetachComponent() throws Exception {
-        resolver.detach(POLICY_SET, child1);
+        attacher.detach(POLICY_SET, child1);
         // the component should not be reprovisioned, just the bindings
         assertEquals(LogicalState.NEW, child1ReferenceBinding.getState());
         assertFalse(child1.getPolicySets().contains(POLICY_SET));
     }
 
     public void testDetachFromService() throws Exception {
-        resolver.detach(POLICY_SET, child1Service);
+        attacher.detach(POLICY_SET, child1Service);
         for (LogicalBinding<?> binding : child1Service.getBindings()) {
             assertEquals(LogicalState.NEW, binding.getState());
         }
@@ -85,7 +85,7 @@ public class DefaultPolicyResolverDetachTestCase extends TestCase {
     }
 
     public void testDetachFromReference() throws Exception {
-        resolver.detach(POLICY_SET, child1Reference);
+        attacher.detach(POLICY_SET, child1Reference);
         for (LogicalBinding<?> binding : child1Reference.getBindings()) {
             assertEquals(LogicalState.NEW, binding.getState());
         }
@@ -93,7 +93,7 @@ public class DefaultPolicyResolverDetachTestCase extends TestCase {
     }
 
     public void testDetachFromBinding() throws Exception {
-        resolver.detach(POLICY_SET, child1ReferenceBinding);
+        attacher.detach(POLICY_SET, child1ReferenceBinding);
         assertEquals(LogicalState.NEW, child1ReferenceBinding.getState());
         assertFalse(child1ReferenceBinding.getPolicySets().contains(POLICY_SET));
     }
@@ -102,7 +102,7 @@ public class DefaultPolicyResolverDetachTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         createDomain();
-        resolver = new DefaultPolicyResolver(null, null, null, null);
+        attacher = new DefaultPolicyAttacher(null, null);
     }
 
     @SuppressWarnings({"unchecked"})

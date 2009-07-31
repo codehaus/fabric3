@@ -49,7 +49,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Generates source and target wire definitions for the HTTP binding.
@@ -61,7 +61,7 @@ public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinit
     public PhysicalSourceDefinition generateWireSource(LogicalBinding<HttpBindingDefinition> binding,
                                                            ServiceContract<?> contract,
                                                            List<LogicalOperation> operations,
-                                                           Policy policy) throws GenerationException {
+                                                           EffectivePolicy policy) throws GenerationException {
         HttpSourceDefinition sourceDefinition = new HttpSourceDefinition();
         HttpBindingDefinition bindingDefinition = binding.getDefinition();
         sourceDefinition.setConfig(bindingDefinition.getConfig());
@@ -72,7 +72,7 @@ public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinit
     public PhysicalTargetDefinition generateWireTarget(LogicalBinding<HttpBindingDefinition> binding,
                                                            ServiceContract<?> contract,
                                                            List<LogicalOperation> operations,
-                                                           Policy policy) throws GenerationException {
+                                                           EffectivePolicy policy) throws GenerationException {
         HttpTargetDefinition targetDefinition = new HttpTargetDefinition();
         HttpBindingDefinition bindingDefinition = binding.getDefinition();
         targetDefinition.setConfig(bindingDefinition.getConfig());

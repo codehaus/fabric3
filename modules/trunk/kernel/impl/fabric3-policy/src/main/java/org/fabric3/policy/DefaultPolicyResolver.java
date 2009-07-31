@@ -46,27 +46,20 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Namespaces;
+import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicyPhase;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.policy.helper.ImplementationPolicyHelper;
-import org.fabric3.policy.helper.InteractionPolicyHelper;
-import org.fabric3.policy.infoset.PolicyEvaluationException;
-import org.fabric3.policy.infoset.PolicyEvaluator;
+import org.fabric3.policy.resolver.ImplementationPolicyResolver;
+import org.fabric3.policy.resolver.InteractionPolicyResolver;
 import org.fabric3.spi.model.instance.Bindable;
-import org.fabric3.spi.model.instance.LogicalAttachPoint;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalScaArtifact;
-import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.instance.LogicalState;
-import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.spi.policy.PolicyMetadata;
-import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
@@ -99,19 +92,13 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
     };
 
-    private InteractionPolicyHelper interactionPolicyHelper;
-    private ImplementationPolicyHelper implementationPolicyHelper;
-    private PolicyEvaluator policyEvaluator;
-    private PolicyRegistry policyRegistry;
+    private InteractionPolicyResolver interactionResolver;
+    private ImplementationPolicyResolver implementationResolver;
 
-    public DefaultPolicyResolver(@Reference InteractionPolicyHelper interactionPolicyHelper,
-                                 @Reference ImplementationPolicyHelper implementationPolicyHelper,
-                                 @Reference PolicyEvaluator policyEvaluator,
-                                 @Reference PolicyRegistry policyRegistry) {
-        this.interactionPolicyHelper = interactionPolicyHelper;
-        this.implementationPolicyHelper = implementationPolicyHelper;
-        this.policyEvaluator = policyEvaluator;
-        this.policyRegistry = policyRegistry;
+    public DefaultPolicyResolver(@Reference InteractionPolicyResolver interactionResolver,
+                                 @Reference ImplementationPolicyResolver implementationResolver) {
+        this.interactionResolver = interactionResolver;
+        this.implementationResolver = implementationResolver;
     }
 
     public PolicyResult resolvePolicies(List<LogicalOperation> operations,
@@ -124,253 +111,84 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
         PolicyResultImpl policyResult = new PolicyResultImpl();
 
+        resolveEndpointPolicies(policyResult, sourceBinding, targetBinding);
+
         for (LogicalOperation operation : operations) {
-            policyResult.addSourceIntents(operation, interactionPolicyHelper.getProvidedIntents(sourceBinding, operation));
+            resolveOperationPolicies(operation, policyResult, sourceBinding, targetBinding, target);
+        }
+        return policyResult;
+    }
 
-            policyResult.addTargetIntents(operation, interactionPolicyHelper.getProvidedIntents(targetBinding, operation));
-            if (target != null) {
-                policyResult.addSourceIntents(operation, implementationPolicyHelper.getProvidedIntents(target, operation));
-            }
+    /**
+     * Resolves configured source and target intents and policies for an endpoint. Resolution will be performed against the bindings and ancestors.
+     *
+     * @param policyResult  the policy result to populate
+     * @param sourceBinding the source binding
+     * @param targetBinding the target binding
+     * @throws PolicyResolutionException if there is a resolution error
+     */
+    private void resolveEndpointPolicies(PolicyResultImpl policyResult, LogicalBinding<?> sourceBinding, LogicalBinding<?> targetBinding)
+            throws PolicyResolutionException {
+        Set<Intent> sourceEndpointIntents = interactionResolver.resolveProvidedIntents(sourceBinding);
+        policyResult.addSourceEndpointIntents(sourceEndpointIntents);
 
-            Set<PolicySet> policies;
-            policies = interactionPolicyHelper.resolve(sourceBinding, operation);
-            policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
-            policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
+        Set<Intent> targetEndpointIntents = interactionResolver.resolveProvidedIntents(targetBinding);
+        policyResult.addTargetEndpointIntents(targetEndpointIntents);
 
-            policies = interactionPolicyHelper.resolve(targetBinding, operation);
+        Set<PolicySet> endpointPolicies = interactionResolver.resolvePolicySets(sourceBinding);
+        policyResult.addSourceEndpointPolicySets(CollectionUtils.filter(endpointPolicies, PROVIDED));
+        policyResult.addInterceptedEndpointPolicySets(CollectionUtils.filter(endpointPolicies, INTERCEPTION));
+
+        endpointPolicies = interactionResolver.resolvePolicySets(targetBinding);
+        policyResult.addTargetEndpointPolicySets(CollectionUtils.filter(endpointPolicies, PROVIDED));
+        policyResult.addInterceptedEndpointPolicySets(CollectionUtils.filter(endpointPolicies, INTERCEPTION));
+    }
+
+
+    /**
+     * Resolves configured source and target intents and policies for an operation.
+     *
+     * @param operation     the operation
+     * @param policyResult  the policy result to populate
+     * @param sourceBinding the source binding
+     * @param targetBinding the target binding
+     * @param target        the atrget component, or null if the operation invokes a remote service
+     * @throws PolicyResolutionException if there is a resolution error
+     */
+    private void resolveOperationPolicies(LogicalOperation operation,
+                                          PolicyResultImpl policyResult,
+                                          LogicalBinding<?> sourceBinding,
+                                          LogicalBinding<?> targetBinding,
+                                          LogicalComponent<?> target) throws PolicyResolutionException {
+        Set<Intent> sourceOperationIntents = interactionResolver.resolveProvidedIntents(operation, sourceBinding);
+        policyResult.addSourceIntents(operation, sourceOperationIntents);
+
+        Set<Intent> targetOperationIntents = interactionResolver.resolveProvidedIntents(operation, targetBinding);
+        policyResult.addTargetIntents(operation, targetOperationIntents);
+        if (target != null) {
+            Set<Intent> sourceImplementationIntents = implementationResolver.resolveProvidedIntents(target, operation);
+            policyResult.addSourceIntents(operation, sourceImplementationIntents);
+        }
+
+        Set<PolicySet> policies = interactionResolver.resolvePolicySets(operation, sourceBinding);
+        policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+        policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
+
+        policies = interactionResolver.resolvePolicySets(operation, targetBinding);
+        policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+        policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
+
+        if (target != null) {
+            Bindable parent = targetBinding.getParent();
+            // resolve policies using the target (as opposed to source) operation so target implementaton policies are included
+            LogicalOperation targetOperation = matchOperation(operation, parent);
+            policies = implementationResolver.resolvePolicySets(target, targetOperation);
+            // add policy metadata to the result
+            policyResult.getMetadata().addAll(targetOperation.getDefinition().getMetadata());
+            // important: use reference side operation as the key
             policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
             policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
-
-            if (target != null) {
-                Bindable parent = targetBinding.getParent();
-                // resolve policies using the target (as opposed to source) operation so target implementaton policies are included
-                LogicalOperation targetOperation = matchOperation(operation, parent);
-                policies = implementationPolicyHelper.resolve(target, targetOperation);
-                // add policy metadata to the result
-                policyResult.getMetadata().addAll(targetOperation.getDefinition().getMetadata());
-                // important: use reference side operation as the key
-                policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
-                policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
-            }
         }
-
-        return policyResult;
-
-    }
-
-    public void attachPolicies(LogicalComponent<?> component, boolean incremental) throws PolicyEvaluationException {
-        List<PolicySet> policySets = policyRegistry.getExternalAttachmentPolicies();
-        attachPolicies(policySets, component, incremental);
-    }
-
-    public void attachPolicies(List<PolicySet> policySets, LogicalComponent<?> component, boolean incremental) throws PolicyEvaluationException {
-        for (PolicySet policySet : policySets) {
-            List<LogicalScaArtifact<?>> results = policyEvaluator.evaluate(policySet.getAttachTo(), component);
-            // attach policy sets
-            for (LogicalScaArtifact<?> result : results) {
-                attach(policySet.getName(), result, incremental);
-            }
-        }
-    }
-
-    public void detachPolicies(List<PolicySet> policySets, LogicalComponent<?> component) throws PolicyEvaluationException {
-        for (PolicySet policySet : policySets) {
-            List<LogicalScaArtifact<?>> results = policyEvaluator.evaluate(policySet.getAttachTo(), component);
-            // attach policy sets
-            for (LogicalScaArtifact<?> result : results) {
-                detach(policySet.getName(), result);
-            }
-        }
-    }
-
-    /**
-     * Performs the actual attachment on the target artifact.
-     *
-     * @param policySet   the PolicySet to attach
-     * @param target      the target to attach to
-     * @param incremental if the attachment is being performed as part of an incremental deployment. If true, the state of the target is set to NEW.
-     * @throws PolicyEvaluationException if an error accurs performing the attachment
-     */
-    void attach(QName policySet, LogicalScaArtifact<?> target, boolean incremental) throws PolicyEvaluationException {
-        if (target instanceof LogicalComponent) {
-            LogicalComponent<?> component = (LogicalComponent<?>) target;
-            if (component.getPolicySets().contains(policySet)) {
-                return;
-            }
-            if (incremental && !component.getPolicySets().contains(policySet)) {
-                component.addPolicySet(policySet);
-                processComponent(component, policySet, incremental);
-            } else if (!incremental) {
-                component.addPolicySet(policySet);
-            }
-        } else if (target instanceof LogicalService) {
-            LogicalService service = (LogicalService) target;
-            // add the policy to the service but mark bindings as NEW for (re)provisioning
-            if (service.getPolicySets().contains(policySet) && incremental) {
-                return;
-            }
-            service.addPolicySet(policySet);
-            processService(service, policySet, incremental);
-        } else if (target instanceof LogicalReference) {
-            LogicalReference reference = (LogicalReference) target;
-            if (reference.getPolicySets().contains(policySet)) {
-                return;
-            }
-            reference.addPolicySet(policySet);
-            processReference(reference, policySet, incremental);
-
-        } else if (target instanceof LogicalOperation) {
-            LogicalOperation operation = (LogicalOperation) target;
-            if (operation.getPolicySets().contains(policySet)) {
-                return;
-            }
-            operation.addPolicySet(policySet);
-            LogicalAttachPoint attachPoint = operation.getParent();
-            if (attachPoint instanceof LogicalReference) {
-                processReference((LogicalReference) attachPoint, policySet, incremental);
-            } else if (attachPoint instanceof LogicalService) {
-                processService((LogicalService) attachPoint, policySet, incremental);
-            } else {
-                throw new PolicyEvaluationException("Invalid policy attachment type: " + target.getClass());
-            }
-        } else if (target instanceof LogicalBinding) {
-            LogicalBinding<?> binding = (LogicalBinding<?>) target;
-            if (binding.getPolicySets().contains(policySet)) {
-                return;
-            }
-            binding.addPolicySet(policySet);
-            binding.setState(LogicalState.NEW);
-        } else {
-            throw new PolicyEvaluationException("Invalid policy attachment type: " + target.getClass());
-        }
-    }
-
-    /**
-     * Performs the actual detachment on the target artifact.
-     *
-     * @param policySet the PolicySet to attach
-     * @param target    the target to attach to
-     * @throws PolicyEvaluationException if an error accurs performing the attachment
-     */
-    void detach(QName policySet, LogicalScaArtifact<?> target) throws PolicyEvaluationException {
-        if (target instanceof LogicalComponent) {
-            LogicalComponent<?> component = (LogicalComponent<?>) target;
-            if (!component.getPolicySets().contains(policySet)) {
-                return;
-            }
-            if (component.getPolicySets().contains(policySet)) {
-                component.removePolicySet(policySet);
-                processDetachComponent(component, policySet, true);
-            }
-        } else if (target instanceof LogicalService) {
-            LogicalService service = (LogicalService) target;
-            // remove the policy to the service but mark bindings as NEW for (re)provisioning
-            if (!service.getPolicySets().contains(policySet)) {
-                return;
-            }
-            service.removePolicySet(policySet);
-            processDetachService(service, policySet, true);
-        } else if (target instanceof LogicalReference) {
-            LogicalReference reference = (LogicalReference) target;
-            if (!reference.getPolicySets().contains(policySet)) {
-                return;
-            }
-            reference.removePolicySet(policySet);
-            processDetachReference(reference, policySet, true);
-
-        } else if (target instanceof LogicalOperation) {
-            LogicalOperation operation = (LogicalOperation) target;
-            if (!operation.getPolicySets().contains(policySet)) {
-                return;
-            }
-            operation.removePolicySet(policySet);
-            LogicalAttachPoint attachPoint = operation.getParent();
-            if (attachPoint instanceof LogicalReference) {
-                processDetachReference((LogicalReference) attachPoint, policySet, true);
-            } else if (attachPoint instanceof LogicalService) {
-                processDetachService((LogicalService) attachPoint, policySet, true);
-            } else {
-                throw new PolicyEvaluationException("Invalid policy attachment type: " + target.getClass());
-            }
-        } else if (target instanceof LogicalBinding) {
-            LogicalBinding<?> binding = (LogicalBinding<?>) target;
-            if (!binding.getPolicySets().contains(policySet)) {
-                return;
-            }
-            binding.removePolicySet(policySet);
-            binding.setState(LogicalState.NEW);
-        } else {
-            throw new PolicyEvaluationException("Invalid policy attachment type: " + target.getClass());
-        }
-    }
-
-    private void processComponent(LogicalComponent<?> component, QName policySet, boolean incremental) {
-        // do not mark the component as new, just the wires since the implementation does not need to be reprovisioned
-        for (LogicalReference reference : component.getReferences()) {
-            processReference(reference, policySet, incremental);
-        }
-        for (LogicalService service : component.getServices()) {
-            processService(service, policySet, incremental);
-        }
-    }
-
-    private void processService(LogicalService service, QName policySet, boolean incremental) {
-        for (LogicalBinding<?> binding : service.getBindings()) {
-            if (incremental && binding.getPolicySets().contains(policySet)) {
-                continue;
-            }
-            binding.setState(LogicalState.NEW);
-        }
-        // TODO check collocated wires, i.e. references attached directly to the service so they can be reprovisioned
-    }
-
-    private void processReference(LogicalReference reference, QName policySet, boolean incremental) {
-        for (LogicalWire wire : reference.getWires()) {
-            wire.setState(LogicalState.NEW);
-        }
-        for (LogicalBinding<?> binding : reference.getBindings()) {
-            if (incremental && binding.getPolicySets().contains(policySet)) {
-                continue;
-            }
-            binding.setState(LogicalState.NEW);
-        }
-    }
-
-    private void processDetachComponent(LogicalComponent<?> component, QName policySet, boolean incremental) {
-        // do not mark the component as new, just the wires since the implementation does not need to be reprovisioned
-        for (LogicalReference reference : component.getReferences()) {
-            processDetachReference(reference, policySet, incremental);
-        }
-        for (LogicalService service : component.getServices()) {
-            processDetachService(service, policySet, incremental);
-        }
-    }
-
-    private void processDetachService(LogicalService service, QName policySet, boolean incremental) {
-        for (LogicalBinding<?> binding : service.getBindings()) {
-            if (incremental && !binding.getPolicySets().contains(policySet)) {
-                continue;
-            }
-            binding.setState(LogicalState.NEW);
-        }
-        // TODO check collocated wires, i.e. references attached directly to the service so they can be reprovisioned
-    }
-
-    private void processDetachReference(LogicalReference reference, QName policySet, boolean incremental) {
-        for (LogicalWire wire : reference.getWires()) {
-            wire.setState(LogicalState.NEW);
-        }
-        for (LogicalBinding<?> binding : reference.getBindings()) {
-            if (incremental && !binding.getPolicySets().contains(policySet)) {
-                continue;
-            }
-            binding.setState(LogicalState.NEW);
-        }
-    }
-
-    private boolean noPolicy(LogicalComponent<?> component) {
-        return component != null && (component.getDefinition().getImplementation().isType(IMPLEMENTATION_SYSTEM)
-                || component.getDefinition().getImplementation().isType(IMPLEMENTATION_SINGLETON));
     }
 
     /**
@@ -404,6 +222,11 @@ public class DefaultPolicyResolver implements PolicyResolver {
         throw new AssertionError("No matching operation for " + name);
     }
 
+    private boolean noPolicy(LogicalComponent<?> component) {
+        return component != null && (component.getDefinition().getImplementation().isType(IMPLEMENTATION_SYSTEM)
+                || component.getDefinition().getImplementation().isType(IMPLEMENTATION_SINGLETON));
+    }
+
     private static class NullPolicyResult implements PolicyResult {
         private PolicyMetadata metadata = new PolicyMetadata();
 
@@ -411,12 +234,16 @@ public class DefaultPolicyResolver implements PolicyResolver {
             return Collections.emptyList();
         }
 
-        public Policy getSourcePolicy() {
-            return new NullPolicy();
+        public EffectivePolicy getSourcePolicy() {
+            return new NullEffectivePolicy();
         }
 
-        public Policy getTargetPolicy() {
-            return new NullPolicy();
+        public EffectivePolicy getTargetPolicy() {
+            return new NullEffectivePolicy();
+        }
+
+        public Set<PolicySet> getInterceptedEndpointPolicySets() {
+            return Collections.emptySet();
         }
 
         public PolicyMetadata getMetadata() {
@@ -425,20 +252,29 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
     }
 
-    private static class NullPolicy implements Policy {
-        public List<QName> getProvidedIntents(LogicalOperation operation) {
+    private static class NullEffectivePolicy implements EffectivePolicy {
+
+        public Set<Intent> getEndpointIntents() {
+            return Collections.emptySet();
+        }
+
+        public Set<PolicySet> getEndpointPolicySets() {
+            return Collections.emptySet();
+        }
+
+        public List<Intent> getIntents(LogicalOperation operation) {
             return Collections.emptyList();
         }
 
-        public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
+        public List<PolicySet> getPolicySets(LogicalOperation operation) {
             return Collections.emptyList();
         }
 
-        public List<QName> getProvidedIntents() {
+        public List<Intent> getOperationIntents() {
             return Collections.emptyList();
         }
 
-        public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets() {
+        public Map<LogicalOperation, List<PolicySet>> getOperationPolicySets() {
             return Collections.emptyMap();
         }
 

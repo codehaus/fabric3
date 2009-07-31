@@ -59,13 +59,14 @@ import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Binding generator that creates the physical source and target definitions for wires. Message acknowledgement is always expected to be using
@@ -90,7 +91,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     public JmsSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       ServiceContract<?> contract,
                                                       List<LogicalOperation> operations,
-                                                      Policy policy) throws GenerationException {
+                                                      EffectivePolicy policy) throws GenerationException {
 
         TransactionType transactionType = getTransactionType(policy, operations);
 
@@ -103,7 +104,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     public JmsTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       ServiceContract<?> contract,
                                                       List<LogicalOperation> operations,
-                                                      Policy policy) throws GenerationException {
+                                                      EffectivePolicy policy) throws GenerationException {
 
         TransactionType transactionType = getTransactionType(policy, operations);
 
@@ -116,18 +117,29 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     /*
      * Gets the transaction type.
      */
-    private TransactionType getTransactionType(Policy policy, List<LogicalOperation> operations) {
+    private TransactionType getTransactionType(EffectivePolicy policy, List<LogicalOperation> operations) {
 
         // If any operation has the intent, return that
         for (LogicalOperation operation : operations) {
-            for (QName intent : policy.getProvidedIntents(operation)) {
-                if (OASIS_TRANSACTED_ONEWAY_GLOBAL.equals(intent)) {
+            for (Intent intent : policy.getIntents(operation)) {
+                QName name = intent.getName();
+                if (OASIS_TRANSACTED_ONEWAY_GLOBAL.equals(name)) {
                     return TransactionType.GLOBAL;
-                } else if (OASIS_TRANSACTED_ONEWAY_LOCAL.equals(intent)) {
+                } else if (OASIS_TRANSACTED_ONEWAY_LOCAL.equals(name)) {
                     return TransactionType.LOCAL;
-                } else if (OASIS_TRANSACTED_ONEWAY.equals(intent)) {
+                } else if (OASIS_TRANSACTED_ONEWAY.equals(name)) {
                     return TransactionType.GLOBAL;
                 }
+            }
+        }
+        for (Intent intent : policy.getEndpointIntents()) {
+            QName name = intent.getName();
+            if (OASIS_TRANSACTED_ONEWAY_GLOBAL.equals(name)) {
+                return TransactionType.GLOBAL;
+            } else if (OASIS_TRANSACTED_ONEWAY_LOCAL.equals(name)) {
+                return TransactionType.LOCAL;
+            } else if (OASIS_TRANSACTED_ONEWAY.equals(name)) {
+                return TransactionType.GLOBAL;
             }
         }
         //no transaction policy specified, use local

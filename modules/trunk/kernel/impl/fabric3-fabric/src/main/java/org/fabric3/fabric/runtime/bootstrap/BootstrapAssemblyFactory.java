@@ -66,6 +66,8 @@ import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartContextCommand;
+import org.fabric3.fabric.documentloader.DocumentLoader;
+import org.fabric3.fabric.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.domain.ContributionHelper;
 import org.fabric3.fabric.domain.ContributionHelperImpl;
 import org.fabric3.fabric.domain.LocalRoutingService;
@@ -115,12 +117,11 @@ import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
 import org.fabric3.fabric.monitor.MonitorResource;
+import org.fabric3.fabric.monitor.MonitorTargetDefinition;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
-import org.fabric3.fabric.monitor.MonitorTargetDefinition;
+import org.fabric3.fabric.policy.NullPolicyAttacher;
 import org.fabric3.fabric.policy.NullPolicyResolver;
-import org.fabric3.fabric.documentloader.DocumentLoader;
-import org.fabric3.fabric.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.HostInfo;
@@ -138,6 +139,7 @@ import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.ContributionWire;
@@ -147,12 +149,12 @@ import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.generator.ClassLoaderWireGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
+import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.cm.ComponentManager;
-import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.system.generator.SystemComponentGenerator;
@@ -165,10 +167,10 @@ import org.fabric3.system.runtime.SystemSourceWireAttacher;
 import org.fabric3.system.runtime.SystemTargetWireAttacher;
 import org.fabric3.system.singleton.SingletonComponentGenerator;
 import org.fabric3.system.singleton.SingletonImplementation;
-import org.fabric3.system.singleton.SingletonSourceWireAttacher;
-import org.fabric3.system.singleton.SingletonTargetWireAttacher;
 import org.fabric3.system.singleton.SingletonSourceDefinition;
+import org.fabric3.system.singleton.SingletonSourceWireAttacher;
 import org.fabric3.system.singleton.SingletonTargetDefinition;
+import org.fabric3.system.singleton.SingletonTargetWireAttacher;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Boolean;
 import org.fabric3.transform.dom2java.String2Class;
@@ -208,8 +210,8 @@ public class BootstrapAssemblyFactory {
                                               info);
 
         LocalRoutingService routingService = new LocalRoutingService(commandRegistry, scopeRegistry);
+        PolicyAttacher policyAttacher = new NullPolicyAttacher();
         PolicyResolver policyResolver = new NullPolicyResolver();
-
         Generator generator = createGenerator(logicalComponentManager, metaDataStore, policyResolver);
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
@@ -219,7 +221,7 @@ public class BootstrapAssemblyFactory {
         return new RuntimeDomain(metaDataStore,
                                  generator,
                                  logicalModelInstantiator,
-                                 policyResolver,
+                                 policyAttacher,
                                  logicalComponentManager,
                                  bindingSelector,
                                  routingService,

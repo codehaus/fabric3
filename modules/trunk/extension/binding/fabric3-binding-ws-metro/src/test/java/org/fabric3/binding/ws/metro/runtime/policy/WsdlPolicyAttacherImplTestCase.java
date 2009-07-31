@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -62,9 +63,12 @@ import com.sun.xml.ws.wsdl.parser.RuntimeWSDLParser;
 import com.sun.xml.ws.wsdl.writer.WSDLGenerator;
 import junit.framework.TestCase;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 
 /**
  * @version $Rev$ $Date$
@@ -89,10 +93,13 @@ public class WsdlPolicyAttacherImplTestCase extends TestCase {
         ByteArrayInputStream bas = new ByteArrayInputStream(TestPolicy.POLICY.getBytes());
         Document document = builder.parse(bas);
         WsdlPolicyAttacherImpl attacher = new WsdlPolicyAttacherImpl();
-//        File portTypeFile = new File(packageName + "." + "HelloWorldPortTypeService.wsdl");
-        List<String> operationNames = new ArrayList<String>();
-        operationNames.add("sayHello");
-        attacher.attach(wsdlResolver.getConcreteWsdl(), operationNames, document.getDocumentElement());
+
+        PolicyExpressionMapping mapping = new PolicyExpressionMapping("id", document.getDocumentElement());
+        mapping.addOperationName("sayHello");
+        List<PolicyExpressionMapping> mappings = new ArrayList<PolicyExpressionMapping>();
+        mappings.add(mapping);
+
+        attacher.attach(wsdlResolver.getConcreteWsdl(), Collections.<Element>emptyList(), mappings);
 
         URL wsdlLocation = new File(packageName + "." + "HelloWorldService.wsdl").toURI().toURL();
         InputStream stream = wsdlLocation.openStream();

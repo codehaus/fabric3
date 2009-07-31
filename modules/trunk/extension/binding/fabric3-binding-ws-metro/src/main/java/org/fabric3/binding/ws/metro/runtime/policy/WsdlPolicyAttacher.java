@@ -42,6 +42,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
+
 /**
  * Inlines WS-Policy expressions in WSDL document. Specifically, a PolicyReference element is added to PortType operation definitions to which the
  * policies apply.
@@ -51,13 +53,14 @@ import org.w3c.dom.Element;
 public interface WsdlPolicyAttacher {
 
     /**
-     * Attaches a policy expression.
+     * Attaches endpoint and operation policy expressions to a WSDL document. Endpoint policies will be attached to the binding while operation
+     * policies will be attached to the port type operation element.
      *
-     * @param abstractWsdl   the abstract WSDL document
-     * @param operationNames the list of operation names the policy expression applies to. Operation overloading is not supported.
-     * @param policy         the parsed policy expression
+     * @param wsdl             the WSDL document
+     * @param endpointPolicies the endpoint policies
+     * @param mappings         a mapping of policy expressions to operations. Operation overloading is not supported.
      * @throws PolicyAttachmentException if an attachment error is encountered
      */
-    void attach(File abstractWsdl, List<String> operationNames, Element policy) throws PolicyAttachmentException;
+    void attach(File wsdl, List<Element> endpointPolicies, List<PolicyExpressionMapping> mappings) throws PolicyAttachmentException;
 
 }

@@ -68,7 +68,7 @@ import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.xquery.provision.XQueryComponentDefinition;
 import org.fabric3.xquery.provision.XQueryComponentSourceDefinition;
@@ -205,7 +205,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         }
     }
 
-    public XQueryComponentSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public XQueryComponentSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         if (reference.getDefinition().getServiceContract().isConversational()) {
@@ -216,7 +216,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<XQueryImplementation> source,
                                                                    ServiceContract<?> serviceContract,
-                                                                   Policy policy) throws GenerationException {
+                                                                   EffectivePolicy policy) throws GenerationException {
         XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
@@ -235,7 +235,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
-    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
         XQueryComponentTargetDefinition targetDefinition = new XQueryComponentTargetDefinition();
         targetDefinition.setUri(service.getUri());
         return targetDefinition;

@@ -42,14 +42,14 @@ import java.util.List;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.rs.provision.RsSourceDefinition;
 import org.fabric3.rs.provision.RsTargetDefinition;
-import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Implementation of the REST binding generator.
@@ -60,9 +60,9 @@ import org.fabric3.spi.policy.Policy;
 public class RsBindingGenerator implements BindingGenerator<RsBindingDefinition> {
 
     public RsSourceDefinition generateWireSource(LogicalBinding<RsBindingDefinition> logicalBinding,
-                                                     ServiceContract<?> contract,
-                                                     List<LogicalOperation> operations,
-                                                     Policy policy) throws GenerationException {
+                                                 ServiceContract<?> contract,
+                                                 List<LogicalOperation> operations,
+                                                 EffectivePolicy policy) throws GenerationException {
 
         RsSourceDefinition rwsd = new RsSourceDefinition();
         rwsd.setUri(logicalBinding.getDefinition().getTargetUri());
@@ -76,9 +76,9 @@ public class RsBindingGenerator implements BindingGenerator<RsBindingDefinition>
     }
 
     public RsTargetDefinition generateWireTarget(LogicalBinding<RsBindingDefinition> logicalBinding,
-                                                     ServiceContract<?> contract,
-                                                     List<LogicalOperation> operations,
-                                                     Policy policy) throws GenerationException {
+                                                 ServiceContract<?> contract,
+                                                 List<LogicalOperation> operations,
+                                                 EffectivePolicy policy) throws GenerationException {
         throw new GenerationException("Not supported");
 
     }

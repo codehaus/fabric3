@@ -67,7 +67,7 @@ import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.model.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
@@ -118,7 +118,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         return physical;
     }
 
-    public WebComponentSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public WebComponentSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         WebComponentSourceDefinition sourceDefinition = new WebComponentSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         if (reference.getDefinition().getServiceContract().isConversational()) {
@@ -128,12 +128,12 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<WebImplementation> source,
-                                                                   ServiceContract<?> serviceContract,
-                                                                   Policy policy) throws GenerationException {
+                                                               ServiceContract<?> serviceContract,
+                                                               EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
         return null;
     }
 

@@ -53,7 +53,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Implementations are responsible for generating command metadata used to provision components to runtimes.
@@ -82,7 +82,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException;
+    PhysicalSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalTargetDefinition} used to attach a wire to a target component. Metadata contained in the
@@ -94,7 +94,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its target on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException;
+    PhysicalTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalSourceDefinition} used to attach a wire for a callback service to a source component. Metadata contained in the
@@ -107,7 +107,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalSourceDefinition generateCallbackWireSource(C source, ServiceContract<?> serviceContract, Policy policy) throws GenerationException;
+    PhysicalSourceDefinition generateCallbackWireSource(C source, ServiceContract<?> serviceContract, EffectivePolicy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalSourceDefinition} used to attach a resource to a source component. Metadata contained in the

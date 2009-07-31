@@ -46,7 +46,7 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Implementation of the test binding generator.
@@ -59,7 +59,7 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingDefinit
     public TestBindingSourceDefinition generateWireSource(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           ServiceContract<?> contract,
                                                           List<LogicalOperation> operations,
-                                                          Policy policy) throws GenerationException {
+                                                          EffectivePolicy policy) throws GenerationException {
         TestBindingSourceDefinition definition = new TestBindingSourceDefinition();
         definition.setUri(logicalBinding.getDefinition().getTargetUri());
         return definition;
@@ -68,7 +68,7 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingDefinit
     public TestBindingTargetDefinition generateWireTarget(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           ServiceContract<?> contract,
                                                           List<LogicalOperation> operations,
-                                                          Policy policy) throws GenerationException {
+                                                          EffectivePolicy policy) throws GenerationException {
 
         TestBindingTargetDefinition definition = new TestBindingTargetDefinition();
         definition.setUri(logicalBinding.getDefinition().getTargetUri());

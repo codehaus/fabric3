@@ -38,7 +38,6 @@
 package org.fabric3.java.generator;
 
 import java.net.URI;
-import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
@@ -62,12 +61,11 @@ import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.InteractionType;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * @version $Rev$ $Date$
@@ -105,7 +103,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
     }
 
 
-    public void generateWireSource(JavaSourceDefinition definition, LogicalReference reference, Policy policy) throws GenerationException {
+    public void generateWireSource(JavaSourceDefinition definition, LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
@@ -117,13 +115,12 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         definition.setOptimizable(true);
 
         boolean conversational = serviceContract.isConversational();
-        List<LogicalOperation> operations = reference.getOperations();
-        calculateConversationalPolicy(definition, operations, policy, conversational);
+        calculateConversationalPolicy(definition, policy, conversational);
     }
 
     public void generateCallbackWireSource(JavaSourceDefinition definition, LogicalComponent<? extends JavaImplementation> component,
                                            ServiceContract<?> serviceContract,
-                                           Policy policy) throws GenerationException {
+                                           EffectivePolicy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
         InjectingComponentType type = component.getDefinition().getImplementation().getComponentType();
         String name = null;
@@ -175,28 +172,18 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
      * Determines if the wire propagates conversations. Conversational propagation is handled by the source component.
      *
      * @param definition     the source wire defintion
-     * @param operations     the logical operations
      * @param policy         the set of policies for the wire
      * @param conversational true if the contract is conversational
      */
-    private void calculateConversationalPolicy(JavaSourceDefinition definition,
-                                               List<LogicalOperation> operations,
-                                               Policy policy,
-                                               boolean conversational) {
-        for (LogicalOperation operation : operations) {
-            for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
-                if (PROPAGATES_CONVERSATION_POLICY.equals(policySet.getName())) {
-                    definition.setInteractionType(InteractionType.PROPAGATES_CONVERSATION);
-                    // conversational propagation is for the entire reference so set it an return
-                    return;
-                }
+    private void calculateConversationalPolicy(JavaSourceDefinition definition, EffectivePolicy policy, boolean conversational) {
+        for (PolicySet policySet : policy.getEndpointPolicySets()) {
+            if (PROPAGATES_CONVERSATION_POLICY.equals(policySet.getName())) {
+                definition.setInteractionType(InteractionType.PROPAGATES_CONVERSATION);
+                return;
             }
         }
         if (conversational) {
             definition.setInteractionType(InteractionType.CONVERSATIONAL);
         }
-
     }
-
-
 }

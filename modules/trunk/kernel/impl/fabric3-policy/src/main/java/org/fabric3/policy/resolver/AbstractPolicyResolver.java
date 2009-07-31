@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.policy.helper;
+package org.fabric3.policy.resolver;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -46,22 +46,22 @@ import javax.xml.namespace.QName;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.policy.infoset.PolicyEvaluator;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
  * Base class for resolving policies.
  *
  * @version $Rev$ $Date$
  */
-public class AbstractPolicyHelper {
+public class AbstractPolicyResolver {
     protected LogicalComponentManager lcm;
     protected PolicyEvaluator policyEvaluator;
     protected PolicyRegistry policyRegistry;
 
-    protected AbstractPolicyHelper(PolicyRegistry policyRegistry, LogicalComponentManager lcm, PolicyEvaluator policyEvaluator) {
+    protected AbstractPolicyResolver(PolicyRegistry policyRegistry, LogicalComponentManager lcm, PolicyEvaluator policyEvaluator) {
         this.policyRegistry = policyRegistry;
         this.lcm = lcm;
         this.policyEvaluator = policyEvaluator;
@@ -70,12 +70,12 @@ public class AbstractPolicyHelper {
     /**
      * Resolves intents to policies.
      *
-     * @param requiredIntents the intents to resolve
-     * @param target          the logical artifact to resolve against
+     * @param intents the intents to resolve
+     * @param target  the logical artifact to evaluate policy set "applies to" constraints against
      * @return the resolved policy sets
      * @throws PolicyResolutionException if there is an error during resolution
      */
-    protected Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents, LogicalScaArtifact<?> target) throws PolicyResolutionException {
+    protected Set<PolicySet> resolvePolicies(Set<Intent> intents, LogicalScaArtifact<?> target) throws PolicyResolutionException {
 
         Set<PolicySet> policies = new LinkedHashSet<PolicySet>();
 
@@ -83,7 +83,7 @@ public class AbstractPolicyHelper {
         // Calculate appliesTo by first determining if the policy set provides the intent and then matching its appliesTo expression
         // against the logical artifact given as a target
         for (PolicySet policySet : definitions) {
-            Iterator<Intent> iterator = requiredIntents.iterator();
+            Iterator<Intent> iterator = intents.iterator();
             while (iterator.hasNext()) {
                 Intent intent = iterator.next();
                 if (policySet.doesProvide(intent.getName())) {

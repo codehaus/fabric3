@@ -88,7 +88,7 @@ import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.policy.PolicyActivationException;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.policy.PolicyResolver;
+import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.lcm.WriteException;
 
@@ -110,7 +110,7 @@ public abstract class AbstractDomain implements Domain {
     private MetaDataStore metadataStore;
     private LogicalComponentManager logicalComponentManager;
     private LogicalModelInstantiator logicalModelInstantiator;
-    private PolicyResolver policyResolver;
+    private PolicyAttacher policyAttacher;
     private BindingSelector bindingSelector;
     private Collector collector;
     private ContributionHelper contributionHelper;
@@ -123,7 +123,7 @@ public abstract class AbstractDomain implements Domain {
      * @param logicalComponentManager  the manager for logical components
      * @param generator                the physical model generator
      * @param logicalModelInstantiator the logical model instantiator
-     * @param policyResolver           the resolver for applying external attachment policies
+     * @param policyAttacher           the attacher for applying external attachment policies
      * @param bindingSelector          the selector for binding.sca
      * @param routingService           the service for routing deployment commands
      * @param collector                the collector for undeploying components
@@ -134,7 +134,7 @@ public abstract class AbstractDomain implements Domain {
                           LogicalComponentManager logicalComponentManager,
                           Generator generator,
                           LogicalModelInstantiator logicalModelInstantiator,
-                          PolicyResolver policyResolver,
+                          PolicyAttacher policyAttacher,
                           BindingSelector bindingSelector,
                           RoutingService routingService,
                           Collector collector,
@@ -144,7 +144,7 @@ public abstract class AbstractDomain implements Domain {
         this.generator = generator;
         this.logicalModelInstantiator = logicalModelInstantiator;
         this.logicalComponentManager = logicalComponentManager;
-        this.policyResolver = policyResolver;
+        this.policyAttacher = policyAttacher;
         this.bindingSelector = bindingSelector;
         this.routingService = routingService;
         this.collector = collector;
@@ -309,7 +309,7 @@ public abstract class AbstractDomain implements Domain {
         }
 
         try {
-            policyResolver.attachPolicies(policySets, domain, true);
+            policyAttacher.attachPolicies(policySets, domain, true);
             Collection<LogicalComponent<?>> components = domain.getComponents();
             // generate and provision any new components and new wires
             CommandMap commandMap = generator.generate(components, true);
@@ -335,7 +335,7 @@ public abstract class AbstractDomain implements Domain {
         }
 
         try {
-            policyResolver.detachPolicies(policySets, domain);
+            policyAttacher.detachPolicies(policySets, domain);
             Collection<LogicalComponent<?>> components = domain.getComponents();
             // generate and provision any new components and new wires
             CommandMap commandMap = generator.generate(components, true);
@@ -448,7 +448,7 @@ public abstract class AbstractDomain implements Domain {
             if (change.hasErrors()) {
                 throw new AssemblyException(change.getErrors());
             }
-            policyResolver.attachPolicies(domain, !recover);
+            policyAttacher.attachPolicies(domain, !recover);
             if (!recover || RuntimeMode.VM == info.getRuntimeMode()) {
                 // in single VM mode, recovery includes deployment
                 allocateAndDeploy(domain, plans);
@@ -570,7 +570,7 @@ public abstract class AbstractDomain implements Domain {
             if (context.hasErrors()) {
                 throw new AssemblyException(context.getErrors());
             }
-            policyResolver.attachPolicies(domain, true);
+            policyAttacher.attachPolicies(domain, true);
             allocateAndDeploy(domain, plans);
         } catch (DeploymentException e) {
             // release the contribution lock if there was an error

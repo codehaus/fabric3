@@ -61,16 +61,16 @@ import org.fabric3.spi.model.instance.LogicalState;
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultPolicyResolverTestCase extends TestCase {
+public class DefaultPolicyAttacherTestCase extends TestCase {
     private static final QName POLICY_SET = new QName("urn:test", "testPolicy");
     private LogicalComponent child1;
-    private DefaultPolicyResolver resolver;
+    private DefaultPolicyAttacher attacher;
     private LogicalService child1Service;
     private LogicalReference child1Reference;
     private LogicalBinding child1ReferenceBinding;
 
     public void testAttachesToComponent() throws Exception {
-        resolver.attach(POLICY_SET, child1, true);
+        attacher.attach(POLICY_SET, child1, true);
         assertEquals(LogicalState.NEW, child1.getState());
         assertTrue(child1.getPolicySets().contains(POLICY_SET));
     }
@@ -79,18 +79,18 @@ public class DefaultPolicyResolverTestCase extends TestCase {
         // simulate the policy already being attached and the component deployed
         child1.setState(LogicalState.PROVISIONED);
         child1.addPolicySet(POLICY_SET);
-        resolver.attach(POLICY_SET, child1, true);
+        attacher.attach(POLICY_SET, child1, true);
         assertEquals(LogicalState.PROVISIONED, child1.getState());
     }
 
     public void testAttachesToComponentNonIncremental() throws Exception {
         child1.setState(LogicalState.PROVISIONED);
-        resolver.attach(POLICY_SET, child1, false);
+        attacher.attach(POLICY_SET, child1, false);
         assertTrue(child1.getPolicySets().contains(POLICY_SET));
     }
 
     public void testAttachesToServiceIncremental() throws Exception {
-        resolver.attach(POLICY_SET, child1Service, true);
+        attacher.attach(POLICY_SET, child1Service, true);
         for (LogicalBinding<?> binding : child1Service.getBindings()) {
             assertEquals(LogicalState.NEW, binding.getState());
         }
@@ -101,7 +101,7 @@ public class DefaultPolicyResolverTestCase extends TestCase {
         for (LogicalBinding<?> binding : child1Service.getBindings()) {
             binding.setState(LogicalState.PROVISIONED);
         }
-        resolver.attach(POLICY_SET, child1Service, false);
+        attacher.attach(POLICY_SET, child1Service, false);
         for (LogicalBinding<?> binding : child1Service.getBindings()) {
             assertEquals(LogicalState.NEW, binding.getState());
         }
@@ -109,7 +109,7 @@ public class DefaultPolicyResolverTestCase extends TestCase {
     }
 
     public void testAttachesToReferenceIncremental() throws Exception {
-        resolver.attach(POLICY_SET, child1Reference, true);
+        attacher.attach(POLICY_SET, child1Reference, true);
         for (LogicalBinding<?> binding : child1Reference.getBindings()) {
             assertEquals(LogicalState.NEW, binding.getState());
         }
@@ -120,7 +120,7 @@ public class DefaultPolicyResolverTestCase extends TestCase {
         for (LogicalBinding<?> binding : child1Reference.getBindings()) {
             binding.setState(LogicalState.PROVISIONED);
         }
-        resolver.attach(POLICY_SET, child1Reference, false);
+        attacher.attach(POLICY_SET, child1Reference, false);
         for (LogicalBinding<?> binding : child1Reference.getBindings()) {
             assertEquals(LogicalState.NEW, binding.getState());
         }
@@ -128,14 +128,14 @@ public class DefaultPolicyResolverTestCase extends TestCase {
     }
 
     public void testAttachesToBindingIncremental() throws Exception {
-        resolver.attach(POLICY_SET, child1ReferenceBinding, true);
+        attacher.attach(POLICY_SET, child1ReferenceBinding, true);
         assertEquals(LogicalState.NEW, child1ReferenceBinding.getState());
         assertTrue(child1ReferenceBinding.getPolicySets().contains(POLICY_SET));
     }
 
     public void testAttachesToBindingNonIncremental() throws Exception {
         child1ReferenceBinding.setState(LogicalState.PROVISIONED);
-        resolver.attach(POLICY_SET, child1ReferenceBinding, true);
+        attacher.attach(POLICY_SET, child1ReferenceBinding, true);
         assertEquals(LogicalState.NEW, child1ReferenceBinding.getState());
         assertTrue(child1ReferenceBinding.getPolicySets().contains(POLICY_SET));
     }
@@ -144,7 +144,7 @@ public class DefaultPolicyResolverTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         createDomain();
-        resolver = new DefaultPolicyResolver(null, null, null, null);
+        attacher = new DefaultPolicyAttacher(null, null);
     }
 
     @SuppressWarnings({"unchecked"})

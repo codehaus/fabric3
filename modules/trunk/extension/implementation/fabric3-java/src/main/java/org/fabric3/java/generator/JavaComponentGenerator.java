@@ -55,7 +55,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -78,21 +78,21 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return definition;
     }
 
-    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, Policy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateWireSource(definition, reference, policy);
         return definition;
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
-                                                                   ServiceContract<?> serviceContract,
-                                                                   Policy policy) throws GenerationException {
+                                                               ServiceContract<?> serviceContract,
+                                                               EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);
         return definition;
     }
 
-    public PhysicalTargetDefinition generateWireTarget(LogicalService service, Policy policy) throws GenerationException {
+    public PhysicalTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
         JavaTargetDefinition definition = new JavaTargetDefinition();
         generationHelper.generateWireTarget(definition, service);
         return definition;

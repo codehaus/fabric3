@@ -41,6 +41,8 @@ import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
 
+import org.w3c.dom.Element;
+
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
@@ -53,28 +55,32 @@ public class MetroSourceDefinition extends PhysicalSourceDefinition {
 
     private URL wsdlLocation;
     private String interfaze;
-    private List<QName> requestedIntents;
+    private List<QName> intents;
+    private List<Element> policies;
     private List<PolicyExpressionMapping> mappings;
     private ServiceEndpointDefinition endpointDefinition;
 
     /**
      * Constructor.
      *
-     * @param endpointDefinition endpoint information
+     * @param endpointDefinition endpoint metadta
      * @param wsdlLocation       optional URL to the WSDL location
      * @param interfaze          the service contract name.
-     * @param requestedIntents   intents requested by the binding
-     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to construct dynamic endpoint WSDL
+     * @param intents            intents configured at the endpoint level that are provided natively by the Metro
+     * @param policies           policy expressions to be attached to the endpoint
+     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to generate endpoint WSDL.
      */
     public MetroSourceDefinition(ServiceEndpointDefinition endpointDefinition,
-                                     URL wsdlLocation,
-                                     String interfaze,
-                                     List<QName> requestedIntents,
-                                     List<PolicyExpressionMapping> mappings) {
+                                 URL wsdlLocation,
+                                 String interfaze,
+                                 List<QName> intents,
+                                 List<Element> policies,
+                                 List<PolicyExpressionMapping> mappings) {
         this.endpointDefinition = endpointDefinition;
         this.wsdlLocation = wsdlLocation;
         this.interfaze = interfaze;
-        this.requestedIntents = requestedIntents;
+        this.intents = intents;
+        this.policies = policies;
         this.mappings = mappings;
     }
 
@@ -106,12 +112,21 @@ public class MetroSourceDefinition extends PhysicalSourceDefinition {
     }
 
     /**
-     * Returns the intents requested by the binding.
+     * Returns the configured endpoint intents provided by the Metro.
      *
-     * @return intents requested by the binding
+     * @return the intents
      */
-    public List<QName> getRequestedIntents() {
-        return requestedIntents;
+    public List<QName> getIntents() {
+        return intents;
+    }
+
+    /**
+     * Returns the policy expressions to be attached to the endpoint
+     *
+     * @return the policy expressions
+     */
+    public List<Element> getPolicies() {
+        return policies;
     }
 
     /**

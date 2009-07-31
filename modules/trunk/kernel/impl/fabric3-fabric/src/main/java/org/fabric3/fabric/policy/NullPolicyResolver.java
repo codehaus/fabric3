@@ -40,17 +40,18 @@ package org.fabric3.fabric.policy;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.xml.namespace.QName;
+import java.util.Set;
 
+import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
+import org.fabric3.spi.policy.PolicyMetadata;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
-import org.fabric3.spi.policy.PolicyMetadata;
 
 /**
  * No-op resolver used during bootstrap.
@@ -59,18 +60,6 @@ import org.fabric3.spi.policy.PolicyMetadata;
  */
 public class NullPolicyResolver implements PolicyResolver {
     private static final PolicyResult EMPTY_RESULT = new NullPolicyResult();
-
-    public void attachPolicies(LogicalComponent<?> component, boolean incremental) {
-        // no-op
-    }
-
-    public void attachPolicies(List<PolicySet> policySets, LogicalComponent<?> component, boolean incremental) throws PolicyResolutionException {
-        // no-op
-    }
-
-    public void detachPolicies(List<PolicySet> policySets, LogicalComponent<?> component) throws PolicyResolutionException {
-        // no-op
-    }
 
     public PolicyResult resolvePolicies(List<LogicalOperation> operations,
                                         LogicalBinding<?> sourceBinding,
@@ -83,6 +72,10 @@ public class NullPolicyResolver implements PolicyResolver {
     private static class NullPolicyResult implements PolicyResult {
         private PolicyMetadata metadata = new PolicyMetadata();
 
+        public Set<PolicySet> getInterceptedEndpointPolicySets() {
+            return Collections.emptySet();
+        }
+
         public List<PolicySet> getInterceptedPolicySets(LogicalOperation operation) {
             return Collections.emptyList();
         }
@@ -91,30 +84,38 @@ public class NullPolicyResolver implements PolicyResolver {
             return metadata;
         }
 
-        public Policy getSourcePolicy() {
-            return new NullPolicy();
+        public EffectivePolicy getSourcePolicy() {
+            return new NullEffectivePolicy();
         }
 
-        public Policy getTargetPolicy() {
-            return new NullPolicy();
+        public EffectivePolicy getTargetPolicy() {
+            return new NullEffectivePolicy();
         }
 
     }
 
-    private static class NullPolicy implements Policy {
-        public List<QName> getProvidedIntents(LogicalOperation operation) {
+    private static class NullEffectivePolicy implements EffectivePolicy {
+        public Set<Intent> getEndpointIntents() {
+            return Collections.emptySet();
+        }
+
+        public Set<PolicySet> getEndpointPolicySets() {
+            return Collections.emptySet();
+        }
+
+        public List<Intent> getIntents(LogicalOperation operation) {
             return Collections.emptyList();
         }
 
-        public List<PolicySet> getProvidedPolicySets(LogicalOperation operation) {
+        public List<PolicySet> getPolicySets(LogicalOperation operation) {
             return Collections.emptyList();
         }
 
-        public List<QName> getProvidedIntents() {
+        public List<Intent> getOperationIntents() {
             return Collections.emptyList();
         }
 
-        public Map<LogicalOperation, List<PolicySet>> getProvidedPolicySets() {
+        public Map<LogicalOperation, List<PolicySet>> getOperationPolicySets() {
             return Collections.emptyMap();
         }
     }

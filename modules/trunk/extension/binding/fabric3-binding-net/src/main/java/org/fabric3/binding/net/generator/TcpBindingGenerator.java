@@ -49,7 +49,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Generates source and target wire definitions for the TCP binding.
@@ -59,9 +59,9 @@ import org.fabric3.spi.policy.Policy;
 public class TcpBindingGenerator implements BindingGenerator<TcpBindingDefinition> {
 
     public PhysicalSourceDefinition generateWireSource(LogicalBinding<TcpBindingDefinition> binding,
-                                                           ServiceContract<?> contract,
-                                                           List<LogicalOperation> operations,
-                                                           Policy policy) throws GenerationException {
+                                                       ServiceContract<?> contract,
+                                                       List<LogicalOperation> operations,
+                                                       EffectivePolicy policy) throws GenerationException {
         TcpSourceDefinition sourceDefinition = new TcpSourceDefinition();
         TcpBindingDefinition bindingDefinition = binding.getDefinition();
         sourceDefinition.setConfig(bindingDefinition.getConfig());
@@ -70,9 +70,9 @@ public class TcpBindingGenerator implements BindingGenerator<TcpBindingDefinitio
     }
 
     public PhysicalTargetDefinition generateWireTarget(LogicalBinding<TcpBindingDefinition> binding,
-                                                           ServiceContract<?> contract,
-                                                           List<LogicalOperation> operations,
-                                                           Policy policy) throws GenerationException {
+                                                       ServiceContract<?> contract,
+                                                       List<LogicalOperation> operations,
+                                                       EffectivePolicy policy) throws GenerationException {
         TcpTargetDefinition targetDefinition = new TcpTargetDefinition();
         TcpBindingDefinition bindingDefinition = binding.getDefinition();
         targetDefinition.setConfig(bindingDefinition.getConfig());

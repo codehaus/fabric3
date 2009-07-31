@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.policy.helper;
+package org.fabric3.policy.resolver;
 
 import java.util.Set;
 
@@ -46,20 +46,27 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.PolicyResolutionException;
 
 /**
+ * Resolves implementation intents and policy sets. Resolution is performed by normalizing intents and policy sets for each operation associated with
+ * a wire.
+ * <p/>
+ * Note this is different than interaction resolution as endpoint- and operation-level policy is not distinguished. Since implementation policies are
+ * not visibile to clients, they are not handled at the transport level. Hence, the requirement by some transport protocols to distinguish policy
+ * assertions is not applicable. Normalizing policy at the operation-level simplifies the resolver service contract and allows one-step resolution.
+ *
  * @version $Rev$ $Date$
  */
-public interface ImplementationPolicyHelper {
+public interface ImplementationPolicyResolver {
 
     /**
-     * Returns the set of intents that need to be explictly provided by the implementation. These are the intents requested by the user and available
-     * in the <code>mayProvide</code> list of intents declared by the implementation type.
+     * Returns the set of configured intents provided by the implementation according to the <code>mayProvide</code> attribute of the implementation
+     * type policy definition.
      *
      * @param component the logical component for which intents are to be resolved.
      * @param operation the operation for which the provided intents are to be computed.
      * @return Set of intents that need to be explictly provided by the implementation.
      * @throws PolicyResolutionException If there are any unidentified intents.
      */
-    Set<Intent> getProvidedIntents(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
+    Set<Intent> resolveProvidedIntents(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
 
     /**
      * Returns the set of policies explicitly declared for the operation and those that satisfy the intents not provided by the implementation type.
@@ -69,7 +76,7 @@ public interface ImplementationPolicyHelper {
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySet> resolve(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
+    Set<PolicySet> resolvePolicySets(LogicalComponent<?> component, LogicalOperation operation) throws PolicyResolutionException;
 
 
 }

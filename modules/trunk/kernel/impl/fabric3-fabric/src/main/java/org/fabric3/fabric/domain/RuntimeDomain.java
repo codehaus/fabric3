@@ -47,7 +47,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.policy.PolicyRegistry;
-import org.fabric3.spi.policy.PolicyResolver;
+import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
@@ -62,7 +62,7 @@ public class RuntimeDomain extends AbstractDomain {
     public RuntimeDomain(@Reference MetaDataStore metadataStore,
                          @Reference Generator generator,
                          @Reference LogicalModelInstantiator logicalModelInstantiator,
-                         @Reference PolicyResolver policyResolver,
+                         @Reference PolicyAttacher policyAttacher,
                          @Reference LogicalComponentManager logicalComponentManager,
                          @Reference BindingSelector bindingSelector,
                          @Reference RoutingService routingService,
@@ -73,7 +73,7 @@ public class RuntimeDomain extends AbstractDomain {
               logicalComponentManager,
               generator,
               logicalModelInstantiator,
-              policyResolver,
+              policyAttacher,
               bindingSelector,
               routingService,
               collector,

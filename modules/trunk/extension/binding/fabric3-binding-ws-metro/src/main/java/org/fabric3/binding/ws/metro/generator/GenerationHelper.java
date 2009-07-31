@@ -57,7 +57,7 @@ import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalOperation;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * @version $Rev$ $Date$
@@ -69,17 +69,17 @@ public class GenerationHelper {
     }
 
     /**
-     * Normalizes policy sets by mapping policy expressions to the operations they are attached to.
+     * Maps policy expressions to the operations they are attached to.
      *
      * @param serviceClass the service endpoint class
      * @param policy       the policy for the wire
-     * @return the normalized mappings
+     * @return the policy expression mappings
      * @throws GenerationException if the policy expression is invalid
      */
-    public static List<PolicyExpressionMapping> createMappings(Policy policy, Class<?> serviceClass) throws GenerationException {
+    public static List<PolicyExpressionMapping> createMappings(EffectivePolicy policy, Class<?> serviceClass) throws GenerationException {
         // temporarily store mappings keyed by policy expression id
         Map<String, PolicyExpressionMapping> mappings = new HashMap<String, PolicyExpressionMapping>();
-        for (Map.Entry<LogicalOperation, List<PolicySet>> entry : policy.getProvidedPolicySets().entrySet()) {
+        for (Map.Entry<LogicalOperation, List<PolicySet>> entry : policy.getOperationPolicySets().entrySet()) {
             Operation definition = entry.getKey().getDefinition();
             for (PolicySet policySet : entry.getValue()) {
                 Element expression = policySet.getExpression();

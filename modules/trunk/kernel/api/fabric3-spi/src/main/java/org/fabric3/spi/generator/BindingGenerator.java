@@ -51,7 +51,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * Generates {@link PhysicalSourceDefinition}s and {@link PhysicalTargetDefinition}s for a resolved binding.
@@ -66,14 +66,14 @@ public interface BindingGenerator<BD extends BindingDefinition> {
      * @param binding    Logical binding.
      * @param contract   the service contract
      * @param operations the operations to generate the wire for
-     * @param policy     the policy metadata associated with the wire
+     * @param policy     the effective policy associated with the wire
      * @return Physical wire source definition.
      * @throws GenerationException if an error is raised during generation
      */
     PhysicalSourceDefinition generateWireSource(LogicalBinding<BD> binding,
                                                 ServiceContract<?> contract,
                                                 List<LogicalOperation> operations,
-                                                Policy policy) throws GenerationException;
+                                                EffectivePolicy policy) throws GenerationException;
 
     /**
      * Generates a physical wire target definition from a logical binding.
@@ -81,13 +81,13 @@ public interface BindingGenerator<BD extends BindingDefinition> {
      * @param binding    Logical binding.
      * @param contract   the service contract
      * @param operations the operations to generate the wire for
-     * @param policy     the policy metadata associated with the wire
+     * @param policy     the effective policy associated with the wire
      * @return Physical wire target definition.
      * @throws GenerationException if an error is raised during generation
      */
     PhysicalTargetDefinition generateWireTarget(LogicalBinding<BD> binding,
                                                 ServiceContract<?> contract,
                                                 List<LogicalOperation> operations,
-                                                Policy policy) throws GenerationException;
+                                                EffectivePolicy policy) throws GenerationException;
 
 }

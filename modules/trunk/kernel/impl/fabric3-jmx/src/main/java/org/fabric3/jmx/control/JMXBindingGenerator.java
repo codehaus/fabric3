@@ -51,7 +51,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
-import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
  * @version $Rev$ $Date$
@@ -60,9 +60,9 @@ import org.fabric3.spi.policy.Policy;
 public class JMXBindingGenerator implements BindingGenerator<JMXBinding> {
 
     public JMXSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding,
-                                                      ServiceContract<?> contract,
-                                                      List<LogicalOperation> operations,
-                                                      Policy policy) throws GenerationException {
+                                                  ServiceContract<?> contract,
+                                                  List<LogicalOperation> operations,
+                                                  EffectivePolicy policy) throws GenerationException {
         Bindable logicalService = binding.getParent();
 
         JMXSourceDefinition definition = new JMXSourceDefinition();
@@ -77,9 +77,9 @@ public class JMXBindingGenerator implements BindingGenerator<JMXBinding> {
     }
 
     public PhysicalTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding,
-                                                           ServiceContract<?> contract,
-                                                           List<LogicalOperation> operations,
-                                                           Policy policy) throws GenerationException {
+                                                       ServiceContract<?> contract,
+                                                       List<LogicalOperation> operations,
+                                                       EffectivePolicy policy) throws GenerationException {
 
         // TODO we might need this for notifications but leave it out for now
         throw new UnsupportedOperationException();
