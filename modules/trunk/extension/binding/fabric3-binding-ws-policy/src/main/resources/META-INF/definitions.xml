@@ -113,7 +113,7 @@ http://131.107.72.15/ilab/WSPolicy/WS-Policy-Scenarios.doc
                 <wsp:Policy>
                     <sp:RecipientToken>
                         <wsp:Policy>
-                            <sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200512/IncludeToken/Never">
+                            <sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never">
                                 <wsp:Policy>
                                     <sp:WssX509V3Token10/>
                                 </wsp:Policy>
@@ -122,7 +122,7 @@ http://131.107.72.15/ilab/WSPolicy/WS-Policy-Scenarios.doc
                     </sp:RecipientToken>
                     <sp:InitiatorToken>
                         <wsp:Policy>
-                            <sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200512/IncludeToken/AlwaysToRecipient">
+                            <sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
                                 <wsp:Policy>
                                     <sp:WssX509V3Token10/>
                                 </wsp:Policy>
