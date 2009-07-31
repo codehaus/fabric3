@@ -89,7 +89,7 @@ http://131.107.72.15/ilab/WSPolicy/WS-Policy-Scenarios.doc
             </sp:TransportBinding>
             <sp:SignedSupportingTokens>
                 <wsp:Policy>
-                    <sp:UsernameToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200512/IncludeToken/AlwaysToRecipient">
+                    <sp:UsernameToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
                         <wsp:Policy>
                             <sp:WssUsernameToken10/>
                         </wsp:Policy>
