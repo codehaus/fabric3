@@ -68,10 +68,6 @@ import org.fabric3.host.monitor.MonitorFactory;
  */
 public final class BootstrapHelper {
 
-    /**
-     * Installation directory system property name.
-     */
-    private static final String INSTALL_DIRECTORY_PROPERTY = "fabric3.installDir";
     private static final String DEFAULT_MONITOR_FACTORY = "org.fabric3.monitor.impl.JavaLoggingMonitorFactory";
     private static final String BOOTSTRAPPER_CLASS = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
     private static final String COORDINATOR_CLASS = "org.fabric3.fabric.runtime.DefaultCoordinator";
@@ -81,27 +77,14 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Gets the installation directory based on the location of a class file. If the system property <code>fabric3.installDir</code> is set then its
-     * value is used as the location of the installation directory. Otherwise, we assume we are running from an executable jar containing the supplied
-     * class and the installation directory is assumed to be the parent of the directory containing that jar.
+     * Gets the installation directory based on the location of a class file. The installation directory is calculated by determining the path of the
+     * jar containing the given class file and returning its parent directory.
      *
      * @param clazz the class to use as a way to find the executable jar
-     * @return directory where Fabric3 standalone server is installed.
-     * @throws IllegalArgumentException if the property is set but its value is not an existing directory
-     * @throws IllegalStateException    if the location could not be determined from the location of the class file
+     * @return directory where Fabric3 runtime is installed.
+     * @throws IllegalStateException if the location could not be determined from the location of the class file
      */
-    public static File getInstallDirectory(Class<?> clazz) throws IllegalStateException, IllegalArgumentException {
-
-        String installDirectoryPath = System.getProperty(INSTALL_DIRECTORY_PROPERTY);
-
-        if (installDirectoryPath != null) {
-            File installDirectory = new File(installDirectoryPath);
-            if (!installDirectory.exists()) {
-                throw new IllegalArgumentException(INSTALL_DIRECTORY_PROPERTY
-                        + " property does not refer to an existing directory: " + installDirectory);
-            }
-            return installDirectory;
-        }
+    public static File getInstallDirectory(Class<?> clazz) throws IllegalStateException {
 
         // get the name of the Class's bytecode
         String name = clazz.getName();
