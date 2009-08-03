@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.spi.Injector;
 import org.fabric3.spi.ObjectFactory;
 
 /**

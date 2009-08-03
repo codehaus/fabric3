@@ -50,7 +50,7 @@ import javax.servlet.Servlet;
 
 import org.mortbay.jetty.servlet.ServletHandler;
 
-import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.spi.Injector;
 import org.fabric3.spi.ObjectCreationException;
 
 /**

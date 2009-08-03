@@ -67,6 +67,7 @@ import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.Injector;
 
 /**
  * @version $Rev$ $Date$

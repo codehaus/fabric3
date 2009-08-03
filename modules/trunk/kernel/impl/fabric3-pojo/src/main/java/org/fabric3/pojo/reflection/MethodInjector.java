@@ -49,6 +49,7 @@ import java.lang.reflect.Method;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.Injector;
 
 /**
  * Injects a value created by an {@link org.fabric3.spi.ObjectFactory} using a given method

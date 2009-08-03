@@ -64,6 +64,7 @@ import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.Injector;
 import org.fabric3.spi.component.InstanceInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;

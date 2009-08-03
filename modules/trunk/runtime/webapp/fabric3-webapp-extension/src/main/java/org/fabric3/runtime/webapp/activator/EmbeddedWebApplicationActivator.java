@@ -57,7 +57,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
-import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.spi.Injector;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.host.ServletHost;
 

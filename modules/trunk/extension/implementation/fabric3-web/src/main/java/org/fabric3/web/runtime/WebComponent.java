@@ -54,7 +54,7 @@ import static org.fabric3.container.web.spi.WebApplicationActivator.OASIS_CONTEX
 import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.pojo.builder.ProxyService;
-import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.spi.Injector;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;

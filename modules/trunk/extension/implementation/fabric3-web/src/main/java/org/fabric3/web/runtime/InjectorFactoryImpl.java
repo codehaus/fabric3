@@ -47,7 +47,7 @@ import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.pojo.reflection.FieldInjector;
-import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.spi.Injector;
 import org.fabric3.pojo.reflection.MethodInjector;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.web.provision.WebContextInjectionSite;

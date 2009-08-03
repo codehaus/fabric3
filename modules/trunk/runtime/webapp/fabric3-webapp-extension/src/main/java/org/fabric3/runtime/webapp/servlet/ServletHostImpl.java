@@ -44,8 +44,8 @@
 package org.fabric3.runtime.webapp.servlet;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -75,7 +75,7 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
 
     public ServletHostImpl(@Reference WebappHostInfo info) {
         this.info = info;
-        servlets = new HashMap<String, Servlet>();
+        servlets = new ConcurrentHashMap<String, Servlet>();
     }
 
     public int getHttpPort() {

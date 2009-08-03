@@ -41,14 +41,11 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.pojo.reflection;
+package org.fabric3.spi;
 
-
-import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.ObjectFactory;
 
 /**
- * Implementations inject a pre-configured value on a component implementation instance
+ * Implementations inject an ObjectFactory value on an object instance
  *
  * @version $Rev$ $Date$
  */
