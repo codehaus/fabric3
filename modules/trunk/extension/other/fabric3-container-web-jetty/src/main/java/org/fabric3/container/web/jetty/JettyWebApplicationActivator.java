@@ -55,6 +55,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
+import org.fabric3.container.web.spi.InjectingSessionListener;
 import org.fabric3.jetty.JettyService;
 import org.fabric3.spi.Injector;
 import org.fabric3.spi.ObjectCreationException;
