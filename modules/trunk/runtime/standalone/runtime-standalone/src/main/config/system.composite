@@ -42,11 +42,6 @@
 
     <include name="TransformComposite" scdlResource="META-INF/transform.composite"/>
 
-    <component name="LogicalComponentStore">
-        <f3-impl:implementation.system class="org.fabric3.fabric.lcm.ApplicationLogicalComponentStore"/>
-        <property name="autowire" source="$systemConfig/domain/@autowire"/>
-    </component>
-
     <component name="ProfileTracker">
         <f3-impl:implementation.system class="org.fabric3.contribution.ProfileTracker"/>
     </component>

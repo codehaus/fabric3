@@ -28,6 +28,7 @@
 
     <component name="LogicalComponentManager">
         <f3-impl:implementation.system class="org.fabric3.fabric.lcm.LogicalComponentManagerImpl"/>
+        <property name="autowire" source="$systemConfig/domain/@autowire"/>
     </component>
 
     <component name="LocalRoutingService">

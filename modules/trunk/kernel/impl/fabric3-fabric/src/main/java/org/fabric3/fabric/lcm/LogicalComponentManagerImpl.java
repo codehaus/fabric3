@@ -41,17 +41,22 @@ import java.net.URI;
 import java.util.Collection;
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.Names;
+import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.model.type.component.Autowire;
+import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Composite;
+import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.CompositeReference;
 import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.lcm.LogicalComponentManagerMBean;
-import org.fabric3.spi.lcm.LogicalComponentStore;
-import org.fabric3.spi.lcm.ReadException;
-import org.fabric3.spi.lcm.WriteException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -59,19 +64,62 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
 
 /**
+ * Implementation of LogicalComponentManager. The runtime domain configuration (created during bootstrap) defaults autowire to ON; the application
+ * domain defaults autowire to OFF, which can be overriden by the runtime configuration.
+ *
  * @version $Rev$ $Date$
  */
 public class LogicalComponentManagerImpl implements LogicalComponentManager, LogicalComponentManagerMBean {
-
+    private URI domainUri;
+    private String autowireValue;
+    private Autowire autowire = Autowire.OFF;
     private LogicalCompositeComponent domain;
-    private final LogicalComponentStore logicalComponentStore;
+    private LCMMonitor monitor;
 
-    public LogicalComponentManagerImpl(@Reference LogicalComponentStore logicalComponentStore) {
-        this.logicalComponentStore = logicalComponentStore;
+    /**
+     * Bootstrap constructor.
+     */
+    public LogicalComponentManagerImpl() {
+        this.domainUri = Names.RUNTIME_URI;
+        this.autowire = Autowire.ON; // autowire on by default in the runtime domain
+        initializeDomainComposite();
+    }
+
+    @Constructor
+    public LogicalComponentManagerImpl(@Reference HostInfo info) {
+        domainUri = info.getDomain();
+        initializeDomainComposite();
+    }
+
+    @Property(required = false)
+    public void setAutowire(String value) {
+        autowireValue = value;
+    }
+
+    @Monitor
+    public void setMonitor(LCMMonitor monitor) {
+        this.monitor = monitor;
+    }
+
+    @Init
+    public void init() {
+        if (autowireValue == null) {
+            return;
+        }
+        Autowire autowire;
+        // can't use Enum.valueOf(..) as INHERITED is not a valid value for the domain composite
+        if ("ON".equalsIgnoreCase(autowireValue.trim())) {
+            autowire = Autowire.ON;
+        } else if ("OFF".equalsIgnoreCase(autowireValue.trim())) {
+            autowire = Autowire.OFF;
+        } else {
+            monitor.invalidAutowireValue(autowireValue);
+            autowire = Autowire.OFF;
+        }
+        this.autowire = autowire;
     }
 
     public LogicalComponent<?> getComponent(URI uri) {
-
         String defragmentedUri = UriHelper.getDefragmentedNameAsString(uri);
         String domainString = domain.getUri().toString();
         String[] hierarchy = defragmentedUri.substring(domainString.length() + 1).split("/");
@@ -88,7 +136,6 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
             }
         }
         return currentComponent;
-
     }
 
     public Collection<LogicalComponent<?>> getComponents() {
@@ -99,14 +146,8 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
         return domain;
     }
 
-    public void replaceRootComponent(LogicalCompositeComponent component) throws WriteException {
+    public void replaceRootComponent(LogicalCompositeComponent component) {
         domain = component;
-        logicalComponentStore.store(domain);
-    }
-
-    @Init
-    public void initialize() throws ReadException {
-        domain = logicalComponentStore.read();
     }
 
     public String getDomainURI() {
@@ -126,4 +167,15 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
         }
         return composite;
     }
+
+    private void initializeDomainComposite() {
+        Composite type = new Composite(null);
+        CompositeImplementation impl = new CompositeImplementation();
+        impl.setComponentType(type);
+        ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(domainUri.toString());
+        definition.setImplementation(impl);
+        type.setAutowire(autowire);
+        domain = new LogicalCompositeComponent(domainUri, definition, null);
+    }
+
 }

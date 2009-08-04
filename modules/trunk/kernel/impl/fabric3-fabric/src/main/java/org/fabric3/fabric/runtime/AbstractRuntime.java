@@ -54,13 +54,11 @@ import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.lcm.LogicalComponentManagerImpl;
-import org.fabric3.fabric.lcm.TransientLogicalComponentStore;
 import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.model.type.component.Autowire;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.AtomicComponent;
@@ -73,8 +71,6 @@ import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.lcm.LogicalComponentManager;
-import org.fabric3.spi.lcm.LogicalComponentStore;
-import org.fabric3.spi.lcm.ReadException;
 
 /**
  * @version $Rev$ $Date$
@@ -149,13 +145,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     }
 
     public void boot() throws InitializationException {
-        LogicalComponentStore store = new TransientLogicalComponentStore(RUNTIME_URI, Autowire.ON);
-        logicalComponentManager = new LogicalComponentManagerImpl(store);
-        try {
-            logicalComponentManager.initialize();
-        } catch (ReadException e) {
-            throw new InitializationException(e);
-        }
+        logicalComponentManager = new LogicalComponentManagerImpl();
         componentManager = new ComponentManagerImpl();
         classLoaderRegistry = new ClassLoaderRegistryImpl();
         ProcessorRegistry processorRegistry = new ProcessorRegistryImpl();

@@ -41,9 +41,4 @@
 
     <include name="JMXComposite" scdlResource="META-INF/jmx.composite"/>
 
-    <component name="LogicalComponentStore">
-        <f3-impl:implementation.system class="org.fabric3.fabric.lcm.ApplicationLogicalComponentStore"/>
-        <property name="autowire" source="$systemConfig/domain/@autowire"/>
-    </component>
-
 </composite>

@@ -62,9 +62,8 @@ public interface LogicalComponentManager {
      * model.
      *
      * @param component the replacement
-     * @throws WriteException if an error occurs replacing the root component
      */
-    void replaceRootComponent(LogicalCompositeComponent component) throws WriteException;
+    void replaceRootComponent(LogicalCompositeComponent component);
 
     /**
      * Returns the component uniquely identified by an id.
@@ -80,13 +79,6 @@ public interface LogicalComponentManager {
      * @return the top level components in the domain
      */
     Collection<LogicalComponent<?>> getComponents();
-
-    /**
-     * Initializes the manager.
-     *
-     * @throws ReadException if there was a problem initializing the components
-     */
-    void initialize() throws ReadException;
 
 
 }

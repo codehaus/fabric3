@@ -80,17 +80,16 @@ import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.ZoneCommands;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.policy.PolicyActivationException;
+import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.policy.PolicyRegistry;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.policy.PolicyAttacher;
-import org.fabric3.spi.lcm.LogicalComponentManager;
-import org.fabric3.spi.lcm.WriteException;
 
 /**
  * Base class for a domain.
@@ -231,18 +230,14 @@ public abstract class AbstractDomain implements Domain {
             throw new UndeploymentException("Error undeploying: " + deployable, e);
 
         }
-        try {
-            // TODO this should happen after nodes have undeployed the components and wires
-            collector.collect(domain);
-            logicalComponentManager.replaceRootComponent(domain);
-            QNameSymbol deployableSymbol = new QNameSymbol(deployable);
-            Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
-            contribution.releaseLock(deployable);
-            for (DomainListener listener : listeners) {
-                listener.onUndeploy(deployable);
-            }
-        } catch (WriteException e) {
-            throw new UndeploymentException("Error applying undeployment: " + deployable, e);
+        // TODO this should happen after nodes have undeployed the components and wires
+        collector.collect(domain);
+        logicalComponentManager.replaceRootComponent(domain);
+        QNameSymbol deployableSymbol = new QNameSymbol(deployable);
+        Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
+        contribution.releaseLock(deployable);
+        for (DomainListener listener : listeners) {
+            listener.onUndeploy(deployable);
         }
     }
 
@@ -316,8 +311,6 @@ public abstract class AbstractDomain implements Domain {
             routingService.route(commandMap);
 
             logicalComponentManager.replaceRootComponent(domain);
-        } catch (WriteException e) {
-            throw new DeploymentException(e);
         } catch (PolicyResolutionException e) {
             throw new DeploymentException(e);
         } catch (GenerationException e) {
@@ -342,8 +335,6 @@ public abstract class AbstractDomain implements Domain {
             routingService.route(commandMap);
 
             logicalComponentManager.replaceRootComponent(domain);
-        } catch (WriteException e) {
-            throw new DeploymentException(e);
         } catch (PolicyResolutionException e) {
             throw new DeploymentException(e);
         } catch (GenerationException e) {
@@ -486,10 +477,6 @@ public abstract class AbstractDomain implements Domain {
             // release the contribution locks if there was an error
             contributionHelper.releaseLocks(contributions);
             throw new DeploymentException("Error deploying composite", e);
-        } catch (WriteException e) {
-            // release the contribution locks if there was an error
-            contributionHelper.releaseLocks(contributions);
-            throw new DeploymentException("Error deploying composite", e);
         } catch (PolicyResolutionException e) {
             // release the contribution locks if there was an error
             contributionHelper.releaseLocks(contributions);
@@ -615,13 +602,9 @@ public abstract class AbstractDomain implements Domain {
             throw new DeploymentException("Error deploying components", e);
         }
 
-        try {
-            // TODO this should happen after nodes have deployed the components and wires
-            collector.markAsProvisioned(domain);
-            logicalComponentManager.replaceRootComponent(domain);
-        } catch (WriteException e) {
-            throw new DeploymentException("Error applying deployment", e);
-        }
+        // TODO this should happen after nodes have deployed the components and wires
+        collector.markAsProvisioned(domain);
+        logicalComponentManager.replaceRootComponent(domain);
     }
 
     /**
