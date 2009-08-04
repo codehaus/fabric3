@@ -39,7 +39,6 @@ package org.fabric3.java.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
@@ -97,9 +96,14 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
 
         IntrospectionContext newContext = new DefaultIntrospectionContext(context, typeMapping);
-        classWalker.walk(implementation, implClass, newContext);
 
-        heuristic.applyHeuristics(implementation, implClass, newContext);
+        try {
+            classWalker.walk(implementation, implClass, newContext);
+            heuristic.applyHeuristics(implementation, implClass, newContext);
+        } catch (NoClassDefFoundError e) {
+            // May be thrown as a result of a referenced class not being on the classpath
+            context.addError(new ImplementationArtifactNotFound(implClassName, e.getMessage()));
+        }
         if (newContext.hasErrors()) {
             context.addErrors(newContext.getErrors());
         }
