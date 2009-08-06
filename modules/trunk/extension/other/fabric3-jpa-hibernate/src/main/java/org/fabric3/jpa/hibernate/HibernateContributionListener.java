@@ -77,7 +77,8 @@ public class HibernateContributionListener implements ContributionServiceListene
         for (Import imprt : manifest.getImports()) {
             if (imprt instanceof JavaImport) {
                 JavaImport contributionImport = (JavaImport) imprt;
-                if (contributionImport.getPackageInfo().getName().startsWith("org.hibernate")) {
+                String name = contributionImport.getPackageInfo().getName();
+                if (name.equals("org.hibernate.*")) {
                     // already explicitly imported, return
                     return;
                 } else if (contributionImport.getPackageInfo().getName().startsWith("javax.persistence")) {
