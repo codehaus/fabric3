@@ -149,7 +149,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroSourceDe
             // update the classloader
             updateClassLoader(seiClass);
 
-            BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
+            BindingID bindingId;
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents);
 
             File generatedWsdl = null;
@@ -158,7 +158,8 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroSourceDe
             ClassLoader old = Thread.currentThread().getContextClassLoader();
             try {
                 Thread.currentThread().setContextClassLoader(seiClass.getClassLoader());
-                if (!source.getPolicies().isEmpty() ||  !source.getMappings().isEmpty()) {
+                bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
+                if (!source.getPolicies().isEmpty() || !source.getMappings().isEmpty()) {
                     // if policy is configured for the endpoint, generate a WSDL with the policy attachments
                     GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, bindingId, false);
                     generatedWsdl = artifacts.getWsdl();
