@@ -38,6 +38,7 @@
 package org.fabric3.jpa.hibernate;
 
 import java.util.Properties;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.hibernate.HibernateException;
@@ -66,4 +67,7 @@ public final class F3HibernateTransactionManagerLookup implements TransactionMan
         return null;
     }
 
+    public Object getTransactionIdentifier(Transaction transaction) {
+        return transaction;
+    }
 }

@@ -56,11 +56,14 @@ import org.fabric3.spi.contribution.manifest.PackageInfo;
  */
 public class HibernateContributionListener implements ContributionServiceListener {
     private JavaImport hibernateImport;
+    private JavaImport javassistImport;
     private boolean noImplicitImport;
 
     public HibernateContributionListener() {
         PackageInfo hibernateIinfo = new PackageInfo("org.hibernate.*");
         hibernateImport = new JavaImport(hibernateIinfo);
+        PackageInfo javassistInfo = new PackageInfo("javassist.util.proxy");
+        javassistImport = new JavaImport(javassistInfo);
     }
 
     @Property(required = false)
@@ -72,23 +75,33 @@ public class HibernateContributionListener implements ContributionServiceListene
         if (noImplicitImport) {
             return;
         }
-        ContributionManifest manifest = contribution.getManifest();
         boolean jpaImported = false;
+        boolean hibernateImported = false;
+        boolean javassistImported = false;
+        ContributionManifest manifest = contribution.getManifest();
         for (Import imprt : manifest.getImports()) {
             if (imprt instanceof JavaImport) {
                 JavaImport contributionImport = (JavaImport) imprt;
                 String name = contributionImport.getPackageInfo().getName();
                 if (name.equals("org.hibernate.*")) {
-                    // already explicitly imported, return
-                    return;
+                    // already explicitly imported
+                    hibernateImported = true;
+                } else if (name.startsWith("javassist.")) {
+                    // already explicitly imported
+                    javassistImported = true;
                 } else if (contributionImport.getPackageInfo().getName().startsWith("javax.persistence")) {
                     jpaImported = true;
                 }
             }
         }
         if (jpaImported) {
-            // JPA is imported, add implicit Hibernate import
-            manifest.addImport(hibernateImport);
+            // JPA is imported, add implicit Hibernate and Javasssist imports
+            if (!hibernateImported) {
+                manifest.addImport(hibernateImport);
+            }
+            if (!javassistImported) {
+                manifest.addImport(javassistImport);
+            }
         }
     }
 
