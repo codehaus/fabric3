@@ -33,11 +33,12 @@
     <modules>
         <module>fabric3-contribution-plugin</module>
         <module>fabric3-webapp-plugin</module>
+        <module>fabric3-assembly-plugin</module>
     </modules>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-plugins-parent-pom-0.7</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/fabric3-plugins-parent-pom-0.7</developerConnection>
-    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/fabric3-plugins-parent-pom-0.7</url>
+    <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk</developerConnection>
+    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/plugins/trunk</url>
   </scm>
 </project>
