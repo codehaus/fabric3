@@ -82,12 +82,20 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     private static final String RUNTIME_TOMCAT = "tomcat";
 
     /**
-     * The directory where the webapp is built.
+     * Directory where the runtime image is built.
      *
      * @parameter expression="${project.build.directory}"
      * @required
      */
     public File buildDirectory;
+
+    /**
+     * Project source directory.
+     *
+     * @parameter expression="${project.build.sourceDirectory}"
+     * @required
+     */
+    public File sourceDirectory;
 
     /**
      * Used to look up Artifacts in the remote repository.
@@ -153,6 +161,13 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
      */
     public Dependency[] extensions = new Dependency[0];
 
+    /**
+     * Set of configuration files
+     *
+     * @parameter
+     */
+    public ConfigFile[] configurationFiles = new ConfigFile[0];
+
     public Fabric3RuntimeAssemblyMojo() throws ParserConfigurationException {
     }
 
@@ -174,6 +189,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         extractRuntime("org.codehaus.fabric3", artifactId, baseDirectory);
         installProfiles(rootDirectory);
         installExtensions(rootDirectory);
+        installConfiguration(rootDirectory);
     }
 
     /**
@@ -264,6 +280,28 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         }
     }
 
+
+    private void installConfiguration(File rootDirectory) throws MojoExecutionException {
+        for (ConfigFile file : configurationFiles) {
+            InputStream sourceStream = null;
+            OutputStream targetStream = null;
+            try {
+                // main directory is parent of the source directory
+                File source = new File(sourceDirectory.getParent(), file.getSource());
+                File targetDirectory = new File(rootDirectory, file.getDestination());
+                targetDirectory.mkdirs();
+                sourceStream = new BufferedInputStream(new FileInputStream(source));
+                File targetFile = new File(targetDirectory, source.getName());
+                targetStream = new BufferedOutputStream(new FileOutputStream(targetFile));
+                copy(sourceStream, targetStream);
+            } catch (IOException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } finally {
+                close(targetStream);
+                close(sourceStream);
+            }
+        }
+    }
 
     /**
      * Extracts the contents of a zip file to a target directory.
