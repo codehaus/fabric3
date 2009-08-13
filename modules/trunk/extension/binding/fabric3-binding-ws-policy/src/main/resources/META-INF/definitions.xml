@@ -149,6 +149,17 @@ http://131.107.72.15/ilab/WSPolicy/WS-Policy-Scenarios.doc
                     <sp:MustSupportRefIssuerSerial/>
                 </wsp:Policy>
             </sp:Wss10>
+            <wsp:ExactlyOne>
+                <wsp:All>
+                    <sp:SignedParts>
+                        <sp:Body/>
+                    </sp:SignedParts>
+                    <sp:EncryptedParts>
+                        <sp:Body/>
+                    </sp:EncryptedParts>
+                </wsp:All>
+            </wsp:ExactlyOne>
+
         </wsp:Policy>
     </policySet>
 
