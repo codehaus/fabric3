@@ -146,18 +146,16 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="sca-spec" />
+    <orderEntry type="module" module-name="sca-spec" />
     <orderEntry type="module-library">
-      <library name="org.hibernate:hibernate:3.2.4ga">
+      <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/hibernate/hibernate/3.2.4.ga/hibernate-3.2.4.ga.jar!/" />
+          <root url="jar://$M2_REPO$/org/hibernate/hibernate-core/3.3.0.SP1/hibernate-core-3.3.0.SP1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/hibernate/hibernate/3.2.4.ga/hibernate-3.2.4.ga-sources.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="sca-spec" />
   </component>
 </module>
 

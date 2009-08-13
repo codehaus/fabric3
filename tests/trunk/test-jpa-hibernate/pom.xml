@@ -54,8 +54,8 @@
 
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.4.ga</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>3.3.0.SP1</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.transaction</groupId>
