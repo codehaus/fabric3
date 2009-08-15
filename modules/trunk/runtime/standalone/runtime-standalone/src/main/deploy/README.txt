@@ -1,1 +1,1 @@
-Copy your composites here to be deployed.
+Copy contributions here to be deployed.

@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>${sca.api.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -37,7 +37,11 @@
         <module>runtime</module>
         <module>admin</module>
     </modules>
-	
+    
+    <properties>
+        <sca.api.version>0.5</sca.api.version>
+    </properties>
+    
     <repositories>
         <repository>
             <id>java.net</id>
