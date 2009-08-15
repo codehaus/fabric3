@@ -36,6 +36,7 @@
         <module>kernel</module>
         <module>runtime</module>
         <module>admin</module>
+        <module>profile</module>
     </modules>
     
     <properties>
