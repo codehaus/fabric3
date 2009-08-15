@@ -16,7 +16,6 @@
         <version>1.2-SNAPSHOT</version>
     </parent>
     <artifactId>profile-timer</artifactId>
-    <version>1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Timer Extension Pofile</name>
     <description>Assembly distribution for the Fabric3 timer extension.</description>
@@ -39,32 +38,32 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-timer-spi</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-tx</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-tx-jotm</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xapool</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-timer</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-timer-quartz</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.resource</groupId>
@@ -98,9 +97,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/profile-timer</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/profile-timer</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/profile-timer</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/profile/profile-timer</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/profile/profile-timer</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/profile/profile-timer</url>
     </scm>
 
 </project>

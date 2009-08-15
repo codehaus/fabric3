@@ -16,7 +16,6 @@
         <version>1.2-SNAPSHOT</version>
     </parent>
     <artifactId>profile-web</artifactId>
-    <version>1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Web Extension Pofile</name>
     <description>Assembly distribution for Fabric3 Web Extensions.</description>
@@ -39,27 +38,27 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-spi</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-jetty</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
  	<dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-web</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
 	</dependency>  		
 	<dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-contribution-war</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
 	</dependency>  		
 	<dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-contribution-scanner-war</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
 	</dependency>  		
    </dependencies>
 
@@ -87,9 +86,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/proile-web</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/proile-web</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/proile-web</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/profile/proile-web</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/profile/proile-web</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/profile/proile-web</url>
     </scm>
     
 </project>

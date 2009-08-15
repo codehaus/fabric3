@@ -16,7 +16,6 @@
         <version>1.2-SNAPSHOT</version>
     </parent>
     <artifactId>profile-net</artifactId>
-    <version>1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Net Binding Profile</name>
     <description>Assembly distribution for Fabric3 Net Binding Extensions.</description>
@@ -40,32 +39,32 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-net</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-databinding-jaxb</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jaxb</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-databinding-json</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-databinding-hessian</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
 
@@ -95,9 +94,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/profile-net</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/profile-net</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/profile-net</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/profile/profile-net</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/profile/profile-net</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/profile/profile-net</url>
     </scm>
 
 </project>

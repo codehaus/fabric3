@@ -34,12 +34,6 @@ Public License. See the accompanying license file for details.
              </includes>
             <outputDirectory>/repository</outputDirectory>
         </dependencySet>
-       <!-- <dependencySet>
-            <includes>
-                <include>org.codehaus.fabric3:fabric3-ftp-api</include>
-             </includes>
-            <outputDirectory>/host</outputDirectory>
-        </dependencySet> -->
   </dependencySets>
     
 </assembly>

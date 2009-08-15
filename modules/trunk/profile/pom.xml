@@ -29,7 +29,14 @@
     <description>Fabric3 Profile Parent POM.</description>
 	<packaging>pom</packaging>
 
-	<modules>
-		
-	</modules>
+    <modules>
+        <module>profile-timer</module>
+        <module>profile-ws</module>
+        <module>profile-web</module>
+        <module>profile-rs</module>
+        <module>profile-jpa</module>
+        <module>profile-jms</module>
+        <module>profile-ftp</module>
+        <module>profile-net</module>
+    </modules>
 </project>
