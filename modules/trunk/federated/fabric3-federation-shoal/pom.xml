@@ -26,14 +26,14 @@ Public License. See the accompanying license file for details.
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-federation-deployment</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -51,7 +51,7 @@ Public License. See the accompanying license file for details.
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-install-shoal</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
