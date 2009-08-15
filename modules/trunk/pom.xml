@@ -32,7 +32,6 @@
 
     <modules>
         <module>extension</module>
-        <module>federated</module>
         <module>kernel</module>
         <module>runtime</module>
         <module>admin</module>

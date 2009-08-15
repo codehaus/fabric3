@@ -12,7 +12,7 @@ Public License. See the accompanying license file for details.
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric3-federated-parent-pom</artifactId>
+        <artifactId>fabric3-extension-federated-parent-pom</artifactId>
         <version>1.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
@@ -78,9 +78,9 @@ Public License. See the accompanying license file for details.
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-federation-shoal</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-federation-shoal</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/federated/fabric3-federation-shoal</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/federated/fabric3-federation-shoal</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/federated/fabric3-federation-shoal</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/federated/fabric3-federation-shoal</url>
 
     </scm>
 </project>

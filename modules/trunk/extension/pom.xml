@@ -34,5 +34,6 @@
 		<module>implementation</module>
 		<module>interface</module>
 		<module>other</module>
+        <module>federated</module>
 	</modules>
 </project>
