@@ -51,6 +51,7 @@ import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
+import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
@@ -154,7 +155,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
                                                                         xmlInputFactory);
 
             Method[] methods = seiClass.getDeclaredMethods();
-            SecurityConfiguration configuration = target.getConfiguration();
+            SecurityConfiguration securityConfiguration = target.getSecurityConfiguration();
+            ConnectionConfiguration connectionConfiguration = target.getConnectionConfiguration();
             for (InvocationChain chain : wire.getInvocationChains()) {
                 Method method = null;
                 for (Method meth : methods) {
@@ -164,7 +166,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
                     }
                 }
                 boolean oneWay = chain.getPhysicalOperation().isOneWay();
-                MetroTargetInterceptor targetInterceptor = new MetroTargetInterceptor(proxyFactory, method, oneWay, configuration);
+                MetroTargetInterceptor targetInterceptor =
+                        new MetroTargetInterceptor(proxyFactory, method, oneWay, securityConfiguration, connectionConfiguration);
                 chain.addInterceptor(targetInterceptor);
             }
         } catch (ClassNotFoundException e) {

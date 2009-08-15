@@ -52,6 +52,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
+import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.MetroSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
@@ -187,9 +188,19 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy, serviceClass);
 
         // obtain security information 
-        SecurityConfiguration configuration = createSecurityConfiguration(definition);
+        SecurityConfiguration securityConfiguration = createSecurityConfiguration(definition);
 
-        return new MetroTargetDefinition(endpointDefinition, wsdlLocation, interfaze, intentNames, policyExpressions, mappings, configuration);
+        // obtain connection information
+        ConnectionConfiguration connectionConfiguration = createConnectionConfiguration(definition);
+
+        return new MetroTargetDefinition(endpointDefinition,
+                                         wsdlLocation,
+                                         interfaze,
+                                         intentNames,
+                                         policyExpressions,
+                                         mappings,
+                                         securityConfiguration,
+                                         connectionConfiguration);
     }
 
     /**
@@ -230,15 +241,54 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
      */
     private SecurityConfiguration createSecurityConfiguration(WsBindingDefinition definition) {
         SecurityConfiguration configuration = null;
-        Map<String, String> securityConfiguration = definition.getConfiguration();
-        if (securityConfiguration != null) {
-            String alias = securityConfiguration.get("alias");
+        Map<String, String> configProperties = definition.getConfiguration();
+        if (configProperties != null) {
+            String alias = configProperties.get("alias");
             if (alias != null) {
                 configuration = new SecurityConfiguration(alias);
             } else {
-                String username = securityConfiguration.get("username");
-                String password = securityConfiguration.get("password");
+                String username = configProperties.get("username");
+                String password = configProperties.get("password");
                 configuration = new SecurityConfiguration(username, password);
+            }
+        }
+        return configuration;
+    }
+
+    /**
+     * Parses HTTP connection information and creates a connection configuration.
+     *
+     * @param definition the binding definition
+     * @return the HTTP configuration
+     * @throws InvalidConfigurationException if a configuration value is invalid
+     */
+    private ConnectionConfiguration createConnectionConfiguration(WsBindingDefinition definition) throws InvalidConfigurationException {
+        ConnectionConfiguration configuration = new ConnectionConfiguration();
+        Map<String, String> configProperties = definition.getConfiguration();
+        if (configProperties != null) {
+            String connectTimeout = configProperties.get("connectTimeout");
+            if (connectTimeout != null) {
+                try {
+                    configuration.setConnectTimeout(Integer.parseInt(connectTimeout));
+                } catch (NumberFormatException e) {
+                    throw new InvalidConfigurationException("Invalid connectTimeout", e);
+                }
+            }
+            String requestTimeout = configProperties.get("requestTimeout");
+            if (requestTimeout != null) {
+                try {
+                    configuration.setRequestTimeout(Integer.parseInt(requestTimeout));
+                } catch (NumberFormatException e) {
+                    throw new InvalidConfigurationException("Invalid requestTimeout", e);
+                }
+            }
+            String clientStreamingChunkSize = configProperties.get("clientStreamingChunkSize");
+            if (clientStreamingChunkSize != null) {
+                try {
+                    configuration.setClientStreamingChunkSize(Integer.parseInt(clientStreamingChunkSize));
+                } catch (NumberFormatException e) {
+                    throw new InvalidConfigurationException("Invalid clientStreamingChunkSize", e);
+                }
             }
         }
         return configuration;

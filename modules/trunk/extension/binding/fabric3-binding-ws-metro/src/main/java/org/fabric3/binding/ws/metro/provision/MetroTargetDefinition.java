@@ -58,19 +58,21 @@ public class MetroTargetDefinition extends PhysicalTargetDefinition {
     private String interfaze;
     private List<QName> intents;
     private List<PolicyExpressionMapping> mappings;
-    private SecurityConfiguration configuration;
+    private SecurityConfiguration securityConfiguration;
+    private ConnectionConfiguration connectionConfiguration;
     private List<Element> policies;
 
     /**
      * Constructor.
      *
-     * @param endpointDefinition endpoint metadata
-     * @param wsdlLocation       optional URL to the WSDL location
-     * @param interfaze          the service contract name
-     * @param intents            intents configured at the endpoint level that are provided natively by the Metro
-     * @param policies           policy expressions to be attached to the endpoint
-     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to generate client WSDL.
-     * @param configuration      the security configuration
+     * @param endpointDefinition      endpoint metadata
+     * @param wsdlLocation            optional URL to the WSDL location
+     * @param interfaze               the service contract name
+     * @param intents                 intents configured at the endpoint level that are provided natively by the Metro
+     * @param policies                policy expressions to be attached to the endpoint
+     * @param mappings                mappings of policy expressions to the operations they are attached to. Used to generate client WSDL.
+     * @param securityConfiguration   the security configuration or null if security is not configured
+     * @param connectionConfiguration the HTTP configuration or null if defaults should be used
      */
     public MetroTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
                                  URL wsdlLocation,
@@ -78,14 +80,16 @@ public class MetroTargetDefinition extends PhysicalTargetDefinition {
                                  List<QName> intents,
                                  List<Element> policies,
                                  List<PolicyExpressionMapping> mappings,
-                                 SecurityConfiguration configuration) {
+                                 SecurityConfiguration securityConfiguration,
+                                 ConnectionConfiguration connectionConfiguration) {
         this.endpointDefinition = endpointDefinition;
         this.wsdlLocation = wsdlLocation;
         this.interfaze = interfaze;
         this.intents = intents;
         this.policies = policies;
         this.mappings = mappings;
-        this.configuration = configuration;
+        this.securityConfiguration = securityConfiguration;
+        this.connectionConfiguration = connectionConfiguration;
     }
 
     /**
@@ -147,7 +151,16 @@ public class MetroTargetDefinition extends PhysicalTargetDefinition {
      *
      * @return the security configuration
      */
-    public SecurityConfiguration getConfiguration() {
-        return configuration;
+    public SecurityConfiguration getSecurityConfiguration() {
+        return securityConfiguration;
+    }
+
+    /**
+     * Returns the HTTP connection configuration.
+     *
+     * @return the HTTP connection configuration
+     */
+    public ConnectionConfiguration getConnectionConfiguration() {
+        return connectionConfiguration;
     }
 }
