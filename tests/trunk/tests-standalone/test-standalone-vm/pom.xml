@@ -24,19 +24,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-api</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-admin-api</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-admin-impl</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

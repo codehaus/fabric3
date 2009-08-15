@@ -11,9 +11,9 @@ Public License. See the accompanying license file for details.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>5</version>
+        <groupId>org.codehaus.fabric3.tests</groupId>
+        <artifactId>ci</artifactId>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>test-ds-extension</artifactId>
@@ -26,12 +26,12 @@ Public License. See the accompanying license file for details.
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>${sca.api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xapool</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>

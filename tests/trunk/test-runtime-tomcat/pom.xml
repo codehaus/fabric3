@@ -8,10 +8,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
-    </parent>
+         <groupId>org.codehaus.fabric3.tests</groupId>
+         <artifactId>ci</artifactId>
+         <version>0.1-SNAPSHOT</version>
+     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>test-runtime-tomcat</artifactId>
     <version>0.1-SNAPSHOT</version>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
         </dependency>
 
         <dependency>
@@ -80,7 +80,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>1.2-SNAPSHOT</version>
+                <version>${fabric3.version}</version>
                 <executions>
                     <execution>
                         <id>fabric3-war</id>
@@ -91,38 +91,38 @@
                 </executions>
                 <configuration>
                     <!-- use the latest version of the runtime -->
-                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>${fabric3.version}</runtimeVersion>
 
                     <extensions>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-hibernate</artifactId>
-                            <version>1.2-SNAPSHOT</version>
+                            <version>${fabric3.version}</version>
                         </dependency>
                         <!-- JPA Core Components -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-spi</artifactId>
-                            <version>1.2-SNAPSHOT</version>
+                            <version>${fabric3.version}</version>
                         </dependency>
                         <!-- Transaction Manager Using JOTM -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>1.2-SNAPSHOT</version>
+                            <version>${fabric3.version}</version>
                         </dependency>
                         <!-- Declarative Transaction Policies -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>1.2-SNAPSHOT</version>
+                            <version>${fabric3.version}</version>
                         </dependency>
                         <!-- JSR 250 Resource Support and Datasource Management -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
-                            <version>1.2-SNAPSHOT</version>
+                            <version>${fabric3.version}</version>
                         </dependency>
                         <!-- Test Extension to Install the Datasource -->
                         <dependency>

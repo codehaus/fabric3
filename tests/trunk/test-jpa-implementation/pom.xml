@@ -9,10 +9,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>5</version>
+   <parent>
+        <groupId>org.codehaus.fabric3.tests</groupId>
+        <artifactId>ci</artifactId>
+        <version>0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.codehaus.fabric3.tests</groupId>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>${sca.api.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -43,13 +43,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-spi</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-api</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -62,15 +62,15 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>1.2-SNAPSHOT</version>
+                <version>${fabric3.version}</version>
                 <configuration>
-                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>${fabric3.version}</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
                     <profiles>
                         <profile>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>profile-jpa</artifactId>
-                            <version>1.2-SNAPSHOT</version>
+                            <version>${fabric3.version}</version>
                         </profile>
                     </profiles>
                     <extensions>

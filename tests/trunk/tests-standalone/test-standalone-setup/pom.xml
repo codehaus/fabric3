@@ -39,7 +39,7 @@
                                     <artifactId>runtime-standalone</artifactId>
                                     <classifier>bin</classifier>
                                     <type>zip</type>
-                                    <version>1.2-SNAPSHOT</version>
+                                    <version>${fabric3.version}</version>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/assembly</outputDirectory>
                                 </artifactItem>

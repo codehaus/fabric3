@@ -17,9 +17,14 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>5</version>
+    </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>ci</artifactId>
-    <version>SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Fabric3 Continuous Integration Tests</name>
@@ -28,6 +33,11 @@
     <build>
         <defaultGoal>verify</defaultGoal>
     </build>
+
+    <properties>
+        <sca.api.version>0.5</sca.api.version>
+        <fabric3.version>1.2-SNAPSHOT</fabric3.version>
+    </properties>
     
     <profiles>
         <!-- Default profile containing modules that should always be run -->

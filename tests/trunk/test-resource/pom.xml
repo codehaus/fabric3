@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-api</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${fabric3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.tests</groupId>
@@ -44,14 +44,14 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <!-- generally this should point to the latest plugin and kernel version -->
-                <version>1.2-SNAPSHOT</version>
+                <version>${fabric3.version}</version>
                 <configuration>
-                    <runtimeVersion>1.2-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>${fabric3.version}</runtimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
-                            <version>1.2-SNAPSHOT</version>
+                            <version>${fabric3.version}</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3.tests</groupId>
