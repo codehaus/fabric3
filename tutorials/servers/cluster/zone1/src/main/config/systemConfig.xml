@@ -1,0 +1,22 @@
+<config>
+    <web.server>
+        <http port="8181-8281"/>
+    </web.server>
+    <datasource>
+       <!-- 
+       <driver>com.mysql.jdbc.Driver</driver>
+       <url>jdbc:mysql://localhost/bigbank</url>
+       <user>bigbank</user>
+       <password>bigbank</password> -->
+       <url>jdbc:h2:mem:loanapplication;DB_CLOSE_DELAY=-1</url>
+       <driver>org.h2.Driver</driver>
+        <keys>LoanApplicationDS</keys>
+    </datasource>
+    <federation>
+        <transport>
+            <http>localhost:8181</http>
+        </transport>
+        <zoneName>zone1</zoneName>
+        <runtimeName>runtime1</runtimeName>
+    </federation>
+</config>
