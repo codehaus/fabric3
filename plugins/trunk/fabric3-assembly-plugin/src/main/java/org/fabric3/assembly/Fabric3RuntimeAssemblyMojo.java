@@ -204,7 +204,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
         String version = runtimeVersion;
         Artifact runtimeArtifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, "zip", "bin");
         try {
-            getLog().info("Downloading the Fabric3 runtime");
+            getLog().info("Installing the Fabric3 runtime");
             resolver.resolve(runtimeArtifact, remoteRepositories, localRepository);
             File source = runtimeArtifact.getFile();
             extract(source, baseDirectory);
@@ -226,7 +226,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             String groupId = profile.getGroupId();
             String artifactId = profile.getArtifactId();
             String version = profile.getVersion();
-            getLog().info("Downloading profile: " + groupId + ":" + artifactId);
+            getLog().info("Installing profile: " + groupId + ":" + artifactId);
             Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, "zip", "bin");
             try {
                 resolver.resolve(artifact, remoteRepositories, localRepository);
@@ -253,7 +253,7 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
             String version = extension.getVersion();
             String type = extension.getType();
             String classifier = extension.getClassifier();
-            getLog().info("Downloading extension: " + groupId + ":" + artifactId);
+            getLog().info("Installing extension: " + groupId + ":" + artifactId);
             Artifact artifact = artifactFactory.createArtifactWithClassifier(groupId, artifactId, version, type, classifier);
             try {
                 resolver.resolve(artifact, remoteRepositories, localRepository);
