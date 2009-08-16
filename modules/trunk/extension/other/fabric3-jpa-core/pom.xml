@@ -87,13 +87,6 @@ Public License. See the accompanying license file for details.
         </dependency>
 
         <dependency>
-            <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa-persistence-jdbc</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
             <version>${project.version}</version>
