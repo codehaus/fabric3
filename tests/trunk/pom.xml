@@ -37,6 +37,7 @@
     <properties>
         <sca.api.version>0.5</sca.api.version>
         <fabric3.version>1.2-SNAPSHOT</fabric3.version>
+        <jaxb.api.version>2.1</jaxb.api.version>
     </properties>
     
     <profiles>
