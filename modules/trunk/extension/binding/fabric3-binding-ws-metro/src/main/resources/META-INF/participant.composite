@@ -39,7 +39,7 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultBindingIdResolver"/>
     </component>
 
-    <component name="F3SecurityEnvironmfent">
+    <component name="F3SecurityEnvironment">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.security.F3SecurityEnvironment"/>
         <property name="keyStoreLocation" source="$systemConfig/security/keystore"/>
         <property name="keyStorePassword" source="$systemConfig/security/keystore.password"/>
