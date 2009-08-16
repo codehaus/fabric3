@@ -111,7 +111,7 @@
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <version>3.2.2</version>
+            <version>${woodstox.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

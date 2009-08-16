@@ -41,6 +41,7 @@
     <properties>
         <sca.api.version>0.5</sca.api.version>
         <stax.api.version>1.0</stax.api.version>
+        <woodstox.version>3.2.9</woodstox.version>
     </properties>
     
     <repositories>
