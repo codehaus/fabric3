@@ -105,9 +105,11 @@
         <defaultGoal>install</defaultGoal>
         <pluginManagement>
             <plugins>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>1.2-SNAPSHOT</version>
+                <plugin>
+                    <groupId>org.codehaus.fabric3</groupId>
+                    <artifactId>fabric3-contribution-plugin</artifactId>
+                    <version>1.2-SNAPSHOT</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
