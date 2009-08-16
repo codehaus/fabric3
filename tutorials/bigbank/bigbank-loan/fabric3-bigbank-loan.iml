@@ -118,15 +118,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="org.codehaus.fabric3:fabric3-api:0.5">
+      <library name="org.codehaus.fabric3:fabric3-api:1.2">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.8-SNAPSHOT/fabric3-api-0.8-SNAPSHOT.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/1.2-SNAPSHOT/fabric3-api-1.2-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.8-SNAPSHOT/fabric3-api-0.8-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/1.2-SNAPSHOT/fabric3-api-1.2-SNAPSHOT-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.8-SNAPSHOT/fabric3-api-0.8-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/1.2-SNAPSHOT/fabric3-api-1.2-SNAPSHOT-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

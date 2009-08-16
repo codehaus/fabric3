@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
-        <version>4</version>
+        <version>5</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorials-parent-pom</artifactId>
@@ -29,6 +29,11 @@
     <name>Fabric3 Tutorials Parent POM</name>
     <description>Fabric3 Tutorials Parent POM.</description>
     <packaging>pom</packaging>
+
+    <properties>
+        <sca.api.version>0.5</sca.api.version>
+        <fabric3.version>1.2-SNAPSHOT</fabric3.version>
+    </properties>
 
     <modules>
         <module>bigbank</module>

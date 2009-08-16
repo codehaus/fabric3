@@ -79,19 +79,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.3-SNPASHOT">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.3-SNAPSHOT/sca-api-r1.0-0.3-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2/sca-api-r1.0-0.2-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2/sca-api-r1.0-0.2-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="junit:junit:3.8.2">
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
@@ -101,6 +88,17 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.5/sca-api-r1.0-0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.5/sca-api-r1.0-0.5-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

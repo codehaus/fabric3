@@ -20,11 +20,10 @@
     <parent>
         <groupId>org.codehaus.fabric3.tutorials</groupId>
         <artifactId>bigbank-parent-pom</artifactId>
-        <version>1.1</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-bigbank-webclient</artifactId>
-    <version>1.1</version>
     <packaging>war</packaging>
     <name>Fabric3 BigBank Web Client</name>
     <description>Fabric3 BigBank web-based client.</description>
@@ -47,16 +46,16 @@
         <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
             <artifactId>bigbank-api</artifactId>
-            <version>1.1</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.4</version>
+            <version>${sca.api.version}</version>
         </dependency>
         <dependency>
-            <groupId>jstl</groupId>
+            <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.1.2</version>
         </dependency>

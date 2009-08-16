@@ -24,7 +24,6 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>bigbank-api</artifactId>
-    <version>1.2-SNAPSHOT</version>
     <name>Fabric3 BigBank API Classes</name>
     <description>Fabric3 BigBank API Classes.</description>
 
@@ -63,7 +62,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.4</version>
+            <version>${sca.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

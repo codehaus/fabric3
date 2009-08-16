@@ -24,7 +24,6 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-webcalc</artifactId>
-    <version>1.2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Fabric3 Web Calculator</name>
     <description>Demonstrates creating a service and wiring it to a servlet.</description>
@@ -33,7 +32,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.4</version>
+            <version>${sca.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -43,17 +42,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <build>
-        <finalName>${artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
