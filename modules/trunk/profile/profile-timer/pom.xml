@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric3-profiles-parent-pom</artifactId>
+        <artifactId>fabric3-profile-parent-pom</artifactId>
         <version>1.2-SNAPSHOT</version>
     </parent>
     <artifactId>profile-timer</artifactId>
