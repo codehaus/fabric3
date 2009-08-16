@@ -40,6 +40,7 @@
     
     <properties>
         <sca.api.version>0.5</sca.api.version>
+        <stax.api.version>1.0</stax.api.version>
     </properties>
     
     <repositories>

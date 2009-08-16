@@ -48,8 +48,7 @@ Public License. See the accompanying license file for details.
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
-            <!-- use version 1.0 as it is the version bundled in JDK 6 -->
-            <version>1.0</version>
+            <version>${stax.api.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-net</groupId>
