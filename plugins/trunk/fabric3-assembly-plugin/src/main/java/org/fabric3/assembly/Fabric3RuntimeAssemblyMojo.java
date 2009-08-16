@@ -281,6 +281,12 @@ public class Fabric3RuntimeAssemblyMojo extends AbstractMojo {
     }
 
 
+    /**
+     * Installs configuration files to the server image.
+     *
+     * @param rootDirectory the top-level runtime image directory
+     * @throws MojoExecutionException if there is an error during installation
+     */
     private void installConfiguration(File rootDirectory) throws MojoExecutionException {
         for (ConfigFile file : configurationFiles) {
             InputStream sourceStream = null;
