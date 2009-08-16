@@ -33,6 +33,10 @@
     <properties>
         <sca.api.version>0.5</sca.api.version>
         <fabric3.version>1.2-SNAPSHOT</fabric3.version>
+        <jaxb.version>2.1</jaxb.version>
+        <web.services.api.version>2.0-b11</web.services.api.version>
+        <servlet.api.version>2.5</servlet.api.version>
+        <persistence.api.version>1.0</persistence.api.version>
     </properties>
 
     <modules>
@@ -63,6 +67,11 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/1</url>
+            <layout>legacy</layout>
         </repository>
     </repositories>
 
