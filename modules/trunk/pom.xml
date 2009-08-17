@@ -44,62 +44,6 @@
         <woodstox.version>3.2.9</woodstox.version>
         <jaxb.api.version>2.1</jaxb.api.version>
     </properties>
-    
-    <repositories>
-        <repository>
-            <id>java.net</id>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
-            <layout>legacy</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>apache-ws</id>
-            <name>Apache WS Zones</name>
-            <url>http://ws.zones.apache.org/repository/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <layout>legacy</layout>
-        </repository>
-        <repository>
-            <id>repository.codehaus.org</id>
-            <name>Fabric3 Releases</name>
-            <url>http://repository.codehaus.org/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>snapshots.repository.codehaus.org</id>
-            <name>Fabric3 Snapshots</name>
-            <url>http://snapshots.repository.codehaus.org/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>com.springsource.repository.bundles.release</id>
-            <name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/release</url>
-        </repository>
-
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository>
-    </repositories>
 
     <build>
         <defaultGoal>install</defaultGoal>
