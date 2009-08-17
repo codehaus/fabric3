@@ -37,7 +37,18 @@
 */
 package org.fabric3.jaxb.format;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import org.fabric3.spi.binding.format.ParameterEncoder;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
@@ -45,25 +56,25 @@ import junit.framework.TestCase;
 public class JAXBParameterEncoderFactoryTestCase extends TestCase {
 
     public void testSerializeDeserialize() throws Exception {
-//        PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
-//        operation.addParameter(Foo.class.getName());
-//        operation.setReturnType(Void.class.getName());
-//
-//        InvocationChain chain = EasyMock.createMock(InvocationChain.class);
-//        EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);
-//        List<InvocationChain> chains = new ArrayList<InvocationChain>();
-//        chains.add(chain);
-//        Wire wire = EasyMock.createMock(Wire.class);
-//        EasyMock.expect(wire.getInvocationChains()).andReturn(chains);
-//        EasyMock.replay(chain, wire);
-//
-//        Message message = new MessageImpl();
-//        message.setBody(new Object[]{new Foo()});
-//        JAXBParameterEncoderFactory factory = new JAXBParameterEncoderFactory();
-//        ParameterEncoder encoder = factory.getInstance(wire, getClass().getClassLoader());
-//        String serialized = encoder.encodeText(message);
-//        Object deserialized = encoder.decode("", serialized);
-//        assertTrue(deserialized instanceof Foo);
+        PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
+        operation.addParameter(Foo.class.getName());
+        operation.setReturnType(Void.class.getName());
+
+        InvocationChain chain = EasyMock.createMock(InvocationChain.class);
+        EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);
+        List<InvocationChain> chains = new ArrayList<InvocationChain>();
+        chains.add(chain);
+        Wire wire = EasyMock.createMock(Wire.class);
+        EasyMock.expect(wire.getInvocationChains()).andReturn(chains);
+        EasyMock.replay(chain, wire);
+
+        Message message = new MessageImpl();
+        message.setBody(new Object[]{new Foo()});
+        JAXBParameterEncoderFactory factory = new JAXBParameterEncoderFactory();
+        ParameterEncoder encoder = factory.getInstance(wire, getClass().getClassLoader());
+        String serialized = encoder.encodeText(message);
+        Object deserialized = encoder.decode("", serialized);
+        assertTrue(deserialized instanceof Foo);
     }
 
 }
