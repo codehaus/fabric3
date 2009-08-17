@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (C) 2009 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="urn:maven:org.codehaus.fabric3:boot"
+           name="TransformComposite"
+           autowire="true">
+
+    <component name="PushTransformerRegistry">
+        <f3-impl:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
+    </component>
+
+    <component name="PullTransformerRegistry">
+        <f3-impl:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
+    </component>
+
+    <component name="String2Boolean">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Boolean"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Byte">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Byte"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Short">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Short"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Integer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Integer"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Long">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Long"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Float">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Float"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Double">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Double"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2QName">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2QName"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Class">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Class"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Date">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Date"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Calendar">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Calendar"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2String">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2URI">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2URI"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2URL">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2URL"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2MapOfString2String">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfString2String"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2MapOfQname2Class">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfQName2Class"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2ListOfString">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.String2ListOfString"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2ListOfQName">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.String2ListOfQName"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Properties">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Properties"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+
+    <component name="Element2Stream">
+        <f3-impl:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
+    </component>
+    
+    <!--
+
+        <component name="Stream2Stream">
+            <f3-impl:implementation.system class="org.fabric3.transform.xml.Stream2Stream"/>
+            <reference name="registry" target="pushTransformerRegistry"/>
+        </component>
+
+        <component name="Stream2Element">
+            <f3-impl:implementation.system class="org.fabric3.transform.xml.Stream2Element"/>
+            <reference name="registry" target="pushTransformerRegistry"/>
+        </component>
+    -->
+
+</composite>

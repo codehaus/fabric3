@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (C) 2009 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="urn:fabric3.org:implementation"
+           name="MockImplementationExtension"
+           autowire="true">
+
+    <!-- Implementation loader -->
+    <component name="ImplementationMockLoader" f3-core:key="f3-impl:implementation.mock">
+        <f3-impl:implementation.system class="org.fabric3.mock.ImplementationMockLoader"/>
+    </component>
+
+    <!-- Component type loader -->
+    <component name="MockComponentTypeLoader">
+        <f3-impl:implementation.system class="org.fabric3.mock.MockComponentTypeLoaderImpl"/>
+    </component>
+
+    <!-- Generator -->
+    <component name="MockComponentGenerator" f3-core:key="org.fabric3.mock.ImplementationMock">
+        <f3-impl:implementation.system class="org.fabric3.mock.MockComponentGenerator"/>
+    </component>
+
+    <!-- Builder -->
+    <component name="MockComponentBuilder" f3-core:key="org.fabric3.mock.MockComponentDefinition">
+        <f3-impl:implementation.system class="org.fabric3.mock.MockComponentBuilder"/>
+    </component>
+
+    <!-- Target Wire attacher -->
+    <component name="MockTargetWireAttacher" f3-core:key="org.fabric3.mock.MockTargetDefinition">
+        <f3-impl:implementation.system class="org.fabric3.mock.MockTargetWireAttacher"/>
+    </component>
+
+    <!-- Source Wire attacher -->
+    <component name="MockSourceWireAttacher" f3-core:key="org.fabric3.mock.MockSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.mock.MockSourceWireAttacher"/>
+    </component>
+
+    <!-- IMock control -->
+    <component name="IMocksControlProxy">
+        <f3-impl:implementation.system class="org.fabric3.mock.IMocksControlProxy"/>
+    </component>
+
+</composite>
