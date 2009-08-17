@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (C) 2009 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="WsdlInterfaceExtension"
+           autowire="true">
+
+
+    <component name="WsdlInterfaceLoader" f3-core:key="sca:interface.wsdl">
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.loader.InterfaceWsdlLoader"/>
+    </component>
+
+    <component name="DefaultWsdlVersionChecker">
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.version.DefaultWsdlVersionChecker"/>
+    </component>
+
+    <component name="WSDLProcessorRegistryComponent">
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.WsdlProcessorRegistry"/>
+        <reference name="versionChecker" target="DefaultWsdlVersionChecker"/>
+    </component>
+
+    <component name="Wsdl11ProcessorComponent">
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl11Processor"/>
+        <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
+    </component>
+
+    <component name="Wsdl20ProcessorComponent">
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl20Processor"/>
+        <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
+    </component>
+
+</composite>

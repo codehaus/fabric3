@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (C) 2009 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="urn:fabric3.org:transaction"
+           name="XaPoolExtension"
+           autowire="true">
+
+    <!-- XAPool Datasource -->
+    <component name="XaPoolDataSource">
+        <f3-impl:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
+        <property name="driver" source="$systemConfig//datasource/driver"/>
+        <property name="url" source="$systemConfig//datasource/url"/>
+        <property name="dataSourceKeys" source="$systemConfig//datasource/keys"/>
+        <property name="user" source="$systemConfig//datasource/user"/>
+        <property name="password" source="$systemConfig//datasource/password"/>
+        <property name="minSize" source="$systemConfig//datasource/minSize"/>
+        <property name="maxSize" source="$systemConfig//datasource/maxSize"/>
+    </component>
+
+</composite>
