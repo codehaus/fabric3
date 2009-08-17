@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-profile-parent-pom</artifactId>
-        <version>1.2</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
     <artifactId>profile-web</artifactId>
     <packaging>pom</packaging>
@@ -86,9 +86,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.2/profile/proile-web</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.2/profile/proile-web</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-1.2/profile/proile-web</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/profile/proile-web</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/profile/proile-web</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/profile/proile-web</url>
     </scm>
     
 </project>
