@@ -13,13 +13,13 @@ Public License. See the accompanying license file for details.
               xmlns:databinding="urn:fabric3.org:databinding"
               xmlns:f3-core="urn:fabric3.org:core"
               f3-core:extension="true">
-    <import.java package="org.fabric3.spi.*" version="1.2"/>
-    <import.java package="javax.xml.bind" version="1.2"/>
-    <import.java package="javax.xml.bind.annotation" version="1.2"/>
-    <import.java package="javax.xml.bind.annotation.adaptors" version="1.2"/>
-    <import.java package="javax.xml.bind.attachment" version="1.2"/>
-    <import.java package="javax.xml.bind.helpers" version="1.2"/>
-    <import.java package="javax.xml.bind.util" version="1.2"/>
+    <import.java package="org.fabric3.spi.*" version="1.3"/>
+    <import.java package="javax.xml.bind" version="1.3"/>
+    <import.java package="javax.xml.bind.annotation" version="1.3"/>
+    <import.java package="javax.xml.bind.annotation.adaptors" version="1.3"/>
+    <import.java package="javax.xml.bind.attachment" version="1.3"/>
+    <import.java package="javax.xml.bind.helpers" version="1.3"/>
+    <import.java package="javax.xml.bind.util" version="1.3"/>
 
     <deployable composite="databinding:DataBindingJAXBExtension"/>
     <f3-core:provides name="jaxb"/>

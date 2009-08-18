@@ -13,8 +13,8 @@ Public License. See the accompanying license file for details.
               xmlns:ftp="urn:fabric3.org:ftp"
               xmlns:f3-core="urn:fabric3.org:core"
               f3-core:extension="true">
-    <import.java package="org.fabric3.host.work" version="1.2"/>
-    <import.java package="org.fabric3.ftp.api" version="1.2"/>
-    <import.java package="org.fabric3.ftp.spi" version="1.2"/>
+    <import.java package="org.fabric3.host.work" version="1.3"/>
+    <import.java package="org.fabric3.ftp.api" version="1.3"/>
+    <import.java package="org.fabric3.ftp.spi" version="1.3"/>
     <deployable composite="ftp:FtpServerExtension"/>
 </contribution>
