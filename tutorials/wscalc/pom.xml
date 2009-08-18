@@ -20,7 +20,7 @@
     <parent>
        <groupId>org.codehaus.fabric3.tutorials</groupId>
        <artifactId>fabric3-tutorials-parent-pom</artifactId>
-       <version>1.2-SNAPSHOT</version>
+       <version>1.2</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-wscalc</artifactId>

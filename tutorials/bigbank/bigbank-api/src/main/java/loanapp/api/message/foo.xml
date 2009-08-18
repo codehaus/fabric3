@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="DuplexService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:tns="http://tempuri.org/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+    <wsp:Policy wsu:Id="DuplexServiceEndpoint_policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+                    <wsrm:InactivityTimeout Milliseconds="600000"/>
+                    <wsrm:AcknowledgementInterval Milliseconds="200"/>
+                </wsrm:RMAssertion>
+                <cdp:CompositeDuplex xmlns:cdp="http://schemas.microsoft.com/net/2006/06/duplex"/>
+                <ow:OneWay xmlns:ow="http://schemas.microsoft.com/ws/2005/05/routing/policy"/>
+                <wsaw:UsingAddressing/>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://tempuri.org/Imports">
+            <xsd:import schemaLocation="http://localhost:8000/service?xsd=xsd0" namespace="http://tempuri.org/"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="IDuplexService_DoWork_InputMessage">
+        <wsdl:part name="parameters" element="tns:DoWork"/>
+    </wsdl:message>
+    <wsdl:portType msc:usingSession="true" name="IDuplexService">
+        <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="DoWork">
+            <wsdl:input wsaw:Action="http://tempuri.org/IDuplexService/DoWork" message="tns:IDuplexService_DoWork_InputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="DoWork">
+            <wsdl:output wsaw:Action="http://tempuri.org/IDuplexService/DoWork" message="tns:IDuplexService_DoWork_InputMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="DuplexServiceEndpoint" type="tns:IDuplexService">
+        <wsp:PolicyReference URI="#DuplexServiceEndpoint_policy"/>
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="DoWork">
+            <soap12:operation soapAction="http://tempuri.org/IDuplexService/DoWork" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="DoWork">
+            <soap12:operation soapAction="http://tempuri.org/IDuplexService/DoWork" style="document"/>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="DuplexService">
+        <wsdl:port name="DuplexServiceEndpoint" binding="tns:DuplexServiceEndpoint">
+            <soap12:address location="http://localhost:8000/service/DuplexService"/>
+            <wsa10:EndpointReference>
+                <wsa10:Address>http://localhost:8000/service/DuplexService</wsa10:Address>
+            </wsa10:EndpointReference>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
