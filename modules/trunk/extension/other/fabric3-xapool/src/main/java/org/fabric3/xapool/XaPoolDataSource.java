@@ -195,7 +195,7 @@ public class XaPoolDataSource implements DataSource {
         delegate.setMaxCon(maxSize);
 
         for (String dataSourceKey : dataSourceKeys) {
-            dataSourceRegistry.registerDataSource(dataSourceKey, this);
+            dataSourceRegistry.register(dataSourceKey, this);
         }
 
     }
