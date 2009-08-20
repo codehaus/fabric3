@@ -60,6 +60,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.event.Fabric3EventListener;
@@ -80,13 +81,15 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
 
     private EventService eventService;
     private HostInfo info;
+    private TransactionMonitor monitor;
     private TransactionManagerImp tm;
     private UserTransactionService uts;
     private Properties properties = new Properties();
 
-    public AtomikosTransactionManager(@Reference EventService eventService, @Reference HostInfo info) {
+    public AtomikosTransactionManager(@Reference EventService eventService, @Reference HostInfo info, @Monitor TransactionMonitor monitor) {
         this.eventService = eventService;
         this.info = info;
+        this.monitor = monitor;
     }
 
     @Init
@@ -105,6 +108,7 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
         String path = trxDir.getCanonicalPath();
         properties.setProperty(OUTPUT_DIR_PROPERTY_NAME, path);
         properties.setProperty(LOG_BASE_DIR_PROPERTY_NAME, path);
+        monitor.extensionStarted();
     }
 
     @Destroy
@@ -129,9 +133,9 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
             tm = (TransactionManagerImp) TransactionManagerImp.getTransactionManager();
             if (tm == null) {
                 uts = new UserTransactionServiceImp(properties);
-//                TSInitInfo info = uts.createTSInitInfo();
                 uts.init(properties);
                 tm = (TransactionManagerImp) TransactionManagerImp.getTransactionManager();
+                monitor.recoveryCompleted();
             }
         }
     }
