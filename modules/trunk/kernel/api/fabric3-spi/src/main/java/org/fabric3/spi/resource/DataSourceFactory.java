@@ -37,34 +37,17 @@
 */
 package org.fabric3.spi.resource;
 
-import javax.sql.DataSource;
-
 /**
  * @version $Rev$ $Date$
  */
-public interface DataSourceRegistry {
+public interface DataSourceFactory {
 
     /**
-     * Gets a named datasource from the registry.
+     * Creates and registers a datasource.
      *
-     * @param name the name of the datasource.
-     * @return Named datasource.
+     * @param configuration the datasource configuraion
+     * @throws DataSourceCreationException if an error is encountered registering a datasource
      */
-    DataSource getDataSource(String name);
+    void create(DataSourceConfiguration configuration) throws DataSourceCreationException;
 
-    /**
-     * Registers a datasource by name.
-     *
-     * @param name       the ame of the datasource.
-     * @param dataSource the datasource to be registered.
-     */
-    void register(String name, DataSource dataSource);
-
-    /**
-     * Unregisters a datasource.
-     *
-     * @param name the datasource name
-     * @return the unregistered datasource or null if not found
-     */
-    DataSource unregister(String name);
 }

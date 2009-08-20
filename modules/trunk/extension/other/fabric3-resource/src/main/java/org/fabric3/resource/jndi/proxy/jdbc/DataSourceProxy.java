@@ -76,7 +76,7 @@ public class DataSourceProxy extends AbstractProxy<DataSource> implements DataSo
     public void init() throws NamingException {
         super.init();
         for (String dataSourceKey : dataSourceKeys) {
-            dataSourceRegistry.registerDataSource(dataSourceKey, this);
+            dataSourceRegistry.register(dataSourceKey, this);
         }
     }
 

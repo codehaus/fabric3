@@ -44,6 +44,8 @@ import javax.sql.DataSource;
 import org.fabric3.spi.resource.DataSourceRegistry;
 
 /**
+ * Default DataSourceRegistry implementation.
+ *
  * @version $Rev$ $Date$
  */
 public class DataSourceRegistryImpl implements DataSourceRegistry {
@@ -54,9 +56,11 @@ public class DataSourceRegistryImpl implements DataSourceRegistry {
         return dataSources.get(name);
     }
 
-    public void registerDataSource(String name, DataSource dataSource) {
-        // TODO why not map of references?
+    public void register(String name, DataSource dataSource) {
         dataSources.put(name, dataSource);
     }
 
+    public DataSource unregister(String name) {
+        return dataSources.remove(name);
+    }
 }
