@@ -40,6 +40,8 @@ package org.fabric3.spi.resource;
 import java.util.Properties;
 
 /**
+ * Represents a configuration for a datasource specified in the runtime system configuration or dynamically through a management interface.
+ *
  * @version $Rev$ $Date$
  */
 public class DataSourceConfiguration {
