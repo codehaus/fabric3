@@ -114,7 +114,8 @@ public class AtomikosDataSourceFactory implements DataSourceFactory {
             bean.setUniqueResourceName(name);
             bean.setDriverClassName(configuration.getDriverClass());
             bean.setUrl(configuration.getUrl());
-            // TODO username and password
+            bean.setUser(configuration.getUsername());
+            bean.setPassword(configuration.getPassword());
             registerJMX(bean);
             beans.put(name, bean);
             registry.register(name, bean);

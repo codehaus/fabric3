@@ -65,7 +65,7 @@ public class DataSourceConfigParser {
                         DataSourceType dataSourceType;
                         String type = readMandatoryAttribute("type", reader);
                         if (type == null) {
-                            dataSourceType = DataSourceType.XA;
+                            dataSourceType = DataSourceType.NON_XA;
                         } else {
                             try {
                                 dataSourceType = DataSourceType.valueOf(type.toUpperCase());
@@ -77,7 +77,10 @@ public class DataSourceConfigParser {
                         configuration = new DataSourceConfiguration(name, driver, dataSourceType);
                         String url = reader.getAttributeValue(null, "url");
                         configuration.setUrl(url);
-
+                        String username = reader.getAttributeValue(null, "username");
+                        configuration.setUsername(username);
+                        String password = reader.getAttributeValue(null, "password");
+                        configuration.setUsername(password);
                     } else {
                         // check to ensure the <datasource> element comes before a property or other element
                         if (configuration != null) {
