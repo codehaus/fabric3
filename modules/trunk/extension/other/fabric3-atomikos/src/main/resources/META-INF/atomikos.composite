@@ -18,6 +18,7 @@ Public License. See the accompanying license file for details.
 
     <component name="AtomikosTransactionManager">
         <f3-impl:implementation.system class="org.fabric3.tx.atomikos.AtomikosTransactionManager"/>
+        <property name="properties" source="$systemConfig/transaction.manager/*"/>
     </component>
 
     <component name="AtomikosDataSourceFactory">

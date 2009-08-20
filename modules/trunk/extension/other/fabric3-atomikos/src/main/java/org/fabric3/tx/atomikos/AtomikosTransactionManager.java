@@ -38,6 +38,10 @@
 
 package org.fabric3.tx.atomikos;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.InvalidTransactionException;
@@ -47,29 +51,89 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import com.atomikos.icatch.jta.UserTransactionManager;
+import com.atomikos.icatch.config.UserTransactionService;
+import com.atomikos.icatch.config.UserTransactionServiceImp;
+import com.atomikos.icatch.jta.TransactionManagerImp;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.event.EventService;
+import org.fabric3.spi.event.Fabric3EventListener;
+import org.fabric3.spi.event.RuntimeRecover;
+
 /**
- * Wraps an Atomikos transaction manager. The transaction manager will startup and perform recovery on first use. Configured JDBC and JMS resource
- * registration is handled implicity by Atomikos.
+ * Wraps an Atomikos transaction manager. Configured JDBC and JMS resource registration is handled implicity by Atomikos.
  *
  * @version $Rev$ $Date$
  */
 @Service(javax.transaction.TransactionManager.class)
-public class AtomikosTransactionManager implements TransactionManager {
-    private UserTransactionManager tm;
+public class AtomikosTransactionManager implements TransactionManager, Fabric3EventListener<RuntimeRecover> {
+    private static final String ATOMIKOS_NO_FILE = "com.atomikos.icatch.no_file";
+    private static final String OUTPUT_DIR_PROPERTY_NAME = "com.atomikos.icatch.output_dir";
+    private static final String LOG_BASE_DIR_PROPERTY_NAME = "com.atomikos.icatch.log_base_dir";
+    private static final String FACTORY_KEY = "com.atomikos.icatch.service";
+    private static final String FACTORY_VALUE = "com.atomikos.icatch.standalone.UserTransactionServiceFactory";
+
+    private EventService eventService;
+    private HostInfo info;
+    private TransactionManagerImp tm;
+    private UserTransactionService uts;
+    private Properties properties = new Properties();
+
+    public AtomikosTransactionManager(@Reference EventService eventService, @Reference HostInfo info) {
+        this.eventService = eventService;
+        this.info = info;
+    }
 
     @Init
-    public void init() {
-        tm = new UserTransactionManager();
+    public void init() throws IOException {
+        eventService.subscribe(RuntimeRecover.class, this);
+        // turn off transactions.properties search by the transaction manager since these will be supplied directly
+        System.setProperty(ATOMIKOS_NO_FILE, "true");
+        // configure mandatory value
+        System.setProperty(FACTORY_KEY, FACTORY_VALUE);
+        // set defaults
+        File dataDir = info.getDataDir();
+        File trxDir = new File(dataDir, "transactions");
+        if (!trxDir.exists()) {
+            trxDir.mkdirs();
+        }
+        String path = trxDir.getCanonicalPath();
+        properties.setProperty(OUTPUT_DIR_PROPERTY_NAME, path);
+        properties.setProperty(LOG_BASE_DIR_PROPERTY_NAME, path);
     }
 
     @Destroy
     public void destroy() {
-        tm.close();
+        if (uts != null) {
+            uts.shutdown(false);
+            uts = null;
+        }
+    }
+
+    @Property(required = false)
+    public void setProperties(Map<String, String> properties) {
+        this.properties.putAll(properties);
+    }
+
+    /**
+     * Performs initialization and transaction recovery. Recovery must be done after transactional resources (potentially in other extensions) have
+     * registered with the transaction manager.
+     */
+    public void onEvent(RuntimeRecover event) {
+        synchronized (TransactionManagerImp.class) {
+            tm = (TransactionManagerImp) TransactionManagerImp.getTransactionManager();
+            if (tm == null) {
+                uts = new UserTransactionServiceImp(properties);
+//                TSInitInfo info = uts.createTSInitInfo();
+                uts.init(properties);
+                tm = (TransactionManagerImp) TransactionManagerImp.getTransactionManager();
+            }
+        }
     }
 
     public void begin() throws NotSupportedException, SystemException {
@@ -89,8 +153,8 @@ public class AtomikosTransactionManager implements TransactionManager {
         return tm.getTransaction();
     }
 
-    public void resume(Transaction trx) throws InvalidTransactionException, IllegalStateException, SystemException {
-        tm.resume(trx);
+    public void resume(Transaction tx) throws InvalidTransactionException, IllegalStateException, SystemException {
+        tm.resume(tx);
     }
 
     public void rollback() throws IllegalStateException, SecurityException, SystemException {
@@ -101,11 +165,12 @@ public class AtomikosTransactionManager implements TransactionManager {
         tm.setRollbackOnly();
     }
 
-    public void setTransactionTimeout(int seconds) throws SystemException {
-        tm.setTransactionTimeout(seconds);
+    public void setTransactionTimeout(int secs) throws SystemException {
+        tm.setTransactionTimeout(secs);
     }
 
     public Transaction suspend() throws SystemException {
         return tm.suspend();
     }
+
 }
