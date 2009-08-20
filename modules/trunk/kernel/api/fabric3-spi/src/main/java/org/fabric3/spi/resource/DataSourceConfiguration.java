@@ -49,6 +49,8 @@ public class DataSourceConfiguration {
     private String driverClass;
     private DataSourceType type;
     private String url;
+    private String username;
+    private String password;
 
     private Properties properties = new Properties();
 
@@ -82,10 +84,37 @@ public class DataSourceConfiguration {
         this.url = url;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * Sets a driver-specific property.
+     *
+     * @param name  the property name
+     * @param value the property value
+     */
     public void setProperty(String name, String value) {
         properties.put(name, value);
     }
 
+    /**
+     * Returns the driver-specific properties configured for the datasource
+     *
+     * @return the properties
+     */
     public Properties getProperties() {
         return properties;
     }
