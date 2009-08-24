@@ -38,6 +38,7 @@
 package org.fabric3.itest;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -63,6 +64,7 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.MavenRuntime;
+import org.fabric3.util.io.FileHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -118,7 +120,7 @@ public class MavenRuntimeBooter {
         return runtime;
     }
 
-    private MavenRuntime createRuntime() {
+    private MavenRuntime createRuntime() throws MojoExecutionException {
         MonitorFactory monitorFactory = new MavenMonitorFactory(log, "f3");
         MavenRuntime runtime = instantiate(MavenRuntime.class, RUNTIME_IMPL, bootClassLoader);
         runtime.setMonitorFactory(monitorFactory);
@@ -126,6 +128,13 @@ public class MavenRuntimeBooter {
 
         Properties hostProperties = properties != null ? properties : System.getProperties();
         File tempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
+        if (tempDir.exists()) {
+            try {
+                FileHelper.cleanDirectory(tempDir);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Error cleaning temporary directory", e);
+            }
+        }
         tempDir.mkdir();
 
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(DOMAIN), hostProperties, moduleDependencies, tempDir);
