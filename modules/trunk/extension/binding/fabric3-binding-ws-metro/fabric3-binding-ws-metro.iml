@@ -87,7 +87,7 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../../../../../../../third.party/asm/asm-3.2/src.zip!/" />
+          <root url="jar://$SOURCES$/asm/asm-3.2/src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -112,8 +112,8 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$MODULE_DIR$/../../../../../../../../third.party/metro/metro.ea.2.0/rt/src" />
-          <root url="jar://$MODULE_DIR$/../../../../../../../../third.party/metro/metro.ea.2.0/lib/runtime/jaxws-rt.src.zip!/" />
+          <root url="file://$SOURCES$/metro/metro.ea.2.0/rt/src" />
+          <root url="jar://$SOURCES$/metro/metro.ea.2.0/lib/runtime/jaxws-rt.src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>

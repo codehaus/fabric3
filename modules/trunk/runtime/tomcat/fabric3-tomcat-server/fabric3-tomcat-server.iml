@@ -20,7 +20,7 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$MODULE_DIR$/../../../../../../../../third.party/tomcat/apache-tomcat-6.0.20-src/java" />
+          <root url="file://$SOURCES$/tomcat/apache-tomcat-6.0.20-src/java" />
         </SOURCES>
       </library>
     </orderEntry>
