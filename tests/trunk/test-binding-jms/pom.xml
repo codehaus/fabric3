@@ -59,66 +59,13 @@
                 <version>${fabric3.version}</version>
                 <configuration>
                     <runtimeVersion>${fabric3.version}</runtimeVersion>
-                    <!--<profiles>-->
-                        <!--<profile>-->
-                            <!--<groupId>org.codehaus.fabric3</groupId>-->
-                            <!--<artifactId>profile-jms</artifactId>-->
-                            <!--<version>${fabric3.version}</version>-->
-                        <!--</profile>-->
-                    <!--</profiles>-->
-                    <extensions>
-                        <dependency>
+                    <profiles>
+                        <profile>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-jms</artifactId>
+                            <artifactId>profile-jms</artifactId>
                             <version>${fabric3.version}</version>
-                        </dependency>
-
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-activemq</artifactId>
-                            <version>${fabric3.version}</version>
-                        </dependency>
-
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-databinding-jaxb</artifactId>
-                            <version>${fabric3.version}</version>
-                        </dependency>
-
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jaxb</artifactId>
-                            <version>${fabric3.version}</version>
-                        </dependency>
-
-
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx</artifactId>
-                            <version>${fabric3.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-atomikos</artifactId>
-                            <version>${fabric3.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-atomikos-jms</artifactId>
-                            <version>${fabric3.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.jms</groupId>
-                            <artifactId>com.springsource.javax.jms</artifactId>
-                            <version>1.1.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.resource</groupId>
-                            <artifactId>com.springsource.javax.resource</artifactId>
-                            <version>1.5.0</version>
-                        </dependency>
-
-                    </extensions>
+                        </profile>
+                    </profiles>
                     <systemConfig>
                         <![CDATA[
                                <config>

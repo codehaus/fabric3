@@ -51,7 +51,6 @@
             <modules>
                 <module>test-function</module>
                 <module>test-policy</module>
-                <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
                 <module>test-jpa-core</module>
                 <module>test-jpa-implementation</module>
@@ -59,11 +58,11 @@
                 <module>test-timer-quartz</module>
                 <module>test-timer-implementation</module>
                 <module>test-mock</module>
-                <module>test-binding-jms</module>
                 <module>test-binding-ftp</module>
-                <module>test-binding-net</module>
                 <module>test-runtime-jetty</module>
                 <module>test-runtime-tomcat</module>
+                <module>test-binding-jms</module>
+                <module>test-binding-net</module> 
             </modules>
         </profile>
         <profile>
@@ -72,7 +71,6 @@
             <modules>
                 <module>test-function</module>
                 <module>test-policy</module>
-                <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
                 <module>test-jpa-core</module>
                 <module>test-jpa-implementation</module>
