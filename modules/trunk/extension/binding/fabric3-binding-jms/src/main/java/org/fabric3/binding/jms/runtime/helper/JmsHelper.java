@@ -50,20 +50,17 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 /**
- * Helper class for closing JMS opbjects.
+ * Utility class for managing JMS objects.
  */
 public class JmsHelper {
 
-    /**
-     * Utility class constructor.
-     */
     private JmsHelper() {
     }
 
     /**
-     * Closes connections quietly.
+     * Closes the connection quietly, ignoring exceptions.
      *
-     * @param connection Connection to be closed.
+     * @param connection the connection to be closed.
      */
     public static void closeQuietly(Connection connection) {
         try {
@@ -75,9 +72,9 @@ public class JmsHelper {
     }
 
     /**
-     * Closes sessions quietly.
+     * Closes the session quietly, ignoring exceptions.
      *
-     * @param session Connection to be closed.
+     * @param session the session to be closed.
      */
     public static void closeQuietly(Session session) {
         try {
@@ -89,9 +86,9 @@ public class JmsHelper {
     }
 
     /**
-     * Closes message producer quietly.
+     * Closes the message producer quietly, ignoring exceptions.
      *
-     * @param producer Message producer to be closed.
+     * @param producer the message producer to be closed.
      */
     public static void closeQuietly(MessageProducer producer) {
         try {
@@ -103,9 +100,9 @@ public class JmsHelper {
     }
 
     /**
-     * Closes message consumer quietly.
+     * Closes the message consumer quietly, ignoring exceptions
      *
-     * @param consumer Message consumer to be closed.
+     * @param consumer the message consumer to be closed.
      */
     public static void closeQuietly(MessageConsumer consumer) {
         try {

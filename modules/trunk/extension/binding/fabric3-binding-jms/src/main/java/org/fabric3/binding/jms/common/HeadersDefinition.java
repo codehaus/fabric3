@@ -44,7 +44,7 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * ModelObject represents binding.jms\headers and binding.jms\operationProperties\headers.
+ * Represents binding.jms\headers and binding.jms\operationProperties\headers.
  */
 public class HeadersDefinition extends PropertyAwareObject {
     private static final long serialVersionUID = 831415808031924363L;
@@ -94,9 +94,6 @@ public class HeadersDefinition extends PropertyAwareObject {
         jMSPriority = priority;
     }
 
-    /**
-     * Clone a new HeadersDefinition.
-     */
     public HeadersDefinition cloneHeadersDefinition() {
         HeadersDefinition clone = new HeadersDefinition();
         clone.setJMSCorrelationId(this.jMSCorrelationId);
@@ -110,6 +107,9 @@ public class HeadersDefinition extends PropertyAwareObject {
 
     /**
      * Return a new HeadersDefinition which value is <code>this</code> is shadowed by <code>from</code>
+     *
+     * @param from the value to shadow from
+     * @return the new definition
      */
     public HeadersDefinition shadowHeadersDefinition(HeadersDefinition from) {
         HeadersDefinition result = this.cloneHeadersDefinition();

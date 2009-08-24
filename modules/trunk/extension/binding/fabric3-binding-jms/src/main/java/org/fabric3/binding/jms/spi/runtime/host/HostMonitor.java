@@ -34,38 +34,40 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.binding.jms.runtime;
+*/
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
+package org.fabric3.binding.jms.spi.runtime.host;
+
+import java.net.URI;
+
+import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
- * Dispatches an asynchronously received message to a service. Implementations support request-response and one-way operations. For request-response
- * operations, responses will be enqueued using the response session and destination.
+ * Monitor for the JmsHost.
+ *
+ * @version $Rev$ $Date$
  */
-public interface ServiceMessageListener {
+public interface HostMonitor {
+
+    @Severe
+    void error(String message, Throwable e);
 
     /**
-     * Dispatch a received message to a service.
+     * Callback when a service has been provisioned as a JMS endpoint
      *
-     * @param request             the message passed to the listener
-     * @param responseSession     the JMSSession object which is used to send response message or null if the operation is one-way
-     * @param responseDestination JMSDestination to which the response is sent or null if the operation is one-way
-     * @throws JmsServiceException    thrown if the service throws an exception. For request-response operations, the exception cause will be sent as
-     *                                a fault response prior to it being thrown.
-     * @throws JmsBadMessageException if a message is received that cannot be processed and should be redelivered
-     * @throws JMSException
+     * @param uri the service URI
      */
-    public abstract void onMessage(Message request, Session responseSession, Destination responseDestination)
-            throws JmsServiceException, JmsBadMessageException, JMSException;
+    @Info
+    void registerListener(URI uri);
 
+    /**
+     * Callback when a service has been removed as a JMS endpoint
+     *
+     * @param uri the service URI
+     */
+    @Info
+    void unRegisterListener(URI uri);
+
+    
 }

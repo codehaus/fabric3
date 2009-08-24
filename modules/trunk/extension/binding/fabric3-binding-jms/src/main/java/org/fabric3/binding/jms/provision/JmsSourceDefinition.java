@@ -51,6 +51,8 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
+ * Generated metadata used for attaching a service endpoint to a JMS destination.
+ *
  * @version $Revision$ $Date$
  */
 public class JmsSourceDefinition extends PhysicalSourceDefinition {
@@ -74,32 +76,18 @@ public class JmsSourceDefinition extends PhysicalSourceDefinition {
         setUri(uri);
     }
 
-    /**
-     * @return JMS metadata.
-     */
     public JmsBindingMetadata getMetadata() {
         return metadata;
     }
 
-    /**
-     * Returns the payload type keyed by operation name
-     *
-     * @return the payload type
-     */
     public Map<String, PayloadType> getPayloadTypes() {
         return payloadTypes;
     }
 
-    /**
-     * @return Transaction type.
-     */
     public TransactionType getTransactionType() {
         return transactionType;
     }
 
-    /**
-     * @param transactionType Transaction type.
-     */
     public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
     }

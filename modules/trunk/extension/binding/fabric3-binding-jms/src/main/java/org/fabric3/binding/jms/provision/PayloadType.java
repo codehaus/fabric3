@@ -44,7 +44,7 @@
 package org.fabric3.binding.jms.provision;
 
 /**
- * The payload type for bound service or reference.
+ * Defines message payload types.
  *
  * @version $Rev$ $Date$
  */

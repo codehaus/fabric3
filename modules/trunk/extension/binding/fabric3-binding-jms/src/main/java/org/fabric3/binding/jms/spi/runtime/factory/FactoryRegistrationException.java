@@ -34,47 +34,24 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.binding.jms.runtime.host.standalone;
+*/
+package org.fabric3.binding.jms.spi.runtime.factory;
 
-import javax.jms.JMSException;
-import javax.jms.ServerSession;
-import javax.jms.Session;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Server session used in standalone JMS host.
+ * Denotes an error registering a connection factory.
  *
  * @version $Rev$ $Date$
  */
-public class StandaloneServerSession implements ServerSession {
+public class FactoryRegistrationException extends Fabric3Exception{
+    private static final long serialVersionUID = -9001751422278517341L;
 
-    private StandaloneServerSessionPool serverSessionPool;
-    private Session session;
-
-
-    /**
-     * Initializes the server session.
-     *
-     * @param session           Underlying JMS session.
-     * @param serverSessionPool Server session pool.
-     */
-    public StandaloneServerSession(Session session, StandaloneServerSessionPool serverSessionPool) {
-        this.session = session;
-        this.serverSessionPool = serverSessionPool;
+    public FactoryRegistrationException(String message) {
+        super(message);
     }
 
-    public Session getSession() throws JMSException {
-        return session;
+    public FactoryRegistrationException(String message, Throwable cause) {
+        super(message, cause);
     }
-
-    public void start() throws JMSException {
-        serverSessionPool.startServerSession(this);
-    }
-
 }

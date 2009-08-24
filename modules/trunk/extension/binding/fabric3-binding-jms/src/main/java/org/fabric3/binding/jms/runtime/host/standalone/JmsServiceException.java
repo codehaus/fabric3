@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.jms.runtime;
+package org.fabric3.binding.jms.runtime.host.standalone;
 
 import org.fabric3.host.Fabric3Exception;
 
@@ -46,6 +46,7 @@ import org.fabric3.host.Fabric3Exception;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public class JmsServiceException extends Fabric3Exception {
     private static final long serialVersionUID = -6821325841475500514L;
 

@@ -37,7 +37,7 @@ package org.fabric3.binding.jms.common;
 
 
 /**
- * JMS administered object definition.
+ * Represents a destination or connection factory configuration.
  *
  * @version $Revision$ $Date$
  */

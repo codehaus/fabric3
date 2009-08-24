@@ -38,6 +38,8 @@
 package org.fabric3.activemq.factory;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -49,7 +51,8 @@ public class ConnectionFactoryConfiguration {
     private ConnectionFactoryType type = ConnectionFactoryType.LOCAL;
     private String name;
     private URI brokerUri;
-    private Properties properties = new Properties();
+    private Properties factoryProperties = new Properties();
+    private Map<String, String> poolProperties = new HashMap<String, String>();
 
     public ConnectionFactoryType getType() {
         return type;
@@ -75,11 +78,20 @@ public class ConnectionFactoryConfiguration {
         this.brokerUri = brokerUri;
     }
 
-    public void setProperty(String name, String value) {
-        properties.put(name, value);
+    public void setFactoryProperty(String name, String value) {
+        factoryProperties.put(name, value);
     }
 
-    public Properties getProperties() {
-        return properties;
+    public Properties getFactoryProperties() {
+        return factoryProperties;
     }
+
+    public void setPoolProperty(String name, String value) {
+        poolProperties.put(name, value);
+    }
+
+    public Map<String, String> getPoolProperties() {
+        return poolProperties;
+    }
+
 }

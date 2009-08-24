@@ -43,6 +43,7 @@
  */
 package org.fabric3.binding.jms.runtime.lookup.connectionfactory;
 
+import java.util.Collections;
 import java.util.Hashtable;
 import javax.jms.ConnectionFactory;
 import javax.naming.Context;
@@ -51,37 +52,42 @@ import javax.naming.NameNotFoundException;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
 import org.fabric3.binding.jms.runtime.lookup.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
+import org.fabric3.binding.jms.spi.runtime.factory.ConnectionFactoryManager;
+import org.fabric3.binding.jms.spi.runtime.factory.FactoryRegistrationException;
 
 /**
  * Implementation that attempts to resolve a connection by searching the ConnectionFactoryRegistry, then JNDI and then, if not found, creating it.
  */
 public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStrategy {
     private ConnectionFactoryStrategy always;
-    private ConnectionFactoryRegistry registry;
+    private ConnectionFactoryManager manager;
 
-    public IfNotExistConnectionFactoryStrategy(@Reference ConnectionFactoryRegistry registry) {
-        this.always = new AlwaysConnectionFactoryStrategy();
-        this.registry = registry;
+    public IfNotExistConnectionFactoryStrategy(@Reference ConnectionFactoryManager manager) {
+        this.always = new AlwaysConnectionFactoryStrategy(manager);
+        this.manager = manager;
     }
 
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException {
+        String name = definition.getName();
         try {
-            String name = definition.getName();
-            ConnectionFactory factory = registry.get(name);
+            ConnectionFactory factory = manager.get(name);
             if (factory != null) {
                 return factory;
             }
             if (!env.contains(Context.INITIAL_CONTEXT_FACTORY)) {
                 // java.naming.factory.initial is not defined, resort to creating
-                return always.getConnectionFactory(definition, env);
+                factory = always.getConnectionFactory(definition, env);
+                return manager.register(name, factory, Collections.<String, String>emptyMap());
             }
-            return (ConnectionFactory) JndiHelper.lookup(name, env);
+            factory = (ConnectionFactory) JndiHelper.lookup(name, env);
+            return manager.register(name, factory, Collections.<String, String>emptyMap());
         } catch (NameNotFoundException ex) {
             return always.getConnectionFactory(definition, env);
+        } catch (FactoryRegistrationException e) {
+            throw new JmsLookupException("Unable to lookup: " + name, e);
         }
 
     }

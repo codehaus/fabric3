@@ -35,37 +35,19 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.jms.runtime.factory;
+package org.fabric3.binding.jms.runtime.host.standalone;
 
-import javax.jms.ConnectionFactory;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * A registry of JMS connection factories.
+ * Denotes an exception registering or unregistering a listener with a JmsHost.
  *
  * @version $Rev$ $Date$
  */
-public interface ConnectionFactoryRegistry {
+public class JmsHostException extends Fabric3Exception {
+    private static final long serialVersionUID = 8872645176633966439L;
 
-    /**
-     * Returns the connection factory for the given name.
-     *
-     * @param name the name the connection factory was registered with
-     * @return the connection factory or null if no factory for the name was registered
-     */
-    ConnectionFactory get(String name);
-
-    /**
-     * Registers a connection factory.
-     *
-     * @param name    the connection factory name
-     * @param factory the connection factory
-     */
-    void register(String name, ConnectionFactory factory);
-
-    /**
-     * Removes a registered connection factory.
-     *
-     * @param name the connection factory name
-     */
-    void unregister(String name);
+    public JmsHostException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

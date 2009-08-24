@@ -39,6 +39,7 @@ package org.fabric3.binding.jms.runtime;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.transaction.TransactionManager;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
 
@@ -52,7 +53,8 @@ public class WireConfiguration {
     private ConnectionFactory requestConnectionFactory;
     private Destination requestDestination;
     private ClassLoader classloader;
-    private JmsResponseMessageListener messageReceiver;
+    private ResponseListener responseListener;
+    private TransactionManager tm;
 
     public CorrelationScheme getCorrelationScheme() {
         return correlationScheme;
@@ -86,11 +88,19 @@ public class WireConfiguration {
         this.classloader = classloader;
     }
 
-    public JmsResponseMessageListener getMessageReceiver() {
-        return messageReceiver;
+    public ResponseListener getResponseListener() {
+        return responseListener;
     }
 
-    public void setMessageReceiver(JmsResponseMessageListener messageReceiver) {
-        this.messageReceiver = messageReceiver;
+    public void setResponseListener(ResponseListener responseListener) {
+        this.responseListener = responseListener;
+    }
+
+    public TransactionManager getTransactionManager() {
+        return tm;
+    }
+
+    public void setTransactionManager(TransactionManager tm) {
+        this.tm = tm;
     }
 }

@@ -48,14 +48,14 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQXAConnectionFactory;
-import org.apache.activemq.pool.PooledConnectionFactory;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
+import org.fabric3.binding.jms.spi.runtime.factory.ConnectionFactoryManager;
+import org.fabric3.binding.jms.spi.runtime.factory.FactoryRegistrationException;
 
 /**
  * Parses ConnectionFactoryConfiguration entries in the runtime system configuration, instantiates connection factories for them, and registers the
@@ -66,10 +66,10 @@ import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
 @EagerInit
 public class ConnectionFactoryParser {
     private List<ConnectionFactoryConfiguration> configurations = new ArrayList<ConnectionFactoryConfiguration>();
-    private ConnectionFactoryRegistry registry;
+    private ConnectionFactoryManager manager;
 
-    public ConnectionFactoryParser(@Reference ConnectionFactoryRegistry registry) {
-        this.registry = registry;
+    public ConnectionFactoryParser(@Reference ConnectionFactoryManager manager) {
+        this.manager = manager;
     }
 
     @Property
@@ -88,32 +88,30 @@ public class ConnectionFactoryParser {
                     }
                     String name = reader.getAttributeValue(null, "name");
                     if (name == null) {
-                        Location location = reader.getLocation();
-                        int line = location.getLineNumber();
-                        int col = location.getColumnNumber();
-                        throw new InvalidConfigurationException("Connection factory name not configured [" + line + "," + col + "]");
+                        invalidConfiguration("Connection factory name not configured", reader, null);
                     }
                     configuration.setName(name);
                     String urlString = reader.getAttributeValue(null, "broker.url");
                     if (urlString == null) {
-                        Location location = reader.getLocation();
-                        int line = location.getLineNumber();
-                        int col = location.getColumnNumber();
-                        throw new InvalidConfigurationException("Broker URL not configured [" + line + "," + col + "]");
+                        invalidConfiguration("Broker URL not configured", reader, null);
                     }
                     try {
                         URI uri = new URI(urlString);
                         configuration.setBrokerUri(uri);
                     } catch (URISyntaxException e) {
-                        Location location = reader.getLocation();
-                        int line = location.getLineNumber();
-                        int col = location.getColumnNumber();
-                        throw new InvalidConfigurationException("Invalid broker URL [" + line + "," + col + "]", e);
+                        invalidConfiguration("Invalid broker URL", reader, e);
                     }
                 } else {
                     if (configuration != null) {
                         // make sure the reader is in <connection.factory> and not before
-                        configuration.setProperty(reader.getName().getLocalPart(), reader.getElementText());
+                        String name = reader.getName().getLocalPart();
+                        if ("factory.properties".equals(name)) {
+                            parseFactoryProperties(configuration, reader);
+                        } else if ("pool.properties".equals(name)) {
+                            parsePoolProperties(configuration, reader);
+                        } else {
+                            invalidConfiguration("Unrecognized element " + name + " in system configuration", reader, null);
+                        }
                     }
                 }
 
@@ -129,9 +127,8 @@ public class ConnectionFactoryParser {
         }
     }
 
-
     @Init
-    public void init() {
+    public void init() throws FactoryRegistrationException {
         // initialize and register the connection factories
         for (ConnectionFactoryConfiguration configuration : configurations) {
             URI uri = configuration.getBrokerUri();
@@ -139,20 +136,20 @@ public class ConnectionFactoryParser {
             switch (configuration.getType()) {
             case LOCAL:
                 ActiveMQConnectionFactory defaultFactory = new ActiveMQConnectionFactory(uri);
-                defaultFactory.setProperties(configuration.getProperties());
-                registry.register(name, defaultFactory);
+                defaultFactory.setProperties(configuration.getFactoryProperties());
+                manager.register(name, defaultFactory, configuration.getPoolProperties());
                 break;
             case POOLED:
-                ActiveMQConnectionFactory wrapped = new ActiveMQConnectionFactory(uri);
-                wrapped.setProperties(configuration.getProperties());
-                PooledConnectionFactory pooledFactory = new PooledConnectionFactory(wrapped);
-                registry.register(name, pooledFactory);
-                // TODO set special pool properies
-                break;
+                throw new UnsupportedOperationException();
+//                ActiveMQConnectionFactory wrapped = new ActiveMQConnectionFactory(uri);
+//                wrapped.setProperties(configuration.getFactoryProperties());
+//                PooledConnectionFactory pooledFactory = new PooledConnectionFactory(wrapped);
+//                registry.register(name, pooledFactory, configuration.getPoolProperties());
+//                break;
             case XA:
                 ActiveMQXAConnectionFactory xaFactory = new ActiveMQXAConnectionFactory(uri);
-                xaFactory.setProperties(configuration.getProperties());
-                registry.register(name, xaFactory);
+                xaFactory.setProperties(configuration.getFactoryProperties());
+                manager.register(name, xaFactory, configuration.getPoolProperties());
                 break;
             }
         }
@@ -162,8 +159,61 @@ public class ConnectionFactoryParser {
     @Destroy
     public void destroy() {
         for (ConnectionFactoryConfiguration configuration : configurations) {
-            registry.unregister(configuration.getName());
+            manager.unregister(configuration.getName());
         }
+    }
+
+    private void parseFactoryProperties(ConnectionFactoryConfiguration configuration, XMLStreamReader reader) throws XMLStreamException {
+        while (true) {
+            switch (reader.next()) {
+            case XMLStreamConstants.START_ELEMENT:
+                configuration.setFactoryProperty(reader.getName().getLocalPart(), reader.getElementText());
+                break;
+            case XMLStreamConstants.END_ELEMENT:
+                if ("factory.properties".equals(reader.getName().getLocalPart())) {
+                    return;
+                }
+                break;
+            case XMLStreamConstants.END_DOCUMENT:
+                return;
+            }
+        }
+    }
+
+
+    private void parsePoolProperties(ConnectionFactoryConfiguration configuration, XMLStreamReader reader) throws XMLStreamException {
+        while (true) {
+            switch (reader.next()) {
+            case XMLStreamConstants.START_ELEMENT:
+                configuration.setPoolProperty(reader.getName().getLocalPart(), reader.getElementText());
+                break;
+            case XMLStreamConstants.END_ELEMENT:
+                if ("pool.properties".equals(reader.getName().getLocalPart())) {
+                    return;
+                }
+                break;
+            case XMLStreamConstants.END_DOCUMENT:
+                return;
+            }
+        }
+    }
+
+    private void invalidConfiguration(String message, XMLStreamReader reader, Exception e) throws InvalidConfigurationException {
+        Location location = reader.getLocation();
+        if (location == null) {
+            // runtime has no external config file
+            if (e != null) {
+                throw new InvalidConfigurationException(message, e);
+            }
+            throw new InvalidConfigurationException(message);
+        }
+        int line = location.getLineNumber();
+        int col = location.getColumnNumber();
+        if (e != null) {
+            throw new InvalidConfigurationException(message + " [" + line + "," + col + "]", e);
+        }
+        throw new InvalidConfigurationException(message + " [" + line + "," + col + "]");
+
     }
 
 }

@@ -51,6 +51,7 @@ import javax.jms.Session;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public interface TransactionHandler {
 
     /**

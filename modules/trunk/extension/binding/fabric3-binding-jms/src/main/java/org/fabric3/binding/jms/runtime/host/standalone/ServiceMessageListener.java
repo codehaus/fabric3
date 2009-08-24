@@ -41,38 +41,34 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.binding.jms.runtime;
+package org.fabric3.binding.jms.runtime.host.standalone;
 
-import java.net.URI;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+
+import org.fabric3.binding.jms.runtime.JmsBadMessageException;
 
 /**
- * Provisions listeners with the underlying JMS infrastructure.
- *
- * @version $Rev$ $Date$
+ * Dispatches an asynchronously received message to a service. Implementations support request-response and one-way operations. For request-response
+ * operations, responses will be enqueued using the response session and destination.
  */
-public interface JmsHost {
+@Deprecated
+public interface ServiceMessageListener {
 
     /**
-     * Returns true if a listener for the service URI is registered.
+     * Dispatch a received message to a service.
      *
-     * @param serviceUri the service URI
-     * @return true if a listener is registered
+     * @param request             the message passed to the listener
+     * @param responseSession     the JMSSession object which is used to send response message or null if the operation is one-way
+     * @param responseDestination JMSDestination to which the response is sent or null if the operation is one-way
+     * @throws JmsServiceException    thrown if the service throws an exception. For request-response operations, the exception cause will be sent as
+     *                                a fault response prior to it being thrown.
+     * @throws JmsBadMessageException if a message is received that cannot be processed and should be redelivered
+     * @throws JMSException
      */
-    boolean isRegistered(URI serviceUri);
+    public abstract void onMessage(Message request, Session responseSession, Destination responseDestination)
+            throws JmsServiceException, JmsBadMessageException, JMSException;
 
-    /**
-     * Register a ServiceMessageListener which dispatches inbound JMS messages to a service.
-     *
-     * @param configuration the configuration template
-     * @throws JmsHostException if an error registering the listener is encountered
-     */
-    void registerListener(ServiceListenerConfiguration configuration) throws JmsHostException;
-
-    /**
-     * Unregister the message listener for the given service
-     *
-     * @param serviceUri the service URI
-     * @throws JmsHostException if an error unregistering the listener is encountered
-     */
-    void unregisterListener(URI serviceUri) throws JmsHostException;
 }

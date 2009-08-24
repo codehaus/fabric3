@@ -81,6 +81,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName OASIS_TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
     private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
+    private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");
 
     private PayloadTypeIntrospector introspector;
 
@@ -89,29 +90,50 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     }
 
     public JmsSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      ServiceContract<?> contract,
-                                                      List<LogicalOperation> operations,
-                                                      EffectivePolicy policy) throws GenerationException {
+                                                  ServiceContract<?> contract,
+                                                  List<LogicalOperation> operations,
+                                                  EffectivePolicy policy) throws GenerationException {
 
         TransactionType transactionType = getTransactionType(policy, operations);
 
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getJmsMetadata();
+        validateResponseDestination(metadata, contract);
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
         URI uri = logicalBinding.getDefinition().getTargetUri();
         return new JmsSourceDefinition(uri, metadata, payloadTypes, transactionType);
     }
 
     public JmsTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      ServiceContract<?> contract,
-                                                      List<LogicalOperation> operations,
-                                                      EffectivePolicy policy) throws GenerationException {
+                                                  ServiceContract<?> contract,
+                                                  List<LogicalOperation> operations,
+                                                  EffectivePolicy policy) throws GenerationException {
 
         TransactionType transactionType = getTransactionType(policy, operations);
 
         URI uri = logicalBinding.getDefinition().getTargetUri();
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getJmsMetadata();
+        validateResponseDestination(metadata, contract);
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
         return new JmsTargetDefinition(uri, metadata, payloadTypes, transactionType);
+    }
+
+    /**
+     * Validates a response destination is provided for request-response operations
+     *
+     * @param metadata the JMS metadata
+     * @param contract the service contract
+     * @throws GenerationException if a response destination was not provided
+     */
+    private void validateResponseDestination(JmsBindingMetadata metadata, ServiceContract<?> contract) throws GenerationException {
+        if (metadata.isResponse()) {
+            return;
+        }
+        for (Operation<?> operation : contract.getOperations()) {
+            if (!operation.getIntents().contains(OASIS_ONEWAY)) {
+                throw new GenerationException("Response destination must be specified for operation " + operation.getName() + " on "
+                        + contract.getInterfaceName());
+            }
+        }
     }
 
     /*

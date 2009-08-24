@@ -44,7 +44,7 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * JMS destination definition used for receiving requests and dispatching responses.
+ * A destination configuration.
  *
  * @version $Revision$ $Date$
  */

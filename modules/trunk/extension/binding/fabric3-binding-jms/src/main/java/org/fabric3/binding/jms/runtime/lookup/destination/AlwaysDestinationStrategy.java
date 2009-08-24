@@ -59,6 +59,8 @@ import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 
 /**
  * Implementation that attempts to resolve the destination in JNDI.
+ *
+ * @version $Revision$ $Date$
  */
 public class AlwaysDestinationStrategy implements DestinationStrategy {
 

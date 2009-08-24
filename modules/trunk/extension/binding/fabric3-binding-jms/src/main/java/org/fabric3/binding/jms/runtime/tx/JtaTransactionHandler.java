@@ -56,6 +56,7 @@ import org.osoa.sca.annotations.Reference;
 /**
  * @version $Rev$ $Date$
  */
+@Deprecated
 public class JtaTransactionHandler implements TransactionHandler {
     private TransactionManager transactionManager;
 

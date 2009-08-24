@@ -49,6 +49,10 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+/**
+ *
+ * @version $Revision$ $Date$
+ */
 public class JmsURIMetadata {
     public final static String CONNECTIONFACORYNAME = "connectionFactoryName";
     public final static String DESTINATIONTYPE = "destinationType";
@@ -56,13 +60,8 @@ public class JmsURIMetadata {
     public final static String TIMETOLIVE = "timeToLive";
     public final static String PRIORITY = "priority";
     public final static String RESPONSEDESTINAT = "responseDestination";
-    /**
-     * string representative for destination
-     */
+
     private String destination;
-    /**
-     * property map
-     */
     private Map<String, String> properties;
 
     public String getDestination() {
@@ -86,7 +85,7 @@ public class JmsURIMetadata {
      * @throws URISyntaxException Thrown when <code>uri</code> is not a valid format required by /binding.jms/@uri.
      */
     public static JmsURIMetadata parseURI(String uri) throws URISyntaxException {
-        //TODO have a better validation
+        //TODO implement better validation
         boolean matches = Pattern.matches(
                 "jms:(.*?)[\\?(.*?)=(.*?)((&(.*?)=(.*?))*)]?", uri);
         if (!matches) {

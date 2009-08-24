@@ -60,11 +60,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.JmsHost;
-import org.fabric3.binding.jms.runtime.JmsHostException;
 import org.fabric3.binding.jms.runtime.JmsMonitor;
-import org.fabric3.binding.jms.runtime.ServiceListenerConfiguration;
-import org.fabric3.binding.jms.runtime.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.host.work.WorkScheduler;
 
@@ -74,7 +70,7 @@ import org.fabric3.host.work.WorkScheduler;
  *
  * @version $Revsion$ $Date$
  */
-public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBean {
+public class StandalonePullJmsHost implements StandalonePullJmsHostMBean {
     private WorkScheduler workScheduler;
     private long readTimeout = 30000L;
     private JmsMonitor monitor;
@@ -148,7 +144,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
             consumerWorker.stop();
         }
         templateMap.remove(serviceUri);
-        monitor.unRegisterListener(serviceUri);
+//        monitor.unRegisterListener(serviceUri);
     }
 
     public void registerListener(ServiceListenerConfiguration configuration) throws JmsHostException {
@@ -172,7 +168,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
             throw new JmsHostException("Unable to register service listener for: " + serviceUri, ex);
         }
 
-        monitor.registerListener(serviceUri);
+       // monitor.registerListener(serviceUri);
 
     }
 

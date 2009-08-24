@@ -48,6 +48,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.transaction.TransactionManager;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -74,19 +75,23 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Attaches the reference end of a wire to a JMS queue.
+ * Attaches the reference end of a wire to a JMS destination.
  *
  * @version $Revision$ $Date$
  */
 public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefinition> {
     private AdministeredObjectResolver resolver;
+    private TransactionManager tm;
     private ClassLoaderRegistry classLoaderRegistry;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
     private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
 
-    public JmsTargetWireAttacher(@Reference AdministeredObjectResolver resolver, @Reference ClassLoaderRegistry classLoaderRegistry) {
+    public JmsTargetWireAttacher(@Reference AdministeredObjectResolver resolver,
+                                 @Reference TransactionManager tm,
+                                 @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.resolver = resolver;
+        this.tm = tm;
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
@@ -106,6 +111,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
         ClassLoader classloader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
         wireConfiguration.setClassloader(classloader);
         wireConfiguration.setCorrelationScheme(target.getMetadata().getCorrelationScheme());
+        wireConfiguration.setTransactionManager(tm);
 
         // resolve the connection factories and destinations for the wire
         resolveAdministeredObjects(target, wireConfiguration);
@@ -117,6 +123,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
             PhysicalOperationDefinition op = chain.getPhysicalOperation();
             String operationName = op.getName();
             configuration.setOperationName(operationName);
+            configuration.setOneWay(op.isOneWay());
             PayloadType payloadType = payloadTypes.get(operationName);
             configuration.setPayloadType(payloadType);
             resolveEncoders(op, wire, classloader, configuration);
@@ -147,6 +154,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
             Destination requestDestination = resolver.resolve(destinationDefinition, requestConnectionFactory, env);
             wireConfiguration.setRequestConnectionFactory(requestConnectionFactory);
             wireConfiguration.setRequestDestination(requestDestination);
+
             if (metadata.isResponse()) {
                 connectionFactoryDefinition = metadata.getResponseConnectionFactory();
                 checkDefaults(target, connectionFactoryDefinition);
@@ -154,8 +162,8 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
                 ConnectionFactory responseConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
                 destinationDefinition = metadata.getResponseDestination();
                 Destination responseDestination = resolver.resolve(destinationDefinition, responseConnectionFactory, env);
-                JmsResponseMessageListener receiver = new JmsResponseMessageListener(responseDestination, responseConnectionFactory);
-                wireConfiguration.setMessageReceiver(receiver);
+                ResponseListener listener = new ResponseListener(responseDestination, responseConnectionFactory, tm);
+                wireConfiguration.setResponseListener(listener);
             }
         } catch (JmsLookupException e) {
             throw new WiringException(e);

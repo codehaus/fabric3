@@ -46,6 +46,8 @@ package org.fabric3.binding.jms.common;
 import org.fabric3.model.type.ModelObject;
 
 /**
+ * Encapsulates a response configuration.
+ *
  * @version $Revision$ $Date$
  */
 public class ResponseDefinition extends ModelObject {

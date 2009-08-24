@@ -44,6 +44,8 @@
 package org.fabric3.binding.jms.common;
 
 /**
+ * JMS schemes used to correlate messages.
+ *
  * @version $Revision$ $Date$
  */
 public enum CorrelationScheme {

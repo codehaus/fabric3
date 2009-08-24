@@ -43,6 +43,7 @@
  */
 package org.fabric3.binding.jms.runtime;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -50,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -62,7 +64,7 @@ import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
+import org.fabric3.binding.jms.spi.runtime.host.JmsHost2;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
@@ -77,13 +79,12 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Attaches the target end of a wire (a service) to a JMS queue.
+ * Attaches a service endpoint to a JMS destination.
  *
  * @version $Revision$ $Date$
  */
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefinition>, JmsSourceWireAttacherMBean {
-    private TransactionHandler transactionHandler;
-    private JmsHost jmsHost;
+    private JmsHost2 jmsHost;
     private ClassLoaderRegistry classLoaderRegistry;
     private AdministeredObjectResolver resolver;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
@@ -91,11 +92,9 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
 
     public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference TransactionHandler transactionHandler,
-                                 @Reference JmsHost jmsHost) {
+                                 @Reference JmsHost2 jmsHost) {
         this.resolver = resolver;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.transactionHandler = transactionHandler;
         this.jmsHost = jmsHost;
     }
 
@@ -110,40 +109,31 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
     }
 
     public void attach(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
-        ServiceListenerConfiguration configuration = new ServiceListenerConfiguration();
-        configuration.setServiceUri(target.getUri());
+        URI serviceUri = target.getUri();
         ClassLoader classloader = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
-        configuration.setClassloader(classloader);
-        configuration.setTransactionType(source.getTransactionType());
-        configuration.setTransactionHandler(transactionHandler);
-        resolveAdministeredObjects(source, configuration);
+        TransactionType trxType = source.getTransactionType();
+        WireHolder wireHolder = createWireHolder(wire, source, target, classloader, trxType);
 
-        WireHolder wireHolder = createWireHolder(wire, source, target, configuration);
+        ResolvedObjects objects = resolveAdministeredObjects(source);
 
-        if (source.getMetadata().isResponse()) {
-            RequestResponseMessageListener listener = new RequestResponseMessageListener(wireHolder);
-            configuration.setMessageListener(listener);
-        } else {
-            OneWayMessageListener listener = new OneWayMessageListener(wireHolder);
-            configuration.setMessageListener(listener);
-        }
         try {
-            if (jmsHost.isRegistered(configuration.getServiceUri())) {
+            ConnectionFactory requestFactory = objects.getRequestFactory();
+            Destination requestDestination = objects.getRequestDestination();
+            ConnectionFactory responseFactory = objects.getResponseFactory();
+            Destination responseDestination = objects.getResponseDestination();
+            ServiceListener listener = new ServiceListener(wireHolder, responseDestination, responseFactory, classloader);
+            if (jmsHost.isRegistered(serviceUri)) {
                 // the wire has changed and it is being reprovisioned
-                jmsHost.unregisterListener(configuration.getServiceUri());
+                jmsHost.unregister(serviceUri);
             }
-            jmsHost.registerListener(configuration);
-        } catch (JmsHostException e) {
+            jmsHost.register(serviceUri, listener, requestDestination, requestFactory);
+        } catch (JMSException e) {
             throw new WiringException(e);
         }
     }
 
     public void detach(JmsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
-        try {
-            jmsHost.unregisterListener(target.getUri());
-        } catch (JmsHostException e) {
-            throw new WiringException(e);
-        }
+        jmsHost.unregister(target.getUri());
     }
 
     public void attachObjectFactory(JmsSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition definition)
@@ -155,7 +145,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         throw new AssertionError();
     }
 
-    private void resolveAdministeredObjects(JmsSourceDefinition source, ServiceListenerConfiguration configuration) throws WiringException {
+    private ResolvedObjects resolveAdministeredObjects(JmsSourceDefinition source) throws WiringException {
         try {
             JmsBindingMetadata metadata = source.getMetadata();
             Hashtable<String, String> env = metadata.getEnv();
@@ -164,21 +154,21 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
             checkDefaults(source, requestConnectionFactoryDefinition);
 
             ConnectionFactory requestConnectionFactory = resolver.resolve(requestConnectionFactoryDefinition, env);
-            DestinationDefinition destinationDefinition = metadata.getDestination();
-            Destination requestDestination = resolver.resolve(destinationDefinition, requestConnectionFactory, env);
-            configuration.setRequestConnectionFactory(requestConnectionFactory);
-            configuration.setRequestDestination(requestDestination);
+            DestinationDefinition requestDestinationDefinition = metadata.getDestination();
+            Destination requestDestination = resolver.resolve(requestDestinationDefinition, requestConnectionFactory, env);
+
+            ConnectionFactory responseConnectionFactory = null;
+            Destination responseDestination = null;
             if (metadata.isResponse()) {
                 ConnectionFactoryDefinition responseConnectionFactoryDefinition = metadata.getResponseConnectionFactory();
 
                 checkDefaults(source, responseConnectionFactoryDefinition);
 
-                ConnectionFactory responseConnectionFactory = resolver.resolve(responseConnectionFactoryDefinition, env);
-                DestinationDefinition responseDestinationDestination = metadata.getResponseDestination();
-                Destination responseDestination = resolver.resolve(responseDestinationDestination, responseConnectionFactory, env);
-                configuration.setResponseConnectionFactory(responseConnectionFactory);
-                configuration.setResponseDestination(responseDestination);
+                responseConnectionFactory = resolver.resolve(responseConnectionFactoryDefinition, env);
+                DestinationDefinition responseDestinationDefinition = metadata.getResponseDestination();
+                responseDestination = resolver.resolve(responseDestinationDefinition, responseConnectionFactory, env);
             }
+            return new ResolvedObjects(requestConnectionFactory, requestDestination, responseConnectionFactory, responseDestination);
         } catch (JmsLookupException e) {
             throw new WiringException(e);
         }
@@ -187,7 +177,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
     private WireHolder createWireHolder(Wire wire,
                                         JmsSourceDefinition source,
                                         PhysicalTargetDefinition target,
-                                        ServiceListenerConfiguration configuration) throws WiringException {
+                                        ClassLoader classloader,
+                                        TransactionType trxType) throws WiringException {
         String callbackUri = null;
         if (target.getCallbackUri() != null) {
             callbackUri = target.getCallbackUri().toString();
@@ -218,7 +209,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
                 throw new WiringException("Parameter encoder factory not found for: " + dataBinding);
             }
             try {
-                parameterEncoder = factory.getInstance(wire, configuration.getClassloader());
+                parameterEncoder = factory.getInstance(wire, classloader);
             } catch (EncoderException e) {
                 throw new WiringException(e);
             }
@@ -227,7 +218,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
                 throw new WiringException("Message encoder not found for: " + dataBinding);
             }
         }
-        return new WireHolder(chainHolders, callbackUri, correlationScheme, configuration.getTransactionType(), messageEncoder, parameterEncoder);
+        return new WireHolder(chainHolders, callbackUri, correlationScheme, trxType, messageEncoder, parameterEncoder);
     }
 
     /**
@@ -247,5 +238,37 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         }
     }
 
+    private class ResolvedObjects {
+        private ConnectionFactory requestFactory;
+        private ConnectionFactory responseFactory;
+        private Destination requestDestination;
+        private Destination responseDestination;
+
+        private ResolvedObjects(ConnectionFactory requestFactory,
+                                Destination requestDestination,
+                                ConnectionFactory responseFactory,
+                                Destination responseDestination) {
+            this.requestFactory = requestFactory;
+            this.requestDestination = requestDestination;
+            this.responseFactory = responseFactory;
+            this.responseDestination = responseDestination;
+        }
+
+        public ConnectionFactory getRequestFactory() {
+            return requestFactory;
+        }
+
+        public ConnectionFactory getResponseFactory() {
+            return responseFactory;
+        }
+
+        public Destination getRequestDestination() {
+            return requestDestination;
+        }
+
+        public Destination getResponseDestination() {
+            return responseDestination;
+        }
+    }
 
 }

@@ -48,7 +48,7 @@ import javax.jms.Destination;
 
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JmsMonitor;
-import org.fabric3.binding.jms.runtime.ServiceMessageListener;
+import org.fabric3.binding.jms.runtime.host.standalone.ServiceMessageListener;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 
 /**

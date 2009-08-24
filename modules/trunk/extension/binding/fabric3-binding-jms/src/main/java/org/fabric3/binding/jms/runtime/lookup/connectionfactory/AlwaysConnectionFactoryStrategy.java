@@ -50,11 +50,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Collections;
 import javax.jms.ConnectionFactory;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.runtime.lookup.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
+import org.fabric3.binding.jms.spi.runtime.factory.ConnectionFactoryManager;
+import org.fabric3.binding.jms.spi.runtime.factory.FactoryRegistrationException;
 
 /**
  * Implementation that always attempts to create a connection factory.
@@ -62,32 +67,44 @@ import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
  * @version $Revision$ $Date$
  */
 public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrategy {
+    private ConnectionFactoryManager manager;
+
+    public AlwaysConnectionFactoryStrategy(@Reference ConnectionFactoryManager manager) {
+        this.manager = manager;
+    }
 
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) throws JmsLookupException {
 
         try {
-            ConnectionFactory cf = (ConnectionFactory) Class.forName(definition.getName()).newInstance();
+            String name = definition.getName();
             Map<String, String> props = definition.getProperties();
+            String className = props.get("class");
+            if (className == null) {
+                throw new JmsLookupException("The 'class' attribute must be set");
+            }
+            ConnectionFactory factory = (ConnectionFactory) Class.forName(className).newInstance();
             // TODO We may need to factor this into provider specific classes rather than making the general assumption on bean style props
-            for (PropertyDescriptor pd : Introspector.getBeanInfo(cf.getClass()).getPropertyDescriptors()) {
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(factory.getClass()).getPropertyDescriptors()) {
                 String propName = pd.getName();
                 String propValue = props.get(propName);
                 Method writeMethod = pd.getWriteMethod();
                 if (propValue != null && writeMethod != null) {
-                    writeMethod.invoke(cf, propValue);
+                    writeMethod.invoke(factory, propValue);
                 }
             }
-            return cf;
-        } catch (InstantiationException ex) {
-            throw new JmsLookupException("Unable to create connection factory", ex);
-        } catch (IllegalAccessException ex) {
-            throw new JmsLookupException("Unable to create connection factory", ex);
-        } catch (ClassNotFoundException ex) {
-            throw new JmsLookupException("Unable to create connection factory", ex);
-        } catch (IntrospectionException ex) {
-            throw new JmsLookupException("Unable to create connection factory", ex);
-        } catch (InvocationTargetException ex) {
-            throw new JmsLookupException("Unable to create connection factory", ex);
+            return manager.register(name, factory, Collections.<String, String>emptyMap());
+        } catch (InstantiationException e) {
+            throw new JmsLookupException("Unable to create connection factory", e);
+        } catch (IllegalAccessException e) {
+            throw new JmsLookupException("Unable to create connection factory", e);
+        } catch (ClassNotFoundException e) {
+            throw new JmsLookupException("Unable to create connection factory", e);
+        } catch (IntrospectionException e) {
+            throw new JmsLookupException("Unable to create connection factory", e);
+        } catch (InvocationTargetException e) {
+            throw new JmsLookupException("Unable to create connection factory", e);
+        } catch (FactoryRegistrationException e) {
+            throw new JmsLookupException("Unable to create connection factory", e);
         }
 
     }

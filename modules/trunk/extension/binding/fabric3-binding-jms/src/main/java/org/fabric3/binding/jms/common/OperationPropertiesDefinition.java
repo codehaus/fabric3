@@ -44,7 +44,9 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * ModelObject represents binding.jms\operationProperties.
+ * Represents binding.jms\operationProperties.
+ *
+ * @version $Revision$ $Date$
  */
 public class OperationPropertiesDefinition extends PropertyAwareObject {
     private static final long serialVersionUID = -1325680761205311178L;

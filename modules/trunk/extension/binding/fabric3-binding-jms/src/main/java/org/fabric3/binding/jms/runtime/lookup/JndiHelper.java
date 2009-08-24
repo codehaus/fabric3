@@ -50,7 +50,9 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 
 /**
- * Helper class for JNDI lookup.
+ * Performs JNDI resolution.
+ *
+ * @version $Revision$ $Date$
  */
 public class JndiHelper {
 

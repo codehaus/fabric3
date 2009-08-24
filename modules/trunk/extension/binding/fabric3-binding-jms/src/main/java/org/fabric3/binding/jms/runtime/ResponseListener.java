@@ -50,58 +50,78 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+import javax.transaction.TransactionManager;
 
 import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 
 /**
- * Message listener that blocks for responses from a service. This listener is attached to the reference side of a wire.
+ * MessageListener that blocks for responses from a service provider. This listener is attached to the reference side of a wire.
  *
  * @version $Revison$ $Date$
  */
-public class JmsResponseMessageListener {
-
-    /**
-     * Destination for receiving response.
-     */
+public class ResponseListener {
     private Destination destination;
-
-    /**
-     * Connection factory for receiving response.
-     */
     private ConnectionFactory connectionFactory;
+    private TransactionManager tm;
 
     /**
-     * @param destination       Destination for sending responses.
-     * @param connectionFactory Connection factory for sending responses.
+     * @param destination       the response destination
+     * @param connectionFactory the response connection factory
+     * @param tm                the JTA transaction manager
      */
-    public JmsResponseMessageListener(Destination destination, ConnectionFactory connectionFactory) {
+    public ResponseListener(Destination destination, ConnectionFactory connectionFactory, TransactionManager tm) {
         this.destination = destination;
         this.connectionFactory = connectionFactory;
+        this.tm = tm;
     }
 
     /**
-     * Performs a blocking receive.
+     * Performs a blocking receive, i.e. control will not be returned to application code until a response is received.
      *
      * @param correlationId Correlation Id.
      * @return Received message.
      */
     public Message receive(String correlationId) {
         Connection connection = null;
+        Session session = null;
         try {
             connection = connectionFactory.createConnection();
-            Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
+            connection.start();  // ensure the connection is started
+            session = connection.createSession(true, Session.SESSION_TRANSACTED);
             String selector = "JMSCorrelationID = '" + correlationId + "'";
             MessageConsumer consumer = session.createConsumer(destination, selector);
-            connection.start();
+            if (Status.STATUS_NO_TRANSACTION == tm.getStatus()) {
+                tm.begin();
+            }
             Message message = consumer.receive();
-            session.commit();
+            tm.commit();
             return message;
-        } catch (JMSException ex) {
+        } catch (JMSException e) {
             // bubble exception to the client
-            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, ex);
+            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
+        } catch (SystemException e) {
+            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
+        } catch (NotSupportedException e) {
+            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
+        } catch (HeuristicMixedException e) {
+            //FIXME
+            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
+        } catch (HeuristicRollbackException e) {
+            //FIXME
+            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
+        } catch (RollbackException e) {
+            //FIXME
+            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
         } finally {
+            JmsHelper.closeQuietly(session);
             JmsHelper.closeQuietly(connection);
         }
 

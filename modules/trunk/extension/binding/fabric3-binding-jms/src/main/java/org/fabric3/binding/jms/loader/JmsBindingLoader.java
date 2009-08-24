@@ -75,6 +75,8 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
 
 /**
+ * Loads a <code>&lt;binding.jms&gt;</code> entry in a composite.
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
@@ -187,9 +189,6 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
     }
 
-    /*
-     * Loads response definition.
-     */
     private ResponseDefinition loadResponse(XMLStreamReader reader) throws XMLStreamException {
 
         ResponseDefinition response = new ResponseDefinition();
@@ -220,53 +219,32 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
     }
 
-    /*
-     * Loads connection factory definition.
-     */
     private ConnectionFactoryDefinition loadConnectionFactory(XMLStreamReader reader) throws XMLStreamException {
-
         ConnectionFactoryDefinition connectionFactory = new ConnectionFactoryDefinition();
-
         connectionFactory.setName(reader.getAttributeValue(null, "name"));
-
         String create = reader.getAttributeValue(null, "create");
         if (create != null) {
             connectionFactory.setCreate(CreateOption.valueOf(create));
         }
         loadProperties(reader, connectionFactory, "connectionFactory");
-
         return connectionFactory;
-
     }
 
-    /*
-     * Loads destination definition.
-     */
     private DestinationDefinition loadDestination(XMLStreamReader reader) throws XMLStreamException {
-
         DestinationDefinition destination = new DestinationDefinition();
-
         destination.setName(reader.getAttributeValue(null, "name"));
-
         String create = reader.getAttributeValue(null, "create");
         if (create != null) {
             destination.setCreate(CreateOption.valueOf(create));
         }
-
         String type = reader.getAttributeValue(null, "type");
         if (type != null) {
             destination.setDestinationType(DestinationType.valueOf(type));
         }
-
         loadProperties(reader, destination, "destination");
-
         return destination;
-
     }
 
-    /*
-     * Loads headers.
-     */
     private HeadersDefinition loadHeaders(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         HeadersDefinition headers = new HeadersDefinition();
         headers.setJMSCorrelationId(reader.getAttributeValue(null, "JMSCorrelationId"));
@@ -305,9 +283,6 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         return headers;
     }
 
-    /*
-     * Loads operation properties.
-     */
     private OperationPropertiesDefinition loadOperationProperties(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException {
         OperationPropertiesDefinition optProperties = new OperationPropertiesDefinition();
@@ -336,9 +311,6 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
     }
 
-    /*
-    * Loads properties.
-    */
     private void loadProperties(XMLStreamReader reader, PropertyAwareObject parent, String parentName) throws XMLStreamException {
         String name;
         while (true) {
@@ -359,9 +331,6 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         }
     }
 
-    /**
-     * Loads a property. TODO Support property type.
-     */
     private void loadProperty(XMLStreamReader reader, PropertyAwareObject parent) throws XMLStreamException {
         final String key = reader.getAttributeValue(null, "name");
         final String value = reader.getElementText();

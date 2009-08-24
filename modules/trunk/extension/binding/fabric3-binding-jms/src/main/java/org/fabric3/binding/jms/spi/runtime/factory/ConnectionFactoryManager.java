@@ -35,19 +35,44 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.jms.runtime;
+package org.fabric3.binding.jms.spi.runtime.factory;
 
-import org.fabric3.host.Fabric3Exception;
+import java.util.Map;
+import javax.jms.ConnectionFactory;
 
 /**
- * Denotes an exception registering or unregistering a listener with a JmsHost.
+ * Manages JMS connection factories. Implementations are responsible for registering connection factories provided by a JMS provider with the
+ * runtime's JTA transaction manager in a way specific to the latter. For example, a ConnectionFactoryManager may implement JMS connection and session
+ * pooling specific to the transaction manager.
  *
  * @version $Rev$ $Date$
  */
-public class JmsHostException extends Fabric3Exception {
-    private static final long serialVersionUID = 8872645176633966439L;
+public interface ConnectionFactoryManager {
 
-    public JmsHostException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    /**
+     * Registers a connection factory.
+     *
+     * @param name       the connection factory name
+     * @param factory    the connection factory
+     * @param properties properties such as pooling configuration
+     * @return the registered connection factory, which may be a wrapper
+     * @throws FactoryRegistrationException if there is an error registering
+     */
+    ConnectionFactory register(String name, ConnectionFactory factory, Map<String, String> properties) throws FactoryRegistrationException;
+
+    /**
+     * Removes a registered connection factory.
+     *
+     * @param name the connection factory name
+     */
+    void unregister(String name);
+
+    /**
+     * Returns the registered connection factory for the given name.
+     *
+     * @param name the name the connection factory was registered with
+     * @return the connection factory or null if no factory for the name was registered
+     */
+    ConnectionFactory get(String name);
+
 }

@@ -49,6 +49,11 @@ import java.util.Map;
 
 import org.fabric3.model.type.ModelObject;
 
+/**
+ * Represents a JMS binding configuration element that contains properties.
+ *
+ * @version $Revision$ $Date$
+ */
 public abstract class PropertyAwareObject extends ModelObject {
     private static final long serialVersionUID = 7862305926561642783L;
     private Map<String, String> properties = null;
@@ -74,12 +79,6 @@ public abstract class PropertyAwareObject extends ModelObject {
         properties.put(name, value);
     }
 
-    private void ensurePropertiesNotNull() {
-        if (properties == null) {
-            properties = new HashMap<String, String>();
-        }
-    }
-
     /**
      * Returns properties used to create the administered object.
      *
@@ -92,4 +91,11 @@ public abstract class PropertyAwareObject extends ModelObject {
             return Collections.emptyMap();
         }
     }
+
+    private void ensurePropertiesNotNull() {
+        if (properties == null) {
+            properties = new HashMap<String, String>();
+        }
+    }
+
 }

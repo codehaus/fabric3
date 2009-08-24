@@ -53,27 +53,17 @@ import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * Logical model object for JMS binding definition. TODO Support for overriding request connection, response connection and operation properties from
- * a definition document as well as activation spec and resource adaptor.
+ * Encapsulates JMS binding configuration specified in a composite.
+ * <p/>
+ * TODO Support for overriding request connection, response connection and operation properties from an activation spec and resource adaptor.
  *
  * @version $Revision$ $Date$
  */
 public class JmsBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = -1888120511695824132L;
 
-    /**
-     * Qualified name for the binding element.
-     */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
-
-    /**
-     * A generated URI overriding TargetUri in base class.
-     */
     private URI generatedTargetUri;
-
-    /**
-     * JMS binding metadata shared between logical and physical.
-     */
     private JmsBindingMetadata metadata;
 
 
@@ -102,16 +92,10 @@ public class JmsBindingDefinition extends BindingDefinition {
         addRequiredCapability("jms");
     }
 
-    /**
-     * @return the metadata
-     */
     public JmsBindingMetadata getJmsMetadata() {
         return metadata;
     }
 
-    /**
-     * @param metadata the metadata to set
-     */
     public void setJmsMetadata(JmsBindingMetadata metadata) {
         this.metadata = metadata;
     }

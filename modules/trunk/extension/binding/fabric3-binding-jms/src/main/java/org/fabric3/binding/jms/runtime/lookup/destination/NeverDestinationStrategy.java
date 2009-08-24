@@ -55,6 +55,8 @@ import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 
 /**
  * Implementation that always resolves a destination against JNDI and never attempts to create it.
+ *
+ * @version $Revision$ $Date$
  */
 public class NeverDestinationStrategy implements DestinationStrategy {
 

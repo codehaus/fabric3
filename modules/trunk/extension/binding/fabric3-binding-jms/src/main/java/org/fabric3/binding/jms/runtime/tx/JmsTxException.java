@@ -50,6 +50,7 @@ import org.fabric3.host.Fabric3Exception;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public class JmsTxException extends Fabric3Exception {
     private static final long serialVersionUID = -1184454615953550937L;
 

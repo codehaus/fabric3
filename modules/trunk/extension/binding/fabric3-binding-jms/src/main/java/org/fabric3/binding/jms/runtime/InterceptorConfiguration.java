@@ -42,8 +42,7 @@ import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 
 /**
- * Template for configuring a JmsInterceptor. If a JmsResponseMessageListener is not set, the interceptor will be configured to perform one-way
- * invocations.
+ * Template for configuring a JmsInterceptor.
  *
  * @version $Rev$ $Date$
  */
@@ -52,6 +51,7 @@ public class InterceptorConfiguration {
     private PayloadType payloadType;
     private MessageEncoder messageEncoder;
     private ParameterEncoder parameterEncoder;
+    private boolean oneWay;
     private WireConfiguration wireConfiguration;
 
     public InterceptorConfiguration(WireConfiguration wireConfiguration) {
@@ -94,4 +94,11 @@ public class InterceptorConfiguration {
         this.parameterEncoder = parameterEncoder;
     }
 
+    public boolean isOneWay() {
+        return oneWay;
+    }
+
+    public void setOneWay(boolean oneWay) {
+        this.oneWay = oneWay;
+    }
 }

@@ -44,7 +44,7 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * JMS connection factory definition.
+ * Represents a connection factory configuration.
  *
  * @version $Revision$ $Date$
  */

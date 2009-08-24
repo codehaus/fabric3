@@ -49,7 +49,7 @@ import junit.framework.TestCase;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQXAConnectionFactory;
 
-import org.fabric3.binding.jms.runtime.factory.ConnectionFactoryRegistry;
+import org.fabric3.binding.jms.spi.runtime.factory.ConnectionFactoryManager;
 
 /**
  * @version $Rev$ $Date$
@@ -58,7 +58,12 @@ public class ConnectionFactoryParserTestCase extends TestCase {
     private static final String XML = "<foo><value>" +
             "<connection.factories>" +
             "   <connection.factory name='testFactory' broker.url='vm://broker' type='xa'>" +
-            "      <optimizedMessageDispatch>true</optimizedMessageDispatch>" +
+            "      <factory.properties>" +
+            "           <optimizedMessageDispatch>true</optimizedMessageDispatch>" +
+            "      </factory.properties>" +
+            "      <pool.properties>" +
+            "            <maxSize>10</maxSize>" +
+            "      </pool.properties>" +
             "   </connection.factory>" +
             "   <connection.factory name='nonXAtestFactory' broker.url='vm://broker'/>" +
             "</connection.factories>" +
@@ -66,7 +71,7 @@ public class ConnectionFactoryParserTestCase extends TestCase {
 
     private ConnectionFactoryParser parser;
     private XMLStreamReader reader;
-    private MockConnectionFactoryRegistry registry;
+    private MockConnectionFactoryManager registry;
 
 
     public void testParse() throws Exception {
@@ -78,7 +83,7 @@ public class ConnectionFactoryParserTestCase extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        registry = new MockConnectionFactoryRegistry();
+        registry = new MockConnectionFactoryManager();
         parser = new ConnectionFactoryParser(registry);
 
         InputStream stream = new ByteArrayInputStream(XML.getBytes());
@@ -88,15 +93,19 @@ public class ConnectionFactoryParserTestCase extends TestCase {
 
     }
 
-    private class MockConnectionFactoryRegistry implements ConnectionFactoryRegistry {
+    private class MockConnectionFactoryManager implements ConnectionFactoryManager {
         private Map<String, ConnectionFactory> factories = new HashMap<String, ConnectionFactory>();
 
         public ConnectionFactory get(String name) {
             return factories.get(name);
         }
 
-        public void register(String name, ConnectionFactory factory) {
+        public ConnectionFactory register(String name, ConnectionFactory factory, Map<String, String> properties) {
             factories.put(name, factory);
+            if ("testFactory".equals(name)) {
+                assertNotNull(properties.get("maxSize"));
+            }
+            return factory;
         }
 
         public void unregister(String name) {

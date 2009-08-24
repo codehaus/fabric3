@@ -50,7 +50,7 @@ import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * Monitor interface for JMS Host.
+ * Monitor interface for JmsHost.
  *
  * @version $Rev$ $Date$
  */
@@ -63,22 +63,6 @@ public interface JmsMonitor {
      */
     @Severe
     void jmsListenerError(Throwable e);
-
-    /**
-     * Callback when a service has been provisioned as a JMS endpoint
-     *
-     * @param uri the service URI
-     */
-    @Info
-    void registerListener(URI uri);
-
-    /**
-     * Callback when a service has been removed as a JMS endpoint
-     *
-     * @param uri the service URI
-     */
-    @Info
-    void unRegisterListener(URI uri);
 
     /**
      * Callback indicating the extension has been started.

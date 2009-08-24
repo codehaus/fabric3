@@ -56,6 +56,8 @@ import org.fabric3.binding.jms.runtime.lookup.JndiHelper;
 
 /**
  * Implementation that attempts to resolve a a destination in JNDI and if it is not found, will create it.
+ *
+ * @version $Revision$ $Date$
  */
 public class IfNotExistDestinationStrategy implements DestinationStrategy {
     private DestinationStrategy always = new AlwaysDestinationStrategy();

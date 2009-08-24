@@ -34,22 +34,47 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.binding.jms.common;
+*/
+
+package org.fabric3.binding.jms.spi.runtime.host;
+
+import java.net.URI;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageListener;
 
 /**
- * Options for resolving destinations and connection factories.
+ * Provisions MessageListeners that dispatch to service endpoints with the underlying JMS infrastructure.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public enum CreateOption {
+public interface JmsHost2 {
 
-    always, never, ifnotexist
+    /**
+     * Returns true if a listener for the service URI is registered.
+     *
+     * @param serviceUri the service URI
+     * @return true if a listener is registered
+     */
+    boolean isRegistered(URI serviceUri);
+
+    /**
+     * Register a MessageListener which dispatches inbound JMS messages to a service.
+     *
+     * @param serviceUri  the service URI
+     * @param listener    the MessageListener
+     * @param destination the distination messages are received from
+     * @param factory     the JMS connection factory
+     * @throws JMSException if an error registering the listener is encountered
+     */
+    public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory) throws JMSException;
+
+    /**
+     * Unregister the MessageListener for the given service
+     *
+     * @param serviceUri the service URI
+     */
+    public void unregister(URI serviceUri);
 
 }

@@ -54,13 +54,10 @@ import org.fabric3.binding.jms.common.JmsURIMetadata;
 import org.fabric3.binding.jms.common.ResponseDefinition;
 
 /**
- * Helper class for JMS loader.
+ * Helper class for loading JMS binding configuration from a comppsite.
  */
 public class JmsLoaderHelper {
     private static final String DEFAULT_CLIENT_QUEUE = "clientQueue";
-    /**
-     * Jndi name for default ConnectionFactory
-     */
     private static final String DEFAULT_JMS_CONNECTION_FACTORY = "connectionFactory";
 
     private JmsLoaderHelper() {
