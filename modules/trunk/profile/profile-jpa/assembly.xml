@@ -30,10 +30,10 @@ Public License. See the accompanying license file for details.
             <includes>
                 <include>org.codehaus.fabric3:fabric3-jpa-spi</include>
                 <include>org.codehaus.fabric3:fabric3-jpa-hibernate</include>
-                <include>org.codehaus.fabric3:fabric3-xapool</include>
                 <include>org.codehaus.fabric3:fabric3-tx</include>
-                <include>org.codehaus.fabric3:fabric3-tx-jotm</include>
+                <include>org.codehaus.fabric3:fabric3-atomikos</include>
                 <include>javax.resource:com.springsource.javax.resource</include>
+                <include>javax.resource:com.springsource.javax.jms</include>
                 <include>javax.persistence:com.springsource.javax.persistence</include>
              </includes>
             <outputDirectory>/repository</outputDirectory>
