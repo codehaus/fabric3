@@ -30,7 +30,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>fabric3-binding-test-harness</module>
 		<module>fabric3-binding-jms</module>
 		<module>fabric3-binding-test</module>
 		<module>fabric3-binding-ws</module>
