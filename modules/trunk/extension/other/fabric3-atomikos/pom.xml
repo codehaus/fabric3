@@ -33,42 +33,27 @@
         <dependency>
             <groupId>com.atomikos</groupId>
             <artifactId>transactions-api</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.5</version>
         </dependency>
         <dependency>
             <groupId>com.atomikos</groupId>
             <artifactId>transactions</artifactId>
-            <version>3.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atomikos</groupId>
-            <artifactId>transactions-essentials-all</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.5</version>
         </dependency>
         <dependency>
             <groupId>com.atomikos</groupId>
             <artifactId>atomikos-util</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.5</version>
         </dependency>
         <dependency>
             <groupId>com.atomikos</groupId>
             <artifactId>transactions-jdbc</artifactId>
-            <version>3.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atomikos</groupId>
-            <artifactId>transactions-jms</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.5</version>
         </dependency>
         <dependency>
             <groupId>com.atomikos</groupId>
             <artifactId>transactions-jta</artifactId>
-            <version>3.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atomikos</groupId>
-            <artifactId>transactions-hibernate3</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.5</version>
         </dependency>
 
         <dependency>
@@ -79,17 +64,19 @@
         </dependency>
 
         <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-atomikos-install</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>com.springsource.javax.transaction</artifactId>
             <version>1.1.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>javax.resource</groupId>-->
-        <!--<artifactId>connector-api</artifactId>-->
-        <!--<version>1.5</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>stax</groupId>

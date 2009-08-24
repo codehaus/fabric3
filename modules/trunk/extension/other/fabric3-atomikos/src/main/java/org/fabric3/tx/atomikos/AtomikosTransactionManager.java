@@ -35,7 +35,6 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-
 package org.fabric3.tx.atomikos;
 
 import java.io.File;
@@ -108,13 +107,16 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
         String path = trxDir.getCanonicalPath();
         properties.setProperty(OUTPUT_DIR_PROPERTY_NAME, path);
         properties.setProperty(LOG_BASE_DIR_PROPERTY_NAME, path);
+//        PrintStreamConsole console = new PrintStreamConsole(System.out);
+//        console.setLevel(Console.DEBUG);
+//        Configuration.addConsole(console);
         monitor.extensionStarted();
     }
 
     @Destroy
     public void destroy() {
         if (uts != null) {
-            uts.shutdown(false);
+            uts.shutdown(true);
             uts = null;
         }
     }
@@ -125,8 +127,8 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
     }
 
     /**
-     * Performs initialization and transaction recovery. Recovery must be done after transactional resources (potentially in other extensions) have
-     * registered with the transaction manager.
+     * Performs initialization and transaction recovery. This is done after transactional resources (potentially in other extensions) have registered
+     * with the transaction manager.
      */
     public void onEvent(RuntimeRecover event) {
         synchronized (TransactionManagerImp.class) {

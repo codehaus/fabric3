@@ -14,66 +14,69 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="sca-spec" />
     <orderEntry type="module-library">
-      <library name="com.atomikos:transactions-api:3.5.2">
+      <library name="com.atomikos:transactions-api:3.5.5">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/transactions-api.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$SOURCES$/atomikos/AtomikosTransactionsEssentials-3.5.1/sources" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="com.atomikos:transactions-essentials-all:3.5.2">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/transactions-essentials-all.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="com.atomikos:transactions-hibernate3:3.5.2">
+      <library name="com.atomikos:transactions-hibernate3:3.5.5">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/transactions-hibernate3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$SOURCES$/atomikos/AtomikosTransactionsEssentials-3.5.1/sources" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="com.atomikos:transactions-jdbc:3.5.2">
+      <library name="com.atomikos:transactions-jdbc:3.5.5">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/transactions-jdbc.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$SOURCES$/atomikos/AtomikosTransactionsEssentials-3.5.1/sources" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="com.atomikos:transactions-jms:3.5.2">
+      <library name="com.atomikos:transactions-jms:3.5.5">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/transactions-jms.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$SOURCES$/atomikos/AtomikosTransactionsEssentials-3.5.1/sources" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="com.atomikos:transactions-jta:3.5.2">
+      <library name="com.atomikos:transactions-jta:3.5.5">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/transactions-jta.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$SOURCES$/atomikos/AtomikosTransactionsEssentials-3.5.1/sources" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="com.atomikos:transactions:3.5.2">
+      <library name="com.atomikos:transactions:3.5.5">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/transactions.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$SOURCES$/atomikos/AtomikosTransactionsEssentials-3.5.1/sources" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-spi" />
@@ -92,6 +95,15 @@
       <library>
         <CLASSES>
           <root url="jar://$APPLICATION_HOME_DIR$/lib/junit.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="com.atomikos:atomikos-util:3.5.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../fabric3-atomikos-install/src/repository/atomikos-util.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

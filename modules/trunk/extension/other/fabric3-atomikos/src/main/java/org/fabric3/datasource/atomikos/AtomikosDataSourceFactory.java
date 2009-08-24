@@ -106,6 +106,7 @@ public class AtomikosDataSourceFactory implements DataSourceFactory {
             bean.setUniqueResourceName(name);
             bean.setXaProperties(configuration.getProperties());
             bean.setXaDataSourceClassName(configuration.getDriverClass());
+            // TODO set pool properties
             registerJMX(bean);
             beans.put(name, bean);
             registry.register(name, bean);
@@ -116,6 +117,7 @@ public class AtomikosDataSourceFactory implements DataSourceFactory {
             bean.setUrl(configuration.getUrl());
             bean.setUser(configuration.getUsername());
             bean.setPassword(configuration.getPassword());
+            // TODO set pool properties
             registerJMX(bean);
             beans.put(name, bean);
             registry.register(name, bean);
