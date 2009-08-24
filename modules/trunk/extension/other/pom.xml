@@ -37,7 +37,6 @@
 		<module>fabric3-contribution-scanner-war</module>
 		<module>fabric3-contribution-war</module>
 		<module>fabric3-conversation-propagation</module>
-		<module>fabric3-db-h2</module>
 		<module>fabric3-ftp-server</module>
 		<module>fabric3-ftp-spi</module>
 		<module>fabric3-jdk-proxy</module>
@@ -52,11 +51,9 @@
 		<module>fabric3-sca-intents</module>
 		<module>fabric3-security-impl</module>
 		<module>fabric3-tx</module>
-		<module>fabric3-tx-jotm</module>
 		<module>fabric3-atomikos-install</module>
 		<module>fabric3-atomikos</module>
 		<module>fabric3-atomikos-jms</module>
-		<module>fabric3-xapool</module>
 		<module>fabric3-timer-spi</module>
 		<module>fabric3-timer-quartz</module>
 		<module>fabric3-test-spi</module>
