@@ -45,16 +45,13 @@
             <artifactId>fabric3-tx</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-tx-jotm</artifactId>
+            <artifactId>fabric3-atomikos</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-xapool</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-timer</artifactId>
@@ -65,6 +62,14 @@
             <artifactId>fabric3-timer-quartz</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- JMS is needed for Atomikos -->
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>com.springsource.javax.jms</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
         <dependency>
             <groupId>javax.resource</groupId>
             <artifactId>com.springsource.javax.resource</artifactId>

@@ -28,14 +28,14 @@
  
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3:fabric3-xapool</include>
                 <include>org.codehaus.fabric3:fabric3-tx</include>
-                <include>org.codehaus.fabric3:fabric3-tx-jotm</include>
-                <include>org.codehaus.fabric3:fabric3-timer</include>
+                <include>org.codehaus.fabric3:fabric3-atomikos</include>
+                  <include>org.codehaus.fabric3:fabric3-timer</include>
                 <include>org.codehaus.fabric3:fabric3-timer-quartz</include>
                 <include>org.codehaus.fabric3:fabric3-timer-spi</include>
                 <include>javax.resource:com.springsource.javax.resource</include>
-             </includes>
+                <include>javax.resource:com.springsource.javax.jms</include>
+              </includes>
             <outputDirectory>/repository</outputDirectory>
         </dependencySet>
   </dependencySets>

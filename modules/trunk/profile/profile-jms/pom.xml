@@ -66,16 +66,20 @@ Public License. See the accompanying license file for details.
             <artifactId>fabric3-tx</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-tx-jotm</artifactId>
+            <artifactId>fabric3-atomikos</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-xapool</artifactId>
+            <artifactId>fabric3-atomikos-jms</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>com.springsource.javax.jms</artifactId>
