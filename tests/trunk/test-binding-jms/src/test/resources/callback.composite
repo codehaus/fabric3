@@ -21,17 +21,11 @@
         <implementation.java class="org.fabric3.tests.binding.harness.callback.AsyncClientServiceImpl"/>
         <reference name="service">
             <binding.jms>
-                <destination name="asyncClientServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="asyncClientServiceQueue" type="queue"/>
             </binding.jms>
             <callback>
                 <binding.jms>
-                    <destination name="asyncClientServiceCallbackQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="asyncClientServiceCallbackQueue" type="queue"/>
                 </binding.jms>
             </callback>
         </reference>
@@ -41,17 +35,11 @@
         <implementation.java class="org.fabric3.tests.binding.harness.callback.AsyncForwardServiceImpl"/>
         <service name="AsyncForwardService">
             <binding.jms>
-                <destination name="asyncClientServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="asyncClientServiceQueue" type="queue"/>
             </binding.jms>
             <callback>
                 <binding.jms>
-                    <destination name="asyncClientServiceCallbackQueue" type="queue" create="always"/>
-                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                        <property name="brokerURL">vm://broker</property>
-                    </connectionFactory>
+                    <destination name="asyncClientServiceCallbackQueue" type="queue"/>
                 </binding.jms>
             </callback>
         </service>

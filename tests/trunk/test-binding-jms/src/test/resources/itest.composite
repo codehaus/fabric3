@@ -12,9 +12,9 @@
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="JMSTestComposite">
 
-    <include name="JMSTypesComposite"/>
     <include name="JMSCallbackComposite"/>
     <include name="JMSDefaultsComposite"/>
+    <include name="JMSTypesComposite"/>
     <include name="JMSScopeComposite"/>
     <include name="JMSJAXBComposite"/>
     <include name="JMSFaultsComposite"/>

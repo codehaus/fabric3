@@ -23,6 +23,9 @@
         <reference name="service">
             <binding.jms>
                 <destination name="defaultClientQueue"/>
+                <response>
+                    <destination name="defaultClientResponseQueue"/>
+                </response>
             </binding.jms>
             <callback>
                 <binding.jms>
@@ -37,6 +40,9 @@
         <service name="AsyncForwardService">
             <binding.jms>
                 <destination name="defaultClientQueue"/>
+                <response>
+                    <destination name="defaultClientResponseQueue"/>
+                </response>
             </binding.jms>
             <callback>
                 <binding.jms>

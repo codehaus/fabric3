@@ -82,7 +82,22 @@
                 <version>${fabric3.version}</version>
                 <configuration>
                     <runtimeVersion>${fabric3.version}</runtimeVersion>
-                    <systemConfigDir>classes/META-INF</systemConfigDir>
+                    <systemConfig>
+                        <![CDATA[<config>
+                            <datasources>
+                                <datasource name="EmployeeDS" driver="org.h2.Driver" url="jdbc:h2:mem:testDB;DB_CLOSE_DELAY=-1" type="non_xa">
+                                    <url>jdbc:h2:mem:testDB;DB_CLOSE_DELAY=-1</url>
+                                </datasource>
+                            </datasources>
+                        </config>]]>
+                    </systemConfig>
+                    <shared>
+                        <depdency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-db-h2</artifactId>
+                            <version>${fabric3.version}</version>
+                        </depdency>
+                    </shared>
                     <profiles>
                         <profile>
                             <groupId>org.codehaus.fabric3</groupId>
@@ -90,14 +105,55 @@
                             <version>${fabric3.version}</version>
                         </profile>
                     </profiles>
-                    <extensions>
+                    <!--<extensions>-->
+                        <!--<dependency>-->
+                            <!--<groupId>javax.persistence</groupId>-->
+                            <!--<artifactId>com.springsource.javax.persistence</artifactId>-->
+                            <!--<version>1.0.0</version>-->
+                        <!--</dependency>-->
+
+                        <!--<dependency>-->
+                            <!--<groupId>org.codehaus.fabric3</groupId>-->
+                            <!--<artifactId>fabric3-tx</artifactId>-->
+                            <!--<version>${fabric3.version}</version>-->
+                        <!--</dependency>-->
+                        <!--<dependency>-->
+                            <!--<groupId>javax.resource</groupId>-->
+                            <!--<artifactId>com.springsource.javax.resource</artifactId>-->
+                            <!--<version>1.5.0</version>-->
+                        <!--</dependency>-->
+
+                        <!--<dependency>-->
+                            <!--<groupId>org.codehaus.fabric3</groupId>-->
+                            <!--<artifactId>fabric3-jpa-spi</artifactId>-->
+                            <!--<version>${fabric3.version}</version>-->
+                        <!--</dependency>-->
+
+                        <!--<dependency>-->
+                            <!--<groupId>org.codehaus.fabric3</groupId>-->
+                            <!--<artifactId>fabric3-jpa-hibernate</artifactId>-->
+                            <!--<version>${fabric3.version}</version>-->
+                        <!--</dependency>-->
+
+                        <!--<dependency>-->
+                            <!--<groupId>org.codehaus.fabric3</groupId>-->
+                            <!--<artifactId>fabric3-atomikos</artifactId>-->
+                            <!--<version>${fabric3.version}</version>-->
+                        <!--</dependency>-->
+
+                        <!--<dependency>-->
+                            <!--<groupId>javax.jms</groupId>-->
+                            <!--<artifactId>com.springsource.javax.jms</artifactId>-->
+                            <!--<version>1.1.0</version>-->
+                        <!--</dependency>-->
+
                         <!-- Test Extension to Install the Datasource -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3.tests</groupId>
-                            <artifactId>test-ds-extension</artifactId>
-                            <version>0.1-SNAPSHOT</version>
-                        </dependency>
-                    </extensions>
+                        <!--<dependency>-->
+                        <!--<groupId>org.codehaus.fabric3.tests</groupId>-->
+                        <!--<artifactId>test-ds-extension</artifactId>-->
+                        <!--<version>0.1-SNAPSHOT</version>-->
+                        <!--</dependency>-->
+                    <!--</extensions>-->
                 </configuration>
                 <executions>
                     <execution>
@@ -107,20 +163,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>testDB</directory>
-                            <includes>
-                                <include>**/**</include>
-                            </includes>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
+
         </plugins>
     </build>
 

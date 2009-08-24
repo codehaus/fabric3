@@ -21,10 +21,11 @@
         <implementation.java class="org.fabric3.tests.binding.harness.scope.CompositeServiceImpl"/>
         <service name="CompositeService">
             <binding.jms>
-                <destination name="compositeServiceQueue" type="queue" create="always"/>
-                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
-                    <property name="brokerURL">vm://broker</property>
-                </connectionFactory>
+                <destination name="compositeServiceQueue" type="queue" />
+                <response>
+                    <destination name="compositeServiceResponseQueue"/>
+                </response>
+
             </binding.jms>
         </service>
     </component>
