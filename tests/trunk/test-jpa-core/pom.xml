@@ -67,6 +67,13 @@
                             </datasources>
                         </config>]]>
                     </systemConfig>
+                    <shared>
+                        <dependency>
+                            <groupId>com.h2database</groupId>
+                            <artifactId>h2</artifactId>
+                            <version>1.0.71</version>
+                        </dependency>
+                    </shared>
                     <profiles>
                         <profile>
                             <groupId>org.codehaus.fabric3</groupId>
