@@ -16,7 +16,7 @@
 -->
 <project name="Atomikos-Installer">
 
-    <property name="atomikos.version" value="3.5.2"/>
+    <property name="atomikos.version" value="3.5.5"/>
 
     <target name="check-installed">
         <condition property="already.installed">
