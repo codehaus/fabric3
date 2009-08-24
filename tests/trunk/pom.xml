@@ -49,6 +49,7 @@
             </activation>
 
             <modules>
+                <module>test-binding-harness</module>
                 <module>test-function</module>
                 <module>test-policy</module>
                 <module>test-jpa-hibernate</module>
