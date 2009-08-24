@@ -45,4 +45,5 @@ import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
  * @version $Rev$ $Date$
  */
 public class TestBindingSourceDefinition extends PhysicalSourceDefinition {
+    private static final long serialVersionUID = 1777812028385490088L;
 }

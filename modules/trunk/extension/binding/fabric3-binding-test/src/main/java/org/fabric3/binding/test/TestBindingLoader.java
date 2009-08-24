@@ -89,7 +89,7 @@ public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
                 definition = new TestBindingDefinition(new URI(uri), loaderHelper.loadKey(reader));
             }
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("The Burlap binding URI is not valid: " + uri, reader);
+            InvalidValue failure = new InvalidValue("The binding URI is not valid: " + uri, reader);
             context.addError(failure);
         }
         LoaderUtil.skipToEndElement(reader);
