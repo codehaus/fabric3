@@ -49,7 +49,7 @@ import javax.jms.MessageListener;
  *
  * @version $Rev$ $Date$
  */
-public interface JmsHost2 {
+public interface JmsHost {
 
     /**
      * Returns true if a listener for the service URI is registered.

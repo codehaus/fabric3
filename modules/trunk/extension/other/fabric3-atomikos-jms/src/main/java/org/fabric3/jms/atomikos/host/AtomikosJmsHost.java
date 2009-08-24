@@ -56,7 +56,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.spi.runtime.host.HostMonitor;
-import org.fabric3.binding.jms.spi.runtime.host.JmsHost2;
+import org.fabric3.binding.jms.spi.runtime.host.JmsHost;
 import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.event.Fabric3EventListener;
 import org.fabric3.spi.event.RuntimeStart;
@@ -68,8 +68,8 @@ import org.fabric3.spi.event.RuntimeStart;
  * @version $Rev$ $Date$
  */
 @EagerInit
-@Service(JmsHost2.class)
-public class AtomikosJmsHost implements JmsHost2, Fabric3EventListener<RuntimeStart> {
+@Service(JmsHost.class)
+public class AtomikosJmsHost implements JmsHost, Fabric3EventListener<RuntimeStart> {
     private Map<URI, MessageDrivenContainer> containers = new ConcurrentHashMap<URI, MessageDrivenContainer>();
     private boolean started;
     private EventService eventService;

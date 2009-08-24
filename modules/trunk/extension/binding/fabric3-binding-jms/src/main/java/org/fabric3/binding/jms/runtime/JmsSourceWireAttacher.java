@@ -64,7 +64,7 @@ import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.binding.jms.spi.runtime.host.JmsHost2;
+import org.fabric3.binding.jms.spi.runtime.host.JmsHost;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
@@ -84,7 +84,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefinition>, JmsSourceWireAttacherMBean {
-    private JmsHost2 jmsHost;
+    private JmsHost jmsHost;
     private ClassLoaderRegistry classLoaderRegistry;
     private AdministeredObjectResolver resolver;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
@@ -92,7 +92,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
 
     public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference JmsHost2 jmsHost) {
+                                 @Reference JmsHost jmsHost) {
         this.resolver = resolver;
         this.classLoaderRegistry = classLoaderRegistry;
         this.jmsHost = jmsHost;
