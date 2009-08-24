@@ -37,10 +37,14 @@
 */
 package org.fabric3.tests.binding.harness.scope;
 
+import org.oasisopen.sca.annotation.OneWay;
+
 /**
  * @version $Rev$ $Date$
  */
 public interface CompositeService {
+
+    @OneWay
     void setData(String data);
 
     String getData();

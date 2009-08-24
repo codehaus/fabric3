@@ -37,6 +37,7 @@
 */
 package org.fabric3.tests.binding.harness.callback;
 
+import org.oasisopen.sca.annotation.OneWay;
 import org.osoa.sca.annotations.Callback;
 
 /**
@@ -45,6 +46,7 @@ import org.osoa.sca.annotations.Callback;
 @Callback(AsyncCallback.class)
 public interface AsyncForwardService {
 
+    @OneWay
     void invoke(String data);
 
 }
