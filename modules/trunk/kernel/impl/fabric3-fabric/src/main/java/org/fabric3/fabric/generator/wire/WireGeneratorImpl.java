@@ -342,8 +342,8 @@ public class WireGeneratorImpl implements WireGenerator {
                 new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, service);
         List<LogicalOperation> callbackOperations = service.getCallbackOperations();
         PolicyResult policyResult = resolvePolicies(callbackOperations, sourceBinding, binding, component, null);
-        EffectivePolicy targetPolicy = policyResult.getSourcePolicy();
-        EffectivePolicy sourcePolicy = policyResult.getTargetPolicy();
+        EffectivePolicy sourcePolicy = policyResult.getSourcePolicy();
+        EffectivePolicy targetPolicy = policyResult.getTargetPolicy();
 
         ComponentGenerator componentGenerator = getGenerator(component);
         PhysicalSourceDefinition sourceDefinition = componentGenerator.generateCallbackWireSource(component, callbackContract, sourcePolicy);
