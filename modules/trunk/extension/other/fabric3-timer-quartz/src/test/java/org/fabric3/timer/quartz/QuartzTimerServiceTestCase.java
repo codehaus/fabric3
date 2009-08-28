@@ -48,7 +48,7 @@ import java.util.concurrent.TimeoutException;
 
 import junit.framework.TestCase;
 
-import org.fabric3.host.work.DefaultPausableWork;
+import org.fabric3.host.work.PausableWork;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
@@ -67,7 +67,7 @@ public class QuartzTimerServiceTestCase extends TestCase {
         super.setUp();
         // TODO mock transaction manager
         WorkScheduler workScheduler = new WorkScheduler() {
-            public <T extends DefaultPausableWork> void scheduleWork(T work) {
+            public <T extends PausableWork> void scheduleWork(T work) {
                 work.run();
             }
 
