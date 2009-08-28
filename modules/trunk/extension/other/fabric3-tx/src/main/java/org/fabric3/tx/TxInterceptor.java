@@ -152,7 +152,6 @@ public class TxInterceptor implements Interceptor {
 
     private void suspend() throws ServiceRuntimeException {
         try {
-            monitor.suspended(hashCode());
             transactionManager.suspend();
         } catch (SystemException e) {
             throw new ServiceRuntimeException(e);
@@ -161,7 +160,6 @@ public class TxInterceptor implements Interceptor {
 
     private void resume(Transaction transaction) throws ServiceRuntimeException {
         try {
-            monitor.resumed(hashCode());
             transactionManager.resume(transaction);
         } catch (SystemException e) {
             throw new ServiceRuntimeException(e);
@@ -175,7 +173,6 @@ public class TxInterceptor implements Interceptor {
     private void commit() throws ServiceRuntimeException {
         try {
             if (transactionManager.getStatus() != Status.STATUS_MARKED_ROLLBACK) {
-                monitor.committed(hashCode());
                 transactionManager.commit();
             } else {
                 rollback();
