@@ -54,17 +54,17 @@ public class JAXBWeatherTest extends TestCase {
     }
 
     public void testWeather() {
-
         WeatherRequest weatherRequest = new WeatherRequest();
         weatherRequest.setCity("London");
         weatherRequest.setDate(new Date());
 
+//        for (int i=0; i<1000; i++) {
         WeatherResponse weatherResponse = weatherService.getWeather(weatherRequest);
 
         assertEquals(WeatherCondition.SUNNY, weatherResponse.getCondition());
         assertEquals(25.0, weatherResponse.getTemperatureMinimum());
         assertEquals(40.0, weatherResponse.getTemperatureMaximum());
-
+//        }
     }
 
 }

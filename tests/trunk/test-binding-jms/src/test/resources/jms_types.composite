@@ -27,7 +27,7 @@
     <component name="ObjectWeatherService">
         <implementation.java class="org.fabric3.binding.jms.test.object.WeatherServiceImpl"/>
         <service name="WeatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
                 <destination name="objectServiceQueue"/>
                 <response>
                     <destination name="clientQueue"/>
@@ -52,7 +52,7 @@
     <component name="PrimitveService">
         <implementation.java class="org.fabric3.binding.jms.test.primitives.PrimitiveServiceImpl"/>
         <service name="PrimitiveService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
                 <destination name="primitiveServiceQueue"/>
                 <response>
                     <destination name="primitiveResponseQueue"/>

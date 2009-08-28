@@ -28,7 +28,7 @@
     <component name="JAXBWeatherService">
         <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
         <service name="WeatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
                 <destination name="jaxbServiceQueue"/>
                 <response>
                     <destination name="clientQueue"/>
