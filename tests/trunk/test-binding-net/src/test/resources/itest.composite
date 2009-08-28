@@ -11,7 +11,7 @@
     <include name="SyncAsyncComposite"/>
     <include name="CallbackComposite"/>
     <include name="ConversationComposite"/>
-    <include name="ScopeComposite"/>
+    <!--<include name="ScopeComposite"/>-->
     <include name="NetJAXBComposite"/>
 
 </composite>
