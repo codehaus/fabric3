@@ -66,7 +66,7 @@ import org.fabric3.management.WorkSchedulerMBean;
 public class ThreadPoolWorkScheduler extends AbstractExecutorService implements WorkScheduler, WorkSchedulerMBean {
 
     private ThreadPoolExecutor executor;
-    private final Set<DefaultPausableWork> workInProgress = new CopyOnWriteArraySet<DefaultPausableWork>();
+    private final Set<PausableWork> workInProgress = new CopyOnWriteArraySet<PausableWork>();
     private final AtomicBoolean paused = new AtomicBoolean();
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -102,7 +102,7 @@ public class ThreadPoolWorkScheduler extends AbstractExecutorService implements 
         paused.set(pauseOnStart);
     }
 
-    public <T extends DefaultPausableWork> void scheduleWork(T work) {
+    public <T extends PausableWork> void scheduleWork(T work) {
 
         Lock lock = readWriteLock.readLock();
         lock.lock();
@@ -144,9 +144,9 @@ public class ThreadPoolWorkScheduler extends AbstractExecutorService implements 
 
     private class DecoratingWork implements Runnable {
 
-        private DefaultPausableWork work;
+        private PausableWork work;
 
-        public DecoratingWork(DefaultPausableWork work) {
+        public DecoratingWork(PausableWork work) {
             this.work = work;
         }
 
