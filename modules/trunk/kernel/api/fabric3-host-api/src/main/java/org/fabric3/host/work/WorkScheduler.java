@@ -59,6 +59,6 @@ public interface WorkScheduler extends ExecutorService {
      *
      * @param work The unit of work that needs to be asynchronously executed.
      */
-    <T extends DefaultPausableWork> void scheduleWork(T work);
+    <T extends PausableWork> void scheduleWork(T work);
 
 }
