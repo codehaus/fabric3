@@ -49,6 +49,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -173,7 +174,12 @@ public class CompositeScopeContainer extends AbstractScopeContainer {
 
     public void stopAllContexts(WorkContext workContext) {
         synchronized (destroyQueues) {
-            for (List<InstanceWrapper<?>> queue : destroyQueues.values()) {
+            // Shutdown all instances by traversing the deployable composites in reverse order they were deployed and interating instances within
+            // each composite in the reverse order they were instantiated. This guarantees dependencies are disposed after the dependent instance.
+            List<List<InstanceWrapper<?>>> queues = new ArrayList<List<InstanceWrapper<?>>>(destroyQueues.values());
+            ListIterator<List<InstanceWrapper<?>>> iter = queues.listIterator(queues.size());
+            while (iter.hasPrevious()) {
+                List<InstanceWrapper<?>> queue = iter.previous();
                 destroyInstances(queue, workContext);
             }
         }
