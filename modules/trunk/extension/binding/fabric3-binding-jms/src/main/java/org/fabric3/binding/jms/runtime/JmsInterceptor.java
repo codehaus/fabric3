@@ -60,14 +60,17 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.oasisopen.sca.ServiceRuntimeException;
+import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
 import org.fabric3.spi.binding.format.EncodeCallback;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
@@ -96,7 +99,9 @@ public class JmsInterceptor implements Interceptor {
     private ParameterEncoder parameterEncoder;
     private ClassLoader cl;
     private boolean oneWay;
+    private TransactionType transactionType;
     private TransactionManager tm;
+    private long timeout;
 
     /**
      * Constructor.
@@ -111,12 +116,14 @@ public class JmsInterceptor implements Interceptor {
         this.cl = wireConfig.getClassloader();
         this.responseListener = wireConfig.getResponseListener();
         this.tm = wireConfig.getTransactionManager();
-
+        this.transactionType = wireConfig.getTransactionType();
+        this.timeout = wireConfig.getTimeout();
         this.oneWay = configuration.isOneWay();
         this.methodName = configuration.getOperationName();
         this.payloadType = configuration.getPayloadType();
         this.messageEncoder = configuration.getMessageEncoder();
         this.parameterEncoder = configuration.getParameterEncoder();
+
     }
 
     public Message invoke(Message message) {
@@ -127,11 +134,22 @@ public class JmsInterceptor implements Interceptor {
             Thread.currentThread().setContextClassLoader(cl);
             // FIXME username/password
             connection = connectionFactory.createConnection();
-            // FIXME
-            if (Status.STATUS_NO_TRANSACTION == tm.getStatus()) {
+            connection.start();
+            int status = tm.getStatus();
+            Transaction suspended = null;
+            boolean begun = false;
+            if (Status.STATUS_NO_TRANSACTION == status && TransactionType.GLOBAL == transactionType) {
                 tm.begin();
+                begun = true;
+            } else if ((Status.STATUS_ACTIVE == status && TransactionType.NONE == transactionType)) {
+                suspended = tm.suspend();
             }
-            session = connection.createSession(true, Session.SESSION_TRANSACTED);
+
+            if (TransactionType.GLOBAL == transactionType) {
+                session = connection.createSession(true, Session.SESSION_TRANSACTED);
+            } else {
+                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            }
 
             MessageProducer producer = session.createProducer(destination);
 
@@ -148,12 +166,23 @@ public class JmsInterceptor implements Interceptor {
             case RequestMsgIDToCorrelID:
                 correlationId = jmsMessage.getJMSMessageID();
             }
-            // FIXME
-            tm.commit();
             if (!oneWay) {
                 // request-response, block on response
-                return receive(correlationId);
+                Message resp = receive(correlationId, session);
+                if (begun) {
+                    tm.commit();
+                }
+                if (suspended != null) {
+                    tm.resume(suspended);
+                }
+                return resp;
             } else {
+                if (begun) {
+                    tm.commit();
+                }
+                if (suspended != null) {
+                    tm.resume(suspended);
+                }
                 // one-way invocation, return an empty message
                 return ONE_WAY_RESPONSE;
             }
@@ -191,11 +220,15 @@ public class JmsInterceptor implements Interceptor {
      * Blocks waiting for a response message from the service provider.
      *
      * @param correlationId the id for correlating the response message
+     * @param session       the session to perform the receive in
      * @return the response message
      * @throws JMSException if an error occurs waiting for or processing the response
      */
-    private Message receive(String correlationId) throws JMSException {
-        javax.jms.Message resultMessage = responseListener.receive(correlationId);
+    private Message receive(String correlationId, Session session) throws JMSException {
+        javax.jms.Message resultMessage = responseListener.receive(correlationId, session, timeout);
+        if (resultMessage == null) {
+            throw new ServiceUnavailableException("Timeout waiting for response to message: " + correlationId);
+        }
         Object payload = MessageHelper.getPayload(resultMessage, payloadType);
         Message response = new MessageImpl();
         if (messageEncoder != null) {

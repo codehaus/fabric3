@@ -71,7 +71,7 @@ public class AlwaysDestinationStrategy implements DestinationStrategy {
             String name = definition.getName();
             connection = cf.createConnection();
 
-            switch (definition.getDestinationType()) {
+            switch (definition.geType()) {
             case queue:
                 QueueConnection qc = (QueueConnection) connection;
                 return qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);

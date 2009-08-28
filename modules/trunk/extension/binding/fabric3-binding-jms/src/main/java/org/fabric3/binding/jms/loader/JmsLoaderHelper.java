@@ -77,7 +77,7 @@ public class JmsLoaderHelper {
         DestinationDefinition destination = new DestinationDefinition();
         String destinationType = uriProperties.get(JmsURIMetadata.DESTINATIONTYPE);
         if ("topic".equalsIgnoreCase(destinationType)) {
-            destination.setDestinationType(DestinationType.topic);
+            destination.setType(DestinationType.topic);
         }
         destination.setName(uriMeta.getDestination());
         destination.setCreate(CreateOption.never); // always assume the destination already exists

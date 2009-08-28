@@ -74,7 +74,8 @@ public interface JmsHost {
      * Unregister the MessageListener for the given service
      *
      * @param serviceUri the service URI
+     * @throws JMSException if an error unregistering the listener is encountered
      */
-    public void unregister(URI serviceUri);
+    public void unregister(URI serviceUri) throws JMSException;
 
 }

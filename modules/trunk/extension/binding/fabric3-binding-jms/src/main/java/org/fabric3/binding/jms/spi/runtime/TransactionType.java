@@ -41,23 +41,15 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.binding.jms.common;
+package org.fabric3.binding.jms.spi.runtime;
 
 /**
- * Encapsulates a destination configuration.
+ * Defines transaction types.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class DestinationDefinition extends AdministeredObjectDefinition {
-    private static final long serialVersionUID = 2175092846182913179L;
-    private DestinationType type = DestinationType.queue;
+public enum TransactionType {
 
-    public DestinationType geType() {
-        return type;
-    }
-
-    public void setType(DestinationType type) {
-        this.type = type;
-    }
+    GLOBAL, NONE, SESSION
 
 }

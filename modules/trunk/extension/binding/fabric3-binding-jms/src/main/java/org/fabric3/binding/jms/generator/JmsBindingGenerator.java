@@ -54,7 +54,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
 import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsTargetDefinition;
@@ -69,8 +69,7 @@ import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
- * Binding generator that creates the physical source and target definitions for wires. Message acknowledgement is always expected to be using
- * transactions, either local or global, as expressed by the intents transactedOneWay, transactedOneWay.local or transactedOneWay.global.
+ * Binding generator that creates the source and target definitions for JMS endpoint and reference wires.
  *
  * @version $Revision$ $Date$
  */
@@ -78,10 +77,9 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinition> {
 
     // Transacted one way intent
-    private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
-    private static final QName OASIS_TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
-    private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
-    private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");
+    private static final QName TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
+    private static final QName IMMEDIATE_ONEWAY = new QName(Constants.SCA_NS, "immediateOneWay");
+    private static final QName ONEWAY = new QName(Constants.SCA_NS, "oneWay");
 
     private PayloadTypeIntrospector introspector;
 
@@ -129,7 +127,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
             return;
         }
         for (Operation<?> operation : contract.getOperations()) {
-            if (!operation.getIntents().contains(OASIS_ONEWAY)) {
+            if (!operation.getIntents().contains(ONEWAY)) {
                 throw new GenerationException("Response destination must be specified for operation " + operation.getName() + " on "
                         + contract.getInterfaceName());
             }
@@ -145,27 +143,23 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         for (LogicalOperation operation : operations) {
             for (Intent intent : policy.getIntents(operation)) {
                 QName name = intent.getName();
-                if (OASIS_TRANSACTED_ONEWAY_GLOBAL.equals(name)) {
+                if (TRANSACTED_ONEWAY.equals(name)) {
                     return TransactionType.GLOBAL;
-                } else if (OASIS_TRANSACTED_ONEWAY_LOCAL.equals(name)) {
-                    return TransactionType.LOCAL;
-                } else if (OASIS_TRANSACTED_ONEWAY.equals(name)) {
-                    return TransactionType.GLOBAL;
+                } else if (IMMEDIATE_ONEWAY.equals(name)) {
+                    return TransactionType.NONE;
                 }
             }
         }
         for (Intent intent : policy.getEndpointIntents()) {
             QName name = intent.getName();
-            if (OASIS_TRANSACTED_ONEWAY_GLOBAL.equals(name)) {
+            if (TRANSACTED_ONEWAY.equals(name)) {
                 return TransactionType.GLOBAL;
-            } else if (OASIS_TRANSACTED_ONEWAY_LOCAL.equals(name)) {
-                return TransactionType.LOCAL;
-            } else if (OASIS_TRANSACTED_ONEWAY.equals(name)) {
-                return TransactionType.GLOBAL;
+            } else if (IMMEDIATE_ONEWAY.equals(name)) {
+                return TransactionType.NONE;
             }
         }
         //no transaction policy specified, use local
-        return TransactionType.LOCAL;
+        return TransactionType.NONE;
 
     }
 

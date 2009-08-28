@@ -40,7 +40,7 @@ package org.fabric3.binding.jms.runtime;
 import java.util.List;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
-import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
 import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 

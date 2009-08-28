@@ -34,30 +34,18 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.binding.jms.common;
+*/
+package org.fabric3.binding.jms.spi.runtime.container;
+
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Encapsulates a destination configuration.
- *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class DestinationDefinition extends AdministeredObjectDefinition {
-    private static final long serialVersionUID = 2175092846182913179L;
-    private DestinationType type = DestinationType.queue;
+public class TransactionException extends Fabric3Exception{
+    private static final long serialVersionUID = -5376791778196200639L;
 
-    public DestinationType geType() {
-        return type;
+    public TransactionException(Throwable cause) {
+        super(cause);
     }
-
-    public void setType(DestinationType type) {
-        this.type = type;
-    }
-
 }

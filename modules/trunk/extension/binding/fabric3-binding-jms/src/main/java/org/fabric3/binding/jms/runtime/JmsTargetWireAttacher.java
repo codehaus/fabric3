@@ -55,7 +55,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
 import org.fabric3.binding.jms.provision.JmsTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
@@ -112,6 +112,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
         wireConfiguration.setClassloader(classloader);
         wireConfiguration.setCorrelationScheme(target.getMetadata().getCorrelationScheme());
         wireConfiguration.setTransactionManager(tm);
+        wireConfiguration.setTransactionType(target.getTransactionType());
 
         // resolve the connection factories and destinations for the wire
         resolveAdministeredObjects(target, wireConfiguration);
@@ -162,7 +163,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
                 ConnectionFactory responseConnectionFactory = resolver.resolve(connectionFactoryDefinition, env);
                 destinationDefinition = metadata.getResponseDestination();
                 Destination responseDestination = resolver.resolve(destinationDefinition, responseConnectionFactory, env);
-                ResponseListener listener = new ResponseListener(responseDestination, responseConnectionFactory, tm);
+                ResponseListener listener = new ResponseListener(responseDestination);
                 wireConfiguration.setResponseListener(listener);
             }
         } catch (JmsLookupException e) {

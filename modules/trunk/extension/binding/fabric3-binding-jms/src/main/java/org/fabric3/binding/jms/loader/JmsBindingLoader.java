@@ -239,7 +239,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         }
         String type = reader.getAttributeValue(null, "type");
         if (type != null) {
-            destination.setDestinationType(DestinationType.valueOf(type));
+            destination.setType(DestinationType.valueOf(type));
         }
         loadProperties(reader, destination, "destination");
         return destination;

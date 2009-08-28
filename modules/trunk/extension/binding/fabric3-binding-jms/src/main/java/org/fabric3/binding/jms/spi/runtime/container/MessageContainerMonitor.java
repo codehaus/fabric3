@@ -34,30 +34,32 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.binding.jms.common;
+*/
+package org.fabric3.binding.jms.spi.runtime.container;
+
+import org.fabric3.api.annotation.logging.Fine;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * Encapsulates a destination configuration.
- *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class DestinationDefinition extends AdministeredObjectDefinition {
-    private static final long serialVersionUID = 2175092846182913179L;
-    private DestinationType type = DestinationType.queue;
+public interface MessageContainerMonitor {
 
-    public DestinationType geType() {
-        return type;
-    }
+    @Severe
+    void errorMessage(String message);
 
-    public void setType(DestinationType type) {
-        this.type = type;
-    }
+    @Severe
+    void error(String message, Throwable e);
 
+    @Fine
+    void increaseReceivers(int count);
+
+    @Fine
+    void decreaseReceivers(int count);
+
+    @Fine
+    void debugError(String message, Throwable e);
+
+    @Fine
+    void reject(Exception e);
 }

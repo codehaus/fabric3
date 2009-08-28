@@ -42,6 +42,7 @@ import javax.jms.Destination;
 import javax.transaction.TransactionManager;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
 
 /**
  * Template for configuring non-operation specific objects for a JmsInterceptor. Used by InterceptorConfiguration.
@@ -54,7 +55,9 @@ public class WireConfiguration {
     private Destination requestDestination;
     private ClassLoader classloader;
     private ResponseListener responseListener;
+    private TransactionType transactionType;
     private TransactionManager tm;
+    private long timeout = 0;   // default JMS timeout - forever
 
     public CorrelationScheme getCorrelationScheme() {
         return correlationScheme;
@@ -96,11 +99,27 @@ public class WireConfiguration {
         this.responseListener = responseListener;
     }
 
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
+
     public TransactionManager getTransactionManager() {
         return tm;
     }
 
     public void setTransactionManager(TransactionManager tm) {
         this.tm = tm;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
     }
 }

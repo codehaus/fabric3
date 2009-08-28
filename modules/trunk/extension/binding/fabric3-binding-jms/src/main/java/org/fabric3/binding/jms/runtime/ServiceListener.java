@@ -43,36 +43,37 @@
  */
 package org.fabric3.binding.jms.runtime;
 
-import java.io.Serializable;
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.MessageListener;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
 import org.fabric3.spi.binding.format.EncodeCallback;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
-import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
-import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.util.Base64;
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Listens for requests sent to a destination and dispatches them to a service, returning a response to the response destination.
@@ -86,13 +87,22 @@ public class ServiceListener implements MessageListener {
     protected InvocationChainHolder onMessageHolder;
     private Destination responseDestination;
     private ConnectionFactory responseFactory;
+    private TransactionType transactionType;
     private ClassLoader cl;
+    private ServiceListenerMonitor monitor;
 
-    public ServiceListener(WireHolder wireHolder, Destination responseDestination, ConnectionFactory responseFactory, ClassLoader cl) {
+    public ServiceListener(WireHolder wireHolder,
+                           Destination responseDestination,
+                           ConnectionFactory responseFactory,
+                           TransactionType transactionType,
+                           ClassLoader cl,
+                           ServiceListenerMonitor monitor) {
         this.wireHolder = wireHolder;
         this.responseDestination = responseDestination;
         this.responseFactory = responseFactory;
+        this.transactionType = transactionType;
         this.cl = cl;
+        this.monitor = monitor;
         invocationChainMap = new HashMap<String, InvocationChainHolder>();
         for (InvocationChainHolder chainHolder : wireHolder.getInvocationChains()) {
             String name = chainHolder.getChain().getPhysicalOperation().getName();
@@ -121,31 +131,31 @@ public class ServiceListener implements MessageListener {
                 if (payload != null && !payload.getClass().isArray()) {
                     payload = new Object[]{payload};
                 }
-                invoke(request, interceptor, payload, payloadType, responseDestination, oneWay);
+                invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
                 break;
             case TEXT:
                 MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
                 if (messageEncoder != null) {
-                    decodeAndInvoke(request, opName, interceptor, payload, payloadType, messageEncoder, responseDestination, oneWay);
+                    decodeAndInvoke(request, opName, interceptor, payload, payloadType, messageEncoder, responseDestination, oneWay, transactionType);
                 } else {
                     // non-encoded text
                     payload = new Object[]{payload};
-                    invoke(request, interceptor, payload, payloadType, responseDestination, oneWay);
+                    invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
                 }
                 break;
             case STREAM:
                 throw new UnsupportedOperationException();
             default:
                 payload = new Object[]{payload};
-                invoke(request, interceptor, payload, payloadType, responseDestination, oneWay);
+                invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
                 break;
             }
         } catch (JMSException e) {
-            // FIXME
-            e.printStackTrace();
+            // TODO This could be a temporary error and should be sent to a dead letter queue. For now, just log the error.
+            monitor.error("Error processing message. Redelivery will not be attempted", e);
         } catch (JmsBadMessageException e) {
-            // FIXME
-            e.printStackTrace();
+            // The message is invalid and cannot be processed. Log the error.
+            monitor.error("Error processing message. Since the message is invalid, redelivery will not be attempted", e);
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
         }
@@ -158,7 +168,8 @@ public class ServiceListener implements MessageListener {
                                  PayloadType payloadType,
                                  MessageEncoder messageEncoder,
                                  Destination responseDestination,
-                                 boolean oneWay) throws JMSException, JmsBadMessageException {
+                                 boolean oneWay,
+                                 TransactionType transactionType) throws JMSException, JmsBadMessageException {
         try {
             JMSHeaderContext context = new JMSHeaderContext(request);
             org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
@@ -190,8 +201,11 @@ public class ServiceListener implements MessageListener {
                 // TODO username, password
                 connection = responseFactory.createConnection();
                 connection.start();
-                responseSession = connection.createSession(true, Session.SESSION_TRANSACTED);
-
+                if (TransactionType.GLOBAL == transactionType) {
+                    responseSession = connection.createSession(true, Session.SESSION_TRANSACTED);
+                } else {
+                    responseSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                }
                 Message response = createMessage(serializedMessage, responseSession, payloadType);
                 sendResponse(request, responseSession, responseDestination, outMessage, response);
             } finally {
@@ -213,7 +227,8 @@ public class ServiceListener implements MessageListener {
                         Object payload,
                         PayloadType payloadType,
                         Destination responseDestination,
-                        boolean oneWay) throws JMSException, JmsBadMessageException {
+                        boolean oneWay,
+                        TransactionType transactionType) throws JMSException, JmsBadMessageException {
         WorkContext workContext = createWorkContext(request, wireHolder.getCallbackUri());
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
@@ -225,7 +240,12 @@ public class ServiceListener implements MessageListener {
         Session responseSession = null;
         try {
             connection = responseFactory.createConnection();
-            responseSession = connection.createSession(true, Session.SESSION_TRANSACTED);
+            if (TransactionType.GLOBAL == transactionType) {
+                responseSession = connection.createSession(true, Session.SESSION_TRANSACTED);
+            } else {
+                responseSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            }
+//            responseSession = connection.createSession(true, Session.SESSION_TRANSACTED);
             Object responsePayload = outMessage.getBody();
             Message response = createMessage(responsePayload, responseSession, payloadType);
             sendResponse(request, responseSession, responseDestination, outMessage, response);

@@ -55,15 +55,16 @@ import javax.jms.JMSException;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
 import org.fabric3.binding.jms.spi.runtime.host.JmsHost;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
@@ -85,6 +86,7 @@ import org.fabric3.spi.wire.Wire;
  */
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefinition>, JmsSourceWireAttacherMBean {
     private JmsHost jmsHost;
+    private ServiceListenerMonitor monitor;
     private ClassLoaderRegistry classLoaderRegistry;
     private AdministeredObjectResolver resolver;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
@@ -92,10 +94,12 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
 
     public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference JmsHost jmsHost) {
+                                 @Reference JmsHost jmsHost,
+                                 @Monitor ServiceListenerMonitor monitor) {
         this.resolver = resolver;
         this.classLoaderRegistry = classLoaderRegistry;
         this.jmsHost = jmsHost;
+        this.monitor = monitor;
     }
 
     @Reference
@@ -121,7 +125,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
             Destination requestDestination = objects.getRequestDestination();
             ConnectionFactory responseFactory = objects.getResponseFactory();
             Destination responseDestination = objects.getResponseDestination();
-            ServiceListener listener = new ServiceListener(wireHolder, responseDestination, responseFactory, classloader);
+            ServiceListener listener = new ServiceListener(wireHolder, responseDestination, responseFactory, trxType, classloader, monitor);
             if (jmsHost.isRegistered(serviceUri)) {
                 // the wire has changed and it is being reprovisioned
                 jmsHost.unregister(serviceUri);
@@ -133,7 +137,11 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
     }
 
     public void detach(JmsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
-        jmsHost.unregister(target.getUri());
+        try {
+            jmsHost.unregister(target.getUri());
+        } catch (JMSException e) {
+            throw new WiringException(e);
+        }
     }
 
     public void attachObjectFactory(JmsSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition definition)

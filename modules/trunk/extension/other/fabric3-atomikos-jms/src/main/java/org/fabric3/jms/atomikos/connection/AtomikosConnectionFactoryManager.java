@@ -59,6 +59,7 @@ import org.fabric3.binding.jms.spi.runtime.factory.FactoryRegistrationException;
 @EagerInit
 public class AtomikosConnectionFactoryManager implements ConnectionFactoryManager {
     private Map<String, AtomikosConnectionFactoryBean> beans = new HashMap<String, AtomikosConnectionFactoryBean>();
+    private Map<String, ConnectionFactory> nonXA = new HashMap<String, ConnectionFactory>();
     private static final String BORROW_TIMEOUT = "borrow.timeout";
     private static final String MAINTENANCE_INTERVAL = "maintenance.interval";
     private static final String MAX_IDLE = "max.idle";
@@ -66,6 +67,7 @@ public class AtomikosConnectionFactoryManager implements ConnectionFactoryManage
     private static final String MAX_POOL_SIZE = "pool.size.max";
     private static final String MIN_POOL_SIZE = "pool.size.min";
     private static final String REAP_TIMEOUT = "reap.timeout";
+    private static final String TRANSACTION_MODE = "local.transaction.mode";
     private static final int DEFAULT_MAX_POOL_SIZE = 50;
 
     @Destroy
@@ -76,16 +78,24 @@ public class AtomikosConnectionFactoryManager implements ConnectionFactoryManage
     }
 
     public ConnectionFactory get(String name) {
-        return beans.get(name);
+        AtomikosConnectionFactoryBean bean = beans.get(name);
+        if (bean != null) {
+            return bean;
+        }
+        return nonXA.get(name);
     }
 
     public ConnectionFactory register(String name, ConnectionFactory factory, Map<String, String> properties) throws FactoryRegistrationException {
+
         if (!(factory instanceof XAConnectionFactory)) {
-            throw new FactoryRegistrationException("ConnectionFactory " + name + " must implement " + XAConnectionFactory.class);
+            nonXA.put(name, factory);
+            return factory;
         }
         AtomikosConnectionFactoryBean bean = new AtomikosConnectionFactoryBean();
         bean.setUniqueResourceName(name);
         bean.setXaConnectionFactory((XAConnectionFactory) factory);
+        String transactionMode = properties.get(TRANSACTION_MODE);
+        bean.setLocalTransactionMode(Boolean.parseBoolean(transactionMode));
         String borrowTimeout = properties.get(BORROW_TIMEOUT);
         if (borrowTimeout != null) {
             try {
@@ -151,7 +161,11 @@ public class AtomikosConnectionFactoryManager implements ConnectionFactoryManage
 
 
     public void unregister(String name) {
-        beans.remove(name);
+        AtomikosConnectionFactoryBean bean = beans.remove(name);
+        if (bean == null) {
+            nonXA.remove(name);
+        }
+
     }
 
 

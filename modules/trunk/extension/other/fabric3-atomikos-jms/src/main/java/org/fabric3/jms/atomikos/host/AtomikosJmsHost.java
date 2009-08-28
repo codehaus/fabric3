@@ -45,9 +45,10 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
+import javax.jms.Session;
+import javax.transaction.TransactionManager;
 
 import com.atomikos.jms.AtomikosConnectionFactoryBean;
-import com.atomikos.jms.extra.MessageDrivenContainer;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -55,8 +56,12 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.jms.spi.runtime.TransactionType;
+import org.fabric3.binding.jms.spi.runtime.container.AdaptiveMessageContainer;
+import org.fabric3.binding.jms.spi.runtime.container.MessageContainerMonitor;
 import org.fabric3.binding.jms.spi.runtime.host.HostMonitor;
 import org.fabric3.binding.jms.spi.runtime.host.JmsHost;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.event.Fabric3EventListener;
 import org.fabric3.spi.event.RuntimeStart;
@@ -70,13 +75,23 @@ import org.fabric3.spi.event.RuntimeStart;
 @EagerInit
 @Service(JmsHost.class)
 public class AtomikosJmsHost implements JmsHost, Fabric3EventListener<RuntimeStart> {
-    private Map<URI, MessageDrivenContainer> containers = new ConcurrentHashMap<URI, MessageDrivenContainer>();
+    private Map<URI, AdaptiveMessageContainer> containers = new ConcurrentHashMap<URI, AdaptiveMessageContainer>();
     private boolean started;
     private EventService eventService;
+    private WorkScheduler scheduler;
+    private TransactionManager tm;
+    private MessageContainerMonitor containerMonitor;
     private HostMonitor monitor;
 
-    public AtomikosJmsHost(@Reference EventService eventService, @Monitor HostMonitor monitor) {
+    public AtomikosJmsHost(@Reference EventService eventService,
+                           @Reference WorkScheduler scheduler,
+                           @Reference TransactionManager tm,
+                           @Monitor MessageContainerMonitor containerMonitor,
+                           @Monitor HostMonitor monitor) {
         this.eventService = eventService;
+        this.scheduler = scheduler;
+        this.tm = tm;
+        this.containerMonitor = containerMonitor;
         this.monitor = monitor;
     }
 
@@ -86,18 +101,18 @@ public class AtomikosJmsHost implements JmsHost, Fabric3EventListener<RuntimeSta
     }
 
     @Destroy
-    public void destroy() {
-        for (MessageDrivenContainer container : containers.values()) {
-            container.stop();
+    public void destroy() throws JMSException {
+        for (AdaptiveMessageContainer container : containers.values()) {
+            container.shutdown();
         }
         started = false;
     }
 
     public void onEvent(RuntimeStart event) {
         // start receiving messages after the runtime has started
-        for (Map.Entry<URI, MessageDrivenContainer> entry : containers.entrySet()) {
+        for (Map.Entry<URI, AdaptiveMessageContainer> entry : containers.entrySet()) {
             try {
-                entry.getValue().start();
+                entry.getValue().initialize();
                 monitor.registerListener(entry.getKey());
             } catch (JMSException e) {
                 // TODO This should send an asynchronous notify
@@ -112,34 +127,22 @@ public class AtomikosJmsHost implements JmsHost, Fabric3EventListener<RuntimeSta
     }
 
     public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory) throws JMSException {
-        if (!(factory instanceof AtomikosConnectionFactoryBean)) {
-            // programming error
-            throw new AssertionError("ConnectionFactory must be an instance of " + AtomikosConnectionFactoryBean.class.getName());
+        AdaptiveMessageContainer container = new AdaptiveMessageContainer(destination, listener, factory, scheduler, tm, containerMonitor);
+        if (factory instanceof AtomikosConnectionFactoryBean) {
+            container.setTransactionType(TransactionType.GLOBAL);
+            container.setAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
         }
-
-        AtomikosConnectionFactoryBean bean = (AtomikosConnectionFactoryBean) factory;
-        MessageDrivenContainer container = new MessageDrivenContainer();
-        container.setDaemonThreads(true);
-        container.setAtomikosConnectionFactoryBean(bean);
-        container.setDestination(destination);
-        container.setMessageListener(listener);
-        //  FIXME add configuration
-        //  container.setPoolSize();
-        //  container.setExceptionListener();
-        //  container.setTransactionTimeout();
-        containers.put(serviceUri, container);
         if (started) {
-            // the listener is provisioned after the runtime has started. start immediately
-            // TODO add option for delayed start if the runtime is already started
-            container.start();
+            container.initialize();
+            containers.put(serviceUri, container);
             monitor.registerListener(serviceUri);
         }
     }
 
-    public void unregister(URI serviceUri) {
-        MessageDrivenContainer container = containers.remove(serviceUri);
+    public void unregister(URI serviceUri) throws JMSException {
+        AdaptiveMessageContainer container = containers.remove(serviceUri);
         if (container != null) {
-            container.stop();
+            container.shutdown();
             monitor.unRegisterListener(serviceUri);
         }
     }

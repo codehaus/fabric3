@@ -11,6 +11,6 @@ Public License. See the accompanying license file for details.
         xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
         targetNamespace="http://docs.oasis-open.org/ns/opencsa/sca/200903">
 
-    <bindingType name="binding.jms" mayProvide="sca:oneWay sca:transactedOneWay sca:transactedOneWay.global sca:transactedOneWay.local"/>
+    <bindingType name="binding.jms" mayProvide="sca:oneWay sca:transactedOneWay sca: sca:immediateOneWay"/>
 
 </definitions>

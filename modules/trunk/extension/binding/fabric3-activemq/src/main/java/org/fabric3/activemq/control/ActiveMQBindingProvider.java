@@ -75,7 +75,6 @@ public class ActiveMQBindingProvider implements BindingProvider {
     private static final BindingMatchResult NO_MATCH = new BindingMatchResult(false, JmsBindingDefinition.BINDING_QNAME);
 
     private static final QName OASIS_TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
-    private static final QName OASIS_TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
 
     private String connectionFactory;
     private String xaConnectionFactory;
@@ -149,7 +148,7 @@ public class ActiveMQBindingProvider implements BindingProvider {
         JmsBindingMetadata metadata = new JmsBindingMetadata();
 
         DestinationDefinition destinationDefinition = new DestinationDefinition();
-        destinationDefinition.setDestinationType(DestinationType.queue);
+        destinationDefinition.setType(DestinationType.queue);
         destinationDefinition.setCreate(CreateOption.ifnotexist);
         destinationDefinition.setName(queueName);
         metadata.setDestination(destinationDefinition);
@@ -231,7 +230,7 @@ public class ActiveMQBindingProvider implements BindingProvider {
     }
 
     private boolean containsTransactionIntent(Set<QName> intents) {
-        return intents.contains(OASIS_TRANSACTED_ONEWAY_GLOBAL) || intents.contains(OASIS_TRANSACTED_ONEWAY);
+        return intents.contains(OASIS_TRANSACTED_ONEWAY);
     }
 
 }

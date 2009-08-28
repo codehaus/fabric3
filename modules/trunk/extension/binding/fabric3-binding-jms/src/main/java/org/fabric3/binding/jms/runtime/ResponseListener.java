@@ -43,24 +43,13 @@
  */
 package org.fabric3.binding.jms.runtime;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.TransactionManager;
 
 import org.oasisopen.sca.ServiceRuntimeException;
-
-import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 
 /**
  * MessageListener that blocks for responses from a service provider. This listener is attached to the reference side of a wire.
@@ -69,60 +58,30 @@ import org.fabric3.binding.jms.runtime.helper.JmsHelper;
  */
 public class ResponseListener {
     private Destination destination;
-    private ConnectionFactory connectionFactory;
-    private TransactionManager tm;
 
     /**
      * @param destination       the response destination
-     * @param connectionFactory the response connection factory
-     * @param tm                the JTA transaction manager
      */
-    public ResponseListener(Destination destination, ConnectionFactory connectionFactory, TransactionManager tm) {
+    public ResponseListener(Destination destination) {
         this.destination = destination;
-        this.connectionFactory = connectionFactory;
-        this.tm = tm;
     }
 
     /**
      * Performs a blocking receive, i.e. control will not be returned to application code until a response is received.
      *
      * @param correlationId Correlation Id.
-     * @return Received message.
+     * @param session the session to use for processing
+     * @param timeout the receive timeout
+     * @return the received message or null if the operation timed out.
      */
-    public Message receive(String correlationId) {
-        Connection connection = null;
-        Session session = null;
+    public Message receive(String correlationId, Session session, long timeout) {
         try {
-            connection = connectionFactory.createConnection();
-            connection.start();  // ensure the connection is started
-            session = connection.createSession(true, Session.SESSION_TRANSACTED);
             String selector = "JMSCorrelationID = '" + correlationId + "'";
             MessageConsumer consumer = session.createConsumer(destination, selector);
-            if (Status.STATUS_NO_TRANSACTION == tm.getStatus()) {
-                tm.begin();
-            }
-            Message message = consumer.receive();
-            tm.commit();
-            return message;
+            return consumer.receive(timeout);
         } catch (JMSException e) {
             // bubble exception to the client
             throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
-        } catch (SystemException e) {
-            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
-        } catch (NotSupportedException e) {
-            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
-        } catch (HeuristicMixedException e) {
-            //FIXME
-            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
-        } catch (HeuristicRollbackException e) {
-            //FIXME
-            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
-        } catch (RollbackException e) {
-            //FIXME
-            throw new ServiceRuntimeException("Unable to receive response for message with correlation id: " + correlationId, e);
-        } finally {
-            JmsHelper.closeQuietly(session);
-            JmsHelper.closeQuietly(connection);
         }
 
     }
