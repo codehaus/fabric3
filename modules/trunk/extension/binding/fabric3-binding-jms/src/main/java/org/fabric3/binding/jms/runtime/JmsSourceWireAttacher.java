@@ -130,7 +130,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
                 // the wire has changed and it is being reprovisioned
                 jmsHost.unregister(serviceUri);
             }
-            jmsHost.register(serviceUri, listener, requestDestination, requestFactory, trxType);
+            jmsHost.register(serviceUri, listener, requestDestination, trxType, requestFactory);
         } catch (JMSException e) {
             throw new WiringException(e);
         }

@@ -67,11 +67,11 @@ public interface JmsHost {
      * @param serviceUri  the service URI
      * @param listener    the MessageListener
      * @param destination the distination messages are received from
-     * @param factory     the JMS connection factory
      * @param type        the transaction type for receiving messages
+     * @param factory     the JMS connection factory
      * @throws JMSException if an error registering the listener is encountered
      */
-    public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory, TransactionType type)
+    public void register(URI serviceUri, MessageListener listener, Destination destination, TransactionType type, ConnectionFactory factory)
             throws JMSException;
 
     /**

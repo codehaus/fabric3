@@ -123,7 +123,7 @@ public class JmsHostImpl implements JmsHost, Fabric3EventListener<RuntimeStart> 
         return containers.containsKey(serviceUri);
     }
 
-    public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory, TransactionType type)
+    public void register(URI serviceUri, MessageListener listener, Destination destination, TransactionType type, ConnectionFactory factory)
             throws JMSException {
         AdaptiveMessageContainer container = new AdaptiveMessageContainer(destination, listener, factory, scheduler, tm, containerMonitor);
         if (TransactionType.GLOBAL == type) {
