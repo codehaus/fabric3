@@ -60,12 +60,12 @@ import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.binding.jms.spi.runtime.TransactionType;
-import org.fabric3.binding.jms.spi.runtime.host.JmsHost;
+import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
@@ -130,7 +130,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
                 // the wire has changed and it is being reprovisioned
                 jmsHost.unregister(serviceUri);
             }
-            jmsHost.register(serviceUri, listener, requestDestination, requestFactory);
+            jmsHost.register(serviceUri, listener, requestDestination, requestFactory, trxType);
         } catch (JMSException e) {
             throw new WiringException(e);
         }

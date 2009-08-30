@@ -19,8 +19,4 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.jms.atomikos.connection.AtomikosConnectionFactoryManager"/>
     </component>
 
-    <component name="AtomikosJmsHost">
-        <f3-impl:implementation.system class="org.fabric3.jms.atomikos.host.AtomikosJmsHost"/>
-    </component>
-
 </composite>

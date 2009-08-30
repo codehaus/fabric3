@@ -35,47 +35,17 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
+package org.fabric3.binding.jms.runtime.container;
 
-package org.fabric3.binding.jms.spi.runtime.host;
-
-import java.net.URI;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageListener;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Provisions MessageListeners that dispatch to service endpoints with the underlying JMS infrastructure.
- *
  * @version $Rev$ $Date$
  */
-public interface JmsHost {
+public class TransactionException extends Fabric3Exception {
+    private static final long serialVersionUID = -5376791778196200639L;
 
-    /**
-     * Returns true if a listener for the service URI is registered.
-     *
-     * @param serviceUri the service URI
-     * @return true if a listener is registered
-     */
-    boolean isRegistered(URI serviceUri);
-
-    /**
-     * Register a MessageListener which dispatches inbound JMS messages to a service.
-     *
-     * @param serviceUri  the service URI
-     * @param listener    the MessageListener
-     * @param destination the distination messages are received from
-     * @param factory     the JMS connection factory
-     * @throws JMSException if an error registering the listener is encountered
-     */
-    public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory) throws JMSException;
-
-    /**
-     * Unregister the MessageListener for the given service
-     *
-     * @param serviceUri the service URI
-     * @throws JMSException if an error unregistering the listener is encountered
-     */
-    public void unregister(URI serviceUri) throws JMSException;
-
+    public TransactionException(Throwable cause) {
+        super(cause);
+    }
 }

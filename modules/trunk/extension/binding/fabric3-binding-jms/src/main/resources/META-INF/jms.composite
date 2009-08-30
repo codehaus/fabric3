@@ -28,6 +28,10 @@ licensed under the Apache 2.0 license.
         <f3-impl:implementation.system class="org.fabric3.binding.jms.generator.PayloadTypeIntrospectorImpl"/>
     </component>
 
+    <component name="JmsHost">
+        <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.host.JmsHostImpl"/>
+    </component>
+
     <component f3-core:key="org.fabric3.binding.jms.provision.JmsSourceDefinition" name="JmsSourceWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher"/>
     </component>

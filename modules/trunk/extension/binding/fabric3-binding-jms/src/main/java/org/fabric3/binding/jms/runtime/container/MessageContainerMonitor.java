@@ -34,22 +34,32 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.binding.jms.spi.runtime;
+*/
+package org.fabric3.binding.jms.runtime.container;
+
+import org.fabric3.api.annotation.logging.Fine;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * Defines transaction types.
- *
  * @version $Rev$ $Date$
  */
-public enum TransactionType {
+public interface MessageContainerMonitor {
 
-    GLOBAL, NONE, SESSION
+    @Severe
+    void errorMessage(String message);
 
+    @Severe
+    void error(String message, Throwable e);
+
+    @Fine
+    void increaseReceivers(int count);
+
+    @Fine
+    void decreaseReceivers(int count);
+
+    @Fine
+    void debugError(String message, Throwable e);
+
+    @Fine
+    void reject(Exception e);
 }

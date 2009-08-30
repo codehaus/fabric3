@@ -35,17 +35,39 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.jms.spi.runtime.container;
 
-import org.fabric3.host.Fabric3Exception;
+package org.fabric3.binding.jms.runtime.host;
+
+import java.net.URI;
+
+import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
+ * Monitor for the JmsHost.
+ *
  * @version $Rev$ $Date$
  */
-public class TransactionException extends Fabric3Exception{
-    private static final long serialVersionUID = -5376791778196200639L;
+public interface HostMonitor {
 
-    public TransactionException(Throwable cause) {
-        super(cause);
-    }
+    @Severe
+    void error(String message, Throwable e);
+
+    /**
+     * Callback when a service has been provisioned as a JMS endpoint
+     *
+     * @param uri the service URI
+     */
+    @Info
+    void registerListener(URI uri);
+
+    /**
+     * Callback when a service has been removed as a JMS endpoint
+     *
+     * @param uri the service URI
+     */
+    @Info
+    void unRegisterListener(URI uri);
+
+    
 }

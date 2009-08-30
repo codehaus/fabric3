@@ -42,7 +42,7 @@ import javax.jms.Destination;
 import javax.transaction.TransactionManager;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
-import org.fabric3.binding.jms.spi.runtime.TransactionType;
+import org.fabric3.binding.jms.common.TransactionType;
 
 /**
  * Template for configuring non-operation specific objects for a JmsInterceptor. Used by InterceptorConfiguration.

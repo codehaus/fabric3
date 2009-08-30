@@ -47,7 +47,7 @@ import java.net.URI;
 import java.util.Map;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.spi.runtime.TransactionType;
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**

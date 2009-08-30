@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.jms.spi.runtime.container;
+package org.fabric3.binding.jms.runtime.container;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -61,8 +61,8 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
-import org.fabric3.binding.jms.spi.runtime.TransactionType;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.PausableWork;
 import org.fabric3.host.work.WorkScheduler;

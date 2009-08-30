@@ -35,31 +35,51 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.jms.spi.runtime.container;
 
-import org.fabric3.api.annotation.logging.Fine;
-import org.fabric3.api.annotation.logging.Severe;
+package org.fabric3.binding.jms.runtime.host;
+
+import java.net.URI;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageListener;
+
+import org.fabric3.binding.jms.common.TransactionType;
 
 /**
+ * Provisions MessageListeners that dispatch to service endpoints with the underlying JMS infrastructure.
+ *
  * @version $Rev$ $Date$
  */
-public interface MessageContainerMonitor {
+public interface JmsHost {
 
-    @Severe
-    void errorMessage(String message);
+    /**
+     * Returns true if a listener for the service URI is registered.
+     *
+     * @param serviceUri the service URI
+     * @return true if a listener is registered
+     */
+    boolean isRegistered(URI serviceUri);
 
-    @Severe
-    void error(String message, Throwable e);
+    /**
+     * Register a MessageListener which dispatches inbound JMS messages to a service.
+     *
+     * @param serviceUri  the service URI
+     * @param listener    the MessageListener
+     * @param destination the distination messages are received from
+     * @param factory     the JMS connection factory
+     * @param type        the transaction type for receiving messages
+     * @throws JMSException if an error registering the listener is encountered
+     */
+    public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory, TransactionType type)
+            throws JMSException;
 
-    @Fine
-    void increaseReceivers(int count);
+    /**
+     * Unregister the MessageListener for the given service
+     *
+     * @param serviceUri the service URI
+     * @throws JMSException if an error unregistering the listener is encountered
+     */
+    public void unregister(URI serviceUri) throws JMSException;
 
-    @Fine
-    void decreaseReceivers(int count);
-
-    @Fine
-    void debugError(String message, Throwable e);
-
-    @Fine
-    void reject(Exception e);
 }

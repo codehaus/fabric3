@@ -34,40 +34,22 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
-*/
-
-package org.fabric3.binding.jms.spi.runtime.host;
-
-import java.net.URI;
-
-import org.fabric3.api.annotation.logging.Severe;
-import org.fabric3.api.annotation.logging.Info;
+ *
+ * ----------------------------------------------------
+ *
+ * Portions originally based on Apache Tuscany 2007
+ * licensed under the Apache 2.0 license.
+ *
+ */
+package org.fabric3.binding.jms.common;
 
 /**
- * Monitor for the JmsHost.
+ * Defines transaction types.
  *
  * @version $Rev$ $Date$
  */
-public interface HostMonitor {
+public enum TransactionType {
 
-    @Severe
-    void error(String message, Throwable e);
+    GLOBAL, NONE, SESSION
 
-    /**
-     * Callback when a service has been provisioned as a JMS endpoint
-     *
-     * @param uri the service URI
-     */
-    @Info
-    void registerListener(URI uri);
-
-    /**
-     * Callback when a service has been removed as a JMS endpoint
-     *
-     * @param uri the service URI
-     */
-    @Info
-    void unRegisterListener(URI uri);
-
-    
 }

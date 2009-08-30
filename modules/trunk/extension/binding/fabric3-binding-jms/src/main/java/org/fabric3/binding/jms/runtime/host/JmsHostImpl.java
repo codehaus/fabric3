@@ -36,7 +36,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.fabric3.jms.atomikos.host;
+package org.fabric3.binding.jms.runtime.host;
 
 import java.net.URI;
 import java.util.Map;
@@ -48,7 +48,6 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.transaction.TransactionManager;
 
-import com.atomikos.jms.AtomikosConnectionFactoryBean;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -56,25 +55,23 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.jms.spi.runtime.TransactionType;
-import org.fabric3.binding.jms.spi.runtime.container.AdaptiveMessageContainer;
-import org.fabric3.binding.jms.spi.runtime.container.MessageContainerMonitor;
-import org.fabric3.binding.jms.spi.runtime.host.HostMonitor;
-import org.fabric3.binding.jms.spi.runtime.host.JmsHost;
+import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.runtime.container.AdaptiveMessageContainer;
+import org.fabric3.binding.jms.runtime.container.MessageContainerMonitor;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.event.Fabric3EventListener;
 import org.fabric3.spi.event.RuntimeStart;
 
 /**
- * JmsHost implementation that uses Atomikos transaction infrastructure to enable JMS MessageListeners to receive messages and dispatch them to a
- * service endpoint.
+ * JmsHost implementation that registers JMS MessageListeners with an AdaptiveMessageContainer to receive messages and dispatch them to a service
+ * endpoint.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 @Service(JmsHost.class)
-public class AtomikosJmsHost implements JmsHost, Fabric3EventListener<RuntimeStart> {
+public class JmsHostImpl implements JmsHost, Fabric3EventListener<RuntimeStart> {
     private Map<URI, AdaptiveMessageContainer> containers = new ConcurrentHashMap<URI, AdaptiveMessageContainer>();
     private boolean started;
     private EventService eventService;
@@ -83,11 +80,11 @@ public class AtomikosJmsHost implements JmsHost, Fabric3EventListener<RuntimeSta
     private MessageContainerMonitor containerMonitor;
     private HostMonitor monitor;
 
-    public AtomikosJmsHost(@Reference EventService eventService,
-                           @Reference WorkScheduler scheduler,
-                           @Reference TransactionManager tm,
-                           @Monitor MessageContainerMonitor containerMonitor,
-                           @Monitor HostMonitor monitor) {
+    public JmsHostImpl(@Reference EventService eventService,
+                       @Reference WorkScheduler scheduler,
+                       @Reference TransactionManager tm,
+                       @Monitor MessageContainerMonitor containerMonitor,
+                       @Monitor HostMonitor monitor) {
         this.eventService = eventService;
         this.scheduler = scheduler;
         this.tm = tm;
@@ -126,9 +123,10 @@ public class AtomikosJmsHost implements JmsHost, Fabric3EventListener<RuntimeSta
         return containers.containsKey(serviceUri);
     }
 
-    public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory) throws JMSException {
+    public void register(URI serviceUri, MessageListener listener, Destination destination, ConnectionFactory factory, TransactionType type)
+            throws JMSException {
         AdaptiveMessageContainer container = new AdaptiveMessageContainer(destination, listener, factory, scheduler, tm, containerMonitor);
-        if (factory instanceof AtomikosConnectionFactoryBean) {
+        if (TransactionType.GLOBAL == type) {
             container.setTransactionType(TransactionType.GLOBAL);
             container.setAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
         }

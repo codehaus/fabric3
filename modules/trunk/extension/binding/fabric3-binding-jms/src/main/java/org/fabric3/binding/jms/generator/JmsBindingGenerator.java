@@ -54,7 +54,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.spi.runtime.TransactionType;
+import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsTargetDefinition;
