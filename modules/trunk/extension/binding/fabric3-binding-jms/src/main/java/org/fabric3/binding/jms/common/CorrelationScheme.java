@@ -44,14 +44,14 @@
 package org.fabric3.binding.jms.common;
 
 /**
- * JMS schemes used to correlate messages.
+ * Defines message correlation schemes.
  *
  * @version $Revision$ $Date$
  */
 public enum CorrelationScheme {
 
-    None,
-    RequestMsgIDToCorrelID,
-    RequestCorrelIDToCorrelID
+    NONE,
+    MESSAGE_ID,
+    CORRELATION_ID
 
 }

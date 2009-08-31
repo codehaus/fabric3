@@ -55,13 +55,15 @@ import org.fabric3.model.type.ModelObject;
  * Encapsulates binding configuration.
  * <p/>
  * TODO Support for overriding request connection, response connection and operation properties from an activation spec and resource adaptor.
+ * <p/>
+ * TODO Support exception listener
  *
  * @version $Revision$ $Date$
  */
 public class JmsBindingMetadata extends ModelObject {
     private static final long serialVersionUID = 4623441503097788831L;
 
-    private CorrelationScheme correlationScheme = CorrelationScheme.RequestMsgIDToCorrelID;
+    private CorrelationScheme correlationScheme = CorrelationScheme.MESSAGE_ID;
     private String initialContextFactory;
     private String jndiUrl;
     private DestinationDefinition destination;
@@ -69,6 +71,20 @@ public class JmsBindingMetadata extends ModelObject {
     private ResponseDefinition response;
     private HeadersDefinition headers;
     private Map<String, OperationPropertiesDefinition> operationProperties;
+
+    // Fabric3-specific configuration settings
+    private CacheLevel cacheLevel;
+    private int minReceivers = 1;
+    private int maxReceivers = 1;
+    private int idleLimit = 1;
+    private int transactionTimeout = 30;
+    private int receiveTimeout = 0;
+    private int maxMessagesToProcess = -1;
+    private long recoveryInterval = 5000;   // default 5 seconds
+    private boolean durable = false;
+    private boolean localDelivery;
+    private String clientId;
+    private String durableSubscriptionName;
 
     public ConnectionFactoryDefinition getConnectionFactory() {
         return connectionFactory;
@@ -164,4 +180,99 @@ public class JmsBindingMetadata extends ModelObject {
         return response != null;
     }
 
+    public CacheLevel getCacheLevel() {
+        return cacheLevel;
+    }
+
+    public void setCacheLevel(CacheLevel cacheLevel) {
+        this.cacheLevel = cacheLevel;
+    }
+
+    public int getMinReceivers() {
+        return minReceivers;
+    }
+
+    public void setMinReceivers(int minReceivers) {
+        this.minReceivers = minReceivers;
+    }
+
+    public int getMaxReceivers() {
+        return maxReceivers;
+    }
+
+    public void setMaxReceivers(int maxReceivers) {
+        this.maxReceivers = maxReceivers;
+    }
+
+    public int getIdleLimit() {
+        return idleLimit;
+    }
+
+    public void setIdleLimit(int idleLimit) {
+        this.idleLimit = idleLimit;
+    }
+
+    public int getTransactionTimeout() {
+        return transactionTimeout;
+    }
+
+    public void setTransactionTimeout(int transactionTimeout) {
+        this.transactionTimeout = transactionTimeout;
+    }
+
+    public int getReceiveTimeout() {
+        return receiveTimeout;
+    }
+
+    public void setReceiveTimeout(int receiveTimeout) {
+        this.receiveTimeout = receiveTimeout;
+    }
+
+    public int getMaxMessagesToProcess() {
+        return maxMessagesToProcess;
+    }
+
+    public void setMaxMessagesToProcess(int maxMessagesToProcess) {
+        this.maxMessagesToProcess = maxMessagesToProcess;
+    }
+
+    public long getRecoveryInterval() {
+        return recoveryInterval;
+    }
+
+    public void setRecoveryInterval(long recoveryInterval) {
+        this.recoveryInterval = recoveryInterval;
+    }
+
+    public boolean isDurable() {
+        return durable;
+    }
+
+    public void setDurable(boolean durable) {
+        this.durable = durable;
+    }
+
+    public boolean isLocalDelivery() {
+        return localDelivery;
+    }
+
+    public void setLocalDelivery(boolean localDelivery) {
+        this.localDelivery = localDelivery;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getDurableSubscriptionName() {
+        return durableSubscriptionName;
+    }
+
+    public void setDurableSubscriptionName(String durableSubscriptionName) {
+        this.durableSubscriptionName = durableSubscriptionName;
+    }
 }

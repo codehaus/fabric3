@@ -48,87 +48,41 @@ package org.fabric3.binding.jms.common;
  */
 public class HeadersDefinition extends PropertyAwareObject {
     private static final long serialVersionUID = 831415808031924363L;
-    private String jMSType;
-    private String jMSCorrelationId;
-    private Integer jMSDeliveryMode;
-    private Long jMSTimeToLive;
-    private Integer jMSPriority;
+    private String type;
+    private DeliveryMode deliveryMode = DeliveryMode.UNDEFINED;
+    private Long timeToLive;
+    private Integer priority;
 
-    public String getJMSType() {
-        return jMSType;
+    public String getType() {
+        return type;
     }
 
-    public void setJMSType(String type) {
-        jMSType = type;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getJMSCorrelationId() {
-        return jMSCorrelationId;
+    public DeliveryMode getDeliveryMode() {
+        return deliveryMode;
     }
 
-    public void setJMSCorrelationId(String correlationId) {
-        jMSCorrelationId = correlationId;
+    public void setDeliveryMode(DeliveryMode deliveryMode) {
+        this.deliveryMode = deliveryMode;
     }
 
-    public Integer getJMSDeliveryMode() {
-        return jMSDeliveryMode;
+    public Long getTimeToLive() {
+        return timeToLive;
     }
 
-    public void setJMSDeliveryMode(Integer deliveryMode) {
-        jMSDeliveryMode = deliveryMode;
+    public void setTimeToLive(Long timeToLive) {
+        this.timeToLive = timeToLive;
     }
 
-    public Long getJMSTimeToLive() {
-        return jMSTimeToLive;
+    public Integer getPriority() {
+        return priority;
     }
 
-    public void setJMSTimeToLive(Long timeToLive) {
-        jMSTimeToLive = timeToLive;
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
-    public Integer getJMSPriority() {
-        return jMSPriority;
-    }
-
-    public void setJMSPriority(Integer priority) {
-        jMSPriority = priority;
-    }
-
-    public HeadersDefinition cloneHeadersDefinition() {
-        HeadersDefinition clone = new HeadersDefinition();
-        clone.setJMSCorrelationId(this.jMSCorrelationId);
-        clone.setJMSDeliveryMode(this.jMSDeliveryMode);
-        clone.setJMSPriority(this.jMSPriority);
-        clone.setJMSTimeToLive(this.jMSTimeToLive);
-        clone.setJMSType(this.jMSType);
-        clone.setProperties(this.getProperties());
-        return clone;
-    }
-
-    /**
-     * Return a new HeadersDefinition which value is <code>this</code> is shadowed by <code>from</code>
-     *
-     * @param from the value to shadow from
-     * @return the new definition
-     */
-    public HeadersDefinition shadowHeadersDefinition(HeadersDefinition from) {
-        HeadersDefinition result = this.cloneHeadersDefinition();
-        if (from.jMSCorrelationId != null) {
-            result.setJMSCorrelationId(from.jMSCorrelationId);
-        }
-        if (from.jMSType != null) {
-            result.setJMSType(from.jMSType);
-        }
-        if (from.jMSDeliveryMode != null) {
-            result.setJMSDeliveryMode(from.jMSDeliveryMode);
-        }
-        if (from.jMSPriority != null) {
-            result.setJMSPriority(from.jMSPriority);
-        }
-        if (from.jMSTimeToLive != null) {
-            result.setJMSTimeToLive(from.jMSTimeToLive);
-        }
-        result.setProperties(from.getProperties());
-        return result;
-    }
 }

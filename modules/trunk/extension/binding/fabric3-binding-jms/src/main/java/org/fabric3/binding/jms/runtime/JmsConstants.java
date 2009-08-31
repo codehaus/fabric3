@@ -69,4 +69,10 @@ public interface JmsConstants {
      */
     String DEFAULT_XA_CONNECTION_FACTORY = "xaDefault";
 
+    int CACHE_NONE = 0;
+
+    int CACHE_CONNECTION = 1;
+
+    int CACHE_SESSION = 2;
+
 }

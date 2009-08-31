@@ -44,27 +44,27 @@ licensed under the Apache 2.0 license.
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolverImpl"/>
     </component>
 
-    <component name="AlwaysCreateDestination" f3-core:key="always">
+    <component name="AlwaysCreateDestination" f3-core:key="ALWAYS">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.AlwaysDestinationStrategy"/>
     </component>
 
-    <component name="NeverCreateDestination" f3-core:key="never">
+    <component name="NeverCreateDestination" f3-core:key="NEVER">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.NeverDestinationStrategy"/>
     </component>
 
-    <component name="IfNotExistCreateDestination" f3-core:key="ifnotexist">
+    <component name="IfNotExistCreateDestination" f3-core:key="IF_NOT_EXIST">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.IfNotExistDestinationStrategy"/>
     </component>
 
-    <component name="AlwaysCreateConnectionFactory" f3-core:key="always">
+    <component name="AlwaysCreateConnectionFactory" f3-core:key="ALWAYS">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.AlwaysConnectionFactoryStrategy"/>
     </component>
 
-    <component name="NeverCreateConnectionFactory" f3-core:key="never">
+    <component name="NeverCreateConnectionFactory" f3-core:key="NEVER">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.NeverConnectionFactoryStrategy"/>
     </component>
 
-    <component name="IfNotExistCreateConnectionFactory" f3-core:key="ifnotexist">
+    <component name="IfNotExistCreateConnectionFactory" f3-core:key="IF_NOT_EXIST">
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy"/>
     </component>
 

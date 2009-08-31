@@ -44,7 +44,7 @@ package org.fabric3.binding.jms.common;
 public class AdministeredObjectDefinition extends PropertyAwareObject {
     private static final long serialVersionUID = 3952595885616542808L;
     private String name;
-    private CreateOption create = CreateOption.ifnotexist;
+    private CreateOption create = CreateOption.IF_NOT_EXIST;
 
     public String getName() {
         return name;

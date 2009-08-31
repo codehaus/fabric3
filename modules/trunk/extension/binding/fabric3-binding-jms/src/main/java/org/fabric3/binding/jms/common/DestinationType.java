@@ -50,5 +50,5 @@ package org.fabric3.binding.jms.common;
  */
 public enum DestinationType {
 
-    queue, topic
+    QUEUE, TOPIC
 }

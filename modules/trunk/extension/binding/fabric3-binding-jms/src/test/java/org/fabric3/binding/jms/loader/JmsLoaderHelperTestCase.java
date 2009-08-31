@@ -59,7 +59,7 @@ public class JmsLoaderHelperTestCase extends TestCase {
         assertEquals("dest", bindingMetadata.getDestination().getName());
         assertEquals("factory", bindingMetadata.getConnectionFactory()
                 .getName());
-        assertEquals(CreateOption.never, bindingMetadata.getDestination()
+        assertEquals(CreateOption.NEVER, bindingMetadata.getDestination()
                 .getCreate());
 
         meta = JmsURIMetadata.parseURI("jms:dest?deliveryMode=PERSISTENT");

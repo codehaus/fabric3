@@ -266,11 +266,11 @@ public class ServiceListener implements MessageListener {
                               Message response) throws JMSException {
         CorrelationScheme correlationScheme = wireHolder.getCorrelationScheme();
         switch (correlationScheme) {
-        case RequestCorrelIDToCorrelID: {
+        case CORRELATION_ID: {
             response.setJMSCorrelationID(request.getJMSCorrelationID());
             break;
         }
-        case RequestMsgIDToCorrelID: {
+        case MESSAGE_ID: {
             response.setJMSCorrelationID(request.getJMSMessageID());
             break;
         }

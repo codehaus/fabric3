@@ -77,10 +77,10 @@ public class JmsLoaderHelper {
         DestinationDefinition destination = new DestinationDefinition();
         String destinationType = uriProperties.get(JmsURIMetadata.DESTINATIONTYPE);
         if ("topic".equalsIgnoreCase(destinationType)) {
-            destination.setType(DestinationType.topic);
+            destination.setType(DestinationType.TOPIC);
         }
         destination.setName(uriMeta.getDestination());
-        destination.setCreate(CreateOption.never); // always assume the destination already exists
+        destination.setCreate(CreateOption.NEVER); // always assume the destination already exists
         result.setDestination(destination);
 
         // ConnectionFactory
@@ -92,7 +92,7 @@ public class JmsLoaderHelper {
         } else {
             connectionFactory.setName(connectionFactoryName);
         }
-        connectionFactory.setCreate(CreateOption.never);
+        connectionFactory.setCreate(CreateOption.NEVER);
         result.setConnectionFactory(connectionFactory);
 
         // Response copy configuration of request
@@ -106,7 +106,7 @@ public class JmsLoaderHelper {
             responseDestinationDef.setName(DEFAULT_CLIENT_QUEUE);
 
         }
-        responseDestinationDef.setCreate(CreateOption.never);
+        responseDestinationDef.setCreate(CreateOption.NEVER);
         response.setDestination(responseDestinationDef);
         result.setResponse(response);
         return result;

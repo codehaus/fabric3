@@ -50,6 +50,6 @@ package org.fabric3.binding.jms.common;
  */
 public enum CreateOption {
 
-    always, never, ifnotexist
+    ALWAYS, NEVER, IF_NOT_EXIST
 
 }

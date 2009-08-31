@@ -65,7 +65,8 @@ public class JmsBindingDefinition extends BindingDefinition {
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
     private URI generatedTargetUri;
     private JmsBindingMetadata metadata;
-
+    private QName requestConnection;
+    private QName responseConnection;
 
     /**
      * Constructor.
@@ -98,6 +99,22 @@ public class JmsBindingDefinition extends BindingDefinition {
 
     public void setJmsMetadata(JmsBindingMetadata metadata) {
         this.metadata = metadata;
+    }
+
+    public QName getRequestConnection() {
+        return requestConnection;
+    }
+
+    public void setRequestConnection(QName requestConnection) {
+        this.requestConnection = requestConnection;
+    }
+
+    public QName getResponseConnection() {
+        return responseConnection;
+    }
+
+    public void setResponseConnection(QName responseConnection) {
+        this.responseConnection = responseConnection;
     }
 
     public void setGeneratedTargetUri(URI generatedTargetUri) {

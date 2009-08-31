@@ -123,13 +123,32 @@ public class JmsHostImpl implements JmsHost, Fabric3EventListener<RuntimeStart> 
         return containers.containsKey(serviceUri);
     }
 
-    public void register(URI serviceUri, MessageListener listener, Destination destination, TransactionType type, ConnectionFactory factory)
-            throws JMSException {
+    public void register(ListenerConfiguration configuration) throws JMSException {
+        Destination destination = configuration.getDestination();
+        MessageListener listener = configuration.getMessageListener();
+        ConnectionFactory factory = configuration.getFactory();
+        TransactionType type = configuration.getType();
+        URI serviceUri = configuration.getUri();
         AdaptiveMessageContainer container = new AdaptiveMessageContainer(destination, listener, factory, scheduler, tm, containerMonitor);
         if (TransactionType.GLOBAL == type) {
             container.setTransactionType(TransactionType.GLOBAL);
             container.setAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
         }
+        container.setCacheLevel(configuration.getCacheLevel());
+        container.setExceptionListener(configuration.getExceptionListener());
+        container.setMaxMessagesToProcess(configuration.getMaxMessagesToProcess());
+        container.setCacheLevel(configuration.getCacheLevel());
+        container.setMaxReceivers(configuration.getMaxReceivers());
+        container.setMinReceivers(configuration.getMinReceivers());
+        container.setRecoveryInterval(configuration.getRecoveryInterval());
+        container.setIdleLimit(configuration.getIdleLimit());
+        container.setReceiveTimeout(configuration.getReceiveTimeout());
+        container.setRecoveryInterval(configuration.getRecoveryInterval());
+// TODO additional configuration        
+//        container.setClientId();
+//        container.setDurable();
+//        container.setDurableSubscriptionName();
+//        container.setLocalDelivery();
         if (started) {
             container.initialize();
             containers.put(serviceUri, container);

@@ -50,7 +50,6 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class JmsURIMetadata {
@@ -78,11 +77,11 @@ public class JmsURIMetadata {
     }
 
     /**
-     * Get a JmsURIMetadata from an input string.
+     * Parses metadata from an input string.
      *
      * @param uri string for /binding.jms/@uri
      * @return a JmsURIMetadata
-     * @throws URISyntaxException Thrown when <code>uri</code> is not a valid format required by /binding.jms/@uri.
+     * @throws URISyntaxException when the URI is not a valid format required by /binding.jms/@uri.
      */
     public static JmsURIMetadata parseURI(String uri) throws URISyntaxException {
         //TODO implement better validation
@@ -108,6 +107,7 @@ public class JmsURIMetadata {
                 propertyName = current;
             } else if (0 != pos) {// ignore beginning 'jms'
                 assert propertyName != null;
+                assert result != null;
                 result.properties.put(propertyName.trim(), current.trim());
             }
             pos++;

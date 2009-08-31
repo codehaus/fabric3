@@ -47,6 +47,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -59,9 +60,11 @@ import org.w3c.dom.Document;
 
 import org.fabric3.binding.jms.common.HeadersDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
+import org.fabric3.binding.jms.common.OperationPropertiesDefinition;
 import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.model.type.PolicyAware;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 
@@ -69,79 +72,55 @@ public class JMSBindingLoaderTestCase extends TestCase {
     public void testLoaderJMSBindingElement() throws Exception {
         LoaderHelper loaderHelper = new LoaderHelper() {
 
-            public QName createQName(String name, XMLStreamReader reader)
-                    throws InvalidPrefixException {
-                // TODO Auto-generated method stub
+            public QName createQName(String name, XMLStreamReader reader) throws InvalidPrefixException {
                 return null;
             }
 
             public URI getURI(String target) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             public Document loadKey(XMLStreamReader reader) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
-            public void loadPolicySetsAndIntents(PolicyAware policyAware,
-                                                 XMLStreamReader reader, IntrospectionContext context) {
-                // TODO Auto-generated method stub
-
+            public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader, IntrospectionContext context) {
             }
 
-            public Document loadValue(XMLStreamReader reader)
-                    throws XMLStreamException {
-                // TODO Auto-generated method stub
+            public Document loadValue(XMLStreamReader reader) throws XMLStreamException {
                 return null;
             }
 
-            public Set<QName> parseListOfQNames(XMLStreamReader reader,
-                                                String attribute) throws InvalidPrefixException {
-                // TODO Auto-generated method stub
+            public Set<QName> parseListOfQNames(XMLStreamReader reader, String attribute) throws InvalidPrefixException {
                 return null;
             }
 
-            public List<URI> parseListOfUris(XMLStreamReader reader,
-                                             String attribute) {
-                // TODO Auto-generated method stub
+            public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) {
                 return null;
             }
 
         };
         JmsBindingLoader loader = new JmsBindingLoader(loaderHelper);
-        InputStream inputStream = JmsBindingLoader.class
-                .getResourceAsStream("JMSBindingLoaderTest.xml");
+        InputStream inputStream = JmsBindingLoader.class.getResourceAsStream("JMSBindingLoaderTest.xml");
         XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader streamReader = factory
-                .createXMLStreamReader(new InputStreamReader(inputStream));
+        XMLStreamReader streamReader = factory.createXMLStreamReader(new InputStreamReader(inputStream));
         loaderHelper.loadKey(streamReader);
         JmsBindingDefinition jmsBinding = null;
         while (streamReader.hasNext()) {
-            if (START_ELEMENT == streamReader.next()
-                    && "binding.jms".equals(streamReader.getName()
-                    .getLocalPart())) {
-                jmsBinding = loader.load(streamReader, null);
+            if (START_ELEMENT == streamReader.next() && "binding.jms".equals(streamReader.getName().getLocalPart())) {
+                jmsBinding = loader.load(streamReader, new DefaultIntrospectionContext());
                 streamReader.close();
                 break;
             }
         }
         JmsBindingMetadata metadata = jmsBinding.getJmsMetadata();
         HeadersDefinition headers = metadata.getHeaders();
-        assertEquals("CorrelationId", headers.getJMSCorrelationId());
-        assertEquals("ThisType", headers.getJMSType());
-        assertEquals("TestHeadersProperty", headers.getProperties().get(
-                "testHeadersProperty"));
-        assertEquals(2, metadata.getOperationProperties().size());
-        assertEquals("TestHeadersPropertyProperty", metadata
-                .getOperationProperties().get("testOperationProperties1")
-                .getProperties().get("testHeadersPropertyProperty"));
-        assertEquals("NestedHeader", metadata
-                .getOperationProperties().get("testOperationProperties1").getHeaders()
-                .getProperties().get("nested"));
-        assertEquals("NativeName", metadata.getOperationProperties().get(
-                "testOperationProperties2").getNativeOperation());
+        assertEquals("TestHeadersProperty", headers.getProperties().get("testHeadersProperty"));
+        Map<String, OperationPropertiesDefinition> props = metadata.getOperationProperties();
+        assertEquals(2, props.size());
+        assertEquals("TestHeadersPropertyProperty", props.get("testOperationProperties1").getProperties().get("testHeadersPropertyProperty"));
+        assertEquals("NestedHeader", props.get("testOperationProperties1").getHeaders().getProperties().get("nested"));
+        assertEquals("NativeName", metadata.getOperationProperties().get("testOperationProperties2").getNativeOperation());
     }
 
 }

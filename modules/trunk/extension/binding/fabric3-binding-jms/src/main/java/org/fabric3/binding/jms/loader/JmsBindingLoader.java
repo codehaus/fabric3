@@ -45,8 +45,10 @@ package org.fabric3.binding.jms.loader;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
@@ -55,9 +57,12 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.binding.jms.common.AdministeredObjectDefinition;
+import org.fabric3.binding.jms.common.CacheLevel;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.CreateOption;
+import org.fabric3.binding.jms.common.DeliveryMode;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.DestinationType;
 import org.fabric3.binding.jms.common.HeadersDefinition;
@@ -70,41 +75,47 @@ import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
 
 /**
  * Loads a <code>&lt;binding.jms&gt;</code> entry in a composite.
+ * <p/>
+ * TODO support requestConnection and responseConnection attributes TODO add validation error for when connectionFactory and
+ * request/responseConnection are specified per the SCA JMS spec
  *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
-    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+    private static final Set<String> ATTRIBUTES = new HashSet<String>();
 
     static {
-        ATTRIBUTES.put("uri", "uri");
-        ATTRIBUTES.put("correlationScheme", "correlationScheme");
-        ATTRIBUTES.put("jndiURL", "jndiURL");
-        ATTRIBUTES.put("initialContextFactory", "initialContextFactory");
-        ATTRIBUTES.put("requires", "requires");
-        ATTRIBUTES.put("policySets", "policySets");
-        ATTRIBUTES.put("name", "name");
-        ATTRIBUTES.put("create", "create");
-        ATTRIBUTES.put("type", "type");
-        ATTRIBUTES.put("destination", "destination");
-        ATTRIBUTES.put("connectionFactory", "connectionFactory");
-        ATTRIBUTES.put("JMSType", "JMSType");
-        ATTRIBUTES.put("JMSTimeToLive", "JMSTimeToLive");
-        ATTRIBUTES.put("JMSPriority", "JMSPriority");
-        ATTRIBUTES.put("JMSDeliveryMode", "JMSDeliveryMode");
-        ATTRIBUTES.put("JMSCorrelationId", "JMSCorrelationId");
-        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.add("uri");
+        ATTRIBUTES.add("correlationScheme");
+        ATTRIBUTES.add("jndiURL");
+        ATTRIBUTES.add("initialContextFactory");
+        ATTRIBUTES.add("requires");
+        ATTRIBUTES.add("policySets");
+        ATTRIBUTES.add("name");
+        ATTRIBUTES.add("create");
+        ATTRIBUTES.add("type");
+        ATTRIBUTES.add("destination");
+        ATTRIBUTES.add("connectionFactory");
+        ATTRIBUTES.add("type");
+        ATTRIBUTES.add("timeToLive");
+        ATTRIBUTES.add("priority");
+        ATTRIBUTES.add("deliveryMode");
+        ATTRIBUTES.add("correlationScheme");
+        ATTRIBUTES.add("name");
+        ATTRIBUTES.add("requestConnection");
+        ATTRIBUTES.add("responseConnection");
     }
 
-    private final LoaderHelper loaderHelper;
+    private LoaderHelper loaderHelper;
 
     /**
      * Constructor.
@@ -115,8 +126,8 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         this.loaderHelper = loaderHelper;
     }
 
-    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
-        validateAttributes(reader, introspectionContext);
+    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
 
         JmsBindingMetadata metadata;
         String uri = reader.getAttributeValue(null, "uri");
@@ -128,7 +139,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 metadata = JmsLoaderHelper.getJmsMetadataFromURI(uriMeta);
             } catch (URISyntaxException e) {
                 InvalidValue failure = new InvalidValue("Invalid JMS binding URI: " + uri, reader, e);
-                introspectionContext.addError(failure);
+                context.addError(failure);
                 return null;
             }
             bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata, loaderHelper.loadKey(reader));
@@ -136,13 +147,33 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             metadata = new JmsBindingMetadata();
             bd = new JmsBindingDefinition(metadata, loaderHelper.loadKey(reader));
         }
-        final String correlationScheme = reader.getAttributeValue(null, "correlationScheme");
+        NamespaceContext namespace = reader.getNamespaceContext();
+        String targetNamespace = context.getTargetNamespace();
+        String correlationScheme = reader.getAttributeValue(null, "correlationScheme");
         if (correlationScheme != null) {
-            metadata.setCorrelationScheme(CorrelationScheme.valueOf(correlationScheme));
+            QName scheme = LoaderUtil.getQName(correlationScheme, targetNamespace, namespace);
+            // support lax namespaces
+            if ("messageID".equalsIgnoreCase(scheme.getLocalPart())) {
+                metadata.setCorrelationScheme(CorrelationScheme.MESSAGE_ID);
+            } else if ("correlationID".equalsIgnoreCase(scheme.getLocalPart())) {
+                metadata.setCorrelationScheme(CorrelationScheme.CORRELATION_ID);
+            } else if ("none".equalsIgnoreCase(scheme.getLocalPart())) {
+                metadata.setCorrelationScheme(CorrelationScheme.NONE);
+            } else {
+                InvalidValue error = new InvalidValue("Invalid value specified for correlationScheme attribute: " + scheme.getLocalPart(), reader);
+                context.addError(error);
+            }
         }
+
+        QName requestConnection = LoaderUtil.getQName("requestConnection", targetNamespace, namespace);
+        bd.setRequestConnection(requestConnection);
+
+        QName responseConnection = LoaderUtil.getQName("responseConnection", targetNamespace, namespace);
+        bd.setResponseConnection(responseConnection);
+
         metadata.setJndiUrl(reader.getAttributeValue(null, "jndiURL"));
         metadata.setInitialContextFactory(reader.getAttributeValue(null, "initialContextFactory"));
-        loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
+        loaderHelper.loadPolicySetsAndIntents(bd, reader, context);
         if (uri != null) {
             while (true) {
                 if (END_ELEMENT == reader.next() && "binding.jms".equals(reader.getName().getLocalPart())) {
@@ -150,6 +181,9 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 }
             }
         }
+
+        loadFabrc3Attributes(metadata, reader, context);
+
         String name;
         while (true) {
 
@@ -157,19 +191,19 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             case START_ELEMENT:
                 name = reader.getName().getLocalPart();
                 if ("destination".equals(name)) {
-                    DestinationDefinition destination = loadDestination(reader);
+                    DestinationDefinition destination = loadDestination(reader, context);
                     metadata.setDestination(destination);
                 } else if ("connectionFactory".equals(name)) {
-                    ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader);
+                    ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader, context);
                     metadata.setConnectionFactory(connectionFactory);
                 } else if ("response".equals(name)) {
-                    ResponseDefinition response = loadResponse(reader);
+                    ResponseDefinition response = loadResponse(reader, context);
                     metadata.setResponse(response);
                 } else if ("headers".equals(name)) {
-                    HeadersDefinition headers = loadHeaders(reader, introspectionContext);
+                    HeadersDefinition headers = loadHeaders(reader, context);
                     metadata.setHeaders(headers);
                 } else if ("operationProperties".equals(name)) {
-                    OperationPropertiesDefinition operationProperties = loadOperationProperties(reader, introspectionContext);
+                    OperationPropertiesDefinition operationProperties = loadOperationProperties(reader, context);
                     metadata.addOperationProperties(operationProperties.getName(), operationProperties);
                 }
                 break;
@@ -186,24 +220,116 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             }
 
         }
+    }
+
+    private void loadFabrc3Attributes(JmsBindingMetadata metadata, XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+//    TODO    boolean durable = false;
+//    TODO    boolean localDelivery;
+//    TODO    String clientId;
+//    TODO    String durableSubscriptionName;
+
+
+        String cacheLevel = reader.getAttributeValue(null, "cache");
+        if (cacheLevel == null) {
+            metadata.setCacheLevel(CacheLevel.NONE);
+        } else if ("connection".equalsIgnoreCase(cacheLevel)) {
+            metadata.setCacheLevel((CacheLevel.CONNECTION));
+        } else if ("session".equalsIgnoreCase(cacheLevel)) {
+            metadata.setCacheLevel((CacheLevel.SESSION));
+        } else {
+            InvalidValue error = new InvalidValue("Invalid cache level attribute", reader);
+            context.addError(error);
+        }
+        String idleLimit = reader.getAttributeValue(null, "idle.limit");
+        if (idleLimit != null) {
+            try {
+                int val = Integer.parseInt(idleLimit);
+                metadata.setIdleLimit(val);
+            } catch (NumberFormatException e) {
+                InvalidValue error = new InvalidValue("Invalid idle.limit attribute", reader, e);
+                context.addError(error);
+            }
+        }
+        String trxTimeout = reader.getAttributeValue(null, "transaction.timout");
+        if (trxTimeout != null) {
+            try {
+                int val = Integer.parseInt(trxTimeout);
+                metadata.setTransactionTimeout(val);
+            } catch (NumberFormatException e) {
+                InvalidValue error = new InvalidValue("Invalid transaction.timeout attribute", reader, e);
+                context.addError(error);
+            }
+        }
+
+        String receiveTimeout = reader.getAttributeValue(null, "receive.timeout");
+        if (receiveTimeout != null) {
+            try {
+                int val = Integer.parseInt(receiveTimeout);
+                metadata.setReceiveTimeout(val);
+            } catch (NumberFormatException e) {
+                InvalidValue error = new InvalidValue("Invalid receive.timeout attribute", reader, e);
+                context.addError(error);
+            }
+        }
+
+        String maxMessagesProcess = reader.getAttributeValue(null, "max.messages");
+        if (maxMessagesProcess != null) {
+            try {
+                int val = Integer.parseInt(maxMessagesProcess);
+                metadata.setMaxMessagesToProcess(val);
+            } catch (NumberFormatException e) {
+                InvalidValue error = new InvalidValue("Invalid max.messages attribute", reader, e);
+                context.addError(error);
+            }
+        }
+
+        String recoveryInterval = reader.getAttributeValue(null, "recovery.interval");
+        if (recoveryInterval != null) {
+            try {
+                int val = Integer.parseInt(recoveryInterval);
+                metadata.setRecoveryInterval(val);
+            } catch (NumberFormatException e) {
+                InvalidValue error = new InvalidValue("Invalid recovery.interval attribute", reader, e);
+                context.addError(error);
+            }
+        }
+
+        String max = reader.getAttributeValue(null, "max.receivers");
+        if (max != null) {
+            try {
+                int val = Integer.parseInt(max);
+                metadata.setMaxReceivers(val);
+            } catch (NumberFormatException e) {
+                InvalidValue error = new InvalidValue("Invalid max.receivers attribute", reader, e);
+                context.addError(error);
+            }
+        }
+        String min = reader.getAttributeValue(null, "min.receivers");
+        if (min != null) {
+            try {
+                int val = Integer.parseInt(min);
+                metadata.setMinReceivers(val);
+            } catch (NumberFormatException e) {
+                InvalidValue error = new InvalidValue("Invalid min.receivers attribute", reader, e);
+                context.addError(error);
+            }
+        }
+
 
     }
 
-    private ResponseDefinition loadResponse(XMLStreamReader reader) throws XMLStreamException {
-
+    private ResponseDefinition loadResponse(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         ResponseDefinition response = new ResponseDefinition();
-
         String name;
         while (true) {
-
             switch (reader.next()) {
             case START_ELEMENT:
                 name = reader.getName().getLocalPart();
                 if ("destination".equals(name)) {
-                    DestinationDefinition destination = loadDestination(reader);
+                    DestinationDefinition destination = loadDestination(reader, context);
                     response.setDestination(destination);
                 } else if ("connectionFactory".equals(name)) {
-                    ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader);
+                    ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader, context);
                     response.setConnectionFactory(connectionFactory);
                 }
                 break;
@@ -214,77 +340,92 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 }
                 break;
             }
-
         }
-
     }
 
-    private ConnectionFactoryDefinition loadConnectionFactory(XMLStreamReader reader) throws XMLStreamException {
+    private ConnectionFactoryDefinition loadConnectionFactory(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         ConnectionFactoryDefinition connectionFactory = new ConnectionFactoryDefinition();
         connectionFactory.setName(reader.getAttributeValue(null, "name"));
         String create = reader.getAttributeValue(null, "create");
-        if (create != null) {
-            connectionFactory.setCreate(CreateOption.valueOf(create));
-        }
+        parseCreate(reader, context, connectionFactory);
         loadProperties(reader, connectionFactory, "connectionFactory");
         return connectionFactory;
     }
 
-    private DestinationDefinition loadDestination(XMLStreamReader reader) throws XMLStreamException {
+    private DestinationDefinition loadDestination(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         DestinationDefinition destination = new DestinationDefinition();
         destination.setName(reader.getAttributeValue(null, "name"));
-        String create = reader.getAttributeValue(null, "create");
-        if (create != null) {
-            destination.setCreate(CreateOption.valueOf(create));
-        }
+        parseCreate(reader, context, destination);
         String type = reader.getAttributeValue(null, "type");
         if (type != null) {
-            destination.setType(DestinationType.valueOf(type));
+            if ("queue".equalsIgnoreCase(type)) {
+                destination.setType(DestinationType.QUEUE);
+            } else if ("topic".equalsIgnoreCase(type)) {
+                destination.setType(DestinationType.TOPIC);
+            } else {
+                InvalidValue error = new InvalidValue("Invalid value specified for destination type: " + type, reader);
+                context.addError(error);
+            }
+
+
         }
         loadProperties(reader, destination, "destination");
         return destination;
     }
 
-    private HeadersDefinition loadHeaders(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
-        HeadersDefinition headers = new HeadersDefinition();
-        headers.setJMSCorrelationId(reader.getAttributeValue(null, "JMSCorrelationId"));
-        String deliveryMode = reader.getAttributeValue(null, "JMSDeliveryMode");
-        if (deliveryMode != null) {
-            try {
-                headers.setJMSDeliveryMode(Integer.valueOf(deliveryMode));
-            } catch (NumberFormatException nfe) {
-                InvalidValue failure =
-                        new InvalidValue(deliveryMode + " is not a legal int value for JMSDeliveryMode", reader, nfe);
-                introspectionContext.addError(failure);
+    private void parseCreate(XMLStreamReader reader, IntrospectionContext context, AdministeredObjectDefinition definition) {
+        String create = reader.getAttributeValue(null, "create");
+        if (create != null) {
+            if ("always".equals(create)) {
+                definition.setCreate(CreateOption.ALWAYS);
+            } else if ("never".equalsIgnoreCase(create)) {
+                definition.setCreate(CreateOption.NEVER);
+            } else if ("ifNotExist".equalsIgnoreCase(create)) {
+                definition.setCreate(CreateOption.IF_NOT_EXIST);
+            } else {
+                InvalidValue error = new InvalidValue("Invalid value specified for create attribute: " + create, reader);
+                context.addError(error);
             }
         }
-        String priority = reader.getAttributeValue(null, "JMSPriority");
+    }
+
+    private HeadersDefinition loadHeaders(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        HeadersDefinition headers = new HeadersDefinition();
+        String deliveryMode = reader.getAttributeValue(null, "deliveryMode");
+        if (deliveryMode != null) {
+            if ("PERSISTENT".equalsIgnoreCase(deliveryMode)) {
+                headers.setDeliveryMode(DeliveryMode.PERSISTENT);
+            } else if ("NONPERSISTENT".equalsIgnoreCase(deliveryMode)) {
+                headers.setDeliveryMode(DeliveryMode.NONPERSISTENT);
+            } else {
+                InvalidValue failure = new InvalidValue("Invalid delivery mode: " + deliveryMode, reader);
+                context.addError(failure);
+            }
+        }
+        String priority = reader.getAttributeValue(null, "priority");
         if (priority != null) {
             try {
-                headers.setJMSPriority(Integer.valueOf(priority));
+                headers.setPriority(Integer.valueOf(priority));
             } catch (NumberFormatException nfe) {
-                InvalidValue failure =
-                        new InvalidValue(priority + " is not a legal int value for JMSPriority", reader, nfe);
-                introspectionContext.addError(failure);
+                InvalidValue failure = new InvalidValue("Invalid priority: " + priority, reader, nfe);
+                context.addError(failure);
             }
         }
-        String timeToLive = reader.getAttributeValue(null, "JMSTimeToLive");
+        String timeToLive = reader.getAttributeValue(null, "timeToLive");
         if (timeToLive != null) {
             try {
-                headers.setJMSTimeToLive(Long.valueOf(timeToLive));
+                headers.setTimeToLive(Long.valueOf(timeToLive));
             } catch (NumberFormatException nfe) {
-                InvalidValue failure =
-                        new InvalidValue(timeToLive + " is not a legal int value for JMSTimeToLive", reader, nfe);
-                introspectionContext.addError(failure);
+                InvalidValue failure = new InvalidValue("Invalid time-to-live value: " + timeToLive, reader, nfe);
+                context.addError(failure);
             }
         }
-        headers.setJMSType(reader.getAttributeValue(null, "JMSType"));
+        headers.setType(reader.getAttributeValue(null, "type"));
         loadProperties(reader, headers, "headers");
         return headers;
     }
 
-    private OperationPropertiesDefinition loadOperationProperties(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException {
+    private OperationPropertiesDefinition loadOperationProperties(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         OperationPropertiesDefinition optProperties = new OperationPropertiesDefinition();
         optProperties.setName(reader.getAttributeValue(null, "name"));
         optProperties.setNativeOperation(reader.getAttributeValue(null, "nativeOperation"));
@@ -294,7 +435,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             case START_ELEMENT:
                 name = reader.getName().getLocalPart();
                 if ("headers".equals(name)) {
-                    HeadersDefinition headersDefinition = loadHeaders(reader, introspectionContext);
+                    HeadersDefinition headersDefinition = loadHeaders(reader, context);
                     optProperties.setHeaders(headersDefinition);
                 } else if ("property".equals(name)) {
                     loadProperty(reader, optProperties);
@@ -332,15 +473,15 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     }
 
     private void loadProperty(XMLStreamReader reader, PropertyAwareObject parent) throws XMLStreamException {
-        final String key = reader.getAttributeValue(null, "name");
-        final String value = reader.getElementText();
+        String key = reader.getAttributeValue(null, "name");
+        String value = reader.getElementText();
         parent.addProperty(key, value);
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!ATTRIBUTES.containsKey(name)) {
+            if (!ATTRIBUTES.contains(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

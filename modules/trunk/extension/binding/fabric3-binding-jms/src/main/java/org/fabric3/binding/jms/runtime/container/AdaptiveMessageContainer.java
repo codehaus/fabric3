@@ -62,6 +62,9 @@ import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 
 import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.binding.jms.runtime.JmsConstants;
+import static org.fabric3.binding.jms.runtime.JmsConstants.CACHE_CONNECTION;
+import static org.fabric3.binding.jms.runtime.JmsConstants.CACHE_NONE;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.PausableWork;
@@ -71,10 +74,6 @@ import org.fabric3.host.work.WorkScheduler;
  * @version $Rev$ $Date$
  */
 public class AdaptiveMessageContainer {
-    public static final int CACHE_NONE = 0;
-    public static final int CACHE_CONNECTION = 1;
-    public static final int CACHE_SESSION = 2;
-
     private static final int DEFAULT_TRX_TIMEOUT = 30;
 
     private int cacheLevel = CACHE_CONNECTION;
@@ -183,8 +182,8 @@ public class AdaptiveMessageContainer {
     }
 
     /**
-     * Sets the cache level for JMS artifacts. Currently {@link #CACHE_NONE}, {@link #CACHE_CONNECTION}, and {@link #CACHE_SESSION} are supported. The
-     * default is to cache the connection.
+     * Sets the cache level for JMS artifacts. Currently {@link JmsConstants#CACHE_NONE}, {@link JmsConstants#CACHE_CONNECTION}, and {@link
+     * JmsConstants#CACHE_SESSION} are supported. The default is to cache the connection.
      *
      * @param level the cache level
      */

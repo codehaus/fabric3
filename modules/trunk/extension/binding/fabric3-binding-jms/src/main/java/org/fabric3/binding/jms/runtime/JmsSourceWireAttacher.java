@@ -56,6 +56,7 @@ import javax.jms.JMSException;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.binding.jms.common.CacheLevel;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.DestinationDefinition;
@@ -63,9 +64,10 @@ import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
+import org.fabric3.binding.jms.runtime.host.JmsHost;
+import org.fabric3.binding.jms.runtime.host.ListenerConfiguration;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
@@ -120,20 +122,49 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
 
         ResolvedObjects objects = resolveAdministeredObjects(source);
 
+        ListenerConfiguration configuration = new ListenerConfiguration();
         try {
             ConnectionFactory requestFactory = objects.getRequestFactory();
             Destination requestDestination = objects.getRequestDestination();
             ConnectionFactory responseFactory = objects.getResponseFactory();
             Destination responseDestination = objects.getResponseDestination();
             ServiceListener listener = new ServiceListener(wireHolder, responseDestination, responseFactory, trxType, classloader, monitor);
+            configuration.setDestination(requestDestination);
+            configuration.setFactory(requestFactory);
+            configuration.setMessageListener(listener);
+            configuration.setUri(serviceUri);
+            configuration.setType(trxType);
+            populateConfiguration(configuration, source.getMetadata());
             if (jmsHost.isRegistered(serviceUri)) {
                 // the wire has changed and it is being reprovisioned
                 jmsHost.unregister(serviceUri);
             }
-            jmsHost.register(serviceUri, listener, requestDestination, trxType, requestFactory);
+            jmsHost.register(configuration);
         } catch (JMSException e) {
             throw new WiringException(e);
         }
+    }
+
+    private void populateConfiguration(ListenerConfiguration configuration, JmsBindingMetadata metadata) {
+        CacheLevel cacheLevel = metadata.getCacheLevel();
+        if (CacheLevel.CONNECTION == cacheLevel) {
+            configuration.setCacheLevel(JmsConstants.CACHE_CONNECTION);
+        } else if (CacheLevel.SESSION == cacheLevel) {
+            configuration.setCacheLevel(JmsConstants.CACHE_SESSION);
+        } else {
+            configuration.setCacheLevel(JmsConstants.CACHE_NONE);
+        }
+        configuration.setIdleLimit(metadata.getIdleLimit());
+        configuration.setMaxMessagesToProcess(metadata.getMaxMessagesToProcess());
+        configuration.setMaxReceivers(metadata.getMaxReceivers());
+        configuration.setMinReceivers(metadata.getMinReceivers());
+        configuration.setReceiveTimeout(metadata.getReceiveTimeout());
+        configuration.setTransactionTimeout(metadata.getTransactionTimeout());
+//        configuration.setDeliveryMode();
+//        configuration.setDurableSubscriptionName();
+//        configuration.setExceptionListener();
+//        configuration.setClientId();
+//        configuration.setLocalDelivery();
     }
 
     public void detach(JmsSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {

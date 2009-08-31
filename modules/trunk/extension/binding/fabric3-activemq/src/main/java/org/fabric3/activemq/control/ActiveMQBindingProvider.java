@@ -148,34 +148,34 @@ public class ActiveMQBindingProvider implements BindingProvider {
         JmsBindingMetadata metadata = new JmsBindingMetadata();
 
         DestinationDefinition destinationDefinition = new DestinationDefinition();
-        destinationDefinition.setType(DestinationType.queue);
-        destinationDefinition.setCreate(CreateOption.ifnotexist);
+        destinationDefinition.setType(DestinationType.QUEUE);
+        destinationDefinition.setCreate(CreateOption.IF_NOT_EXIST);
         destinationDefinition.setName(queueName);
         metadata.setDestination(destinationDefinition);
         if (xa && xaConnectionFactory != null) {
             // XA connection factory defined
             ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
             factoryDefinition.setName(xaConnectionFactory);
-            factoryDefinition.setCreate(CreateOption.never);
+            factoryDefinition.setCreate(CreateOption.NEVER);
             metadata.setConnectionFactory(factoryDefinition);
         } else if (xa) {
             // XA, no connection factory defined
             ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
             factoryDefinition.setName(ActiveMQXAConnectionFactory.class.getName());
-            factoryDefinition.setCreate(CreateOption.always);
+            factoryDefinition.setCreate(CreateOption.ALWAYS);
             metadata.setConnectionFactory(factoryDefinition);
 
         } else if (connectionFactory != null) {
             // non-XA connection factory defined
             ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
             factoryDefinition.setName(connectionFactory);
-            factoryDefinition.setCreate(CreateOption.never);
+            factoryDefinition.setCreate(CreateOption.NEVER);
             metadata.setConnectionFactory(factoryDefinition);
         } else {
             // non-XA, no connection factory defined
             ConnectionFactoryDefinition factoryDefinition = new ConnectionFactoryDefinition();
             factoryDefinition.setName(ActiveMQConnectionFactory.class.getName());
-            factoryDefinition.setCreate(CreateOption.always);
+            factoryDefinition.setCreate(CreateOption.ALWAYS);
             metadata.setConnectionFactory(factoryDefinition);
         }
         JmsBindingDefinition definition = new JmsBindingDefinition(metadata, null);

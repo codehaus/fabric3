@@ -160,10 +160,10 @@ public class JmsInterceptor implements Interceptor {
 
             String correlationId = null;
             switch (correlationScheme) {
-            case None:
-            case RequestCorrelIDToCorrelID:
+            case NONE:
+            case CORRELATION_ID:
                 throw new UnsupportedOperationException("Correlation scheme not supported");
-            case RequestMsgIDToCorrelID:
+            case MESSAGE_ID:
                 correlationId = jmsMessage.getJMSMessageID();
             }
             if (!oneWay) {

@@ -39,12 +39,7 @@
 package org.fabric3.binding.jms.runtime.host;
 
 import java.net.URI;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MessageListener;
-
-import org.fabric3.binding.jms.common.TransactionType;
 
 /**
  * Provisions MessageListeners that dispatch to service endpoints with the underlying JMS infrastructure.
@@ -64,15 +59,10 @@ public interface JmsHost {
     /**
      * Register a MessageListener which dispatches inbound JMS messages to a service.
      *
-     * @param serviceUri  the service URI
-     * @param listener    the MessageListener
-     * @param destination the distination messages are received from
-     * @param type        the transaction type for receiving messages
-     * @param factory     the JMS connection factory
+     * @param configuration the configuration for the message listener to register
      * @throws JMSException if an error registering the listener is encountered
      */
-    public void register(URI serviceUri, MessageListener listener, Destination destination, TransactionType type, ConnectionFactory factory)
-            throws JMSException;
+    public void register(ListenerConfiguration configuration) throws JMSException;
 
     /**
      * Unregister the MessageListener for the given service
