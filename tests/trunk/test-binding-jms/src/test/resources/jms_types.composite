@@ -15,7 +15,7 @@
     <component name="ObjectWeatherTest">
         <f3-impl:junit class="org.fabric3.binding.jms.test.object.ObjectWeatherTest"/>
         <reference name="weatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+            <binding.jms>
                 <destination name="objectServiceQueue"/>
                 <response>
                     <destination name="clientQueue"/>
@@ -27,7 +27,7 @@
     <component name="ObjectWeatherService">
         <implementation.java class="org.fabric3.binding.jms.test.object.WeatherServiceImpl"/>
         <service name="WeatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+            <binding.jms>
                 <destination name="objectServiceQueue"/>
                 <response>
                     <destination name="clientQueue"/>
@@ -40,7 +40,7 @@
     <component name="PrimitiveTest">
         <f3-impl:junit class="org.fabric3.binding.jms.test.primitives.PrimitiveTest"/>
         <reference name="service">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+            <binding.jms>
                 <destination name="primitiveServiceQueue"/>
                 <response>
                     <destination name="primitiveResponseQueue"/>
@@ -52,7 +52,7 @@
     <component name="PrimitveService">
         <implementation.java class="org.fabric3.binding.jms.test.primitives.PrimitiveServiceImpl"/>
         <service name="PrimitiveService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+            <binding.jms>
                 <destination name="primitiveServiceQueue"/>
                 <response>
                     <destination name="primitiveResponseQueue"/>

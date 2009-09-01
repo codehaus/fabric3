@@ -16,7 +16,7 @@
     <component name="JAXBWeatherTest">
         <f3-impl:junit class="org.fabric3.binding.jms.test.jaxb.JAXBWeatherTest"/>
         <reference name="weatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+            <binding.jms correlationScheme="messageID">
                 <destination name="jaxbServiceQueue"/>
                 <response>
                     <destination name="clientQueue"/>
@@ -28,7 +28,7 @@
     <component name="JAXBWeatherService">
         <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
         <service name="WeatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+            <binding.jms correlationScheme="messageID">
                 <destination name="jaxbServiceQueue"/>
                 <response>
                     <destination name="clientQueue"/>
