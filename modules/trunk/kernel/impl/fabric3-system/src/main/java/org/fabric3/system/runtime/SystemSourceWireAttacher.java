@@ -53,14 +53,13 @@ import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PullTransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.system.provision.SystemSourceDefinition;
@@ -75,7 +74,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
     private ProxyService proxyService;
 
     public SystemSourceWireAttacher(@Reference ComponentManager manager,
-                                    @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+                                    @Reference(name = "transformerRegistry") PullTransformerRegistry transformerRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;

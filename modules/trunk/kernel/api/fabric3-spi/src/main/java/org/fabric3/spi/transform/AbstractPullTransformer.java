@@ -51,38 +51,20 @@ import org.fabric3.spi.model.type.XSDSimpleType;
  */
 @EagerInit
 public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTransformer<SOURCE, TARGET> {
-
-    /**
-     * Default source to be used
-     */
+     // the default source to be used
     private static final XSDSimpleType DEFAULT_SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
+    private PullTransformerRegistry registry;
 
-    /**
-     * Transform Registry to be used
-     */
-    private TransformerRegistry<PullTransformer<SOURCE, TARGET>> registry;
-
-    /**
-     * Sets the TransformerRegistry
-     *
-     * @param registry the transformer registry
-     */
     @Reference
-    public void setRegistry(TransformerRegistry<PullTransformer<SOURCE, TARGET>> registry) {
+    public void setRegistry(PullTransformerRegistry registry) {
         this.registry = registry;
     }
 
-    /**
-     * Register Transformer
-     */
     @Init
     public void init() {
         registry.register(this);
     }
 
-    /**
-     * Unregister Registry
-     */
     @Destroy
     public void destroy() {
         registry.unregister(this);
@@ -92,12 +74,6 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
         return DEFAULT_SOURCE;
     }
 
-    /**
-     * Checks whether this transformer can transform the specified type.
-     *
-     * @param targetType Target type.
-     * @return True if this type can be transformed.
-     */
     public boolean canTransform(DataType<?> targetType) {
         return false;
     }

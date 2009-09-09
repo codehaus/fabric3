@@ -40,12 +40,32 @@ package org.fabric3.spi.transform;
 import org.fabric3.model.type.service.DataType;
 
 /**
+ * Registry for pull transformers.
+ *
  * @version $Rev$ $Date$
  */
-public interface TransformerRegistry<T extends Transformer> {
-    void register(T transformer);
+public interface PullTransformerRegistry {
 
-    void unregister(T transformer);
+    /**
+     * Registers a transformer.
+     *
+     * @param transformer the transformer
+     */
+    void register(PullTransformer<?,?> transformer);
 
-    T getTransformer(DataType<?> source, DataType<?> target);
+    /**
+     * Unregisters a transformer.
+     *
+     * @param transformer unregister the transformer
+     */
+    void unregister(PullTransformer<?,?> transformer);
+
+    /**
+     * Returns a transformer for the source and target types.
+     *
+     * @param source the type to transform from
+     * @param target the type to transform to
+     * @return the transformer
+     */
+    PullTransformer<?,?> getTransformer(DataType<?> source, DataType<?> target);
 }

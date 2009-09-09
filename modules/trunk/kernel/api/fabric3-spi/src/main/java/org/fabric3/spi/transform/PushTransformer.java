@@ -38,9 +38,12 @@
 package org.fabric3.spi.transform;
 
 /**
+ * Transforms by reding from a source and writing to a target instance.
+ *
  * @version $Rev$ $Date$
  */
 public interface PushTransformer<SOURCE, TARGET> extends Transformer {
+
     /**
      * Transforms the source by writing it to the target.
      *

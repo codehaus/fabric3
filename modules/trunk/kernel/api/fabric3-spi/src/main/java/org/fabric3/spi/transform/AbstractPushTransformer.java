@@ -49,10 +49,10 @@ import org.fabric3.model.type.service.DataType;
  */
 @EagerInit
 public abstract class AbstractPushTransformer<SOURCE, TARGET> implements PushTransformer<SOURCE, TARGET> {
-    private TransformerRegistry<PushTransformer<SOURCE, TARGET>> registry;
+    private PushTransformerRegistry registry;
 
     @Reference
-    public void setRegistry(TransformerRegistry<PushTransformer<SOURCE, TARGET>> registry) {
+    public void setRegistry(PushTransformerRegistry registry) {
         this.registry = registry;
     }
 
@@ -66,12 +66,6 @@ public abstract class AbstractPushTransformer<SOURCE, TARGET> implements PushTra
         registry.unregister(this);
     }
 
-    /**
-     * Checks whether this transformer can transform the specified type.
-     *
-     * @param targetType Target type.
-     * @return True if this type can be transformed.
-     */
     public boolean canTransform(DataType<?> targetType) {
         return false;
     }

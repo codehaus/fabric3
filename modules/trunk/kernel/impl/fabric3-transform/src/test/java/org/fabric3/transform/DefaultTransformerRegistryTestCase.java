@@ -43,14 +43,14 @@ import org.w3c.dom.Node;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PullTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Integer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DefaultTransformerRegistryTestCase extends TestCase {
-    private TransformerRegistry<PullTransformer<?,?>> registry;
+    private PullTransformerRegistry registry;
 
     public void testRegistration() {
         PullTransformer<?,?> transformer = new String2Integer();
@@ -62,6 +62,6 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        registry = new DefaultTransformerRegistry<PullTransformer<?,?>>();
+        registry = new DefaultPullTransformerRegistry();
     }
 }

@@ -64,7 +64,7 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PullTransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -73,10 +73,10 @@ public abstract class PojoSourceWireAttacher {
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
-    protected TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
+    protected PullTransformerRegistry transformerRegistry;
     protected ClassLoaderRegistry classLoaderRegistry;
 
-    protected PojoSourceWireAttacher(TransformerRegistry<PullTransformer<?, ?>> transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
+    protected PojoSourceWireAttacher(PullTransformerRegistry transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
         this.transformerRegistry = transformerRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
     }
@@ -125,7 +125,7 @@ public abstract class PojoSourceWireAttacher {
                 targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
             }
 
-            TransformContext context = new TransformContext(sourceClassLoader, targetClassLoader, null, null);
+            TransformContext context = new TransformContext(sourceClassLoader, targetClassLoader);
             return createKey(formalType, element, context);
         }
 

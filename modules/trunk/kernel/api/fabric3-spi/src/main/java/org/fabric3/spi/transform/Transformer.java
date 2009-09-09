@@ -40,12 +40,32 @@ package org.fabric3.spi.transform;
 import org.fabric3.model.type.service.DataType;
 
 /**
+ * Base transformer interface for pull- and push-style transformations.
+ *
  * @version $Rev$ $Date$
  */
 public interface Transformer {
+
+    /**
+     * Returns true if the transformer can transform the given type.
+     *
+     * @param type the type
+     * @return true if the transformer can transform the given type
+     */
+    boolean canTransform(DataType<?> type);
+
+    /**
+     * Returns the type the transformer transforms from.
+     *
+     * @return the type
+     */
     DataType<?> getSourceType();
 
+    /**
+     * Returns the type the transformer transforms to.
+     *
+     * @return the type
+     */
     DataType<?> getTargetType();
 
-    boolean canTransform(DataType<?> targetType);
 }

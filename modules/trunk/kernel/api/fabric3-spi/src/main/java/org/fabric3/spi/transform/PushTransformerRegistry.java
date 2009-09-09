@@ -37,39 +37,35 @@
 */
 package org.fabric3.spi.transform;
 
+import org.fabric3.model.type.service.DataType;
+
 /**
- * Context information applicable during a transformation.
+ * Registry for push transformers.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7146 $ $Date: 2009-06-14 16:28:54 -0700 (Sun, 14 Jun 2009) $
  */
-public class TransformContext {
-    private final ClassLoader targetClassLoader;
-    private final ClassLoader sourceClassLoader;
+public interface PushTransformerRegistry {
 
     /**
-     * @param sourceClassLoader a ClassLoader that can be used to access resources from the source
-     * @param targetClassLoader a ClassLoader that can be used instantiate transformation results
-     */
-    public TransformContext(ClassLoader sourceClassLoader, ClassLoader targetClassLoader) {
-        this.sourceClassLoader = sourceClassLoader;
-        this.targetClassLoader = targetClassLoader;
-    }
-
-    /**
-     * Returns a ClassLoader that can be used instantiate transformation results.
+     * Registers a transformer.
      *
-     * @return a ClassLoader that can be used instantiate transformation results
+     * @param transformer the transformer
      */
-    public ClassLoader getTargetClassLoader() {
-        return targetClassLoader;
-    }
+    void register(PushTransformer<?,?> transformer);
 
     /**
-     * Returns a ClassLoader that can be used to access resources from the source.
+     * Unregisters a transformer.
      *
-     * @return a ClassLoader that can be used to access resources from the source
+     * @param transformer unregister the transformer
      */
-    public ClassLoader getSourceClassLoader() {
-        return sourceClassLoader;
-    }
+    void unregister(PushTransformer<?,?> transformer);
+
+    /**
+     * Returns a transformer for the source and target types.
+     *
+     * @param source the type to transform from
+     * @param target the type to transform to
+     * @return the transformer
+     */
+    PushTransformer<?,?> getTransformer(DataType<?> source, DataType<?> target);
 }

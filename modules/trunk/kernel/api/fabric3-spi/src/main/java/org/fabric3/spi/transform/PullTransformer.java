@@ -39,9 +39,12 @@ package org.fabric3.spi.transform;
 
 
 /**
+ * Transforms a source instance to a target type, returning a new target instance.
+ *
  * @version $Rev$ $Date$
  */
 public interface PullTransformer<SOURCE, TARGET> extends Transformer {
+
     /**
      * Transforms the source instance into a new instance of the target type.
      *

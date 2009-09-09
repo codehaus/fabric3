@@ -72,7 +72,7 @@ import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PullTransformerRegistry;
 
 /**
  * Base class for ComponentBuilders that build components based on POJOs.
@@ -84,7 +84,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected final ScopeRegistry scopeRegistry;
     protected final InstanceFactoryBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
-    protected final TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
+    protected final PullTransformerRegistry transformerRegistry;
     protected ExpressionExpander expander;
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
@@ -104,7 +104,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected PojoComponentBuilder(ScopeRegistry scopeRegistry,
                                    InstanceFactoryBuilderRegistry providerBuilders,
                                    ClassLoaderRegistry classLoaderRegistry,
-                                   TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                                   PullTransformerRegistry transformerRegistry) {
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
         this.classLoaderRegistry = classLoaderRegistry;
@@ -126,7 +126,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         Map<String, Document> propertyValues = definition.getPropertyValues();
 
         ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
-        TransformContext context = new TransformContext(null, cl, null, null);
+        TransformContext context = new TransformContext(null, cl);
         for (Map.Entry<String, Document> entry : propertyValues.entrySet()) {
             String name = entry.getKey();
             Document value = entry.getValue();

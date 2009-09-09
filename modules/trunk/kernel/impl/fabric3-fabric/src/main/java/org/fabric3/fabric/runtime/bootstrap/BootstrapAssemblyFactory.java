@@ -155,8 +155,7 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PullTransformerRegistry;
 import org.fabric3.system.generator.SystemComponentGenerator;
 import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
@@ -171,7 +170,7 @@ import org.fabric3.system.singleton.SingletonSourceDefinition;
 import org.fabric3.system.singleton.SingletonSourceWireAttacher;
 import org.fabric3.system.singleton.SingletonTargetDefinition;
 import org.fabric3.system.singleton.SingletonTargetWireAttacher;
-import org.fabric3.transform.DefaultTransformerRegistry;
+import org.fabric3.transform.DefaultPullTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Boolean;
 import org.fabric3.transform.dom2java.String2Class;
 import org.fabric3.transform.dom2java.String2Integer;
@@ -267,8 +266,7 @@ public class BootstrapAssemblyFactory {
         ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder(providerRegistry, buildHelper);
         provider.init();
 
-        TransformerRegistry<PullTransformer<?, ?>> transformerRegistry =
-                new DefaultTransformerRegistry<PullTransformer<?, ?>>();
+        PullTransformerRegistry transformerRegistry = new DefaultPullTransformerRegistry();
         transformerRegistry.register(new String2String());
         transformerRegistry.register(new String2Integer());
         transformerRegistry.register(new String2Boolean());
