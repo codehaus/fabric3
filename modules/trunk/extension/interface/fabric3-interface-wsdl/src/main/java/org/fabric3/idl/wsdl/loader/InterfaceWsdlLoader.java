@@ -122,7 +122,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
         }
         URL wsdlUrl = getWsdlUrl(wsdlLocation);
         if (wsdlUrl == null) {
-            InvalidWSDLLocation failure = new InvalidWSDLLocation("Unable to locate WSDL: " + wsdlLocation, wsdlLocation, reader);
+            InvalidWSDLLocation failure = new InvalidWSDLLocation("Unable to locate WSDL: " + wsdlLocation, reader);
             context.addError(failure);
         }
         return wsdlUrl;
