@@ -58,7 +58,6 @@ public abstract class AbstractWsdlProcessor {
      * @param xmlSchema
      */
     protected DataType<XmlSchemaType> getDataType(QName qName, XmlSchemaCollection xmlSchema) {
-
         XmlSchemaType type = xmlSchema.getTypeByQName(qName);
         if (type != null) {
             return new DataType<XmlSchemaType>(Object.class, type);

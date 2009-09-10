@@ -58,11 +58,8 @@ import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 import org.w3c.dom.Element;
 
-import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 
@@ -71,15 +68,7 @@ import org.fabric3.model.type.service.Operation;
  *
  * @version $Revsion$ $Date$
  */
-@Service(interfaces = {Wsdl11Processor.class, WsdlProcessor.class})
 public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProcessor {
-
-    /**
-     * @param wsdlProcessorRegistry Injected default processor.
-     */
-    public Wsdl11Processor(@Reference(name = "registry") WsdlProcessorRegistry wsdlProcessorRegistry) {
-        wsdlProcessorRegistry.registerProcessor(WsdlVersion.VERSION_1_1, this);
-    }
 
     public List<Operation> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
 

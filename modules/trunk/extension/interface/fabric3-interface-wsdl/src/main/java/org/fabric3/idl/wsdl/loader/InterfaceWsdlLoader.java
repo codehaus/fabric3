@@ -60,17 +60,9 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
  */
 @EagerInit
 public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
-
-    /**
-     * WSDL processor.
-     */
     private final WsdlProcessor processor;
 
-    /**
-     * @param loaderRegistry Loader registry.
-     * @param processor      WSDL processor.
-     */
-    public InterfaceWsdlLoader(@Reference(name = "processor") WsdlProcessor processor) {
+    public InterfaceWsdlLoader(@Reference WsdlProcessor processor) {
         this.processor = processor;
     }
 
@@ -85,7 +77,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
         }
         processInterface(reader, wsdlContract, wsdlUrl, context);
 
-        processCallbackInterface(reader, wsdlContract, wsdlUrl);
+        processCallbackInterface(reader, wsdlContract);
 
         LoaderUtil.skipToEndElement(reader);
 
@@ -93,11 +85,8 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
 
     }
 
-    /*
-     * Processes the callback interface.
-     */
     @SuppressWarnings("unchecked")
-    private void processCallbackInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, URL wsdlUrl) {
+    private void processCallbackInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract) {
 
         String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
         if (callbackInterfaze != null) {
@@ -107,9 +96,6 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
 
     }
 
-    /*
-     * Processes the interface.
-     */
     @SuppressWarnings("unchecked")
     private void processInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, URL wsdlUrl, IntrospectionContext context) {
 
@@ -125,9 +111,6 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
 
     }
 
-    /*
-     * Resolves the WSDL.
-     */
     private URL resolveWsdl(XMLStreamReader reader, IntrospectionContext context) {
 
         String wsdlLocation = reader.getAttributeValue(null, "wsdlLocation");
