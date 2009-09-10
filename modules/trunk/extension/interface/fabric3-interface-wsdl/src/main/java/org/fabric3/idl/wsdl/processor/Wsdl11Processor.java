@@ -206,30 +206,6 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
     }
 
     /*
-     * Get the input type.
-     */
-    @SuppressWarnings("unchecked")
-    private DataType<List<DataType<?>>> getInputType(Input input, XmlSchemaCollection xmlSchema) {
-
-        if (input == null) return null;
-
-        Message message = input.getMessage();
-        List<Part> parts = message.getOrderedParts(null);
-
-        List<DataType<?>> types = new LinkedList<DataType<?>>();
-
-        for (Part part : parts) {
-            DataType<XmlSchemaType> dataType = getDataType(part.getElementName(), xmlSchema);
-            if (dataType != null) {
-                types.add(dataType);
-            }
-        }
-
-        return new DataType<List<DataType<?>>>(Object.class, types);
-
-    }
-
-    /*
      * Get all the inline schemas.
      */
     private XmlSchemaCollection getXmlSchema(Definition definition) {
