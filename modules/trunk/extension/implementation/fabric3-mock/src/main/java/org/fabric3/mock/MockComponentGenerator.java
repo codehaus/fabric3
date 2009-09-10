@@ -67,7 +67,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
     public MockTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
         MockTargetDefinition definition = new MockTargetDefinition();
         definition.setUri(service.getUri());
-        ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
+        ServiceContract serviceContract = service.getDefinition().getServiceContract();
         definition.setMockedInterface(serviceContract.getQualifiedInterfaceName());
         return definition;
     }
@@ -81,7 +81,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationMock> source,
-                                                               ServiceContract<?> serviceContract,
+                                                               ServiceContract serviceContract,
                                                                EffectivePolicy policy) throws GenerationException {
         return new MockSourceDefinition();
     }

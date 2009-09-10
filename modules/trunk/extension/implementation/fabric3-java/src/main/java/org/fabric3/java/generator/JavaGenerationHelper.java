@@ -86,7 +86,7 @@ public interface JavaGenerationHelper {
      */
     void generateCallbackWireSource(JavaSourceDefinition definition,
                                     LogicalComponent<? extends JavaImplementation> component,
-                                    ServiceContract<?> serviceContract,
+                                    ServiceContract serviceContract,
                                     EffectivePolicy policy) throws GenerationException;
 
     /**

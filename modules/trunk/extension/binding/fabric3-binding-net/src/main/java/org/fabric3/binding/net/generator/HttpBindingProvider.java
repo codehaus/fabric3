@@ -93,7 +93,7 @@ public class HttpBindingProvider implements BindingProvider {
         if (!enabled) {
             return NO_MATCH;
         }
-        ServiceContract<?> contract = source.getDefinition().getServiceContract();
+        ServiceContract contract = source.getDefinition().getServiceContract();
         for (Operation<?> operation : contract.getOperations()) {
             if (operation.getInputType().getLogical().size() > 1) {
                 BindingMatchResult result = new BindingMatchResult(false, HTTP_BINDING);
@@ -101,7 +101,7 @@ public class HttpBindingProvider implements BindingProvider {
                 return result;
             }
         }
-        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        ServiceContract callbackContract = contract.getCallbackContract();
         if (callbackContract != null) {
             for (Operation<?> operation : callbackContract.getOperations()) {
                 if (operation.getInputType().getLogical().size() > 1) {

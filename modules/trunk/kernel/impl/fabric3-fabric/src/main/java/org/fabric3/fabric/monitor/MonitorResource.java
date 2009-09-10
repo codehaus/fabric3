@@ -52,7 +52,7 @@ import org.fabric3.model.type.service.ServiceContract;
 public class MonitorResource extends ResourceDefinition {
     private static final long serialVersionUID = -6723752212878850748L;
 
-    public MonitorResource(String name, boolean optional, ServiceContract<?> serviceContract) {
+    public MonitorResource(String name, boolean optional, ServiceContract serviceContract) {
         super(name, serviceContract, optional);
     }
 }

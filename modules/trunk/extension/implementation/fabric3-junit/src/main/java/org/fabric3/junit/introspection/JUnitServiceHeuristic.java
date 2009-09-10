@@ -114,7 +114,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
 
     @SuppressWarnings({"unchecked"})
     private ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
-        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
+        ServiceContract contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
         ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
         Annotation[] annotations = serviceInterface.getAnnotations();
         if (policyProcessor != null) {
@@ -126,7 +126,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
     }
 
     private JUnitServiceContract generateTestContract(Class<?> implClass) {
-        List<Operation<Type>> operations = new ArrayList<Operation<Type>>();
+        List<Operation<?>> operations = new ArrayList<Operation<?>>();
         for (Method method : implClass.getMethods()) {
             // see if this is a test method
             if (Modifier.isStatic(method.getModifiers())) {
@@ -142,7 +142,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
             if (name.length() < 5 || !name.startsWith("test")) {
                 continue;
             }
-            Operation<Type> operation = new Operation<Type>(name, INPUT_TYPE, OUTPUT_TYPE, FAULT_TYPE);
+            Operation<?> operation = new Operation<Type>(name, INPUT_TYPE, OUTPUT_TYPE, FAULT_TYPE);
             operations.add(operation);
         }
         return new JUnitServiceContract(operations);

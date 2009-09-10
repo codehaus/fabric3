@@ -99,7 +99,7 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
 
     @SuppressWarnings({"unchecked"})
     ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, Class<?> implClass, IntrospectionContext context) {
-        ServiceContract<?> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
+        ServiceContract contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
 
         ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
         Annotation[] annotations = serviceInterface.getAnnotations();

@@ -119,7 +119,7 @@ public class ComponentServiceLoader extends AbstractExtensibleTypeLoader<Compone
                     continue;
                 }
                 if (type instanceof ServiceContract) {
-                    def.setServiceContract((ServiceContract<?>) type);
+                    def.setServiceContract((ServiceContract) type);
                 } else if (type instanceof BindingDefinition) {
                     if (callback) {
                         def.addCallbackBinding((BindingDefinition) type);

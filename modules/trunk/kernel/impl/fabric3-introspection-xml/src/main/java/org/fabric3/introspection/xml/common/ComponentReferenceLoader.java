@@ -160,7 +160,7 @@ public class ComponentReferenceLoader extends AbstractExtensibleTypeLoader<Compo
                     continue;
                 }
                 if (type instanceof ServiceContract) {
-                    reference.setServiceContract((ServiceContract<?>) type);
+                    reference.setServiceContract((ServiceContract) type);
                 } else if (type instanceof BindingDefinition) {
                     if (callback) {
                         reference.addCallbackBinding((BindingDefinition) type);

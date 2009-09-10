@@ -37,7 +37,6 @@
 */
 package org.fabric3.mock;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import org.easymock.IMocksControl;
@@ -64,7 +63,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
         IntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract<Type> controlServiceContract = introspect(IMocksControl.class, context);
+        ServiceContract controlServiceContract = introspect(IMocksControl.class, context);
         assert !context.hasErrors(); // should not happen
         controlService = new ServiceDefinition("mockControl", controlServiceContract);
     }
@@ -91,7 +90,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
                 continue;
             }
 
-            ServiceContract<Type> serviceContract = introspect(interfaceClass, introspectionContext);
+            ServiceContract serviceContract = introspect(interfaceClass, introspectionContext);
             String name = interfaceClass.getName();
             int index = name.lastIndexOf('.');
             if (index != -1) {
@@ -107,7 +106,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
 
     }
 
-    private ServiceContract<Type> introspect(Class<?> interfaceClass, IntrospectionContext context) {
+    private ServiceContract introspect(Class<?> interfaceClass, IntrospectionContext context) {
         TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
         return contractProcessor.introspect(typeMapping, interfaceClass, context);
     }

@@ -99,7 +99,7 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<SingletonImplementation> source,
-                                                               ServiceContract<?> serviceContract,
+                                                               ServiceContract serviceContract,
                                                                EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }

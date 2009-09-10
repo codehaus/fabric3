@@ -88,7 +88,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     }
 
     public JmsSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                  ServiceContract<?> contract,
+                                                  ServiceContract contract,
                                                   List<LogicalOperation> operations,
                                                   EffectivePolicy policy) throws GenerationException {
 
@@ -102,7 +102,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     }
 
     public JmsTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                  ServiceContract<?> contract,
+                                                  ServiceContract contract,
                                                   List<LogicalOperation> operations,
                                                   EffectivePolicy policy) throws GenerationException {
 
@@ -122,7 +122,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
      * @param contract the service contract
      * @throws GenerationException if a response destination was not provided
      */
-    private void validateResponseDestination(JmsBindingMetadata metadata, ServiceContract<?> contract) throws GenerationException {
+    private void validateResponseDestination(JmsBindingMetadata metadata, ServiceContract contract) throws GenerationException {
         if (metadata.isResponse()) {
             return;
         }
@@ -170,7 +170,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
      * @return the collection of payload types keyed by operation name
      * @throws JmsGenerationException if an error occurs
      */
-    private Map<String, PayloadType> processPayloadTypes(ServiceContract<?> serviceContract) throws JmsGenerationException {
+    private Map<String, PayloadType> processPayloadTypes(ServiceContract serviceContract) throws JmsGenerationException {
         Map<String, PayloadType> types = new HashMap<String, PayloadType>();
         for (Operation<?> operation : serviceContract.getOperations()) {
             PayloadType payloadType = introspector.introspect(operation);

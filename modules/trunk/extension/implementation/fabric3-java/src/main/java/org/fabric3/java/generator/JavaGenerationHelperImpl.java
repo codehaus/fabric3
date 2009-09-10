@@ -105,7 +105,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
 
     public void generateWireSource(JavaSourceDefinition definition, LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         URI uri = reference.getUri();
-        ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
+        ServiceContract serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
 
         definition.setUri(uri);
@@ -119,7 +119,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
     }
 
     public void generateCallbackWireSource(JavaSourceDefinition definition, LogicalComponent<? extends JavaImplementation> component,
-                                           ServiceContract<?> serviceContract,
+                                           ServiceContract serviceContract,
                                            EffectivePolicy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
         InjectingComponentType type = component.getDefinition().getImplementation().getComponentType();
@@ -145,7 +145,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
 
     public void generateResourceWireSource(JavaSourceDefinition wireDefinition, LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
-        ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
+        ServiceContract serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
 
         wireDefinition.setUri(uri);

@@ -39,7 +39,6 @@ package org.fabric3.jpa.introspection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -67,7 +66,7 @@ import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor
  */
 @EagerInit
 public class PersistenceContextProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<PersistenceContext, I> {
-    private final ServiceContract<Type> factoryServiceContract;
+    private final ServiceContract factoryServiceContract;
 
     public PersistenceContextProcessor(@Reference ContractProcessor contractProcessor) {
         super(PersistenceContext.class);

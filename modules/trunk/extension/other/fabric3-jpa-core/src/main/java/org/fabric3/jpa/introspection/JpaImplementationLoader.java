@@ -37,7 +37,6 @@
 */
 package org.fabric3.jpa.introspection;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContextType;
@@ -76,7 +75,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
     public static final QName IMPLEMENTATION_JPA = new QName(Namespaces.IMPLEMENTATION, "implementation.jpa");
 
     private final JavaImplementationProcessor implementationProcessor;
-    private final ServiceContract<Type> factoryServiceContract;
+    private final ServiceContract factoryServiceContract;
 
     public JpaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor, @Reference ContractProcessor contractProcessor) {
         this.implementationProcessor = implementationProcessor;

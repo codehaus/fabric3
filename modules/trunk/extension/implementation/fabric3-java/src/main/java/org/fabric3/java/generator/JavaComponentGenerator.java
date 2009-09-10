@@ -85,7 +85,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
-                                                               ServiceContract<?> serviceContract,
+                                                               ServiceContract serviceContract,
                                                                EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);

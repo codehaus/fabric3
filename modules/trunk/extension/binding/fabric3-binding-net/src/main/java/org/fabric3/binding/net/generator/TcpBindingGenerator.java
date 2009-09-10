@@ -59,7 +59,7 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class TcpBindingGenerator implements BindingGenerator<TcpBindingDefinition> {
 
     public PhysicalSourceDefinition generateWireSource(LogicalBinding<TcpBindingDefinition> binding,
-                                                       ServiceContract<?> contract,
+                                                       ServiceContract contract,
                                                        List<LogicalOperation> operations,
                                                        EffectivePolicy policy) throws GenerationException {
         TcpSourceDefinition sourceDefinition = new TcpSourceDefinition();
@@ -70,7 +70,7 @@ public class TcpBindingGenerator implements BindingGenerator<TcpBindingDefinitio
     }
 
     public PhysicalTargetDefinition generateWireTarget(LogicalBinding<TcpBindingDefinition> binding,
-                                                       ServiceContract<?> contract,
+                                                       ServiceContract contract,
                                                        List<LogicalOperation> operations,
                                                        EffectivePolicy policy) throws GenerationException {
         TcpTargetDefinition targetDefinition = new TcpTargetDefinition();

@@ -98,7 +98,7 @@ public class ServiceProcessor<I extends Implementation<? extends InjectingCompon
 
     @SuppressWarnings({"unchecked"})
     private ServiceDefinition createDefinition(Class<?> service, TypeMapping typeMapping, Class<?> implClass, IntrospectionContext context) {
-        ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, service, context);
+        ServiceContract serviceContract = contractProcessor.introspect(typeMapping, service, context);
         ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
         Annotation[] annotations = service.getAnnotations();
         if (policyProcessor != null) {

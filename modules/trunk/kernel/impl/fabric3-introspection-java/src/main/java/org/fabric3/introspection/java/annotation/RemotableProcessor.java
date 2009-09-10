@@ -43,8 +43,6 @@
  */
 package org.fabric3.introspection.java.annotation;
 
-import java.lang.reflect.Type;
-
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
@@ -69,7 +67,7 @@ public class RemotableProcessor<I extends Implementation<? extends InjectingComp
     }
 
     public void visitType(Remotable annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        ServiceContract<Type> serviceContract = contractProcessor.introspect(context.getTypeMapping(), type, context);
+        ServiceContract serviceContract = contractProcessor.introspect(context.getTypeMapping(), type, context);
         ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
         implementation.getComponentType().add(definition);
     }

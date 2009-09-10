@@ -54,8 +54,8 @@ import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -92,7 +92,7 @@ public class JSR250ResourceProcessor<I extends Implementation<? extends Injectin
                                          String mappedName,
                                          TypeMapping typeMapping,
                                          IntrospectionContext context) {
-        ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, type, context);
+        ServiceContract serviceContract = contractProcessor.introspect(typeMapping, type, context);
         return new SystemSourcedResource(name, optional, mappedName, serviceContract);
     }
 }

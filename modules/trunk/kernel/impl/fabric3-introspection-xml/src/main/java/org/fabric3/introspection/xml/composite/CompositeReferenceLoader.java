@@ -143,7 +143,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                     continue;
                 }
                 if (type instanceof ServiceContract) {
-                    referenceDefinition.setServiceContract((ServiceContract<?>) type);
+                    referenceDefinition.setServiceContract((ServiceContract) type);
                 } else if (type instanceof BindingDefinition) {
                     if (callback) {
                         referenceDefinition.addCallbackBinding((BindingDefinition) type);

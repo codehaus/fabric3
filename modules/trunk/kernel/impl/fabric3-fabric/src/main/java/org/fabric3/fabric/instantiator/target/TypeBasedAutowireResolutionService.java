@@ -85,7 +85,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
                 return;
             }
 
-            ServiceContract<?> requiredContract = contractResolver.determineContract(logicalReference);
+            ServiceContract requiredContract = contractResolver.determineContract(logicalReference);
 
             Autowire autowire = calculateAutowire(compositeComponent, component);
             if (autowire == Autowire.ON) {
@@ -101,7 +101,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
 
             if (componentReference.isAutowire()) {
                 ReferenceDefinition referenceDefinition = logicalReference.getDefinition();
-                ServiceContract<?> requiredContract = referenceDefinition.getServiceContract();
+                ServiceContract requiredContract = referenceDefinition.getServiceContract();
                 boolean resolved = resolveByType(component.getParent(), logicalReference, requiredContract);
                 if (!resolved) {
                     resolveByType(compositeComponent, logicalReference, requiredContract);
@@ -181,14 +181,14 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
      * @param contract         the contract to match against
      * @return true if the reference has been resolved.
      */
-    private boolean resolveByType(LogicalCompositeComponent composite, LogicalReference logicalReference, ServiceContract<?> contract) {
+    private boolean resolveByType(LogicalCompositeComponent composite, LogicalReference logicalReference, ServiceContract contract) {
 
         List<LogicalService> candidates = new ArrayList<LogicalService>();
         Multiplicity refMultiplicity = logicalReference.getDefinition().getMultiplicity();
         boolean multiplicity = Multiplicity.ZERO_N.equals(refMultiplicity) || Multiplicity.ONE_N.equals(refMultiplicity);
         for (LogicalComponent<?> child : composite.getComponents()) {
             for (LogicalService service : child.getServices()) {
-                ServiceContract<?> targetContract = contractResolver.determineContract(service);
+                ServiceContract targetContract = contractResolver.determineContract(service);
                 if (targetContract == null) {
                     // This is a programming error since a non-composite service must have a service contract
                     throw new AssertionError("No service contract specified on service: " + service.getUri());

@@ -135,7 +135,7 @@ public class WireGeneratorImpl implements WireGenerator {
         LogicalComponent source = reference.getParent();
         LogicalComponent target = service.getParent();
         ReferenceDefinition referenceDefinition = reference.getDefinition();
-        ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
+        ServiceContract serviceContract = referenceDefinition.getServiceContract();
 
         LogicalBinding<LocalBindingDefinition> sourceBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, reference);
         LogicalBinding<LocalBindingDefinition> targetBinding = new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, service);
@@ -148,7 +148,7 @@ public class WireGeneratorImpl implements WireGenerator {
         // generate metadata for the target side of the wire
         PhysicalTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, targetPolicy);
         targetDefinition.setClassLoaderId(target.getDefinition().getContributionUri());
-        ServiceContract<?> callbackContract = reference.getDefinition().getServiceContract().getCallbackContract();
+        ServiceContract callbackContract = reference.getDefinition().getServiceContract().getCallbackContract();
         if (callbackContract != null) {
             // if there is a callback wire associated with this forward wire, calculate its URI
             URI callbackUri = generateCallbackUri(source, callbackContract, referenceDefinition.getName());
@@ -177,7 +177,7 @@ public class WireGeneratorImpl implements WireGenerator {
 
     public PhysicalWireDefinition generateCollocatedCallbackWire(LogicalService service, LogicalReference reference) throws GenerationException {
         LogicalComponent<?> targetComponent = reference.getParent();
-        ServiceContract<?> contract = reference.getDefinition().getServiceContract().getCallbackContract();
+        ServiceContract contract = reference.getDefinition().getServiceContract().getCallbackContract();
         LogicalService callbackService = targetComponent.getService(contract.getInterfaceName());
         LogicalBinding<LocalBindingDefinition> sourceBinding =
                 new LogicalBinding<LocalBindingDefinition>(LocalBindingDefinition.INSTANCE, callbackService);
@@ -215,7 +215,7 @@ public class WireGeneratorImpl implements WireGenerator {
         assert bindable instanceof LogicalService;
         LogicalService logicalService = (LogicalService) bindable;
 
-        ServiceContract<?> contract = logicalService.getDefinition().getServiceContract();
+        ServiceContract contract = logicalService.getDefinition().getServiceContract();
         if (contract == null) {
             contract = service.getDefinition().getServiceContract();
         }
@@ -260,7 +260,7 @@ public class WireGeneratorImpl implements WireGenerator {
 
         LogicalComponent component = reference.getParent();
         ReferenceDefinition referenceDefinition = reference.getDefinition();
-        ServiceContract<?> contract = referenceDefinition.getServiceContract();
+        ServiceContract contract = referenceDefinition.getServiceContract();
         LogicalBinding<RemoteBindingDefinition> sourceBinding =
                 new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, reference);
 
@@ -271,7 +271,7 @@ public class WireGeneratorImpl implements WireGenerator {
         BindingGenerator targetGenerator = getGenerator(binding);
         List<LogicalOperation> operations = reference.getOperations();
         PhysicalTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, contract, operations, targetPolicy);
-        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        ServiceContract callbackContract = contract.getCallbackContract();
         if (callbackContract != null) {
             // if there is a callback wire associated with this forward wire, calculate its URI
             URI callbackUri = generateCallbackUri(component, callbackContract, referenceDefinition.getName());
@@ -297,8 +297,8 @@ public class WireGeneratorImpl implements WireGenerator {
             throws GenerationException {
         LogicalComponent<?> component = reference.getParent();
         ReferenceDefinition definition = reference.getDefinition();
-        ServiceContract<?> contract = definition.getServiceContract();
-        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        ServiceContract contract = definition.getServiceContract();
+        ServiceContract callbackContract = contract.getCallbackContract();
 
         LogicalService callbackService = component.getService(callbackContract.getInterfaceName());
 
@@ -332,11 +332,11 @@ public class WireGeneratorImpl implements WireGenerator {
         assert bindable instanceof LogicalService;
         LogicalService logicalService = (LogicalService) bindable;
 
-        ServiceContract<?> contract = logicalService.getDefinition().getServiceContract();
+        ServiceContract contract = logicalService.getDefinition().getServiceContract();
         if (contract == null) {
             contract = service.getDefinition().getServiceContract();
         }
-        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        ServiceContract callbackContract = contract.getCallbackContract();
 
         LogicalBinding<RemoteBindingDefinition> sourceBinding =
                 new LogicalBinding<RemoteBindingDefinition>(RemoteBindingDefinition.INSTANCE, service);
@@ -421,7 +421,7 @@ public class WireGeneratorImpl implements WireGenerator {
         }
     }
 
-    private <S extends LogicalComponent<?>> URI generateCallbackUri(S source, ServiceContract<?> contract, String sourceName)
+    private <S extends LogicalComponent<?>> URI generateCallbackUri(S source, ServiceContract contract, String sourceName)
             throws CallbackServiceNotFoundException {
         LogicalService candidate = null;
         for (LogicalService entry : source.getServices()) {
@@ -455,7 +455,7 @@ public class WireGeneratorImpl implements WireGenerator {
         return (BindingGenerator<T>) generatorRegistry.getBindingGenerator(binding.getDefinition().getClass());
     }
 
-    private boolean checkOptimization(ServiceContract<?> serviceContract, Set<PhysicalOperationDefinition> operationDefinitions) {
+    private boolean checkOptimization(ServiceContract serviceContract, Set<PhysicalOperationDefinition> operationDefinitions) {
         if (serviceContract.isConversational()) {
             return false;
         }

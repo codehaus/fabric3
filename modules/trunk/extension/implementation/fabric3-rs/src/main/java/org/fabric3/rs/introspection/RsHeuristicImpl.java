@@ -79,7 +79,7 @@ public class RsHeuristicImpl implements RsHeuristic {
     public void applyHeuristics(JavaImplementation impl, URI webAppUri, IntrospectionContext context) {
         ServiceDefinition serviceDefinition = addRESTService(impl, webAppUri);
         RsBindingDefinition definition = (RsBindingDefinition) serviceDefinition.getBindings().get(0);
-        List<Operation<Type>> operations = new ArrayList<Operation<Type>>();
+        List<Operation<?>> operations = new ArrayList<Operation<?>>();
 
         ClassLoader cl = context.getTargetClassLoader();
 
@@ -163,7 +163,6 @@ public class RsHeuristicImpl implements RsHeuristic {
         }
 
         DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
-        Operation<Type> operation = new Operation<Type>(method.getName(), inputType, returnDataType, faultDataTypes, NO_CONVERSATION);
-        return operation;
+        return new Operation<Type>(method.getName(), inputType, returnDataType, faultDataTypes, NO_CONVERSATION);
     }
 }

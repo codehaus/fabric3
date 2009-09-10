@@ -56,7 +56,7 @@ public final class PersistenceUnitResource extends ResourceDefinition {
      * @param unitName        Persistence unit name.
      * @param serviceContract the service contract for the persistence unit
      */
-    public PersistenceUnitResource(String name, String unitName, ServiceContract<?> serviceContract) {
+    public PersistenceUnitResource(String name, String unitName, ServiceContract serviceContract) {
         super(name, serviceContract, true);
         this.unitName = unitName;
     }

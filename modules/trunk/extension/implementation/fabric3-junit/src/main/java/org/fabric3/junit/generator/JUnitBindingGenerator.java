@@ -62,7 +62,7 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class JUnitBindingGenerator implements BindingGenerator<JUnitBindingDefinition> {
 
     public JUnitSourceDefinition generateWireSource(LogicalBinding<JUnitBindingDefinition> bindingDefinition,
-                                                    ServiceContract<?> contract,
+                                                    ServiceContract contract,
                                                     List<LogicalOperation> operations,
                                                     EffectivePolicy policy) throws GenerationException {
         ComponentDefinition<?> definition = bindingDefinition.getParent().getParent().getDefinition();
@@ -72,7 +72,7 @@ public class JUnitBindingGenerator implements BindingGenerator<JUnitBindingDefin
     }
 
     public PhysicalTargetDefinition generateWireTarget(LogicalBinding<JUnitBindingDefinition> bindingDefinition,
-                                                       ServiceContract<?> contract,
+                                                       ServiceContract contract,
                                                        List<LogicalOperation> operations,
                                                        EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();

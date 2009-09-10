@@ -100,7 +100,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         this.operationIntrospectors = operationIntrospectors;
     }
 
-    public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
+    public ServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
         if (type instanceof Class) {
             return introspect(typeMapping, (Class<?>) type, context);
         } else {
@@ -156,7 +156,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
-        List<Operation<Type>> operations = getOperations(typeMapping, interfaze, remotable, conversational, context);
+        List<Operation<?>> operations = getOperations(typeMapping, interfaze, remotable, conversational, context);
         contract.setOperations(operations);
         for (InterfaceIntrospector introspector : interfaceIntrospectors) {
             introspector.introspect(contract, interfaze, context);
@@ -164,18 +164,18 @@ public class DefaultContractProcessor implements ContractProcessor {
         return contract;
     }
 
-    private <T> List<Operation<Type>> getOperations(TypeMapping typeMapping,
-                                                    Class<T> type,
-                                                    boolean remotable,
-                                                    boolean conversational,
-                                                    IntrospectionContext context) {
+    private <T> List<Operation<?>> getOperations(TypeMapping typeMapping,
+                                                 Class<T> type,
+                                                 boolean remotable,
+                                                 boolean conversational,
+                                                 IntrospectionContext context) {
         Method[] methods = type.getMethods();
-        List<Operation<Type>> operations = new ArrayList<Operation<Type>>(methods.length);
+        List<Operation<?>> operations = new ArrayList<Operation<?>>(methods.length);
         for (Method method : methods) {
             String name = method.getName();
             if (remotable) {
                 boolean error = false;
-                for (Operation<Type> operation : operations) {
+                for (Operation<?> operation : operations) {
                     if (operation.getName().equals(name)) {
                         context.addError(new OverloadedOperation(method));
                         error = true;

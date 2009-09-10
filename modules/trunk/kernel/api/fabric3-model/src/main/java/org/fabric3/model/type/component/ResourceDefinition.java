@@ -56,9 +56,9 @@ public class ResourceDefinition extends ModelObject {
 
     private String name;
     private boolean optional;
-    private ServiceContract<?> serviceContract;
+    private ServiceContract serviceContract;
 
-    public ResourceDefinition(String name, ServiceContract<?> serviceContract, boolean optional) {
+    public ResourceDefinition(String name, ServiceContract serviceContract, boolean optional) {
         this.name = name;
         this.serviceContract = serviceContract;
         this.optional = optional;
@@ -87,7 +87,7 @@ public class ResourceDefinition extends ModelObject {
      *
      * @return the service contract
      */
-    public ServiceContract<?> getServiceContract() {
+    public ServiceContract getServiceContract() {
         return serviceContract;
     }
 

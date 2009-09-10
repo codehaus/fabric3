@@ -94,7 +94,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
     }
 
     public MetroSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
-                                                    ServiceContract<?> contract,
+                                                    ServiceContract contract,
                                                     List<LogicalOperation> operations,
                                                     EffectivePolicy policy) throws GenerationException {
         if (!(contract instanceof JavaServiceContract)) {
@@ -138,7 +138,7 @@ public class MetroBindingGenerator implements BindingGenerator<WsBindingDefiniti
     }
 
     public MetroTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
-                                                    ServiceContract<?> contract,
+                                                    ServiceContract contract,
                                                     List<LogicalOperation> operations,
                                                     EffectivePolicy policy) throws GenerationException {
         if (!(contract instanceof JavaServiceContract)) {

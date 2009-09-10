@@ -37,8 +37,6 @@
 */
 package org.fabric3.resource.model;
 
-import java.lang.reflect.Type;
-
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 
@@ -48,7 +46,7 @@ import org.fabric3.model.type.service.ServiceContract;
 public class SystemSourcedResource extends ResourceDefinition {
     private String mappedName;
 
-    public SystemSourcedResource(String name, boolean optional, String mappedName, ServiceContract<Type> serviceContract) {
+    public SystemSourcedResource(String name, boolean optional, String mappedName, ServiceContract serviceContract) {
         super(name, serviceContract, optional);
         this.mappedName = mappedName;
     }

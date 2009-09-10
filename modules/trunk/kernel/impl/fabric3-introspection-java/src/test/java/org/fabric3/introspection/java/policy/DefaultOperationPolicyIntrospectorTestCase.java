@@ -70,7 +70,7 @@ public class DefaultOperationPolicyIntrospectorTestCase extends TestCase {
         DefaultOperationPolicyIntrospector introspector = new DefaultOperationPolicyIntrospector(processor);
 
         DefaultIntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract<?> contract = contractProcessor.introspect(new TypeMapping(), TestService.class, context);
+        ServiceContract contract = contractProcessor.introspect(new TypeMapping(), TestService.class, context);
         introspector.introspectPolicyOnOperations(contract, TestServiceImpl.class, context);
         EasyMock.verify(processor);
     }

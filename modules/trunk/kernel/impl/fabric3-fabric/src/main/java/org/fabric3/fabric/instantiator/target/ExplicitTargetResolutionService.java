@@ -194,8 +194,8 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
      * @param context   the logical context
      */
     private void validateContracts(LogicalReference reference, LogicalService service, InstantiationContext context) {
-        ServiceContract<?> referenceContract = contractResolver.determineContract(reference);
-        ServiceContract<?> serviceContract = contractResolver.determineContract(service);
+        ServiceContract referenceContract = contractResolver.determineContract(reference);
+        ServiceContract serviceContract = contractResolver.determineContract(service);
         if (!referenceContract.isAssignableFrom(serviceContract)) {
             URI uri = reference.getParent().getUri();
             URI referenceUri = reference.getUri();

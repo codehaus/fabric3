@@ -199,7 +199,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
     private void addFunctions(String name, XQueryServiceContract contract, Map<String, List<QName>> mappings) {
         List<QName> functions = new ArrayList<QName>();
         mappings.put(name, functions);
-        for (Operation o : (List<Operation>) contract.getOperations()) {
+        for (Operation<?> o : contract.getOperations()) {
             QName functionName = new QName(contract.getQname().getNamespaceURI(), o.getName(), contract.getQname().getPrefix());
             functions.add(functionName);
         }
@@ -215,7 +215,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<XQueryImplementation> source,
-                                                                   ServiceContract<?> serviceContract,
+                                                                   ServiceContract serviceContract,
                                                                    EffectivePolicy policy) throws GenerationException {
         XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();

@@ -43,14 +43,12 @@
  */
 package org.fabric3.model.type.component;
 
-import java.lang.reflect.Type;
-
 import org.fabric3.model.type.service.ServiceContract;
 
 /**
  * @version $Rev$ $Date$
  */
-public class TestServiceContract extends ServiceContract<Type> {
+public class TestServiceContract extends ServiceContract {
     private static final long serialVersionUID = 7713843032375918467L;
     private final Class<?> type;
 
@@ -58,7 +56,7 @@ public class TestServiceContract extends ServiceContract<Type> {
         this.type = type;
     }
 
-    public boolean isAssignableFrom(ServiceContract<?> serviceContract) {
+    public boolean isAssignableFrom(ServiceContract serviceContract) {
         if (serviceContract instanceof TestServiceContract) {
             TestServiceContract other = (TestServiceContract) serviceContract;
             return this.type.isAssignableFrom(other.type);

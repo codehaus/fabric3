@@ -91,7 +91,7 @@ public class TimerComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<TimerImplementation> source,
-                                                               ServiceContract<?> serviceContract,
+                                                               ServiceContract serviceContract,
                                                                EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
         generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);

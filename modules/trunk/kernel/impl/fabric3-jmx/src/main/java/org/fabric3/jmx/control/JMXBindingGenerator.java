@@ -60,7 +60,7 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class JMXBindingGenerator implements BindingGenerator<JMXBinding> {
 
     public JMXSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding,
-                                                  ServiceContract<?> contract,
+                                                  ServiceContract contract,
                                                   List<LogicalOperation> operations,
                                                   EffectivePolicy policy) throws GenerationException {
         Bindable logicalService = binding.getParent();
@@ -77,7 +77,7 @@ public class JMXBindingGenerator implements BindingGenerator<JMXBinding> {
     }
 
     public PhysicalTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding,
-                                                       ServiceContract<?> contract,
+                                                       ServiceContract contract,
                                                        List<LogicalOperation> operations,
                                                        EffectivePolicy policy) throws GenerationException {
 

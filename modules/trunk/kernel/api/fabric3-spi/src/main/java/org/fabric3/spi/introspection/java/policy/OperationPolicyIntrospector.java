@@ -57,6 +57,6 @@ public interface OperationPolicyIntrospector {
      * @param implClass the component implementation class
      * @param context   the current introspection context
      */
-    void introspectPolicyOnOperations(ServiceContract<?> contract, Class<?> implClass, IntrospectionContext context);
+    void introspectPolicyOnOperations(ServiceContract contract, Class<?> implClass, IntrospectionContext context);
 
 }

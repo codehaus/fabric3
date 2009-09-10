@@ -105,7 +105,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
     public PhysicalSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         URI uri = reference.getUri();
-        ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
+        ServiceContract serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
 
         JavaSourceDefinition wireDefinition = new JavaSourceDefinition();
@@ -123,7 +123,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<JUnitImplementation> source,
-                                                               ServiceContract<?> serviceContract,
+                                                               ServiceContract serviceContract,
                                                                EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
@@ -131,7 +131,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
 
         URI uri = resource.getUri();
-        ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
+        ServiceContract serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
 
         JavaSourceDefinition wireDefinition = new JavaSourceDefinition();
@@ -141,7 +141,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return wireDefinition;
     }
 
-    private String getInterfaceName(ServiceContract<?> contract) {
+    private String getInterfaceName(ServiceContract contract) {
         return contract.getQualifiedInterfaceName();
     }
 

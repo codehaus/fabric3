@@ -87,9 +87,9 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
     }
 
     public FtpSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding,
-                                                      ServiceContract<?> contract,
-                                                      List<LogicalOperation> operations,
-                                                      EffectivePolicy policy) throws GenerationException {
+                                                  ServiceContract contract,
+                                                  List<LogicalOperation> operations,
+                                                  EffectivePolicy policy) throws GenerationException {
 
         if (contract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");
@@ -104,9 +104,9 @@ public class FtpBindingGenerator implements BindingGenerator<FtpBindingDefinitio
     }
 
     public FtpTargetDefinition generateWireTarget(LogicalBinding<FtpBindingDefinition> binding,
-                                                      ServiceContract<?> contract,
-                                                      List<LogicalOperation> operations,
-                                                      EffectivePolicy policy) throws GenerationException {
+                                                  ServiceContract contract,
+                                                  List<LogicalOperation> operations,
+                                                  EffectivePolicy policy) throws GenerationException {
 
         if (operations.size() != 1) {
             throw new GenerationException("Expects only one operation");

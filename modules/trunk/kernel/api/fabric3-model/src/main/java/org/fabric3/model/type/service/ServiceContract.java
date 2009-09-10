@@ -53,13 +53,13 @@ import org.fabric3.model.type.ModelObject;
  *
  * @version $Rev$ $Date$
  */
-public abstract class ServiceContract<T> extends ModelObject {
+public abstract class ServiceContract extends ModelObject {
     private static final long serialVersionUID = 7930416351019873131L;
     protected boolean conversational;
     protected boolean remotable;
     protected String interfaceName;
-    protected List<Operation<T>> operations;
-    protected ServiceContract<?> callbackContract;
+    protected List<Operation<?>> operations;
+    protected ServiceContract callbackContract;
 
     protected ServiceContract() {
     }
@@ -123,7 +123,7 @@ public abstract class ServiceContract<T> extends ModelObject {
      *
      * @return the operations for the service contract
      */
-    public List<Operation<T>> getOperations() {
+    public List<Operation<?>> getOperations() {
         if (operations == null) {
             return Collections.emptyList();
         }
@@ -135,7 +135,7 @@ public abstract class ServiceContract<T> extends ModelObject {
      *
      * @param operations the operations for the service contract
      */
-    public void setOperations(List<Operation<T>> operations) {
+    public void setOperations(List<Operation<?>> operations) {
         this.operations = operations;
     }
 
@@ -144,7 +144,7 @@ public abstract class ServiceContract<T> extends ModelObject {
      *
      * @return the callback contract or null
      */
-    public ServiceContract<?> getCallbackContract() {
+    public ServiceContract getCallbackContract() {
         return callbackContract;
     }
 
@@ -153,7 +153,7 @@ public abstract class ServiceContract<T> extends ModelObject {
      *
      * @param callbackContract the callback contract
      */
-    public void setCallbackContract(ServiceContract<?> callbackContract) {
+    public void setCallbackContract(ServiceContract callbackContract) {
         this.callbackContract = callbackContract;
     }
 
@@ -164,7 +164,7 @@ public abstract class ServiceContract<T> extends ModelObject {
      * @param contract the contract to test compatibility with
      * @return true if the contracts are compatible
      */
-    public abstract boolean isAssignableFrom(ServiceContract<?> contract);
+    public abstract boolean isAssignableFrom(ServiceContract contract);
 
     public abstract String getQualifiedInterfaceName();
 

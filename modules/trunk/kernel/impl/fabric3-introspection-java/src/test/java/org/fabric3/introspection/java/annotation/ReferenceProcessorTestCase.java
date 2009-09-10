@@ -147,7 +147,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        final ServiceContract<Type> contract = new ServiceContract<Type>() {
+        final ServiceContract contract = new ServiceContract() {
             private static final long serialVersionUID = -1453983556738324512L;
 
             public boolean isAssignableFrom(ServiceContract serviceContract) {
@@ -161,7 +161,7 @@ public class ReferenceProcessorTestCase extends TestCase {
 
         ContractProcessor contractProcessor = new ContractProcessor() {
 
-            public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
+            public ServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
                 return contract;
             }
         };

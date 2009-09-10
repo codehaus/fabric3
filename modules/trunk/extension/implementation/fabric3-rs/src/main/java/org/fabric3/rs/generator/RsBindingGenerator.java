@@ -60,7 +60,7 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class RsBindingGenerator implements BindingGenerator<RsBindingDefinition> {
 
     public RsSourceDefinition generateWireSource(LogicalBinding<RsBindingDefinition> logicalBinding,
-                                                 ServiceContract<?> contract,
+                                                 ServiceContract contract,
                                                  List<LogicalOperation> operations,
                                                  EffectivePolicy policy) throws GenerationException {
 
@@ -76,7 +76,7 @@ public class RsBindingGenerator implements BindingGenerator<RsBindingDefinition>
     }
 
     public RsTargetDefinition generateWireTarget(LogicalBinding<RsBindingDefinition> logicalBinding,
-                                                 ServiceContract<?> contract,
+                                                 ServiceContract contract,
                                                  List<LogicalOperation> operations,
                                                  EffectivePolicy policy) throws GenerationException {
         throw new GenerationException("Not supported");

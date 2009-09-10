@@ -71,7 +71,7 @@ public interface BindingGenerator<BD extends BindingDefinition> {
      * @throws GenerationException if an error is raised during generation
      */
     PhysicalSourceDefinition generateWireSource(LogicalBinding<BD> binding,
-                                                ServiceContract<?> contract,
+                                                ServiceContract contract,
                                                 List<LogicalOperation> operations,
                                                 EffectivePolicy policy) throws GenerationException;
 
@@ -86,7 +86,7 @@ public interface BindingGenerator<BD extends BindingDefinition> {
      * @throws GenerationException if an error is raised during generation
      */
     PhysicalTargetDefinition generateWireTarget(LogicalBinding<BD> binding,
-                                                ServiceContract<?> contract,
+                                                ServiceContract contract,
                                                 List<LogicalOperation> operations,
                                                 EffectivePolicy policy) throws GenerationException;
 

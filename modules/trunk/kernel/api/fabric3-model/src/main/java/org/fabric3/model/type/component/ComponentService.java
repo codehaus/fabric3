@@ -53,7 +53,7 @@ import org.fabric3.model.type.service.ServiceContract;
 public class ComponentService extends ServiceDefinition {
     private static final long serialVersionUID = 1076710434904709542L;
 
-    public ComponentService(String name, ServiceContract<?> serviceContract) {
+    public ComponentService(String name, ServiceContract serviceContract) {
         super(name, serviceContract);
     }
 }

@@ -59,8 +59,8 @@ public class HttpBindingProviderTestCase extends TestCase {
     private HttpBindingProvider bindingProvider;
 
     public void testGenerateServiceAndReference() throws Exception {
-        ServiceContract<?> contract = new MockServiceContract();
-        ServiceContract<?> callbackContract = new MockServiceContract();
+        ServiceContract contract = new MockServiceContract();
+        ServiceContract callbackContract = new MockServiceContract();
         contract.setCallbackContract(callbackContract);
 
         LogicalComponent<?> source = new LogicalComponent(URI.create("fabric3://runtime/source"), null, null);

@@ -83,7 +83,7 @@ public class OperationRefFunction implements Function {
     private void find(String interfaceName, String operationName, LogicalComponent<?> component, List<LogicalOperation> operations) {
         for (LogicalService service : component.getServices()) {
             ServiceDefinition definition = service.getDefinition();
-            ServiceContract<?> contract = definition.getServiceContract();
+            ServiceContract contract = definition.getServiceContract();
             // match on the name of the service contract but return the logical operation
             if (contract.getInterfaceName().equals(interfaceName)) {
                 for (LogicalOperation operation : service.getOperations()) {
@@ -96,7 +96,7 @@ public class OperationRefFunction implements Function {
         for (LogicalReference reference : component.getReferences()) {
             ReferenceDefinition definition = reference.getDefinition();
             // match on the name of the service contract but return the logical operation
-            ServiceContract<?> contract = definition.getServiceContract();
+            ServiceContract contract = definition.getServiceContract();
             if (contract.getInterfaceName().equals(interfaceName)) {
                 for (LogicalOperation operation : reference.getOperations()) {
                     if (operation.getDefinition().getName().equals(operationName)) {

@@ -63,7 +63,7 @@ public class LogicalAttachPoint extends LogicalScaArtifact<LogicalComponent<?>> 
      * @param parent   Parent of the SCA artifact.
      * @param type     Type of this artifact.
      */
-    public LogicalAttachPoint(URI uri, ServiceContract<?> contract, LogicalComponent<?> parent, QName type) {
+    public LogicalAttachPoint(URI uri, ServiceContract contract, LogicalComponent<?> parent, QName type) {
         super(uri, parent, type);
         operations = new ArrayList<LogicalOperation>();
         callbackOperations = new ArrayList<LogicalOperation>();
@@ -72,7 +72,7 @@ public class LogicalAttachPoint extends LogicalScaArtifact<LogicalComponent<?>> 
             for (Operation operation : contract.getOperations()) {
                 operations.add(new LogicalOperation(operation, this));
             }
-            ServiceContract<?> callbackContract = contract.getCallbackContract();
+            ServiceContract callbackContract = contract.getCallbackContract();
             if (callbackContract != null) {
                 for (Operation<?> operation : callbackContract.getOperations()) {
                     callbackOperations.add(new LogicalOperation(operation, this));

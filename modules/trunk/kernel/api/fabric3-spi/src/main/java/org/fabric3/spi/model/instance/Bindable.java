@@ -68,7 +68,7 @@ public abstract class Bindable extends LogicalAttachPoint {
      * @param parent   Parent of the service or the reference.
      * @param type     Type of this artifact (service or reference).
      */
-    protected Bindable(URI uri, ServiceContract<?> contract, LogicalComponent<?> parent, QName type) {
+    protected Bindable(URI uri, ServiceContract contract, LogicalComponent<?> parent, QName type) {
         super(uri, contract, parent, type);
         bindings = new ArrayList<LogicalBinding<?>>();
         callbackBindings = new ArrayList<LogicalBinding<?>>();

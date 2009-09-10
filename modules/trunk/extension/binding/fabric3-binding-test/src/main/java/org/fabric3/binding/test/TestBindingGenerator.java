@@ -57,7 +57,7 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class TestBindingGenerator implements BindingGenerator<TestBindingDefinition> {
 
     public TestBindingSourceDefinition generateWireSource(LogicalBinding<TestBindingDefinition> logicalBinding,
-                                                          ServiceContract<?> contract,
+                                                          ServiceContract contract,
                                                           List<LogicalOperation> operations,
                                                           EffectivePolicy policy) throws GenerationException {
         TestBindingSourceDefinition definition = new TestBindingSourceDefinition();
@@ -66,7 +66,7 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingDefinit
     }
 
     public TestBindingTargetDefinition generateWireTarget(LogicalBinding<TestBindingDefinition> logicalBinding,
-                                                          ServiceContract<?> contract,
+                                                          ServiceContract contract,
                                                           List<LogicalOperation> operations,
                                                           EffectivePolicy policy) throws GenerationException {
 

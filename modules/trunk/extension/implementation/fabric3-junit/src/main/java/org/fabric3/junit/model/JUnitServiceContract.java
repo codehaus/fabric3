@@ -37,7 +37,6 @@
 */
 package org.fabric3.junit.model;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import org.fabric3.model.type.service.Operation;
@@ -46,14 +45,14 @@ import org.fabric3.model.type.service.ServiceContract;
 /**
  * @version $Rev$ $Date$
  */
-public class JUnitServiceContract extends ServiceContract<Type> {
+public class JUnitServiceContract extends ServiceContract {
     private static final long serialVersionUID = -2402977196426881023L;
 
-    public JUnitServiceContract(List<Operation<Type>> operations) {
+    public JUnitServiceContract(List<Operation<?>> operations) {
         setOperations(operations);
     }
 
-    public boolean isAssignableFrom(ServiceContract<?> contract) {
+    public boolean isAssignableFrom(ServiceContract contract) {
         throw new UnsupportedOperationException();
     }
 

@@ -26,7 +26,7 @@ public class DefaultOperationPolicyIntrospector implements OperationPolicyIntros
         this.policyProcessor = policyProcessor;
     }
 
-    public void introspectPolicyOnOperations(ServiceContract<?> contract, Class<?> implClass, IntrospectionContext context) {
+    public void introspectPolicyOnOperations(ServiceContract contract, Class<?> implClass, IntrospectionContext context) {
         for (Operation operation : contract.getOperations()) {
             // determine the operation signature and look up the corresponding method on the implementation class
             DataType<List<DataType>> input = operation.getInputType();

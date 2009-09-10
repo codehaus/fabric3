@@ -59,7 +59,7 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinition> {
 
     public PhysicalSourceDefinition generateWireSource(LogicalBinding<HttpBindingDefinition> binding,
-                                                           ServiceContract<?> contract,
+                                                           ServiceContract contract,
                                                            List<LogicalOperation> operations,
                                                            EffectivePolicy policy) throws GenerationException {
         HttpSourceDefinition sourceDefinition = new HttpSourceDefinition();
@@ -70,7 +70,7 @@ public class HttpBindingGenerator implements BindingGenerator<HttpBindingDefinit
     }
 
     public PhysicalTargetDefinition generateWireTarget(LogicalBinding<HttpBindingDefinition> binding,
-                                                           ServiceContract<?> contract,
+                                                           ServiceContract contract,
                                                            List<LogicalOperation> operations,
                                                            EffectivePolicy policy) throws GenerationException {
         HttpTargetDefinition targetDefinition = new HttpTargetDefinition();

@@ -64,5 +64,5 @@ public interface ContractProcessor {
      * @param context     the validation context for reporting errors and warnings
      * @return the ServiceContract corresponding to the interface type
      */
-    ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, IntrospectionContext context);
+    ServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context);
 }
