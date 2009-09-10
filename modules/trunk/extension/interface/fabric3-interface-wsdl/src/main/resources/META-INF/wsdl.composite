@@ -24,7 +24,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="Wsdl11Processor">
-        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl11Processor"/>
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl11ContractProcessor"/>
         <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
     </component>
 

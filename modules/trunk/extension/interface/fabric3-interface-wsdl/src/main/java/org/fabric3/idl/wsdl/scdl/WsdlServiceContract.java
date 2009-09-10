@@ -55,11 +55,6 @@ public class WsdlServiceContract extends ServiceContract {
     private QName qname;
 
     /**
-     * Callback qname.
-     */
-    private QName callbackQname;
-
-    /**
      * @return QName for the port type/interface.
      */
     public QName getQname() {
@@ -73,25 +68,23 @@ public class WsdlServiceContract extends ServiceContract {
         this.qname = qname;
     }
 
-    /**
-     * @return Callback qname.
-     */
-    public QName getCallbackQname() {
-        return callbackQname;
-    }
-
-    /**
-     * @param callbackQname Callback qname.
-     */
-    public void setCallbackQname(QName callbackQname) {
-        this.callbackQname = callbackQname;
-    }
-
     public boolean isAssignableFrom(ServiceContract serviceContract) {
         throw new UnsupportedOperationException();
     }
 
     public String getQualifiedInterfaceName() {
         return qname.toString();
+    }
+
+    @Override
+    public boolean isRemotable() {
+        return true;
+    }
+
+    @Override
+    public void setRemotable(boolean remotable) {
+        if (!remotable) {
+            throw new IllegalArgumentException("WSDL interfaces are always remotable");
+        }
     }
 }

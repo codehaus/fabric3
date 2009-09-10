@@ -37,26 +37,25 @@
 */
 package org.fabric3.idl.wsdl.processor;
 
-import java.net.URL;
-import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.Operation;
+import org.fabric3.idl.wsdl.scdl.WsdlServiceContract;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
- * Abstraction for processing WSDL.
+ * Introspects a WSDL port type and returns a corresponding WsdlServiceContract.
  *
  * @version $Revison$ $Date$
  */
-public interface WsdlProcessor {
+public interface WsdlContractProcessor {
 
     /**
-     * Get the list of operations from a WSDL 1.1 port type or WSDL 2.0 interface.
+     * Creates a WsdlServiceContract by introspecting the WSDL 1.1 port type.
      *
-     * @param portTypeOrInterfaceName Qualified name of the WSDL 1.1 port type or WSDL 2.0 interface.
-     * @param wsdlUrl                 The URL to the WSDL.
-     * @return List of operations.
+     * @param portType the qualified name of the WSDL 1.1 port type
+     * @param context  the context to report errors against
+     * @return the list of operations.
      */
-    List<Operation> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl);
+    WsdlServiceContract introspect(QName portType, IntrospectionContext context);
 
 }

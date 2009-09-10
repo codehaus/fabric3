@@ -37,8 +37,6 @@
  */
 package org.fabric3.idl.wsdl.loader;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -46,7 +44,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.idl.wsdl.processor.WsdlProcessor;
+import org.fabric3.idl.wsdl.processor.WsdlContractProcessor;
 import org.fabric3.idl.wsdl.scdl.WsdlServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
@@ -54,98 +52,49 @@ import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 
 /**
- * Loader for interface.wsdl.
+ * Loads interface.wsdl.
  *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
-    private final WsdlProcessor processor;
+    private final WsdlContractProcessor processor;
 
-    public InterfaceWsdlLoader(@Reference WsdlProcessor processor) {
+    public InterfaceWsdlLoader(@Reference WsdlContractProcessor processor) {
         this.processor = processor;
     }
 
     public WsdlServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
-        WsdlServiceContract wsdlContract = new WsdlServiceContract();
-
-        URL wsdlUrl = resolveWsdl(reader, context);
-        if (wsdlUrl == null) {
-            // there was a problem, return an empty contract
-            return wsdlContract;
-        }
-        processInterface(reader, wsdlContract, wsdlUrl, context);
-
-        processCallbackInterface(reader, wsdlContract);
-
+        WsdlServiceContract wsdlContract = processInterface(reader, context);
+        processCallbackInterface(reader, wsdlContract, context);
         LoaderUtil.skipToEndElement(reader);
-
         return wsdlContract;
-
     }
 
-    @SuppressWarnings("unchecked")
-    private void processCallbackInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract) {
-
-        String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
-        if (callbackInterfaze != null) {
-            QName callbackInterfaceQName = getQName(callbackInterfaze);
-            wsdlContract.setCallbackQname(callbackInterfaceQName);
-        }
-
-    }
-
-    @SuppressWarnings("unchecked")
-    private void processInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, URL wsdlUrl, IntrospectionContext context) {
-
+    private WsdlServiceContract processInterface(XMLStreamReader reader, IntrospectionContext context) {
         String interfaze = reader.getAttributeValue(null, "interface");
         if (interfaze == null) {
             MissingAttribute failure = new MissingAttribute("Interface attribute is required", reader);
             context.addError(failure);
-            return;
-        }
-        QName interfaceQName = getQName(interfaze);
-        wsdlContract.setQname(interfaceQName);
-        wsdlContract.setOperations(processor.getOperations(interfaceQName, wsdlUrl));
-
-    }
-
-    private URL resolveWsdl(XMLStreamReader reader, IntrospectionContext context) {
-
-        String wsdlLocation = reader.getAttributeValue(null, "wsdlLocation");
-        if (wsdlLocation == null) {
-            // We don't support auto dereferecing of namespace URI
-            MissingAttribute failure = new MissingAttribute("wsdlLocation Location is required", reader);
-            context.addError(failure);
             return null;
         }
-        URL wsdlUrl = getWsdlUrl(wsdlLocation);
-        if (wsdlUrl == null) {
-            InvalidWSDLLocation failure = new InvalidWSDLLocation("Unable to locate WSDL: " + wsdlLocation, reader);
-            context.addError(failure);
-        }
-        return wsdlUrl;
+        QName portTypeName = parseQName(interfaze);
+        return processor.introspect(portTypeName, context);
 
     }
 
-    /*
-     * Returns the interface.portType qname.
-     */
-    private QName getQName(String interfaze) {
-        throw new UnsupportedOperationException("Not supported yet");
+    private void processCallbackInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, IntrospectionContext context) {
+        String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
+        if (callbackInterfaze != null) {
+            QName callbackName = parseQName(callbackInterfaze);
+            WsdlServiceContract callbackContract = processor.introspect(callbackName, context);
+            wsdlContract.setCallbackContract(callbackContract);
+        }
     }
 
-    /*
-    * Gets the WSDL URL.
-    */
-    private URL getWsdlUrl(String wsdlPath) {
-
-        try {
-            return new URL(wsdlPath);
-        } catch (MalformedURLException ex) {
-            return getClass().getClassLoader().getResource(wsdlPath);
-        }
+    private QName parseQName(String interfaze) {
+        // TODO implement
+        return null;
     }
 
 }
