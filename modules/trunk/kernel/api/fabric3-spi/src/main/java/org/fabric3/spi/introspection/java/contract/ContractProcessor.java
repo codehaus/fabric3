@@ -45,24 +45,24 @@ package org.fabric3.spi.introspection.java.contract;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
 
 /**
- * Interface for processors that can construct a ServiceContract from a Java type.
+ * Constructs a JavaServiceContract from a Java type.
  *
  * @version $Rev$ $Date$
  */
 public interface ContractProcessor {
     /**
-     * Introspect a Java Type (e.g. a Class) and return the ServiceContract. If validation errors or warnings are encountered, they will be reported
-     * in the ValidationContext.
+     * Introspect a Java Type (e.g. a Class) and return the JavaServiceContract. If validation errors or warnings are encountered, they will be
+     * reported in the IntrospectionContext.
      *
      * @param typeMapping the type mapping for the interface
      * @param type        the Java Type to introspect
-     * @param context     the validation context for reporting errors and warnings
+     * @param context     the introspection context for reporting errors and warnings
      * @return the ServiceContract corresponding to the interface type
      */
-    ServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context);
+    JavaServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context);
 }

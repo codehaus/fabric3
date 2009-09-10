@@ -52,12 +52,10 @@ import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
-import org.fabric3.introspection.java.annotation.ReferenceProcessor;
-import org.fabric3.introspection.java.annotation.InvalidAccessor;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -147,21 +145,11 @@ public class ReferenceProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        final ServiceContract contract = new ServiceContract() {
-            private static final long serialVersionUID = -1453983556738324512L;
-
-            public boolean isAssignableFrom(ServiceContract serviceContract) {
-                return false;
-            }
-
-            public String getQualifiedInterfaceName() {
-                return null;
-            }
-        };
+        final JavaServiceContract contract = new JavaServiceContract(Implementation.class);
 
         ContractProcessor contractProcessor = new ContractProcessor() {
 
-            public ServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
+            public JavaServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
                 return contract;
             }
         };

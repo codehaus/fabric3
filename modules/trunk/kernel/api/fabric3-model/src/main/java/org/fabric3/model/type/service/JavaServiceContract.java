@@ -125,8 +125,6 @@ public class JavaServiceContract extends ServiceContract {
         } else {
             return isNonJavaAssignableFrom(contract);
         }
-        // TODO handle the case where the contract is defined using a different IDL
-        //return false;
     }
 
     private boolean isJavaAssignableFrom(JavaServiceContract contract) {

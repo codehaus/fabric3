@@ -62,7 +62,6 @@ import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.model.type.service.Operation;
 import static org.fabric3.model.type.service.Operation.CONVERSATION_END;
 import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
@@ -100,7 +99,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         this.operationIntrospectors = operationIntrospectors;
     }
 
-    public ServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
+    public JavaServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
         if (type instanceof Class) {
             return introspect(typeMapping, (Class<?>) type, context);
         } else {
