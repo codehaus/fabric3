@@ -47,7 +47,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
-import org.fabric3.idl.wsdl.scdl.WsdlContract;
+import org.fabric3.idl.wsdl.scdl.WsdlServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
@@ -59,7 +59,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
+public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
 
     /**
      * WSDL processor.
@@ -74,9 +74,9 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
         this.processor = processor;
     }
 
-    public WsdlContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+    public WsdlServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
-        WsdlContract wsdlContract = new WsdlContract();
+        WsdlServiceContract wsdlContract = new WsdlServiceContract();
 
         URL wsdlUrl = resolveWsdl(reader, context);
         if (wsdlUrl == null) {
@@ -97,7 +97,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
      * Processes the callback interface.
      */
     @SuppressWarnings("unchecked")
-    private void processCallbackInterface(XMLStreamReader reader, WsdlContract wsdlContract, URL wsdlUrl) {
+    private void processCallbackInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, URL wsdlUrl) {
 
         String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
         if (callbackInterfaze != null) {
@@ -111,7 +111,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
      * Processes the interface.
      */
     @SuppressWarnings("unchecked")
-    private void processInterface(XMLStreamReader reader, WsdlContract wsdlContract, URL wsdlUrl, IntrospectionContext context) {
+    private void processInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, URL wsdlUrl, IntrospectionContext context) {
 
         String interfaze = reader.getAttributeValue(null, "interface");
         if (interfaze == null) {

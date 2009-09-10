@@ -46,7 +46,7 @@ import org.fabric3.model.type.service.ServiceContract;
  *
  * @version $Revsion$ $Date$
  */
-public class WsdlContract extends ServiceContract {
+public class WsdlServiceContract extends ServiceContract {
     private static final long serialVersionUID = 8084985972954894699L;
 
     /**
