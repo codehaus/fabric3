@@ -81,11 +81,11 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
         wsdlProcessorRegistry.registerProcessor(WsdlVersion.VERSION_1_1, this);
     }
 
-    public List<Operation<XmlSchemaType>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
+    public List<Operation> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
 
         try {
 
-            List<Operation<XmlSchemaType>> operations = new LinkedList<Operation<XmlSchemaType>>();
+            List<Operation> operations = new LinkedList<Operation>();
 
             WSDLFactory factory = WSDLFactory.newInstance();
             WSDLReader reader = factory.newWSDLReader();
@@ -101,7 +101,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
             XmlSchemaCollection xmlSchema = getXmlSchema(definition);
 
             for (Object obj : portType.getOperations()) {
-                Operation<XmlSchemaType> op = getOperation(xmlSchema, obj);
+                Operation op = getOperation(xmlSchema, obj);
                 operations.add(op);
             }
 
@@ -113,9 +113,9 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
 
     }
 
-    public List<Operation<XmlSchemaType>> getOperations(PortType portType, XmlSchemaCollection xmlSchema) {
+    public List<Operation> getOperations(PortType portType, XmlSchemaCollection xmlSchema) {
 
-        List<Operation<XmlSchemaType>> operations = new LinkedList<Operation<XmlSchemaType>>();
+        List<Operation> operations = new LinkedList<Operation>();
 
 
         if (portType == null || xmlSchema == null) {
@@ -123,7 +123,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
         }
 
         for (Object obj : portType.getOperations()) {
-            Operation<XmlSchemaType> op = getOperation(xmlSchema, obj);
+            Operation op = getOperation(xmlSchema, obj);
             operations.add(op);
         }
 
@@ -133,7 +133,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
     * Creates an F3 operation from a WSDL operation.
     */
-    private Operation<XmlSchemaType> getOperation(XmlSchemaCollection xmlSchema, Object obj) {
+    private Operation getOperation(XmlSchemaCollection xmlSchema, Object obj) {
 
         javax.wsdl.Operation operation = (javax.wsdl.Operation) obj;
 
@@ -142,11 +142,11 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
         Map faults = operation.getFaults();
 
         String name = operation.getName();
-        DataType<List<DataType<XmlSchemaType>>> inputType = getInputType(input, xmlSchema);
-        DataType<XmlSchemaType> outputType = getOutputType(output, xmlSchema);
-        List<DataType<XmlSchemaType>> faultTypes = getFaultTypes(faults, xmlSchema);
+        DataType<List<DataType<?>>> inputType = getInputType(input, xmlSchema);
+        DataType<?> outputType = getOutputType(output, xmlSchema);
+        List<DataType<?>> faultTypes = getFaultTypes(faults, xmlSchema);
 
-        return new Operation<XmlSchemaType>(name, inputType, outputType, faultTypes);
+        return new Operation(name, inputType, outputType, faultTypes);
 
     }
 
@@ -154,9 +154,9 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
     * Gets the fault types.
     */
     @SuppressWarnings("unchecked")
-    private List<DataType<XmlSchemaType>> getFaultTypes(Map faults, XmlSchemaCollection xmlSchema) {
+    private List<DataType<?>> getFaultTypes(Map faults, XmlSchemaCollection xmlSchema) {
 
-        List<DataType<XmlSchemaType>> types = new LinkedList<DataType<XmlSchemaType>>();
+        List<DataType<?>> types = new LinkedList<DataType<?>>();
 
         for (Fault fault : (Collection<Fault>) faults.values()) {
 
@@ -175,7 +175,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
      * Get the output type.
      */
-    private DataType<XmlSchemaType> getOutputType(Output output, XmlSchemaCollection xmlSchema) {
+    private DataType<?> getOutputType(Output output, XmlSchemaCollection xmlSchema) {
 
         if (output == null) return null;
 
@@ -190,14 +190,14 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
      * Get the input type.
      */
     @SuppressWarnings("unchecked")
-    private DataType<List<DataType<XmlSchemaType>>> getInputType(Input input, XmlSchemaCollection xmlSchema) {
+    private DataType<List<DataType<?>>> getInputType(Input input, XmlSchemaCollection xmlSchema) {
 
         if (input == null) return null;
 
         Message message = input.getMessage();
         List<Part> parts = message.getOrderedParts(null);
 
-        List<DataType<XmlSchemaType>> types = new LinkedList<DataType<XmlSchemaType>>();
+        List<DataType<?>> types = new LinkedList<DataType<?>>();
 
         for (Part part : parts) {
             DataType<XmlSchemaType> dataType = getDataType(part.getElementName(), xmlSchema);
@@ -206,7 +206,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
             }
         }
 
-        return new DataType<List<DataType<XmlSchemaType>>>(Object.class, types);
+        return new DataType<List<DataType<?>>>(Object.class, types);
 
     }
 

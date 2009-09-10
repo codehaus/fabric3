@@ -2,7 +2,6 @@ package org.fabric3.introspection.java.policy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
@@ -29,11 +28,11 @@ public class DefaultOperationPolicyIntrospector implements OperationPolicyIntros
     public void introspectPolicyOnOperations(ServiceContract contract, Class<?> implClass, IntrospectionContext context) {
         for (Operation operation : contract.getOperations()) {
             // determine the operation signature and look up the corresponding method on the implementation class
-            DataType<List<DataType>> input = operation.getInputType();
+            DataType<List<DataType<?>>> input = operation.getInputType();
             Class<?>[] params = new Class<?>[input.getLogical().size()];
             int i = 0;
-            for (DataType<Type> type : input.getLogical()) {
-                Type logical = type.getLogical();
+            for (DataType<?> type : input.getLogical()) {
+                Object logical = type.getLogical();
                 if (!(logical instanceof Class)) {
                     // not possible
                     throw new AssertionError();

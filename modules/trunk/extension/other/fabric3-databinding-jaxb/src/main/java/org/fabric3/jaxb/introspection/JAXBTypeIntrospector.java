@@ -54,9 +54,9 @@ import org.fabric3.spi.introspection.java.contract.OperationIntrospector;
  */
 public class JAXBTypeIntrospector implements OperationIntrospector {
 
-    public <T> void introspect(Operation<T> operation, Method method, IntrospectionContext context) {
+    public void introspect(Operation operation, Method method, IntrospectionContext context) {
         // TODO perform error checking, e.g. mixing of databindings
-        DataType<List<DataType<T>>> inputType = operation.getInputType();
+        DataType<List<DataType<?>>> inputType = operation.getInputType();
         for (DataType<?> type : inputType.getLogical()) {
             if (isJAXB(type)) {
                 operation.setDatabinding("jaxb");

@@ -53,6 +53,6 @@ public interface PhysicalOperationMapper {
      * @param operation the operation to map.
      * @return the mapped PhysicalOperationDefinition
      */
-    <T> PhysicalOperationDefinition map(Operation<T> operation);
+    PhysicalOperationDefinition map(Operation operation);
 
 }

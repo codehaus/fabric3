@@ -54,13 +54,13 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
     private JAXBTypeIntrospector introspector;
 
     public void testJAXBIntrospection() throws Exception {
-        Operation<Type> jaxbOperation = createOperation("jaxbMethod", Param.class);
+        Operation jaxbOperation = createOperation("jaxbMethod", Param.class);
         introspector.introspect(jaxbOperation, Contract.class.getMethod("jaxbMethod", Param.class), null);
         assertEquals("jaxb", jaxbOperation.getDatabinding());
     }
 
     public void testNoJAXBIntrospection() throws Exception {
-        Operation<Type> nonJaxbOperation = createOperation("nonJaxbMethod", String.class);
+        Operation nonJaxbOperation = createOperation("nonJaxbMethod", String.class);
         introspector.introspect(nonJaxbOperation, Contract.class.getMethod("nonJaxbMethod", String.class), null);
         assertNull(nonJaxbOperation.getDatabinding());
     }
@@ -70,12 +70,12 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
         introspector = new JAXBTypeIntrospector();
     }
 
-    private Operation<Type> createOperation(String name, Class<?> paramType) {
+    private Operation createOperation(String name, Class<?> paramType) {
         DataType<Type> type = new DataType<Type>(paramType, paramType);
-        List<DataType<Type>> in = new ArrayList<DataType<Type>>();
+        List<DataType<?>> in = new ArrayList<DataType<?>>();
         in.add(type);
-        DataType<List<DataType<Type>>> inParams = new DataType<List<DataType<Type>>>(paramType, in);
-        return new Operation<Type>(name, inParams, null, null);
+        DataType<List<DataType<?>>> inParams = new DataType<List<DataType<?>>>(paramType, in);
+        return new Operation(name, inParams, null, null);
     }
 
     private class Contract {

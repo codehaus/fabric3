@@ -126,7 +126,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         if (metadata.isResponse()) {
             return;
         }
-        for (Operation<?> operation : contract.getOperations()) {
+        for (Operation operation : contract.getOperations()) {
             if (!operation.getIntents().contains(ONEWAY)) {
                 throw new GenerationException("Response destination must be specified for operation " + operation.getName() + " on "
                         + contract.getInterfaceName());
@@ -172,7 +172,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
      */
     private Map<String, PayloadType> processPayloadTypes(ServiceContract serviceContract) throws JmsGenerationException {
         Map<String, PayloadType> types = new HashMap<String, PayloadType>();
-        for (Operation<?> operation : serviceContract.getOperations()) {
+        for (Operation operation : serviceContract.getOperations()) {
             PayloadType payloadType = introspector.introspect(operation);
             types.put(operation.getName(), payloadType);
         }

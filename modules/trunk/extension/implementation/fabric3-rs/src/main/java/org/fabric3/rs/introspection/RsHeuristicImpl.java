@@ -79,7 +79,7 @@ public class RsHeuristicImpl implements RsHeuristic {
     public void applyHeuristics(JavaImplementation impl, URI webAppUri, IntrospectionContext context) {
         ServiceDefinition serviceDefinition = addRESTService(impl, webAppUri);
         RsBindingDefinition definition = (RsBindingDefinition) serviceDefinition.getBindings().get(0);
-        List<Operation<?>> operations = new ArrayList<Operation<?>>();
+        List<Operation> operations = new ArrayList<Operation>();
 
         ClassLoader cl = context.getTargetClassLoader();
 
@@ -145,7 +145,7 @@ public class RsHeuristicImpl implements RsHeuristic {
         return definition;
     }
 
-    private <T> Operation<Type> getOperations(Method method) {
+    private Operation getOperations(Method method) {
 
         Class<?> returnType = method.getReturnType();
         Class<?>[] paramTypes = method.getParameterTypes();
@@ -153,16 +153,16 @@ public class RsHeuristicImpl implements RsHeuristic {
 
 
         DataType<Type> returnDataType = new DataType<Type>(returnType, returnType);
-        List<DataType<Type>> paramDataTypes = new ArrayList<DataType<Type>>(paramTypes.length);
+        List<DataType<?>> paramDataTypes = new ArrayList<DataType<?>>(paramTypes.length);
         for (Type paramType : paramTypes) {
             paramDataTypes.add(new DataType<Type>(paramType, paramType));
         }
-        List<DataType<Type>> faultDataTypes = new ArrayList<DataType<Type>>(faultTypes.length);
+        List<DataType<?>> faultDataTypes = new ArrayList<DataType<?>>(faultTypes.length);
         for (Type faultType : faultTypes) {
             faultDataTypes.add(new DataType<Type>(faultType, faultType));
         }
 
-        DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
-        return new Operation<Type>(method.getName(), inputType, returnDataType, faultDataTypes, NO_CONVERSATION);
+        DataType<List<DataType<?>>> inputType = new DataType<List<DataType<?>>>(Object[].class, paramDataTypes);
+        return new Operation(method.getName(), inputType, returnDataType, faultDataTypes, NO_CONVERSATION);
     }
 }

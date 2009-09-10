@@ -120,7 +120,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
             }
         }
 
-        for (LogicalReference lr : (Collection<LogicalReference>) component.getReferences()) {
+        for (LogicalReference lr : component.getReferences()) {
             for (LogicalWire wire : component.getParent().getWires(lr)) {
                 URI sourceUri = UriHelper.getDefragmentedName(wire.getTargetUri());
                 LogicalComponent lc = component.getParent().getComponent(sourceUri);
@@ -199,7 +199,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
     private void addFunctions(String name, XQueryServiceContract contract, Map<String, List<QName>> mappings) {
         List<QName> functions = new ArrayList<QName>();
         mappings.put(name, functions);
-        for (Operation<?> o : contract.getOperations()) {
+        for (Operation o : contract.getOperations()) {
             QName functionName = new QName(contract.getQname().getNamespaceURI(), o.getName(), contract.getQname().getPrefix());
             functions.add(functionName);
         }

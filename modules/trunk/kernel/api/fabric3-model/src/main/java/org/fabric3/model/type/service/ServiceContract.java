@@ -58,7 +58,7 @@ public abstract class ServiceContract extends ModelObject {
     protected boolean conversational;
     protected boolean remotable;
     protected String interfaceName;
-    protected List<Operation<?>> operations;
+    protected List<Operation> operations;
     protected ServiceContract callbackContract;
 
     protected ServiceContract() {
@@ -123,7 +123,7 @@ public abstract class ServiceContract extends ModelObject {
      *
      * @return the operations for the service contract
      */
-    public List<Operation<?>> getOperations() {
+    public List<Operation> getOperations() {
         if (operations == null) {
             return Collections.emptyList();
         }
@@ -135,7 +135,7 @@ public abstract class ServiceContract extends ModelObject {
      *
      * @param operations the operations for the service contract
      */
-    public void setOperations(List<Operation<?>> operations) {
+    public void setOperations(List<Operation> operations) {
         this.operations = operations;
     }
 

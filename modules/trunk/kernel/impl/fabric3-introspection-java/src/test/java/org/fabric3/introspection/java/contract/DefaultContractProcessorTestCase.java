@@ -74,9 +74,9 @@ public class DefaultContractProcessorTestCase extends TestCase {
         ServiceContract contract = impl.introspect(emptyMapping, Simple.class, context);
         assertEquals("Simple", contract.getInterfaceName());
         assertEquals(Simple.class.getName(), contract.getQualifiedInterfaceName());
-        List<Operation<?>> operations = contract.getOperations();
+        List<Operation> operations = contract.getOperations();
         assertEquals(1, operations.size());
-        Operation<?> baseInt = operations.get(0);
+        Operation baseInt = operations.get(0);
         assertNotNull(baseInt);
 
         DataType<?> returnType = baseInt.getOutputType();
@@ -101,10 +101,10 @@ public class DefaultContractProcessorTestCase extends TestCase {
         ServiceContract contract = impl.introspect(boundMapping, Generic.class, context);
         assertEquals("Generic", contract.getInterfaceName());
 
-        List<Operation<?>> operations = contract.getOperations();
+        List<Operation> operations = contract.getOperations();
         assertEquals(2, operations.size());
-        Operation<?> operation = null;
-        for (Operation<?> op : operations) {
+        Operation operation = null;
+        for (Operation op : operations) {
             if ("echo".equals(op.getName())) {
                 operation = op;
                 break;
@@ -120,9 +120,9 @@ public class DefaultContractProcessorTestCase extends TestCase {
     public void testMethodGeneric() {
         IntrospectionContext context = new DefaultIntrospectionContext();
         ServiceContract contract = impl.introspect(boundMapping, Generic.class, context);
-        List<Operation<?>> operations = contract.getOperations();
-        Operation<?> operation = null;
-        for (Operation<?> op : operations) {
+        List<Operation> operations = contract.getOperations();
+        Operation operation = null;
+        for (Operation op : operations) {
             if ("echo2".equals(op.getName())) {
                 operation = op;
                 break;
@@ -143,9 +143,9 @@ public class DefaultContractProcessorTestCase extends TestCase {
         ServiceContract callback = contract.getCallbackContract();
         assertEquals("CallbackInterface", callback.getInterfaceName());
         assertEquals(CallbackInterface.class.getName(), callback.getQualifiedInterfaceName());
-        List<? extends Operation<?>> operations = callback.getOperations();
+        List<? extends Operation> operations = callback.getOperations();
         assertEquals(1, operations.size());
-        Operation<?> back = operations.get(0);
+        Operation back = operations.get(0);
         assertEquals("back", back.getName());
     }
 
@@ -156,7 +156,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
         assertTrue(contract.isConversational());
         boolean testedContinue = false;
         boolean testedEnd = false;
-        for (Operation<?> operation : contract.getOperations()) {
+        for (Operation operation : contract.getOperations()) {
             if (operation.getName().equals("operation")) {
                 assertEquals(Operation.CONVERSATION_CONTINUE, operation.getConversationSequence());
                 testedContinue = true;
@@ -175,7 +175,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
         ServiceContract contract = impl.introspect(emptyMapping, NonConversationalFoo.class, context);
         assertFalse(contract.isConversational());
         boolean tested = false;
-        for (Operation<?> operation : contract.getOperations()) {
+        for (Operation operation : contract.getOperations()) {
             if (operation.getName().equals("operation")) {
                 int seq = operation.getConversationSequence();
                 assertEquals(Operation.NO_CONVERSATION, seq);

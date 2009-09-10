@@ -255,7 +255,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         Set<Class<?>> interfaces = new HashSet<Class<?>>();
         while (type != null) {
             nextInterface:
-            for (Class<?> current : (Class<?>[]) type.getInterfaces()) {
+            for (Class<?> current : type.getInterfaces()) {
                 for (Class<?> foundAlready : interfaces) {
                     if (current.isAssignableFrom(foundAlready)) {
                         continue nextInterface;
@@ -320,8 +320,8 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
     private Set<Signature> getOperations(Collection<ServiceDefinition> services) {
         Set<Signature> operations = new HashSet<Signature>();
         for (ServiceDefinition definition : services) {
-            List<? extends Operation<?>> ops = definition.getServiceContract().getOperations();
-            for (Operation<?> operation : ops) {
+            List<? extends Operation> ops = definition.getServiceContract().getOperations();
+            for (Operation operation : ops) {
                 String name = operation.getName();
                 List<? extends DataType<?>> inputTypes = operation.getInputType().getLogical();
                 List<String> paramTypes = new ArrayList<String>(inputTypes.size());

@@ -57,7 +57,7 @@ public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
     private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");
 
     @SuppressWarnings({"unchecked"})
-    public <T> PhysicalOperationDefinition map(Operation<T> o) {
+    public PhysicalOperationDefinition map(Operation o) {
 
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName(o.getName());
@@ -68,12 +68,12 @@ public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
         Type returnType = o.getOutputType().getPhysical();
         operation.setReturnType(getClassName(returnType));
 
-        for (DataType<T> fault : o.getFaultTypes()) {
+        for (DataType<?> fault : o.getFaultTypes()) {
             Type faultType = fault.getPhysical();
             operation.addFaultType(getClassName(faultType));
         }
 
-        DataType<List<DataType<T>>> params = o.getInputType();
+        DataType<List<DataType<?>>> params = o.getInputType();
         for (DataType<?> param : params.getLogical()) {
             Type paramType = param.getPhysical();
             operation.addParameter(getClassName(paramType));

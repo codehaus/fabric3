@@ -155,12 +155,12 @@ public class JavaServiceContract extends ServiceContract {
 
     private boolean isNonJavaAssignableFrom(ServiceContract contract) {
         //compare contract operations
-        List<Operation<?>> theirOperations = contract.getOperations();
-        Map<String, Operation<?>> theirOperationNames = new HashMap<String, Operation<?>>();
+        List<Operation> theirOperations = contract.getOperations();
+        Map<String, Operation> theirOperationNames = new HashMap<String, Operation>();
         for (Operation o : theirOperations) {
             theirOperationNames.put(o.getName(), o);
         }
-        List<Operation<?>> myOperations = this.getOperations();
+        List<Operation> myOperations = this.getOperations();
         for (Operation o : myOperations) {
             Operation theirs = theirOperationNames.remove(o.getName());
             if (theirs == null) {
@@ -169,8 +169,8 @@ public class JavaServiceContract extends ServiceContract {
             if (!compareTypes(o.getInputType(), theirs.getInputType())) {
                 return false;
             }
-            List<DataType<?>> myParams = (List<DataType<?>>) o.getInputType().getLogical();
-            List<DataType<?>> theirParams = (List<DataType<?>>) theirs.getInputType().getLogical();
+            List<DataType<?>> myParams = o.getInputType().getLogical();
+            List<DataType<?>> theirParams = theirs.getInputType().getLogical();
 
             if (myParams.size() == theirParams.size()) {
                 for (int i = 0; i < myParams.size(); i++) {

@@ -67,13 +67,13 @@ import org.fabric3.spi.introspection.java.contract.ContractProcessor;
  */
 public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementation> {
     private static final String TEST_SERVICE_NAME = "testService";
-    private static final DataType<List<DataType<Type>>> INPUT_TYPE;
+    private static final DataType<List<DataType<?>>> INPUT_TYPE;
     private static final DataType<Type> OUTPUT_TYPE;
-    private static final List<DataType<Type>> FAULT_TYPE;
+    private static final List<DataType<?>> FAULT_TYPE;
 
     static {
-        List<DataType<Type>> paramDataTypes = Collections.emptyList();
-        INPUT_TYPE = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
+        List<DataType<?>> paramDataTypes = Collections.emptyList();
+        INPUT_TYPE = new DataType<List<DataType<?>>>(Object[].class, paramDataTypes);
         OUTPUT_TYPE = new DataType<Type>(void.class, void.class);
         FAULT_TYPE = Collections.emptyList();
     }
@@ -126,7 +126,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
     }
 
     private JUnitServiceContract generateTestContract(Class<?> implClass) {
-        List<Operation<?>> operations = new ArrayList<Operation<?>>();
+        List<Operation> operations = new ArrayList<Operation>();
         for (Method method : implClass.getMethods()) {
             // see if this is a test method
             if (Modifier.isStatic(method.getModifiers())) {
@@ -142,7 +142,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
             if (name.length() < 5 || !name.startsWith("test")) {
                 continue;
             }
-            Operation<?> operation = new Operation<Type>(name, INPUT_TYPE, OUTPUT_TYPE, FAULT_TYPE);
+            Operation operation = new Operation(name, INPUT_TYPE, OUTPUT_TYPE, FAULT_TYPE);
             operations.add(operation);
         }
         return new JUnitServiceContract(operations);

@@ -129,11 +129,11 @@ public class GenerationHelper {
      */
     @SuppressWarnings({"unchecked"})
     private static Method findMethod(Operation operation, Class<?> serviceClass) {
-        DataType<List<DataType>> input = operation.getInputType();
+        DataType<List<DataType<?>>> input = operation.getInputType();
         Class<?>[] params = new Class<?>[input.getLogical().size()];
         int i = 0;
-        for (DataType<Type> type : input.getLogical()) {
-            Type logical = type.getLogical();
+        for (DataType<?> type : input.getLogical()) {
+            Object logical = type.getLogical();
             if (!(logical instanceof Class)) {
                 // not possible
                 throw new AssertionError();

@@ -74,7 +74,7 @@ public class LogicalAttachPoint extends LogicalScaArtifact<LogicalComponent<?>> 
             }
             ServiceContract callbackContract = contract.getCallbackContract();
             if (callbackContract != null) {
-                for (Operation<?> operation : callbackContract.getOperations()) {
+                for (Operation operation : callbackContract.getOperations()) {
                     callbackOperations.add(new LogicalOperation(operation, this));
                 }
             }

@@ -75,23 +75,23 @@ public class WsdlProcessorRegistryTest extends TestCase {
         URL url = getClass().getClassLoader().getResource("example_1_1.wsdl");
         QName portTypeQName = new QName("http://example.com/stockquote.wsdl", "StockQuotePortType");
 
-        List<Operation<XmlSchemaType>> operations = processorRegistry.getOperations(portTypeQName, url);
+        List<Operation> operations = processorRegistry.getOperations(portTypeQName, url);
         assertEquals(1, operations.size());
 
-        Operation<XmlSchemaType> operation = operations.get(0);
+        Operation operation = operations.get(0);
         assertEquals("GetLastTradePrice", operation.getName());
 
-        DataType<List<DataType<XmlSchemaType>>> inputType = operation.getInputType();
-        List<DataType<XmlSchemaType>> inputParts = inputType.getLogical();
+        DataType<List<DataType<?>>> inputType = operation.getInputType();
+        List<DataType<?>> inputParts = inputType.getLogical();
         assertEquals(1, inputParts.size());
 
-        DataType<XmlSchemaType> inputPart = inputParts.get(0);
-        XmlSchemaType inputPartLogical = inputPart.getLogical();
+        DataType<?> inputPart = inputParts.get(0);
+        XmlSchemaType inputPartLogical = (XmlSchemaType) inputPart.getLogical();
 
         assertNotNull(inputPartLogical);
         assertEquals("string", inputPartLogical.getName());
 
-        DataType<XmlSchemaType> outputType = operation.getOutputType();
+        DataType<XmlSchemaType> outputType = (DataType<XmlSchemaType>) operation.getOutputType();
         assertEquals("float", outputType.getLogical().getName());
 
     }
@@ -104,23 +104,23 @@ public class WsdlProcessorRegistryTest extends TestCase {
         URL url = getClass().getClassLoader().getResource("example_2_0.wsdl");
         QName portTypeQName = new QName("http://greath.example.com/2004/wsdl/resSvc", "reservationInterface");
 
-        List<Operation<XmlSchemaType>> operations = processorRegistry.getOperations(portTypeQName, url);
+        List<Operation> operations = processorRegistry.getOperations(portTypeQName, url);
         assertEquals(1, operations.size());
 
-        Operation<XmlSchemaType> operation = operations.get(0);
+        Operation operation = operations.get(0);
         assertEquals("opCheckAvailability", operation.getName());
 
-        DataType<List<DataType<XmlSchemaType>>> inputType = operation.getInputType();
-        List<DataType<XmlSchemaType>> inputParts = inputType.getLogical();
+        DataType<List<DataType<?>>> inputType = operation.getInputType();
+        List<DataType<?>> inputParts = inputType.getLogical();
         assertEquals(1, inputParts.size());
 
-        DataType<XmlSchemaType> inputPart = inputParts.get(0);
-        XmlSchemaType inputPartLogical = inputPart.getLogical();
+        DataType<?> inputPart = inputParts.get(0);
+        XmlSchemaType inputPartLogical = (XmlSchemaType) inputPart.getLogical();
 
         assertNotNull(inputPartLogical);
         assertEquals("tCheckAvailability", inputPartLogical.getName());
 
-        DataType<XmlSchemaType> outputType = operation.getOutputType();
+        DataType<XmlSchemaType> outputType = (DataType<XmlSchemaType>) operation.getOutputType();
         assertEquals("double", outputType.getLogical().getName());
 
     }

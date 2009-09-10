@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
-import org.apache.ws.commons.schema.XmlSchemaType;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
@@ -76,7 +75,7 @@ public class WsdlProcessorRegistry implements WsdlProcessor {
         this.versionChecker = versionChecker;
     }
 
-    public List<Operation<XmlSchemaType>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
+    public List<Operation> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
 
         WsdlVersion wsdlVersion = versionChecker.getVersion(wsdlUrl);
         if (!wsdlProcessors.containsKey(wsdlVersion)) {

@@ -67,12 +67,12 @@ import org.fabric3.model.type.service.Operation;
  */
 public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
 
-    public <T> PayloadType introspect(Operation<T> operation) throws JmsGenerationException {
+    public PayloadType introspect(Operation operation) throws JmsGenerationException {
         // TODO perform error checking, e.g. mixing of databindings
         if ("jaxb".equals(operation.getDatabinding())) {
             return PayloadType.TEXT;
         }
-        DataType<List<DataType<T>>> inputType = operation.getInputType();
+        DataType<List<DataType<?>>> inputType = operation.getInputType();
         if (inputType.getLogical().size() == 1) {
             DataType<?> param = inputType.getLogical().get(0);
             Type physical = param.getPhysical();

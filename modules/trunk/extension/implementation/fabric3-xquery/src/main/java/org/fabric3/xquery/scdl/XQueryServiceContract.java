@@ -37,7 +37,6 @@
 */
 package org.fabric3.xquery.scdl;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import javax.xml.namespace.QName;
 
@@ -48,9 +47,10 @@ import org.fabric3.model.type.service.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class XQueryServiceContract extends ServiceContract {
+    private static final long serialVersionUID = 630477464259103851L;
 
     public XQueryServiceContract() {
-        operations = new ArrayList<Operation<Type>>();
+        operations = new ArrayList<Operation>();
     }
 
     private QName qname;

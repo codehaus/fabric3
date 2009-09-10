@@ -94,7 +94,7 @@ public class HttpBindingProvider implements BindingProvider {
             return NO_MATCH;
         }
         ServiceContract contract = source.getDefinition().getServiceContract();
-        for (Operation<?> operation : contract.getOperations()) {
+        for (Operation operation : contract.getOperations()) {
             if (operation.getInputType().getLogical().size() > 1) {
                 BindingMatchResult result = new BindingMatchResult(false, HTTP_BINDING);
                 result.addReason("Operations with more than one parameter not supported");
@@ -103,7 +103,7 @@ public class HttpBindingProvider implements BindingProvider {
         }
         ServiceContract callbackContract = contract.getCallbackContract();
         if (callbackContract != null) {
-            for (Operation<?> operation : callbackContract.getOperations()) {
+            for (Operation operation : callbackContract.getOperations()) {
                 if (operation.getInputType().getLogical().size() > 1) {
                     BindingMatchResult result = new BindingMatchResult(false, HTTP_BINDING);
                     result.addReason("Operations with more than one parameter not supported");

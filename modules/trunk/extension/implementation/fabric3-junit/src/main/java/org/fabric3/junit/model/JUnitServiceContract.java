@@ -48,7 +48,7 @@ import org.fabric3.model.type.service.ServiceContract;
 public class JUnitServiceContract extends ServiceContract {
     private static final long serialVersionUID = -2402977196426881023L;
 
-    public JUnitServiceContract(List<Operation<?>> operations) {
+    public JUnitServiceContract(List<Operation> operations) {
         setOperations(operations);
     }
 

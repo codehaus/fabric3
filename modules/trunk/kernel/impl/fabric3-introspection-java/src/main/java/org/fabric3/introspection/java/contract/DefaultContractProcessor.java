@@ -156,7 +156,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
-        List<Operation<?>> operations = getOperations(typeMapping, interfaze, remotable, conversational, context);
+        List<Operation> operations = getOperations(typeMapping, interfaze, remotable, conversational, context);
         contract.setOperations(operations);
         for (InterfaceIntrospector introspector : interfaceIntrospectors) {
             introspector.introspect(contract, interfaze, context);
@@ -164,18 +164,18 @@ public class DefaultContractProcessor implements ContractProcessor {
         return contract;
     }
 
-    private <T> List<Operation<?>> getOperations(TypeMapping typeMapping,
+    private <T> List<Operation> getOperations(TypeMapping typeMapping,
                                                  Class<T> type,
                                                  boolean remotable,
                                                  boolean conversational,
                                                  IntrospectionContext context) {
         Method[] methods = type.getMethods();
-        List<Operation<?>> operations = new ArrayList<Operation<?>>(methods.length);
+        List<Operation> operations = new ArrayList<Operation>(methods.length);
         for (Method method : methods) {
             String name = method.getName();
             if (remotable) {
                 boolean error = false;
-                for (Operation<?> operation : operations) {
+                for (Operation operation : operations) {
                     if (operation.getName().equals(name)) {
                         context.addError(new OverloadedOperation(method));
                         error = true;
@@ -203,19 +203,19 @@ public class DefaultContractProcessor implements ContractProcessor {
 
             Type actualReturnType = typeMapping.getActualType(returnType);
             DataType<Type> returnDataType = new DataType<Type>(actualReturnType, actualReturnType);
-            List<DataType<Type>> paramDataTypes = new ArrayList<DataType<Type>>(paramTypes.length);
+            List<DataType<?>> paramDataTypes = new ArrayList<DataType<?>>(paramTypes.length);
             for (Type paramType : paramTypes) {
                 Type actualType = typeMapping.getActualType(paramType);
                 paramDataTypes.add(new DataType<Type>(actualType, actualType));
             }
-            List<DataType<Type>> faultDataTypes = new ArrayList<DataType<Type>>(faultTypes.length);
+            List<DataType<?>> faultDataTypes = new ArrayList<DataType<?>>(faultTypes.length);
             for (Type faultType : faultTypes) {
                 Type actualType = typeMapping.getActualType(faultType);
                 faultDataTypes.add(new DataType<Type>(actualType, actualType));
             }
 
-            DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
-            Operation<Type> operation = new Operation<Type>(name, inputType, returnDataType, faultDataTypes, conversationSequence);
+            DataType<List<DataType<?>>> inputType = new DataType<List<DataType<?>>>(Object[].class, paramDataTypes);
+            Operation operation = new Operation(name, inputType, returnDataType, faultDataTypes, conversationSequence);
 
             if (method.isAnnotationPresent(org.oasisopen.sca.annotation.OneWay.class) || method.isAnnotationPresent(OneWay.class)) {
                 operation.addIntent(ONEWAY_INTENT);

@@ -41,8 +41,6 @@ import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.apache.ws.commons.schema.XmlSchemaType;
-
 import org.fabric3.model.type.service.Operation;
 
 /**
@@ -59,6 +57,6 @@ public interface WsdlProcessor {
      * @param wsdlUrl                 The URL to the WSDL.
      * @return List of operations.
      */
-    List<Operation<XmlSchemaType>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl);
+    List<Operation> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl);
 
 }
