@@ -50,6 +50,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
 /**
  * Loads interface.wsdl.
@@ -65,6 +66,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
     }
 
     public WsdlServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
         WsdlServiceContract wsdlContract = processInterface(reader, context);
         processCallbackInterface(reader, wsdlContract, context);
         LoaderUtil.skipToEndElement(reader);
@@ -95,6 +97,15 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
     private QName parseQName(String interfaze) {
         // TODO implement
         return null;
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"interface".equals(name) || !"callbackInterface".equals(name) || !"remotable".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 }
