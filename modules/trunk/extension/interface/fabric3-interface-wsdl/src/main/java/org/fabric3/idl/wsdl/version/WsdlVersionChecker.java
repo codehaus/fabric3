@@ -50,7 +50,7 @@ public interface WsdlVersionChecker {
      * WSDL Version.
      */
     public enum WsdlVersion {
-        VERSION_1_1, VERSION_2_0;
+        VERSION_1_1, VERSION_2_0
     }
 
     /**

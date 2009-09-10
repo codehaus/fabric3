@@ -52,9 +52,11 @@ import org.fabric3.model.type.service.DataType;
  */
 public abstract class AbstractWsdlProcessor {
 
-    /*
-    * Create a data type with the XML type for the part.
-    */
+    /**
+     * Create a data type with the XML type for the part.
+     * @param qName
+     * @param xmlSchema
+     */
     protected DataType<XmlSchemaType> getDataType(QName qName, XmlSchemaCollection xmlSchema) {
 
         XmlSchemaType type = xmlSchema.getTypeByQName(qName);

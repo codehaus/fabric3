@@ -51,21 +51,8 @@ import org.fabric3.model.type.service.Operation;
 /**
  * @version $Revision$ $Date$
  */
-public class WsdlProcessorRegistryTest extends TestCase {
-
-    // Processor registry
+public class WsdlProcessorRegistryTestCase extends TestCase {
     private WsdlProcessorRegistry processorRegistry = null;
-
-    /**
-     * Sets up the registry.
-     */
-    public void setUp() {
-
-        processorRegistry = new WsdlProcessorRegistry(new DefaultWsdlVersionChecker());
-        new Wsdl11Processor(processorRegistry);
-        new Wsdl20Processor(processorRegistry);
-
-    }
 
     /**
      * Checks for version 1.1
@@ -95,32 +82,10 @@ public class WsdlProcessorRegistryTest extends TestCase {
 
     }
 
-    /**
-     * Checks for version 1.1
-     */
-    public void testGetVersion2_0() {
-
-        URL url = getClass().getClassLoader().getResource("example_2_0.wsdl");
-        QName portTypeQName = new QName("http://greath.example.com/2004/wsdl/resSvc", "reservationInterface");
-
-        List<Operation> operations = processorRegistry.getOperations(portTypeQName, url);
-        assertEquals(1, operations.size());
-
-        Operation operation = operations.get(0);
-        assertEquals("opCheckAvailability", operation.getName());
-
-        List<DataType<?>> inputParts = operation.getInputTypes();
-        assertEquals(1, inputParts.size());
-
-        DataType<?> inputPart = inputParts.get(0);
-        XmlSchemaType inputPartLogical = (XmlSchemaType) inputPart.getLogical();
-
-        assertNotNull(inputPartLogical);
-        assertEquals("tCheckAvailability", inputPartLogical.getName());
-
-        DataType<XmlSchemaType> outputType = (DataType<XmlSchemaType>) operation.getOutputType();
-        assertEquals("double", outputType.getLogical().getName());
-
+    public void setUp() {
+        processorRegistry = new WsdlProcessorRegistry(new DefaultWsdlVersionChecker());
+        new Wsdl11Processor(processorRegistry);
     }
+
 
 }

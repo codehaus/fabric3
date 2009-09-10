@@ -50,9 +50,6 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class DefaultWsdlVersionChecker implements WsdlVersionChecker {
 
-    /**
-     * @see org.fabric3.idl.wsdl.version.WsdlVersionChecker#getVersion(java.net.URL)
-     */
     public WsdlVersion getVersion(URL wsdlUrl) {
 
         InputStream wsdlStream = null;

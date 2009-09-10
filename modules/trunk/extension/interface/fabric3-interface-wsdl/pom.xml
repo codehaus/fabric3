@@ -21,21 +21,6 @@ Public License. See the accompanying license file for details.
     <name>Fabric3 WSDL Interface</name>
     <description>Fabric3 WSDL Interface.</description>
 
-    <repositories>
-        <repository>
-            <id>apache-ws</id>
-            <name>Apache WS Zones</name>
-            <url>http://ws.zones.apache.org/repository/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <layout>legacy</layout>
-        </repository>
-    </repositories>
-
     <dependencies>
 
         <dependency>
@@ -58,13 +43,6 @@ Public License. See the accompanying license file for details.
             <artifactId>wsdl4j</artifactId>
             <version>1.6.2</version>
             <scope>compile</scope>
-        </dependency>
-
-        <!-- WSDL 2.0 Support -->
-        <dependency>
-            <groupId>org.apache.woden</groupId>
-            <artifactId>woden</artifactId>
-            <version>1.0-incubating-M7a</version>
         </dependency>
 
         <!-- XML Schema Support -->
