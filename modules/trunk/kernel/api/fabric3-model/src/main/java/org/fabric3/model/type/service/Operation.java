@@ -44,17 +44,13 @@
 package org.fabric3.model.type.service;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.AbstractPolicyAware;
 
 
 /**
- * Represents an operation that is part of a service contract. The type paramter of this operation identifies the logical type system for all data
- * types.
+ * Represents an operation that is part of a service contract.
  *
  * @version $Rev$ $Date$
  */
@@ -70,7 +66,6 @@ public class Operation extends AbstractPolicyAware {
     private List<DataType<?>> faultTypes;
     private int conversationSequence = NO_CONVERSATION;
     private String databinding;
-    private Map<QName, Map<String, String>> info;
 
     /**
      * Construct a minimally-specified operation
@@ -160,35 +155,6 @@ public class Operation extends AbstractPolicyAware {
      */
     public void setConversationSequence(int conversationSequence) {
         this.conversationSequence = conversationSequence;
-    }
-
-    /**
-     * Add additional info related to Operation
-     *
-     * @param qName QName info need to be keyed on.
-     * @param key   Name of the parameter
-     * @param value Value of the parameter
-     */
-    public void addInfo(QName qName, String key, String value) {
-        if (info == null) {//Lazy loading
-            info = new HashMap<QName, Map<String, String>>();
-            info.put(qName, new HashMap<String, String>());
-        }
-
-        info.get(qName).put(key, value);
-    }
-
-    /**
-     * Retrieve info set on the Operation
-     *
-     * @param qName QName as key to retrieve the info
-     * @return Map containing key-value info
-     */
-    public Map<String, String> getInfo(QName qName) {
-        if (info != null) {
-            return info.get(qName);
-        }
-        return null;
     }
 
     /**
