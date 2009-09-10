@@ -39,7 +39,6 @@
 package org.fabric3.binding.ws.metro.generator;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,10 +128,10 @@ public class GenerationHelper {
      */
     @SuppressWarnings({"unchecked"})
     private static Method findMethod(Operation operation, Class<?> serviceClass) {
-        DataType<List<DataType<?>>> input = operation.getInputType();
-        Class<?>[] params = new Class<?>[input.getLogical().size()];
+        List<DataType<?>> types = operation.getInputTypes();
+        Class<?>[] params = new Class<?>[types.size()];
         int i = 0;
-        for (DataType<?> type : input.getLogical()) {
+        for (DataType<?> type : types) {
             Object logical = type.getLogical();
             if (!(logical instanceof Class)) {
                 // not possible

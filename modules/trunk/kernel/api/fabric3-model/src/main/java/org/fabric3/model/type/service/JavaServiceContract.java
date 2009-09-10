@@ -166,11 +166,8 @@ public class JavaServiceContract extends ServiceContract {
             if (theirs == null) {
                 return false;
             }
-            if (!compareTypes(o.getInputType(), theirs.getInputType())) {
-                return false;
-            }
-            List<DataType<?>> myParams = o.getInputType().getLogical();
-            List<DataType<?>> theirParams = theirs.getInputType().getLogical();
+            List<DataType<?>> myParams = o.getInputTypes();
+            List<DataType<?>> theirParams = theirs.getInputTypes();
 
             if (myParams.size() == theirParams.size()) {
                 for (int i = 0; i < myParams.size(); i++) {

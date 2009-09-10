@@ -74,8 +74,7 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
         DataType<Type> type = new DataType<Type>(paramType, paramType);
         List<DataType<?>> in = new ArrayList<DataType<?>>();
         in.add(type);
-        DataType<List<DataType<?>>> inParams = new DataType<List<DataType<?>>>(paramType, in);
-        return new Operation(name, inParams, null, null);
+        return new Operation(name, in, null, null);
     }
 
     private class Contract {

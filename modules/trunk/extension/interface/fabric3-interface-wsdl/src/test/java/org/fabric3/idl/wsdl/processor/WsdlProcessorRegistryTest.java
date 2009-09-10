@@ -81,8 +81,7 @@ public class WsdlProcessorRegistryTest extends TestCase {
         Operation operation = operations.get(0);
         assertEquals("GetLastTradePrice", operation.getName());
 
-        DataType<List<DataType<?>>> inputType = operation.getInputType();
-        List<DataType<?>> inputParts = inputType.getLogical();
+        List<DataType<?>> inputParts = operation.getInputTypes();
         assertEquals(1, inputParts.size());
 
         DataType<?> inputPart = inputParts.get(0);
@@ -110,8 +109,7 @@ public class WsdlProcessorRegistryTest extends TestCase {
         Operation operation = operations.get(0);
         assertEquals("opCheckAvailability", operation.getName());
 
-        DataType<List<DataType<?>>> inputType = operation.getInputType();
-        List<DataType<?>> inputParts = inputType.getLogical();
+        List<DataType<?>> inputParts = operation.getInputTypes();
         assertEquals(1, inputParts.size());
 
         DataType<?> inputPart = inputParts.get(0);

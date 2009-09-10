@@ -214,8 +214,7 @@ public class DefaultContractProcessor implements ContractProcessor {
                 faultDataTypes.add(new DataType<Type>(actualType, actualType));
             }
 
-            DataType<List<DataType<?>>> inputType = new DataType<List<DataType<?>>>(Object[].class, paramDataTypes);
-            Operation operation = new Operation(name, inputType, returnDataType, faultDataTypes, conversationSequence);
+            Operation operation = new Operation(name, paramDataTypes, returnDataType, faultDataTypes, conversationSequence);
 
             if (method.isAnnotationPresent(org.oasisopen.sca.annotation.OneWay.class) || method.isAnnotationPresent(OneWay.class)) {
                 operation.addIntent(ONEWAY_INTENT);

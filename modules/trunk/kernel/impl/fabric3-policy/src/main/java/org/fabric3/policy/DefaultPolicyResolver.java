@@ -201,7 +201,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
      */
     private LogicalOperation matchOperation(LogicalOperation operation, Bindable bindable) {
         String name = operation.getDefinition().getName();
-        DataType<?> inputType = operation.getDefinition().getInputType();
+        List<DataType<?>> inputTypes = operation.getDefinition().getInputTypes();
         DataType<?> outputType = operation.getDefinition().getOutputType();
 
         List<LogicalOperation> operations;
@@ -214,7 +214,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
         for (LogicalOperation candidate : operations) {
             if (name.equals(candidate.getDefinition().getName())) {
                 Operation definition = candidate.getDefinition();
-                if (outputType.equals(definition.getOutputType()) && inputType.equals(definition.getInputType())) {
+                if (outputType.equals(definition.getOutputType()) && inputTypes.equals(definition.getInputTypes())) {
                     return candidate;
                 }
             }

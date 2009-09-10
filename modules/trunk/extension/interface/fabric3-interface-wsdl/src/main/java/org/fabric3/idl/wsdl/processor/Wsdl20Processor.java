@@ -137,9 +137,8 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
             }
         }
 
-        DataType<List<DataType<?>>> inputType = new DataType<List<DataType<?>>>(Object.class, inputTypes);
 
-        return new Operation(name, inputType, outputType, faultTypes);
+        return new Operation(name, inputTypes, outputType, faultTypes);
     }
 
     /*

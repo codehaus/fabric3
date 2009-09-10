@@ -67,16 +67,9 @@ import org.fabric3.spi.introspection.java.contract.ContractProcessor;
  */
 public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementation> {
     private static final String TEST_SERVICE_NAME = "testService";
-    private static final DataType<List<DataType<?>>> INPUT_TYPE;
-    private static final DataType<Type> OUTPUT_TYPE;
-    private static final List<DataType<?>> FAULT_TYPE;
-
-    static {
-        List<DataType<?>> paramDataTypes = Collections.emptyList();
-        INPUT_TYPE = new DataType<List<DataType<?>>>(Object[].class, paramDataTypes);
-        OUTPUT_TYPE = new DataType<Type>(void.class, void.class);
-        FAULT_TYPE = Collections.emptyList();
-    }
+    private static final List<DataType<?>> INPUT_TYPE = Collections.emptyList();
+    private static final DataType<Type> OUTPUT_TYPE = new DataType<Type>(void.class, void.class);
+    private static final List<DataType<?>> FAULT_TYPE = Collections.emptyList();
 
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;

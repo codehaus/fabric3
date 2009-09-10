@@ -162,7 +162,6 @@ public class RsHeuristicImpl implements RsHeuristic {
             faultDataTypes.add(new DataType<Type>(faultType, faultType));
         }
 
-        DataType<List<DataType<?>>> inputType = new DataType<List<DataType<?>>>(Object[].class, paramDataTypes);
-        return new Operation(method.getName(), inputType, returnDataType, faultDataTypes, NO_CONVERSATION);
+        return new Operation(method.getName(), paramDataTypes, returnDataType, faultDataTypes, NO_CONVERSATION);
     }
 }

@@ -73,8 +73,8 @@ public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
             operation.addFaultType(getClassName(faultType));
         }
 
-        DataType<List<DataType<?>>> params = o.getInputType();
-        for (DataType<?> param : params.getLogical()) {
+        List<DataType<?>> params = o.getInputTypes();
+        for (DataType<?> param : params) {
             Type paramType = param.getPhysical();
             operation.addParameter(getClassName(paramType));
         }

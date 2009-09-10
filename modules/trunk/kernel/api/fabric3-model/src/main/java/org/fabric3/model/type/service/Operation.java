@@ -66,7 +66,7 @@ public class Operation extends AbstractPolicyAware {
     private static final long serialVersionUID = 5279880534105654066L;
     private final String name;
     private DataType<?> outputType;
-    private DataType<List<DataType<?>>> inputType;
+    private List<DataType<?>> inputTypes;
     private List<DataType<?>> faultTypes;
     private int conversationSequence = NO_CONVERSATION;
     private String databinding;
@@ -76,36 +76,28 @@ public class Operation extends AbstractPolicyAware {
      * Construct a minimally-specified operation
      *
      * @param name       the name of the operation
-     * @param inputType  the data types of parameters passed to the operation
+     * @param inputTypes the data types of parameters passed to the operation
      * @param outputType the data type returned by the operation
      * @param faultTypes the data type of faults raised by the operation
      */
-    public Operation(String name,
-                     DataType<List<DataType<?>>> inputType,
-                     DataType<?> outputType,
-                     List<DataType<?>> faultTypes) {
-        this(name, inputType, outputType, faultTypes, NO_CONVERSATION);
+    public Operation(String name, List<DataType<?>> inputTypes, DataType<?> outputType, List<DataType<?>> faultTypes) {
+        this(name, inputTypes, outputType, faultTypes, NO_CONVERSATION);
     }
 
     /**
      * Construct an operation
      *
      * @param name       the name of the operation
-     * @param inputType  the data types of parameters passed to the operation
+     * @param inputTypes the data types of parameters passed to the operation
      * @param outputType the data type returned by the operation
      * @param faultTypes the data type of faults raised by the operation
      * @param sequence   the conversational attributes of the operation, {@link #NO_CONVERSATION}, {@link #CONVERSATION_CONTINUE}, {@link
-*                   #CONVERSATION_CONTINUE}
+     *                   #CONVERSATION_CONTINUE}
      */
-    public Operation(final String name,
-                     final DataType<List<DataType<?>>> inputType,
-                     final DataType<?> outputType,
-                     final List<DataType<?>> faultTypes,
-                     int sequence) {
-        super();
+    public Operation(String name, List<DataType<?>> inputTypes, DataType<?> outputType, List<DataType<?>> faultTypes, int sequence) {
         this.name = name;
         List<DataType<?>> types = Collections.emptyList();
-        this.inputType = inputType;
+        this.inputTypes = inputTypes;
         this.outputType = outputType;
         this.faultTypes = (faultTypes == null) ? types : faultTypes;
         this.conversationSequence = sequence;
@@ -121,23 +113,23 @@ public class Operation extends AbstractPolicyAware {
     }
 
     /**
-     * Returns the data type returned by the operation.
-     *
-     * @return the data type returned by the operation
-     */
-    public DataType<?> getOutputType() {
-        return outputType;
-    }
-
-    /**
      * Returns the data types of the parameters passed to the operation.
      * <p/>
      * The inputType's logical type is a list of DataTypes which describes the parameter types
      *
      * @return the data types of the parameters passed to the operation
      */
-    public DataType<List<DataType<?>>> getInputType() {
-        return inputType;
+    public List<DataType<?>> getInputTypes() {
+        return inputTypes;
+    }
+
+    /**
+     * Returns the data type returned by the operation.
+     *
+     * @return the data type returned by the operation
+     */
+    public DataType<?> getOutputType() {
+        return outputType;
     }
 
     /**
@@ -254,7 +246,7 @@ public class Operation extends AbstractPolicyAware {
         }
 
         //noinspection SimplifiableIfStatement
-        if (inputType != null ? !inputType.equals(operation.inputType) : operation.inputType != null) {
+        if (inputTypes != null ? !inputTypes.equals(operation.inputTypes) : operation.inputTypes != null) {
             return false;
         }
         return !(outputType != null ? !outputType.equals(operation.outputType) : operation.outputType != null);
@@ -265,7 +257,7 @@ public class Operation extends AbstractPolicyAware {
         result = name != null ? name.hashCode() : 0;
 
         result = 29 * result + (outputType != null ? outputType.hashCode() : 0);
-        result = 29 * result + (inputType != null ? inputType.hashCode() : 0);
+        result = 29 * result + (inputTypes != null ? inputTypes.hashCode() : 0);
         result = 29 * result + (faultTypes != null ? faultTypes.hashCode() : 0);
         return result;
     }

@@ -83,7 +83,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
         assertEquals(Integer.TYPE, returnType.getPhysical());
         assertEquals(Integer.TYPE, returnType.getLogical());
 
-        List<?> parameterTypes = baseInt.getInputType().getLogical();
+        List<?> parameterTypes = baseInt.getInputTypes();
         assertEquals(1, parameterTypes.size());
         DataType<?> arg0 = (DataType<?>) parameterTypes.get(0);
         assertEquals(Integer.TYPE, arg0.getPhysical());

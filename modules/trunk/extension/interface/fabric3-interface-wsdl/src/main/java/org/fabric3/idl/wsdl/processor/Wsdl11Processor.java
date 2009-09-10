@@ -142,11 +142,30 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
         Map faults = operation.getFaults();
 
         String name = operation.getName();
-        DataType<List<DataType<?>>> inputType = getInputType(input, xmlSchema);
+        List<DataType<?>> inputTypes = getInputTypes(input.getMessage(), xmlSchema);
         DataType<?> outputType = getOutputType(output, xmlSchema);
         List<DataType<?>> faultTypes = getFaultTypes(faults, xmlSchema);
 
-        return new Operation(name, inputType, outputType, faultTypes);
+        return new Operation(name, inputTypes, outputType, faultTypes);
+
+    }
+
+
+    @SuppressWarnings({"unchecked"})
+    private List<DataType<?>> getInputTypes(Message message, XmlSchemaCollection xmlSchema) {
+
+        List<DataType<?>> types = new LinkedList<DataType<?>>();
+
+        for (Part part : (Collection<Part>) message.getParts().values()) {
+
+            DataType<XmlSchemaType> dataType = getDataType(part.getElementName(), xmlSchema);
+            if (dataType != null) {
+                types.add(dataType);
+            }
+
+        }
+
+        return types;
 
     }
 

@@ -72,9 +72,9 @@ public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
         if ("jaxb".equals(operation.getDatabinding())) {
             return PayloadType.TEXT;
         }
-        DataType<List<DataType<?>>> inputType = operation.getInputType();
-        if (inputType.getLogical().size() == 1) {
-            DataType<?> param = inputType.getLogical().get(0);
+        List<DataType<?>> inputTypes = operation.getInputTypes();
+        if (inputTypes.size() == 1) {
+            DataType<?> param = inputTypes.get(0);
             Type physical = param.getPhysical();
             if (physical instanceof Class) {
                 Class<?> clazz = (Class<?>) physical;

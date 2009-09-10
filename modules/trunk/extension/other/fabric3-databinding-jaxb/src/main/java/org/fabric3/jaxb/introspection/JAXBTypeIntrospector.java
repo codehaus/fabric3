@@ -56,8 +56,8 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
 
     public void introspect(Operation operation, Method method, IntrospectionContext context) {
         // TODO perform error checking, e.g. mixing of databindings
-        DataType<List<DataType<?>>> inputType = operation.getInputType();
-        for (DataType<?> type : inputType.getLogical()) {
+        List<DataType<?>> inputTypes = operation.getInputTypes();
+        for (DataType<?> type : inputTypes) {
             if (isJAXB(type)) {
                 operation.setDatabinding("jaxb");
                 return;
