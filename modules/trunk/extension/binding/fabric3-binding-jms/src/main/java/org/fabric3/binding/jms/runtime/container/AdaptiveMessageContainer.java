@@ -82,7 +82,7 @@ public class AdaptiveMessageContainer {
     private int maxReceivers = 1;
     private int idleLimit = 1;
     private int transactionTimeout = DEFAULT_TRX_TIMEOUT;
-    private int receiveTimeout = 0;
+    private int receiveTimeout = transactionTimeout /2;
     private int maxMessagesToProcess = -1;
     private long recoveryInterval = 5000;   // default 5 seconds
     private boolean durable = false;
@@ -825,7 +825,9 @@ public class AdaptiveMessageContainer {
      */
     private void globalRollback() throws TransactionException {
         try {
-            tm.rollback();
+            if (tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                tm.rollback();
+            }
         } catch (SystemException e) {
             throw new TransactionException(e);
         }
@@ -852,6 +854,7 @@ public class AdaptiveMessageContainer {
      */
     private Session createSession(Connection connection) throws JMSException {
         boolean transacted = TransactionType.SESSION == transactionType || TransactionType.GLOBAL == transactionType;
+        // FIXME Atomikos requires this set to "true" but app servers (and Java EE) requires it to be false for XA transactions
         return connection.createSession(transacted, acknowledgeMode);
     }
 
@@ -968,7 +971,10 @@ public class AdaptiveMessageContainer {
                         if (interrupted) {
                             throw new IllegalStateException("Interrupted while waiting for restart");
                         }
-                        if (!waiting) {
+                        if (!isRunning()) {
+                            return false;
+                        }
+                        if (!waiting && isRunning()) {
                             activeReceiverCount--;
                         }
                         waiting = true;
@@ -1033,10 +1039,13 @@ public class AdaptiveMessageContainer {
                 }
                 return received;
             } catch (JMSException e) {
+                monitor.error("Error receiving message", e);
                 globalRollback();
             } catch (RuntimeException e) {
+                monitor.error("Error receiving message", e);
                 globalRollback();
             } catch (Error e) {
+                monitor.error("Error receiving message", e);
                 globalRollback();
             } catch (SystemException e) {
                 throw new TransactionException(e);
@@ -1088,10 +1097,8 @@ public class AdaptiveMessageContainer {
                         return false;
                     }
                 }
-                activeReceiverCount--;
                 // wait for a message, blocking for the timeout period, which, if 0, will be indefinitely
                 Message message = consumerToUse.receive(timeout);
-                activeReceiverCount++;
                 if (message != null) {
                     if (!isRunning()) {
                         // container is shutting down.
@@ -1125,7 +1132,7 @@ public class AdaptiveMessageContainer {
                         throw e;
                     }
                     return true;
-                } else {
+                } else {  
                     idle = true;
                     return false;
                 }

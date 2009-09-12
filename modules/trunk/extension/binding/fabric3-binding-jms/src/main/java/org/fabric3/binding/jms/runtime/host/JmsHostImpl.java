@@ -100,6 +100,9 @@ public class JmsHostImpl implements JmsHost, Fabric3EventListener<RuntimeStart> 
     @Destroy
     public void destroy() throws JMSException {
         for (AdaptiveMessageContainer container : containers.values()) {
+            container.stop();
+        }
+        for (AdaptiveMessageContainer container : containers.values()) {
             container.shutdown();
         }
         started = false;

@@ -77,8 +77,8 @@ public class JmsBindingMetadata extends ModelObject {
     private int minReceivers = 1;
     private int maxReceivers = 1;
     private int idleLimit = 1;
-    private int transactionTimeout = 30;
-    private int receiveTimeout = 0;
+    private int transactionTimeout = 30; // in seconds
+    private int receiveTimeout = (transactionTimeout / 2) * 1000;  // set the timeout in milliseconds to half that of the trx timeout
     private int maxMessagesToProcess = -1;
     private long recoveryInterval = 5000;   // default 5 seconds
     private boolean durable = false;
