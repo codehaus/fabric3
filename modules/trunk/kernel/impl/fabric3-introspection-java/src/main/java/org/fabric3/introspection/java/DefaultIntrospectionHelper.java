@@ -362,8 +362,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return fields;
     }
 
-    public TypeMapping mapTypeParameters(Class<?> type) {
-        TypeMapping mapping = new TypeMapping();
+    public void mapTypeParameters(Class<?> type, TypeMapping mapping) {
         while (type != null) {
             addTypeBindings(mapping, type.getGenericSuperclass());
             for (Type interfaceType : type.getGenericInterfaces()) {
@@ -371,7 +370,6 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             }
             type = type.getSuperclass();
         }
-        return mapping;
     }
 
     private void addTypeBindings(TypeMapping mapping, Type type1) {

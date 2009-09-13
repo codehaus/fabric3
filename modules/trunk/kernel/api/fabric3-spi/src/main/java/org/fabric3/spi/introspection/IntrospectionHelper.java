@@ -155,9 +155,9 @@ public interface IntrospectionHelper {
      * Map the formal parameters of a type, its superclass and superinterfaces to the actual parameters of the class.
      *
      * @param type the class whose parameters should be mapped
-     * @return a mapping of formal type parameters to actual types
+     * @param typeMapping the type mapping to update
      */
-    TypeMapping mapTypeParameters(Class<?> type);
+    void mapTypeParameters(Class<?> type, TypeMapping typeMapping);       
 
     /**
      * Returns the base type for the supplied type.

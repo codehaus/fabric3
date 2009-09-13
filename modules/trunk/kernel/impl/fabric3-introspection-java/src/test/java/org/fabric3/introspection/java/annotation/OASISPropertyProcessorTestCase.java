@@ -51,16 +51,12 @@ import junit.framework.TestCase;
 import org.oasisopen.sca.annotation.Property;
 
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
-import org.fabric3.introspection.java.annotation.OASISPropertyProcessor;
-import org.fabric3.introspection.java.annotation.InvalidAccessor;
-import org.fabric3.introspection.java.annotation.InvalidMethod;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
 
 @SuppressWarnings("unchecked")
 public class OASISPropertyProcessorTestCase extends TestCase {
@@ -70,8 +66,7 @@ public class OASISPropertyProcessorTestCase extends TestCase {
     public void testInvalidMethodAccessor() throws Exception {
         Method method = TestPrivateClass.class.getDeclaredMethod("setRequiredProperty", String.class);
         Property annotation = method.getAnnotation(Property.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitMethod(annotation, method, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
@@ -81,8 +76,7 @@ public class OASISPropertyProcessorTestCase extends TestCase {
     public void testInvalidFieldAccessor() throws Exception {
         Field field = TestPrivateClass.class.getDeclaredField("requiredProperty");
         Property annotation = field.getAnnotation(Property.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitField(annotation, field, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
@@ -92,8 +86,7 @@ public class OASISPropertyProcessorTestCase extends TestCase {
     public void testInvalidParameters() throws Exception {
         Method method = TestPrivateClass.class.getDeclaredMethod("setNoParamsProperty");
         Property annotation = method.getAnnotation(Property.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitMethod(annotation, method, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());

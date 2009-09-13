@@ -93,9 +93,10 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
             context.addError(failure);
             return;
         }
-        TypeMapping typeMapping = helper.mapTypeParameters(implClass);
 
-        IntrospectionContext newContext = new DefaultIntrospectionContext(context, typeMapping);
+        TypeMapping mapping = context.getTypeMapping();
+        helper.mapTypeParameters(implClass, mapping);
+        IntrospectionContext newContext = new DefaultIntrospectionContext(context);
 
         try {
             classWalker.walk(implementation, implClass, newContext);

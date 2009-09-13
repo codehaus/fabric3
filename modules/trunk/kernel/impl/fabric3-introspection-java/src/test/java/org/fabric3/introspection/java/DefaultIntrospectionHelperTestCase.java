@@ -55,7 +55,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.fabric3.introspection.java.contract.DefaultContractProcessor;
-import org.fabric3.introspection.java.DefaultIntrospectionHelper;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
@@ -255,7 +254,7 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
         Set<Method> expected = Collections.emptySet();
         Set<ServiceDefinition> services = new HashSet<ServiceDefinition>();
         IntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract contract = new DefaultContractProcessor(helper).introspect(new TypeMapping(), InterfaceWithSetter.class, context);
+        ServiceContract contract = new DefaultContractProcessor(helper).introspect(InterfaceWithSetter.class, context);
         ServiceDefinition definition = new ServiceDefinition("InterfaceWithSetter", contract);
         services.add(definition);
         assertEquals(expected, helper.getInjectionMethods(InjectionWithInterface.class, services));
@@ -264,7 +263,9 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         helper = new DefaultIntrospectionHelper();
-        baseMapping = helper.mapTypeParameters(BaseTypes.class);
-        boundMapping = helper.mapTypeParameters(BoundTypes.class);
+        baseMapping = new TypeMapping();
+        helper.mapTypeParameters(BaseTypes.class, baseMapping);
+        boundMapping = new TypeMapping();
+        helper.mapTypeParameters(BoundTypes.class, boundMapping);
     }
 }

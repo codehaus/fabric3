@@ -133,7 +133,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     @SuppressWarnings({"unchecked"})
     public void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader classLoader) throws InstallException {
         URL url = resource.getUrl();
-        IntrospectionContext childContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, classLoader, url);
         Composite composite;
         try {
             // check to see if the resoruce has already been evaluated

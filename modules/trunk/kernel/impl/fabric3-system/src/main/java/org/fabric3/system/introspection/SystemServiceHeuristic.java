@@ -47,9 +47,8 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.system.model.SystemImplementation;
 
@@ -69,7 +68,6 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
 
     public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        TypeMapping typeMapping = context.getTypeMapping();
 
         // if the service contracts have not already been defined then introspect them
         if (componentType.getServices().isEmpty()) {
@@ -79,12 +77,12 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
             // if the class does not implement any interfaces, then the class itself is the service contract
             // we don't have to worry about proxies because all wires to system components are optimized
             if (interfaces.isEmpty()) {
-                ServiceDefinition serviceDefinition = createServiceDefinition(implClass, typeMapping, context);
+                ServiceDefinition serviceDefinition = createServiceDefinition(implClass, context);
                 componentType.add(serviceDefinition);
             } else {
                 // otherwise, expose all of the implemented interfaces
                 for (Class<?> serviceInterface : interfaces) {
-                    ServiceDefinition serviceDefinition = createServiceDefinition(serviceInterface, typeMapping, context);
+                    ServiceDefinition serviceDefinition = createServiceDefinition(serviceInterface, context);
                     componentType.add(serviceDefinition);
                 }
             }
@@ -99,8 +97,8 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
         }
     }
 
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
+    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, IntrospectionContext context) {
+        ServiceContract contract = contractProcessor.introspect(serviceInterface, context);
         ServiceDefinition service = new ServiceDefinition(contract.getInterfaceName(), contract);
         service.setManagement(serviceInterface.isAnnotationPresent(Management.class));
         return service;

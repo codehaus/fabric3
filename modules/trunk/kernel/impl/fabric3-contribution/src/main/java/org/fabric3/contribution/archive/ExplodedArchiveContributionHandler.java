@@ -93,7 +93,7 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
             URL manifestUrl = new URL(sourceUrl.toString() + "/META-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(uri, cl);
             manifest = loader.load(manifestUrl, ContributionManifest.class, childContext);
             if (childContext.hasErrors()) {
                 context.addErrors(childContext.getErrors());

@@ -107,7 +107,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
 
     @SuppressWarnings({"unchecked"})
     private ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
+        ServiceContract contract = contractProcessor.introspect(serviceInterface, context);
         ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
         Annotation[] annotations = serviceInterface.getAnnotations();
         if (policyProcessor != null) {

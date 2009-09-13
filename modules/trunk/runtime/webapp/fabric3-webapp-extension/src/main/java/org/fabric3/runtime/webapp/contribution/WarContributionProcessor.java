@@ -123,7 +123,7 @@ public class WarContributionProcessor implements ContributionProcessor {
 
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(uri, cl);
             ContributionManifest manifest = loader.load(manifestURL, ContributionManifest.class, childContext);
             if (childContext.hasErrors()) {
                 context.addErrors(childContext.getErrors());

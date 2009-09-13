@@ -112,7 +112,7 @@ public class WarContributionHandler implements ArchiveContributionHandler {
             URL manifestURL = new URL("jar:" + sourceUrl.toExternalForm() + "!/WEB-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(uri, cl);
             manifest = loader.load(manifestURL, ContributionManifest.class, childContext);
             if (childContext.hasErrors()) {
                 context.addErrors(childContext.getErrors());

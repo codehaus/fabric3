@@ -99,52 +99,47 @@ public class DefaultContractProcessor implements ContractProcessor {
         this.operationIntrospectors = operationIntrospectors;
     }
 
-    public JavaServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
+    public JavaServiceContract introspect(Type type, IntrospectionContext context) {
         if (type instanceof Class) {
-            return introspect(typeMapping, (Class<?>) type, context);
+            return introspect((Class<?>) type, context);
         } else {
             throw new UnsupportedOperationException("Interface introspection is only supported for classes");
         }
     }
 
-    private JavaServiceContract introspect(TypeMapping typeMapping, Class<?> interfaze, IntrospectionContext context) {
-        JavaServiceContract contract = introspectInterface(typeMapping, interfaze, context);
+    private JavaServiceContract introspect(Class<?> interfaze, IntrospectionContext context) {
+        JavaServiceContract contract = introspectInterface(interfaze, context);
         Callback callback = interfaze.getAnnotation(Callback.class);
         if (callback != null) {
             Class<?> callbackClass = callback.value();
-            processCallback(typeMapping, interfaze, callbackClass, context, contract);
+            processCallback(interfaze, callbackClass, contract, context);
         } else {
             org.oasisopen.sca.annotation.Callback oasisCallback = interfaze.getAnnotation(org.oasisopen.sca.annotation.Callback.class);
             if (oasisCallback != null) {
                 Class<?> callbackClass = oasisCallback.value();
-                processCallback(typeMapping, interfaze, callbackClass, context, contract);
+                processCallback(interfaze, callbackClass, contract, context);
             }
         }
         return contract;
     }
 
-    private void processCallback(TypeMapping typeMapping,
-                                 Class<?> interfaze,
-                                 Class<?> callbackClass,
-                                 IntrospectionContext context,
-                                 JavaServiceContract contract) {
+    private void processCallback(Class<?> interfaze, Class<?> callbackClass, JavaServiceContract contract, IntrospectionContext context) {
         if (Void.class.equals(callbackClass)) {
             context.addError(new MissingCallback(interfaze));
             return;
         }
-        JavaServiceContract callbackContract = introspectInterface(typeMapping, callbackClass, context);
+        JavaServiceContract callbackContract = introspectInterface(callbackClass, context);
         contract.setCallbackContract(callbackContract);
     }
 
     /**
      * Introspects a class, returning its service contract. Errors and warnings are reported in the ValidationContext.
      *
-     * @param typeMapping generics mappings
-     * @param interfaze   the interface to introspect
-     * @param context     the current validation context to report errors
+     * @param interfaze the interface to introspect
+     * @param context   the current validation context to report errors
      * @return the service contract
      */
-    private JavaServiceContract introspectInterface(TypeMapping typeMapping, Class<?> interfaze, IntrospectionContext context) {
+    private JavaServiceContract introspectInterface(Class<?> interfaze, IntrospectionContext context) {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
         contract.setInterfaceName(interfaze.getSimpleName());
 
@@ -155,7 +150,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
-        List<Operation> operations = getOperations(typeMapping, interfaze, remotable, conversational, context);
+        List<Operation> operations = getOperations(interfaze, remotable, conversational, context);
         contract.setOperations(operations);
         for (InterfaceIntrospector introspector : interfaceIntrospectors) {
             introspector.introspect(contract, interfaze, context);
@@ -163,11 +158,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         return contract;
     }
 
-    private <T> List<Operation> getOperations(TypeMapping typeMapping,
-                                                 Class<T> type,
-                                                 boolean remotable,
-                                                 boolean conversational,
-                                                 IntrospectionContext context) {
+    private <T> List<Operation> getOperations(Class<T> type, boolean remotable, boolean conversational, IntrospectionContext context) {
         Method[] methods = type.getMethods();
         List<Operation> operations = new ArrayList<Operation>(methods.length);
         for (Method method : methods) {
@@ -199,7 +190,7 @@ public class DefaultContractProcessor implements ContractProcessor {
             } else if (conversational) {
                 conversationSequence = Operation.CONVERSATION_CONTINUE;
             }
-
+            TypeMapping typeMapping = context.getTypeMapping();
             Type actualReturnType = typeMapping.getActualType(returnType);
             DataType<Type> returnDataType = new DataType<Type>(actualReturnType, actualReturnType);
             List<DataType<?>> paramDataTypes = new ArrayList<DataType<?>>(paramTypes.length);

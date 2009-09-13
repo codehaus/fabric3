@@ -120,7 +120,7 @@ public class ImplementationCompositeLoader extends AbstractExtensibleTypeLoader<
                 introspectionContext.addError(failure);
                 return impl;
             }
-            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, cl, url);
             Composite composite;
             try {
                 composite = registry.load(url, Composite.class, childContext);
@@ -151,7 +151,7 @@ public class ImplementationCompositeLoader extends AbstractExtensibleTypeLoader<
                 introspectionContext.addError(failure);
                 return impl;
             }
-            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, cl, url);
             Composite composite;
             try {
                 composite = registry.load(url, Composite.class, childContext);

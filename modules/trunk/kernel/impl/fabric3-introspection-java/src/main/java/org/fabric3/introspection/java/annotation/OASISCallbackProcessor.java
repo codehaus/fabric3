@@ -83,7 +83,7 @@ public class OASISCallbackProcessor<I extends Implementation<? extends Injecting
         String name = helper.getSiteName(field, null);
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        CallbackDefinition definition = createDefinition(name, type, context.getTypeMapping(), context);
+        CallbackDefinition definition = createDefinition(name, type, context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -93,7 +93,7 @@ public class OASISCallbackProcessor<I extends Implementation<? extends Injecting
         String name = helper.getSiteName(method, null);
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        CallbackDefinition definition = createDefinition(name, type, context.getTypeMapping(), context);
+        CallbackDefinition definition = createDefinition(name, type, context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -116,9 +116,10 @@ public class OASISCallbackProcessor<I extends Implementation<? extends Injecting
         }
     }
 
-    private CallbackDefinition createDefinition(String name, Type type, TypeMapping typeMapping, IntrospectionContext context) {
+    private CallbackDefinition createDefinition(String name, Type type, IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping();
         Type baseType = helper.getBaseType(type, typeMapping);
-        ServiceContract contract = contractProcessor.introspect(typeMapping, baseType, context);
+        ServiceContract contract = contractProcessor.introspect(baseType, context);
         return new CallbackDefinition(name, contract);
     }
 }

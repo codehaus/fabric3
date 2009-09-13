@@ -48,7 +48,6 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
@@ -78,7 +77,6 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
 
     public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        TypeMapping typeMapping = context.getTypeMapping();
 
         // if any services have been defined, then there's nothing to do
         if (!componentType.getServices().isEmpty()) {
@@ -89,17 +87,17 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
         Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
         if (interfaces.size() == 1) {
             Class<?> service = interfaces.iterator().next();
-            ServiceDefinition serviceDefinition = createServiceDefinition(service, typeMapping, implClass, context);
+            ServiceDefinition serviceDefinition = createServiceDefinition(service, implClass, context);
             componentType.add(serviceDefinition);
         } else {
-            ServiceDefinition serviceDefinition = createServiceDefinition(implClass, typeMapping, implClass, context);
+            ServiceDefinition serviceDefinition = createServiceDefinition(implClass, implClass, context);
             componentType.add(serviceDefinition);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, Class<?> implClass, IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
+    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, Class<?> implClass, IntrospectionContext context) {
+        ServiceContract contract = contractProcessor.introspect(serviceInterface, context);
 
         ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
         Annotation[] annotations = serviceInterface.getAnnotations();

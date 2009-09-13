@@ -82,8 +82,9 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             WebArtifactImplementation artifactImpl = new WebArtifactImplementation();
             InjectingComponentType type = new InjectingComponentType(artifact.getName());
             artifactImpl.setComponentType(type);
-            TypeMapping typeMapping = helper.mapTypeParameters(artifact);
-            IntrospectionContext childContext = new DefaultIntrospectionContext(context, typeMapping);
+            TypeMapping mapping = context.getTypeMapping();
+            helper.mapTypeParameters(artifact, mapping);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(context);
             classWalker.walk(artifactImpl, artifact, childContext);
             if (childContext.hasErrors()) {
                 context.addErrors(childContext.getErrors());

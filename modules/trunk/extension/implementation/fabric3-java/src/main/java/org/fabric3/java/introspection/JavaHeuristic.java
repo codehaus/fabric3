@@ -159,7 +159,6 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             throw new AssertionError(e);
         }
 
-        TypeMapping typeMapping = context.getTypeMapping();
         Type[] parameterTypes = constructor.getGenericParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
             InjectionSite site = new ConstructorInjectionSite(constructor, i);
@@ -172,14 +171,13 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             Type parameterType = parameterTypes[i];
             String name = helper.getSiteName(constructor, i, null);
             Annotation[] annotations = constructor.getParameterAnnotations()[i];
-            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
+            processSite(componentType, name, parameterType, site, annotations, context);
         }
     }
 
     private void evaluateSetters(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
-        TypeMapping typeMapping = context.getTypeMapping();
         Set<Method> setters = helper.getInjectionMethods(implClass, componentType.getServices().values());
         for (Method setter : setters) {
             InjectionSite site = new MethodInjectionSite(setter, 0);
@@ -192,14 +190,13 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             String name = helper.getSiteName(setter, null);
             Type parameterType = setter.getGenericParameterTypes()[0];
             Annotation[] annotations = setter.getAnnotations();
-            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
+            processSite(componentType, name, parameterType, site, annotations, context);
         }
     }
 
     private void evaluateFields(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
-        TypeMapping typeMapping = context.getTypeMapping();
         Set<Field> fields = helper.getInjectionFields(implClass);
         for (Field field : fields) {
             InjectionSite site = new FieldInjectionSite(field);
@@ -212,25 +209,25 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             String name = helper.getSiteName(field, null);
             Type parameterType = field.getGenericType();
             Annotation[] annotations = field.getAnnotations();
-            processSite(componentType, typeMapping, name, parameterType, site, annotations, context);
+            processSite(componentType, name, parameterType, site, annotations, context);
         }
     }
 
 
     private void processSite(InjectingComponentType componentType,
-                             TypeMapping typeMapping,
                              String name,
                              Type parameterType,
                              InjectionSite site,
                              Annotation[] annotations,
                              IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping();
         InjectableAttributeType type = helper.inferType(parameterType, typeMapping);
         switch (type) {
         case PROPERTY:
-            addProperty(componentType, typeMapping, name, parameterType, site);
+            addProperty(componentType, name, parameterType, site, context);
             break;
         case REFERENCE:
-            addReference(componentType, typeMapping, name, parameterType, site, annotations, context);
+            addReference(componentType, name, parameterType, site, annotations, context);
             break;
         case CALLBACK:
             context.addError(new UnknownInjectionType(site, type, componentType.getImplClass()));
@@ -240,21 +237,22 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
         }
     }
 
-    private void addProperty(InjectingComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
+    private void addProperty(InjectingComponentType componentType, String name, Type type, InjectionSite site, IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping();
         Property property = new Property(name, null);
-        property.setMany(helper.isManyValued(typeMapping, parameterType));
+        property.setMany(helper.isManyValued(typeMapping, type));
         componentType.add(property, site);
     }
 
     @SuppressWarnings({"unchecked"})
     private void addReference(InjectingComponentType componentType,
-                              TypeMapping typeMapping,
                               String name,
                               Type parameterType,
                               InjectionSite site,
                               Annotation[] annotations,
                               IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(typeMapping, parameterType, context);
+        TypeMapping typeMapping = context.getTypeMapping();
+        ServiceContract contract = contractProcessor.introspect(parameterType, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         if (policyProcessor != null) {

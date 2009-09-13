@@ -89,7 +89,7 @@ public class ComponentLoaderPropertyTestCase extends TestCase {
         EasyMock.replay(helper);
         loader = new ComponentLoader(registry, helper);
         reader = createReader();
-        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
+        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), null, "foo", null);
     }
 
     private LoaderRegistry createRegistry() throws XMLStreamException, LoaderException {

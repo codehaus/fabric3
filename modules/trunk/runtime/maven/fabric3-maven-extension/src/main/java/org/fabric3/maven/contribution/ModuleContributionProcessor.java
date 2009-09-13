@@ -117,7 +117,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             URL manifestURL = new URL(sourceUrl.toExternalForm() + "/classes/META-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(uri, cl);
             manifest = loader.load(manifestURL, ContributionManifest.class, childContext);
             if (childContext.hasErrors()) {
                 context.addErrors(childContext.getErrors());

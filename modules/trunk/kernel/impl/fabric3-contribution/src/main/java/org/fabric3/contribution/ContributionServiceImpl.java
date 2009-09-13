@@ -79,6 +79,8 @@ import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Implementation;
+import org.fabric3.spi.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.contenttype.ContentTypeResolver;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionServiceListener;
 import org.fabric3.spi.contribution.ContributionState;
@@ -91,8 +93,6 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.introspection.validation.ValidationUtils;
-import org.fabric3.spi.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.contenttype.ContentTypeResolver;
 import org.fabric3.spi.repository.Repository;
 import org.fabric3.spi.repository.RepositoryException;
 
@@ -457,7 +457,7 @@ public class ContributionServiceImpl implements ContributionService {
         if (ContributionState.STORED != contribution.getState()) {
             throw new ContributionAlreadyInstalledException("Contribution is already installed");
         }
-        introspect(contribution);
+        processManifest(contribution);
         ClassLoader loader = contributionLoader.load(contribution);
         try {
             processContents(contribution, loader);
@@ -483,7 +483,7 @@ public class ContributionServiceImpl implements ContributionService {
     private List<URI> installInOrder(List<Contribution> contributions) throws InstallException {
         for (Contribution contribution : contributions) {
             // process any SCA manifest information, including imports and exports
-            introspect(contribution);
+            processManifest(contribution);
         }
         // order the contributions based on their dependencies
         try {
@@ -508,12 +508,12 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     /**
-     * Intospects and validates contribution.
+     * Processes the contribution manifest.
      *
      * @param contribution the contribution
      * @throws InstallException if there is an error during introspection such as an invalid contribution
      */
-    private void introspect(Contribution contribution) throws InstallException {
+    private void processManifest(Contribution contribution) throws InstallException {
         IntrospectionContext context = new DefaultIntrospectionContext();
         processorRegistry.processManifest(contribution, context);
         if (context.hasErrors()) {
@@ -543,13 +543,14 @@ public class ContributionServiceImpl implements ContributionService {
      */
     private void processContents(Contribution contribution, ClassLoader loader) throws InstallException {
         try {
-            IntrospectionContext context = new DefaultIntrospectionContext();
+            URI contributionUri = contribution.getUri();
+            IntrospectionContext context = new DefaultIntrospectionContext(contributionUri, loader);
             processorRegistry.indexContribution(contribution, context);
             if (context.hasErrors()) {
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             metaDataStore.store(contribution);
-            context = new DefaultIntrospectionContext();
+            context = new DefaultIntrospectionContext(contributionUri, loader);
             processorRegistry.processContribution(contribution, context, loader);
             validateContribution(contribution, context);
             if (context.hasErrors()) {

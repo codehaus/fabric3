@@ -59,46 +59,57 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
     private TypeMapping typeMapping;
 
     public DefaultIntrospectionContext() {
+        this.typeMapping = new TypeMapping();
     }
 
-    public DefaultIntrospectionContext(ClassLoader targetClassLoader,
+    public DefaultIntrospectionContext(URI contributionUri,
+                                       ClassLoader classLoader,
                                        URL sourceBase,
                                        String targetNamespace,
-                                       URI contributionUri,
                                        TypeMapping typeMapping) {
-        this.targetClassLoader = targetClassLoader;
+        this.targetClassLoader = classLoader;
         this.sourceBase = sourceBase;
         this.targetNamespace = targetNamespace;
         this.contributionUri = contributionUri;
-        this.typeMapping = typeMapping;
-    }
-
-    public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader, String targetNamespace) {
-        this(classLoader, null, targetNamespace, contributionUri, null);
+        if (typeMapping == null) {
+            this.typeMapping = new TypeMapping();
+        } else {
+            this.typeMapping = typeMapping;
+        }
     }
 
     /**
-     * Constructor defining properties of this context.
+     * Constructor.
      *
-     * @param classLoader     the classloader for loading application resources
      * @param contributionUri the active contribution URI
+     * @param classLoader     the classloader for loading application resources
+     */
+    public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader) {
+        this(contributionUri, classLoader, null, null, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param contributionUri the active contribution URI
+     * @param classLoader     the classloader for loading application resources
      * @param scdlLocation    the location of the SCDL defining this composite
      */
-    public DefaultIntrospectionContext(ClassLoader classLoader, URI contributionUri, URL scdlLocation) {
-        this(classLoader, scdlLocation, null, contributionUri, null);
+    public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader, URL scdlLocation) {
+        this(contributionUri, classLoader, scdlLocation, null, null);
     }
 
     /**
-     * Initializes from a parent context.
+     * Initializes from a parent context, overriding the target namespace.
      *
      * @param parentContext   Parent context.
      * @param targetNamespace Target namespace.
      */
     public DefaultIntrospectionContext(IntrospectionContext parentContext, String targetNamespace) {
-        this(parentContext.getTargetClassLoader(),
+        this(parentContext.getContributionUri(),
+             parentContext.getTargetClassLoader(),
              parentContext.getSourceBase(),
              targetNamespace,
-             parentContext.getContributionUri(),
              parentContext.getTypeMapping());
     }
 
@@ -106,14 +117,13 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
      * Initializes from a parent context.
      *
      * @param parentContext Parent context.
-     * @param typeMapping   mapping of formal types
      */
-    public DefaultIntrospectionContext(IntrospectionContext parentContext, TypeMapping typeMapping) {
-        this(parentContext.getTargetClassLoader(),
+    public DefaultIntrospectionContext(IntrospectionContext parentContext) {
+        this(parentContext.getContributionUri(),
+             parentContext.getTargetClassLoader(),
              parentContext.getSourceBase(),
              parentContext.getTargetNamespace(),
-             parentContext.getContributionUri(),
-             typeMapping);
+             parentContext.getTypeMapping());
     }
 
     public boolean hasErrors() {
@@ -158,6 +168,10 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
 
     public String getTargetNamespace() {
         return targetNamespace;
+    }
+
+    public void setTargetNamespace(String targetNamespace) {
+        this.targetNamespace = targetNamespace;
     }
 
     public URI getContributionUri() {

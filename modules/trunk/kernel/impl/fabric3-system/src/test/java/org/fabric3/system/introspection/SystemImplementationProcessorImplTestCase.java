@@ -92,7 +92,7 @@ public class SystemImplementationProcessorImplTestCase extends TestCase {
         IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);
         helper.loadClass(EasyMock.isA(String.class), EasyMock.isA(ClassLoader.class));
         EasyMock.expectLastCall().andReturn(Simple.class);
-        EasyMock.expect(helper.mapTypeParameters(EasyMock.isA(Class.class))).andReturn(new TypeMapping());
+        helper.mapTypeParameters(EasyMock.isA(Class.class), (TypeMapping) EasyMock.isNull());
         EasyMock.replay(helper);
 
 

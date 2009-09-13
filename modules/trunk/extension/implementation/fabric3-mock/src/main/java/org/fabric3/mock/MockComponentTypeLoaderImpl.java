@@ -47,9 +47,8 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.MissingResource;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -63,7 +62,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
         IntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract controlServiceContract = introspect(IMocksControl.class, context);
+        ServiceContract controlServiceContract = contractProcessor.introspect(IMocksControl.class, context);
         assert !context.hasErrors(); // should not happen
         controlService = new ServiceDefinition("mockControl", controlServiceContract);
     }
@@ -71,26 +70,27 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
     /**
      * Loads the mock component type.
      *
-     * @param mockedInterfaces     Interfaces that need to be mocked.
-     * @param introspectionContext Loader context.
+     * @param mockedInterfaces Interfaces that need to be mocked.
+     * @param context          Loader context.
      * @return Mock component type.
      */
-    public MockComponentType load(List<String> mockedInterfaces, IntrospectionContext introspectionContext) {
+    public MockComponentType load(List<String> mockedInterfaces, IntrospectionContext context) {
 
         MockComponentType componentType = new MockComponentType();
 
-        ClassLoader classLoader = introspectionContext.getTargetClassLoader();
+        ClassLoader classLoader = context.getTargetClassLoader();
         for (String mockedInterface : mockedInterfaces) {
             Class<?> interfaceClass;
             try {
                 interfaceClass = classLoader.loadClass(mockedInterface);
             } catch (ClassNotFoundException e) {
                 MissingResource failure = new MissingResource("Mock interface not found: " + mockedInterface, mockedInterface);
-                introspectionContext.addError(failure);
+                context.addError(failure);
                 continue;
             }
 
-            ServiceContract serviceContract = introspect(interfaceClass, introspectionContext);
+            ServiceContract serviceContract = contractProcessor.introspect(interfaceClass, context);
+
             String name = interfaceClass.getName();
             int index = name.lastIndexOf('.');
             if (index != -1) {
@@ -102,13 +102,6 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
         componentType.setScope("STATELESS");
 
         return componentType;
-
-
-    }
-
-    private ServiceContract introspect(Class<?> interfaceClass, IntrospectionContext context) {
-        TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
-        return contractProcessor.introspect(typeMapping, interfaceClass, context);
     }
 
 }

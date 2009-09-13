@@ -39,7 +39,6 @@ package org.fabric3.binding.ftp.introspection;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -89,7 +88,7 @@ public class FtpBindingLoaderTestCase extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        context = new DefaultIntrospectionContext((URI) null, null, null);
+        context = new DefaultIntrospectionContext();
 
         LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);

@@ -44,7 +44,6 @@
 package org.fabric3.introspection.java.annotation;
 
 import java.lang.reflect.Method;
-import java.net.URI;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -54,8 +53,6 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.annotation.OASISInitProcessor;
-import org.fabric3.introspection.java.annotation.InvalidMethod;
 
 @SuppressWarnings("unchecked")
 public class OASISInitProcessorTestCase extends TestCase {
@@ -65,7 +62,7 @@ public class OASISInitProcessorTestCase extends TestCase {
         Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
         OASISInitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new OASISInitProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         processor.visitMethod(annotation, TestInvalidInitClass.class.getDeclaredMethod("init"), new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidMethod);
@@ -76,7 +73,7 @@ public class OASISInitProcessorTestCase extends TestCase {
         Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
         OASISInitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new OASISInitProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         TestImplementation impl = new TestImplementation();
         InjectingComponentType componentType = new InjectingComponentType() {
 
@@ -93,7 +90,7 @@ public class OASISInitProcessorTestCase extends TestCase {
         Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
         OASISInitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new OASISInitProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         TestImplementation impl = new TestImplementation();
         InjectingComponentType componentType = new InjectingComponentType() {
 

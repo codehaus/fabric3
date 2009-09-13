@@ -64,19 +64,19 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
         EasyMock.replay(context);
 
         IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);
-        EasyMock.expect(helper.mapTypeParameters(EasyMock.isA(Class.class))).andReturn(new TypeMapping()).atLeastOnce();
+        helper.mapTypeParameters(EasyMock.isA(Class.class), (TypeMapping) EasyMock.isNull());
         EasyMock.expect(helper.isAnnotationPresent(EasyMock.isA(Class.class), EasyMock.isA(Class.class))).andReturn(false).atLeastOnce();
         EasyMock.replay(helper);
 
         ContractProcessor processor = EasyMock.createMock(ContractProcessor.class);
         JavaServiceContract controlContract = new JavaServiceContract(IMocksControl.class);
         JavaServiceContract fooContract = new JavaServiceContract(Foo.class);
-        EasyMock.expect(processor.introspect(EasyMock.isA(TypeMapping.class),
-                                             EasyMock.eq(IMocksControl.class),
-                                             EasyMock.isA(IntrospectionContext.class))).andReturn(controlContract);
-        EasyMock.expect(processor.introspect(EasyMock.isA(TypeMapping.class),
-                                             EasyMock.eq(Foo.class),
-                                             EasyMock.isA(IntrospectionContext.class))).andReturn(fooContract);
+        EasyMock.expect(processor.introspect(
+                EasyMock.eq(IMocksControl.class),
+                EasyMock.isA(IntrospectionContext.class))).andReturn(controlContract);
+        EasyMock.expect(processor.introspect(
+                EasyMock.eq(Foo.class),
+                EasyMock.isA(IntrospectionContext.class))).andReturn(fooContract);
         EasyMock.replay(processor);
 
         MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(helper, processor);

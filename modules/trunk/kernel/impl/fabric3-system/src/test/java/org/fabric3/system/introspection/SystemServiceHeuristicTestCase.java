@@ -59,7 +59,6 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.system.model.SystemImplementation;
 
@@ -78,12 +77,11 @@ public class SystemServiceHeuristicTestCase extends TestCase {
     private JavaServiceContract serviceInterfaceContract;
     private JavaServiceContract noInterfaceContract;
     private IMocksControl control;
-    private TypeMapping typeMapping;
 
     public void testNoInterface() throws IntrospectionException {
         EasyMock.expect(helper.getImplementedInterfaces(NoInterface.class)).andReturn(NOCLASSES);
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, typeMapping);
-        EasyMock.expect(contractProcessor.introspect(typeMapping, NoInterface.class, context)).andReturn(noInterfaceContract);
+        IntrospectionContext context = new DefaultIntrospectionContext();
+        EasyMock.expect(contractProcessor.introspect(NoInterface.class, context)).andReturn(noInterfaceContract);
         control.replay();
 
         heuristic.applyHeuristics(impl, NoInterface.class, context);
@@ -97,9 +95,9 @@ public class SystemServiceHeuristicTestCase extends TestCase {
         Set<Class<?>> interfaces = new HashSet<Class<?>>();
         interfaces.add(ServiceInterface.class);
 
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, typeMapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         EasyMock.expect(helper.getImplementedInterfaces(OneInterface.class)).andReturn(interfaces);
-        EasyMock.expect(contractProcessor.introspect(typeMapping, ServiceInterface.class, context)).andReturn(
+        EasyMock.expect(contractProcessor.introspect(ServiceInterface.class, context)).andReturn(
                 serviceInterfaceContract);
         control.replay();
 
@@ -142,9 +140,8 @@ public class SystemServiceHeuristicTestCase extends TestCase {
         serviceInterfaceContract = createServiceContract(ServiceInterface.class);
 
         control = EasyMock.createControl();
-        typeMapping = new TypeMapping();
         context = control.createMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(null);
         contractProcessor = control.createMock(ContractProcessor.class);
         helper = control.createMock(IntrospectionHelper.class);
         heuristic = new SystemServiceHeuristic(contractProcessor, helper);

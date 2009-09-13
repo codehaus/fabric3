@@ -37,7 +37,6 @@
 */
 package org.fabric3.jpa.introspection;
 
-import java.net.URI;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContextType;
 import javax.xml.namespace.QName;
@@ -57,7 +56,6 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
@@ -80,7 +78,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
     public JpaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor, @Reference ContractProcessor contractProcessor) {
         this.implementationProcessor = implementationProcessor;
         IntrospectionContext context = new DefaultIntrospectionContext();
-        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class, context);
+        factoryServiceContract = contractProcessor.introspect(EntityManager.class, context);
         assert !context.hasErrors();  // should not happen
     }
 
@@ -105,19 +103,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
 
             implementation.setImplementationClass(ConversationalDaoImpl.class.getName());
 
-            URI contributionUri = context.getContributionUri();
-            String targetNs = context.getTargetNamespace();
-            ClassLoader cl = getClass().getClassLoader();
-
-            IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, cl, targetNs);
-            implementationProcessor.introspect(implementation, childContext);
-            if (childContext.hasErrors()) {
-                context.addErrors(childContext.getErrors());
-            }
-            if (childContext.hasWarnings()) {
-                context.addWarnings(childContext.getWarnings());
-            }
-
+            implementationProcessor.introspect(implementation, context);
             InjectingComponentType pojoComponentType = implementation.getComponentType();
 
             PersistenceContextResource resource = new PersistenceContextResource(

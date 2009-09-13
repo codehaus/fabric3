@@ -79,7 +79,8 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        Property property = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        TypeMapping typeMapping = context.getTypeMapping();
+        Property property = createDefinition(name, annotation.required(), type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
 
@@ -91,7 +92,8 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        Property property = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        TypeMapping typeMapping = context.getTypeMapping();
+        Property property = createDefinition(name, annotation.required(), type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
 
@@ -144,7 +146,8 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
-        Property property = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        TypeMapping typeMapping = context.getTypeMapping();
+        Property property = createDefinition(name, annotation.required(), type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
 

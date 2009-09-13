@@ -67,7 +67,7 @@ public class RemotableProcessor<I extends Implementation<? extends InjectingComp
     }
 
     public void visitType(Remotable annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        ServiceContract serviceContract = contractProcessor.introspect(context.getTypeMapping(), type, context);
+        ServiceContract serviceContract = contractProcessor.introspect(type, context);
         ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
         implementation.getComponentType().add(definition);
     }

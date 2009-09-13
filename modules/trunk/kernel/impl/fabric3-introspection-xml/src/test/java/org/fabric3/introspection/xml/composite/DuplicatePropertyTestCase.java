@@ -94,7 +94,7 @@ public class DuplicatePropertyTestCase extends TestCase {
         EasyMock.replay(helper);
         loader = new CompositeLoader(registry, createPropertyLoader(), helper);
         reader = createReader();
-        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
+        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), null, "foo", null);
     }
 
 

@@ -53,9 +53,8 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -75,7 +74,7 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context.getTypeMapping(), context);
+        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -83,7 +82,7 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context.getTypeMapping(), context);
+        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -91,9 +90,8 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
                                          Type type,
                                          boolean optional,
                                          String mappedName,
-                                         TypeMapping typeMapping,
                                          IntrospectionContext context) {
-        ServiceContract serviceContract = contractProcessor.introspect(typeMapping, type, context);
+        ServiceContract serviceContract = contractProcessor.introspect(type, context);
         return new SystemSourcedResource(name, optional, mappedName, serviceContract);
     }
 }

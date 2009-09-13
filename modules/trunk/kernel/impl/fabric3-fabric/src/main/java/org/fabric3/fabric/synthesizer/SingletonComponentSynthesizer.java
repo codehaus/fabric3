@@ -52,22 +52,21 @@ import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.cm.ComponentManager;
+import org.fabric3.spi.cm.RegistrationException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.spi.cm.ComponentManager;
-import org.fabric3.spi.cm.RegistrationException;
-import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.synthesize.InvalidServiceContractException;
@@ -154,8 +153,8 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
 
         String implClassName = instance.getClass().getName();
 
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, null, null, mapping);
+        ClassLoader loader = getClass().getClassLoader();
+        IntrospectionContext context = new DefaultIntrospectionContext(BOOT_CONTRIBUTION, loader);
         if (introspect) {
             // introspect the instance so it may be injected by the runtime with additional services
             SystemImplementation implementation = new SystemImplementation();
@@ -168,7 +167,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             return def;
         } else {
             // instance does not have any services injected
-            ServiceContract contract = contractProcessor.introspect(mapping, type, context);
+            ServiceContract contract = contractProcessor.introspect(type, context);
             if (context.hasErrors()) {
                 throw new InvalidServiceContractException(context.getErrors());
             }

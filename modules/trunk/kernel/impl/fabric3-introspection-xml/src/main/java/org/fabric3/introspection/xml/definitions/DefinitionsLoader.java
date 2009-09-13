@@ -68,7 +68,6 @@ import org.fabric3.spi.contribution.Symbol;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoader;
 import org.fabric3.spi.contribution.xml.XmlResourceElementLoaderRegistry;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
@@ -112,8 +111,9 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
 
         validateAttributes(reader, context);
         List<AbstractDefinition> definitions = new ArrayList<AbstractDefinition>();
+        String oldNamespace = context.getTargetNamespace();
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
-        IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, loader, targetNamespace);
+        context.setTargetNamespace(targetNamespace);
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
@@ -121,25 +121,25 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                 AbstractDefinition definition = null;
                 if (INTENT.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, Intent.class, childContext);
+                        definition = loaderRegistry.load(reader, Intent.class, context);
                     } catch (UnrecognizedElementException e) {
                         throw new InstallException(e);
                     }
                 } else if (POLICY_SET.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, PolicySet.class, childContext);
+                        definition = loaderRegistry.load(reader, PolicySet.class, context);
                     } catch (UnrecognizedElementException e) {
                         throw new InstallException(e);
                     }
                 } else if (BINDING_TYPE.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, BindingType.class, childContext);
+                        definition = loaderRegistry.load(reader, BindingType.class, context);
                     } catch (UnrecognizedElementException e) {
                         throw new InstallException(e);
                     }
                 } else if (IMPLEMENTATION_TYPE.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, ImplementationType.class, childContext);
+                        definition = loaderRegistry.load(reader, ImplementationType.class, context);
                     } catch (UnrecognizedElementException e) {
                         throw new InstallException(e);
                     }
@@ -169,12 +169,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                         expandQualifiers((Intent) candidate, resource);
                     }
                 }
-                if (childContext.hasErrors()) {
-                    context.addErrors(childContext.getErrors());
-                }
-                if (childContext.hasWarnings()) {
-                    context.addWarnings(childContext.getWarnings());
-                }
+                context.setTargetNamespace(oldNamespace);
                 return;
             }
         }

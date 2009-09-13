@@ -55,7 +55,6 @@ import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 
@@ -71,7 +70,7 @@ public class PersistenceContextProcessor<I extends Implementation<? extends Inje
     public PersistenceContextProcessor(@Reference ContractProcessor contractProcessor) {
         super(PersistenceContext.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
-        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class, context);
+        factoryServiceContract = contractProcessor.introspect(EntityManager.class, context);
         assert !context.hasErrors(); // should not happen
     }
 

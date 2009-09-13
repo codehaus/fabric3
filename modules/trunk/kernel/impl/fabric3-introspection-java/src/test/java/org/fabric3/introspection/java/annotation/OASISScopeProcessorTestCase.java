@@ -43,7 +43,6 @@
  */
 package org.fabric3.introspection.java.annotation;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -53,8 +52,6 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.annotation.OASISScopeProcessor;
-import org.fabric3.introspection.java.annotation.InvalidScope;
 
 @SuppressWarnings("unchecked")
 public class OASISScopeProcessorTestCase extends TestCase {
@@ -65,7 +62,7 @@ public class OASISScopeProcessorTestCase extends TestCase {
         Scope annotation = componentToProcess.getClass().getAnnotation(Scope.class);
         OASISScopeProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new OASISScopeProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         processor.visitType(annotation, ScopeAnnotated.class, new TestImplementation(), context);
         assertTrue(context.getErrors().get(0) instanceof InvalidScope);
     }

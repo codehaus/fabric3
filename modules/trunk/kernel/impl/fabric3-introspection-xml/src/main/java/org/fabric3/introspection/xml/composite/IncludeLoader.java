@@ -180,7 +180,7 @@ public class IncludeLoader extends AbstractExtensibleTypeLoader<Include> {
 
     private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url, XMLStreamReader reader, IntrospectionContext context) {
         Include include = new Include();
-        IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, cl, url);
         Composite composite;
         try {
             composite = registry.load(url, Composite.class, childContext);

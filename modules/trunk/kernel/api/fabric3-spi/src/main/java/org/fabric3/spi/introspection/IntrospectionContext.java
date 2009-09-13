@@ -43,8 +43,8 @@
  */
 package org.fabric3.spi.introspection;
 
-import java.net.URI;
 import java.net.URL;
+import java.net.URI;
 import java.util.List;
 
 import org.fabric3.host.contribution.ValidationFailure;
@@ -58,6 +58,13 @@ import org.fabric3.host.contribution.ValidationFailure;
  * @version $Rev$ $Date$
  */
 public interface IntrospectionContext {
+
+    /**
+     * Returns the active contribution URI.
+     *
+     * @return the active contribution URI
+     */
+    URI getContributionUri();
 
     /**
      * Returns true if the validation has detected any fatal errors.
@@ -108,7 +115,6 @@ public interface IntrospectionContext {
      */
     void addWarning(ValidationFailure e);
 
-
     /**
      * Add a collection of non-fatal warnings to the validation results.
      *
@@ -124,9 +130,9 @@ public interface IntrospectionContext {
     ClassLoader getTargetClassLoader();
 
     /**
-     * Returns the location of the SCDL definition being deployed.
+     * Returns the location of the composite being deployed.
      *
-     * @return the location of the SCDL definition being deployed
+     * @return the location of the composite being deployed. This may return null if the source is not a dereferenceable artifact.
      */
     URL getSourceBase();
 
@@ -138,17 +144,16 @@ public interface IntrospectionContext {
     String getTargetNamespace();
 
     /**
-     * Returns the active contribution URI.
+     * Sets the current target namespace
      *
-     * @return the active contribution URI
+     * @param namespace the namespace to set
      */
-    URI getContributionUri();
+    void setTargetNamespace(String namespace);
 
     /**
      * Returns the mappings from formal to actual types for the component being introspected.
      *
      * @return the mappings from formal to actual types for the component being introspected
      */
-    @Deprecated
     TypeMapping getTypeMapping();
 }

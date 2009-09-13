@@ -53,7 +53,6 @@ import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
@@ -81,24 +80,23 @@ public class ServiceProcessor<I extends Implementation<? extends InjectingCompon
     }
 
     public void visitType(Service annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping();
         InjectingComponentType componentType = implementation.getComponentType();
 
         for (Class<?> service : annotation.interfaces()) {
-            ServiceDefinition definition = createDefinition(service, typeMapping, type, context);
+            ServiceDefinition definition = createDefinition(service, type, context);
             componentType.add(definition);
         }
 
         Class<?> service = annotation.value();
         if (!Void.class.equals(service)) {
-            ServiceDefinition definition = createDefinition(service, typeMapping, type, context);
+            ServiceDefinition definition = createDefinition(service, type, context);
             componentType.add(definition);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    private ServiceDefinition createDefinition(Class<?> service, TypeMapping typeMapping, Class<?> implClass, IntrospectionContext context) {
-        ServiceContract serviceContract = contractProcessor.introspect(typeMapping, service, context);
+    private ServiceDefinition createDefinition(Class<?> service, Class<?> implClass, IntrospectionContext context) {
+        ServiceContract serviceContract = contractProcessor.introspect(service, context);
         ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
         Annotation[] annotations = service.getAnnotations();
         if (policyProcessor != null) {

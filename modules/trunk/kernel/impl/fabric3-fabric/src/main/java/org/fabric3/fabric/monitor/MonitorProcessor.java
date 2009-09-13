@@ -59,9 +59,8 @@ import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -81,7 +80,7 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
         String name = helper.getSiteName(field, null);
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        MonitorResource resource = createDefinition(name, type, context.getTypeMapping(), context);
+        MonitorResource resource = createDefinition(name, type, context);
         implementation.getComponentType().add(resource, site);
     }
 
@@ -89,7 +88,7 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
         String name = helper.getSiteName(method, null);
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        MonitorResource resource = createDefinition(name, type, context.getTypeMapping(), context);
+        MonitorResource resource = createDefinition(name, type, context);
         implementation.getComponentType().add(resource, site);
     }
 
@@ -97,13 +96,13 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
         String name = helper.getSiteName(constructor, index, null);
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
-        MonitorResource resource = createDefinition(name, type, context.getTypeMapping(), context);
+        MonitorResource resource = createDefinition(name, type, context);
         implementation.getComponentType().add(resource, site);
     }
 
 
-    MonitorResource createDefinition(String name, Type type, TypeMapping typeMapping, IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(typeMapping, type, context);
+    MonitorResource createDefinition(String name, Type type, IntrospectionContext context) {
+        ServiceContract contract = contractProcessor.introspect(type, context);
         return new MonitorResource(name, false, contract);
     }
 }

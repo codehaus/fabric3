@@ -51,8 +51,6 @@ import junit.framework.TestCase;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
-import org.fabric3.introspection.java.annotation.PropertyProcessor;
-import org.fabric3.introspection.java.annotation.InvalidAccessor;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
@@ -68,8 +66,7 @@ public class PropertyProcessorTestCase extends TestCase {
     public void testWarningMethodAccessor() throws Exception {
         Method method = TestPrivateClass.class.getDeclaredMethod("setProperty", String.class);
         Property annotation = method.getAnnotation(Property.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitMethod(annotation, method, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
@@ -79,8 +76,7 @@ public class PropertyProcessorTestCase extends TestCase {
     public void testInvalidMethodAccessor() throws Exception {
         Method method = TestPrivateClass.class.getDeclaredMethod("setRequiredProperty", String.class);
         Property annotation = method.getAnnotation(Property.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitMethod(annotation, method, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
@@ -90,8 +86,7 @@ public class PropertyProcessorTestCase extends TestCase {
     public void testWarningFieldAccessor() throws Exception {
         Field field = TestPrivateClass.class.getDeclaredField("property");
         Property annotation = field.getAnnotation(Property.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitField(annotation, field, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
@@ -101,8 +96,7 @@ public class PropertyProcessorTestCase extends TestCase {
     public void testInvalidFieldAccessor() throws Exception {
         Field field = TestPrivateClass.class.getDeclaredField("requiredProperty");
         Property annotation = field.getAnnotation(Property.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitField(annotation, field, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());

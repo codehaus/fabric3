@@ -69,8 +69,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     public void testInvalidMethodAccessor() throws Exception {
         Method method = TestPrivateClass.class.getDeclaredMethod("setRequiredReference", TestPrivateClass.class);
         Reference annotation = method.getAnnotation(Reference.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitMethod(annotation, method, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
@@ -80,8 +79,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     public void testWarningMethodAccessor() throws Exception {
         Method method = TestPrivateClass.class.getDeclaredMethod("setReference", TestPrivateClass.class);
         Reference annotation = method.getAnnotation(Reference.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitMethod(annotation, method, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
@@ -91,8 +89,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     public void testInvalidFieldAccessor() throws Exception {
         Field field = TestPrivateClass.class.getDeclaredField("requiredFieldReference");
         Reference annotation = field.getAnnotation(Reference.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitField(annotation, field, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
@@ -102,8 +99,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     public void testWarningFieldAccessor() throws Exception {
         Field field = TestPrivateClass.class.getDeclaredField("fieldReference");
         Reference annotation = field.getAnnotation(Reference.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitField(annotation, field, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
@@ -149,7 +145,7 @@ public class ReferenceProcessorTestCase extends TestCase {
 
         ContractProcessor contractProcessor = new ContractProcessor() {
 
-            public JavaServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
+            public JavaServiceContract introspect(Type type, IntrospectionContext context) {
                 return contract;
             }
         };

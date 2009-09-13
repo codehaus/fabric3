@@ -44,7 +44,6 @@
 package org.fabric3.introspection.java.annotation;
 
 import java.lang.reflect.Method;
-import java.net.URI;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -55,8 +54,6 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.annotation.InitProcessor;
-import org.fabric3.introspection.java.annotation.InvalidAccessor;
 
 @SuppressWarnings("unchecked")
 public class InitProcessorTestCase extends TestCase {
@@ -66,7 +63,7 @@ public class InitProcessorTestCase extends TestCase {
         Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
         InitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new InitProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         processor.visitMethod(annotation, TestInvalidInitClass.class.getDeclaredMethod("init"), new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
         assertTrue(context.getWarnings().get(0) instanceof InvalidAccessor);
@@ -77,7 +74,7 @@ public class InitProcessorTestCase extends TestCase {
         Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
         InitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new InitProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         TestImplementation impl = new TestImplementation();
         InjectingComponentType componentType = new InjectingComponentType() {
 

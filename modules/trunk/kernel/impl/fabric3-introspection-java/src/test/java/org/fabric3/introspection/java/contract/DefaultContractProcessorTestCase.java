@@ -58,7 +58,6 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
@@ -66,12 +65,10 @@ import org.fabric3.spi.introspection.java.contract.ContractProcessor;
  */
 public class DefaultContractProcessorTestCase extends TestCase {
     private ContractProcessor impl;
-    private TypeMapping boundMapping;
-    private TypeMapping emptyMapping;
 
     public void testSimpleInterface() {
         IntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract contract = impl.introspect(emptyMapping, Simple.class, context);
+        ServiceContract contract = impl.introspect(Simple.class, context);
         assertEquals("Simple", contract.getInterfaceName());
         assertEquals(Simple.class.getName(), contract.getQualifiedInterfaceName());
         List<Operation> operations = contract.getOperations();
@@ -98,7 +95,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
 
     public void testBoundGenericInterface() {
         IntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract contract = impl.introspect(boundMapping, Generic.class, context);
+        ServiceContract contract = impl.introspect(Generic.class, context);
         assertEquals("Generic", contract.getInterfaceName());
 
         List<Operation> operations = contract.getOperations();
@@ -119,7 +116,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
 
     public void testMethodGeneric() {
         IntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract contract = impl.introspect(boundMapping, Generic.class, context);
+        ServiceContract contract = impl.introspect(Generic.class, context);
         List<Operation> operations = contract.getOperations();
         Operation operation = null;
         for (Operation op : operations) {
@@ -139,7 +136,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     public void testCallbackInterface() {
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        ServiceContract contract = impl.introspect(emptyMapping, ForwardInterface.class, context);
+        ServiceContract contract = impl.introspect(ForwardInterface.class, context);
         ServiceContract callback = contract.getCallbackContract();
         assertEquals("CallbackInterface", callback.getInterfaceName());
         assertEquals(CallbackInterface.class.getName(), callback.getQualifiedInterfaceName());
@@ -152,7 +149,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     public void testConversationalInformationIntrospection() throws Exception {
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        ServiceContract contract = impl.introspect(emptyMapping, Foo.class, context);
+        ServiceContract contract = impl.introspect(Foo.class, context);
         assertTrue(contract.isConversational());
         boolean testedContinue = false;
         boolean testedEnd = false;
@@ -172,7 +169,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     public void testNonConversationalInformationIntrospection() throws Exception {
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        ServiceContract contract = impl.introspect(emptyMapping, NonConversationalFoo.class, context);
+        ServiceContract contract = impl.introspect(NonConversationalFoo.class, context);
         assertFalse(contract.isConversational());
         boolean tested = false;
         for (Operation operation : contract.getOperations()) {
@@ -188,7 +185,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     public void testInvalidConversationalAttribute() throws Exception {
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        impl.introspect(emptyMapping, BadConversation.class, context);
+        impl.introspect(BadConversation.class, context);
         assertTrue(context.getErrors().get(0) instanceof InvalidConversationalOperation);
     }
 
@@ -211,9 +208,6 @@ public class DefaultContractProcessorTestCase extends TestCase {
         super.setUp();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         impl = new DefaultContractProcessor(helper);
-        emptyMapping = new TypeMapping();
-        boundMapping = helper.mapTypeParameters(BoundImpl.class);
-
     }
 
     private static interface Base {

@@ -45,14 +45,12 @@ import org.easymock.EasyMock;
 import org.fabric3.api.annotation.security.RolesAllowed;
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
 import org.fabric3.introspection.java.contract.DefaultContractProcessor;
-import org.fabric3.introspection.java.policy.DefaultOperationPolicyIntrospector;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
+import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -70,7 +68,7 @@ public class DefaultOperationPolicyIntrospectorTestCase extends TestCase {
         DefaultOperationPolicyIntrospector introspector = new DefaultOperationPolicyIntrospector(processor);
 
         DefaultIntrospectionContext context = new DefaultIntrospectionContext();
-        ServiceContract contract = contractProcessor.introspect(new TypeMapping(), TestService.class, context);
+        ServiceContract contract = contractProcessor.introspect(TestService.class, context);
         introspector.introspectPolicyOnOperations(contract, TestServiceImpl.class, context);
         EasyMock.verify(processor);
     }

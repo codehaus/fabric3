@@ -264,7 +264,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
                               InjectionSite site,
                               Annotation[] annotations,
                               IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(typeMapping, parameterType, context);
+        ServiceContract contract = contractProcessor.introspect(parameterType, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         if (policyProcessor != null) {

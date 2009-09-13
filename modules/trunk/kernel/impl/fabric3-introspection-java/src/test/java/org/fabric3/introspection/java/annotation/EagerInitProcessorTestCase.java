@@ -43,7 +43,6 @@
  */
 package org.fabric3.introspection.java.annotation;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -54,8 +53,6 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.annotation.EagerInitProcessor;
-import org.fabric3.introspection.java.annotation.EagerInitNotSupported;
 
 @SuppressWarnings("unchecked")
 public class EagerInitProcessorTestCase extends TestCase {
@@ -65,7 +62,7 @@ public class EagerInitProcessorTestCase extends TestCase {
         EagerInit annotation = componentToProcess.getClass().getAnnotation(EagerInit.class);
         EagerInitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new EagerInitProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext();
         processor.visitType(annotation, TestClass.class, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
         assertTrue(context.getWarnings().get(0) instanceof EagerInitNotSupported);

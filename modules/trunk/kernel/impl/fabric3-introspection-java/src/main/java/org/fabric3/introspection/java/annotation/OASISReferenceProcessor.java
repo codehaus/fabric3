@@ -123,7 +123,7 @@ public class OASISReferenceProcessor<I extends Implementation<? extends Injectin
     ReferenceDefinition createDefinition(String name, boolean required, Type type, Annotation[] annotations, IntrospectionContext context) {
         TypeMapping typeMapping = context.getTypeMapping();
         Type baseType = helper.getBaseType(type, typeMapping);
-        ServiceContract contract = contractProcessor.introspect(typeMapping, baseType, context);
+        ServiceContract contract = contractProcessor.introspect(baseType, context);
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);
         ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
         if (policyProcessor != null) {

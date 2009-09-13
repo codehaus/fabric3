@@ -59,7 +59,6 @@ import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
 @SuppressWarnings("unchecked")
@@ -69,8 +68,7 @@ public class OASISCallbackProcessorTestCase extends TestCase {
     public void testInvalidMethodAccessor() throws Exception {
         Method method = TestPrivateClass.class.getDeclaredMethod("setCallback", TestPrivateClass.class);
         Callback annotation = method.getAnnotation(Callback.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitMethod(annotation, method, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
@@ -80,8 +78,7 @@ public class OASISCallbackProcessorTestCase extends TestCase {
     public void testInvalidFieldAccessor() throws Exception {
         Field field = TestPrivateClass.class.getDeclaredField("callbackField");
         Callback annotation = field.getAnnotation(Callback.class);
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, mapping);
+        IntrospectionContext context = new DefaultIntrospectionContext();
 
         processor.visitField(annotation, field, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
@@ -119,7 +116,7 @@ public class OASISCallbackProcessorTestCase extends TestCase {
 
         ContractProcessor contractProcessor = new ContractProcessor() {
 
-            public JavaServiceContract introspect(TypeMapping typeMapping, Type type, IntrospectionContext context) {
+            public JavaServiceContract introspect(Type type, IntrospectionContext context) {
                 return contract;
             }
         };

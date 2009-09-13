@@ -122,7 +122,7 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
             Loader loader = BootstrapLoaderFactory.createLoader(processor, monitorFactory, getXmlFactory());
 
             // load the system composite
-            IntrospectionContext introspectionContext = new DefaultIntrospectionContext(bootClassLoader, contributionUri, scdlLocation);
+            IntrospectionContext introspectionContext = new DefaultIntrospectionContext(contributionUri, bootClassLoader, scdlLocation);
             Composite composite = loader.load(scdlLocation, Composite.class, introspectionContext);
             if (introspectionContext.hasErrors()) {
                 QName name = composite.getName();
