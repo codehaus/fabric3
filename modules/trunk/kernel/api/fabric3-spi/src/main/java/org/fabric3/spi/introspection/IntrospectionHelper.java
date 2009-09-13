@@ -138,6 +138,13 @@ public interface IntrospectionHelper {
      */
     boolean isManyValued(TypeMapping typeMapping, Type type);
 
+    /**
+     * Returns the attribute type of the given type
+     *
+     * @param type        the type to infer
+     * @param typeMapping the type mapping for resolved parameters
+     * @return the attribute type
+     */
     InjectableAttributeType inferType(Type type, TypeMapping typeMapping);
 
     /**
@@ -152,12 +159,12 @@ public interface IntrospectionHelper {
     boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType);
 
     /**
-     * Map the formal parameters of a type, its superclass and superinterfaces to the actual parameters of the class.
+     * Resolves the formal parameters of a class, its superclass and superinterfaces to the concrete types.
      *
-     * @param type the class whose parameters should be mapped
-     * @param typeMapping the type mapping to update
+     * @param type        the class whose parameters should be resolved
+     * @param typeMapping the type mapping to update with resolved types
      */
-    void mapTypeParameters(Class<?> type, TypeMapping typeMapping);       
+    void resolveTypeParameters(Class<?> type, TypeMapping typeMapping);
 
     /**
      * Returns the base type for the supplied type.

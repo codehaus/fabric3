@@ -104,7 +104,7 @@ public class SystemImplementationProcessorImpl implements ImplementationProcesso
             return;
         }
         TypeMapping mapping = context.getTypeMapping();
-        helper.mapTypeParameters(implClass, mapping);
+        helper.resolveTypeParameters(implClass, mapping);
 
         IntrospectionContext childContext = new DefaultIntrospectionContext(context);
         classWalker.walk(implementation, implClass, childContext);

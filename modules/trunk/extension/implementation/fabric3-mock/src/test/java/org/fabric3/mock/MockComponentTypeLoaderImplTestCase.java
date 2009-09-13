@@ -64,7 +64,7 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
         EasyMock.replay(context);
 
         IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);
-        helper.mapTypeParameters(EasyMock.isA(Class.class), (TypeMapping) EasyMock.isNull());
+        helper.resolveTypeParameters(EasyMock.isA(Class.class), (TypeMapping) EasyMock.isNull());
         EasyMock.expect(helper.isAnnotationPresent(EasyMock.isA(Class.class), EasyMock.isA(Class.class))).andReturn(false).atLeastOnce();
         EasyMock.replay(helper);
 

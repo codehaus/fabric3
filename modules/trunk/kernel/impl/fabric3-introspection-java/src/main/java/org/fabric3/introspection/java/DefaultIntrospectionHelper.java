@@ -362,7 +362,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return fields;
     }
 
-    public void mapTypeParameters(Class<?> type, TypeMapping mapping) {
+    public void resolveTypeParameters(Class<?> type, TypeMapping mapping) {
         while (type != null) {
             addTypeBindings(mapping, type.getGenericSuperclass());
             for (Type interfaceType : type.getGenericInterfaces()) {

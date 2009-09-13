@@ -95,7 +95,7 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
         }
 
         TypeMapping mapping = context.getTypeMapping();
-        helper.mapTypeParameters(implClass, mapping);
+        helper.resolveTypeParameters(implClass, mapping);
         IntrospectionContext newContext = new DefaultIntrospectionContext(context);
 
         try {

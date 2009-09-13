@@ -264,8 +264,8 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
         super.setUp();
         helper = new DefaultIntrospectionHelper();
         baseMapping = new TypeMapping();
-        helper.mapTypeParameters(BaseTypes.class, baseMapping);
+        helper.resolveTypeParameters(BaseTypes.class, baseMapping);
         boundMapping = new TypeMapping();
-        helper.mapTypeParameters(BoundTypes.class, boundMapping);
+        helper.resolveTypeParameters(BoundTypes.class, boundMapping);
     }
 }
