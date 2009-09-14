@@ -28,8 +28,8 @@
         <f3-impl:implementation.system class="org.fabric3.introspection.java.contract.DefaultContractProcessor"/>
     </component>
 
-    <component name="ClassWalker">
-        <f3-impl:implementation.system class="org.fabric3.introspection.java.DefaultClassWalker"/>
+    <component name="ClassVisitor">
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.DefaultClassVisitor"/>
     </component>
 
     <component name="OperationPolicyIntrospector">

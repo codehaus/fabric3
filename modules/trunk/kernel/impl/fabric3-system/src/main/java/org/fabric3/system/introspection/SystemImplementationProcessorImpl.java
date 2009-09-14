@@ -50,7 +50,7 @@ import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.spi.introspection.java.annotation.InvalidImplementation;
@@ -63,14 +63,14 @@ import org.fabric3.system.model.SystemImplementation;
  * @version $Rev$ $Date$
  */
 public class SystemImplementationProcessorImpl implements ImplementationProcessor<SystemImplementation> {
-    private final ClassWalker<SystemImplementation> classWalker;
+    private final ClassVisitor<SystemImplementation> classVisitor;
     private final HeuristicProcessor<SystemImplementation> heuristic;
     private final IntrospectionHelper helper;
 
-    public SystemImplementationProcessorImpl(@Reference(name = "classWalker") ClassWalker<SystemImplementation> classWalker,
+    public SystemImplementationProcessorImpl(@Reference(name = "classVisitor") ClassVisitor<SystemImplementation> classVisitor,
                                              @Reference(name = "heuristic") HeuristicProcessor<SystemImplementation> heuristic,
                                              @Reference(name = "helper") IntrospectionHelper helper) {
-        this.classWalker = classWalker;
+        this.classVisitor = classVisitor;
         this.heuristic = heuristic;
         this.helper = helper;
     }
@@ -109,7 +109,7 @@ public class SystemImplementationProcessorImpl implements ImplementationProcesso
         }
         helper.resolveTypeParameters(implClass, mapping);
 
-        classWalker.walk(implementation, implClass, context);
+        classVisitor.visit(implementation, implClass, context);
 
         heuristic.applyHeuristics(implementation, implClass, context);
     }

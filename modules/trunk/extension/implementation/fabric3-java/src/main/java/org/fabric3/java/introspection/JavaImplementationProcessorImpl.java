@@ -45,7 +45,7 @@ import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.InvalidImplementation;
 
@@ -53,14 +53,14 @@ import org.fabric3.spi.introspection.java.annotation.InvalidImplementation;
  * @version $Rev$ $Date$
  */
 public class JavaImplementationProcessorImpl implements JavaImplementationProcessor {
-    private final ClassWalker<JavaImplementation> classWalker;
+    private final ClassVisitor<JavaImplementation> classVisitor;
     private final HeuristicProcessor<JavaImplementation> heuristic;
     private final IntrospectionHelper helper;
 
-    public JavaImplementationProcessorImpl(@Reference(name = "classWalker") ClassWalker<JavaImplementation> classWalker,
+    public JavaImplementationProcessorImpl(@Reference(name = "classVisitor") ClassVisitor<JavaImplementation> classVisitor,
                                            @Reference(name = "heuristic") HeuristicProcessor<JavaImplementation> heuristic,
                                            @Reference(name = "helper") IntrospectionHelper helper) {
-        this.classWalker = classWalker;
+        this.classVisitor = classVisitor;
         this.heuristic = heuristic;
         this.helper = helper;
     }
@@ -101,7 +101,7 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
         helper.resolveTypeParameters(implClass, mapping);
 
         try {
-            classWalker.walk(implementation, implClass, context);
+            classVisitor.visit(implementation, implClass, context);
             heuristic.applyHeuristics(implementation, implClass, context);
         } catch (NoClassDefFoundError e) {
             // May be thrown as a result of a referenced class not being on the classpath

@@ -42,7 +42,7 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
- * Interface for processing an implementation to introspect its component type.
+ * Introspects a Java-based implementation.
  *
  * @version $Rev$ $Date$
  * @param <I>            the type of Implementation an implementation can handle

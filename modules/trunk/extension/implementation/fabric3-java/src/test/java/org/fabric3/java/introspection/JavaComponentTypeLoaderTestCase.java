@@ -46,7 +46,7 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 
 /**
@@ -55,7 +55,7 @@ import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 public class JavaComponentTypeLoaderTestCase extends TestCase {
 
     private JavaImplementationProcessorImpl loader;
-    private ClassWalker<JavaImplementation> classWalker;
+    private ClassVisitor<JavaImplementation> classVisitor;
     private IntrospectionContext context;
     private JavaImplementation impl;
     private HeuristicProcessor<JavaImplementation> heuristic;
@@ -64,7 +64,7 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
     public void testSimple() throws IntrospectionException {
         impl.setImplementationClass(Simple.class.getName());
 
-        classWalker.walk(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
+        classVisitor.visit(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
         heuristic.applyHeuristics(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
         control.replay();
         loader.introspect(impl, context);
@@ -94,9 +94,9 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
         EasyMock.replay(context);
 
         control = EasyMock.createControl();
-        classWalker = control.createMock(ClassWalker.class);
+        classVisitor = control.createMock(ClassVisitor.class);
         heuristic = control.createMock(HeuristicProcessor.class);
 
-        this.loader = new JavaImplementationProcessorImpl(classWalker, heuristic, helper);
+        this.loader = new JavaImplementationProcessorImpl(classVisitor, heuristic, helper);
     }
 }

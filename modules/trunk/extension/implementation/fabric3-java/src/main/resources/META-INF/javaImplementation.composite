@@ -25,7 +25,6 @@ Public License. See the accompanying license file for details.
 
     <component name="JavaImplementationProcessorImpl">
         <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaImplementationProcessorImpl"/>
-        <reference name="classWalker" target="ClassWalker"/>
         <reference name="heuristic" target="JavaHeuristic"/>
     </component>
 

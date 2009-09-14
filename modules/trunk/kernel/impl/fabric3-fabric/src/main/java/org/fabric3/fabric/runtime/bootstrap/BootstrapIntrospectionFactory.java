@@ -49,7 +49,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.fabric.monitor.MonitorProcessor;
-import org.fabric3.introspection.java.DefaultClassWalker;
+import org.fabric3.introspection.java.DefaultClassVisitor;
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
 import org.fabric3.introspection.java.annotation.DestroyProcessor;
 import org.fabric3.introspection.java.annotation.EagerInitProcessor;
@@ -65,7 +65,7 @@ import org.fabric3.introspection.java.contract.DefaultContractProcessor;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AnnotationProcessor;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
 import org.fabric3.system.introspection.SystemConstructorHeuristic;
 import org.fabric3.system.introspection.SystemHeuristic;
@@ -112,7 +112,7 @@ public class BootstrapIntrospectionFactory {
         // F3 annotations
         processors.put(Monitor.class, new MonitorProcessor<SystemImplementation>(helper, contractProcessor));
 
-        ClassWalker<SystemImplementation> classWalker = new DefaultClassWalker<SystemImplementation>(processors);
+        ClassVisitor<SystemImplementation> classVisitor = new DefaultClassVisitor<SystemImplementation>(processors);
 
         // heuristics for system components
         SystemServiceHeuristic serviceHeuristic = new SystemServiceHeuristic(contractProcessor, helper);
@@ -120,7 +120,7 @@ public class BootstrapIntrospectionFactory {
         SystemUnannotatedHeuristic unannotatedHeuristic = new SystemUnannotatedHeuristic(helper, contractProcessor);
         SystemHeuristic systemHeuristic = new SystemHeuristic(serviceHeuristic, constructorHeuristic, unannotatedHeuristic);
 
-        return new SystemImplementationProcessorImpl(classWalker, systemHeuristic, helper);
+        return new SystemImplementationProcessorImpl(classVisitor, systemHeuristic, helper);
     }
 
 }

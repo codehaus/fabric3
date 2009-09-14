@@ -48,7 +48,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
  * @version $Rev$ $Date$
  * @param <I> the type of implementation that the clas is for
  */
-public interface ClassWalker<I extends Implementation<? extends InjectingComponentType>> {
+public interface ClassVisitor<I extends Implementation<? extends InjectingComponentType>> {
     /**
      * Walk a class and update the implementation definition. If errors or warnings are encountered, they will be collated in the
      * IntrospectionContext.
@@ -57,5 +57,5 @@ public interface ClassWalker<I extends Implementation<? extends InjectingCompone
      * @param clazz          the Java class to walk
      * @param context        the current introspection context
      */
-    void walk(I implementation, Class<?> clazz, IntrospectionContext context);
+    void visit(I implementation, Class<?> clazz, IntrospectionContext context);
 }

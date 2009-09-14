@@ -55,14 +55,15 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.AnnotationProcessor;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 
 /**
- * Default ClassWalker implementation.
+ * Default ClassVisitor implementation.
+ *
  * @version $Rev$ $Date$
  */
-public class DefaultClassWalker<I extends Implementation<? extends InjectingComponentType>> implements ClassWalker<I> {
+public class DefaultClassVisitor<I extends Implementation<? extends InjectingComponentType>> implements ClassVisitor<I> {
 
     private Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors;
     private PolicyAnnotationProcessor policyProcessor;
@@ -72,7 +73,7 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
      *
      * @param processors the generic annotation processors
      */
-    public DefaultClassWalker(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
+    public DefaultClassVisitor(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
         this.processors = processors;
     }
 
@@ -80,7 +81,7 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
      * Constructor.
      */
     @org.osoa.sca.annotations.Constructor
-    public DefaultClassWalker() {
+    public DefaultClassVisitor() {
     }
 
     @Reference
@@ -93,11 +94,11 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
         this.policyProcessor = processor;
     }
 
-    public void walk(I implementation, Class<?> clazz, IntrospectionContext context) {
+    public void visit(I implementation, Class<?> clazz, IntrospectionContext context) {
         walk(implementation, clazz, clazz, false, context);
     }
 
-    private void walk(I implementation, Class<?> clazz, Class<?> implClass,  boolean isSuperClass, IntrospectionContext context) {
+    private void walk(I implementation, Class<?> clazz, Class<?> implClass, boolean isSuperClass, IntrospectionContext context) {
         if (!clazz.isInterface()) {
             walkSuperClasses(implementation, clazz, implClass, context);
         }

@@ -46,21 +46,21 @@ import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JUnitImplementationProcessorImpl implements JUnitImplementationProcessor {
-    private final ClassWalker<JUnitImplementation> classWalker;
+    private final ClassVisitor<JUnitImplementation> classVisitor;
     private final HeuristicProcessor<JUnitImplementation> heuristic;
     private final IntrospectionHelper helper;
 
-    public JUnitImplementationProcessorImpl(@Reference(name = "classWalker") ClassWalker<JUnitImplementation> classWalker,
+    public JUnitImplementationProcessorImpl(@Reference(name = "classVisitor") ClassVisitor<JUnitImplementation> classVisitor,
                                             @Reference(name = "heuristic") HeuristicProcessor<JUnitImplementation> heuristic,
                                             @Reference(name = "helper") IntrospectionHelper helper) {
-        this.classWalker = classWalker;
+        this.classVisitor = classVisitor;
         this.heuristic = heuristic;
         this.helper = helper;
     }
@@ -93,7 +93,7 @@ public class JUnitImplementationProcessorImpl implements JUnitImplementationProc
         }
         helper.resolveTypeParameters(implClass, mapping);
 
-        classWalker.walk(implementation, implClass, context);
+        classVisitor.visit(implementation, implClass, context);
 
         heuristic.applyHeuristics(implementation, implClass, context);
 

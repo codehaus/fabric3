@@ -50,7 +50,7 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.web.model.WebImplementation;
 
 /**
@@ -59,14 +59,14 @@ import org.fabric3.web.model.WebImplementation;
  * @version $Rev$ $Date$
  */
 public class WebImplementationIntrospectorImpl implements WebImplementationIntrospector {
-    private ClassWalker<WebArtifactImplementation> classWalker;
+    private ClassVisitor<WebArtifactImplementation> classVisitor;
     private IntrospectionHelper helper;
     private WebXmlIntrospector xmlIntrospector;
 
-    public WebImplementationIntrospectorImpl(@Reference(name = "classWalker") ClassWalker<WebArtifactImplementation> classWalker,
-                                             @Reference(name = "xmlIntrospector") WebXmlIntrospector xmlIntrospector,
-                                             @Reference(name = "helper") IntrospectionHelper helper) {
-        this.classWalker = classWalker;
+    public WebImplementationIntrospectorImpl(@Reference ClassVisitor<WebArtifactImplementation> classVisitor,
+                                             @Reference WebXmlIntrospector xmlIntrospector,
+                                             @Reference IntrospectionHelper helper) {
+        this.classVisitor = classVisitor;
         this.helper = helper;
         this.xmlIntrospector = xmlIntrospector;
     }
@@ -89,7 +89,7 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             }
             helper.resolveTypeParameters(artifact, mapping);
             IntrospectionContext childContext = new DefaultIntrospectionContext(context);
-            classWalker.walk(artifactImpl, artifact, childContext);
+            classVisitor.visit(artifactImpl, artifact, childContext);
             if (childContext.hasErrors()) {
                 context.addErrors(childContext.getErrors());
             }

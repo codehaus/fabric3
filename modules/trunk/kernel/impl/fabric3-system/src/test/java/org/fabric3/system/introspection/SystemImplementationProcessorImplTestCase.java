@@ -55,7 +55,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.annotation.ClassWalker;
+import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.system.model.SystemImplementation;
 
@@ -64,7 +64,7 @@ import org.fabric3.system.model.SystemImplementation;
  */
 public class SystemImplementationProcessorImplTestCase extends TestCase {
     private SystemImplementationProcessorImpl loader;
-    private ClassWalker<SystemImplementation> classWalker;
+    private ClassVisitor<SystemImplementation> classVisitor;
     private IntrospectionContext context;
     private SystemImplementation impl;
     private HeuristicProcessor<SystemImplementation> heuristic;
@@ -73,7 +73,7 @@ public class SystemImplementationProcessorImplTestCase extends TestCase {
     public void testSimple() throws IntrospectionException {
         impl.setImplementationClass(Simple.class.getName());
 
-        classWalker.walk(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
+        classVisitor.visit(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
         heuristic.applyHeuristics(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
         control.replay();
         loader.introspect(impl, context);
@@ -104,9 +104,9 @@ public class SystemImplementationProcessorImplTestCase extends TestCase {
         context.addTypeMapping(Simple.class, mapping);
 
         control = EasyMock.createControl();
-        classWalker = control.createMock(ClassWalker.class);
+        classVisitor = control.createMock(ClassVisitor.class);
         heuristic = control.createMock(HeuristicProcessor.class);
 
-        this.loader = new SystemImplementationProcessorImpl(classWalker, heuristic, helper);
+        this.loader = new SystemImplementationProcessorImpl(classVisitor, heuristic, helper);
     }
 }
