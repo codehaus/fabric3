@@ -61,10 +61,10 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 public class RsImplementationLoader implements TypeLoader<JavaImplementation> {
 
     private final LoaderHelper loaderHelper;
-    private final ImplementationProcessor processor;
+    private final ImplementationProcessor<JavaImplementation> processor;
     private final RsHeuristic rsHeuristic;
 
-    public RsImplementationLoader(@Reference(name = "implementationProcessor") ImplementationProcessor processor,
+    public RsImplementationLoader(@Reference(name = "implementationProcessor") ImplementationProcessor<JavaImplementation> processor,
                                   @Reference(name = "RsHeuristic") RsHeuristic rsHeuristic,
                                   @Reference LoaderHelper loaderHelper) {
         this.processor = processor;
@@ -75,24 +75,24 @@ public class RsImplementationLoader implements TypeLoader<JavaImplementation> {
     public JavaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String className = reader.getAttributeValue(null, "class");
-        String webApp = reader.getAttributeValue(null, "uri");
-        URI webAppURI = null;
+        String uriStr = reader.getAttributeValue(null, "uri");
+        URI uri;
 
         if (className == null) {
-            MissingAttribute failure = new MissingAttribute("No class name specified", reader);
+            MissingAttribute failure = new MissingAttribute("Class name not specified", reader);
             context.addError(failure);
             return null;
         }
 
-        if (webApp == null) {
-            MissingAttribute failure = new MissingAttribute("No web application URI specified", reader);
+        if (uriStr == null) {
+            MissingAttribute failure = new MissingAttribute("URI not specified", reader);
             context.addError(failure);
             return null;
         }
         try {
-            webAppURI = new URI(webApp);
+            uri = new URI(uriStr);
         } catch (URISyntaxException ex) {
-            InvalidValue failure = new InvalidValue("invalid URI value", reader);
+            InvalidValue failure = new InvalidValue("Invalid URI value", reader);
             context.addError(failure);
             return null;
         }
@@ -102,7 +102,7 @@ public class RsImplementationLoader implements TypeLoader<JavaImplementation> {
         loaderHelper.loadPolicySetsAndIntents(impl, reader, context);
         processor.introspect(impl, context);
         LoaderUtil.skipToEndElement(reader);
-        rsHeuristic.applyHeuristics(impl, webAppURI, context);
+        rsHeuristic.applyHeuristics(impl, uri, context);
         return impl;
     }
 }
