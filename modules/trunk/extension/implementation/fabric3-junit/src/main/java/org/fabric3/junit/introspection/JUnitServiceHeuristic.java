@@ -57,7 +57,6 @@ import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
@@ -90,7 +89,6 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
         JUnitServiceContract testContract = generateTestContract(implClass);
         ServiceDefinition testService = new ServiceDefinition(TEST_SERVICE_NAME, testContract);
         InjectingComponentType componentType = implementation.getComponentType();
-        TypeMapping typeMapping = context.getTypeMapping(implClass);
         componentType.add(testService);
         // if the class implements a single interface, use it, otherwise the contract is the class itself
         Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
@@ -99,14 +97,14 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
                 if (interfaze.getCanonicalName().endsWith("Test")) {
                     continue;
                 }
-                ServiceDefinition serviceDefinition = createServiceDefinition(interfaze, typeMapping, context);
+                ServiceDefinition serviceDefinition = createServiceDefinition(interfaze, context);
                 componentType.add(serviceDefinition);
             }
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    private ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
+    private ServiceDefinition createServiceDefinition(Class<?> serviceInterface, IntrospectionContext context) {
         ServiceContract contract = contractProcessor.introspect(serviceInterface, context);
         ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
         Annotation[] annotations = serviceInterface.getAnnotations();
