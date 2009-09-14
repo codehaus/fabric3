@@ -71,7 +71,7 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);
 
-        ClassLoader cl = context.getTargetClassLoader();
+        ClassLoader cl = context.getClassLoader();
 
         Class<?> implClass;
         try {

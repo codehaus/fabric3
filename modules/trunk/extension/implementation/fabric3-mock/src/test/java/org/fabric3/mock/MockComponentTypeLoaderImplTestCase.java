@@ -60,7 +60,7 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
     public void testLoad() throws Exception {
 
         IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTargetClassLoader()).andReturn(getClass().getClassLoader());
+        EasyMock.expect(context.getClassLoader()).andReturn(getClass().getClassLoader());
         EasyMock.replay(context);
 
         IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);

@@ -77,7 +77,7 @@ public class WebXmlIntrospectorImpl implements WebXmlIntrospector {
 
     public List<Class<?>> introspectArtifactClasses(IntrospectionContext context) {
         List<Class<?>> artifacts = new ArrayList<Class<?>>();
-        ClassLoader cl = context.getTargetClassLoader();
+        ClassLoader cl = context.getClassLoader();
         Resource resource = store.resolveContainingResource(context.getContributionUri(), WEB_APP_NAMESPACE);
         if (resource == null) {
             resource = store.resolveContainingResource(context.getContributionUri(), WEB_APP_NO_NAMESPACE);

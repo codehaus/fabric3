@@ -78,7 +78,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
 
         MockComponentType componentType = new MockComponentType();
 
-        ClassLoader classLoader = context.getTargetClassLoader();
+        ClassLoader classLoader = context.getClassLoader();
         for (String mockedInterface : mockedInterfaces) {
             Class<?> interfaceClass;
             try {

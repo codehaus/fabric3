@@ -108,7 +108,7 @@ public class ImplementationCompositeLoader extends AbstractExtensibleTypeLoader<
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
 
-        ClassLoader cl = introspectionContext.getTargetClassLoader();
+        ClassLoader cl = introspectionContext.getClassLoader();
         CompositeImplementation impl = new CompositeImplementation();
         URI contributionUri = introspectionContext.getContributionUri();
         URL url;

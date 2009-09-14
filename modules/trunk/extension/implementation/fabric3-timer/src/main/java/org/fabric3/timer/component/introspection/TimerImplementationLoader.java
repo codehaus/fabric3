@@ -135,7 +135,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
         }
         implementation.setImplementationClass(implClass);
         try {
-            Class<?> clazz = context.getTargetClassLoader().loadClass(implClass);
+            Class<?> clazz = context.getClassLoader().loadClass(implClass);
             if (!(Runnable.class.isAssignableFrom(clazz))) {
                 InvalidInterface failure = new InvalidInterface(implementation);
                 context.addError(failure);

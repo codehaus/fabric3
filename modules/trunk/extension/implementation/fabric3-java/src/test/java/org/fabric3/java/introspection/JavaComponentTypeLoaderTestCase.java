@@ -90,7 +90,7 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
 
 
         context = EasyMock.createNiceMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(cl);
+        EasyMock.expect(context.getClassLoader()).andStubReturn(cl);
         EasyMock.replay(context);
 
         control = EasyMock.createControl();

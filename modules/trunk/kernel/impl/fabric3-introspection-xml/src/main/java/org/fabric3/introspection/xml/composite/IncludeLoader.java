@@ -130,7 +130,7 @@ public class IncludeLoader extends AbstractExtensibleTypeLoader<Include> {
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
 
-        ClassLoader cl = context.getTargetClassLoader();
+        ClassLoader cl = context.getClassLoader();
         URI contributionUri = context.getContributionUri();
         URL url;
         if (scdlLocation != null) {

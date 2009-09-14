@@ -81,7 +81,7 @@ public class RsHeuristicImpl implements RsHeuristic {
         RsBindingDefinition definition = (RsBindingDefinition) serviceDefinition.getBindings().get(0);
         List<Operation> operations = new ArrayList<Operation>();
 
-        ClassLoader cl = context.getTargetClassLoader();
+        ClassLoader cl = context.getClassLoader();
 
         Class<?> implClass;
         try {

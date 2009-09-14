@@ -96,7 +96,7 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(reader.next()).andReturn(END_ELEMENT);
 
         expect(context.getTargetNamespace()).andReturn(namespace);
-        expect(context.getTargetClassLoader()).andReturn(cl);
+        expect(context.getClassLoader()).andReturn(cl);
         expect(context.getContributionUri()).andReturn(null);
         QNameSymbol symbol = new QNameSymbol(name);
         Composite include = new Composite(name);
@@ -123,7 +123,7 @@ public class IncludeLoaderTestCase extends TestCase {
 
         expect(context.getSourceBase()).andReturn(base);
         expect(context.getTargetNamespace()).andReturn(namespace);
-        expect(context.getTargetClassLoader()).andReturn(cl);
+        expect(context.getClassLoader()).andReturn(cl);
         expect(context.getContributionUri()).andReturn(null);
 
         expect(registry.load(
@@ -149,7 +149,7 @@ public class IncludeLoaderTestCase extends TestCase {
 
         expect(context.getSourceBase()).andReturn(base);
         expect(context.getTargetNamespace()).andReturn(namespace);
-        expect(context.getTargetClassLoader()).andReturn(cl);
+        expect(context.getClassLoader()).andReturn(cl);
         expect(context.getContributionUri()).andReturn(null);
 
         expect(registry.load(
@@ -178,7 +178,7 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(reader.next()).andReturn(END_ELEMENT);
 
         expect(context.getTargetNamespace()).andReturn(namespace);
-        expect(context.getTargetClassLoader()).andReturn(cl);
+        expect(context.getClassLoader()).andReturn(cl);
         expect(context.getContributionUri()).andReturn(null);
 
         expect(registry.load(

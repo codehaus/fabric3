@@ -90,7 +90,7 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         }
         Class<?> interfaceClass;
         try {
-            interfaceClass = helper.loadClass(name, context.getTargetClassLoader());
+            interfaceClass = helper.loadClass(name, context.getClassLoader());
         } catch (ImplementationNotFoundException e) {
             ResourceNotFound failure = new ResourceNotFound("Interface not found: " + name, reader);
             context.addError(failure);
@@ -100,7 +100,7 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         name = reader.getAttributeValue(null, "callbackInterface");
         Class<?> callbackClass;
         try {
-            callbackClass = (name != null) ? helper.loadClass(name, context.getTargetClassLoader()) : null;
+            callbackClass = (name != null) ? helper.loadClass(name, context.getClassLoader()) : null;
         } catch (ImplementationNotFoundException e) {
             ResourceNotFound failure = new ResourceNotFound("Callback interface not found: " + name, reader);
             context.addError(failure);

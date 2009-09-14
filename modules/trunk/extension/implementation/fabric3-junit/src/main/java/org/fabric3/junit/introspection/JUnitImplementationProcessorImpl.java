@@ -71,7 +71,7 @@ public class JUnitImplementationProcessorImpl implements JUnitImplementationProc
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);
 
-        ClassLoader cl = context.getTargetClassLoader();
+        ClassLoader cl = context.getClassLoader();
         Class<?> implClass;
         try {
             implClass = helper.loadClass(implClassName, cl);

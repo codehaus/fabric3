@@ -125,7 +125,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             // this should not happen
             throw new LoaderException(e.getMessage(), e);
         }
-        IntrospectionContext childContext = new DefaultIntrospectionContext(null, context.getTargetClassLoader(), url);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(null, context.getClassLoader(), url);
         ComponentType componentType = registry.load(url, ComponentType.class, childContext);
         componentType.setScope("COMPOSITE");
         if (childContext.hasErrors()) {

@@ -81,7 +81,7 @@ public class SystemImplementationProcessorImpl implements ImplementationProcesso
         componentType.setScope("COMPOSITE");
         implementation.setComponentType(componentType);
 
-        ClassLoader cl = context.getTargetClassLoader();
+        ClassLoader cl = context.getClassLoader();
         Class<?> implClass;
         try {
             implClass = helper.loadClass(implClassName, cl);

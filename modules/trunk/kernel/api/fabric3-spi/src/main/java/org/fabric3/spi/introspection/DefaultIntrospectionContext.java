@@ -54,7 +54,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 public class DefaultIntrospectionContext implements IntrospectionContext {
     private List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
     private List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
-    private ClassLoader targetClassLoader;
+    private ClassLoader classLoader;
     private URL sourceBase;
     private String targetNamespace;
     private URI contributionUri;
@@ -75,7 +75,7 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
      * @param targetNamespace the target namespace.
      */
     public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader, URL sourceBase, String targetNamespace) {
-        this.targetClassLoader = classLoader;
+        this.classLoader = classLoader;
         this.sourceBase = sourceBase;
         this.targetNamespace = targetNamespace;
         this.contributionUri = contributionUri;
@@ -110,7 +110,7 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
      */
     public DefaultIntrospectionContext(IntrospectionContext parentContext, String targetNamespace) {
         this(parentContext.getContributionUri(),
-             parentContext.getTargetClassLoader(),
+             parentContext.getClassLoader(),
              parentContext.getSourceBase(),
              targetNamespace
         );
@@ -123,7 +123,7 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
      */
     public DefaultIntrospectionContext(IntrospectionContext parentContext) {
         this(parentContext.getContributionUri(),
-             parentContext.getTargetClassLoader(),
+             parentContext.getClassLoader(),
              parentContext.getSourceBase(),
              parentContext.getTargetNamespace());
         typeMappings.putAll(parentContext.getTypeMappings());
@@ -161,8 +161,8 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
         this.warnings.addAll(warnings);
     }
 
-    public ClassLoader getTargetClassLoader() {
-        return targetClassLoader;
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     public URL getSourceBase() {

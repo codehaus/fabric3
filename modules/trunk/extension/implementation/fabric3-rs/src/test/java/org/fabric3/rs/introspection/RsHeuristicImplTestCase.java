@@ -154,7 +154,7 @@ public class RsHeuristicImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         context = EasyMock.createMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(getClass().getClassLoader());
+        EasyMock.expect(context.getClassLoader()).andStubReturn(getClass().getClassLoader());
         impl = new JavaImplementation();
         impl.setComponentType(new InjectingComponentType());
         control = EasyMock.createControl();

@@ -124,11 +124,11 @@ public interface IntrospectionContext {
     void addWarnings(List<ValidationFailure> warnings);
 
     /**
-     * Returns a class loader that can be used to load application resources.
+     * Returns the classloader of the contributon being installed.
      *
-     * @return a class loader that can be used to load application resources
+     * @return the contribution classloader
      */
-    ClassLoader getTargetClassLoader();
+    ClassLoader getClassLoader();
 
     /**
      * Returns the location of the composite being deployed.
