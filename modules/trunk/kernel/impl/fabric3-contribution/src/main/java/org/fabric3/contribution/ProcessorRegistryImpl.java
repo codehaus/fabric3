@@ -37,13 +37,11 @@
 */
 package org.fabric3.contribution;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.contribution.Contribution;
@@ -59,10 +57,8 @@ import org.fabric3.spi.introspection.IntrospectionContext;
  * @version $Rev$ $Date$
  */
 @EagerInit
-@Service(ProcessorRegistry.class)
 public class ProcessorRegistryImpl implements ProcessorRegistry {
-    private Map<String, ContributionProcessor> contributionProcessorCache =
-            new HashMap<String, ContributionProcessor>();
+    private Map<String, ContributionProcessor> contributionProcessorCache = new HashMap<String, ContributionProcessor>();
     private Map<String, ResourceProcessor> resourceProcessorCache = new HashMap<String, ResourceProcessor>();
 
     public ProcessorRegistryImpl() {
@@ -116,24 +112,24 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.index(contribution, url, context);
     }
 
-    public void processContribution(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
+    public void processContribution(Contribution contribution, IntrospectionContext context) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
             String source = contribution.getUri().toString();
             throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
-        processor.process(contribution, context, loader);
+        processor.process(contribution, context);
     }
 
-    public void processResource(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException {
+    public void processResource(Resource resource, IntrospectionContext context) throws InstallException {
         ResourceProcessor processor = resourceProcessorCache.get(resource.getContentType());
         if (processor == null) {
             // FIXME for now, return null
             return;
             //throw new UnsupportedContentTypeException(contentType);
         }
-        processor.process(contributionUri, resource, context, loader);
+        processor.process(resource, context);
     }
 
 }

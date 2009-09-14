@@ -37,7 +37,6 @@
 */
 package org.fabric3.spi.contribution;
 
-import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.InstallException;
@@ -111,20 +110,17 @@ public interface ProcessorRegistry {
      *
      * @param contribution The contribution
      * @param context      the context to which validation errors and warnings are reported
-     * @param loader       the classloader conribution resources must be laoded in
      * @throws InstallException if there was a problem loading resources in the contribution
      */
-    void processContribution(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException;
+    void processContribution(Contribution contribution, IntrospectionContext context) throws InstallException;
 
     /**
      * Loads a contained resource in a contribution.
      *
-     * @param contributionUri the URI of the active contribution
-     * @param resource        the resource to process
-     * @param context         the context to which validation errors and warnings are reported
-     * @param loader          the classloader contribution the resource must be loaded in
+     * @param resource the resource to process
+     * @param context  the context to which validation errors and warnings are reported
      * @throws InstallException if there was a problem loading the resoure
      */
-    void processResource(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException;
+    void processResource(Resource resource, IntrospectionContext context) throws InstallException;
 
 }

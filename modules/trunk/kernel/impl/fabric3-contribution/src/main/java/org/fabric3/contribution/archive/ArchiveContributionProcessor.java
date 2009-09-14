@@ -37,7 +37,6 @@
 */
 package org.fabric3.contribution.archive;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,14 +90,14 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
 
     }
 
-    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
+    public void process(Contribution contribution, IntrospectionContext context) throws InstallException {
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
-        URI contributionUri = contribution.getUri();
+        ClassLoader loader = context.getClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(loader);
             for (Resource resource : contribution.getResources()) {
                 if (!resource.isProcessed()) {
-                    registry.processResource(contributionUri, resource, context, loader);
+                    registry.processResource(resource, context);
                 }
             }
         } finally {

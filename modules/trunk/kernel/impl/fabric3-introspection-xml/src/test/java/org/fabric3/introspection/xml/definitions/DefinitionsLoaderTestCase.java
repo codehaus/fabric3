@@ -93,7 +93,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
     public void testLoad() throws Exception {
 
         IntrospectionContext context = new DefaultIntrospectionContext();
-        loader.load(reader, null, resource, context, null);
+        loader.load(reader, resource, context);
 
         List<ResourceElement<?, ?>> elements = resource.getResourceElements();
         assertEquals(7, elements.size());

@@ -366,7 +366,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                 if (element.getSymbol().equals(symbol)) {
                     if (!resource.isProcessed()) {
                         try {
-                            processorRegistry.processResource(contributionUri, resource, context, loader);
+                            processorRegistry.processResource(resource, context);
                         } catch (ContributionException e) {
                             String identifier = resource.getUrl().toString();
                             throw new StoreException("Error resolving resource: " + identifier, identifier, e);

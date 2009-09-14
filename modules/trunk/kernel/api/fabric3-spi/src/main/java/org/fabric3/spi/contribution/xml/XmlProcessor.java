@@ -62,11 +62,9 @@ public interface XmlProcessor {
      * Processes the XML contribution
      *
      * @param contribution the contribution metadata to update
-     * @param context      the context to which validation errors and warnings are reported
      * @param reader       the reader positioned at the first element of the document
-     * @param loader       the classloader to perform resolution in
+     * @param context      the context to which validation errors and warnings are reported
      * @throws InstallException if an error occurs processing
      */
-    void processContent(Contribution contribution, IntrospectionContext context, XMLStreamReader reader, ClassLoader loader)
-            throws InstallException;
+    void processContent(Contribution contribution, XMLStreamReader reader, IntrospectionContext context) throws InstallException;
 }

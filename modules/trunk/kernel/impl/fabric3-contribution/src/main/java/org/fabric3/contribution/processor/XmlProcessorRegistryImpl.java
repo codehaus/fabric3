@@ -64,14 +64,13 @@ public class XmlProcessorRegistryImpl implements XmlProcessorRegistry {
         cache.remove(name);
     }
 
-    public void process(Contribution contribution, XMLStreamReader reader, IntrospectionContext context, ClassLoader loader)
-            throws InstallException {
+    public void process(Contribution contribution, XMLStreamReader reader, IntrospectionContext context) throws InstallException {
         QName name = reader.getName();
         XmlProcessor processor = cache.get(name);
         if (processor == null) {
             String id = name.toString();
             throw new XmlProcessorTypeNotFoundException("XML processor not found for: " + id, id);
         }
-        processor.processContent(contribution, context, reader, loader);
+        processor.processContent(contribution, reader, context);
     }
 }

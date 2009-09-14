@@ -82,7 +82,7 @@ public class SyntheticDirectoryContributionProcessor extends AbstractContributio
 
     }
 
-    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
+    public void process(Contribution contribution, IntrospectionContext context) throws InstallException {
 
     }
 

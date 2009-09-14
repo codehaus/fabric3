@@ -120,7 +120,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
+    public void process(Contribution contribution, IntrospectionContext context) throws InstallException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
         XMLStreamReader reader = null;
@@ -128,7 +128,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
             stream = locationURL.openStream();
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            xmlProcessorRegistry.process(contribution, reader, context, loader);
+            xmlProcessorRegistry.process(contribution, reader, context);
         } catch (IOException e) {
             String uri = contribution.getUri().toString();
             throw new InstallException("Error processing contribution " + uri, e);

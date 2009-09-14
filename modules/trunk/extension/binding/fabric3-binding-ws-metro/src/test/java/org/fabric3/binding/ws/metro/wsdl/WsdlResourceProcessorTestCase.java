@@ -53,6 +53,7 @@ import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.xml.XMLFactoryInstantiationException;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 
 /**
  * @version $Rev$ $Date$
@@ -69,7 +70,8 @@ public class WsdlResourceProcessorTestCase extends TestCase {
         processor.index(contribution, wsdl, null);
         Resource resource = contribution.getResources().get(0);
         assertNotNull(resource);
-        processor.process(null, resource, null, null);
+        DefaultIntrospectionContext context = new DefaultIntrospectionContext();
+        processor.process(resource, context);
         ResourceElement<QNameSymbol, WSDLModel> element = (ResourceElement<QNameSymbol, WSDLModel>) resource.getResourceElements().get(0);
         assertNotNull(element);
         WSDLModel model = element.getValue();

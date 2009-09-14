@@ -39,7 +39,6 @@ package org.fabric3.binding.ws.metro.wsdl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -156,7 +155,7 @@ public class WsdlResourceProcessor implements ResourceProcessor {
 
 
     @SuppressWarnings({"unchecked"})
-    public void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException {
+    public void process(Resource resource, IntrospectionContext context) throws InstallException {
         InputStream stream = null;
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         URL wsdlLocation = resource.getUrl();

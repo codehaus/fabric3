@@ -37,7 +37,6 @@
 */
 package org.fabric3.contribution.processor;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -74,13 +73,11 @@ public class DefinitionsProcessor implements XmlProcessor {
         return DEFINITIONS;
     }
 
-    public void processContent(Contribution contribution, IntrospectionContext context, XMLStreamReader reader, ClassLoader cl)
-            throws InstallException {
+    public void processContent(Contribution contribution, XMLStreamReader reader, IntrospectionContext context)  throws InstallException {
         try {
-            URI uri = contribution.getUri();
             assert contribution.getResources().size() == 1;
             Resource resource = contribution.getResources().get(0);
-            loader.load(reader, uri, resource, context, cl);
+            loader.load(reader, resource, context);
         } catch (XMLStreamException e) {
             throw new InstallException(e);
         }

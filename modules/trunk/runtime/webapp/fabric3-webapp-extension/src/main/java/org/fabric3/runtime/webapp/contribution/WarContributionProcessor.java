@@ -98,11 +98,10 @@ public class WarContributionProcessor implements ContributionProcessor {
         registry.register(this);
     }
 
-    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException {
-        URI contributionUri = contribution.getUri();
+    public void process(Contribution contribution, IntrospectionContext context) throws InstallException {
         for (Resource resource : contribution.getResources()) {
             if (!resource.isProcessed()) {
-                registry.processResource(contributionUri, resource, context, loader);
+                registry.processResource(resource, context);
             }
         }
     }

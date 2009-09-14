@@ -37,7 +37,6 @@
 */
 package org.fabric3.spi.contribution.xml;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -70,14 +69,11 @@ public interface XmlResourceElementLoaderRegistry {
      * Dispatches to an XmlResourceElementLoader to loads an element in an XML resource
      *
      * @param reader          the StAX reader, positioned at the start of the element to laod
-     * @param contributionUri the current contribution URI
      * @param resource        the resource
      * @param context         the context to which validation errors and warnings are reported
-     * @param loader          the classloader to resolve resources with
      * @throws InstallException   if a fatal error loading the resource occurs
      * @throws XMLStreamException if an error parsing the XML stream occurs
      */
-    void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
-            throws InstallException, XMLStreamException;
+    void load(XMLStreamReader reader, Resource resource, IntrospectionContext context) throws InstallException, XMLStreamException;
 
 }

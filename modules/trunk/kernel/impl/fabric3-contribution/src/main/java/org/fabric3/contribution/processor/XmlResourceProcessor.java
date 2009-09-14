@@ -39,7 +39,6 @@ package org.fabric3.contribution.processor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -126,7 +125,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         }
     }
 
-    public void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader) throws InstallException {
+    public void process(Resource resource, IntrospectionContext context) throws InstallException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
@@ -136,7 +135,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
                 resource.setProcessed(true);
                 return;
             }
-            elementLoaderRegistry.load(reader, contributionUri, resource, context, loader);
+            elementLoaderRegistry.load(reader, resource, context);
             resource.setProcessed(true);
         } catch (XMLStreamException e) {
             throw new InstallException(e);

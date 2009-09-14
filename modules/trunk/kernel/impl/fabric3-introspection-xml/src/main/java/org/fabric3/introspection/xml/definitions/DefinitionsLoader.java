@@ -37,7 +37,6 @@
 */
 package org.fabric3.introspection.xml.definitions;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -106,8 +105,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
         return DEFINITIONS;
     }
 
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
-            throws InstallException, XMLStreamException {
+    public void load(XMLStreamReader reader, Resource resource, IntrospectionContext context) throws InstallException, XMLStreamException {
 
         validateAttributes(reader, context);
         List<AbstractDefinition> definitions = new ArrayList<AbstractDefinition>();

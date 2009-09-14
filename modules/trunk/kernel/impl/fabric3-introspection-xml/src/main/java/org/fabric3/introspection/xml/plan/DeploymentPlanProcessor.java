@@ -37,7 +37,6 @@
 */
 package org.fabric3.introspection.xml.plan;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -87,8 +86,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
         registry.register(this);
     }
 
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
-            throws InstallException {
+    public void load(XMLStreamReader reader, Resource resource, IntrospectionContext context) throws InstallException {
         try {
             QName qname = reader.getName();
             assert PLAN.equals(qname);
@@ -119,7 +117,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
                 }
             }
         } catch (XMLStreamException e) {
-            throw new InstallException("Error processing contribution: " + contributionUri, e);
+            throw new InstallException("Error processing contribution: " + context.getContributionUri(), e);
         }
 
 

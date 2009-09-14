@@ -39,7 +39,6 @@ package org.fabric3.introspection.xml.plan;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -79,9 +78,8 @@ public class DeploymentPlanProcessorTestCase extends TestCase {
         QNameSymbol symbol = new QNameSymbol(qName);
         ResourceElement<QNameSymbol, DeploymentPlan> element = new ResourceElement<QNameSymbol, DeploymentPlan>(symbol);
         resource.addResourceElement(element);
-        URI uri = URI.create("uri");
         IntrospectionContext context = new DefaultIntrospectionContext();
-        processor.load(reader, uri, resource, context, getClass().getClassLoader());
+        processor.load(reader, resource, context);
         DeploymentPlan plan = element.getValue();
         assertNotNull(plan);
         assertEquals(2, plan.getDeployableMappings().size());

@@ -551,7 +551,7 @@ public class ContributionServiceImpl implements ContributionService {
             }
             metaDataStore.store(contribution);
             context = new DefaultIntrospectionContext(contributionUri, loader);
-            processorRegistry.processContribution(contribution, context, loader);
+            processorRegistry.processContribution(contribution, context);
             validateContribution(contribution, context);
             if (context.hasErrors()) {
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());

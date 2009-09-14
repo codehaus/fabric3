@@ -37,7 +37,6 @@
 */
 package org.fabric3.contribution.processor;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -67,15 +66,14 @@ public class XmlResourceElementLoaderRegistryImpl implements XmlResourceElementL
     }
 
     @SuppressWarnings({"unchecked"})
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader loader)
-            throws InstallException, XMLStreamException {
+    public void load(XMLStreamReader reader, Resource resource, IntrospectionContext context) throws InstallException, XMLStreamException {
         try {
             QName name = reader.getName();
             XmlResourceElementLoader elementLoader = cache.get(name);
             if (elementLoader == null) {
                 return;
             }
-            elementLoader.load(reader, contributionUri, resource, context, loader);
+            elementLoader.load(reader, resource, context);
         } finally {
             try {
                 if (reader != null) {

@@ -70,9 +70,8 @@ public interface XmlProcessorRegistry {
      * @param contribution the contribution metadata to update
      * @param reader       the reader positioned at the first element of the document
      * @param context      the context to which validation errors and warnings are reported
-     * @param loader       the classloader to perform resolution in
      * @throws InstallException if an error occurs processing
      */
-    void process(Contribution contribution, XMLStreamReader reader, IntrospectionContext context, ClassLoader loader) throws InstallException;
+    void process(Contribution contribution, XMLStreamReader reader, IntrospectionContext context) throws InstallException;
 
 }

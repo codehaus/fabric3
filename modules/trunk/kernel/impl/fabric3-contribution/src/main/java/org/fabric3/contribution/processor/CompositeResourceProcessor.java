@@ -39,8 +39,8 @@ package org.fabric3.contribution.processor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
+import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -131,8 +131,10 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     }
 
     @SuppressWarnings({"unchecked"})
-    public void process(URI contributionUri, Resource resource, IntrospectionContext context, ClassLoader classLoader) throws InstallException {
+    public void process(Resource resource, IntrospectionContext context) throws InstallException {
         URL url = resource.getUrl();
+        ClassLoader classLoader = context.getClassLoader();
+        URI contributionUri = context.getContributionUri();
         IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, classLoader, url);
         Composite composite;
         try {

@@ -85,9 +85,8 @@ public interface ContributionProcessor {
      *
      * @param contribution the contribution
      * @param context      the context to which validation errors and warnings are reported
-     * @param loader       the classloader contribution resources must be loaded in
      * @throws InstallException if there was a problem loading the contribution resoruces
      */
-    public void process(Contribution contribution, IntrospectionContext context, ClassLoader loader) throws InstallException;
+    public void process(Contribution contribution, IntrospectionContext context) throws InstallException;
 
 }
