@@ -63,7 +63,7 @@ public class InitProcessor<I extends Implementation<? extends InjectingComponent
         super(Init.class);
     }
 
-    public void visitMethod(Init annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Init annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         if (!validateAccessor(method, context)) {
             return;
         }

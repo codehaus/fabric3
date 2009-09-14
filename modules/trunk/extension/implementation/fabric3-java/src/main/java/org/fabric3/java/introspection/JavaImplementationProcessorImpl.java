@@ -41,7 +41,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -94,22 +93,19 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
             return;
         }
 
-        TypeMapping mapping = context.getTypeMapping();
+        TypeMapping mapping = context.getTypeMapping(implClass);
+        if (mapping == null) {
+            mapping = new TypeMapping();
+            context.addTypeMapping(implClass, mapping);
+        }
         helper.resolveTypeParameters(implClass, mapping);
-        IntrospectionContext newContext = new DefaultIntrospectionContext(context);
 
         try {
-            classWalker.walk(implementation, implClass, newContext);
-            heuristic.applyHeuristics(implementation, implClass, newContext);
+            classWalker.walk(implementation, implClass, context);
+            heuristic.applyHeuristics(implementation, implClass, context);
         } catch (NoClassDefFoundError e) {
             // May be thrown as a result of a referenced class not being on the classpath
             context.addError(new ImplementationArtifactNotFound(implClassName, e.getMessage()));
-        }
-        if (newContext.hasErrors()) {
-            context.addErrors(newContext.getErrors());
-        }
-        if (newContext.hasWarnings()) {
-            context.addWarnings(newContext.getWarnings());
         }
 
     }

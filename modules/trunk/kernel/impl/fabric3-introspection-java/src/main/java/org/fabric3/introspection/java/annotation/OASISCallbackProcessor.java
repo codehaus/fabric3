@@ -77,23 +77,23 @@ public class OASISCallbackProcessor<I extends Implementation<? extends Injecting
     }
 
 
-    public void visitField(Callback annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(Callback annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         validate(field, context);
 
         String name = helper.getSiteName(field, null);
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        CallbackDefinition definition = createDefinition(name, type, context);
+        CallbackDefinition definition = createDefinition(name, type, implClass, context);
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitMethod(Callback annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Callback annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         validate(method, context);
 
         String name = helper.getSiteName(method, null);
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        CallbackDefinition definition = createDefinition(name, type, context);
+        CallbackDefinition definition = createDefinition(name, type, implClass, context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -116,10 +116,12 @@ public class OASISCallbackProcessor<I extends Implementation<? extends Injecting
         }
     }
 
-    private CallbackDefinition createDefinition(String name, Type type, IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping();
+    private CallbackDefinition createDefinition(String name, Type type, Class<?> implClass, IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         Type baseType = helper.getBaseType(type, typeMapping);
         ServiceContract contract = contractProcessor.introspect(baseType, context);
         return new CallbackDefinition(name, contract);
     }
+
+
 }

@@ -190,7 +190,11 @@ public class DefaultContractProcessor implements ContractProcessor {
             } else if (conversational) {
                 conversationSequence = Operation.CONVERSATION_CONTINUE;
             }
-            TypeMapping typeMapping = context.getTypeMapping();
+            TypeMapping typeMapping = context.getTypeMapping(type);
+            if (typeMapping == null) {
+                typeMapping = new TypeMapping();
+                context.addTypeMapping(type, typeMapping);
+            }
             Type actualReturnType = typeMapping.getActualType(returnType);
             DataType<Type> returnDataType = new DataType<Type>(actualReturnType, actualReturnType);
             List<DataType<?>> paramDataTypes = new ArrayList<DataType<?>>(paramTypes.length);

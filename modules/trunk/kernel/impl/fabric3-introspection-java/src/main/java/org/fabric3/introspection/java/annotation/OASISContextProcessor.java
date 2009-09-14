@@ -75,13 +75,13 @@ public class OASISContextProcessor<I extends Implementation<? extends InjectingC
         this.helper = helper;
     }
 
-    public void visitField(Context annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(Context annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
         visit(type, implementation, site, field.getDeclaringClass(), context);
     }
 
-    public void visitMethod(Context annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Context annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         visit(type, implementation, site, method.getDeclaringClass(), context);

@@ -171,7 +171,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             Type parameterType = parameterTypes[i];
             String name = helper.getSiteName(constructor, i, null);
             Annotation[] annotations = constructor.getParameterAnnotations()[i];
-            processSite(componentType, name, parameterType, site, annotations, context);
+            processSite(componentType, name, parameterType, implClass, site, annotations, context);
         }
     }
 
@@ -190,7 +190,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             String name = helper.getSiteName(setter, null);
             Type parameterType = setter.getGenericParameterTypes()[0];
             Annotation[] annotations = setter.getAnnotations();
-            processSite(componentType, name, parameterType, site, annotations, context);
+            processSite(componentType, name, parameterType, implClass, site, annotations, context);
         }
     }
 
@@ -209,7 +209,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             String name = helper.getSiteName(field, null);
             Type parameterType = field.getGenericType();
             Annotation[] annotations = field.getAnnotations();
-            processSite(componentType, name, parameterType, site, annotations, context);
+            processSite(componentType, name, parameterType, implClass, site, annotations, context);
         }
     }
 
@@ -217,17 +217,18 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
     private void processSite(InjectingComponentType componentType,
                              String name,
                              Type parameterType,
+                             Class<?> declaringClass,
                              InjectionSite site,
                              Annotation[] annotations,
                              IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(declaringClass);
         InjectableAttributeType type = helper.inferType(parameterType, typeMapping);
         switch (type) {
         case PROPERTY:
-            addProperty(componentType, name, parameterType, site, context);
+            addProperty(componentType, name, parameterType, declaringClass, site, context);
             break;
         case REFERENCE:
-            addReference(componentType, name, parameterType, site, annotations, context);
+            addReference(componentType, name, parameterType, declaringClass, site, annotations, context);
             break;
         case CALLBACK:
             context.addError(new UnknownInjectionType(site, type, componentType.getImplClass()));
@@ -237,8 +238,13 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
         }
     }
 
-    private void addProperty(InjectingComponentType componentType, String name, Type type, InjectionSite site, IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping();
+    private void addProperty(InjectingComponentType componentType,
+                             String name,
+                             Type type,
+                             Class<?> declaringClass,
+                             InjectionSite site,
+                             IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping(declaringClass);
         Property property = new Property(name, null);
         property.setMany(helper.isManyValued(typeMapping, type));
         componentType.add(property, site);
@@ -248,10 +254,11 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
     private void addReference(InjectingComponentType componentType,
                               String name,
                               Type parameterType,
+                              Class<?> declaringClass,
                               InjectionSite site,
                               Annotation[] annotations,
                               IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(declaringClass);
         ServiceContract contract = contractProcessor.introspect(parameterType, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);

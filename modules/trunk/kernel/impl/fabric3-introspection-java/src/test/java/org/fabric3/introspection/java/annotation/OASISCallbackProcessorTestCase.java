@@ -70,7 +70,7 @@ public class OASISCallbackProcessorTestCase extends TestCase {
         Callback annotation = method.getAnnotation(Callback.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        processor.visitMethod(annotation, method, new TestImplementation(), context);
+        processor.visitMethod(annotation, method, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }
@@ -80,7 +80,7 @@ public class OASISCallbackProcessorTestCase extends TestCase {
         Callback annotation = field.getAnnotation(Callback.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        processor.visitField(annotation, field, new TestImplementation(), context);
+        processor.visitField(annotation, field, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }

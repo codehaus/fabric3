@@ -62,7 +62,7 @@ public class DestroyProcessor<I extends Implementation<? extends InjectingCompon
         super(Destroy.class);
     }
 
-    public void visitMethod(Destroy annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Destroy annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         implementation.getComponentType().setDestroyMethod(new Signature(method));
     }
 }

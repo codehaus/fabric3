@@ -62,7 +62,7 @@ public class OASISInitProcessor<I extends Implementation<? extends InjectingComp
         super(Init.class);
     }
 
-    public void visitMethod(Init annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Init annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         if (!validate(method, context)) {
             return;
         }

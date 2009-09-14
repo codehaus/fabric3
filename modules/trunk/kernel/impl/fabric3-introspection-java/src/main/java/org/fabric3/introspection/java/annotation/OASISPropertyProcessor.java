@@ -74,17 +74,25 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         this.helper = helper;
     }
 
-    public void visitField(org.oasisopen.sca.annotation.Property annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(org.oasisopen.sca.annotation.Property annotation,
+                           Field field,
+                           Class<?> implClass,
+                           I implementation,
+                           IntrospectionContext context) {
         validate(annotation, field, context);
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         Property property = createDefinition(name, annotation.required(), type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
 
-    public void visitMethod(org.oasisopen.sca.annotation.Property annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(org.oasisopen.sca.annotation.Property annotation,
+                            Method method,
+                            Class<?> implClass,
+                            I implementation,
+                            IntrospectionContext context) {
         boolean result = validate(annotation, method, context);
         if (!result) {
             return;
@@ -92,7 +100,7 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         Property property = createDefinition(name, annotation.required(), type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
@@ -141,13 +149,15 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
     public void visitConstructorParameter(org.oasisopen.sca.annotation.Property annotation,
                                           Constructor<?> constructor,
                                           int index,
+                                          Class<?> implClass,
                                           I implementation,
                                           IntrospectionContext context) {
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
-        TypeMapping typeMapping = context.getTypeMapping();
-        Property property = createDefinition(name, annotation.required(), type, typeMapping);
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
+        boolean required = annotation.required();
+        Property property = createDefinition(name, required, type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
 
@@ -158,4 +168,5 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         property.setMany(helper.isManyValued(typeMapping, type));
         return property;
     }
+
 }

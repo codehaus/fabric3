@@ -68,7 +68,7 @@ public class PropertyProcessorTestCase extends TestCase {
         Property annotation = method.getAnnotation(Property.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        processor.visitMethod(annotation, method, new TestImplementation(), context);
+        processor.visitMethod(annotation, method, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
         assertTrue(context.getWarnings().get(0) instanceof InvalidAccessor);
     }
@@ -78,7 +78,7 @@ public class PropertyProcessorTestCase extends TestCase {
         Property annotation = method.getAnnotation(Property.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        processor.visitMethod(annotation, method, new TestImplementation(), context);
+        processor.visitMethod(annotation, method, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }
@@ -87,8 +87,10 @@ public class PropertyProcessorTestCase extends TestCase {
         Field field = TestPrivateClass.class.getDeclaredField("property");
         Property annotation = field.getAnnotation(Property.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
+        TypeMapping mapping = new TypeMapping();
+        context.addTypeMapping(TestPrivateClass.class, mapping);
 
-        processor.visitField(annotation, field, new TestImplementation(), context);
+        processor.visitField(annotation, field, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
         assertTrue(context.getWarnings().get(0) instanceof InvalidAccessor);
     }
@@ -97,8 +99,10 @@ public class PropertyProcessorTestCase extends TestCase {
         Field field = TestPrivateClass.class.getDeclaredField("requiredProperty");
         Property annotation = field.getAnnotation(Property.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
+        TypeMapping mapping = new TypeMapping();
+        context.addTypeMapping(TestPrivateClass.class, mapping);
 
-        processor.visitField(annotation, field, new TestImplementation(), context);
+        processor.visitField(annotation, field, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }
@@ -123,13 +127,14 @@ public class PropertyProcessorTestCase extends TestCase {
 
     public static class TestImplementation extends Implementation {
         private static final long serialVersionUID = 2759280710238779821L;
+        private InjectingComponentType type = new InjectingComponentType();
 
         public QName getType() {
             return null;
         }
 
         public AbstractComponentType getComponentType() {
-            return new InjectingComponentType();
+            return type;
         }
     }
 

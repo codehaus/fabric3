@@ -254,6 +254,9 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
         Set<Method> expected = Collections.emptySet();
         Set<ServiceDefinition> services = new HashSet<ServiceDefinition>();
         IntrospectionContext context = new DefaultIntrospectionContext();
+        TypeMapping mapping = new TypeMapping();
+        context.addTypeMapping(InterfaceWithSetter.class, mapping);
+
         ServiceContract contract = new DefaultContractProcessor(helper).introspect(InterfaceWithSetter.class, context);
         ServiceDefinition definition = new ServiceDefinition("InterfaceWithSetter", contract);
         services.add(definition);

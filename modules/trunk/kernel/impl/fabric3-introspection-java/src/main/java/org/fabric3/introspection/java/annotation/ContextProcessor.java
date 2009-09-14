@@ -73,7 +73,7 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
     }
 
 
-    public void visitField(Context annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(Context annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
 
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -87,7 +87,7 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
         }
     }
 
-    public void visitMethod(Context annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Context annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
 
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);

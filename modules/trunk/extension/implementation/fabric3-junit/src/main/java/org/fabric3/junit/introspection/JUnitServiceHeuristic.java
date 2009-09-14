@@ -90,7 +90,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
         JUnitServiceContract testContract = generateTestContract(implClass);
         ServiceDefinition testService = new ServiceDefinition(TEST_SERVICE_NAME, testContract);
         InjectingComponentType componentType = implementation.getComponentType();
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         componentType.add(testService);
         // if the class implements a single interface, use it, otherwise the contract is the class itself
         Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);

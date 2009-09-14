@@ -141,7 +141,7 @@ public class SystemServiceHeuristicTestCase extends TestCase {
 
         control = EasyMock.createControl();
         context = control.createMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTypeMapping()).andStubReturn(null);
+        EasyMock.expect(context.getTypeMapping(EasyMock.isA(Class.class))).andStubReturn(null);
         contractProcessor = control.createMock(ContractProcessor.class);
         helper = control.createMock(IntrospectionHelper.class);
         heuristic = new SystemServiceHeuristic(contractProcessor, helper);

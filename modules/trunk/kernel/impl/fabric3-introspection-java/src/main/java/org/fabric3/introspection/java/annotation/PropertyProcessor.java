@@ -73,16 +73,26 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         this.helper = helper;
     }
 
-    public void visitField(org.osoa.sca.annotations.Property annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(org.osoa.sca.annotations.Property annotation,
+                           Field field,
+                           Class<?> implClass,
+                           I implementation,
+                           IntrospectionContext context) {
         validate(annotation, field, context);
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        Property property = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        boolean required = annotation.required();
+        TypeMapping mapping = context.getTypeMapping(implClass);
+        Property property = createDefinition(name, required, type, mapping);
         implementation.getComponentType().add(property, site);
     }
 
-    public void visitMethod(org.osoa.sca.annotations.Property annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(org.osoa.sca.annotations.Property annotation,
+                            Method method,
+                            Class<?> implClass,
+                            I implementation,
+                            IntrospectionContext context) {
         boolean result = validate(annotation, method, context);
         if (!result) {
             return;
@@ -90,7 +100,9 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        Property property = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        boolean required = annotation.required();
+        TypeMapping mapping = context.getTypeMapping(implClass);
+        Property property = createDefinition(name, required, type, mapping);
         implementation.getComponentType().add(property, site);
     }
 
@@ -114,12 +126,15 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
     public void visitConstructorParameter(org.osoa.sca.annotations.Property annotation,
                                           Constructor<?> constructor,
                                           int index,
+                                          Class<?> implClass,
                                           I implementation,
                                           IntrospectionContext context) {
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
-        Property property = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        TypeMapping mapping = context.getTypeMapping(implClass);
+        boolean required = annotation.required();
+        Property property = createDefinition(name, required, type, mapping);
         implementation.getComponentType().add(property, site);
     }
 
@@ -154,4 +169,5 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         property.setMany(helper.isManyValued(typeMapping, type));
         return property;
     }
+
 }

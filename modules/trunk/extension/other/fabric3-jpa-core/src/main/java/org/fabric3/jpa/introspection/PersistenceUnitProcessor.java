@@ -71,7 +71,7 @@ public class PersistenceUnitProcessor<I extends Implementation<? extends Injecti
         assert !context.hasErrors(); // should not happen
     }
 
-    public void visitField(PersistenceUnit annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(PersistenceUnit annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         FieldInjectionSite site = new FieldInjectionSite(field);
         PersistenceUnitResource definition = createDefinition(annotation);
         InjectingComponentType componentType = implementation.getComponentType();
@@ -80,7 +80,7 @@ public class PersistenceUnitProcessor<I extends Implementation<? extends Injecti
         componentType.addRequiredCapability("jpa");
     }
 
-    public void visitMethod(PersistenceUnit annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(PersistenceUnit annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         PersistenceUnitResource definition = createDefinition(annotation);
         InjectingComponentType componentType = implementation.getComponentType();

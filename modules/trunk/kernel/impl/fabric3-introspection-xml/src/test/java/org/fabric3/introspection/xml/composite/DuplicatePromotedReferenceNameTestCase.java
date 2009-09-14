@@ -106,7 +106,7 @@ public class DuplicatePromotedReferenceNameTestCase extends TestCase {
         EasyMock.replay(helper);
         loader = new CompositeLoader(registry, null, refLoader, null, helper);
         reader = createReader();
-        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), null, "foo", null);
+        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), null, "foo");
     }
 
     private LoaderRegistry createRegistry() throws XMLStreamException, LoaderException {

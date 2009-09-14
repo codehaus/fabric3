@@ -169,7 +169,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
             throw new AssertionError(e);
         }
 
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         Type[] parameterTypes = constructor.getGenericParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
             InjectionSite site = new ConstructorInjectionSite(constructor, i);
@@ -189,7 +189,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     void evaluateSetters(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         Set<Method> setters = helper.getInjectionMethods(implClass, componentType.getServices().values());
         for (Method setter : setters) {
             InjectionSite site = new MethodInjectionSite(setter, 0);
@@ -209,7 +209,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     void evaluateFields(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
         Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
-        TypeMapping typeMapping = context.getTypeMapping();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         Set<Field> fields = helper.getInjectionFields(implClass);
         for (Field field : fields) {
             InjectionSite site = new FieldInjectionSite(field);

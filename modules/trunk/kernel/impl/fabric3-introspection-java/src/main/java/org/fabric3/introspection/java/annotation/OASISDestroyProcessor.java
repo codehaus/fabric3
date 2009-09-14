@@ -62,7 +62,7 @@ public class OASISDestroyProcessor<I extends Implementation<? extends InjectingC
         super(Destroy.class);
     }
 
-    public void visitMethod(Destroy annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Destroy annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         if (!validate(method, context)) {
             return;
         }

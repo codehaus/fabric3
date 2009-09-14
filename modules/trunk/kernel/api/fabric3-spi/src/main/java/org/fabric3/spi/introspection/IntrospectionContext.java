@@ -43,9 +43,10 @@
  */
 package org.fabric3.spi.introspection;
 
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.fabric3.host.contribution.ValidationFailure;
 
@@ -151,9 +152,27 @@ public interface IntrospectionContext {
     void setTargetNamespace(String namespace);
 
     /**
-     * Returns the mappings from formal to actual types for the component being introspected.
+     * Returns a cache of mappings from formal parameter types to actual types for a class. Since the IntrospectionContext is disposed after a
+     * contribution has been installed, it is safe to cache pointers to classes.
      *
-     * @return the mappings from formal to actual types for the component being introspected
+     * @param type the class
+     * @return the cache of mappings from formal parameter types to actual types for a class or null if the mapping does not exist
      */
-    TypeMapping getTypeMapping();
+    TypeMapping getTypeMapping(Class<?> type);
+
+    /**
+     * Returns the cache of classes and their resolved parameter types mapped to actual types.
+     *
+     * @return the cache of classes and their resolved parameter types mapped to actual types
+     */
+    Map<Class<?>, TypeMapping> getTypeMappings();
+
+    /**
+     * Adds a mapping from formal parameter types to actual types for a class to the cache.
+     *
+     * @param type        the class
+     * @param typeMapping the mappings
+     */
+    void addTypeMapping(Class<?> type, TypeMapping typeMapping);
+
 }

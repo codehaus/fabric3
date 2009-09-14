@@ -76,7 +76,7 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
         this.contractProcessor = contractProcessor;
     }
 
-    public void visitField(Monitor annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(Monitor annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(field, null);
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -84,7 +84,7 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
         implementation.getComponentType().add(resource, site);
     }
 
-    public void visitMethod(Monitor annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Monitor annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(method, null);
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
@@ -92,7 +92,12 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
         implementation.getComponentType().add(resource, site);
     }
 
-    public void visitConstructorParameter(Monitor annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context) {
+    public void visitConstructorParameter(Monitor annotation,
+                                          Constructor<?> constructor,
+                                          int index,
+                                          Class<?> implClass,
+                                          I implementation,
+                                          IntrospectionContext context) {
         String name = helper.getSiteName(constructor, index, null);
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);

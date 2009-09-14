@@ -69,7 +69,7 @@ public class JSR250ResourceProcessor<I extends Implementation<? extends Injectin
         this.contractProcessor = contractProcessor;
     }
 
-    public void visitField(Resource annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(Resource annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -77,7 +77,7 @@ public class JSR250ResourceProcessor<I extends Implementation<? extends Injectin
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitMethod(Resource annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Resource annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);

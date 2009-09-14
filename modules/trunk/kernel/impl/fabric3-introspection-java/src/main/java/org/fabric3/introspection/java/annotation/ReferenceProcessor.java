@@ -86,24 +86,26 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         this.policyProcessor = processor;
     }
 
-    public void visitField(Reference annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(Reference annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         validate(annotation, field, context);
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
         Annotation[] annotations = field.getAnnotations();
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, annotations, context);
+        boolean required = annotation.required();
+        ReferenceDefinition definition = createDefinition(name, required, type, implClass, annotations, context);
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitMethod(Reference annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(Reference annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         validate(annotation, method, context);
 
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         Annotation[] annotations = method.getAnnotations();
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, annotations, context);
+        boolean required = annotation.required();
+        ReferenceDefinition definition = createDefinition(name, required, type, implClass, annotations, context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -143,20 +145,26 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
     public void visitConstructorParameter(Reference annotation,
                                           Constructor<?> constructor,
                                           int index,
-                                          I implementation,
+                                          Class<?> implClass, I implementation,
                                           IntrospectionContext context) {
 
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
         Annotation[] annotations = constructor.getParameterAnnotations()[index];
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, annotations, context);
+        boolean required = annotation.required();
+        ReferenceDefinition definition = createDefinition(name, required, type, implClass, annotations, context);
         implementation.getComponentType().add(definition, site);
     }
 
     @SuppressWarnings({"unchecked"})
-    ReferenceDefinition createDefinition(String name, boolean required, Type type, Annotation[] annotations, IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping();
+    ReferenceDefinition createDefinition(String name,
+                                         boolean required,
+                                         Type type,
+                                         Class<?> implClass,
+                                         Annotation[] annotations,
+                                         IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
         Type baseType = helper.getBaseType(type, typeMapping);
         ServiceContract contract = contractProcessor.introspect(baseType, context);
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);

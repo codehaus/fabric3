@@ -73,24 +73,26 @@ public abstract class AbstractAnnotationProcessor<A extends Annotation, I extend
         return type;
     }
 
-    public void visitPackage(A annotation, Package javaPackage, I implementation, IntrospectionContext context) {
-    }
-
     public void visitType(A annotation, Class<?> type, I implementation, IntrospectionContext context) {
     }
 
-    public void visitField(A annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(A annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
     }
 
-    public void visitMethod(A annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(A annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
     }
 
-    public void visitMethodParameter(A annotation, Method method, int index, I implementation, IntrospectionContext context) {
+    public void visitMethodParameter(A annotation, Method method, int index, Class<?> implClass, I implementation, IntrospectionContext context) {
     }
 
-    public void visitConstructor(A annotation, Constructor<?> constructor, I implementation, IntrospectionContext context) {
+    public void visitConstructor(A annotation, Constructor<?> constructor, Class<?> implClass, I implementation, IntrospectionContext context) {
     }
 
-    public void visitConstructorParameter(A annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context) {
+    public void visitConstructorParameter(A annotation,
+                                          Constructor<?> constructor,
+                                          int index,
+                                          Class<?> implClass,
+                                          I implementation,
+                                          IntrospectionContext context) {
     }
 }

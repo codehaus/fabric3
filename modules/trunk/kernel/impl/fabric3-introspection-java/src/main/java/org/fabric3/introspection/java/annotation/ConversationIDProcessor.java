@@ -66,12 +66,12 @@ public class ConversationIDProcessor<I extends Implementation<? extends Injectin
         super(ConversationID.class);
     }
 
-    public void visitField(ConversationID annotation, Field field, I implementation, IntrospectionContext context) {
+    public void visitField(ConversationID annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         InjectionSite site = new FieldInjectionSite(field);
         implementation.getComponentType().addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
     }
 
-    public void visitMethod(ConversationID annotation, Method method, I implementation, IntrospectionContext context) {
+    public void visitMethod(ConversationID annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         InjectionSite site = new MethodInjectionSite(method, 0);
         implementation.getComponentType().addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
     }

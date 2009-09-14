@@ -109,7 +109,11 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
 
         LoaderUtil.skipToEndElement(reader);
 
-        TypeMapping mapping = context.getTypeMapping();
+        TypeMapping mapping = context.getTypeMapping(interfaceClass);
+        if (mapping == null) {
+            mapping = new TypeMapping();
+            context.addTypeMapping(interfaceClass, mapping);
+        }
         helper.resolveTypeParameters(interfaceClass, mapping);
         ServiceContract serviceContract = contractProcessor.introspect(interfaceClass, context);
         if (callbackClass != null) {

@@ -59,6 +59,7 @@ import org.fabric3.spi.introspection.java.annotation.ClassWalker;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 
 /**
+ * Default ClassWalker implementation.
  * @version $Rev$ $Date$
  */
 public class DefaultClassWalker<I extends Implementation<? extends InjectingComponentType>> implements ClassWalker<I> {
@@ -93,83 +94,83 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
     }
 
     public void walk(I implementation, Class<?> clazz, IntrospectionContext context) {
-        walk(implementation, clazz, false, context);
+        walk(implementation, clazz, clazz, false, context);
     }
 
-    public void walk(I implementation, Class<?> clazz, boolean isSuperClass, IntrospectionContext context) {
+    private void walk(I implementation, Class<?> clazz, Class<?> implClass,  boolean isSuperClass, IntrospectionContext context) {
         if (!clazz.isInterface()) {
-            walkSuperClasses(implementation, clazz, context);
+            walkSuperClasses(implementation, clazz, implClass, context);
         }
 
-        walkInterfaces(implementation, clazz, context);
+        walkInterfaces(implementation, implClass, clazz, context);
 
-        walkClass(implementation, clazz, context);
+        walkClass(implementation, clazz, implClass, context);
 
-        walkFields(implementation, clazz, context);
+        walkFields(implementation, clazz, implClass, context);
 
-        walkMethods(implementation, clazz, context);
+        walkMethods(implementation, clazz, implClass, context);
 
         if (!isSuperClass) {
             // If a superclass is being evaluated, ignore its constructors.
             // Otherwise references, properties, or resources may be incorrectly introspected.
-            walkConstructors(implementation, clazz, context);
+            walkConstructors(implementation, clazz, implClass, context);
         }
     }
 
-    private void walkSuperClasses(I implementation, Class<?> clazz, IntrospectionContext context) {
+    private void walkSuperClasses(I implementation, Class<?> clazz, Class<?> implClass, IntrospectionContext context) {
         Class<?> superClass = clazz.getSuperclass();
         if (superClass != null) {
-            walk(implementation, superClass, true, context);
+            walk(implementation, superClass, implClass, true, context);
         }
     }
 
-    private void walkInterfaces(I implementation, Class<?> clazz, IntrospectionContext context) {
+    private void walkInterfaces(I implementation, Class<?> clazz, Class<?> implClass, IntrospectionContext context) {
         for (Class<?> interfaze : clazz.getInterfaces()) {
-            walk(implementation, interfaze, context);
+            walk(implementation, interfaze, implClass, false, context);
         }
     }
 
-    private void walkClass(I implementation, Class<?> clazz, IntrospectionContext context) {
+    private void walkClass(I implementation, Class<?> clazz, Class<?> implClass, IntrospectionContext context) {
         for (Annotation annotation : clazz.getDeclaredAnnotations()) {
-            visitType(annotation, clazz, implementation, context);
+            visitType(annotation, implClass, implementation, context);
         }
     }
 
-    private void walkFields(I implementation, Class<?> clazz, IntrospectionContext context) {
+    private void walkFields(I implementation, Class<?> clazz, Class<?> implClass, IntrospectionContext context) {
         for (Field field : clazz.getDeclaredFields()) {
             for (Annotation annotation : field.getDeclaredAnnotations()) {
-                visitField(annotation, field, implementation, context);
+                visitField(annotation, field, implClass, implementation, context);
             }
         }
     }
 
-    private void walkMethods(I implementation, Class<?> clazz, IntrospectionContext context) {
+    private void walkMethods(I implementation, Class<?> clazz, Class<?> implClass, IntrospectionContext context) {
         for (Method method : clazz.getDeclaredMethods()) {
             for (Annotation annotation : method.getDeclaredAnnotations()) {
-                visitMethod(annotation, method, implementation, context);
+                visitMethod(annotation, method, implClass, implementation, context);
             }
 
             Annotation[][] parameterAnnotations = method.getParameterAnnotations();
             for (int i = 0; i < parameterAnnotations.length; i++) {
                 Annotation[] annotations = parameterAnnotations[i];
                 for (Annotation annotation : annotations) {
-                    visitMethodParameter(annotation, method, i, implementation, context);
+                    visitMethodParameter(annotation, method, i, implClass, implementation, context);
                 }
             }
         }
     }
 
-    private void walkConstructors(I implementation, Class<?> clazz, IntrospectionContext context) {
+    private void walkConstructors(I implementation, Class<?> clazz, Class<?> implClass, IntrospectionContext context) {
         for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
             for (Annotation annotation : constructor.getDeclaredAnnotations()) {
-                visitConstructor(annotation, constructor, implementation, context);
+                visitConstructor(annotation, constructor, implClass, implementation, context);
             }
 
             Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
             for (int i = 0; i < parameterAnnotations.length; i++) {
                 Annotation[] annotations = parameterAnnotations[i];
                 for (Annotation annotation : annotations) {
-                    visitConstructorParameter(annotation, constructor, i, implementation, context);
+                    visitConstructorParameter(annotation, constructor, i, implClass, implementation, context);
                 }
             }
         }
@@ -187,42 +188,52 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
         }
     }
 
-    private <A extends Annotation> void visitField(A annotation, Field field, I implementation, IntrospectionContext context) {
+    private <A extends Annotation> void visitField(A annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         AnnotationProcessor<A, I> processor = getProcessor(annotation);
         if (processor != null) {
-            processor.visitField(annotation, field, implementation, context);
+            processor.visitField(annotation, field, implClass, implementation, context);
         }
     }
 
-    private <A extends Annotation> void visitMethod(A annotation, Method method, I implementation, IntrospectionContext context) {
+    private <A extends Annotation> void visitMethod(A annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         AnnotationProcessor<A, I> processor = getProcessor(annotation);
         if (processor != null) {
-            processor.visitMethod(annotation, method, implementation, context);
+            processor.visitMethod(annotation, method, implClass, implementation, context);
         }
     }
 
-    private <A extends Annotation> void visitMethodParameter(A annotation, Method method, int index, I implementation, IntrospectionContext context) {
+    private <A extends Annotation> void visitMethodParameter(A annotation,
+                                                             Method method,
+                                                             int index,
+                                                             Class<?> implClass,
+                                                             I implementation,
+                                                             IntrospectionContext context) {
         AnnotationProcessor<A, I> processor = getProcessor(annotation);
         if (processor != null) {
-            processor.visitMethodParameter(annotation, method, index, implementation, context);
+            processor.visitMethodParameter(annotation, method, index, implClass, implementation, context);
         }
     }
 
-    private <A extends Annotation> void visitConstructor(A annotation, Constructor<?> constructor, I implementation, IntrospectionContext context) {
+    private <A extends Annotation> void visitConstructor(A annotation,
+                                                         Constructor<?> constructor,
+                                                         Class<?> implClass,
+                                                         I implementation,
+                                                         IntrospectionContext context) {
         AnnotationProcessor<A, I> processor = getProcessor(annotation);
         if (processor != null) {
-            processor.visitConstructor(annotation, constructor, implementation, context);
+            processor.visitConstructor(annotation, constructor, implClass, implementation, context);
         }
     }
 
     private <A extends Annotation> void visitConstructorParameter(A annotation,
                                                                   Constructor<?> constructor,
                                                                   int index,
+                                                                  Class<?> implClass,
                                                                   I implementation,
                                                                   IntrospectionContext context) {
         AnnotationProcessor<A, I> processor = getProcessor(annotation);
         if (processor != null) {
-            processor.visitConstructorParameter(annotation, constructor, index, implementation, context);
+            processor.visitConstructorParameter(annotation, constructor, index, implClass, implementation, context);
         }
     }
 

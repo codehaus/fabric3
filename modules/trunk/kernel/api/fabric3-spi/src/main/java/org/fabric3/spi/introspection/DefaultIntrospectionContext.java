@@ -40,7 +40,9 @@ package org.fabric3.spi.introspection;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.fabric3.host.contribution.ValidationFailure;
 
@@ -56,26 +58,27 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
     private URL sourceBase;
     private String targetNamespace;
     private URI contributionUri;
-    private TypeMapping typeMapping;
+    private Map<Class<?>, TypeMapping> typeMappings = new HashMap<Class<?>, TypeMapping>();
 
+    /**
+     * Constructor.
+     */
     public DefaultIntrospectionContext() {
-        this.typeMapping = new TypeMapping();
     }
 
-    public DefaultIntrospectionContext(URI contributionUri,
-                                       ClassLoader classLoader,
-                                       URL sourceBase,
-                                       String targetNamespace,
-                                       TypeMapping typeMapping) {
+    /**
+     * Constructor.
+     *
+     * @param contributionUri the active contribution URI
+     * @param classLoader     the classloader for loading application resources
+     * @param sourceBase      the composite location
+     * @param targetNamespace the target namespace.
+     */
+    public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader, URL sourceBase, String targetNamespace) {
         this.targetClassLoader = classLoader;
         this.sourceBase = sourceBase;
         this.targetNamespace = targetNamespace;
         this.contributionUri = contributionUri;
-        if (typeMapping == null) {
-            this.typeMapping = new TypeMapping();
-        } else {
-            this.typeMapping = typeMapping;
-        }
     }
 
     /**
@@ -85,7 +88,7 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
      * @param classLoader     the classloader for loading application resources
      */
     public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader) {
-        this(contributionUri, classLoader, null, null, null);
+        this(contributionUri, classLoader, null, null);
     }
 
     /**
@@ -93,24 +96,24 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
      *
      * @param contributionUri the active contribution URI
      * @param classLoader     the classloader for loading application resources
-     * @param scdlLocation    the location of the SCDL defining this composite
+     * @param sourceBase      the composite location
      */
-    public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader, URL scdlLocation) {
-        this(contributionUri, classLoader, scdlLocation, null, null);
+    public DefaultIntrospectionContext(URI contributionUri, ClassLoader classLoader, URL sourceBase) {
+        this(contributionUri, classLoader, sourceBase, null);
     }
 
     /**
      * Initializes from a parent context, overriding the target namespace.
      *
-     * @param parentContext   Parent context.
-     * @param targetNamespace Target namespace.
+     * @param parentContext   the parent context.
+     * @param targetNamespace the target namespace.
      */
     public DefaultIntrospectionContext(IntrospectionContext parentContext, String targetNamespace) {
         this(parentContext.getContributionUri(),
              parentContext.getTargetClassLoader(),
              parentContext.getSourceBase(),
-             targetNamespace,
-             parentContext.getTypeMapping());
+             targetNamespace
+        );
     }
 
     /**
@@ -122,8 +125,8 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
         this(parentContext.getContributionUri(),
              parentContext.getTargetClassLoader(),
              parentContext.getSourceBase(),
-             parentContext.getTargetNamespace(),
-             parentContext.getTypeMapping());
+             parentContext.getTargetNamespace());
+        typeMappings.putAll(parentContext.getTypeMappings());
     }
 
     public boolean hasErrors() {
@@ -178,7 +181,15 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
         return contributionUri;
     }
 
-    public TypeMapping getTypeMapping() {
-        return typeMapping;
+    public TypeMapping getTypeMapping(Class<?> type) {
+        return typeMappings.get(type);
+    }
+
+    public void addTypeMapping(Class<?> type, TypeMapping typeMapping) {
+        typeMappings.put(type, typeMapping);
+    }
+
+    public Map<Class<?>, TypeMapping> getTypeMappings() {
+        return typeMappings;
     }
 }

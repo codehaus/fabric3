@@ -64,7 +64,7 @@ public class InitProcessorTestCase extends TestCase {
         InitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new InitProcessor<Implementation<? extends InjectingComponentType>>();
         IntrospectionContext context = new DefaultIntrospectionContext();
-        processor.visitMethod(annotation, TestInvalidInitClass.class.getDeclaredMethod("init"), new TestImplementation(), context);
+        processor.visitMethod(annotation, TestInvalidInitClass.class.getDeclaredMethod("init"), TestClass.class, new TestImplementation(), context);
         assertEquals(1, context.getWarnings().size());
         assertTrue(context.getWarnings().get(0) instanceof InvalidAccessor);
     }
@@ -81,7 +81,7 @@ public class InitProcessorTestCase extends TestCase {
         };
         impl.setComponentType(componentType);
         Method method = TestClass.class.getDeclaredMethod("init");
-        processor.visitMethod(annotation, method, impl, context);
+        processor.visitMethod(annotation, method, TestClass.class, impl, context);
         assertEquals(0, context.getWarnings().size());
         assertEquals(method, impl.getComponentType().getInitMethod().getMethod(TestClass.class));
     }

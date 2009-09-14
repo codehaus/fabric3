@@ -57,6 +57,7 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
 
 @SuppressWarnings("unchecked")
 public class OASISPropertyProcessorTestCase extends TestCase {
@@ -68,7 +69,7 @@ public class OASISPropertyProcessorTestCase extends TestCase {
         Property annotation = method.getAnnotation(Property.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        processor.visitMethod(annotation, method, new TestImplementation(), context);
+        processor.visitMethod(annotation, method, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }
@@ -77,8 +78,10 @@ public class OASISPropertyProcessorTestCase extends TestCase {
         Field field = TestPrivateClass.class.getDeclaredField("requiredProperty");
         Property annotation = field.getAnnotation(Property.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
+        TypeMapping mapping = new TypeMapping();
+        context.addTypeMapping(TestPrivateClass.class, mapping);
 
-        processor.visitField(annotation, field, new TestImplementation(), context);
+        processor.visitField(annotation, field, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidAccessor);
     }
@@ -88,7 +91,7 @@ public class OASISPropertyProcessorTestCase extends TestCase {
         Property annotation = method.getAnnotation(Property.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
 
-        processor.visitMethod(annotation, method, new TestImplementation(), context);
+        processor.visitMethod(annotation, method, TestPrivateClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidMethod);
     }

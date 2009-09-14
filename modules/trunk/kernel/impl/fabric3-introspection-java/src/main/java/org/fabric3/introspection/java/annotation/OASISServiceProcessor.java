@@ -53,7 +53,6 @@ import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
@@ -81,7 +80,6 @@ public class OASISServiceProcessor<I extends Implementation<? extends InjectingC
     }
 
     public void visitType(Service annotation, Class<?> type, I implementation, IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping();
         InjectingComponentType componentType = implementation.getComponentType();
 
         for (Class<?> service : annotation.interfaces()) {

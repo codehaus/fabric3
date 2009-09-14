@@ -49,6 +49,7 @@ import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 
@@ -68,6 +69,8 @@ public class DefaultOperationPolicyIntrospectorTestCase extends TestCase {
         DefaultOperationPolicyIntrospector introspector = new DefaultOperationPolicyIntrospector(processor);
 
         DefaultIntrospectionContext context = new DefaultIntrospectionContext();
+        TypeMapping mapping = new TypeMapping();
+        context.addTypeMapping(TestService.class, mapping);
         ServiceContract contract = contractProcessor.introspect(TestService.class, context);
         introspector.introspectPolicyOnOperations(contract, TestServiceImpl.class, context);
         EasyMock.verify(processor);

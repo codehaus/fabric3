@@ -43,11 +43,14 @@
  */
 package org.fabric3.system.introspection;
 
+import java.net.URI;
+
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
 import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -92,13 +95,13 @@ public class SystemImplementationProcessorImplTestCase extends TestCase {
         IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);
         helper.loadClass(EasyMock.isA(String.class), EasyMock.isA(ClassLoader.class));
         EasyMock.expectLastCall().andReturn(Simple.class);
-        helper.resolveTypeParameters(EasyMock.isA(Class.class), (TypeMapping) EasyMock.isNull());
+        helper.resolveTypeParameters(EasyMock.isA(Class.class), EasyMock.isA(TypeMapping.class));
         EasyMock.replay(helper);
 
 
-        context = EasyMock.createNiceMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(getClass().getClassLoader());
-        EasyMock.replay(context);
+        context = new DefaultIntrospectionContext(URI.create("test"), getClass().getClassLoader());
+        TypeMapping mapping = new TypeMapping();
+        context.addTypeMapping(Simple.class, mapping);
 
         control = EasyMock.createControl();
         classWalker = control.createMock(ClassWalker.class);

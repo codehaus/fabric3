@@ -46,7 +46,6 @@ package org.fabric3.system.introspection;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -103,18 +102,15 @@ public class SystemImplementationProcessorImpl implements ImplementationProcesso
             context.addError(failure);
             return;
         }
-        TypeMapping mapping = context.getTypeMapping();
+        TypeMapping mapping = context.getTypeMapping(implClass);
+        if (mapping == null) {
+            mapping = new TypeMapping();
+            context.addTypeMapping(implClass, mapping);
+        }
         helper.resolveTypeParameters(implClass, mapping);
 
-        IntrospectionContext childContext = new DefaultIntrospectionContext(context);
-        classWalker.walk(implementation, implClass, childContext);
+        classWalker.walk(implementation, implClass, context);
 
-        heuristic.applyHeuristics(implementation, implClass, childContext);
-        if (childContext.hasErrors()) {
-            context.addErrors(childContext.getErrors());
-        }
-        if (childContext.hasWarnings()) {
-            context.addWarnings(childContext.getWarnings());
-        }
+        heuristic.applyHeuristics(implementation, implClass, context);
     }
 }

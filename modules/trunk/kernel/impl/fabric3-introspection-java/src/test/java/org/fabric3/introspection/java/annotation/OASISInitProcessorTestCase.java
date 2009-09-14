@@ -63,7 +63,7 @@ public class OASISInitProcessorTestCase extends TestCase {
         OASISInitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new OASISInitProcessor<Implementation<? extends InjectingComponentType>>();
         IntrospectionContext context = new DefaultIntrospectionContext();
-        processor.visitMethod(annotation, TestInvalidInitClass.class.getDeclaredMethod("init"), new TestImplementation(), context);
+        processor.visitMethod(annotation, TestInvalidInitClass.class.getDeclaredMethod("init"), TestClass.class, new TestImplementation(), context);
         assertEquals(1, context.getErrors().size());
         assertTrue(context.getErrors().get(0) instanceof InvalidMethod);
     }
@@ -80,7 +80,7 @@ public class OASISInitProcessorTestCase extends TestCase {
         };
         impl.setComponentType(componentType);
         Method method = TestClass.class.getDeclaredMethod("init");
-        processor.visitMethod(annotation, method, impl, context);
+        processor.visitMethod(annotation, method, TestClass.class, impl, context);
         assertEquals(0, context.getWarnings().size());
         assertEquals(method, impl.getComponentType().getInitMethod().getMethod(TestClass.class));
     }
@@ -97,7 +97,7 @@ public class OASISInitProcessorTestCase extends TestCase {
         };
         impl.setComponentType(componentType);
         Method method = TestClass.class.getDeclaredMethod("init");
-        processor.visitMethod(annotation, method, impl, context);
+        processor.visitMethod(annotation, method, TestClass.class, impl, context);
         assertEquals(0, context.getWarnings().size());
         assertEquals(method, impl.getComponentType().getInitMethod().getMethod(TestClass.class));
     }
