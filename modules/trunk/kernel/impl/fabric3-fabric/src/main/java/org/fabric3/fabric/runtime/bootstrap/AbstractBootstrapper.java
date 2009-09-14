@@ -85,7 +85,7 @@ import org.fabric3.spi.contribution.manifest.JavaExport;
 import org.fabric3.spi.contribution.manifest.PackageInfo;
 import org.fabric3.spi.contribution.manifest.PackageVersion;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;

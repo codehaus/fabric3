@@ -48,7 +48,7 @@ import org.fabric3.introspection.xml.composite.CompositeLoader;
 import org.fabric3.introspection.xml.composite.IncludeLoader;
 import org.fabric3.introspection.xml.composite.PropertyValueLoader;
 import org.fabric3.introspection.xml.composite.WireLoader;
-import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;

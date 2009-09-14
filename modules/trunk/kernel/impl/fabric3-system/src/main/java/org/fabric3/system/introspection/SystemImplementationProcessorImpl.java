@@ -52,7 +52,7 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.java.annotation.InvalidImplementation;
 import org.fabric3.spi.introspection.java.annotation.MissingResource;
 import org.fabric3.system.model.SystemImplementation;

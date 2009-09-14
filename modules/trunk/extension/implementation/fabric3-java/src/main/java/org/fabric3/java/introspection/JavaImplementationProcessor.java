@@ -38,7 +38,7 @@
 package org.fabric3.java.introspection;
 
 import org.fabric3.java.model.JavaImplementation;
-import org.fabric3.spi.introspection.java.annotation.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 
 /**
  * Strongly typed ImplementationProcessor for Java implementations.
