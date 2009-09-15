@@ -37,10 +37,7 @@
 */
 package org.fabric3.spi.transform;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Node;
 
 import org.fabric3.model.type.service.DataType;
@@ -53,22 +50,6 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTransformer<SOURCE, TARGET> {
      // the default source to be used
     private static final XSDSimpleType DEFAULT_SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-    private PullTransformerRegistry registry;
-
-    @Reference
-    public void setRegistry(PullTransformerRegistry registry) {
-        this.registry = registry;
-    }
-
-    @Init
-    public void init() {
-        registry.register(this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregister(this);
-    }
 
     public DataType<?> getSourceType() {
         return DEFAULT_SOURCE;

@@ -47,20 +47,6 @@ import org.fabric3.model.type.service.DataType;
 public interface PullTransformerRegistry {
 
     /**
-     * Registers a transformer.
-     *
-     * @param transformer the transformer
-     */
-    void register(PullTransformer<?,?> transformer);
-
-    /**
-     * Unregisters a transformer.
-     *
-     * @param transformer unregister the transformer
-     */
-    void unregister(PullTransformer<?,?> transformer);
-
-    /**
      * Returns a transformer for the source and target types.
      *
      * @param source the type to transform from

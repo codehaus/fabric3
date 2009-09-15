@@ -37,31 +37,35 @@
    */
 package org.fabric3.transform.xml;
 
-import static javax.xml.stream.XMLStreamConstants.CDATA;
-import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
-import static javax.xml.stream.XMLStreamConstants.COMMENT;
-import static javax.xml.stream.XMLStreamConstants.DTD;
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.ENTITY_REFERENCE;
-import static javax.xml.stream.XMLStreamConstants.PROCESSING_INSTRUCTION;
-import static javax.xml.stream.XMLStreamConstants.SPACE;
-import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
+  import static javax.xml.stream.XMLStreamConstants.CDATA;
+  import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
+  import static javax.xml.stream.XMLStreamConstants.COMMENT;
+  import static javax.xml.stream.XMLStreamConstants.DTD;
+  import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+  import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+  import static javax.xml.stream.XMLStreamConstants.ENTITY_REFERENCE;
+  import static javax.xml.stream.XMLStreamConstants.PROCESSING_INSTRUCTION;
+  import static javax.xml.stream.XMLStreamConstants.SPACE;
+  import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
+  import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+  import javax.xml.stream.XMLStreamException;
+  import javax.xml.stream.XMLStreamReader;
+  import javax.xml.stream.XMLStreamWriter;
 
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.AbstractPushTransformer;
-import org.fabric3.spi.transform.TransformationException;
+  import org.fabric3.model.type.service.DataType;
+  import org.fabric3.spi.transform.PushTransformer;
+  import org.fabric3.spi.transform.TransformContext;
+  import org.fabric3.spi.transform.TransformationException;
 
-/**
+  /**
  * @version $Rev$ $Date$
  */
-public class Stream2Stream extends AbstractPushTransformer<XMLStreamReader, XMLStreamWriter> {
-    public DataType<?> getSourceType() {
+public class Stream2Stream implements PushTransformer<XMLStreamReader, XMLStreamWriter> {
+      public boolean canTransform(DataType<?> type) {
+          return false;
+      }
+
+      public DataType<?> getSourceType() {
         return null;
     }
 

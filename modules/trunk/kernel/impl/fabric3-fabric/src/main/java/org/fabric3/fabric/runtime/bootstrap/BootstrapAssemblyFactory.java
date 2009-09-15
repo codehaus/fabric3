@@ -155,7 +155,7 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.system.generator.SystemComponentGenerator;
 import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
@@ -266,16 +266,17 @@ public class BootstrapAssemblyFactory {
         ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder(providerRegistry, buildHelper);
         provider.init();
 
-        PullTransformerRegistry transformerRegistry = new DefaultPullTransformerRegistry();
-        transformerRegistry.register(new String2String());
-        transformerRegistry.register(new String2Integer());
-        transformerRegistry.register(new String2Boolean());
-        transformerRegistry.register(new String2MapOfString2String());
-        transformerRegistry.register(new String2Class(classLoaderRegistry));
-        transformerRegistry.register(new String2QName());
-        transformerRegistry.register(new String2ListOfString());
-        transformerRegistry.register(new String2ListOfQName());
-
+        DefaultPullTransformerRegistry transformerRegistry = new DefaultPullTransformerRegistry();
+        List<PullTransformer<?, ?>> transformers = new ArrayList<PullTransformer<?, ?>>();
+        transformers.add(new String2String());
+        transformers.add(new String2Integer());
+        transformers.add(new String2Boolean());
+        transformers.add(new String2MapOfString2String());
+        transformers.add(new String2Class(classLoaderRegistry));
+        transformers.add(new String2QName());
+        transformers.add(new String2ListOfString());
+        transformers.add(new String2ListOfQName());
+        transformerRegistry.setTransformers(transformers);
         DefaultComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(scopeRegistry,

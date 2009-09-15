@@ -37,24 +37,28 @@
    */
 package org.fabric3.transform;
 
-import junit.framework.TestCase;
-import org.w3c.dom.Node;
+  import java.util.List;
+  import java.util.ArrayList;
 
-import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.PullTransformerRegistry;
-import org.fabric3.transform.dom2java.String2Integer;
+  import junit.framework.TestCase;
+  import org.w3c.dom.Node;
+
+  import org.fabric3.spi.model.type.JavaClass;
+  import org.fabric3.spi.model.type.XSDSimpleType;
+  import org.fabric3.spi.transform.PullTransformer;
+  import org.fabric3.transform.dom2java.String2Integer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DefaultTransformerRegistryTestCase extends TestCase {
-    private PullTransformerRegistry registry;
+    private DefaultPullTransformerRegistry registry;
 
     public void testRegistration() {
         PullTransformer<?,?> transformer = new String2Integer();
-        registry.register(transformer);
+        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
+        transformers.add(transformer);
+        registry.setTransformers(transformers);
         XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
         JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
         assertSame(transformer, registry.getTransformer(source, target));

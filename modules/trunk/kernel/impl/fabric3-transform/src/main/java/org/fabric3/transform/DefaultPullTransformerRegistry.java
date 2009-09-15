@@ -37,28 +37,32 @@
 */
 package org.fabric3.transform;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.PullTransformerRegistry;
 
 /**
+ * Default PullTransformerRegistry implementation.
+ *
  * @version $Rev$ $Date$
  */
 public class DefaultPullTransformerRegistry implements PullTransformerRegistry {
-    private final Map<TransformerPair, PullTransformer<?, ?>> transformers = new ConcurrentHashMap<TransformerPair, PullTransformer<?, ?>>();
+    private Map<TransformerPair, PullTransformer<?, ?>> transformers = new ConcurrentHashMap<TransformerPair, PullTransformer<?, ?>>();
 
 
-    public void register(PullTransformer<?, ?> transformer) {
-        TransformerPair pair = new TransformerPair(transformer.getSourceType(), transformer.getTargetType());
-        transformers.put(pair, transformer);
-    }
-
-    public void unregister(PullTransformer<?, ?> transformer) {
-        TransformerPair pair = new TransformerPair(transformer.getSourceType(), transformer.getTargetType());
-        transformers.remove(pair);
+    @Reference(required = false)
+    public void setTransformers(List<PullTransformer<?, ?>> transformers) {
+        this.transformers.clear();
+        for (PullTransformer<?, ?> transformer : transformers) {
+            TransformerPair pair = new TransformerPair(transformer.getSourceType(), transformer.getTargetType());
+            this.transformers.put(pair, transformer);
+        }
     }
 
     @SuppressWarnings({"unchecked"})
@@ -72,9 +76,6 @@ public class DefaultPullTransformerRegistry implements PullTransformerRegistry {
                     break;
                 }
             }
-        }
-        if (transformer == null) {
-            System.err.println("No transformer for soure " + target.getLogical() + "|" + target.getPhysical());
         }
         return transformer;
     }

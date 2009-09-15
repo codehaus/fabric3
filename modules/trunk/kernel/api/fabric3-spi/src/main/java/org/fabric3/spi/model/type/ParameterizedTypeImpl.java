@@ -76,11 +76,11 @@ public final class ParameterizedTypeImpl implements ParameterizedType {
         Type[] otherTypeArguments = other.getActualTypeArguments();
 
         boolean equals = actualTypeArguments.length == otherTypeArguments.length;
-
-        for (int i = 0; i < actualTypeArguments.length; i++) {
-            equals = actualTypeArguments[i].equals(otherTypeArguments[i]);
+        if (equals) {
+            for (int i = 0; i < actualTypeArguments.length; i++) {
+                equals = actualTypeArguments[i].equals(otherTypeArguments[i]);
+            }
         }
-
         return equals;
 
     }
