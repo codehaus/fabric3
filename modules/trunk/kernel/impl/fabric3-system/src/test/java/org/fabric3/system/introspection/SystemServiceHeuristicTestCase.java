@@ -59,7 +59,7 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.system.model.SystemImplementation;
 
 /**
@@ -69,7 +69,7 @@ public class SystemServiceHeuristicTestCase extends TestCase {
     private static final Set<Class<?>> NOCLASSES = Collections.emptySet();
     private SystemServiceHeuristic heuristic;
 
-    private ContractProcessor contractProcessor;
+    private JavaContractProcessor contractProcessor;
     private IntrospectionHelper helper;
     private IntrospectionContext context;
     private SystemImplementation impl;
@@ -142,7 +142,7 @@ public class SystemServiceHeuristicTestCase extends TestCase {
         control = EasyMock.createControl();
         context = control.createMock(IntrospectionContext.class);
         EasyMock.expect(context.getTypeMapping(EasyMock.isA(Class.class))).andStubReturn(null);
-        contractProcessor = control.createMock(ContractProcessor.class);
+        contractProcessor = control.createMock(JavaContractProcessor.class);
         helper = control.createMock(IntrospectionHelper.class);
         heuristic = new SystemServiceHeuristic(contractProcessor, helper);
     }

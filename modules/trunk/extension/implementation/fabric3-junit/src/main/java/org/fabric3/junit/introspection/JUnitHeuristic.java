@@ -68,7 +68,7 @@ import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.NoConstructorFound;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.UnknownInjectionType;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -76,13 +76,13 @@ import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
 
     private final IntrospectionHelper helper;
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
 
     private final HeuristicProcessor<JUnitImplementation> serviceHeuristic;
     private PolicyAnnotationProcessor policyProcessor;
 
     public JUnitHeuristic(@Reference IntrospectionHelper helper,
-                          @Reference ContractProcessor contractProcessor,
+                          @Reference JavaContractProcessor contractProcessor,
                           @Reference(name = "service") HeuristicProcessor<JUnitImplementation> serviceHeuristic) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;

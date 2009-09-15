@@ -44,14 +44,14 @@ import org.easymock.EasyMock;
 
 import org.fabric3.api.annotation.security.RolesAllowed;
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
-import org.fabric3.introspection.java.contract.DefaultContractProcessor;
+import org.fabric3.introspection.java.contract.JavaContractProcessorImpl;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -59,7 +59,7 @@ import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 public class DefaultOperationPolicyIntrospectorTestCase extends TestCase {
 
     public void testOperationIntrospection() throws Exception {
-        ContractProcessor contractProcessor = new DefaultContractProcessor(new DefaultIntrospectionHelper());
+        JavaContractProcessor contractProcessor = new JavaContractProcessorImpl(new DefaultIntrospectionHelper());
 
         PolicyAnnotationProcessor processor = EasyMock.createNiceMock(PolicyAnnotationProcessor.class);
         processor.process(EasyMock.isA(Annotation.class), EasyMock.isA(Operation.class), EasyMock.isA(IntrospectionContext.class));

@@ -60,7 +60,7 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -68,9 +68,9 @@ import org.fabric3.spi.introspection.java.contract.ContractProcessor;
 public class MonitorProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Monitor, I> {
 
     private final IntrospectionHelper helper;
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
 
-    public MonitorProcessor(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
+    public MonitorProcessor(@Reference IntrospectionHelper helper, @Reference JavaContractProcessor contractProcessor) {
         super(Monitor.class);
         this.helper = helper;
         this.contractProcessor = contractProcessor;

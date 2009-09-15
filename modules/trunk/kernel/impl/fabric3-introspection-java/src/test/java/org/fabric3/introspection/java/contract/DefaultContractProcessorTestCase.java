@@ -59,13 +59,13 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DefaultContractProcessorTestCase extends TestCase {
-    private ContractProcessor impl;
+    private JavaContractProcessor impl;
 
     public void testSimpleInterface() {
         IntrospectionContext context = new DefaultIntrospectionContext();
@@ -224,7 +224,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        impl = new DefaultContractProcessor(helper);
+        impl = new JavaContractProcessorImpl(helper);
     }
 
     private static interface Base {

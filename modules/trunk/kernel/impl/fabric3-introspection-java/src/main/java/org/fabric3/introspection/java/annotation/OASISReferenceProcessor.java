@@ -64,17 +64,17 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class OASISReferenceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Reference, I> {
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
     private PolicyAnnotationProcessor policyProcessor;
 
-    public OASISReferenceProcessor(@org.osoa.sca.annotations.Reference ContractProcessor contractProcessor,
+    public OASISReferenceProcessor(@org.osoa.sca.annotations.Reference JavaContractProcessor contractProcessor,
                                    @org.osoa.sca.annotations.Reference IntrospectionHelper helper) {
         super(Reference.class);
         this.contractProcessor = contractProcessor;

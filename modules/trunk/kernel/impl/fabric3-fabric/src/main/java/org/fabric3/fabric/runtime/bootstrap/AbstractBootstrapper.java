@@ -71,7 +71,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
-import org.fabric3.introspection.java.contract.DefaultContractProcessor;
+import org.fabric3.introspection.java.contract.JavaContractProcessorImpl;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.cm.ComponentManager;
@@ -86,7 +86,7 @@ import org.fabric3.spi.contribution.manifest.PackageInfo;
 import org.fabric3.spi.contribution.manifest.PackageVersion;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.synthesize.ComponentRegistrationException;
@@ -104,7 +104,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     private static final URI RUNTIME_SERVICES = URI.create("fabric3://RuntimeServices");
 
     // bootstrap components - these are disposed of after the core runtime system components are booted
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private final ComponentInstantiator instantiator;
     private final ImplementationProcessor<SystemImplementation> systemImplementationProcessor;
     private ComponentSynthesizer synthesizer;
@@ -132,7 +132,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         this.xmlFactory = xmlFactory;
         // create components needed for to bootstrap the runtime
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        contractProcessor = new DefaultContractProcessor(helper);
+        contractProcessor = new JavaContractProcessorImpl(helper);
         DocumentLoader documentLoader = new DocumentLoaderImpl();
         instantiator = new AtomicComponentInstantiator(documentLoader);
         systemImplementationProcessor = BootstrapIntrospectionFactory.createSystemImplementationProcessor();

@@ -50,7 +50,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
 
 /**
@@ -58,12 +58,12 @@ import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
  */
 public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementation> {
     private final IntrospectionHelper helper;
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private PolicyAnnotationProcessor policyProcessor;
     private OperationPolicyIntrospector policyIntrospector;
 
     public JavaServiceHeuristic(@Reference IntrospectionHelper helper,
-                                @Reference ContractProcessor contractProcessor,
+                                @Reference JavaContractProcessor contractProcessor,
                                 @Reference OperationPolicyIntrospector policyIntrospector) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;

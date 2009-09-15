@@ -61,9 +61,9 @@ import org.fabric3.introspection.java.annotation.OASISPropertyProcessor;
 import org.fabric3.introspection.java.annotation.OASISReferenceProcessor;
 import org.fabric3.introspection.java.annotation.PropertyProcessor;
 import org.fabric3.introspection.java.annotation.ReferenceProcessor;
-import org.fabric3.introspection.java.contract.DefaultContractProcessor;
+import org.fabric3.introspection.java.contract.JavaContractProcessorImpl;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
@@ -89,7 +89,7 @@ public class BootstrapIntrospectionFactory {
      */
     public static ImplementationProcessor<SystemImplementation> createSystemImplementationProcessor() {
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+        JavaContractProcessor contractProcessor = new JavaContractProcessorImpl(helper);
 
         Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>> processors =
                 new HashMap<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>>();

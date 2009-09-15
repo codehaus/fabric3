@@ -48,17 +48,17 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.MissingResource;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
     private final ServiceDefinition controlService;
 
-    public MockComponentTypeLoaderImpl(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
+    public MockComponentTypeLoaderImpl(@Reference IntrospectionHelper helper, @Reference JavaContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
         IntrospectionContext context = new DefaultIntrospectionContext();

@@ -54,17 +54,17 @@ import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class Fabric3ResourceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Resource, I> {
     private final IntrospectionHelper helper;
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
 
     public Fabric3ResourceProcessor(@Reference IntrospectionHelper helper,
-                                    @Reference ContractProcessor contractProcessor) {
+                                    @Reference JavaContractProcessor contractProcessor) {
         super(Resource.class);
         this.helper = helper;
         this.contractProcessor = contractProcessor;

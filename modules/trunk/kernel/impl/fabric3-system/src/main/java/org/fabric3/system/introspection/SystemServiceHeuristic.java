@@ -48,7 +48,7 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.system.model.SystemImplementation;
 
@@ -58,10 +58,10 @@ import org.fabric3.system.model.SystemImplementation;
  * @version $Rev$ $Date$
  */
 public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplementation> {
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
 
-    public SystemServiceHeuristic(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
+    public SystemServiceHeuristic(@Reference JavaContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
         this.contractProcessor = contractProcessor;
         this.helper = helper;
     }

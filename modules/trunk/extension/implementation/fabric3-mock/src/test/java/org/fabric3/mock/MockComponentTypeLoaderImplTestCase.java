@@ -49,7 +49,7 @@ import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -68,7 +68,7 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
         EasyMock.expect(helper.isAnnotationPresent(EasyMock.isA(Class.class), EasyMock.isA(Class.class))).andReturn(false).atLeastOnce();
         EasyMock.replay(helper);
 
-        ContractProcessor processor = EasyMock.createMock(ContractProcessor.class);
+        JavaContractProcessor processor = EasyMock.createMock(JavaContractProcessor.class);
         JavaServiceContract controlContract = new JavaServiceContract(IMocksControl.class);
         JavaServiceContract fooContract = new JavaServiceContract(Foo.class);
         EasyMock.expect(processor.introspect(

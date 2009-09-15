@@ -60,7 +60,7 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 @SuppressWarnings("unchecked")
 public class ReferenceProcessorTestCase extends TestCase {
@@ -151,7 +151,7 @@ public class ReferenceProcessorTestCase extends TestCase {
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         final JavaServiceContract contract = new JavaServiceContract(Implementation.class);
 
-        ContractProcessor contractProcessor = new ContractProcessor() {
+        JavaContractProcessor contractProcessor = new JavaContractProcessor() {
 
             public JavaServiceContract introspect(Type type, IntrospectionContext context) {
                 return contract;

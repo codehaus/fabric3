@@ -55,7 +55,7 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
 
 /**
@@ -64,11 +64,11 @@ import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
  * @version $Rev$ $Date$
  */
 public class OASISServiceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Service, I> {
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private PolicyAnnotationProcessor policyProcessor;
     private OperationPolicyIntrospector policyIntrospector;
 
-    public OASISServiceProcessor(@Reference ContractProcessor contractProcessor, @Reference OperationPolicyIntrospector policyIntrospector) {
+    public OASISServiceProcessor(@Reference JavaContractProcessor contractProcessor, @Reference OperationPolicyIntrospector policyIntrospector) {
         super(Service.class);
         this.contractProcessor = contractProcessor;
         this.policyIntrospector = policyIntrospector;

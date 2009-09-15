@@ -24,8 +24,8 @@
         <f3-impl:implementation.system class="org.fabric3.introspection.java.DefaultIntrospectionHelper"/>
     </component>
 
-    <component name="DefaultContractProcessor">
-        <f3-impl:implementation.system class="org.fabric3.introspection.java.contract.DefaultContractProcessor"/>
+    <component name="JavaContractProcessor">
+        <f3-impl:implementation.system class="org.fabric3.introspection.java.contract.JavaContractProcessorImpl"/>
     </component>
 
     <component name="ClassVisitor">

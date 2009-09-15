@@ -59,7 +59,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -71,10 +71,10 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
     private static final List<DataType<?>> FAULT_TYPE = Collections.emptyList();
 
     private final IntrospectionHelper helper;
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private PolicyAnnotationProcessor policyProcessor;
 
-    public JUnitServiceHeuristic(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
+    public JUnitServiceHeuristic(@Reference IntrospectionHelper helper, @Reference JavaContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
     }

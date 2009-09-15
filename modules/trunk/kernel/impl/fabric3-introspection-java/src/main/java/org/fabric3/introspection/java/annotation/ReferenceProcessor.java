@@ -65,17 +65,17 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ReferenceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Reference, I> {
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
     private PolicyAnnotationProcessor policyProcessor;
 
-    public ReferenceProcessor(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
+    public ReferenceProcessor(@Reference JavaContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
         super(Reference.class);
         this.contractProcessor = contractProcessor;
         this.helper = helper;

@@ -53,7 +53,7 @@ import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 
 /**
@@ -64,7 +64,7 @@ public class PersistenceUnitProcessor<I extends Implementation<? extends Injecti
 
     private final ServiceContract factoryServiceContract;
 
-    public PersistenceUnitProcessor(@Reference ContractProcessor contractProcessor) {
+    public PersistenceUnitProcessor(@Reference JavaContractProcessor contractProcessor) {
         super(PersistenceUnit.class);
         IntrospectionContext context = new DefaultIntrospectionContext();
         factoryServiceContract = contractProcessor.introspect(EntityManagerFactory.class, context);

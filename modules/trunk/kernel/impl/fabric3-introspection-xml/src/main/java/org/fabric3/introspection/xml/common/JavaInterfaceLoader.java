@@ -53,7 +53,7 @@ import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.ResourceNotFound;
@@ -67,10 +67,10 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
  */
 public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
 
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
 
-    public JavaInterfaceLoader(@Reference ContractProcessor contractProcessor,
+    public JavaInterfaceLoader(@Reference JavaContractProcessor contractProcessor,
                                @Reference IntrospectionHelper helper) {
         this.contractProcessor = contractProcessor;
         this.helper = helper;

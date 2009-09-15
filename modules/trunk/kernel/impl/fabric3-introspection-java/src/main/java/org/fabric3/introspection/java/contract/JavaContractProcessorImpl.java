@@ -65,7 +65,7 @@ import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.contract.InterfaceIntrospector;
 import org.fabric3.spi.introspection.java.contract.OperationIntrospector;
 
@@ -74,7 +74,7 @@ import org.fabric3.spi.introspection.java.contract.OperationIntrospector;
  *
  * @version $Rev$ $Date$
  */
-public class DefaultContractProcessor implements ContractProcessor {
+public class JavaContractProcessorImpl implements JavaContractProcessor {
     public static final String IDL_INPUT = "idl:input";
     public static final QName ONEWAY_INTENT = new QName(Constants.SCA_NS, "oneWay");
 
@@ -83,7 +83,7 @@ public class DefaultContractProcessor implements ContractProcessor {
     private List<OperationIntrospector> operationIntrospectors;
 
 
-    public DefaultContractProcessor(@Reference IntrospectionHelper helper) {
+    public JavaContractProcessorImpl(@Reference IntrospectionHelper helper) {
         this.helper = helper;
         interfaceIntrospectors = new ArrayList<InterfaceIntrospector>();
         operationIntrospectors = new ArrayList<OperationIntrospector>();

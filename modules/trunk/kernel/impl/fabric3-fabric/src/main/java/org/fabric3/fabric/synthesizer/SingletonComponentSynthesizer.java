@@ -60,7 +60,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -85,7 +85,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
     private ComponentInstantiator instantiator;
     private LogicalComponentManager lcm;
     private ComponentManager componentManager;
-    private ContractProcessor contractProcessor;
+    private JavaContractProcessor contractProcessor;
     private ScopeContainer scopeContainer;
 
     @Constructor
@@ -93,7 +93,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
                                          @Reference ComponentInstantiator instantiator,
                                          @Reference LogicalComponentManager lcm,
                                          @Reference ComponentManager componentManager,
-                                         @Reference ContractProcessor contractProcessor,
+                                         @Reference JavaContractProcessor contractProcessor,
                                          @Reference ScopeRegistry registry) {
         this(implementationProcessor, instantiator, lcm, componentManager, contractProcessor, registry.getScopeContainer(Scope.COMPOSITE));
     }
@@ -102,7 +102,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
                                          ComponentInstantiator instantiator,
                                          LogicalComponentManager lcm,
                                          ComponentManager componentManager,
-                                         ContractProcessor contractProcessor,
+                                         JavaContractProcessor contractProcessor,
                                          ScopeContainer scopeContainer) {
         this.implementationProcessor = implementationProcessor;
         this.instantiator = instantiator;

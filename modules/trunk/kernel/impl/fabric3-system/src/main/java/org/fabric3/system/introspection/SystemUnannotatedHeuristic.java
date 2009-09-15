@@ -60,7 +60,7 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.UnknownInjectionType;
 import org.fabric3.system.model.SystemImplementation;
@@ -73,9 +73,9 @@ import org.fabric3.system.model.SystemImplementation;
 public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImplementation> {
 
     private final IntrospectionHelper helper;
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
 
-    public SystemUnannotatedHeuristic(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
+    public SystemUnannotatedHeuristic(@Reference IntrospectionHelper helper, @Reference JavaContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
     }

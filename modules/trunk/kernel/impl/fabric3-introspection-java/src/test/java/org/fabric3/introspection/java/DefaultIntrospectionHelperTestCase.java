@@ -54,7 +54,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.fabric3.introspection.java.contract.DefaultContractProcessor;
+import org.fabric3.introspection.java.contract.JavaContractProcessorImpl;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
@@ -257,7 +257,7 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
         TypeMapping mapping = new TypeMapping();
         context.addTypeMapping(InterfaceWithSetter.class, mapping);
 
-        ServiceContract contract = new DefaultContractProcessor(helper).introspect(InterfaceWithSetter.class, context);
+        ServiceContract contract = new JavaContractProcessorImpl(helper).introspect(InterfaceWithSetter.class, context);
         ServiceDefinition definition = new ServiceDefinition("InterfaceWithSetter", contract);
         services.add(definition);
         assertEquals(expected, helper.getInjectionMethods(InjectionWithInterface.class, services));

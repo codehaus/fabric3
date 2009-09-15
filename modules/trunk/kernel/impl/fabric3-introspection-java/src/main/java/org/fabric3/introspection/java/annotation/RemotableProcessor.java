@@ -52,16 +52,16 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class RemotableProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Remotable, I> {
 
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
 
-    public RemotableProcessor(@Reference ContractProcessor contractProcessor) {
+    public RemotableProcessor(@Reference JavaContractProcessor contractProcessor) {
         super(Remotable.class);
         this.contractProcessor = contractProcessor;
     }

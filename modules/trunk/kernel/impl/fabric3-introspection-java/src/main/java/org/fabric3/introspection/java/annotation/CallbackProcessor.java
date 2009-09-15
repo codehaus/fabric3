@@ -61,16 +61,16 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class CallbackProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Callback, I> {
     private final IntrospectionHelper helper;
-    private final ContractProcessor contractProcessor;
+    private final JavaContractProcessor contractProcessor;
 
-    public CallbackProcessor(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
+    public CallbackProcessor(@Reference JavaContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
         super(Callback.class);
         this.contractProcessor = contractProcessor;
         this.helper = helper;

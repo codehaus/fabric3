@@ -49,11 +49,11 @@ import org.fabric3.model.type.service.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
- * Constructs a JavaServiceContract from a Java type.
+ * Introspects a JavaServiceContract from a Java type.
  *
  * @version $Rev$ $Date$
  */
-public interface ContractProcessor {
+public interface JavaContractProcessor {
     /**
      * Introspect a Java Type (e.g. a Class) and return the JavaServiceContract. If validation errors or warnings are encountered, they will be
      * reported in the IntrospectionContext.

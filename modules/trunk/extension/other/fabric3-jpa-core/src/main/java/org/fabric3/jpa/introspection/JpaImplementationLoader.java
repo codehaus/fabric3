@@ -56,7 +56,7 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
@@ -75,7 +75,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
     private final JavaImplementationProcessor implementationProcessor;
     private final ServiceContract factoryServiceContract;
 
-    public JpaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor, @Reference ContractProcessor contractProcessor) {
+    public JpaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor, @Reference JavaContractProcessor contractProcessor) {
         this.implementationProcessor = implementationProcessor;
         IntrospectionContext context = new DefaultIntrospectionContext();
         factoryServiceContract = contractProcessor.introspect(EntityManager.class, context);
