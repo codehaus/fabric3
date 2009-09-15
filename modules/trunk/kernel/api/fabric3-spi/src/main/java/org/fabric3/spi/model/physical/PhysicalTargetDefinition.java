@@ -45,6 +45,8 @@ package org.fabric3.spi.model.physical;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.w3c.dom.Document;
 
@@ -55,6 +57,11 @@ import org.w3c.dom.Document;
  */
 public class PhysicalTargetDefinition implements Serializable {
     private static final long serialVersionUID = -8430498259706831133L;
+    private static List<String> PHYSICAL_DATA_TYPES = new ArrayList<String>();
+
+    static {
+        PHYSICAL_DATA_TYPES.add(PhysicalDataTypes.JAVA_TYPE);
+    }
 
     private URI uri;
     private boolean optimizable;
@@ -115,6 +122,15 @@ public class PhysicalTargetDefinition implements Serializable {
      */
     public void setCallback(boolean callback) {
         this.callback = callback;
+    }
+
+    /**
+     * Returns a list of supported physical data types by order of preference.
+     *
+     * @return a list of supported physical data types by order of preference
+     */
+    public static List<String> getPHYSICAL_DATA_TYPES() {
+        return PHYSICAL_DATA_TYPES;
     }
 
     /**
