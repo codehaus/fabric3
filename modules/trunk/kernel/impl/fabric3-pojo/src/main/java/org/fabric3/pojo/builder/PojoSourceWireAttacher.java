@@ -62,9 +62,9 @@ import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.PullTransformerRegistry;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.PullTransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -117,16 +117,13 @@ public abstract class PojoSourceWireAttacher {
                 formalType = String.class;
             }
 
-            URI sourceId = sourceDefinition.getClassLoaderId();
             URI targetId = targetDefinition.getClassLoaderId();
-            ClassLoader sourceClassLoader = classLoaderRegistry.getClassLoader(sourceId);
             ClassLoader targetClassLoader = null;
             if (targetId != null) {
                 targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
             }
 
-            TransformContext context = new TransformContext(sourceClassLoader, targetClassLoader);
-            return createKey(formalType, element, context);
+            return createKey(formalType, element, targetClassLoader);
         }
 
         return null;
@@ -134,7 +131,7 @@ public abstract class PojoSourceWireAttacher {
     }
 
     @SuppressWarnings("unchecked")
-    private Object createKey(Type type, Element value, TransformContext context) throws PropertyTransformException {
+    private Object createKey(Type type, Element value, ClassLoader classLoader) throws PropertyTransformException {
 
         DataType<?> targetType;
         if (type instanceof Class<?>) {
@@ -147,6 +144,7 @@ public abstract class PojoSourceWireAttacher {
             throw new PropertyTransformException("No transformer for : " + type);
         }
         try {
+            TransformContext context = new TransformContext(SOURCE_TYPE, targetType, classLoader);
             return transformer.transform(value, context);
         } catch (TransformationException e) {
             throw new PropertyTransformException("Error transformatng property", e);

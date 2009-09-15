@@ -37,39 +37,56 @@
 */
 package org.fabric3.spi.transform;
 
+import org.fabric3.model.type.service.DataType;
+
 /**
  * Context information applicable during a transformation.
  *
  * @version $Rev$ $Date$
  */
 public class TransformContext {
-    private final ClassLoader targetClassLoader;
-    private final ClassLoader sourceClassLoader;
+    private ClassLoader targetClassLoader;
+    private DataType<?> sourceType;
+    private DataType<?> targetType;
 
     /**
-     * @param sourceClassLoader a ClassLoader that can be used to access resources from the source
+     * Constructor.
+     *
+     * @param sourceType        the data type to transform from
+     * @param targetType        the data type to transform to
      * @param targetClassLoader a ClassLoader that can be used instantiate transformation results
      */
-    public TransformContext(ClassLoader sourceClassLoader, ClassLoader targetClassLoader) {
-        this.sourceClassLoader = sourceClassLoader;
+    public TransformContext(DataType<?> sourceType, DataType<?> targetType, ClassLoader targetClassLoader) {
+        this.sourceType = sourceType;
+        this.targetType = targetType;
         this.targetClassLoader = targetClassLoader;
     }
 
     /**
-     * Returns a ClassLoader that can be used instantiate transformation results.
+     * The data type to transform from.
      *
-     * @return a ClassLoader that can be used instantiate transformation results
+     * @return data type to transform from
+     */
+    public DataType<?> getSourceType() {
+        return sourceType;
+    }
+
+    /**
+     * The data type to transform to.
+     *
+     * @return data type to transform to
+     */
+    public DataType<?> getTargetType() {
+        return targetType;
+    }
+
+    /**
+     * Returns a ClassLoader that can be used to instantiate transformation results.
+     *
+     * @return a ClassLoader that can be used to instantiate transformation results
      */
     public ClassLoader getTargetClassLoader() {
         return targetClassLoader;
     }
 
-    /**
-     * Returns a ClassLoader that can be used to access resources from the source.
-     *
-     * @return a ClassLoader that can be used to access resources from the source
-     */
-    public ClassLoader getSourceClassLoader() {
-        return sourceClassLoader;
-    }
 }

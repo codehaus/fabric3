@@ -44,6 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.service.DataType;
+import org.fabric3.spi.transform.ComplexTypePullTransformer;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.PullTransformerRegistry;
 
@@ -54,7 +55,7 @@ import org.fabric3.spi.transform.PullTransformerRegistry;
  */
 public class DefaultPullTransformerRegistry implements PullTransformerRegistry {
     private Map<TransformerPair, PullTransformer<?, ?>> transformers = new ConcurrentHashMap<TransformerPair, PullTransformer<?, ?>>();
-
+    private ComplexTypePullTransformer complexTransformer;
 
     @Reference(required = false)
     public void setTransformers(List<PullTransformer<?, ?>> transformers) {
@@ -65,16 +66,18 @@ public class DefaultPullTransformerRegistry implements PullTransformerRegistry {
         }
     }
 
+    @Reference(required = false)
+    public void setComplexTransformer(ComplexTypePullTransformer complexTransformer) {
+        this.complexTransformer = complexTransformer;
+    }
+
     @SuppressWarnings({"unchecked"})
     public PullTransformer<?, ?> getTransformer(DataType<?> source, DataType<?> target) {
         TransformerPair pair = new TransformerPair(source, target);
         PullTransformer<?, ?> transformer = transformers.get(pair);
         if (transformer == null) {
-            for (PullTransformer<?, ?> tr : transformers.values()) {
-                if (tr.canTransform(target)) {
-                    transformer = tr;
-                    break;
-                }
+            if (complexTransformer.canTransform(target)) {
+                transformer = complexTransformer;
             }
         }
         return transformer;

@@ -47,14 +47,6 @@ import org.fabric3.model.type.service.DataType;
 public interface Transformer {
 
     /**
-     * Returns true if the transformer can transform the given type.
-     *
-     * @param type the type
-     * @return true if the transformer can transform the given type
-     */
-    boolean canTransform(DataType<?> type);
-
-    /**
      * Returns the type the transformer transforms from.
      *
      * @return the type

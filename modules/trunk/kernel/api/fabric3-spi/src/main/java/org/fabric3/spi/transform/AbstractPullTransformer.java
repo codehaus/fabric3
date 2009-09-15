@@ -55,7 +55,4 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
         return DEFAULT_SOURCE;
     }
 
-    public boolean canTransform(DataType<?> targetType) {
-        return false;
-    }
 }

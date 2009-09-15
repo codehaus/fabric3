@@ -97,7 +97,7 @@ public class JAXBParameterEncoder extends AbstractParameterEncoder {
         if (body != null && body.getClass().isArray() && !body.getClass().isPrimitive()) {
             Object[] payload = (Object[]) body;
             if (payload.length > 1) {
-                throw new UnsupportedOperationException("Multiple paramters not supported");
+                throw new UnsupportedOperationException("Multiple parameters not supported");
             }
             body = payload[0];
         }

@@ -61,18 +61,20 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
-import org.fabric3.spi.expression.ExpressionExpander;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.expression.ExpressionExpander;
+import org.fabric3.spi.expression.ExpressionExpansionException;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * Base class for ComponentBuilders that build components based on POJOs.
@@ -125,8 +127,6 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected void createPropertyFactories(PCD definition, InstanceFactoryProvider<T> provider) throws BuilderException {
         Map<String, Document> propertyValues = definition.getPropertyValues();
 
-        ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
-        TransformContext context = new TransformContext(null, cl);
         for (Map.Entry<String, Document> entry : propertyValues.entrySet()) {
             String name = entry.getKey();
             Document value = entry.getValue();
@@ -142,13 +142,14 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
                 }
             }
 
-            ObjectFactory<?> objectFactory = createObjectFactory(name, memberType, element, context);
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
+            ObjectFactory<?> objectFactory = createObjectFactory(name, memberType, element, classLoader);
             provider.setObjectFactory(source, objectFactory);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private ObjectFactory<?> createObjectFactory(String name, Type type, Element value, TransformContext context) throws BuilderException {
+    private ObjectFactory<?> createObjectFactory(String name, Type type, Element value, ClassLoader classLoader) throws BuilderException {
 
         DataType<?> targetType = null;
 
@@ -164,14 +165,17 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         }
 
         try {
+            TransformContext context = new TransformContext(SOURCE_TYPE, targetType, classLoader);
             Object instance = transformer.transform(value, context);
             if (instance instanceof String && expander != null) {
                 // if the property value is a string, expand it if it contains expressions
                 instance = expander.expand((String) instance);
             }
             return new SingletonObjectFactory(instance);
-        } catch (Exception e) {
+        } catch (TransformationException e) {
             throw new PropertyTransformException("Unable to transform property value: " + name, name, e);
+        } catch (ExpressionExpansionException e) {
+            throw new PropertyTransformException("Unable to expand property value: " + name, name, e);
         }
 
     }

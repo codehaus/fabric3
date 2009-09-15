@@ -56,8 +56,6 @@
  */
 package org.fabric3.jaxb.transform;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -69,27 +67,23 @@ import org.w3c.dom.NodeList;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.ComplexTypePullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
-public class String2Jaxb extends AbstractPullTransformer<Node, Object> {
-
+public class String2Jaxb extends AbstractPullTransformer<Node, Object> implements ComplexTypePullTransformer<Node, Object> {
     private static final JavaClass<Object> TARGET = new JavaClass<Object>(Object.class);
-    private Set<Class<?>> jaxbClasses = new HashSet<Class<?>>();
-
-    @Override
-    public boolean canTransform(DataType<?> targetType) {
-        Class<?> clazz = (Class<?>) targetType.getPhysical();
-        if (clazz.isAnnotationPresent(XmlRootElement.class)) {
-            jaxbClasses.add(clazz);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public DataType<?> getTargetType() {
         return TARGET;
+    }
+
+    public boolean canTransform(DataType<?> targetType) {
+        if (!(targetType.getPhysical() instanceof Class)) {
+            return false;
+        }
+        Class<?> clazz = (Class<?>) targetType.getPhysical();
+        return clazz.isAnnotationPresent(XmlRootElement.class);
     }
 
     public Object transform(Node source, TransformContext context) throws TransformationException {
@@ -97,10 +91,9 @@ public class String2Jaxb extends AbstractPullTransformer<Node, Object> {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
         try {
-            Class<?>[] classes = new Class<?>[jaxbClasses.size()];
-            classes = jaxbClasses.toArray(classes);
             Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-            JAXBContext jaxbContext = JAXBContext.newInstance(classes);
+            Class<?> clazz = (Class<?>) context.getTargetType().getPhysical();
+            JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
 
             Thread.currentThread().setContextClassLoader(context.getTargetClassLoader());
             NodeList children = source.getChildNodes();
