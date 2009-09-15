@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.idl.wsdl.scdl;
+package org.fabric3.idl.wsdl.model;
 
 import javax.xml.namespace.QName;
 

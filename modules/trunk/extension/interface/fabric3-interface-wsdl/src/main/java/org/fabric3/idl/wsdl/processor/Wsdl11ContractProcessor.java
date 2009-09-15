@@ -37,7 +37,8 @@
  */
 package org.fabric3.idl.wsdl.processor;
 
-import java.net.URL;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,30 +50,26 @@ import javax.wsdl.Message;
 import javax.wsdl.Output;
 import javax.wsdl.Part;
 import javax.wsdl.PortType;
-import javax.wsdl.Types;
-import javax.wsdl.WSDLException;
-import javax.wsdl.extensions.schema.Schema;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
-import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.apache.ws.commons.schema.XmlSchemaType;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
-import org.fabric3.idl.wsdl.scdl.WsdlServiceContract;
+import org.fabric3.idl.wsdl.model.WsdlServiceContract;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ResourceElement;
+import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.model.type.XSDType;
 
 /**
  * WSDL 1.1 processor implementation.
  *
  * @version $Revsion$ $Date$
  */
-public class Wsdl11ContractProcessor extends AbstractWsdlProcessor implements WsdlContractProcessor {
+public class Wsdl11ContractProcessor implements WsdlContractProcessor {
     private MetaDataStore store;
 
     public Wsdl11ContractProcessor(@Reference MetaDataStore store) {
@@ -80,81 +77,60 @@ public class Wsdl11ContractProcessor extends AbstractWsdlProcessor implements Ws
     }
 
     public WsdlServiceContract introspect(QName portTypeName, IntrospectionContext context) {
-        URL wsdlUrl = resolveWsdl(portTypeName);
-        try {
+        WsdlServiceContract contract = new WsdlServiceContract();
+        contract.setQname(portTypeName);
 
-            List<Operation> operations = new LinkedList<Operation>();
-
-            WSDLFactory factory = WSDLFactory.newInstance();
-            WSDLReader reader = factory.newWSDLReader();
-            reader.setExtensionRegistry(factory.newPopulatedExtensionRegistry());
-
-            Definition definition = reader.readWSDL(wsdlUrl.toExternalForm());
-            PortType portType = definition.getPortType(portTypeName);
-
-            if (portType == null) {
-                throw new WsdlProcessorException("Port type not found " + portType);
-            }
-
-            XmlSchemaCollection xmlSchema = getXmlSchema(definition);
-
-            for (Object obj : portType.getOperations()) {
-                Operation op = getOperation(xmlSchema, obj);
-                operations.add(op);
-            }
-            WsdlServiceContract contract = new WsdlServiceContract();
-            contract.setQname(portTypeName);
-            contract.setOperations(operations);
+        URI contributionUri = context.getContributionUri();
+        PortType portType = resolvePortType(null, portTypeName, contributionUri);
+        if (portType == null) {
+            PortTypeNotFound error = new PortTypeNotFound("Port type not found " + portType);
+            context.addError(error);
             return contract;
-
-        } catch (WSDLException ex) {
-            throw new WsdlProcessorException("Unable to parse WSDL " + wsdlUrl, ex);
         }
+        List<Operation> operations = new LinkedList<Operation>();
+        for (Object wsdlOperation : portType.getOperations()) {
+            Operation op = createOperation((javax.wsdl.Operation) wsdlOperation);
+            operations.add(op);
+        }
+        contract.setOperations(operations);
+        return contract;
 
     }
 
-    public List<Operation> getOperations(PortType portType, XmlSchemaCollection xmlSchema) {
+    public List<Operation> getOperations(PortType portType) {
         List<Operation> operations = new LinkedList<Operation>();
-        if (portType == null || xmlSchema == null) {
-            throw new WsdlProcessorException("Port type is null ");
-        }
         for (Object obj : portType.getOperations()) {
-            Operation op = getOperation(xmlSchema, obj);
+            Operation op = createOperation((javax.wsdl.Operation) obj);
             operations.add(op);
         }
         return operations;
     }
 
     /**
-     * Creates an F3 operation from a WSDL operation.
+     * Creates a operation model object from a WSDL operation.
+     *
+     * @param operation the WSDL operation
+     * @return the operation model object
      */
-    private Operation getOperation(XmlSchemaCollection xmlSchema, Object obj) {
-
-        javax.wsdl.Operation operation = (javax.wsdl.Operation) obj;
-
+    private Operation createOperation(javax.wsdl.Operation operation) {
         Input input = operation.getInput();
-        Output output = operation.getOutput();
+        List<DataType<?>> inputTypes = getInputTypes(input.getMessage());
+
         Map faults = operation.getFaults();
+        List<DataType<?>> faultTypes = getFaultTypes(faults);
+
+        Output output = operation.getOutput();
+        DataType<?> outputType = getOutputType(output);
 
         String name = operation.getName();
-        List<DataType<?>> inputTypes = getInputTypes(input.getMessage(), xmlSchema);
-        DataType<?> outputType = getOutputType(output, xmlSchema);
-        List<DataType<?>> faultTypes = getFaultTypes(faults, xmlSchema);
-
         return new Operation(name, inputTypes, outputType, faultTypes);
-
-    }
-
-    URL resolveWsdl(QName portType) {
-        // TODO implement using the MetaDataStore. 
-        return null;
     }
 
     @SuppressWarnings({"unchecked"})
-    private List<DataType<?>> getInputTypes(Message message, XmlSchemaCollection xmlSchema) {
-        List<DataType<?>> types = new LinkedList<DataType<?>>();
+    private List<DataType<?>> getInputTypes(Message message) {
+        List<DataType<?>> types = new ArrayList<DataType<?>>();
         for (Part part : (Collection<Part>) message.getParts().values()) {
-            DataType<XmlSchemaType> dataType = getDataType(part.getElementName(), xmlSchema);
+            XSDType dataType = getDataType(part.getElementName());
             if (dataType != null) {
                 types.add(dataType);
             }
@@ -163,11 +139,11 @@ public class Wsdl11ContractProcessor extends AbstractWsdlProcessor implements Ws
     }
 
     @SuppressWarnings("unchecked")
-    private List<DataType<?>> getFaultTypes(Map faults, XmlSchemaCollection xmlSchema) {
+    private List<DataType<?>> getFaultTypes(Map faults) {
         List<DataType<?>> types = new LinkedList<DataType<?>>();
         for (Fault fault : (Collection<Fault>) faults.values()) {
             Part part = (Part) fault.getMessage().getOrderedParts(null).get(0);
-            DataType<XmlSchemaType> dataType = getDataType(part.getElementName(), xmlSchema);
+            XSDType dataType = getDataType(part.getElementName());
             if (dataType != null) {
                 types.add(dataType);
             }
@@ -176,28 +152,36 @@ public class Wsdl11ContractProcessor extends AbstractWsdlProcessor implements Ws
 
     }
 
-    private DataType<?> getOutputType(Output output, XmlSchemaCollection xmlSchema) {
+    private DataType<?> getOutputType(Output output) {
         if (output == null) {
             return null;
         }
         Message message = output.getMessage();
         Part part = (Part) message.getOrderedParts(null).get(0);
-        return getDataType(part.getElementName(), xmlSchema);
+        return getDataType(part.getElementName());
     }
 
-    private XmlSchemaCollection getXmlSchema(Definition definition) {
-        XmlSchemaCollection collection = new XmlSchemaCollection();
-        Types types = definition.getTypes();
-        for (Object obj : types.getExtensibilityElements()) {
-            if (obj instanceof Schema) {
-                Schema schema = (Schema) obj;
-                Element element = schema.getElement();
-                collection.setBaseUri(schema.getDocumentBaseURI());
-                collection.read(element);
+    private XSDType getDataType(QName elementName) {
+        // TODO create XSDType from schema type
+        return null;
+    }
+
+
+    @SuppressWarnings({"unchecked"})
+    private PortType resolvePortType(String namespace, QName portName, URI contributionUri) {
+        List<Resource> resources = store.resolveResources(contributionUri);
+
+        for (Resource resource : resources) {
+            if ("text/wsdl+xml".equals(resource.getContentType())) {
+                // resource type is a WSDL
+                ResourceElement<QNameSymbol, Definition> element = (ResourceElement<QNameSymbol, Definition>) resource.getResourceElements().get(0);
+                if (namespace.equals(element.getSymbol().getKey().getNamespaceURI())) {
+                    Definition model = element.getValue();
+                    return model.getPortType(portName);
+                }
             }
         }
-        return collection;
-
+        return null;
     }
 
 }

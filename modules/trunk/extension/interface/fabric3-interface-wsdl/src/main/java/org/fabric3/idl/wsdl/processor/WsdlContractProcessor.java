@@ -39,7 +39,7 @@ package org.fabric3.idl.wsdl.processor;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.idl.wsdl.scdl.WsdlServiceContract;
+import org.fabric3.idl.wsdl.model.WsdlServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**

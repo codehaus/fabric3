@@ -44,8 +44,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.idl.wsdl.model.WsdlServiceContract;
 import org.fabric3.idl.wsdl.processor.WsdlContractProcessor;
-import org.fabric3.idl.wsdl.scdl.WsdlServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
@@ -53,7 +53,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 
 /**
- * Loads interface.wsdl.
+ * Loads interface.wsdl elements in a composite.
  *
  * @version $Revision$ $Date$
  */
