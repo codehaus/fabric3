@@ -35,37 +35,59 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
+import org.fabric3.spi.transform.TransformationException;
 
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
 
 /**
- * @version $Rev$ $Date$
+ * Tests String to URI Transform
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2URITestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
-    }
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
+	/**
+	 * Test for successful transformation from String to URI 
+	 */
+	public void testURITransformSuccess() {
+		final String uriContent = "xmlns:f3";
+		final String xml = "<string_to_uri>" + uriContent + "</string_to_uri>";
+		
+		try {
+			final URI transformedURI = getStringToURI().transform(getNode(xml), null);
+			assertNotNull(transformedURI);
+			assertEquals(uriContent, transformedURI.toString());
+		} catch (TransformationException te) {
+			fail("TransformationException : - Should Not Occur" + te);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * Test for unsuccessful Conversion from String URI
+	 */
+	public void testURITransformationSuccess() {
+		final String errorURIContent = "[[[[]]io9876^^^hasx";
+		final String xml = "<string_to_urierror>" + errorURIContent + "</string_to_urierror>";
+		
+		try {
+			getStringToURI().transform(getNode(xml), null);
+			fail("Should not convert to URI");
+		} catch (TransformationException te) {
+			assertNotNull(te);
+		    URISyntaxException.class.isAssignableFrom(te.getClass());
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * @return StringToURI
+	 */
+	private Node2URI getStringToURI() {
+		return new Node2URI();
+	}
 }

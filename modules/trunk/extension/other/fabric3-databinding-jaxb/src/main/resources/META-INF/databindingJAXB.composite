@@ -17,8 +17,8 @@ Public License. See the accompanying license file for details.
            targetNamespace="urn:fabric3.org:databinding"
            name="DataBindingJAXBExtension">
 
-    <component name="String2Jaxb">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.transform.String2Jaxb"/>
+    <component name="String2JaxbTransformer">
+        <f3-impl:implementation.system class="org.fabric3.jaxb.transform.Node2JaxbTransformer"/>
     </component>
 
     <component name="JAXBParameterEncoderFactory" f3-core:key="jaxb">

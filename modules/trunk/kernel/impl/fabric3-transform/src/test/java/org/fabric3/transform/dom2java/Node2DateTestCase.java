@@ -35,37 +35,67 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
-
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
- * @version $Rev$ $Date$
+ * Tests String to Date Transform
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2DateTestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
-    }
+	/**
+	 * Test of converting String to Date
+	 */
+	public void testDateTransform() {
+		final String MID_JAN = "20/01/2007";
+		final String xml = "<string_to_date>" + MID_JAN + "</string_to_date>";
+		try {
+			Date date = getStringToDate().transform(getNode(xml), null);
+			assertNotNull(date);
+            assertEquals(MID_JAN, DateToString(date));
+		} catch (TransformationException te) {
+			fail("Transform exception should not occur " + te);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * Test failure of converting String to Date
+	 */
+	public void testDateTransformFailure() {
+		final String WRONG_DATE = "20/2007/01";
+		final String xml = "<string_to_date>" + WRONG_DATE + "</string_to_date>";
+		try {
+			getStringToDate().transform(getNode(xml), null);
+			fail("Should not reach here something wrong in [ String2Date ] code");
+		} catch (TransformationException te) {
+			assertNotNull(te);
+			assertTrue(ParseException.class.isAssignableFrom(te.getCause().getClass()));
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
+	/**
+	 * @return
+	 */
+	private Node2DateTransformer getStringToDate() {
+		return new Node2DateTransformer();
+	}
+
+	/**
+	 * @param date
+	 * @return String from Date Object
+	 */
+	private String DateToString(final Date date) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		final String convertedDate = sdf.format(date);
+		return convertedDate;
+	}
 }

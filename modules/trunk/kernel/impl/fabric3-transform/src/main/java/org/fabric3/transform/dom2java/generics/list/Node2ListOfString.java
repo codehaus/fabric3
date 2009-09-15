@@ -35,37 +35,56 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java.generics.list;
 
-  import java.util.List;
-  import java.util.ArrayList;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
+import org.w3c.dom.Node;
 
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.spi.model.type.JavaParameterizedType;
+import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
+ * Expects the property to be defined in the format,
+ * <p/>
+ * <code> value1, value2, value3 </code>
+ *
  * @version $Rev$ $Date$
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
-
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
+public class Node2ListOfString extends AbstractPullTransformer<Node, List<String>> {
+    
+    private static List<String> FIELD = null;
+    private static JavaParameterizedType TARGET = null;
+    
+    static {
+        try {
+            ParameterizedType parameterizedType = (ParameterizedType) Node2ListOfString.class.getDeclaredField("FIELD").getGenericType();
+            TARGET = new JavaParameterizedType(parameterizedType);
+        } catch (NoSuchFieldException ignore) {
+        }
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
+    public DataType<?> getTargetType() {
+        return TARGET;
     }
+
+    public List<String> transform(final Node node, final TransformContext context) throws TransformationException {
+
+        final List<String> list = new ArrayList<String>();
+        final StringTokenizer tokenizer = new StringTokenizer(node.getTextContent());
+        
+        while (tokenizer.hasMoreElements()) {
+            list.add(tokenizer.nextToken());
+        }
+        
+        return list;
+        
+    }
+    
 }

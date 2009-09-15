@@ -35,37 +35,63 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
-
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
-
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
 
 /**
- * @version $Rev$ $Date$
+ * Tests String to boolean Transform
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2BooleanTestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
-    }
+	/**
+	 * Test of converting String to Boolean on true
+	 */
+	public void testBooleanTransformForTrue() {
+		final String TRUE = "true";
+		final String xml = "<string_to_boolean>" + TRUE + "</string_to_boolean>";
+		try {
+			final boolean convBoolean = getStringToBoolean().transform(getNode(xml), null);
+			assertNotNull(convBoolean);
+            assertTrue(convBoolean);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * Test failure of converting String to boolean on False
+	 */
+	public void testBooleanTransformForFalse() {
+	    final String FALSE = "false";
+		final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
+		try {
+			boolean convBoolean = getStringToBoolean().transform(getNode(xml), null);
+			assertNotNull(convBoolean);
+			assertFalse(convBoolean);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * Test failure of converting String to boolean on False
+	 */
+	public void testBooleanOnUnspecifiedFalse() {
+	    final String FALSE = "SHOULD BE FALSE";
+		final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
+		try {
+			boolean convBoolean = getStringToBoolean().transform(getNode(xml), null);
+			assertNotNull(convBoolean);
+			assertFalse(convBoolean);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
+	/**
+	 * @return StringToBoolean
+	 */
+	private Node2BooleanTransformer getStringToBoolean() {
+		return new Node2BooleanTransformer();
+	}
 }

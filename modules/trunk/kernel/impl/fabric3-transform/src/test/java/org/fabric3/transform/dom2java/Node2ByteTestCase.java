@@ -35,37 +35,53 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
-
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
-
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
- * @version $Rev$ $Date$
+ * Tests String to Byte Transform
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2ByteTestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
-    }
+	/**
+	 * Test of converting String to Byte success
+	 */
+	public void testByteTransform() {
+		final String BYTE = "125";
+		final String xml = "<string_to_byte>" + BYTE + "</string_to_byte>";
+		try {
+			final byte convertedByte = getStringToByte().transform(getNode(xml), null);
+			assertNotNull(convertedByte);
+            assertEquals(Byte.valueOf(BYTE).byteValue(), convertedByte);
+		} catch (TransformationException te) {
+			fail("Transform exception should not occur " + te);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
+	/**
+	 * Test failure of converting String to Byte
+	 */
+	public void testDateTransformFailure() {
+		final String OUT_OF_RANGE_BYTE = "129";
+		final String xml = "<string_to_byte>" + OUT_OF_RANGE_BYTE + "</string_to_byte>";
+		try {
+			getStringToByte().transform(getNode(xml), null);
+			fail("Should not reach here something wrong in [ String2Byte ] code");
+		} catch (TransformationException te) {
+			assertNotNull(te);
+			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+
+	/**
+	 * @return StringToBoolean
+	 */
+	private Node2ByteTransformer getStringToByte() {
+		return new Node2ByteTransformer();
+	}
 }

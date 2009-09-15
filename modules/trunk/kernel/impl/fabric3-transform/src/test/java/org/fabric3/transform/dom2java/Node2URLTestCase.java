@@ -35,37 +35,58 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
+import org.fabric3.spi.transform.TransformationException;
 
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
 
 /**
- * @version $Rev$ $Date$
+ * Tests String to URL Transformation
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2URLTestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
-    }
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
+	/**
+	 * Test for successful transformation from String to URL 
+	 */
+	public void testURLTransformSuccess() {
+		final String urlContent = "ftp://testf3.org";
+		final String xml = "<string_to_url>" + urlContent + "</string_to_url>";
+		
+		try {
+			final URL transformedURL = getStringToURL().transform(getNode(xml), null);
+			assertNotNull(transformedURL);
+		} catch (TransformationException te) {
+			fail("TransformationException : - Should Not Occur" + te);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * Test for unsuccessful Conversion from String URL
+	 */
+	public void testURLTransformationSuccess() {
+		final String erroredURL = "failedURL";
+		final String xml = "<string_to_urlerror>" + erroredURL + "</string_to_urlerror>";
+		
+		try {
+			getStringToURL().transform(getNode(xml), null);
+			fail("Should not convert to URL");
+		} catch (TransformationException te) {
+			assertNotNull(te);
+			MalformedURLException.class.isAssignableFrom(te.getCause().getClass());
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * @return StringToURL
+	 */
+	private Node2URL getStringToURL() {
+		return new Node2URL();
+	}
 }

@@ -35,37 +35,30 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
+import java.util.Map;
 
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
+import org.w3c.dom.Node;
 
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.transform.dom2java.generics.map.Node2MapOfStringsTransformer;
 
-/**
- * @version $Rev$ $Date$
- */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+  public class Node2MapTestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
+    public void testTransform() throws Exception {
+
+        Node2MapOfStringsTransformer node2MapOfStringsTransformer = new Node2MapOfStringsTransformer();
+
+        String xml = "<value><apple>yellow</apple><lime>green</lime><grape>black</grape></value>";
+
+        Node node = getNode(xml);
+        
+        Map<String, String> map = node2MapOfStringsTransformer.transform(node, null);
+
+        assertEquals(3, map.size());
+        assertEquals("yellow", map.get("apple"));
+        assertEquals("green", map.get("lime"));
+        assertEquals("black", map.get("grape"));
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
 }

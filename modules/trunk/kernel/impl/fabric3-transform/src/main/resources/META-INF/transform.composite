@@ -19,84 +19,84 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.transform.DefaultPullTransformerRegistry"/>
     </component>
 
-    <component name="String2Boolean">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Boolean"/>
+    <component name="Node2BooleanTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2BooleanTransformer"/>
     </component>
 
-    <component name="String2Byte">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Byte"/>
+    <component name="Node2ByteTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2ByteTransformer"/>
     </component>
 
-    <component name="String2Short">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Short"/>
+    <component name="Node2ShortTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2Short"/>
     </component>
 
-    <component name="String2Integer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Integer"/>
+    <component name="Node2IntegerTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2IntegerTransformer"/>
     </component>
 
-    <component name="String2Long">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Long"/>
+    <component name="Node2LongTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2Long"/>
     </component>
 
-    <component name="String2Float">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Float"/>
+    <component name="Node2FloatTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2FloatTransformer"/>
     </component>
 
-    <component name="String2Double">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Double"/>
+    <component name="Node2DoubleTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2DoubleTransformer"/>
     </component>
 
-    <component name="String2QName">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2QName"/>
+    <component name="Node2QNameTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2QName"/>
     </component>
 
-    <component name="String2Class">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Class"/>
+    <component name="Node2ClassTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2ClassTransformer"/>
     </component>
 
-    <component name="String2Date">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Date"/>
+    <component name="Node2DateTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2DateTransformer"/>
     </component>
 
-    <component name="String2Calendar">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Calendar"/>
+    <component name="Node2CalendarTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2CalendarTransformer"/>
     </component>
 
-    <component name="String2String">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
+    <component name="Node2StringTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2String"/>
     </component>
 
-    <component name="String2URI">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2URI"/>
+    <component name="Node2URITransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URI"/>
     </component>
 
-    <component name="String2URL">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2URL"/>
+    <component name="Node2URLTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URL"/>
     </component>
 
-    <component name="String2MapOfString2String">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfString2String"/>
+    <component name="Node2MapOfStringsTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.Node2MapOfStringsTransformer"/>
     </component>
 
-    <component name="String2MapOfQname2Class">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfQName2Class"/>
+    <component name="Node2MapOfQName2ClassTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.Node2MapOfQName2ClassTransformer"/>
     </component>
 
-    <component name="String2ListOfString">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.String2ListOfString"/>
+    <component name="Node2ListOfStringTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Node2ListOfString"/>
     </component>
 
-    <component name="String2ListOfQName">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.String2ListOfQName"/>
+    <component name="Node2ListOfQNameTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Node2ListOfQNameTransformer"/>
     </component>
 
-    <component name="String2Properties">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.String2Properties"/>
+    <component name="Node2PropertiesTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2Properties"/>
     </component>
 
-    <component name="Element2Stream">
-        <f3-impl:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
+    <component name="Element2StreamTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.xml.Element2StreamTransformer"/>
     </component>
 
 </composite>

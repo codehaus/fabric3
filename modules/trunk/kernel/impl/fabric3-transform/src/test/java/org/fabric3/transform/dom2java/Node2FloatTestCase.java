@@ -35,37 +35,53 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
-
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
-
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
- * @version $Rev$ $Date$
+ * Tests String to Float Transform
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2FloatTestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
-    }
+	/**
+	 * Test of converting String to Float
+	 */
+	public void testFloatTransform() {
+		final String ANY_FLOAT_NUMBER = "99.00";
+		final String xml = "<string_to_float>" + ANY_FLOAT_NUMBER + "</string_to_float>";
+		try {
+			final double convertedFloat = getStringToFloat().transform(getNode(xml), null);
+			assertNotNull(convertedFloat);
+            assertEquals(99.00, convertedFloat);
+		} catch (TransformationException te) {
+			fail("Transform exception should not occur " + te);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * Test failure of converting String to Float
+	 */
+	public void testFloatTransformFailure() {
+	    final String NON_FLOAT = "NON FLOAT";
+		final String xml = "<string_to_float>" + NON_FLOAT + "</string_to_float>";
+		try {
+			getStringToFloat().transform(getNode(xml), null);
+			fail("Should not reach here something wrong in [ String2Float ] code");
+		} catch (TransformationException te) {
+			assertNotNull(te);
+			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
+	/**
+	 * @return
+	 */
+	private Node2FloatTransformer getStringToFloat() {
+		return new Node2FloatTransformer();
+	}
 }

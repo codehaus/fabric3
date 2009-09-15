@@ -35,37 +35,31 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
+import org.w3c.dom.Node;
 
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
-
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2ByteTransformer extends AbstractPullTransformer<Node, Byte> {
+    private static final JavaClass<Byte> TARGET = new JavaClass<Byte>(Byte.class);
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
+    public DataType<?> getTargetType() {
+        return TARGET;
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
+    public Byte transform(Node node, TransformContext context) throws TransformationException {
+        try {
+            return Byte.valueOf(node.getTextContent());
+        } catch (NumberFormatException ex) {
+            throw new TransformationException("Unsupportable byte " + node.getTextContent(), ex);
+        }
     }
 }

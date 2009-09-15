@@ -35,37 +35,61 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java.generics.map;
 
-  import java.util.List;
-  import java.util.ArrayList;
+import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
+import java.util.Map;
 
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.spi.model.type.JavaParameterizedType;
+import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
+ * Expects the property to be dfined in the format,
+ * <p/>
+ * <code> <key1>value1</key1> <key2>value2</key2> </code>
+ *
  * @version $Rev$ $Date$
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
-
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
+public class Node2MapOfStringsTransformer extends AbstractPullTransformer<Node, Map<String, String>> {
+    
+    private static Map<String, String> FIELD = null;
+    private static JavaParameterizedType TARGET = null;
+    
+    static {
+        try {
+            ParameterizedType parameterizedType = (ParameterizedType) Node2MapOfStringsTransformer.class.getDeclaredField("FIELD").getGenericType();
+            TARGET = new JavaParameterizedType(parameterizedType);
+        } catch (NoSuchFieldException ignore) {
+        }
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
+    public DataType<?> getTargetType() {
+        return TARGET;
     }
+
+    public Map<String, String> transform(final Node node, final TransformContext context)
+            throws TransformationException {
+
+        final Map<String, String> map = new HashMap<String, String>();
+        final NodeList nodeList = node.getChildNodes();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node child = nodeList.item(i);
+            if (child instanceof Element) {
+                Element element = (Element) child;
+                map.put(element.getTagName(), child.getTextContent());
+            }
+        }
+        return map;
+    }
+    
+    
 }

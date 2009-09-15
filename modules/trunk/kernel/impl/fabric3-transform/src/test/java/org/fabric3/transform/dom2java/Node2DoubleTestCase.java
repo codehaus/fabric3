@@ -35,37 +35,53 @@
    * GNU General Public License along with Fabric3.
    * If not, see <http://www.gnu.org/licenses/>.
    */
-package org.fabric3.transform;
+package org.fabric3.transform.dom2java;
 
-  import java.util.List;
-  import java.util.ArrayList;
-
-  import junit.framework.TestCase;
-  import org.w3c.dom.Node;
-
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
-  import org.fabric3.spi.transform.PullTransformer;
-  import org.fabric3.transform.dom2java.Node2IntegerTransformer;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
- * @version $Rev$ $Date$
+ * Tests String to Double Transform
  */
-public class DefaultTransformerRegistryTestCase extends TestCase {
-    private DefaultPullTransformerRegistry registry;
+public class Node2DoubleTestCase extends BaseTransformTest {
 
-    public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?,?>> transformers = new ArrayList<PullTransformer<?,?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
-    }
+	/**
+	 * Test of converting String to Double
+	 */
+	public void testDoubleTransform() {
+		final String ANY_DOUBLE_NUMBER = "99919329323.00102345";
+		final String xml = "<string_to_double>" + ANY_DOUBLE_NUMBER + "</string_to_double>";
+		try {
+			double convertedDouble = getStringToDouble().transform(getNode(xml), null);
+			assertNotNull(convertedDouble);
+            assertEquals(99919329323.00102345, convertedDouble);
+		} catch (TransformationException te) {
+			fail("Transform exception should not occur " + te);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+	
+	/**
+	 * Test failure of converting String to Double
+	 */
+	public void testDoubleTransformFailure() {
+	    final String NON_DOUBLE = "NOT DOUBLE";
+		final String xml = "<string_to_double>" + NON_DOUBLE + "</string_to_double>";
+		try {
+			getStringToDouble().transform(getNode(xml), null);
+			fail("Should not reach here something wrong in [ String2Double ] code");
+		} catch (TransformationException te) {
+			assertNotNull(te);
+			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = new DefaultPullTransformerRegistry();
-    }
+	/**
+	 * @return
+	 */
+	private Node2DoubleTransformer getStringToDouble() {
+		return new Node2DoubleTransformer();
+	}
 }

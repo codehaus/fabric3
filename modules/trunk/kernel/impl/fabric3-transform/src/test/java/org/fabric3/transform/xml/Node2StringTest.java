@@ -58,7 +58,7 @@ public class Node2StringTest extends TestCase {
         Element el = doc.createElementNS("http://www.fabric3.org", "policy");
         el.appendChild(doc.createTextNode("Test data"));
         
-        String output = new Node2String().transform(el, null);
+        String output = new Node2StringTransformer().transform(el, null);
         assertEquals(expected, output);
     }
 
