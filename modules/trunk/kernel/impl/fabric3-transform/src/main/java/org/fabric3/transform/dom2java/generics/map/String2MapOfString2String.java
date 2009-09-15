@@ -41,15 +41,15 @@ import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.spi.model.type.JavaParameterizedType;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.AbstractPullTransformer;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.fabric3.model.type.service.DataType;
+import org.fabric3.spi.model.type.JavaParameterizedType;
+import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * Expects the property to be dfined in the format,
@@ -71,16 +71,10 @@ public class String2MapOfString2String extends AbstractPullTransformer<Node, Map
         }
     }
 
-    /**
-     * @see org.fabric3.spi.transform.Transformer#getTargetType()
-     */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
-    /**
-     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object, org.fabric3.spi.transform.TransformContext)
-     */
     public Map<String, String> transform(final Node node, final TransformContext context)
             throws TransformationException {
 

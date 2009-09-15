@@ -51,22 +51,12 @@ import org.fabric3.spi.transform.AbstractPullTransformer;
  * @version $Rev$ $Date$
  */
 public class String2QName extends AbstractPullTransformer<Node, QName> {
-    /**
-     * Target Class (Long)
-     */
     private static final JavaClass<QName> TARGET = new JavaClass<QName>(QName.class);
 
-    /**
-     * @see org.fabric3.spi.transform.Transformer#getTargetType()
-     */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
-    /**
-     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object, org.fabric3.spi.transform.TransformContext)
-     *      Applies Transformation for QName
-     */
     public QName transform(final Node node, final TransformContext context) throws TransformationException {
         String content = node.getTextContent();
         // see if the content looks like it might reference a namespace

@@ -40,33 +40,24 @@ package org.fabric3.transform.dom2java;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.w3c.dom.Node;
+
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.transform.AbstractPullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.AbstractPullTransformer;
-
-import org.w3c.dom.Node;
 
 /**
  * String to URL Transformer
  */
 public class String2URL extends AbstractPullTransformer<Node, URL> {
-	
 	private static final JavaClass<URL> TARGET = new JavaClass<URL>(URL.class);
 
-	/**
-	 * @see org.fabric3.spi.transform.Transformer#getTargetType()
-	 */
 	public DataType<?> getTargetType() {
 		return TARGET;
 	}
 
-	/**
-	 * Transformation for URL
-	 * 
-	 * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object, org.fabric3.spi.transform.TransformContext)
-	 */
 	public URL transform(final Node node, final TransformContext context) throws TransformationException {
 		final String content = node.getTextContent();
 		final URL url;
