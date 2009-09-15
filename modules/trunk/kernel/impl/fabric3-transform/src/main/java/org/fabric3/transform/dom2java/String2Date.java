@@ -55,36 +55,22 @@ import org.fabric3.spi.transform.AbstractPullTransformer;
  *          date as dd/mm/yyyy (<date>12/07/2007</date>)
  */
 public class String2Date extends AbstractPullTransformer<Node, Date> {
+    private static final JavaClass<Date> TARGET = new JavaClass<Date>(Date.class);
 
     /**
      * Standard Date Format
      */
     private final DateFormat dateFormatter;
 
-    /**
-     * Target Class (Date)
-     */
-    private static final JavaClass<Date> TARGET = new JavaClass<Date>(Date.class);
-
-    /**
-     * Default Constructor
-     */
     public String2Date() {
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
         dateFormatter.setLenient(false);
     }
 
-    /**
-     * @see org.fabric3.spi.transform.Transformer#getTargetType()
-     */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
-    /**
-     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object, org.fabric3.spi.transform.TransformContext)
-     *      Applies transformation for Date
-     */
     public Date transform(final Node node, final TransformContext context) throws TransformationException {
         try {
             return dateFormatter.parse(node.getTextContent());
