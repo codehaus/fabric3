@@ -35,12 +35,14 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.idl.wsdl.processor;
+package org.fabric3.wsdl.processor;
 
-import javax.xml.namespace.QName;
+import javax.wsdl.PortType;
 
-import org.fabric3.idl.wsdl.model.WsdlServiceContract;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
+
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**
  * Introspects a WSDL port type and returns a corresponding WsdlServiceContract.
@@ -52,10 +54,11 @@ public interface WsdlContractProcessor {
     /**
      * Creates a WsdlServiceContract by introspecting the WSDL 1.1 port type.
      *
-     * @param portType the qualified name of the WSDL 1.1 port type
-     * @param context  the context to report errors against
+     * @param portType         the WSDL 1.1 port type
+     * @param schemaCollection the schemas contained in or referenced by the WSDL containing the port type
+     * @param context          the context to report errors against
      * @return the list of operations.
      */
-    WsdlServiceContract introspect(QName portType, IntrospectionContext context);
+    WsdlServiceContract introspect(PortType portType, XmlSchemaCollection schemaCollection, IntrospectionContext context);
 
 }

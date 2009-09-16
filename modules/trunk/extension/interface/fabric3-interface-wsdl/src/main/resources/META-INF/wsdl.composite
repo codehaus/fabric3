@@ -20,11 +20,11 @@ Public License. See the accompanying license file for details.
 
 
     <component name="WsdlInterfaceLoader" f3-core:key="sca:interface.wsdl">
-        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.loader.InterfaceWsdlLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.wsdl.loader.InterfaceWsdlLoader"/>
     </component>
 
     <component name="Wsdl11Processor">
-        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl11ContractProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.wsdl.processor.Wsdl11ContractProcessor"/>
         <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
     </component>
 

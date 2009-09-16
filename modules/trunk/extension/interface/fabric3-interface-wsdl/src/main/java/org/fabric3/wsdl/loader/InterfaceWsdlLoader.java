@@ -35,8 +35,9 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.idl.wsdl.loader;
+package org.fabric3.wsdl.loader;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -44,13 +45,17 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.idl.wsdl.model.WsdlServiceContract;
-import org.fabric3.idl.wsdl.processor.WsdlContractProcessor;
+import org.fabric3.host.contribution.StoreException;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.ElementLoadFailure;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.wsdl.contribution.WsdlServiceContractSymbol;
+import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**
  * Loads interface.wsdl elements in a composite.
@@ -59,10 +64,10 @@ import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
  */
 @EagerInit
 public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
-    private final WsdlContractProcessor processor;
+    private MetaDataStore store;
 
-    public InterfaceWsdlLoader(@Reference WsdlContractProcessor processor) {
-        this.processor = processor;
+    public InterfaceWsdlLoader(@Reference MetaDataStore store) {
+        this.store = store;
     }
 
     public WsdlServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
@@ -81,15 +86,14 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
             return null;
         }
         QName portTypeName = parseQName(interfaze);
-        return processor.introspect(portTypeName, context);
-
+        return resolveContract(portTypeName, reader, context);
     }
 
     private void processCallbackInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, IntrospectionContext context) {
         String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
         if (callbackInterfaze != null) {
             QName callbackName = parseQName(callbackInterfaze);
-            WsdlServiceContract callbackContract = processor.introspect(callbackName, context);
+            WsdlServiceContract callbackContract = resolveContract(callbackName, reader, context);
             wsdlContract.setCallbackContract(callbackContract);
         }
     }
@@ -98,6 +102,26 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
         // TODO implement
         return null;
     }
+
+    private WsdlServiceContract resolveContract(QName portTypeName, XMLStreamReader reader, IntrospectionContext context) {
+        WsdlServiceContractSymbol symbol = new WsdlServiceContractSymbol(portTypeName);
+        URI contributionUri = context.getContributionUri();
+        ResourceElement<WsdlServiceContractSymbol, WsdlServiceContract> element;
+        try {
+            element = store.resolve(contributionUri, WsdlServiceContract.class, symbol, context);
+        } catch (StoreException e) {
+            ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
+            context.addError(failure);
+            return null;
+        }
+        if (element == null) {
+            PortTypeNotFound error = new PortTypeNotFound("Port type not found: " + portTypeName);
+            context.addError(error);
+            return null;
+        }
+        return element.getValue();
+    }
+
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {

@@ -35,21 +35,20 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.idl.wsdl.processor;
+package org.fabric3.wsdl.contribution;
 
-import org.fabric3.host.contribution.ValidationFailure;
+import javax.xml.namespace.QName;
+
+import org.fabric3.spi.contribution.Symbol;
 
 /**
+ * A key to a WSDL document.
+ *
  * @version $Rev$ $Date$
  */
-public class PortTypeNotFound extends ValidationFailure {
-    private String message;
+public class WsdlSymbol extends Symbol<QName> {
 
-    public PortTypeNotFound(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
+    public WsdlSymbol(QName qName) {
+        super(qName);
     }
 }

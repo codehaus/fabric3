@@ -34,57 +34,20 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- */
-package org.fabric3.idl.wsdl.model;
+*/
+package org.fabric3.wsdl.contribution;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.spi.contribution.Symbol;
 
 /**
- * WSDL Service contract.
+ * A key to a WSDL port type.
  *
- * @version $Revsion$ $Date$
+ * @version $Rev$ $Date$
  */
-public class WsdlServiceContract extends ServiceContract {
-    private static final long serialVersionUID = 8084985972954894699L;
-
-    /**
-     * QName for the port type/interface.
-     */
-    private QName qname;
-
-    /**
-     * @return QName for the port type/interface.
-     */
-    public QName getQname() {
-        return qname;
-    }
-
-    /**
-     * @param qname QName for the port type/interface.
-     */
-    public void setQname(QName qname) {
-        this.qname = qname;
-    }
-
-    public boolean isAssignableFrom(ServiceContract serviceContract) {
-        throw new UnsupportedOperationException();
-    }
-
-    public String getQualifiedInterfaceName() {
-        return qname.toString();
-    }
-
-    @Override
-    public boolean isRemotable() {
-        return true;
-    }
-
-    @Override
-    public void setRemotable(boolean remotable) {
-        if (!remotable) {
-            throw new IllegalArgumentException("WSDL interfaces are always remotable");
-        }
+public class PortTypeSymbol extends Symbol<QName> {
+    public PortTypeSymbol(QName qName) {
+        super(qName);
     }
 }
