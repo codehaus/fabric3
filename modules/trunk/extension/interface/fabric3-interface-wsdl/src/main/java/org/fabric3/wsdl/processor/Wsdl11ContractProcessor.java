@@ -55,11 +55,9 @@ import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
-import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.model.type.XSDComplexType;
 import org.fabric3.spi.model.type.XSDSimpleType;
@@ -72,11 +70,6 @@ import org.fabric3.wsdl.model.WsdlServiceContract;
  * @version $Revsion$ $Date$
  */
 public class Wsdl11ContractProcessor implements WsdlContractProcessor {
-    private MetaDataStore store;
-
-    public Wsdl11ContractProcessor(@Reference MetaDataStore store) {
-        this.store = store;
-    }
 
     public WsdlServiceContract introspect(PortType portType, XmlSchemaCollection schemaCollection, IntrospectionContext context) {
         WsdlServiceContract contract = new WsdlServiceContract();
@@ -89,16 +82,6 @@ public class Wsdl11ContractProcessor implements WsdlContractProcessor {
         contract.setOperations(operations);
         return contract;
 
-    }
-
-    public List<Operation> getOperations(PortType portType, XmlSchemaCollection schemaCollection) {
-        List<Operation> operations = new LinkedList<Operation>();
-        for (Object object : portType.getOperations()) {
-            javax.wsdl.Operation wsdlOperation = (javax.wsdl.Operation) object;
-            Operation operation = createOperation(wsdlOperation, schemaCollection);
-            operations.add(operation);
-        }
-        return operations;
     }
 
     /**
@@ -175,22 +158,4 @@ public class Wsdl11ContractProcessor implements WsdlContractProcessor {
         }
     }
 
-
-//    @SuppressWarnings({"unchecked"})
-//    private PortType resolvePortType(String namespace, QName portName, URI contributionUri) {
-//        List<Resource> resources = store.resolveResources(contributionUri);
-//
-//        for (Resource resource : resources) {
-//            if ("text/wsdl+xml".equals(resource.getContentType())) {
-//                // resource type is a WSDL
-//                ResourceElement<QNameSymbol, Definition> element = (ResourceElement<QNameSymbol, Definition>) resource.getResourceElements().get(0);
-//                if (namespace.equals(element.getSymbol().getKey().getNamespaceURI())) {
-//                    Definition model = element.getValue();
-//                    return model.getPortType(portName);
-//                }
-//            }
-//        }
-//        return null;
-//    }
-//
 }

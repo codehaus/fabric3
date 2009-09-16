@@ -49,9 +49,6 @@ import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.osoa.sca.annotations.EagerInit;
@@ -65,10 +62,7 @@ import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.ResourceProcessor;
-import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.MissingAttribute;
-import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.wsdl.contribution.PortTypeSymbol;
 import org.fabric3.wsdl.contribution.WsdlServiceContractSymbol;
 import org.fabric3.wsdl.contribution.WsdlSymbol;
@@ -88,14 +82,10 @@ public class WsdlResourceProcessor implements ResourceProcessor {
 
     private ProcessorRegistry registry;
     private WsdlContractProcessor contractProcessor;
-    private XMLInputFactory xmlFactory;
 
-    public WsdlResourceProcessor(@Reference ProcessorRegistry registry,
-                                 @Reference WsdlContractProcessor contractProcessor,
-                                 @Reference XMLFactory xmlFactory) {
+    public WsdlResourceProcessor(@Reference ProcessorRegistry registry, @Reference WsdlContractProcessor contractProcessor) {
         this.registry = registry;
         this.contractProcessor = contractProcessor;
-        this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
     @Init
@@ -112,34 +102,13 @@ public class WsdlResourceProcessor implements ResourceProcessor {
     }
 
     public void index(Contribution contribution, URL url, IntrospectionContext context) throws InstallException {
-        XMLStreamReader reader = null;
         InputStream stream = null;
         try {
             stream = url.openStream();
-            reader = xmlFactory.createXMLStreamReader(stream);
-            reader.nextTag();
-
-            String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
-            if (targetNamespace == null) {
-                context.addError(new MissingAttribute("Target namespace not specified", reader));
-                return;
-            }
-
-            String name = reader.getAttributeValue(null, "name");
-            if (name == null) {
-                // synthesize a name
-                name = url.toString();
-            }
-
             // eagerly process the WSDL since port types need to be available during contribution processing.
-
-            QNameSymbol symbol = new QNameSymbol(new QName(targetNamespace, name));
-
             Resource resource = new Resource(url, MIME_TYPE);
             parse(resource, context);
             contribution.addResource(resource);
-        } catch (XMLStreamException e) {
-            throw new InstallException(e);
         } catch (IOException e) {
             throw new InstallException(e);
         } finally {
@@ -148,13 +117,6 @@ public class WsdlResourceProcessor implements ResourceProcessor {
                     stream.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (XMLStreamException e) {
                 e.printStackTrace();
             }
         }
@@ -201,6 +163,7 @@ public class WsdlResourceProcessor implements ResourceProcessor {
         try {
             WSDLFactory factory = WSDLFactory.newInstance();
             WSDLReader reader = factory.newWSDLReader();
+            reader.setFeature("javax.wsdl.verbose", false);
             // TODO add support for SCA-specific extensions
             reader.setExtensionRegistry(factory.newPopulatedExtensionRegistry());
             return reader.readWSDL(wsdlLocation.toURI().toString());
