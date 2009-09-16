@@ -146,11 +146,10 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
         return element.getValue();
     }
 
-
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"interface".equals(name) || !"callbackInterface".equals(name) || !"remotable".equals(name)) {
+            if (!"interface".equals(name) && !"callbackInterface".equals(name) && !"remotable".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

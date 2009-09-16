@@ -108,6 +108,7 @@ public class WsdlResourceProcessor implements ResourceProcessor {
             // eagerly process the WSDL since port types need to be available during contribution processing.
             Resource resource = new Resource(url, MIME_TYPE);
             parse(resource, context);
+            resource.setProcessed(true);
             contribution.addResource(resource);
         } catch (IOException e) {
             throw new InstallException(e);
