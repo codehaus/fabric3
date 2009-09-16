@@ -14,18 +14,17 @@ Public License. See the accompanying license file for details.
            xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           targetNamespace="org.codehaus.fabric3"
+           targetNamespace="urn:fabric3.org:other"
            name="WsdlInterfaceExtension"
            autowire="true">
 
 
-    <component name="WsdlInterfaceLoader" f3-core:key="sca:interface.wsdl">
+    <component name="InterfaceWsdlLoader" f3-core:key="sca:interface.wsdl">
         <f3-impl:implementation.system class="org.fabric3.wsdl.loader.InterfaceWsdlLoader"/>
     </component>
 
-    <component name="Wsdl11Processor">
+    <component name="Wsdl11ContractProcessor">
         <f3-impl:implementation.system class="org.fabric3.wsdl.processor.Wsdl11ContractProcessor"/>
-        <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
     </component>
 
 
