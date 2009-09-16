@@ -18,7 +18,6 @@ Public License. See the accompanying license file for details.
            name="WsdlInterfaceExtension"
            autowire="true">
 
-
     <component name="InterfaceWsdlLoader" f3-core:key="sca:interface.wsdl">
         <f3-impl:implementation.system class="org.fabric3.wsdl.loader.InterfaceWsdlLoader"/>
     </component>
@@ -26,6 +25,5 @@ Public License. See the accompanying license file for details.
     <component name="Wsdl11ContractProcessor">
         <f3-impl:implementation.system class="org.fabric3.wsdl.processor.Wsdl11ContractProcessor"/>
     </component>
-
 
 </composite>
