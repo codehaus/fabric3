@@ -38,6 +38,7 @@
 package org.fabric3.wsdl.loader;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -50,10 +51,12 @@ import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.ElementLoadFailure;
+import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.util.UriHelper;
 import org.fabric3.wsdl.contribution.WsdlServiceContractSymbol;
 import org.fabric3.wsdl.model.WsdlServiceContract;
 
@@ -85,22 +88,43 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlServiceContract> {
             context.addError(failure);
             return null;
         }
-        QName portTypeName = parseQName(interfaze);
+        QName portTypeName = parseQName(interfaze, reader, context);
+        if (portTypeName == null) {
+            return null;
+        }
         return resolveContract(portTypeName, reader, context);
     }
 
     private void processCallbackInterface(XMLStreamReader reader, WsdlServiceContract wsdlContract, IntrospectionContext context) {
         String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
         if (callbackInterfaze != null) {
-            QName callbackName = parseQName(callbackInterfaze);
+            QName callbackName = parseQName(callbackInterfaze, reader, context);
+            if (callbackName == null) {
+                return;
+            }
             WsdlServiceContract callbackContract = resolveContract(callbackName, reader, context);
             wsdlContract.setCallbackContract(callbackContract);
         }
     }
 
-    private QName parseQName(String interfaze) {
-        // TODO implement
-        return null;
+    QName parseQName(String portType, XMLStreamReader reader, IntrospectionContext context) {
+        try {
+            URI uri = new URI(portType);
+            String namespace = UriHelper.getDefragmentedNameAsString(uri);
+            String localExpression = uri.getFragment();
+            if (localExpression == null || !localExpression.startsWith("wsdl11.portType(") || !localExpression.endsWith(")")) {
+                InvalidValue error = new InvalidValue("A port type expression must be specified of the form: <namespace>#wsdl11.portType(portType)"
+                        + portType, reader);
+                context.addError(error);
+                return null;
+            }
+            String localPart = localExpression.substring(16, localExpression.length() - 1);
+            return new QName(namespace, localPart);
+        } catch (URISyntaxException e) {
+            InvalidValue error = new InvalidValue("Invalid port type identifier: " + portType, reader, e);
+            context.addError(error);
+            return null;
+        }
     }
 
     private WsdlServiceContract resolveContract(QName portTypeName, XMLStreamReader reader, IntrospectionContext context) {

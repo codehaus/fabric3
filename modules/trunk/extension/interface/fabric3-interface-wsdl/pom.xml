@@ -56,6 +56,11 @@ Public License. See the accompanying license file for details.
         </dependency>
 
         <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
             <version>${woodstox.version}</version>
