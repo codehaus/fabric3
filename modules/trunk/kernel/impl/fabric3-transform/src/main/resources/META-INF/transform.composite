@@ -99,4 +99,16 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.transform.xml.Element2StreamTransformer"/>
     </component>
 
+    <component name="String2QNameTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.string2java.String2QNameTransformer"/>
+    </component>
+
+    <component name="String2ClassTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.string2java.String2ClassTransformer"/>
+    </component>
+
+    <component name="String2IntegerTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.string2java.String2IntegerTransformer"/>
+    </component>
+
 </composite>
