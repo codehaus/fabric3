@@ -38,7 +38,6 @@
 package org.fabric3.tests.function.binding;
 
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 import org.oasisopen.sca.annotation.Reference;
@@ -56,8 +55,6 @@ public class BoundServiceReferenceTest extends TestCase {
     protected HelloService helloService;
     @Reference
     protected List<HelloService> listOfReferences;
-    @Reference
-    protected Map<String, HelloService> mapOfReferences;
 
     public void testReferenceIsBound() {
         assertEquals("hello", helloService.send("hello"));
@@ -74,9 +71,4 @@ public class BoundServiceReferenceTest extends TestCase {
         }
     }
 
-    public void testMapOfReferenceIsBound() {
-        assertEquals(2, mapOfReferences.size());
-        assertEquals("hello", mapOfReferences.get("ONE").send("hello"));
-        assertEquals("hello", mapOfReferences.get("TWO").send("hello"));
-    }
 }

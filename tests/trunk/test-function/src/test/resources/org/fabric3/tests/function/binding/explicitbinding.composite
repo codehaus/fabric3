@@ -24,10 +24,6 @@ Public License. See the accompanying license file for details.
             <f3-binding:binding.test uri="HelloService"/>
             <f3-binding:binding.test uri="HelloService"/>
         </reference>
-        <reference name="mapOfReferences">
-            <f3-binding:binding.test uri="HelloService" f3-core:key="ONE"/>
-            <f3-binding:binding.test uri="HelloService" f3-core:key="TWO"/>
-        </reference>
     </component>
 
     <component name="HelloExplicitComponent">
