@@ -48,6 +48,7 @@ import java.util.Map;
 public class ParamTypes {
 
     public static final Map<String, Class<?>> PRIMITIVES_TYPES;
+    public static final Map<Class<?>, Class<?>> PRIMITIVE_TO_OBJECT;
 
     static {
         PRIMITIVES_TYPES = new HashMap<String, Class<?>>();
@@ -59,6 +60,19 @@ public class ParamTypes {
         PRIMITIVES_TYPES.put("long", Long.TYPE);
         PRIMITIVES_TYPES.put("float", Float.TYPE);
         PRIMITIVES_TYPES.put("double", Double.TYPE);
+        PRIMITIVES_TYPES.put("char", Character.TYPE);
+
+        PRIMITIVE_TO_OBJECT = new HashMap<Class<?>, Class<?>>();
+        PRIMITIVE_TO_OBJECT.put(Void.TYPE, Void.class);
+        PRIMITIVE_TO_OBJECT.put(Boolean.TYPE, Boolean.class);
+        PRIMITIVE_TO_OBJECT.put(Byte.TYPE, Byte.class);
+        PRIMITIVE_TO_OBJECT.put(Short.TYPE, Short.class);
+        PRIMITIVE_TO_OBJECT.put(Integer.TYPE, Integer.class);
+        PRIMITIVE_TO_OBJECT.put(Long.TYPE, Long.class);
+        PRIMITIVE_TO_OBJECT.put(Float.TYPE, Float.class);
+        PRIMITIVE_TO_OBJECT.put(Double.TYPE, Double.class);
+        PRIMITIVE_TO_OBJECT.put(Character.TYPE, Character.class);
+
     }
 
 }
