@@ -43,6 +43,7 @@ import org.fabric3.java.provision.JavaSourceDefinition;
  * @version $Rev$ $Date$
  */
 public class RsSourceDefinition extends JavaSourceDefinition {
+    private static final long serialVersionUID = 2180952036516977449L;
 
     private boolean isResource;
     private boolean isProvider;
