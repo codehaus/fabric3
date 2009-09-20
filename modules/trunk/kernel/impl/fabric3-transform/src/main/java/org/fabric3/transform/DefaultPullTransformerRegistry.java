@@ -76,7 +76,7 @@ public class DefaultPullTransformerRegistry implements PullTransformerRegistry {
         TransformerPair pair = new TransformerPair(source, target);
         PullTransformer<?, ?> transformer = transformers.get(pair);
         if (transformer == null) {
-            if (complexTransformer.canTransform(target)) {
+            if (complexTransformer != null && complexTransformer.canTransform(target)) {
                 transformer = complexTransformer;
             }
         }
