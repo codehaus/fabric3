@@ -44,7 +44,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.binding.net.model.TcpBindingDefinition;
@@ -78,8 +77,7 @@ public class TcpBindingLoader extends AbstractBindingLoader<TcpBindingDefinition
             InvalidValue failure = new InvalidValue("Absolute binding URIs must use TCP as the scheme", reader);
             context.addError(failure);
         }
-        Document key = loaderHelper.loadKey(reader);
-        TcpBindingDefinition definition = new TcpBindingDefinition(uri, key);
+        TcpBindingDefinition definition = new TcpBindingDefinition(uri);
         TcpConfig config = definition.getConfig();
         loaderHelper.loadPolicySetsAndIntents(definition, reader, context);
         parseBindingAttributes(reader, config, context);

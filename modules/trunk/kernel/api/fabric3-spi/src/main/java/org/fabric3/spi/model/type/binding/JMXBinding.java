@@ -51,6 +51,6 @@ public class JMXBinding extends BindingDefinition {
     private static final QName TYPE = new QName("urn:maven:org.codehaus.fabric3:fabric3-system", "management");
 
     public JMXBinding() {
-        super(null, TYPE, null);
+        super(null, TYPE);
     }
 }

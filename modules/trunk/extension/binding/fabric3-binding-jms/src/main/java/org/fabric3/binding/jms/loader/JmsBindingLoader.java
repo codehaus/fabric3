@@ -142,10 +142,11 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 context.addError(failure);
                 return null;
             }
-            bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata, loaderHelper.loadKey(reader));
+            URI targetURI = loaderHelper.getURI(uri);
+            bd = new JmsBindingDefinition(targetURI, metadata);
         } else {
             metadata = new JmsBindingMetadata();
-            bd = new JmsBindingDefinition(metadata, loaderHelper.loadKey(reader));
+            bd = new JmsBindingDefinition(metadata);
         }
         NamespaceContext namespace = reader.getNamespaceContext();
         String targetNamespace = context.getTargetNamespace();
@@ -346,7 +347,6 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     private ConnectionFactoryDefinition loadConnectionFactory(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         ConnectionFactoryDefinition connectionFactory = new ConnectionFactoryDefinition();
         connectionFactory.setName(reader.getAttributeValue(null, "name"));
-        String create = reader.getAttributeValue(null, "create");
         parseCreate(reader, context, connectionFactory);
         loadProperties(reader, connectionFactory, "connectionFactory");
         return connectionFactory;

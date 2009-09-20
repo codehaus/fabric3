@@ -56,6 +56,6 @@ public class RemoteBindingDefinition extends BindingDefinition {
     public static final RemoteBindingDefinition INSTANCE = new RemoteBindingDefinition();
 
     public RemoteBindingDefinition() {
-        super(null, QNAME, null);
+        super(null, QNAME);
     }
 }

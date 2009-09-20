@@ -105,11 +105,11 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
             if (uri == null) {
-                bd = new WsBindingDefinition(null, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
+                bd = new WsBindingDefinition(null, wsdlLocation, wsdlElement);
             } else {
                 // encode the URI since there may be expressions (e.g. "${..}") contained in it
                 URI endpointUri = new URI(URLEncoder.encode(uri, "UTF-8"));
-                bd = new WsBindingDefinition(endpointUri, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
+                bd = new WsBindingDefinition(endpointUri, wsdlLocation, wsdlElement);
             }
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 

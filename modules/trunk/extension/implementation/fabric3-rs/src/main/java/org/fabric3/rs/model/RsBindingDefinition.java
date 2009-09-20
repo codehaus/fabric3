@@ -53,7 +53,7 @@ public class RsBindingDefinition extends BindingDefinition {
     private boolean isProvider;
 
     public RsBindingDefinition(URI targetUri) {
-        super(targetUri, BINDING_RS, null);
+        super(targetUri, BINDING_RS);
     }
 
     public boolean isProvider() {

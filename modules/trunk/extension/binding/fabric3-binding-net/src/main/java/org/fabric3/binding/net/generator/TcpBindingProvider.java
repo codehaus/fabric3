@@ -143,7 +143,7 @@ public class TcpBindingProvider implements BindingProvider {
     }
 
     private void constructLogicalReference(LogicalReference source, URI targetUri) {
-        TcpBindingDefinition referenceDefinition = new TcpBindingDefinition(targetUri, null);
+        TcpBindingDefinition referenceDefinition = new TcpBindingDefinition(targetUri);
         LogicalBinding<TcpBindingDefinition> referenceBinding = new LogicalBinding<TcpBindingDefinition>(referenceDefinition, source);
         referenceBinding.setAssigned(true);
         source.addBinding(referenceBinding);
@@ -152,7 +152,7 @@ public class TcpBindingProvider implements BindingProvider {
     private void configureService(LogicalReference source, LogicalService target) {
         String endpointName = target.getUri().getPath() + "/" + target.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
-        TcpBindingDefinition serviceDefinition = new TcpBindingDefinition(endpointUri, null);
+        TcpBindingDefinition serviceDefinition = new TcpBindingDefinition(endpointUri);
         QName deployable = source.getParent().getDeployable();
         LogicalBinding<TcpBindingDefinition> serviceBinding = new LogicalBinding<TcpBindingDefinition>(serviceDefinition, target, deployable);
         serviceBinding.setAssigned(true);
@@ -178,13 +178,13 @@ public class TcpBindingProvider implements BindingProvider {
         String endpointName = target.getUri().getPath() + "/" + source.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
 
-        TcpBindingDefinition sourceCallbackDefinition = new TcpBindingDefinition(endpointUri, null);
+        TcpBindingDefinition sourceCallbackDefinition = new TcpBindingDefinition(endpointUri);
         LogicalBinding<TcpBindingDefinition> sourceBinding = new LogicalBinding<TcpBindingDefinition>(sourceCallbackDefinition, source);
         sourceBinding.setAssigned(true);
         source.addCallbackBinding(sourceBinding);
 
         URI callbackUri = URI.create(sourceBaseUrl + endpointName);
-        TcpBindingDefinition targetCallbackDefinition = new TcpBindingDefinition(callbackUri, null);
+        TcpBindingDefinition targetCallbackDefinition = new TcpBindingDefinition(callbackUri);
         LogicalBinding<TcpBindingDefinition> targetBinding = new LogicalBinding<TcpBindingDefinition>(targetCallbackDefinition, target);
         targetBinding.setAssigned(true);
         target.addCallbackBinding(targetBinding);

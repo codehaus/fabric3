@@ -49,7 +49,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
-import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -84,50 +83,29 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
  */
 public class DefaultLoaderHelper implements LoaderHelper {
     private final DocumentBuilderFactory documentBuilderFactory;
-    private final DocumentBuilder builder;
 
     public DefaultLoaderHelper() {
-        try {
-            documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilderFactory.setNamespaceAware(true);
-            builder = documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError(e);
-        }
+        documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
     }
 
-    /**
-     * Load the value of the attribute key from the current element.
-     *
-     * @param reader a stream containing a property value
-     * @return a standalone document containing the value
-     */
-    public Document loadKey(XMLStreamReader reader) {
-
+    public String loadKey(XMLStreamReader reader) {
         String key = reader.getAttributeValue(Namespaces.CORE, "key");
         if (key == null) {
             return null;
         }
 
-        // create a document with a root element to hold the key value
-        Document document = builder.newDocument();
-        Element element = document.createElement("key");
-        document.appendChild(element);
-
         // TODO: we should copy all in-context namespaces to the declaration if we can find what they are
         // in the mean time, see if the value looks like it might contain a prefix
         int index = key.indexOf(':');
-        if (index != -1) {
+        if (index != -1 && !key.startsWith("{")) {
+            // treat the key as a QName
             String prefix = key.substring(0, index);
-            String uri = reader.getNamespaceURI(prefix);
-            if (uri != null) {
-                element.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns:" + prefix, uri);
-            }
+            String localPart = key.substring(index + 1);
+            String ns = reader.getNamespaceContext().getNamespaceURI(prefix);
+            key = "{" + ns + "}" + localPart;
         }
-        // set the text value
-        element.appendChild(document.createTextNode(key));
-        return document;
-
+        return key;
     }
 
 
@@ -146,7 +124,6 @@ public class DefaultLoaderHelper implements LoaderHelper {
     }
 
     public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader, IntrospectionContext context) {
-
         try {
             policyAware.setIntents(parseListOfQNames(reader, "requires"));
             policyAware.setPolicySets(parseListOfQNames(reader, "policySets"));
@@ -156,14 +133,11 @@ public class DefaultLoaderHelper implements LoaderHelper {
             context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in contribution " + uri
                     + " is invalid", reader));
         }
-
     }
 
 
     public Set<QName> parseListOfQNames(XMLStreamReader reader, String attribute) throws InvalidPrefixException {
-
         Set<QName> qNames = new HashSet<QName>();
-
         String val = reader.getAttributeValue(null, attribute);
         if (val != null) {
             StringTokenizer tok = new StringTokenizer(val);
@@ -171,9 +145,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
                 qNames.add(createQName(tok.nextToken(), reader));
             }
         }
-
         return qNames;
-
     }
 
     public QName createQName(String name, XMLStreamReader reader) throws InvalidPrefixException {
@@ -225,7 +197,6 @@ public class DefaultLoaderHelper implements LoaderHelper {
     }
 
     private void transform(XMLStreamReader reader, Element element) throws XMLStreamException {
-
         Document document = element.getOwnerDocument();
         int depth = 0;
         while (true) {

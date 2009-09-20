@@ -72,10 +72,9 @@ public class JmsBindingDefinition extends BindingDefinition {
      * Constructor.
      *
      * @param metadata Metadata to be initialized.
-     * @param key      the binding key
      */
-    public JmsBindingDefinition(JmsBindingMetadata metadata, Document key) {
-        super(null, BINDING_QNAME, key);
+    public JmsBindingDefinition(JmsBindingMetadata metadata) {
+        super(null, BINDING_QNAME);
         this.metadata = metadata;
         addRequiredCapability("jms");
     }
@@ -85,10 +84,9 @@ public class JmsBindingDefinition extends BindingDefinition {
      *
      * @param targetURI URI of binding target
      * @param metadata  Metadata to be initialized.
-     * @param key       the binding key
      */
-    public JmsBindingDefinition(URI targetURI, JmsBindingMetadata metadata, Document key) {
-        super(targetURI, BINDING_QNAME, key);
+    public JmsBindingDefinition(URI targetURI, JmsBindingMetadata metadata) {
+        super(targetURI, BINDING_QNAME);
         this.metadata = metadata;
         addRequiredCapability("jms");
     }

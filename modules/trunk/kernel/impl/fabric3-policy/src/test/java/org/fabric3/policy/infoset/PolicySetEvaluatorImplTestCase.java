@@ -181,7 +181,7 @@ public class PolicySetEvaluatorImplTestCase extends TestCase {
         private static final long serialVersionUID = -5325959511447059266L;
 
         public MockBindingDefintion() {
-            super(null, new QName(null, "binding.mock"), null);
+            super(null, new QName(null, "binding.mock"));
         }
     }
 

@@ -44,12 +44,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
@@ -64,17 +62,6 @@ public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
 
     public static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.test");
 
-    private final LoaderHelper loaderHelper;
-
-    /**
-     * Constructor.
-     *
-     * @param loaderHelper the policy helper
-     */
-    public TestBindingLoader(@Reference LoaderHelper loaderHelper) {
-        this.loaderHelper = loaderHelper;
-    }
-
     public TestBindingDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         TestBindingDefinition definition = null;
@@ -86,7 +73,8 @@ public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
                 context.addError(failure);
                 return null;
             } else {
-                definition = new TestBindingDefinition(new URI(uri), loaderHelper.loadKey(reader));
+                URI targetUri = new URI(uri);
+                definition = new TestBindingDefinition(targetUri);
             }
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The binding URI is not valid: " + uri, reader);

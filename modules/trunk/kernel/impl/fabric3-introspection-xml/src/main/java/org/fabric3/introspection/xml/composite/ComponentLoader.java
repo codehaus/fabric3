@@ -116,7 +116,9 @@ public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefin
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         componentDefinition.setAutowire(autowire);
         loadInitLevel(componentDefinition, reader, context);
-        loadKey(componentDefinition, reader);
+
+        String key = loaderHelper.loadKey(reader);
+        componentDefinition.setKey(key);
 
         loaderHelper.loadPolicySetsAndIntents(componentDefinition, reader, context);
 
@@ -131,9 +133,8 @@ public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefin
                 context.addError(error);
                 return componentDefinition;
             } else if (PROPERTY.equals(elementName) || REFERENCE.equals(elementName) || SERVICE.equals(elementName)) {
-                MissingComponentImplementation error =
-                        new MissingComponentImplementation("The component " + name + " must specify an implementation as the first child element",
-                                                           reader);
+                MissingComponentImplementation error = new MissingComponentImplementation("The component " + name
+                        + " must specify an implementation as the first child element", reader);
                 context.addError(error);
                 return componentDefinition;
             }
@@ -142,8 +143,7 @@ public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefin
                 // error loading impl
                 return componentDefinition;
             }
-            // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
-            // UnrecognizedElement added to the context if none is found
+
             if (!reader.getName().equals(elementName) || reader.getEventType() != END_ELEMENT) {
                 // ensure that the implementation loader has positioned the cursor to the end element 
                 throw new AssertionError("Impementation loader must position the cursor to the end element");
@@ -273,19 +273,6 @@ public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefin
         }
     }
 
-    /**
-     * Loads the key when the component is wired to a map based reference.
-     *
-     * @param componentDefinition the component definition
-     * @param reader              a reader positioned on the element containing the key definition @return a Document containing the key value.
-     */
-    private void loadKey(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader) {
-        componentDefinition.setKey(loaderHelper.loadKey(reader));
-    }
-
-    /*
-     * Loads the init level.
-     */
     private void loadInitLevel(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader, IntrospectionContext context) {
         String initLevel = reader.getAttributeValue(null, "initLevel");
         if (initLevel != null && initLevel.length() != 0) {

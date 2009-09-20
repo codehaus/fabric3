@@ -40,8 +40,6 @@ package org.fabric3.binding.net.model;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Document;
-
 import org.fabric3.binding.net.config.TcpConfig;
 import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.BindingDefinition;
@@ -56,8 +54,8 @@ public class TcpBindingDefinition extends BindingDefinition {
     public static final QName TCP_BINDING = new QName(Namespaces.BINDING, "binding.tcp");
     private TcpConfig config;
 
-    public TcpBindingDefinition(URI targetUri, Document key) {
-        super(targetUri, TCP_BINDING, key);
+    public TcpBindingDefinition(URI targetUri) {
+        super(targetUri, TCP_BINDING);
         config = new TcpConfig();
         addRequiredCapability("binding.net");
     }

@@ -47,8 +47,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-
 import org.fabric3.model.type.AbstractPolicyAware;
 
 /**
@@ -66,7 +64,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     private final Map<String, ComponentService> services = new HashMap<String, ComponentService>();
     private final Map<String, ComponentReference> references = new HashMap<String, ComponentReference>();
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
-    private Document key;
+    private String key;
     private URI contributionUri;
 
     /**
@@ -212,16 +210,16 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
      *
      * @return The value of the key.
      */
-    public Document getKey() {
+    public String getKey() {
         return key;
     }
 
     /**
-     * Returns the key to be used if this component is wired to a map of references.
+     * Sets the key to be used if this component is wired to a map of references.
      *
      * @param key The value of the key.
      */
-    public void setKey(Document key) {
+    public void setKey(String key) {
         this.key = key;
     }
 

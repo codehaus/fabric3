@@ -80,7 +80,7 @@ public class JMSBindingLoaderTestCase extends TestCase {
                 return null;
             }
 
-            public Document loadKey(XMLStreamReader reader) {
+            public String loadKey(XMLStreamReader reader) {
                 return null;
             }
 

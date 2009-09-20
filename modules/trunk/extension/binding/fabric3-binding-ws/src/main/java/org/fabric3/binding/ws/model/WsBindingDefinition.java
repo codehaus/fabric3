@@ -48,7 +48,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.oasisopen.sca.Constants;
-import org.w3c.dom.Document;
 
 import org.fabric3.model.type.component.BindingDefinition;
 
@@ -71,10 +70,9 @@ public class WsBindingDefinition extends BindingDefinition {
      * @param targetUri    the target binding URI. May be null.
      * @param wsdlLocation the WSDL location. May be null.
      * @param wsdlElement  the SCA WSDL element expression. May be null.
-     * @param key          the key to use when wiring multiplicity references. May be null.
      */
-    public WsBindingDefinition(URI targetUri, String wsdlLocation, String wsdlElement, Document key) {
-        super(targetUri, BINDING_QNAME, key);
+    public WsBindingDefinition(URI targetUri, String wsdlLocation, String wsdlElement) {
+        super(targetUri, BINDING_QNAME);
         this.wsdlElement = wsdlElement;
         this.wsdlLocation = wsdlLocation;
     }

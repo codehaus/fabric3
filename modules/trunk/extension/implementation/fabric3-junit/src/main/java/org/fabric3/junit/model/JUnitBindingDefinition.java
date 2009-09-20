@@ -57,7 +57,7 @@ public class JUnitBindingDefinition extends BindingDefinition {
      * @param configuration the context configuration or null if not set
      */
     public JUnitBindingDefinition(ContextConfiguration configuration) {
-        super(null, BINDING_QNAME, null);
+        super(null, BINDING_QNAME);
         this.configuration = configuration;
     }
 

@@ -44,7 +44,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.binding.net.model.HttpBindingDefinition;
@@ -79,8 +78,7 @@ public class HttpBindingLoader extends AbstractBindingLoader<HttpBindingDefiniti
             InvalidValue failure = new InvalidValue("Absolute binding URIs must use HTTP or HTTPS as the scheme", reader);
             context.addError(failure);
         }
-        Document key = loaderHelper.loadKey(reader);
-        HttpBindingDefinition definition = new HttpBindingDefinition(uri, key);
+        HttpBindingDefinition definition = new HttpBindingDefinition(uri);
         HttpConfig config = definition.getConfig();
         loaderHelper.loadPolicySetsAndIntents(definition, reader, context);
         parseBindingAttributes(reader, config, context);

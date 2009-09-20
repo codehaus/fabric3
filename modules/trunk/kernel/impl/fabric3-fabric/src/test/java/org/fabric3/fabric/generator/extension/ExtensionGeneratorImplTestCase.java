@@ -145,7 +145,7 @@ public class ExtensionGeneratorImplTestCase extends TestCase {
     private class MockBinding extends BindingDefinition {
 
         public MockBinding() {
-            super(null, null, null);
+            super(null, null);
         }
     }
 

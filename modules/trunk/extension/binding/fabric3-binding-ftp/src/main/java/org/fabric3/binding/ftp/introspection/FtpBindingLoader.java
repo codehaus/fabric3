@@ -95,7 +95,7 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
             TransferMode tMode = transferMode != null ? TransferMode.valueOf(transferMode) : TransferMode.PASSIVE;
             // encode the URI since there may be expressions (e.g. "${..}") contained in it
             URI endpointUri = new URI(URLEncoder.encode(uri, "UTF-8"));
-            bd = new FtpBindingDefinition(endpointUri, tMode, loaderHelper.loadKey(reader));
+            bd = new FtpBindingDefinition(endpointUri, tMode);
 
             String tmpFileSuffix = reader.getAttributeValue(null, "tmpFileSuffix");
             if (tmpFileSuffix != null) {

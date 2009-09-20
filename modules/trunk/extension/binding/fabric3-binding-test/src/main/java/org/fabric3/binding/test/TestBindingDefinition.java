@@ -39,8 +39,6 @@ package org.fabric3.binding.test;
 
 import java.net.URI;
 
-import org.w3c.dom.Document;
-
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
@@ -49,7 +47,7 @@ import org.fabric3.model.type.component.BindingDefinition;
 public class TestBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 2529090404017606258L;
 
-    public TestBindingDefinition(URI targetUri, Document key) {
-        super(targetUri, TestBindingLoader.BINDING_QNAME, key);
+    public TestBindingDefinition(URI targetUri) {
+        super(targetUri, TestBindingLoader.BINDING_QNAME);
     }
 }

@@ -41,7 +41,6 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.oasisopen.sca.Constants;
-import org.w3c.dom.Document;
 
 import org.fabric3.binding.net.config.HttpConfig;
 import org.fabric3.model.type.component.BindingDefinition;
@@ -56,8 +55,8 @@ public class HttpBindingDefinition extends BindingDefinition {
     public static final QName HTTP_BINDING = new QName(Constants.SCA_NS, "binding.http");
     private HttpConfig config;
 
-    public HttpBindingDefinition(URI targetUri, Document key) {
-        super(targetUri, HTTP_BINDING, key);
+    public HttpBindingDefinition(URI targetUri) {
+        super(targetUri, HTTP_BINDING);
         config = new HttpConfig();
         addRequiredCapability("binding.net");
     }

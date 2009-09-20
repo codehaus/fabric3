@@ -48,8 +48,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Document;
-
 import org.fabric3.model.type.AbstractPolicyAware;
 import org.fabric3.model.type.CapabilityAware;
 
@@ -63,14 +61,12 @@ public abstract class BindingDefinition extends AbstractPolicyAware implements C
 
     private URI targetUri;
     private QName type;
-    private Document key;
 
     private Set<String> requiredCapabilities = new HashSet<String>();
 
-    public BindingDefinition(URI targetUri, QName type, Document key) {
+    public BindingDefinition(URI targetUri, QName type) {
         this.targetUri = targetUri;
         this.type = type;
-        this.key = key;
     }
 
     public URI getTargetUri() {
@@ -79,10 +75,6 @@ public abstract class BindingDefinition extends AbstractPolicyAware implements C
 
     public QName getType() {
         return type;
-    }
-
-    public Document getKey() {
-        return key;
     }
 
     public Set<String> getRequiredCapabilities() {

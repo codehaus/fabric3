@@ -48,12 +48,8 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.contract.DataType;
+import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.provision.PojoSourceDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -70,7 +66,7 @@ import org.fabric3.spi.transform.TransformationException;
  */
 public abstract class PojoSourceWireAttacher {
 
-    private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
+    private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(String.class, XSDSimpleType.STRING);
 
     protected PullTransformerRegistry transformerRegistry;
     protected ClassLoaderRegistry classLoaderRegistry;
@@ -90,15 +86,10 @@ public abstract class PojoSourceWireAttacher {
             return null;
         }
 
-        Document keyDocument = sourceDefinition.getKey();
-        if (keyDocument == null) {
-            keyDocument = targetDefinition.getKey();
-        }
+        String value = sourceDefinition.getKey();
 
+        if (value != null) {
 
-        if (keyDocument != null) {
-
-            Element element = keyDocument.getDocumentElement();
             URI targetId = targetDefinition.getClassLoaderId();
             ClassLoader targetClassLoader = null;
             if (targetId != null) {
@@ -115,17 +106,20 @@ public abstract class PojoSourceWireAttacher {
                     formalType = ((ParameterizedType) formalType).getRawType();
                 } else if (formalType instanceof Class<?> && Enum.class.isAssignableFrom((Class<?>) formalType)) {
                     Class<Enum> enumClass = (Class<Enum>) formalType;
-                    return Enum.valueOf(enumClass, element.getTextContent());
+                    return Enum.valueOf(enumClass, value);
+                }
+                if (String.class.equals(formalType)){
+                    return value;
                 }
             } else {
-                formalType = String.class;
+                return value;
             }
 
             if (!(formalType instanceof Class)) {
                 throw new PropertyTransformException("Unsupported key type:: " + formalType);
             }
             DataType<?> targetType = new JavaClass((Class) formalType);
-            return createKey(targetType, element, targetClassLoader);
+            return createKey(targetType, value, targetClassLoader);
         }
 
         return null;
@@ -134,9 +128,9 @@ public abstract class PojoSourceWireAttacher {
 
 
     @SuppressWarnings("unchecked")
-    private Object createKey(DataType<?> targetType, Element value, ClassLoader classLoader) throws PropertyTransformException {
+    private Object createKey(DataType<?> targetType, String value, ClassLoader classLoader) throws PropertyTransformException {
 
-        PullTransformer<Node, ?> transformer = (PullTransformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
+        PullTransformer<String, ?> transformer = (PullTransformer<String, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
         if (transformer == null) {
             throw new PropertyTransformException("No transformer for : " + targetType);
         }

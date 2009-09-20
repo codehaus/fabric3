@@ -163,7 +163,7 @@ public class HttpBindingProvider implements BindingProvider {
     }
 
     private void constructLogicalReference(LogicalReference source, URI targetUri) {
-        HttpBindingDefinition referenceDefinition = new HttpBindingDefinition(targetUri, null);
+        HttpBindingDefinition referenceDefinition = new HttpBindingDefinition(targetUri);
         LogicalBinding<HttpBindingDefinition> referenceBinding = new LogicalBinding<HttpBindingDefinition>(referenceDefinition, source);
         referenceBinding.setAssigned(true);
         source.addBinding(referenceBinding);
@@ -172,7 +172,7 @@ public class HttpBindingProvider implements BindingProvider {
     private void configureService(LogicalReference source, LogicalService target) {
         String endpointName = target.getUri().getPath() + "/" + target.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
-        HttpBindingDefinition serviceDefinition = new HttpBindingDefinition(endpointUri, null);
+        HttpBindingDefinition serviceDefinition = new HttpBindingDefinition(endpointUri);
         QName deployable = source.getParent().getDeployable();
         LogicalBinding<HttpBindingDefinition> serviceBinding = new LogicalBinding<HttpBindingDefinition>(serviceDefinition, target, deployable);
         serviceBinding.setAssigned(true);
@@ -198,13 +198,13 @@ public class HttpBindingProvider implements BindingProvider {
         String endpointName = target.getUri().getPath() + "/" + source.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
 
-        HttpBindingDefinition sourceCallbackDefinition = new HttpBindingDefinition(endpointUri, null);
+        HttpBindingDefinition sourceCallbackDefinition = new HttpBindingDefinition(endpointUri);
         LogicalBinding<HttpBindingDefinition> sourceBinding = new LogicalBinding<HttpBindingDefinition>(sourceCallbackDefinition, source);
         sourceBinding.setAssigned(true);
         source.addCallbackBinding(sourceBinding);
 
         URI callbackUri = URI.create(sourceBaseUrl + endpointName);
-        HttpBindingDefinition targetCallbackDefinition = new HttpBindingDefinition(callbackUri, null);
+        HttpBindingDefinition targetCallbackDefinition = new HttpBindingDefinition(callbackUri);
         LogicalBinding<HttpBindingDefinition> targetBinding = new LogicalBinding<HttpBindingDefinition>(targetCallbackDefinition, target);
         targetBinding.setAssigned(true);
         target.addCallbackBinding(targetBinding);

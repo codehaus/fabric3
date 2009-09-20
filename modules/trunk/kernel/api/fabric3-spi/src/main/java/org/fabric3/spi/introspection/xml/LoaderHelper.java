@@ -65,11 +65,9 @@ public interface LoaderHelper {
      * Load the value of the attribute key from the current element.
      *
      * @param reader a stream containing a property value
-     * @return a standalone document containing the value
-     * @throws javax.xml.stream.XMLStreamException
-     *          if there was a problem reading the stream
+     * @return the key value
      */
-    Document loadKey(XMLStreamReader reader);
+    String loadKey(XMLStreamReader reader);
 
     /**
      * Load an XML value from a Stax stream.

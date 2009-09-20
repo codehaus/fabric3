@@ -46,8 +46,6 @@ package org.fabric3.spi.model.physical;
 import java.io.Serializable;
 import java.net.URI;
 
-import org.w3c.dom.Document;
-
 /**
  * Represents the source side of a wire.
  *
@@ -59,7 +57,7 @@ public class PhysicalSourceDefinition implements Serializable {
     private URI uri;
     private URI classLoaderId;
     private boolean optimizable;
-    private Document key;
+    private String key;
     private InteractionType type = InteractionType.STATELESS;
 
     /**
@@ -98,7 +96,6 @@ public class PhysicalSourceDefinition implements Serializable {
         this.classLoaderId = classLoaderId;
     }
 
-
     /**
      * Returns whether the source side of the wire is optimizable.
      *
@@ -136,20 +133,20 @@ public class PhysicalSourceDefinition implements Serializable {
     }
 
     /**
-     * Returns the key to be used when this wire is part of a Map reference.
+     * Returns the key to be used when this wire is part of a Map-style reference.
      *
-     * @return the key to be used when this wire is part of a Map reference
+     * @return the key to be used when this wire is part of a Map-style reference
      */
-    public Document getKey() {
+    public String getKey() {
         return key;
     }
 
     /**
-     * Sets the key to be used when this wire is part of a Map reference.
+     * Sets the key to be used when this wire is part of a Map-style reference.
      *
-     * @param key the key to be used when this wire is part of a Map reference
+     * @param key the key to be used when this wire is part of a Map-style reference
      */
-    public void setKey(Document key) {
+    public void setKey(String key) {
         this.key = key;
     }
 }

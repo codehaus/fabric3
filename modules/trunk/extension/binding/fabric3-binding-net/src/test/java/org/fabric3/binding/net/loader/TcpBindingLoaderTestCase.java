@@ -68,7 +68,6 @@ public class TcpBindingLoaderTestCase extends TestCase {
         XMLStreamReader reader = factory.createXMLStreamReader(new ByteArrayInputStream(XML.getBytes()));
         DefaultIntrospectionContext ctx = new DefaultIntrospectionContext();
         LoaderHelper helper = EasyMock.createMock(LoaderHelper.class);
-        EasyMock.expect(helper.loadKey(reader)).andReturn(null);
         helper.loadPolicySetsAndIntents(EasyMock.isA(PolicyAware.class), EasyMock.eq(reader), EasyMock.eq(ctx));
         EasyMock.replay(helper);
 

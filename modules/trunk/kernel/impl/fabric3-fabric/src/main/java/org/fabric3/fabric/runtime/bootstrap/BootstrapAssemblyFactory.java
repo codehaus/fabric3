@@ -174,13 +174,14 @@ import org.fabric3.system.singleton.SingletonTargetDefinition;
 import org.fabric3.system.singleton.SingletonTargetWireAttacher;
 import org.fabric3.transform.DefaultPullTransformerRegistry;
 import org.fabric3.transform.dom2java.Node2BooleanTransformer;
-import org.fabric3.transform.dom2java.Node2ClassTransformer;
 import org.fabric3.transform.dom2java.Node2IntegerTransformer;
-import org.fabric3.transform.dom2java.Node2QName;
 import org.fabric3.transform.dom2java.Node2String;
 import org.fabric3.transform.dom2java.generics.list.Node2ListOfQNameTransformer;
 import org.fabric3.transform.dom2java.generics.list.Node2ListOfString;
 import org.fabric3.transform.dom2java.generics.map.Node2MapOfStringsTransformer;
+import org.fabric3.transform.string2java.String2ClassTransformer;
+import org.fabric3.transform.string2java.String2QNameTransformer;
+import org.fabric3.transform.string2java.String2IntegerTransformer;
 
 /**
  * Bootstraps services required for instantiation, generation, and deployment.
@@ -274,10 +275,11 @@ public class BootstrapAssemblyFactory {
         transformers.add(new Node2IntegerTransformer());
         transformers.add(new Node2BooleanTransformer());
         transformers.add(new Node2MapOfStringsTransformer());
-        transformers.add(new Node2ClassTransformer(classLoaderRegistry));
-        transformers.add(new Node2QName());
         transformers.add(new Node2ListOfString());
         transformers.add(new Node2ListOfQNameTransformer());
+        transformers.add(new String2ClassTransformer(classLoaderRegistry));
+        transformers.add(new String2QNameTransformer());
+        transformers.add(new String2IntegerTransformer());
         transformerRegistry.setTransformers(transformers);
         DefaultComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 

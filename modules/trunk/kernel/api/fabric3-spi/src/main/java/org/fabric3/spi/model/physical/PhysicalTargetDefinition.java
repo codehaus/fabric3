@@ -48,8 +48,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Document;
-
 /**
  * Represents the target side of a physical wire.
  *
@@ -68,7 +66,6 @@ public class PhysicalTargetDefinition implements Serializable {
     private boolean callback;
     private URI callbackUri;
     private URI classLoaderId;
-    private Document key;
 
     /**
      * Returns the URI of the physical component targeted by this wire.
@@ -167,24 +164,6 @@ public class PhysicalTargetDefinition implements Serializable {
      */
     public void setClassLoaderId(URI classLoaderId) {
         this.classLoaderId = classLoaderId;
-    }
-
-    /**
-     * Returns the key to be used when the containing wire is part of a Map reference.
-     *
-     * @return the key to be used when this wire is part of a Map reference
-     */
-    public Document getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key to be used when the containing wire is part of a Map reference.
-     *
-     * @param key the key to be used when this wire is part of a Map reference
-     */
-    public void setKey(Document key) {
-        this.key = key;
     }
 
 }
