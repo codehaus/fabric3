@@ -43,8 +43,6 @@
  */
 package org.fabric3.introspection.xml.common;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -68,7 +66,6 @@ public class PropertyLoader implements TypeLoader<Property> {
     private static final String MUST_SUPPLY = "mustSupply";
     private static final String TYPE = "type";
     private static final String SOURCE = "source";
-    private static final QName XS_STRING = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "string");
 
     private final LoaderHelper helper;
 
@@ -86,7 +83,6 @@ public class PropertyLoader implements TypeLoader<Property> {
         Property property = new Property();
         property.setRequired(mustSupply);
         property.setName(name);
-        property.setXmlType(XS_STRING);
         property.setMany(many);
         property.setDefaultValue(value);
         return property;
