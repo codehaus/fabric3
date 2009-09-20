@@ -132,12 +132,12 @@ public class GenerationHelper {
         Class<?>[] params = new Class<?>[types.size()];
         int i = 0;
         for (DataType<?> type : types) {
-            Object logical = type.getLogical();
-            if (!(logical instanceof Class)) {
+            Object physical = type.getPhysical();
+            if (!(physical instanceof Class)) {
                 // not possible
                 throw new AssertionError();
             }
-            params[i] = (Class<?>) logical;
+            params[i] = (Class<?>) physical;
             i++;
         }
         try {

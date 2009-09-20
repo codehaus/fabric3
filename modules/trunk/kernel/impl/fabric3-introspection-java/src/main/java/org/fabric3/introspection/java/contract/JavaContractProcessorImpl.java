@@ -65,9 +65,12 @@ import static org.fabric3.model.type.service.Operation.NO_CONVERSATION;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.contract.InterfaceIntrospector;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.contract.OperationIntrospector;
+import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.JavaGenericType;
+import org.fabric3.spi.model.type.JavaTypeInfo;
 
 /**
  * Default implementation of a ContractProcessor for Java interfaces.
@@ -81,7 +84,6 @@ public class JavaContractProcessorImpl implements JavaContractProcessor {
     private final IntrospectionHelper helper;
     private List<InterfaceIntrospector> interfaceIntrospectors;
     private List<OperationIntrospector> operationIntrospectors;
-
 
     public JavaContractProcessorImpl(@Reference IntrospectionHelper helper) {
         this.helper = helper;
@@ -99,47 +101,38 @@ public class JavaContractProcessorImpl implements JavaContractProcessor {
         this.operationIntrospectors = operationIntrospectors;
     }
 
-    public JavaServiceContract introspect(Type type, IntrospectionContext context) {
-        if (type instanceof Class) {
-            return introspect((Class<?>) type, context);
-        } else {
-            throw new UnsupportedOperationException("Interface introspection is only supported for classes");
-        }
+    public JavaServiceContract introspect(Class<?> interfaze, IntrospectionContext context) {
+        return introspect(interfaze, interfaze, context);
     }
 
-    private JavaServiceContract introspect(Class<?> interfaze, IntrospectionContext context) {
-        JavaServiceContract contract = introspectInterface(interfaze, context);
+    public JavaServiceContract introspect(Class<?> interfaze, Class<?> baseClass, IntrospectionContext context) {
+        JavaServiceContract contract = introspectInterface(interfaze, baseClass, context);
         Callback callback = interfaze.getAnnotation(Callback.class);
         if (callback != null) {
             Class<?> callbackClass = callback.value();
-            processCallback(interfaze, callbackClass, contract, context);
+            introspectCallback(interfaze, callbackClass, contract, context);
         } else {
             org.oasisopen.sca.annotation.Callback oasisCallback = interfaze.getAnnotation(org.oasisopen.sca.annotation.Callback.class);
             if (oasisCallback != null) {
                 Class<?> callbackClass = oasisCallback.value();
-                processCallback(interfaze, callbackClass, contract, context);
+                introspectCallback(interfaze, callbackClass, contract, context);
             }
         }
         return contract;
     }
 
-    private void processCallback(Class<?> interfaze, Class<?> callbackClass, JavaServiceContract contract, IntrospectionContext context) {
+    private void introspectCallback(Class<?> interfaze, Class<?> callbackClass, JavaServiceContract contract, IntrospectionContext context) {
         if (Void.class.equals(callbackClass)) {
             context.addError(new MissingCallback(interfaze));
             return;
         }
-        JavaServiceContract callbackContract = introspectInterface(callbackClass, context);
+        // the base class for the callback interface is always itself since it is not referenceable in Java from the service implementation
+        // or client implementation where the reference is injected
+        JavaServiceContract callbackContract = introspectInterface(callbackClass, callbackClass, context);
         contract.setCallbackContract(callbackContract);
     }
 
-    /**
-     * Introspects a class, returning its service contract. Errors and warnings are reported in the ValidationContext.
-     *
-     * @param interfaze the interface to introspect
-     * @param context   the current validation context to report errors
-     * @return the service contract
-     */
-    private JavaServiceContract introspectInterface(Class<?> interfaze, IntrospectionContext context) {
+    private JavaServiceContract introspectInterface(Class<?> interfaze, Class<?> baseClass, IntrospectionContext context) {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
         contract.setInterfaceName(interfaze.getSimpleName());
 
@@ -150,7 +143,7 @@ public class JavaContractProcessorImpl implements JavaContractProcessor {
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
-        List<Operation> operations = getOperations(interfaze, remotable, conversational, context);
+        List<Operation> operations = introspectOperations(interfaze, baseClass, remotable, conversational, context);
         contract.setOperations(operations);
         for (InterfaceIntrospector introspector : interfaceIntrospectors) {
             introspector.introspect(contract, interfaze, context);
@@ -158,67 +151,140 @@ public class JavaContractProcessorImpl implements JavaContractProcessor {
         return contract;
     }
 
-    private <T> List<Operation> getOperations(Class<T> type, boolean remotable, boolean conversational, IntrospectionContext context) {
-        Method[] methods = type.getMethods();
+    private List<Operation> introspectOperations(Class<?> interfaze,
+                                                 Class<?> baseClass,
+                                                 boolean remotable,
+                                                 boolean conversational,
+                                                 IntrospectionContext context) {
+        Method[] methods = interfaze.getMethods();
         List<Operation> operations = new ArrayList<Operation>(methods.length);
+
         for (Method method : methods) {
             String name = method.getName();
-            if (remotable) {
-                boolean error = false;
-                for (Operation operation : operations) {
-                    if (operation.getName().equals(name)) {
-                        context.addError(new OverloadedOperation(method));
-                        error = true;
-                        break;
-                    }
-                }
-                if (error) {
-                    continue;
-                }
-            }
 
-            Class<?> returnType = method.getReturnType();
-            Class<?>[] paramTypes = method.getParameterTypes();
-            Class<?>[] faultTypes = method.getExceptionTypes();
+            TypeMapping typeMapping = getTypeMapping(interfaze, baseClass, context);
+            DataType<?> returnType = introspectReturnType(method, typeMapping);
+            List<DataType<?>> paramTypes = introspectParameterTypes(method, typeMapping);
+            List<DataType<?>> faultTypes = introspectFaultTypes(method, typeMapping);
 
-            int conversationSequence = NO_CONVERSATION;
-            if (method.isAnnotationPresent(EndsConversation.class)) {
-                if (!conversational) {
-                    context.addError(new InvalidConversationalOperation(method));
-                }
-                conversationSequence = CONVERSATION_END;
-            } else if (conversational) {
-                conversationSequence = Operation.CONVERSATION_CONTINUE;
-            }
-            TypeMapping typeMapping = context.getTypeMapping(type);
-            if (typeMapping == null) {
-                typeMapping = new TypeMapping();
-                context.addTypeMapping(type, typeMapping);
-            }
-            Type actualReturnType = typeMapping.getActualType(returnType);
-            DataType<Type> returnDataType = new DataType<Type>(actualReturnType, actualReturnType);
-            List<DataType<?>> paramDataTypes = new ArrayList<DataType<?>>(paramTypes.length);
-            for (Type paramType : paramTypes) {
-                Type actualType = typeMapping.getActualType(paramType);
-                paramDataTypes.add(new DataType<Type>(actualType, actualType));
-            }
-            List<DataType<?>> faultDataTypes = new ArrayList<DataType<?>>(faultTypes.length);
-            for (Type faultType : faultTypes) {
-                Type actualType = typeMapping.getActualType(faultType);
-                faultDataTypes.add(new DataType<Type>(actualType, actualType));
-            }
+            int conversationSequence = introspectConversationSequence(conversational, method, context);
 
-            Operation operation = new Operation(name, paramDataTypes, returnDataType, faultDataTypes, conversationSequence);
+            Operation operation = new Operation(name, paramTypes, returnType, faultTypes, conversationSequence);
 
             if (method.isAnnotationPresent(org.oasisopen.sca.annotation.OneWay.class) || method.isAnnotationPresent(OneWay.class)) {
                 operation.addIntent(ONEWAY_INTENT);
             }
+
             for (OperationIntrospector introspector : operationIntrospectors) {
                 introspector.introspect(operation, method, context);
+            }
+            if (remotable) {
+                checkOverloadedOperations(method, operations, context);
             }
             operations.add(operation);
         }
         return operations;
     }
+
+    private DataType<?> introspectReturnType(Method method, TypeMapping typeMapping) {
+        Class<?> physicalReturnType = method.getReturnType();
+        Type gReturnType = method.getGenericReturnType();
+        Type logicalReturnType = typeMapping.getActualType(gReturnType);
+        return createDataType(physicalReturnType, logicalReturnType, typeMapping);
+    }
+
+    private List<DataType<?>> introspectParameterTypes(Method method, TypeMapping typeMapping) {
+        Class<?>[] physicalParameterTypes = method.getParameterTypes();
+        Type[] gParamTypes = method.getGenericParameterTypes();
+        List<DataType<?>> parameterDataTypes = new ArrayList<DataType<?>>(gParamTypes.length);
+        for (int i = 0; i < gParamTypes.length; i++) {
+            Type gParamType = gParamTypes[i];
+            Type logicalParamType = typeMapping.getActualType(gParamType);
+            DataType<?> dataType = createDataType(physicalParameterTypes[i], logicalParamType, typeMapping);
+            parameterDataTypes.add(dataType);
+        }
+        return parameterDataTypes;
+    }
+
+    private List<DataType<?>> introspectFaultTypes(Method method, TypeMapping typeMapping) {
+        Class<?>[] physicalFaultTypes = method.getExceptionTypes();
+        Type[] gFaultTypes = method.getGenericExceptionTypes();  // possible even though it is not possible to catch a generic exception type
+        List<DataType<?>> faultDataTypes = new ArrayList<DataType<?>>(gFaultTypes.length);
+        for (int i = 0; i < gFaultTypes.length; i++) {
+            Type gFaultType = gFaultTypes[i];
+            Type logicalType = typeMapping.getActualType(gFaultType);
+            DataType<?> dataType = createDataType(physicalFaultTypes[i], logicalType, typeMapping);
+            faultDataTypes.add(dataType);
+        }
+        return faultDataTypes;
+    }
+
+    private TypeMapping getTypeMapping(Class<?> type, Class<?> baseClass, IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping(baseClass);
+        if (typeMapping == null) {
+            typeMapping = new TypeMapping();
+            context.addTypeMapping(type, typeMapping);
+            helper.resolveTypeParameters(type, typeMapping);
+        }
+        return typeMapping;
+    }
+
+    /**
+     * Determines the conversational sequence of a conversational service.
+     *
+     * @param conversational true if the service is conversaional
+     * @param method         the method being introspected
+     * @param context        the introspection context 
+     * @return the conversational sequence
+     */
+    private int introspectConversationSequence(boolean conversational, Method method, IntrospectionContext context) {
+        int conversationSequence = NO_CONVERSATION;
+        if (method.isAnnotationPresent(EndsConversation.class)) {
+            if (!conversational) {
+                context.addError(new InvalidConversationalOperation(method));
+            }
+            conversationSequence = CONVERSATION_END;
+        } else if (conversational) {
+            conversationSequence = Operation.CONVERSATION_CONTINUE;
+        }
+        return conversationSequence;
+    }
+
+    /**
+     * Returns a data type from a logical and physical type pairing.
+     *
+     * @param physicalType the physical type
+     * @param type         the type to construct the data type from
+     * @param mapping      the resolved generic type mappings
+     * @return the data type
+     */
+    @SuppressWarnings({"unchecked"})
+    private DataType<?> createDataType(Class<?> physicalType, Type type, TypeMapping mapping) {
+        if (type instanceof Class) {
+            // not a generic
+            return new JavaClass(physicalType);
+        } else {
+            JavaTypeInfo info = helper.createTypeInfo(type, mapping);
+            return new JavaGenericType(info);
+        }
+    }
+
+    /**
+     * Validates a remotable interface does not contain overloaded operations by comparing the current method to introspected operations.
+     *
+     * @param method     the method being introspected
+     * @param operations the interface operations
+     * @param context    the introspection context
+     */
+    private void checkOverloadedOperations(Method method, List<Operation> operations, IntrospectionContext context) {
+        for (Operation entry : operations) {
+            String name = method.getName();
+            if (entry.getName().equals(name)) {
+                OverloadedOperation error = new OverloadedOperation(name);
+                context.addError(error);
+            }
+        }
+    }
+
 
 }

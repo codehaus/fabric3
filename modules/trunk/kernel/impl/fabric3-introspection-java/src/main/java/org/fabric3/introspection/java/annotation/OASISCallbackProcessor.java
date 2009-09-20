@@ -118,8 +118,8 @@ public class OASISCallbackProcessor<I extends Implementation<? extends Injecting
 
     private CallbackDefinition createDefinition(String name, Type type, Class<?> implClass, IntrospectionContext context) {
         TypeMapping typeMapping = context.getTypeMapping(implClass);
-        Type baseType = helper.getBaseType(type, typeMapping);
-        ServiceContract contract = contractProcessor.introspect(baseType, context);
+        Class<?> baseType = helper.getBaseType(type, typeMapping);
+        ServiceContract contract = contractProcessor.introspect(baseType, implClass, context);
         return new CallbackDefinition(name, contract);
     }
 

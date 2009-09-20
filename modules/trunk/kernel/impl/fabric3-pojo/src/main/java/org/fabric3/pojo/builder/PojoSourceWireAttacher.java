@@ -59,7 +59,6 @@ import org.fabric3.pojo.provision.PojoSourceDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.PullTransformerRegistry;
@@ -76,10 +75,10 @@ public abstract class PojoSourceWireAttacher {
     protected PullTransformerRegistry transformerRegistry;
     protected ClassLoaderRegistry classLoaderRegistry;
 
-    protected PojoSourceWireAttacher(PullTransformerRegistry transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
+    protected PojoSourceWireAttacher(PullTransformerRegistry transformerRegistry, ClassLoaderRegistry loaderRegistry) {
         this.transformerRegistry = transformerRegistry;
-        this.classLoaderRegistry = classLoaderRegistry;
-    }
+        this.classLoaderRegistry = loaderRegistry;
+   }
 
     @SuppressWarnings("unchecked")
     protected Object getKey(PojoSourceDefinition sourceDefinition,
@@ -100,9 +99,14 @@ public abstract class PojoSourceWireAttacher {
         if (keyDocument != null) {
 
             Element element = keyDocument.getDocumentElement();
+            URI targetId = targetDefinition.getClassLoaderId();
+            ClassLoader targetClassLoader = null;
+            if (targetId != null) {
+                targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
+            }
 
             Type formalType;
-            Type type = source.getGerenricMemberType(referenceSource);
+            Type type = source.getGenericMemberType(referenceSource);
 
             if (type instanceof ParameterizedType) {
                 ParameterizedType genericType = (ParameterizedType) type;
@@ -117,31 +121,24 @@ public abstract class PojoSourceWireAttacher {
                 formalType = String.class;
             }
 
-            URI targetId = targetDefinition.getClassLoaderId();
-            ClassLoader targetClassLoader = null;
-            if (targetId != null) {
-                targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
+            if (!(formalType instanceof Class)) {
+                throw new PropertyTransformException("Unsupported key type:: " + formalType);
             }
-
-            return createKey(formalType, element, targetClassLoader);
+            DataType<?> targetType = new JavaClass((Class) formalType);
+            return createKey(targetType, element, targetClassLoader);
         }
 
         return null;
 
     }
 
-    @SuppressWarnings("unchecked")
-    private Object createKey(Type type, Element value, ClassLoader classLoader) throws PropertyTransformException {
 
-        DataType<?> targetType;
-        if (type instanceof Class<?>) {
-            targetType = new JavaClass((Class<?>) type);
-        } else {
-            targetType = new JavaParameterizedType((ParameterizedType) type);
-        }
+    @SuppressWarnings("unchecked")
+    private Object createKey(DataType<?> targetType, Element value, ClassLoader classLoader) throws PropertyTransformException {
+
         PullTransformer<Node, ?> transformer = (PullTransformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
         if (transformer == null) {
-            throw new PropertyTransformException("No transformer for : " + type);
+            throw new PropertyTransformException("No transformer for : " + targetType);
         }
         try {
             TransformContext context = new TransformContext(SOURCE_TYPE, targetType, classLoader);

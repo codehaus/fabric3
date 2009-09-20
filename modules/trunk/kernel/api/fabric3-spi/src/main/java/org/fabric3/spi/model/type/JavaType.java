@@ -34,43 +34,25 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.pojo.provision;
+*/
+package org.fabric3.spi.model.type;
 
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import java.lang.reflect.Type;
+
+import org.fabric3.model.type.service.DataType;
 
 /**
- * Definition of a physical component whose actual implementation is based on a POJO.
+ * An abstract Java type. For generic types, the physical type will be the raw type.
+ * <p/>
+ * For generic types, the logical type will contain resolved generic parameters. This allows for stronger type checking during wiring as resolved
+ * generic parameter types can be used for type checking. For non-generic types, the physical and logical types will be the same.
  *
  * @version $Rev$ $Date$
  */
-public abstract class PojoComponentDefinition extends PhysicalComponentDefinition {
-    private static final long serialVersionUID = 297672484973345029L;
+public abstract class JavaType<T extends Type> extends DataType<T> {
 
-    private InstanceFactoryDefinition providerDefinition;
-
-    /**
-     * Gets the instance factory provider definition.
-     *
-     * @return Instance factory provider definition.
-     */
-    public InstanceFactoryDefinition getProviderDefinition() {
-        return providerDefinition;
-    }
-
-    /**
-     * Sets the instance factory provider definition.
-     *
-     * @param providerDefinition Instance factory provider definition.
-     */
-    public void setProviderDefinition(InstanceFactoryDefinition providerDefinition) {
-        this.providerDefinition = providerDefinition;
+    public JavaType(Class<?> physical, T logical) {
+        super(physical, logical);
     }
 
 }

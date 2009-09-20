@@ -126,6 +126,7 @@ import org.fabric3.host.domain.Domain;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.introspection.java.DefaultIntrospectionHelper;
 import org.fabric3.jmx.control.JMXBindingGenerator;
 import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.jmx.runtime.JMXWireAttacher;
@@ -149,6 +150,7 @@ import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.generator.ClassLoaderWireGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
@@ -279,17 +281,19 @@ public class BootstrapAssemblyFactory {
         transformerRegistry.setTransformers(transformers);
         DefaultComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(scopeRegistry,
                                                                                providerRegistry,
                                                                                classLoaderRegistry,
-                                                                               transformerRegistry);
+                                                                               transformerRegistry,
+                                                                               helper);
 
         registry.register(SystemComponentDefinition.class, builder);
 
         Map<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>> sourceAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>>();
-        sourceAttachers.put(SystemSourceDefinition.class,
-                            new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
+        SystemSourceWireAttacher wireAttacher = new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry);
+        sourceAttachers.put(SystemSourceDefinition.class, wireAttacher);
         sourceAttachers.put(SingletonSourceDefinition.class, new SingletonSourceWireAttacher(componentManager));
 
         sourceAttachers.put(JMXSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxSubDomain));

@@ -66,8 +66,8 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
     }
 
     private boolean isJAXB(DataType<?> dataType) {
-        if (dataType.getLogical() instanceof Class) {
-            Class<?> clazz = (Class<?>) dataType.getLogical();
+        if (dataType.getPhysical() instanceof Class) {
+            Class<?> clazz = (Class<?>) dataType.getPhysical();
             if (clazz.isAnnotationPresent(XmlRootElement.class) || JAXBElement.class.isAssignableFrom(clazz)) {
                 return true;
             }

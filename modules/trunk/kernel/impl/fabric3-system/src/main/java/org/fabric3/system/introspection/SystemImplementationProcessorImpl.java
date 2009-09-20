@@ -106,8 +106,8 @@ public class SystemImplementationProcessorImpl implements ImplementationProcesso
         if (mapping == null) {
             mapping = new TypeMapping();
             context.addTypeMapping(implClass, mapping);
+            helper.resolveTypeParameters(implClass, mapping);
         }
-        helper.resolveTypeParameters(implClass, mapping);
 
         classVisitor.visit(implementation, implClass, context);
 

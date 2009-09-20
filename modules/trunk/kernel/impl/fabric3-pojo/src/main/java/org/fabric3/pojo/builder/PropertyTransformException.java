@@ -55,10 +55,6 @@ public class PropertyTransformException extends WiringException {
         super(message);
     }
 
-    public PropertyTransformException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
     public PropertyTransformException(String message, Throwable cause) {
         super(message, cause);
     }

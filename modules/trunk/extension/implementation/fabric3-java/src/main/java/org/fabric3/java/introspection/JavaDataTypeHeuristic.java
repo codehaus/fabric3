@@ -66,6 +66,7 @@ import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public class JavaDataTypeHeuristic implements HeuristicProcessor<JavaImplementation> {
     private static final Map<String, QName> JAXB_MAPPING;
 
@@ -106,12 +107,12 @@ public class JavaDataTypeHeuristic implements HeuristicProcessor<JavaImplementat
                 continue;
             }
 
-            Property property = properties.get(attribute.getName());
-            if (property.getXmlType() != null) {
-                continue;
-            }
+//            Property property = properties.get(attribute.getName());
+//            if (property.getXmlType() != null) {
+//                continue;
+//            }
 
-            property.setXmlType(getXmlType(site.getType()));
+//            property.setXmlType(getXmlType(site.getType()));
         }
     }
 

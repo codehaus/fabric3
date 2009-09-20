@@ -37,8 +37,6 @@
 */
 package org.fabric3.introspection.java.contract;
 
-import java.lang.reflect.Method;
-
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**
@@ -47,9 +45,9 @@ import org.fabric3.host.contribution.ValidationFailure;
  * @version $Rev$ $Date$
  */
 public class OverloadedOperation extends ValidationFailure {
-    private Method method;
+    private String method;
 
-    public OverloadedOperation(Method method) {
+    public OverloadedOperation(String method) {
         super();
         this.method = method;
     }

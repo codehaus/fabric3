@@ -34,43 +34,43 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.pojo.provision;
+*/
+package org.fabric3.spi.model.physical;
 
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import java.io.Serializable;
+
+import org.w3c.dom.Document;
 
 /**
- * Definition of a physical component whose actual implementation is based on a POJO.
+ * Defines a property type and value.
  *
  * @version $Rev$ $Date$
  */
-public abstract class PojoComponentDefinition extends PhysicalComponentDefinition {
-    private static final long serialVersionUID = 297672484973345029L;
+public class PhysicalPropertyDefinition implements Serializable {
+    private static final long serialVersionUID = -9068366603932114615L;
+    private String name;
+    private Document value;
 
-    private InstanceFactoryDefinition providerDefinition;
-
-    /**
-     * Gets the instance factory provider definition.
-     *
-     * @return Instance factory provider definition.
-     */
-    public InstanceFactoryDefinition getProviderDefinition() {
-        return providerDefinition;
+    public PhysicalPropertyDefinition(String name, Document value) {
+        this.name = name;
+        this.value = value;
     }
 
     /**
-     * Sets the instance factory provider definition.
+     * Returns the property name.
      *
-     * @param providerDefinition Instance factory provider definition.
+     * @return the property name
      */
-    public void setProviderDefinition(InstanceFactoryDefinition providerDefinition) {
-        this.providerDefinition = providerDefinition;
+    public String getName() {
+        return name;
     }
 
+    /**
+     * The property value.
+     *
+     * @return the property value
+     */
+    public Document getValue() {
+        return value;
+    }
 }

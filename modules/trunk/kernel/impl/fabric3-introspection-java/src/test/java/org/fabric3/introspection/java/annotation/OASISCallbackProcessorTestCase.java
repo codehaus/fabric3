@@ -45,7 +45,6 @@ package org.fabric3.introspection.java.annotation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -116,7 +115,11 @@ public class OASISCallbackProcessorTestCase extends TestCase {
 
         JavaContractProcessor contractProcessor = new JavaContractProcessor() {
 
-            public JavaServiceContract introspect(Type type, IntrospectionContext context) {
+            public JavaServiceContract introspect(Class<?> interfaze, IntrospectionContext context) {
+                return contract;
+            }
+
+            public JavaServiceContract introspect(Class<?> interfaze, Class<?> baseClass, IntrospectionContext context) {
                 return contract;
             }
         };

@@ -79,17 +79,14 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
     private final JavaContractProcessor contractProcessor;
 
     private final HeuristicProcessor<JavaImplementation> serviceHeuristic;
-    private final HeuristicProcessor<JavaImplementation> dataTypeHeuristic;
     private PolicyAnnotationProcessor policyProcessor;
 
     public JavaHeuristic(@Reference IntrospectionHelper helper,
                          @Reference JavaContractProcessor contractProcessor,
-                         @Reference(name = "service") HeuristicProcessor<JavaImplementation> serviceHeuristic,
-                         @Reference(name = "dataType") HeuristicProcessor<JavaImplementation> dataTypeHeuristic) {
+                         @Reference(name = "service") HeuristicProcessor<JavaImplementation> serviceHeuristic) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
         this.serviceHeuristic = serviceHeuristic;
-        this.dataTypeHeuristic = dataTypeHeuristic;
     }
 
     @Reference
@@ -115,8 +112,6 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             evaluateFields(implementation, implClass, context);
         }
 
-        // apply data type mapping heuristic
-        dataTypeHeuristic.applyHeuristics(implementation, implClass, context);
     }
 
     private Signature findConstructor(Class<?> implClass, IntrospectionContext context) {
@@ -168,7 +163,9 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
                 continue;
             }
 
-            Type parameterType = parameterTypes[i];
+            TypeMapping typeMapping = context.getTypeMapping(implClass);
+            Class<?> parameterType = helper.getBaseType(parameterTypes[i], typeMapping);
+
             String name = helper.getSiteName(constructor, i, null);
             Annotation[] annotations = constructor.getParameterAnnotations()[i];
             processSite(componentType, name, parameterType, implClass, site, annotations, context);
@@ -188,7 +185,9 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             }
 
             String name = helper.getSiteName(setter, null);
-            Type parameterType = setter.getGenericParameterTypes()[0];
+            TypeMapping typeMapping = context.getTypeMapping(implClass);
+            Type genericType = setter.getGenericParameterTypes()[0];
+            Class<?> parameterType = helper.getBaseType(genericType, typeMapping);
             Annotation[] annotations = setter.getAnnotations();
             processSite(componentType, name, parameterType, implClass, site, annotations, context);
         }
@@ -207,7 +206,8 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             }
 
             String name = helper.getSiteName(field, null);
-            Type parameterType = field.getGenericType();
+            TypeMapping typeMapping = context.getTypeMapping(implClass);
+            Class<?> parameterType = helper.getBaseType(field.getGenericType(), typeMapping);
             Annotation[] annotations = field.getAnnotations();
             processSite(componentType, name, parameterType, implClass, site, annotations, context);
         }
@@ -216,7 +216,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
 
     private void processSite(InjectingComponentType componentType,
                              String name,
-                             Type parameterType,
+                             Class<?> parameterType,
                              Class<?> declaringClass,
                              InjectionSite site,
                              Annotation[] annotations,
@@ -245,7 +245,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
                              InjectionSite site,
                              IntrospectionContext context) {
         TypeMapping typeMapping = context.getTypeMapping(declaringClass);
-        Property property = new Property(name, null);
+        Property property = new Property(name);
         property.setMany(helper.isManyValued(typeMapping, type));
         componentType.add(property, site);
     }
@@ -253,7 +253,7 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
     @SuppressWarnings({"unchecked"})
     private void addReference(InjectingComponentType componentType,
                               String name,
-                              Type parameterType,
+                              Class<?> parameterType,
                               Class<?> declaringClass,
                               InjectionSite site,
                               Annotation[] annotations,

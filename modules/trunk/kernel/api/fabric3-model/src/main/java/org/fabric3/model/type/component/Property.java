@@ -43,8 +43,6 @@
  */
 package org.fabric3.model.type.component;
 
-import javax.xml.namespace.QName;
-
 import org.w3c.dom.Document;
 
 import org.fabric3.model.type.ModelObject;
@@ -59,16 +57,13 @@ public class Property extends ModelObject {
     private String name;
     private boolean many;
     private boolean required;
-    private QName xmlType;
-
     private Document defaultValue;
 
     public Property() {
     }
 
-    public Property(String name, QName xmlType) {
+    public Property(String name) {
         this.name = name;
-        this.xmlType = xmlType;
     }
 
     /**
@@ -125,14 +120,6 @@ public class Property extends ModelObject {
         this.required = required;
     }
 
-    public QName getXmlType() {
-        return xmlType;
-    }
-
-    public void setXmlType(QName xmlType) {
-        this.xmlType = xmlType;
-    }
-
     public Document getDefaultValue() {
         return defaultValue;
     }
@@ -140,4 +127,5 @@ public class Property extends ModelObject {
     public void setDefaultValue(Document defaultValue) {
         this.defaultValue = defaultValue;
     }
+
 }

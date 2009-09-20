@@ -34,43 +34,59 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.pojo.provision;
+*/
+package org.fabric3.spi.model.type;
 
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import java.util.ArrayList;
+import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
- * Definition of a physical component whose actual implementation is based on a POJO.
- *
  * @version $Rev$ $Date$
  */
-public abstract class PojoComponentDefinition extends PhysicalComponentDefinition {
-    private static final long serialVersionUID = 297672484973345029L;
-
-    private InstanceFactoryDefinition providerDefinition;
+public class JavaTypesEqualityTestCase extends TestCase {
 
     /**
-     * Gets the instance factory provider definition.
-     *
-     * @return Instance factory provider definition.
+     * Tests Class<String> and Class
      */
-    public InstanceFactoryDefinition getProviderDefinition() {
-        return providerDefinition;
+    @SuppressWarnings({"EqualsBetweenInconvertibleTypes"})
+    public void testBoundJavaGenericTypeToJavaClass() {
+        JavaTypeInfo param = new JavaTypeInfo(String.class);
+        List<JavaTypeInfo> params = new ArrayList<JavaTypeInfo>();
+        params.add(param);
+        JavaTypeInfo info = new JavaTypeInfo(Class.class, params);
+        JavaGenericType type = new JavaGenericType(info);
+        JavaClass<Class> clazz = new JavaClass<Class>(Class.class);
+        assertFalse(type.equals(clazz));
+        assertFalse(clazz.equals(type));
     }
 
     /**
-     * Sets the instance factory provider definition.
-     *
-     * @param providerDefinition Instance factory provider definition.
+     * Tests Class<Object> and Class
      */
-    public void setProviderDefinition(InstanceFactoryDefinition providerDefinition) {
-        this.providerDefinition = providerDefinition;
+    @SuppressWarnings({"AssertEqualsBetweenInconvertibleTypes"})
+    public void testBoundObjectJavaGenericTypeToJavaClass() {
+        JavaTypeInfo param = new JavaTypeInfo(Object.class);
+        List<JavaTypeInfo> params = new ArrayList<JavaTypeInfo>();
+        params.add(param);
+        JavaTypeInfo info = new JavaTypeInfo(Class.class, params);
+        JavaGenericType type = new JavaGenericType(info);
+        JavaClass<Class> clazz = new JavaClass<Class>(Class.class);
+        assertEquals(type, clazz);
+        assertEquals(clazz, type);
+    }
+
+    /**
+     * Tests Class<?> and Class
+     */
+    @SuppressWarnings({"AssertEqualsBetweenInconvertibleTypes"})
+    public void testUnboundJavaGenericTypeToJavaClass() {
+        JavaTypeInfo unBound = new JavaTypeInfo(Class.class);
+        JavaGenericType type = new JavaGenericType(unBound);
+        JavaClass<Class> clazz = new JavaClass<Class>(Class.class);
+        assertEquals(type, clazz);
+        assertEquals(clazz, type);
     }
 
 }

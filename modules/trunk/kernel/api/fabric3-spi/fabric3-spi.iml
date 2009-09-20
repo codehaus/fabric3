@@ -84,6 +84,17 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-model" exported="" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPO$/ant/ant/1.6.5/ant-1.6.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/ant/ant/1.6.5/ant-1.6.5-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
 

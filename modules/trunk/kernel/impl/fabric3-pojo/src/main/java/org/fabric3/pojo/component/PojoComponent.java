@@ -204,7 +204,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         return provider.getMemberType(injectionSite);
     }
 
-    public Type getGerenricMemberType(InjectableAttribute injectionSite) {
+    public Type getGenericMemberType(InjectableAttribute injectionSite) {
         return provider.getGenericType(injectionSite);
     }
 

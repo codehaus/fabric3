@@ -90,8 +90,8 @@ public class JUnitImplementationProcessorImpl implements JUnitImplementationProc
         if (mapping == null) {
             mapping = new TypeMapping();
             context.addTypeMapping(implClass, mapping);
+            helper.resolveTypeParameters(implClass, mapping);
         }
-        helper.resolveTypeParameters(implClass, mapping);
 
         classVisitor.visit(implementation, implClass, context);
 

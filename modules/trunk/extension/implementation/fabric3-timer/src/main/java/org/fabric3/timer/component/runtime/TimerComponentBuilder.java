@@ -60,6 +60,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.transform.PullTransformerRegistry;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
@@ -70,18 +71,23 @@ import org.fabric3.timer.spi.TimerService;
  */
 @EagerInit
 public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerComponentDefinition, TimerComponent<?>> {
+    private ScopeRegistry scopeRegistry;
+    private InstanceFactoryBuilderRegistry providerBuilders;
+    private ProxyService proxyService;
     private TimerService nonTrxTimerService;
     private TimerService trxTimerService;
-    private ProxyService proxyService;
 
     public TimerComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                  @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference(name = "transformerRegistry") PullTransformerRegistry transformerRegistry,
+                                 @Reference PullTransformerRegistry transformerRegistry,
                                  @Reference ProxyService proxyService,
                                  @Reference(name = "nonTrxTimerService") TimerService nonTrxTimerService,
-                                 @Reference(name = "trxTimerService") TimerService trxTimerService) {
-        super(scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
+                                 @Reference(name = "trxTimerService") TimerService trxTimerService,
+                                 @Reference IntrospectionHelper helper) {
+        super(classLoaderRegistry, transformerRegistry, helper);
+        this.scopeRegistry = scopeRegistry;
+        this.providerBuilders = providerBuilders;
         this.proxyService = proxyService;
         this.nonTrxTimerService = nonTrxTimerService;
         this.trxTimerService = trxTimerService;
@@ -112,13 +118,15 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
         } else {
             timerService = nonTrxTimerService;
         }
+        long idleTime = definition.getMaxIdleTime();
+        long maxAge = definition.getMaxAge();
         TimerComponent<T> component = new TimerComponent<T>(uri,
                                                             provider,
                                                             scopeContainer,
                                                             deployable,
                                                             initLevel,
-                                                            definition.getMaxIdleTime(),
-                                                            definition.getMaxAge(),
+                                                            idleTime,
+                                                            maxAge,
                                                             proxyService,
                                                             data,
                                                             timerService);

@@ -22,7 +22,7 @@
            name="ActiveMQControllerExtension"
            autowire="true">
 
-    <component name="ActiveMQBindingProvider" f3-core:key="f3-binding:binding.activemq">
+    <component name="ActiveMQBindingProvider">
         <f3-impl:implementation.system class="org.fabric3.activemq.control.ActiveMQBindingProvider"/>
         <property name="connectionFactory" source="$systemConfig//jms/binding.sca/@factory"/>
         <property name="xaConnectionFactory" source="$systemConfig//jms/binding.sca/@xa.factory"/>

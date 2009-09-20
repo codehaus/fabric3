@@ -66,6 +66,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.EffectivePolicy;
@@ -179,9 +180,10 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
     private void processPropertyValues(LogicalComponent<XQueryImplementation> component, XQueryComponentDefinition physical) {
         for (Map.Entry<String, Document> entry : component.getPropertyValues().entrySet()) {
             String name = entry.getKey();
-            Document value = entry.getValue();
-            if (value != null) {
-                physical.setPropertyValue(name, value);
+            Document document = entry.getValue();
+            if (document != null) {
+                PhysicalPropertyDefinition definition = new PhysicalPropertyDefinition(name,  document);
+                physical.setPropertyDefinition(definition);
             }
         }
 
@@ -215,8 +217,8 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<XQueryImplementation> source,
-                                                                   ServiceContract serviceContract,
-                                                                   EffectivePolicy policy) throws GenerationException {
+                                                               ServiceContract serviceContract,
+                                                               EffectivePolicy policy) throws GenerationException {
         XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;

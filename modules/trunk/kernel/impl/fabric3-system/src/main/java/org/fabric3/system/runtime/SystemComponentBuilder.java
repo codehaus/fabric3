@@ -58,6 +58,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.transform.PullTransformerRegistry;
 import org.fabric3.system.provision.SystemComponentDefinition;
 
@@ -66,12 +67,17 @@ import org.fabric3.system.provision.SystemComponentDefinition;
  */
 @EagerInit
 public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemComponentDefinition, SystemComponent<T>> {
+    private ScopeRegistry scopeRegistry;
+    private InstanceFactoryBuilderRegistry providerBuilders;
 
     public SystemComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                   @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference(name = "transformerRegistry") PullTransformerRegistry transformerRegistry) {
-        super(scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
+                                  @Reference PullTransformerRegistry transformerRegistry,
+                                  @Reference IntrospectionHelper helper) {
+        super(classLoaderRegistry, transformerRegistry, helper);
+        this.scopeRegistry = scopeRegistry;
+        this.providerBuilders = providerBuilders;
     }
 
     public SystemComponent<T> build(SystemComponentDefinition definition) throws BuilderException {

@@ -60,9 +60,9 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.annotation.UnknownInjectionType;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.system.model.SystemImplementation;
 
 /**
@@ -180,7 +180,7 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
     }
 
     private void addProperty(InjectingComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
-        Property property = new Property(name, null);
+        Property property = new Property(name);
         property.setMany(helper.isManyValued(typeMapping, parameterType));
         componentType.add(property, site);
     }
@@ -191,7 +191,8 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
                               Type parameterType,
                               InjectionSite site,
                               IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(parameterType, context);
+        Class<?> type = helper.getBaseType(parameterType, typeMapping);
+        ServiceContract contract = contractProcessor.introspect(type, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         componentType.add(reference, site);

@@ -45,6 +45,8 @@ package org.fabric3.spi.model.physical;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 /**
@@ -62,6 +64,7 @@ public abstract class PhysicalComponentDefinition implements Serializable {
     private long maxIdleTime;
     private long maxAge;
     private URI classLoaderId;
+    private final List<PhysicalPropertyDefinition> propertyDefinitions = new ArrayList<PhysicalPropertyDefinition>();
 
     /**
      * Gets the component URI.
@@ -187,6 +190,24 @@ public abstract class PhysicalComponentDefinition implements Serializable {
      */
     public void setMaxAge(long maxAge) {
         this.maxAge = maxAge;
+    }
+
+    /**
+     * Sets the property definition.
+     *
+     * @param definition the property definition
+     */
+    public void setPropertyDefinition(PhysicalPropertyDefinition definition) {
+        propertyDefinitions.add(definition);
+    }
+
+    /**
+     * Returns the property definitions for the component.
+     *
+     * @return the property definitions for the component
+     */
+    public List<PhysicalPropertyDefinition> getPropertyDefinitions() {
+        return propertyDefinitions;
     }
 
     @Override

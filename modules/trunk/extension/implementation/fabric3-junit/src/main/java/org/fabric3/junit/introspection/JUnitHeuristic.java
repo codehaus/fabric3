@@ -252,7 +252,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
     }
 
     private void addProperty(InjectingComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
-        Property property = new Property(name, null);
+        Property property = new Property(name);
         property.setMany(helper.isManyValued(typeMapping, parameterType));
         componentType.add(property, site);
     }
@@ -264,7 +264,8 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
                               InjectionSite site,
                               Annotation[] annotations,
                               IntrospectionContext context) {
-        ServiceContract contract = contractProcessor.introspect(parameterType, context);
+        Class<?> type = helper.getBaseType(parameterType, typeMapping);
+        ServiceContract contract = contractProcessor.introspect(type, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         if (policyProcessor != null) {

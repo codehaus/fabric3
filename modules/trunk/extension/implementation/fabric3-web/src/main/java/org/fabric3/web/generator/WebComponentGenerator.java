@@ -65,6 +65,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.EffectivePolicy;
@@ -233,9 +234,10 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
     private void processPropertyValues(LogicalComponent<?> component, WebComponentDefinition physical) {
         for (Map.Entry<String, Document> entry : component.getPropertyValues().entrySet()) {
             String name = entry.getKey();
-            Document value = entry.getValue();
-            if (value != null) {
-                physical.setPropertyValue(name, value);
+            Document document  = entry.getValue();
+            if (document != null) {
+                PhysicalPropertyDefinition definition = new PhysicalPropertyDefinition(name, document);
+                physical.setPropertyDefinition(definition);
             }
         }
     }

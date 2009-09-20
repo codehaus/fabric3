@@ -54,6 +54,7 @@ import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -110,9 +111,10 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
     public void processPropertyValues(LogicalComponent<?> component, PojoComponentDefinition physical) {
         for (Map.Entry<String, Document> entry : component.getPropertyValues().entrySet()) {
             String name = entry.getKey();
-            Document value = entry.getValue();
-            if (value != null) {
-                physical.setPropertyValue(name, value);
+            Document document = entry.getValue();
+            if (document != null) {
+                PhysicalPropertyDefinition definition = new PhysicalPropertyDefinition(name, document);
+                physical.setPropertyDefinition(definition);
             }
         }
     }

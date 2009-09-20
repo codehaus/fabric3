@@ -97,8 +97,8 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
         if (mapping == null) {
             mapping = new TypeMapping();
             context.addTypeMapping(implClass, mapping);
+            helper.resolveTypeParameters(implClass, mapping);
         }
-        helper.resolveTypeParameters(implClass, mapping);
 
         try {
             classVisitor.visit(implementation, implClass, context);

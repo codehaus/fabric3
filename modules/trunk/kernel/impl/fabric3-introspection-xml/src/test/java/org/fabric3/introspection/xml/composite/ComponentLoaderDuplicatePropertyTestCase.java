@@ -116,7 +116,7 @@ public class ComponentLoaderDuplicatePropertyTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        Property property = new Property(PROP_NAME, null);
+        Property property = new Property(PROP_NAME);
 
         type.add(property);
         impl.setComponentType(type);

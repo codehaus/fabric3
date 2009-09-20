@@ -53,18 +53,20 @@ import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
+ * Processes metadata for the {@link Resource} annotation.
+ *
  * @version $Rev$ $Date$
  */
 public class Fabric3ResourceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Resource, I> {
     private final IntrospectionHelper helper;
     private final JavaContractProcessor contractProcessor;
 
-    public Fabric3ResourceProcessor(@Reference IntrospectionHelper helper,
-                                    @Reference JavaContractProcessor contractProcessor) {
+    public Fabric3ResourceProcessor(@Reference IntrospectionHelper helper, @Reference JavaContractProcessor contractProcessor) {
         super(Resource.class);
         this.helper = helper;
         this.contractProcessor = contractProcessor;
@@ -72,7 +74,9 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
 
     public void visitField(Resource annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(field, annotation.name());
-        Type type = field.getGenericType();
+        Type genericType = field.getGenericType();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
+        Class<?> type = helper.getBaseType(genericType, typeMapping);
         FieldInjectionSite site = new FieldInjectionSite(field);
         ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context);
         implementation.getComponentType().add(definition, site);
@@ -80,17 +84,15 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
 
     public void visitMethod(Resource annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(method, annotation.name());
-        Type type = helper.getGenericType(method);
+        Type genericType = helper.getGenericType(method);
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
+        Class<?> type = helper.getBaseType(genericType, typeMapping);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    SystemSourcedResource createResource(String name,
-                                         Type type,
-                                         boolean optional,
-                                         String mappedName,
-                                         IntrospectionContext context) {
+    SystemSourcedResource createResource(String name, Class<?> type, boolean optional, String mappedName, IntrospectionContext context) {
         ServiceContract serviceContract = contractProcessor.introspect(type, context);
         return new SystemSourcedResource(name, optional, mappedName, serviceContract);
     }

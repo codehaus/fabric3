@@ -73,7 +73,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
     public JavaSourceWireAttacher(@Reference ComponentManager manager,
                                   @Reference ProxyService proxyService,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference(name = "transformerRegistry") PullTransformerRegistry transformerRegistry) {
+                                  @Reference PullTransformerRegistry transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
         this.proxyService = proxyService;

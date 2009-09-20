@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A mapping from formal types to actual types.
+ * A mapping from formal types to actual types for a class hierarchy.
  *
  * @version $Rev$ $Date$
  */
@@ -61,7 +61,7 @@ public class TypeMapping {
     private final Map<? super Type, Type> mappings = new HashMap<Type, Type>();
 
     /**
-     * Add a mapping from a TypeVariable to an actual type
+     * Add a mapping from a TypeVariable to an actual type.
      *
      * @param typeVariable the formal type variable
      * @param type         the actual type it maps to
@@ -71,7 +71,8 @@ public class TypeMapping {
     }
 
     /**
-     * Return the actual type of the supplied formal type.
+     * Return the actual type of the supplied formal type. That is, the Class, GenericArrayType, TypeVariable or WildCardType that the formal type is
+     * bound to.
      *
      * @param type the formal type parameter
      * @return the actual type; may be a TypeVariable if the type is not bound
@@ -115,4 +116,5 @@ public class TypeMapping {
             throw new AssertionError();
         }
     }
+
 }

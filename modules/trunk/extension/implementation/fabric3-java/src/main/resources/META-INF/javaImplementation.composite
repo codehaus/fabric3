@@ -31,15 +31,10 @@ Public License. See the accompanying license file for details.
     <component name="JavaHeuristic">
         <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaHeuristic"/>
         <reference name="service" target="JavaServiceHeuristic"/>
-        <reference name="dataType" target="JavaDataTypeHeuristic"/>
     </component>
 
     <component name="JavaServiceHeuristic">
         <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaServiceHeuristic"/>
-    </component>
-
-    <component name="JavaDataTypeHeuristic">
-        <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaDataTypeHeuristic"/>
     </component>
 
     <component name="JavaComponentGenerator" f3-core:key="org.fabric3.java.model.JavaImplementation">

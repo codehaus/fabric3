@@ -37,7 +37,6 @@
 */
 package org.fabric3.transform.dom2java.generics.list;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -46,14 +45,14 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Node;
 
 import org.fabric3.model.type.service.DataType;
-import org.fabric3.spi.model.type.JavaParameterizedType;
+import org.fabric3.spi.model.type.JavaGenericType;
+import org.fabric3.spi.model.type.JavaTypeInfo;
 import org.fabric3.spi.transform.AbstractPullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Converts a DOM node to a list of QNames. Expects the property to be defined in the format,
- * <p/><code> value1, value2, value3 </code>
+ * Converts a DOM node to a list of QNames. Expects the property to be defined in the format, <p/><code> value1, value2, value3 </code>
  * <p/>
  * where values correspond to the format specified by {@link QName#valueOf(String)}.
  *
@@ -61,15 +60,14 @@ import org.fabric3.spi.transform.TransformationException;
  */
 public class Node2ListOfQNameTransformer extends AbstractPullTransformer<Node, List<QName>> {
 
-    private static List<QName> FIELD = null;
-    private static JavaParameterizedType TARGET = null;
+    private static JavaGenericType TARGET = null;
 
     static {
-        try {
-            ParameterizedType parameterizedType = (ParameterizedType) Node2ListOfQNameTransformer.class.getDeclaredField("FIELD").getGenericType();
-            TARGET = new JavaParameterizedType(parameterizedType);
-        } catch (NoSuchFieldException ignore) {
-        }
+        JavaTypeInfo qNameInfo = new JavaTypeInfo(QName.class);
+        List<JavaTypeInfo> list = new ArrayList<JavaTypeInfo>();
+        list.add(qNameInfo);
+        JavaTypeInfo listInfo = new JavaTypeInfo(List.class, list);
+        TARGET = new JavaGenericType(listInfo);
     }
 
     public DataType<?> getTargetType() {

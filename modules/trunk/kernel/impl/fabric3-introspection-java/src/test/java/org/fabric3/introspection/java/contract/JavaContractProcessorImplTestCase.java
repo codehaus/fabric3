@@ -60,11 +60,12 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
+import org.fabric3.spi.model.type.JavaTypeInfo;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultContractProcessorTestCase extends TestCase {
+public class JavaContractProcessorImplTestCase extends TestCase {
     private JavaContractProcessor impl;
 
     public void testSimpleInterface() {
@@ -99,6 +100,8 @@ public class DefaultContractProcessorTestCase extends TestCase {
     public void testBoundGenericInterface() {
         IntrospectionContext context = new DefaultIntrospectionContext();
         TypeMapping mapping = new TypeMapping();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        helper.resolveTypeParameters(Generic.class, mapping);
         context.addTypeMapping(Generic.class, mapping);
         ServiceContract contract = impl.introspect(Generic.class, context);
         assertEquals("Generic", contract.getInterfaceName());
@@ -115,6 +118,10 @@ public class DefaultContractProcessorTestCase extends TestCase {
         assertNotNull(operation);
 
         DataType<?> returnType = operation.getOutputType();
+        // the return type should be unbound, which means the raw type (Base) will be used for the actual parameter type
+        JavaTypeInfo info = (JavaTypeInfo) returnType.getLogical();
+        assertEquals(Base.class, info.getRawType());
+        assertTrue(info.getParameterTypesInfos().isEmpty());
         assertEquals(Base.class, returnType.getPhysical());
 
     }
@@ -206,20 +213,6 @@ public class DefaultContractProcessorTestCase extends TestCase {
         assertTrue(context.getErrors().get(0) instanceof InvalidConversationalOperation);
     }
 
-/*
-    public void testUnregister() throws Exception {
-        JavaInterfaceProcessor processor = createMock(JavaInterfaceProcessor.class);
-        processor.visitInterface(eq(Base.class), isA(JavaServiceContract.class));
-        processor.visitOperation(eq(Base.class.getMethod("baseInt", Integer.TYPE)), isA(Operation.class));
-        expectLastCall().once();
-        replay(processor);
-        impl.registerProcessor(processor);
-        impl.introspect(Base.class);
-        impl.unregisterProcessor(processor);
-        impl.introspect(Base.class);
-        verify(processor);
-    }
-*/
 
     protected void setUp() throws Exception {
         super.setUp();

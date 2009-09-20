@@ -44,6 +44,7 @@
 package org.fabric3.introspection.java;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -52,6 +53,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -76,6 +78,7 @@ import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.model.type.JavaTypeInfo;
 
 /**
  * @version $Rev$ $Date$
@@ -165,7 +168,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return constructor.getGenericParameterTypes()[index];
     }
 
-    public Type getBaseType(Type type, TypeMapping typeMapping) {
+    public Class<?> getBaseType(Type type, TypeMapping typeMapping) {
         if (type instanceof Class) {
             Class<?> clazz = (Class<?>) type;
             if (clazz.isArray()) {
@@ -205,7 +208,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
     }
 
     public InjectableAttributeType inferType(Type type, TypeMapping typeMapping) {
-        Type baseType = getBaseType(type, typeMapping);
+        Class<?> baseType = getBaseType(type, typeMapping);
         Class<?> rawType = typeMapping.getRawType(baseType);
 
         // if it's not an interface, it must be a property
@@ -362,17 +365,56 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return fields;
     }
 
-    public void resolveTypeParameters(Class<?> type, TypeMapping mapping) {
+    public void resolveTypeParameters(Class<?> type, TypeMapping typeMapping) {
         while (type != null) {
-            addTypeBindings(mapping, type.getGenericSuperclass());
+            addTypeBindings(type.getGenericSuperclass(), typeMapping);
             for (Type interfaceType : type.getGenericInterfaces()) {
-                addTypeBindings(mapping, interfaceType);
+                addTypeBindings(interfaceType, typeMapping);
             }
             type = type.getSuperclass();
         }
     }
 
-    private void addTypeBindings(TypeMapping mapping, Type type1) {
+    public JavaTypeInfo createTypeInfo(Type type, TypeMapping typeMapping) {
+        if (type instanceof Class<?>) {
+            return new JavaTypeInfo((Class<?>) type);
+        } else if (type instanceof TypeVariable) {
+            TypeVariable typeVariable = (TypeVariable) type;
+            Type actual = typeMapping.getActualType(typeVariable);
+            if (actual instanceof TypeVariable) {
+                // unbound TypeVariable, use the raw type as the parameter type
+                return new JavaTypeInfo(typeMapping.getRawType(typeVariable));
+            }
+            return createTypeInfo(actual, typeMapping);
+        } else if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            List<JavaTypeInfo> infos = new ArrayList<JavaTypeInfo>();
+            for (Type arg : parameterizedType.getActualTypeArguments()) {
+                Type argActual = typeMapping.getActualType(arg);
+                JavaTypeInfo argInfo = createTypeInfo(argActual, typeMapping);
+                infos.add(argInfo);
+            }
+            Class<?> rawType = typeMapping.getRawType(parameterizedType.getRawType());
+            return new JavaTypeInfo(rawType, infos);
+        } else if (type instanceof GenericArrayType) {
+            GenericArrayType arrayType = (GenericArrayType) type;
+            // generic arrays are illegal, so return the raw type
+            Class<?> componentType = typeMapping.getRawType(arrayType.getGenericComponentType());
+            return new JavaTypeInfo(Array.newInstance(componentType, 0).getClass());
+        } else if (type instanceof WildcardType) {
+            WildcardType wildcardType = (WildcardType) type;
+            Type actual = typeMapping.getActualType(wildcardType);
+            if (actual instanceof WildcardType) {
+                // unbound wildcard, use the raw type as the parameter type
+                return new JavaTypeInfo(typeMapping.getRawType(wildcardType));
+            }
+            return createTypeInfo(actual, typeMapping);
+        } else {
+            throw new AssertionError();
+        }
+    }
+
+    private void addTypeBindings(Type type1, TypeMapping mapping) {
         if (type1 instanceof ParameterizedType) {
             ParameterizedType type = (ParameterizedType) type1;
             Class<?> boundType = (Class<?>) type.getRawType();
@@ -383,4 +425,5 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             }
         }
     }
+
 }

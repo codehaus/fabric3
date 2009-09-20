@@ -86,8 +86,8 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             if (mapping == null) {
                 mapping = new TypeMapping();
                 context.addTypeMapping(artifact, mapping);
+                helper.resolveTypeParameters(artifact, mapping);
             }
-            helper.resolveTypeParameters(artifact, mapping);
             IntrospectionContext childContext = new DefaultIntrospectionContext(context);
             classVisitor.visit(artifactImpl, artifact, childContext);
             if (childContext.hasErrors()) {

@@ -117,7 +117,7 @@ public class DuplicatePropertyTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        Property property = new Property(PROP_NAME, null);
+        Property property = new Property(PROP_NAME);
 
         type.add(property);
         impl.setComponentType(type);
@@ -152,7 +152,7 @@ public class DuplicatePropertyTestCase extends TestCase {
     @SuppressWarnings({"unchecked"})
     private <T> TypeLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
         TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-        Property value = new Property(PROP_NAME, null);
+        Property value = new Property(PROP_NAME);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);

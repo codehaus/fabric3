@@ -14,7 +14,7 @@ import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
 
 /**
- * Defailt implementation of OperationPolicyIntrospector.
+ * Default implementation of OperationPolicyIntrospector.
  *
  * @version $Rev$ $Date$
  */
@@ -32,12 +32,12 @@ public class DefaultOperationPolicyIntrospector implements OperationPolicyIntros
             Class<?>[] params = new Class<?>[types.size()];
             int i = 0;
             for (DataType<?> type : types) {
-                Object logical = type.getLogical();
-                if (!(logical instanceof Class)) {
-                    // not possible
+                Object physical = type.getPhysical();
+                if (!(physical instanceof Class)) {
+                    // programming error since this class is only called to introspect Java types
                     throw new AssertionError();
                 }
-                params[i] = (Class<?>) logical;
+                params[i] = (Class<?>) physical;
                 i++;
             }
             try {

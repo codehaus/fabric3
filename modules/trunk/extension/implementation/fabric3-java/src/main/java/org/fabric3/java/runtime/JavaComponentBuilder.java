@@ -57,6 +57,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.SingletonObjectFactory;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
@@ -71,14 +72,19 @@ import org.fabric3.spi.transform.PullTransformerRegistry;
  */
 @EagerInit
 public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaComponentDefinition, JavaComponent<T>> {
+    private ScopeRegistry scopeRegistry;
+    private InstanceFactoryBuilderRegistry providerBuilders;
     private ProxyService proxyService;
 
     public JavaComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
-                                @Reference(name = "transformerRegistry") PullTransformerRegistry transformerRegistry,
-                                @Reference ProxyService proxyService) {
-        super(scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
+                                @Reference PullTransformerRegistry transformerRegistry,
+                                @Reference ProxyService proxyService,
+                                @Reference IntrospectionHelper helper) {
+        super(classLoaderRegistry, transformerRegistry, helper);
+        this.scopeRegistry = scopeRegistry;
+        this.providerBuilders = providerBuilders;
         this.proxyService = proxyService;
     }
 
@@ -96,32 +102,32 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         // create the InstanceFactoryProvider based on the definition in the model
         InstanceFactoryDefinition providerDefinition = definition.getProviderDefinition();
 
-
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         createPropertyFactories(definition, provider);
 
-        JavaComponent<T> component = new JavaComponent<T>(uri,
-                                                          provider,
-                                                          scopeContainer,
-                                                          deployable,
-                                                          initLevel,
-                                                          definition.getMaxIdleTime(),
-                                                          definition.getMaxAge(),
-                                                          proxyService);
+        long idleTime = definition.getMaxIdleTime();
+        long age = definition.getMaxAge();
+
+        JavaComponent<T> component = new JavaComponent<T>(uri, provider, scopeContainer, deployable, initLevel, idleTime, age, proxyService);
 
         PojoRequestContext requestContext = new PojoRequestContext();
-        provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));
+        SingletonObjectFactory<PojoRequestContext> requestObjectFactory = new SingletonObjectFactory<PojoRequestContext>(requestContext);
+        provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, requestObjectFactory);
         PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
-        provider.setObjectFactory(InjectableAttribute.COMPONENT_CONTEXT, new SingletonObjectFactory<PojoComponentContext>(componentContext));
-        provider.setObjectFactory(InjectableAttribute.CONVERSATION_ID, new ConversationIDObjectFactory());
+        SingletonObjectFactory<PojoComponentContext> componentObjectFactory = new SingletonObjectFactory<PojoComponentContext>(componentContext);
+        provider.setObjectFactory(InjectableAttribute.COMPONENT_CONTEXT, componentObjectFactory);
+        ConversationIDObjectFactory conversationIDObjectFactory = new ConversationIDObjectFactory();
+        provider.setObjectFactory(InjectableAttribute.CONVERSATION_ID, conversationIDObjectFactory);
 
         OASISPojoRequestContext oasisRequestContext = new OASISPojoRequestContext();
-        provider.setObjectFactory(InjectableAttribute.OASIS_REQUEST_CONTEXT,
-                                  new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext));
+        SingletonObjectFactory<OASISPojoRequestContext> oasisRequestFactory =
+                new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext);
+        provider.setObjectFactory(InjectableAttribute.OASIS_REQUEST_CONTEXT, oasisRequestFactory);
         OASISPojoComponentContext oasisComponentContext = new OASISPojoComponentContext(component, oasisRequestContext);
-        provider.setObjectFactory(InjectableAttribute.OASIS_COMPONENT_CONTEXT,
-                                  new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext));
+        SingletonObjectFactory<OASISPojoComponentContext> oasisComponentFactory =
+                new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext);
+        provider.setObjectFactory(InjectableAttribute.OASIS_COMPONENT_CONTEXT, oasisComponentFactory);
 
 
         return component;

@@ -37,18 +37,57 @@
 */
 package org.fabric3.spi.model.type;
 
-import java.lang.reflect.ParameterizedType;
-
 import org.fabric3.model.type.service.DataType;
 
 /**
+ * A Java generic type. The physical type is the raw type, e.g. <code>List</code> for the parameterized type <code>List&lt;String&gt;</code>. The
+ * logical type is a {@link JavaTypeInfo} which represents resolved generic type information. The logical type can be used to perform strong type
+ * checking that includes the actual types of generic parameters, e.g. a check that can verify <code>List&lt;String&gt;</code> as opposed to just
+ * <code>List</code>.
+ *
  * @version $Rev$ $Date$
  */
-public class JavaParameterizedType extends DataType<ParameterizedType> {
+public class JavaGenericType extends DataType<JavaTypeInfo> {
     private static final long serialVersionUID = -8832071773275935399L;
 
-    public JavaParameterizedType(ParameterizedType parameterizedType) {
-        super(parameterizedType, parameterizedType);
+    public JavaGenericType(JavaTypeInfo info) {
+        super(info.getRawType(), info);
     }
+
+    /**
+     * Overrides <code>DataType.equals()</code> to implement equality between unbound generic types or generc types with <code>java.lang.Object</code>
+     * as an upper bound.
+     *
+     * @param o the object to test for equality
+     * @return if the objects are equal
+     */
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DataType)) {
+            return false;
+        }
+        DataType other = (DataType) o;
+        if (!getPhysical().equals(other.getPhysical())) {
+            return false;
+        }
+
+        if (other instanceof JavaClass) {
+            boolean bound = false;  // unbound paramters are equivalent to non-generic types
+            for (JavaTypeInfo info : getLogical().getParameterTypesInfos()) {
+                if (!Object.class.equals(info.getRawType())) {
+                    bound = true;
+                    break;
+                }
+            }
+            if (!bound) {
+                JavaClass<?> otherClazz = (JavaClass<?>) other;
+                return getLogical().getRawType().equals(otherClazz.getLogical());
+            }
+        }
+        return getLogical().equals(other.getLogical());
+    }
+
 
 }

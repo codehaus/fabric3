@@ -59,6 +59,7 @@ import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
@@ -78,7 +79,9 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
 
     public void visitField(Monitor annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(field, null);
-        Type type = field.getGenericType();
+        Type genericType = field.getGenericType();
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
+        Class<?> type = helper.getBaseType(genericType, typeMapping);
         FieldInjectionSite site = new FieldInjectionSite(field);
         MonitorResource resource = createDefinition(name, type, context);
         implementation.getComponentType().add(resource, site);
@@ -86,7 +89,9 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
 
     public void visitMethod(Monitor annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(method, null);
-        Type type = helper.getGenericType(method);
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
+        Type genericType = helper.getGenericType(method);
+        Class<?> type = helper.getBaseType(genericType, typeMapping);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         MonitorResource resource = createDefinition(name, type, context);
         implementation.getComponentType().add(resource, site);
@@ -99,14 +104,16 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
                                           I implementation,
                                           IntrospectionContext context) {
         String name = helper.getSiteName(constructor, index, null);
-        Type type = helper.getGenericType(constructor, index);
+        Type genericType = helper.getGenericType(constructor, index);
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
+        Class<?> type = helper.getBaseType(genericType, typeMapping);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
         MonitorResource resource = createDefinition(name, type, context);
         implementation.getComponentType().add(resource, site);
     }
 
 
-    MonitorResource createDefinition(String name, Type type, IntrospectionContext context) {
+    MonitorResource createDefinition(String name, Class<?> type, IntrospectionContext context) {
         ServiceContract contract = contractProcessor.introspect(type, context);
         return new MonitorResource(name, false, contract);
     }

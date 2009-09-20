@@ -37,10 +37,7 @@
 */
 package org.fabric3.fabric.generator.wire;
 
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.List;
 import javax.xml.namespace.QName;
 
@@ -84,32 +81,11 @@ public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
     }
 
     private String getClassName(Type paramType) {
-
-        // TODO this needs to be fixed
+        // FIXME Java-specific
         if (paramType instanceof Class) {
             return ((Class) paramType).getName();
-        } else if (paramType instanceof ParameterizedType) {
-            Type type = ((ParameterizedType) paramType).getRawType();
-            if (type instanceof Class) {
-                return ((Class) type).getName();
-            }
-        } else if (paramType instanceof TypeVariable) {
-            TypeVariable var = (TypeVariable) paramType;
-            if (var.getBounds().length > 0 && var.getBounds()[0] instanceof Class) {
-                return ((Class) var.getBounds()[0]).getName();
-            } else if (var.getBounds().length > 0 && var.getBounds()[0] instanceof ParameterizedType) {
-                Type actualType = ((ParameterizedType) var.getBounds()[0]).getRawType();
-                if (!(actualType instanceof Class)) {
-                    throw new AssertionError();
-                }
-                return ((Class) actualType).getName();
-            }
-        } else if (paramType instanceof GenericArrayType) {
-            GenericArrayType var = (GenericArrayType) paramType;
-            return "[L" + var.getGenericComponentType();
         }
         throw new AssertionError();
-
     }
 
 }

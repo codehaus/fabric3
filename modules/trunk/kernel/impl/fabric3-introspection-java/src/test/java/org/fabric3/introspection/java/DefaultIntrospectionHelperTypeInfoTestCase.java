@@ -34,43 +34,63 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.pojo.provision;
+*/
+package org.fabric3.introspection.java;
 
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.Map;
+
+import junit.framework.TestCase;
+
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.model.type.JavaTypeInfo;
 
 /**
- * Definition of a physical component whose actual implementation is based on a POJO.
- *
  * @version $Rev$ $Date$
  */
-public abstract class PojoComponentDefinition extends PhysicalComponentDefinition {
-    private static final long serialVersionUID = 297672484973345029L;
+public class DefaultIntrospectionHelperTypeInfoTestCase extends TestCase {
 
-    private InstanceFactoryDefinition providerDefinition;
+    public void testTypeInfo() throws Exception {
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        TypeMapping mapping = new TypeMapping();
+        helper.resolveTypeParameters(BondMission.class, mapping);
 
-    /**
-     * Gets the instance factory provider definition.
-     *
-     * @return Instance factory provider definition.
-     */
-    public InstanceFactoryDefinition getProviderDefinition() {
-        return providerDefinition;
+        Field subject = Activity.class.getField("subject");
+        Type subjectType = subject.getGenericType();
+        JavaTypeInfo info = helper.createTypeInfo(subjectType, mapping);
+        assertEquals(Map.class, info.getRawType());
+        assertEquals(String.class, info.getParameterTypesInfos().get(0).getRawType());
+        assertEquals(Agent.class, info.getParameterTypesInfos().get(1).getRawType());
+
+        Field action = Activity.class.getField("action");
+        Type actionType = action.getGenericType();
+        info = helper.createTypeInfo(actionType, mapping);
+        assertEquals(Mission.class, info.getRawType());
+        assertTrue(info.getParameterTypesInfos().isEmpty());
+
     }
 
-    /**
-     * Sets the instance factory provider definition.
-     *
-     * @param providerDefinition Instance factory provider definition.
-     */
-    public void setProviderDefinition(InstanceFactoryDefinition providerDefinition) {
-        this.providerDefinition = providerDefinition;
+    public static class Activity<S, A> {
+        public S subject;
+        public A action;
+    }
+
+    public static class SecretAgentActivity<A2> extends Activity<Map<String, Agent>, A2> {
+    }
+
+    public static class SecretAgentMission extends SecretAgentActivity<Mission> {
+    }
+
+    public static class BondMission extends SecretAgentMission {
+    }
+
+    public static class Agent {
+    }
+
+    public static class Mission {
     }
 
 }
+
+

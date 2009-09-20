@@ -53,6 +53,7 @@ import java.util.Set;
 
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.spi.model.type.JavaTypeInfo;
 
 /**
  * Helper service that provides support methods to simplify introspection.
@@ -167,6 +168,16 @@ public interface IntrospectionHelper {
     void resolveTypeParameters(Class<?> type, TypeMapping typeMapping);
 
     /**
+     * Creates a JavaTypeInfo for a given type based on the class hierarchy the type is used in. For example, the JavaTypeInfo for a field type or
+     * method parameter will be introspected using the containing class hierarchy and its generics declarations.
+     *
+     * @param type        the type to introspect
+     * @param typeMapping the type mapping to use for introspecting the class hierarchy
+     * @return the TypeInfo
+     */
+    public JavaTypeInfo createTypeInfo(Type type, TypeMapping typeMapping);
+
+    /**
      * Returns the base type for the supplied type.
      * <p/>
      * The base type is the actual type of a property or reference having removed any decoration for arrays or collections.
@@ -175,7 +186,7 @@ public interface IntrospectionHelper {
      * @param typeMapping the mapping to use to resolve any formal types
      * @return the actual type of the property or reference corresponding to the parameter
      */
-    Type getBaseType(Type type, TypeMapping typeMapping);
+    Class<?> getBaseType(Type type, TypeMapping typeMapping);
 
     /**
      * Returns all service interfaces directly implemented by a class or any superclass.
