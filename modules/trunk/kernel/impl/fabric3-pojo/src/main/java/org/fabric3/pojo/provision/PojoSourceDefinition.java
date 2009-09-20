@@ -50,6 +50,7 @@ import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
  * @version $Rev$ $Date$
  */
 public class PojoSourceDefinition extends PhysicalSourceDefinition {
+    private static final long serialVersionUID = -7594088400247150995L;
     private String interfaceName;
     private InjectableAttribute injectableAttribute;
 
