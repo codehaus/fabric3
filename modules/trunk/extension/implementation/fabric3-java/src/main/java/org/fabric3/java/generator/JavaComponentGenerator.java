@@ -58,7 +58,7 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
- * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
+ * Generates physical metadata for a Java component deployment.
  *
  * @version $Rev$ $Date$
  */
