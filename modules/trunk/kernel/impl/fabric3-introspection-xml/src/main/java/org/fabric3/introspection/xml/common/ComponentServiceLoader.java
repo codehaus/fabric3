@@ -111,8 +111,6 @@ public class ComponentServiceLoader extends AbstractExtensibleTypeLoader<Compone
                 ModelObject type;
                 try {
                     type = registry.load(reader, ModelObject.class, context);
-                    // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
-                    // UnrecognizedElement added to the context if none is found
                 } catch (UnrecognizedElementException e) {
                     UnrecognizedElement failure = new UnrecognizedElement(reader);
                     context.addError(failure);
