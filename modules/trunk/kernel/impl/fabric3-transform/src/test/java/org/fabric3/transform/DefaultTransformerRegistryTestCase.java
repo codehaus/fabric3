@@ -43,8 +43,8 @@ package org.fabric3.transform;
   import junit.framework.TestCase;
   import org.w3c.dom.Node;
 
-  import org.fabric3.spi.model.type.JavaClass;
-  import org.fabric3.spi.model.type.XSDSimpleType;
+  import org.fabric3.spi.model.type.java.JavaClass;
+  import org.fabric3.spi.model.type.xsd.XSDSimpleType;
   import org.fabric3.spi.transform.PullTransformer;
   import org.fabric3.transform.dom2java.Node2IntegerTransformer;
 

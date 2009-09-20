@@ -35,21 +35,20 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.model.type;
+package org.fabric3.spi.model.type.xsd;
 
 import java.lang.reflect.Type;
 import javax.xml.namespace.QName;
 
 /**
- * Specialization of DataType for simple types from the XML Schema type system.
+ * Specialization of DataType for Elements from the XML Schema type system.
  *
  * @version $Rev$ $Date$
  */
-public class XSDSimpleType extends XSDType {
-    private static final long serialVersionUID = 1482637673051984949L;
-    public static final QName STRING = new QName(XSD_NS, "string");
+public class XSDElement extends XSDType {
+    private static final long serialVersionUID = -2602951884349165087L;
 
-    public XSDSimpleType(Type physical, QName logical) {
+    public XSDElement(Type physical, QName logical) {
         super(physical, logical);
     }
 }

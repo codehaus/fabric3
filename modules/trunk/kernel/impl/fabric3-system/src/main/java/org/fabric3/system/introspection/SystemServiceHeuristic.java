@@ -49,7 +49,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
-import org.fabric3.spi.model.type.JMXBinding;
+import org.fabric3.spi.model.type.binding.JMXBinding;
 import org.fabric3.system.model.SystemImplementation;
 
 /**

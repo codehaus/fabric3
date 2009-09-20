@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
 import org.fabric3.model.type.service.DataType;
 import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**

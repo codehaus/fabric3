@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Node;
 
 import org.fabric3.model.type.service.DataType;
-import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 
 /**
  * @version $Rev$ $Date$

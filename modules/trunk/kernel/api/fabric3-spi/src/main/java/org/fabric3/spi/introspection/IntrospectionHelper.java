@@ -53,7 +53,7 @@ import java.util.Set;
 
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.spi.model.type.JavaTypeInfo;
+import org.fabric3.spi.model.type.java.JavaTypeInfo;
 
 /**
  * Helper service that provides support methods to simplify introspection.

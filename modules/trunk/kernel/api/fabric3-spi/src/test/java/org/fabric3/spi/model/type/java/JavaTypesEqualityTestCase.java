@@ -35,70 +35,62 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.model.type;
+package org.fabric3.spi.model.type.java;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
+
+import org.fabric3.spi.model.type.java.JavaClass;
+import org.fabric3.spi.model.type.java.JavaGenericType;
+import org.fabric3.spi.model.type.java.JavaTypeInfo;
 
 /**
  * @version $Rev$ $Date$
  */
-public class JavaTypeInfoTestCase extends TestCase {
-
-    public void testToString() {
-        JavaTypeInfo key = new JavaTypeInfo(String.class);
-        JavaTypeInfo param = new JavaTypeInfo(String.class);
-        List<JavaTypeInfo> params = new ArrayList<JavaTypeInfo>();
-        params.add(param);
-        JavaTypeInfo value = new JavaTypeInfo(Class.class, params);
-        List<JavaTypeInfo> mapParams = new ArrayList<JavaTypeInfo>();
-        mapParams.add(key);
-        mapParams.add(value);
-        JavaTypeInfo info = new JavaTypeInfo(Map.class, mapParams);
-        assertEquals("java.util.Map<java.lang.String, java.lang.Class<java.lang.String>>", info.toString());
-    }
+public class JavaTypesEqualityTestCase extends TestCase {
 
     /**
-     * Tests Class<Object> and Class<?>
+     * Tests Class<String> and Class
      */
-    public void testUnboundGenericToBoundObjectEquality() {
-        JavaTypeInfo param = new JavaTypeInfo(Object.class);
-        List<JavaTypeInfo> params = new ArrayList<JavaTypeInfo>();
-        params.add(param);
-        JavaTypeInfo bound = new JavaTypeInfo(Class.class, params);
-        JavaTypeInfo unBound = new JavaTypeInfo(Class.class);
-        assertEquals(bound, unBound);
-        assertEquals(unBound, bound);
-    }
-
-    /**
-     * Tests Class<?> and Class<?>
-     */
-    public void testUnboundEquality() {
-        JavaTypeInfo unBound1 = new JavaTypeInfo(Class.class);
-        JavaTypeInfo unBound2 = new JavaTypeInfo(Class.class);
-        assertEquals(unBound1, unBound2);
-        assertEquals(unBound2, unBound1);
-    }
-
-    /**
-     * Tests Class<Object> and Class<String>
-     */
-    public void testNotEqualTypeParameters() {
+    @SuppressWarnings({"EqualsBetweenInconvertibleTypes"})
+    public void testBoundJavaGenericTypeToJavaClass() {
         JavaTypeInfo param = new JavaTypeInfo(String.class);
         List<JavaTypeInfo> params = new ArrayList<JavaTypeInfo>();
         params.add(param);
         JavaTypeInfo info = new JavaTypeInfo(Class.class, params);
+        JavaGenericType type = new JavaGenericType(info);
+        JavaClass<Class> clazz = new JavaClass<Class>(Class.class);
+        assertFalse(type.equals(clazz));
+        assertFalse(clazz.equals(type));
+    }
 
-        JavaTypeInfo param2 = new JavaTypeInfo(Object.class);
-        List<JavaTypeInfo> params2 = new ArrayList<JavaTypeInfo>();
-        params2.add(param2);
-        JavaTypeInfo info2 = new JavaTypeInfo(Class.class, params2);
-        assertFalse(info.equals(info2));
-        assertFalse(info2.equals(info));
+    /**
+     * Tests Class<Object> and Class
+     */
+    @SuppressWarnings({"AssertEqualsBetweenInconvertibleTypes"})
+    public void testBoundObjectJavaGenericTypeToJavaClass() {
+        JavaTypeInfo param = new JavaTypeInfo(Object.class);
+        List<JavaTypeInfo> params = new ArrayList<JavaTypeInfo>();
+        params.add(param);
+        JavaTypeInfo info = new JavaTypeInfo(Class.class, params);
+        JavaGenericType type = new JavaGenericType(info);
+        JavaClass<Class> clazz = new JavaClass<Class>(Class.class);
+        assertEquals(type, clazz);
+        assertEquals(clazz, type);
+    }
+
+    /**
+     * Tests Class<?> and Class
+     */
+    @SuppressWarnings({"AssertEqualsBetweenInconvertibleTypes"})
+    public void testUnboundJavaGenericTypeToJavaClass() {
+        JavaTypeInfo unBound = new JavaTypeInfo(Class.class);
+        JavaGenericType type = new JavaGenericType(unBound);
+        JavaClass<Class> clazz = new JavaClass<Class>(Class.class);
+        assertEquals(type, clazz);
+        assertEquals(clazz, type);
     }
 
 }

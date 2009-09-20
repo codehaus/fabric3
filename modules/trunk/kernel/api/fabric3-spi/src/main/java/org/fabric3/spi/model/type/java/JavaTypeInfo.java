@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.model.type;
+package org.fabric3.spi.model.type.java;
 
 import java.util.Collections;
 import java.util.List;
@@ -122,26 +122,26 @@ public class JavaTypeInfo extends ModelObject {
         JavaTypeInfo that = (JavaTypeInfo) o;
 
         // handle the case where one param type is bound to Object and the other is unbounded 
-        if (parameterTypeInfos == null && that.parameterTypeInfos != null){
+        if (parameterTypeInfos == null && that.parameterTypeInfos != null) {
             boolean allObject = true;
             for (JavaTypeInfo info : that.parameterTypeInfos) {
-                 if (!Object.class.equals(info.getRawType())){
+                if (!Object.class.equals(info.getRawType())) {
                     allObject = false;
-                     break;
-                 }
+                    break;
+                }
             }
             if (allObject) {
                 if (rawType.equals(that.rawType)) {
                     return true;
                 }
             }
-        } else if  (parameterTypeInfos != null && that.parameterTypeInfos == null){
+        } else if (parameterTypeInfos != null && that.parameterTypeInfos == null) {
             boolean allObject = true;
             for (JavaTypeInfo info : parameterTypeInfos) {
-                 if (!Object.class.equals(info.getRawType())){
+                if (!Object.class.equals(info.getRawType())) {
                     allObject = false;
-                     break;
-                 }
+                    break;
+                }
             }
             if (allObject) {
                 if (rawType.equals(that.rawType)) {

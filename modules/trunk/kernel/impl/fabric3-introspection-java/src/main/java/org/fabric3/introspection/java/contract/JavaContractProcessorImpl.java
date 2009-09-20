@@ -68,9 +68,9 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.InterfaceIntrospector;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.contract.OperationIntrospector;
-import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.JavaGenericType;
-import org.fabric3.spi.model.type.JavaTypeInfo;
+import org.fabric3.spi.model.type.java.JavaClass;
+import org.fabric3.spi.model.type.java.JavaGenericType;
+import org.fabric3.spi.model.type.java.JavaTypeInfo;
 
 /**
  * Default implementation of a ContractProcessor for Java interfaces.

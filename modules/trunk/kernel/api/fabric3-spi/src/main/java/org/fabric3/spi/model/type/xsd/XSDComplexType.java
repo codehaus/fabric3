@@ -35,26 +35,20 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.model.type;
+package org.fabric3.spi.model.type.xsd;
 
+import java.lang.reflect.Type;
 import javax.xml.namespace.QName;
 
-import org.fabric3.host.Namespaces;
-import org.fabric3.model.type.component.BindingDefinition;
-
 /**
- * Represents binding information for a wire between collocated components.
+ * Specialization of DataType for complex types from the XML Schema type system.
  *
  * @version $Rev$ $Date$
  */
-public final class LocalBindingDefinition extends BindingDefinition {
-    private static final long serialVersionUID = 8531584350454081265L;
+public class XSDComplexType extends XSDType {
+    private static final long serialVersionUID = 6325312345723762898L;
 
-    public static final LocalBindingDefinition INSTANCE = new LocalBindingDefinition();
-
-    private LocalBindingDefinition() {
-        super(null, new QName(Namespaces.CORE, "binding.local"), null);
+    public XSDComplexType(Type physical, QName logical) {
+        super(physical, logical);
     }
-
-
 }

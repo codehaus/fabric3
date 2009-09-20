@@ -35,22 +35,26 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.model.type;
+package org.fabric3.spi.model.type.binding;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * Represents a service bound to a JMX provider.
+ * Represents binding information for a wire between collocated components.
  *
  * @version $Rev$ $Date$
  */
-public class JMXBinding extends BindingDefinition {
-    private static final long serialVersionUID = -8354441354679603299L;
-    private static final QName TYPE = new QName("urn:maven:org.codehaus.fabric3:fabric3-system", "management");
+public final class LocalBindingDefinition extends BindingDefinition {
+    private static final long serialVersionUID = 8531584350454081265L;
 
-    public JMXBinding() {
-        super(null, TYPE, null);
+    public static final LocalBindingDefinition INSTANCE = new LocalBindingDefinition();
+
+    private LocalBindingDefinition() {
+        super(null, new QName(Namespaces.CORE, "binding.local"), null);
     }
+
+
 }

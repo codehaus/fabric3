@@ -50,7 +50,7 @@ import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.model.type.JMXBinding;
+import org.fabric3.spi.model.type.binding.JMXBinding;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**

@@ -35,48 +35,21 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.model.type;
+package org.fabric3.spi.model.type.xsd;
 
-import org.fabric3.model.type.service.DataType;
+import java.lang.reflect.Type;
+import javax.xml.namespace.QName;
 
 /**
- * A non-generic Java class. Since the class is not generic, the logical and physical representations are the same.
+ * Specialization of DataType for simple types from the XML Schema type system.
  *
  * @version $Rev$ $Date$
  */
-public class JavaClass<T> extends JavaType<Class<T>> {
-    private static final long serialVersionUID = -901379909664326192L;
+public class XSDSimpleType extends XSDType {
+    private static final long serialVersionUID = 1482637673051984949L;
+    public static final QName STRING = new QName(XSD_NS, "string");
 
-    public JavaClass(Class<T> clazz) {
-        super(clazz, clazz);
+    public XSDSimpleType(Type physical, QName logical) {
+        super(physical, logical);
     }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof DataType)) {
-            return false;
-        }
-        DataType other = (DataType) o;
-        if (!getPhysical().equals(other.getPhysical())) {
-            return false;
-        }
-
-        if (other instanceof JavaGenericType) {
-            boolean bound = false;  // unbound paramters are equivalent to non-generic
-            JavaGenericType otherType = (JavaGenericType) other;
-            for (JavaTypeInfo info : otherType.getLogical().getParameterTypesInfos()) {
-                if (!Object.class.equals(info.getRawType())) {
-                    bound = true;
-                    break;
-                }
-            }
-            if (!bound) {
-                return otherType.getLogical().getRawType().equals(getLogical());
-            }
-        }
-        return getLogical().equals(other.getLogical());
-    }
-
 }

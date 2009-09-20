@@ -154,7 +154,7 @@ import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.model.type.JMXBinding;
+import org.fabric3.spi.model.type.binding.JMXBinding;
 import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.transform.PullTransformer;

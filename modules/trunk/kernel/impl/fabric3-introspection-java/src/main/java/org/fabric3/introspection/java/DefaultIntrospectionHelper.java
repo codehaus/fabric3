@@ -78,7 +78,7 @@ import org.fabric3.model.type.service.Operation;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.model.type.JavaTypeInfo;
+import org.fabric3.spi.model.type.java.JavaTypeInfo;
 
 /**
  * @version $Rev$ $Date$

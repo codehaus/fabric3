@@ -35,24 +35,22 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.model.type;
+package org.fabric3.spi.model.type.binding;
 
-import java.lang.reflect.Type;
-import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * Specialization of DataType representing types from the XML Schema type system.
+ * Represents a service bound to a JMX provider.
  *
  * @version $Rev$ $Date$
  */
-public abstract class XSDType extends DataType<QName> {
-    private static final long serialVersionUID = 4837060732513291971L;
-    public static final String XSD_NS = XMLConstants.W3C_XML_SCHEMA_NS_URI;
+public class JMXBinding extends BindingDefinition {
+    private static final long serialVersionUID = -8354441354679603299L;
+    private static final QName TYPE = new QName("urn:maven:org.codehaus.fabric3:fabric3-system", "management");
 
-    protected XSDType(Type physical, QName logical) {
-        super(physical, logical);
+    public JMXBinding() {
+        super(null, TYPE, null);
     }
 }
