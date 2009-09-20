@@ -43,8 +43,6 @@
  */
 package org.fabric3.model.type.service;
 
-import java.lang.reflect.Type;
-
 import org.fabric3.model.type.ModelObject;
 
 /**
@@ -58,7 +56,7 @@ import org.fabric3.model.type.ModelObject;
  */
 public class DataType<L> extends ModelObject {
     private static final long serialVersionUID = 1848442023940979720L;
-    private final Type physical;
+    private final Class<?> physical;
     private final L logical;
 
     /**
@@ -67,7 +65,7 @@ public class DataType<L> extends ModelObject {
      * @param physical the physical class used by the runtime
      * @param logical  the logical type identifier
      */
-    public DataType(Type physical, L logical) {
+    public DataType(Class<?> physical, L logical) {
         assert physical != null && logical != null;
         this.physical = physical;
         this.logical = logical;
@@ -78,7 +76,7 @@ public class DataType<L> extends ModelObject {
      *
      * @return the physical type used by the runtime
      */
-    public Type getPhysical() {
+    public Class<?> getPhysical() {
         return physical;
     }
 

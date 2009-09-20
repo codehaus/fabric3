@@ -85,11 +85,8 @@ public class Node2JaxbTransformer extends AbstractPullTransformer<Node, Object> 
     }
 
     public boolean canTransform(DataType<?> targetType) {
-        if (!(targetType.getPhysical() instanceof Class)) {
-            return false;
-        }
-        Class<?> clazz = (Class<?>) targetType.getPhysical();
-        return clazz.isAnnotationPresent(XmlRootElement.class);
+        Class<?> physical = targetType.getPhysical();
+        return physical.isAnnotationPresent(XmlRootElement.class);
     }
 
     public Object transform(Node source, TransformContext context) throws TransformationException {
@@ -98,8 +95,8 @@ public class Node2JaxbTransformer extends AbstractPullTransformer<Node, Object> 
 
         try {
             Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-            Class<?> clazz = (Class<?>) context.getTargetType().getPhysical();
-            JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+            Class<?> physical = context.getTargetType().getPhysical();
+            JAXBContext jaxbContext = JAXBContext.newInstance(physical);
 
             Thread.currentThread().setContextClassLoader(context.getTargetClassLoader());
             NodeList children = source.getChildNodes();

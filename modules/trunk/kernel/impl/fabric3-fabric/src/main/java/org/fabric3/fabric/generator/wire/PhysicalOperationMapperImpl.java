@@ -37,7 +37,6 @@
 */
 package org.fabric3.fabric.generator.wire;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import javax.xml.namespace.QName;
 
@@ -62,30 +61,22 @@ public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
         if (o.getIntents().contains(OASIS_ONEWAY)) {
             operation.setOneWay(true);
         }
-        Type returnType = o.getOutputType().getPhysical();
-        operation.setReturnType(getClassName(returnType));
+        Class<?> returnType = o.getOutputType().getPhysical();
+        operation.setReturnType(returnType.getName());
 
         for (DataType<?> fault : o.getFaultTypes()) {
-            Type faultType = fault.getPhysical();
-            operation.addFaultType(getClassName(faultType));
+            Class<?> faultType = fault.getPhysical();
+            operation.addFaultType(faultType.getName());
         }
 
         List<DataType<?>> params = o.getInputTypes();
         for (DataType<?> param : params) {
-            Type paramType = param.getPhysical();
-            operation.addParameter(getClassName(paramType));
+            Class<?> paramType = param.getPhysical();
+            operation.addParameter(paramType.getName());
         }
         operation.setDatabinding(o.getDatabinding());
         return operation;
 
-    }
-
-    private String getClassName(Type paramType) {
-        // FIXME Java-specific
-        if (paramType instanceof Class) {
-            return ((Class) paramType).getName();
-        }
-        throw new AssertionError();
     }
 
 }

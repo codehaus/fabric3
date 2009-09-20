@@ -37,7 +37,6 @@
 */
 package org.fabric3.spi.model.type.xsd;
 
-import java.lang.reflect.Type;
 import javax.xml.namespace.QName;
 
 /**
@@ -49,7 +48,7 @@ public class XSDSimpleType extends XSDType {
     private static final long serialVersionUID = 1482637673051984949L;
     public static final QName STRING = new QName(XSD_NS, "string");
 
-    public XSDSimpleType(Type physical, QName logical) {
+    public XSDSimpleType(Class<?> physical, QName logical) {
         super(physical, logical);
     }
 }

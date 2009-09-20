@@ -154,12 +154,12 @@ public class RsHeuristicImpl implements RsHeuristic {
 
         DataType<Type> returnDataType = new DataType<Type>(returnType, returnType);
         List<DataType<?>> paramDataTypes = new ArrayList<DataType<?>>(paramTypes.length);
-        for (Type paramType : paramTypes) {
-            paramDataTypes.add(new DataType<Type>(paramType, paramType));
+        for (Class<?> paramType : paramTypes) {
+            paramDataTypes.add(new DataType<Class>(paramType, paramType));
         }
         List<DataType<?>> faultDataTypes = new ArrayList<DataType<?>>(faultTypes.length);
-        for (Type faultType : faultTypes) {
-            faultDataTypes.add(new DataType<Type>(faultType, faultType));
+        for (Class<?> faultType : faultTypes) {
+            faultDataTypes.add(new DataType<Class>(faultType, faultType));
         }
 
         return new Operation(method.getName(), paramDataTypes, returnDataType, faultDataTypes, NO_CONVERSATION);

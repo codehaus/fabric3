@@ -329,7 +329,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
                 List<? extends DataType<?>> inputTypes = operation.getInputTypes();
                 List<String> paramTypes = new ArrayList<String>(inputTypes.size());
                 for (DataType<?> inputType : inputTypes) {
-                    paramTypes.add(((Class<?>) inputType.getPhysical()).getName());
+                    paramTypes.add(inputType.getPhysical().getName());
                 }
                 operations.add(new Signature(name, paramTypes));
             }

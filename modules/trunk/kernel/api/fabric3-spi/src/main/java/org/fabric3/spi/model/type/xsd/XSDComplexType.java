@@ -37,7 +37,6 @@
 */
 package org.fabric3.spi.model.type.xsd;
 
-import java.lang.reflect.Type;
 import javax.xml.namespace.QName;
 
 /**
@@ -48,7 +47,7 @@ import javax.xml.namespace.QName;
 public class XSDComplexType extends XSDType {
     private static final long serialVersionUID = 6325312345723762898L;
 
-    public XSDComplexType(Type physical, QName logical) {
+    public XSDComplexType(Class<?> physical, QName logical) {
         super(physical, logical);
     }
 }

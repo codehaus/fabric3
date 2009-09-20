@@ -37,7 +37,6 @@
 */
 package org.fabric3.spi.model.type.xsd;
 
-import java.lang.reflect.Type;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
@@ -52,7 +51,7 @@ public abstract class XSDType extends DataType<QName> {
     private static final long serialVersionUID = 4837060732513291971L;
     public static final String XSD_NS = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
-    protected XSDType(Type physical, QName logical) {
+    protected XSDType(Class<?> physical, QName logical) {
         super(physical, logical);
     }
 }

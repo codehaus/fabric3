@@ -45,7 +45,6 @@ package org.fabric3.model.type.service;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -202,24 +201,15 @@ public class JavaServiceContract extends ServiceContract {
     }
 
     private boolean compareTypes(DataType mine, DataType theirs) {
-        Type myType = mine.getPhysical();
-        Type theirType = theirs.getPhysical();
-        if (myType instanceof Class && theirType instanceof Class) {
-            Class myClass = (Class) myType;
-            Class theirClass = (Class) theirType;
-            if (myClass.isPrimitive()) {
-                myClass = PRIMITIVE_TYPES.get(myClass);
-            }
-            if (theirClass.isPrimitive()) {
-                theirClass = PRIMITIVE_TYPES.get(theirClass);
-            }
-            if (!theirClass.isAssignableFrom(myClass)) {
-                return false;
-            }
-        } else {
-            return false;
+        Class<?> myClass = mine.getPhysical();
+        Class<?> theirClass = theirs.getPhysical();
+        if (myClass.isPrimitive()) {
+            myClass = PRIMITIVE_TYPES.get(myClass);
         }
-        return true;
+        if (theirClass.isPrimitive()) {
+            theirClass = PRIMITIVE_TYPES.get(theirClass);
+        }
+        return theirClass.isAssignableFrom(myClass);
 
     }
 

@@ -30,15 +30,10 @@ public class DefaultOperationPolicyIntrospector implements OperationPolicyIntros
             // determine the operation signature and look up the corresponding method on the implementation class
             List<DataType<?>> types = operation.getInputTypes();
             Class<?>[] params = new Class<?>[types.size()];
-            int i = 0;
-            for (DataType<?> type : types) {
-                Object physical = type.getPhysical();
-                if (!(physical instanceof Class)) {
-                    // programming error since this class is only called to introspect Java types
-                    throw new AssertionError();
-                }
-                params[i] = (Class<?>) physical;
-                i++;
+            for (int i = 0; i < types.size(); i++) {
+                DataType<?> type = types.get(i);
+                Class<?> physical = type.getPhysical();
+                params[i] = physical;
             }
             try {
                 Method method = implClass.getMethod(operation.getName(), params);

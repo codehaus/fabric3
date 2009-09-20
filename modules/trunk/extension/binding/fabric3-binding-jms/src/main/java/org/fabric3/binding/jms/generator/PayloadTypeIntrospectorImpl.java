@@ -45,7 +45,6 @@ package org.fabric3.binding.jms.generator;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.List;
 
 import org.fabric3.binding.jms.provision.PayloadType;
@@ -75,20 +74,15 @@ public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
         List<DataType<?>> inputTypes = operation.getInputTypes();
         if (inputTypes.size() == 1) {
             DataType<?> param = inputTypes.get(0);
-            Type physical = param.getPhysical();
-            if (physical instanceof Class) {
-                Class<?> clazz = (Class<?>) physical;
-                if (clazz.isPrimitive()) {
-                    return calculatePrimitivePayloadType(clazz);
-                } else if (InputStream.class.isAssignableFrom(clazz)) {
-                    return PayloadType.STREAM;
-                } else if (String.class.isAssignableFrom(clazz)) {
-                    return PayloadType.TEXT;
-                } else if (Serializable.class.isAssignableFrom(clazz)) {
-                    return PayloadType.OBJECT;
-                }
-            } else {
-                throw new UnsupportedOperationException("Non-class types not supported: " + physical);
+            Class<?> physical = param.getPhysical();
+            if (physical.isPrimitive()) {
+                return calculatePrimitivePayloadType(physical);
+            } else if (InputStream.class.isAssignableFrom(physical)) {
+                return PayloadType.STREAM;
+            } else if (String.class.isAssignableFrom(physical)) {
+                return PayloadType.TEXT;
+            } else if (Serializable.class.isAssignableFrom(physical)) {
+                return PayloadType.OBJECT;
             }
         }
         // more than one parameter, use an object type message

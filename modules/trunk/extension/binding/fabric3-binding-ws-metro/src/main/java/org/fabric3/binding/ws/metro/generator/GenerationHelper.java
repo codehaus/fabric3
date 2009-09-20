@@ -130,15 +130,9 @@ public class GenerationHelper {
     private static Method findMethod(Operation operation, Class<?> serviceClass) {
         List<DataType<?>> types = operation.getInputTypes();
         Class<?>[] params = new Class<?>[types.size()];
-        int i = 0;
-        for (DataType<?> type : types) {
-            Object physical = type.getPhysical();
-            if (!(physical instanceof Class)) {
-                // not possible
-                throw new AssertionError();
-            }
-            params[i] = (Class<?>) physical;
-            i++;
+        for (int i = 0; i < types.size(); i++) {
+            DataType<?> type = types.get(i);
+            params[i] = type.getPhysical();
         }
         try {
             return serviceClass.getMethod(operation.getName(), params);
