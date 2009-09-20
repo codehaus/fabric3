@@ -40,7 +40,7 @@ package org.fabric3.spi.model.type.xsd;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 
 /**
  * Specialization of DataType representing types from the XML Schema type system.

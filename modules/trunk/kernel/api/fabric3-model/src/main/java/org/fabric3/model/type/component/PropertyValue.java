@@ -48,8 +48,8 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 
+import org.fabric3.model.type.DataType;
 import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.service.DataType;
 
 /**
  * Represents the value of a configured component property.

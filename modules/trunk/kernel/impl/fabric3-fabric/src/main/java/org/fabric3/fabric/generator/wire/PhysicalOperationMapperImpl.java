@@ -42,8 +42,8 @@ import javax.xml.namespace.QName;
 
 import org.oasisopen.sca.Constants;
 
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.Operation;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**

@@ -39,8 +39,8 @@ package org.fabric3.junit.model;
 
 import java.util.List;
 
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

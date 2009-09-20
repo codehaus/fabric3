@@ -41,7 +41,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;

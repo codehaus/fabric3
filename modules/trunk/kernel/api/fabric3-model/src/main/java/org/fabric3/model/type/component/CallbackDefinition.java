@@ -44,7 +44,7 @@
 package org.fabric3.model.type.component;
 
 import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Represents a callback definition.

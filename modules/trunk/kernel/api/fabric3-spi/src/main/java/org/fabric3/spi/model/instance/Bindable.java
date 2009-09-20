@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Super class for logical services and references.

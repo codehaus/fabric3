@@ -39,7 +39,7 @@ package org.fabric3.spi.model.type.java;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 
 /**
  * An abstract Java type. For generic types, the physical type will be the raw type.

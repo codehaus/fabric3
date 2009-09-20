@@ -52,7 +52,7 @@ import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.binding.ftp.provision.FtpSourceDefinition;
 import org.fabric3.binding.ftp.provision.FtpTargetDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;

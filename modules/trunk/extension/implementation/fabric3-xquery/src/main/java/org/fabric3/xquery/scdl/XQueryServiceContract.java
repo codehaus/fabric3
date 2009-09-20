@@ -40,8 +40,8 @@ package org.fabric3.xquery.scdl;
 import java.util.ArrayList;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

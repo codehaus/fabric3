@@ -59,7 +59,7 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.java.Signature;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;

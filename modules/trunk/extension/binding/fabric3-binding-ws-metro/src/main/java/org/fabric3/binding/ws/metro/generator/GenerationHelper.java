@@ -52,8 +52,8 @@ import org.w3c.dom.Node;
 
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.Operation;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.EffectivePolicy;

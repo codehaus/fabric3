@@ -47,8 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fabric3.model.type.AbstractPolicyAware;
-import org.fabric3.model.type.service.OperationDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.OperationDefinition;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Represents a component reference.

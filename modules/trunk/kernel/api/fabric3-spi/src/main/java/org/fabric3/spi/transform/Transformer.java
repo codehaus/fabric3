@@ -37,7 +37,7 @@
 */
 package org.fabric3.spi.transform;
 
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 
 /**
  * Base transformer interface for pull- and push-style transformations.

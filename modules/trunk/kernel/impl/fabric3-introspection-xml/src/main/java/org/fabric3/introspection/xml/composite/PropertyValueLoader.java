@@ -57,7 +57,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.fabric3.model.type.component.PropertyValue;
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;

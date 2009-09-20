@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.model.type.service;
+package org.fabric3.model.type.contract;
 
 import org.fabric3.model.type.AbstractPolicyAware;
 

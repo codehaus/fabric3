@@ -49,7 +49,7 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;

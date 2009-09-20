@@ -45,7 +45,7 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.service.JavaServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;

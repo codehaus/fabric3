@@ -57,10 +57,10 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;

@@ -43,7 +43,7 @@
  */
 package org.fabric3.spi.introspection.java.contract;
 
-import org.fabric3.model.type.service.JavaServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**

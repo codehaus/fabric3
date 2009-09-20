@@ -51,7 +51,7 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.cm.RegistrationException;
 import org.fabric3.spi.component.AtomicComponent;

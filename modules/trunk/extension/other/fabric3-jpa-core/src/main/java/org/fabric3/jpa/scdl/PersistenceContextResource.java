@@ -40,7 +40,7 @@ package org.fabric3.jpa.scdl;
 import javax.persistence.PersistenceContextType;
 
 import org.fabric3.model.type.component.ResourceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Represents an entity manager factory treated as a resource.

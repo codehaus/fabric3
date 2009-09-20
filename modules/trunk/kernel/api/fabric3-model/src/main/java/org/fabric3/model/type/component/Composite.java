@@ -53,7 +53,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.PolicyAware;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Represents a composite.

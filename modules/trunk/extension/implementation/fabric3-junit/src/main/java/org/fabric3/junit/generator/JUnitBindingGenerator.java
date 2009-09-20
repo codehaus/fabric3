@@ -45,7 +45,7 @@ import org.fabric3.junit.common.ContextConfiguration;
 import org.fabric3.junit.model.JUnitBindingDefinition;
 import org.fabric3.junit.provision.JUnitSourceDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;

@@ -37,7 +37,7 @@
 */
 package org.fabric3.fabric.generator.wire;
 
-import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.contract.Operation;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**

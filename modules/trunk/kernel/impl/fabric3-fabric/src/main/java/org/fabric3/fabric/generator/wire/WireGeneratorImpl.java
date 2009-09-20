@@ -54,7 +54,7 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;

@@ -55,7 +55,7 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;

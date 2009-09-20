@@ -56,8 +56,8 @@ import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaType;
 
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.service.Operation;
+import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.Operation;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.model.type.xsd.XSDComplexType;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;

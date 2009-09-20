@@ -44,7 +44,7 @@
 package org.fabric3.fabric.monitor;
 
 import org.fabric3.model.type.component.ResourceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

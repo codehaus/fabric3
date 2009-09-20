@@ -37,7 +37,7 @@
 */
 package org.fabric3.fabric.instantiator.target;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 

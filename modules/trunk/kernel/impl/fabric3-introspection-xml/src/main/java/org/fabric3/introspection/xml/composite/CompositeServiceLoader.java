@@ -53,10 +53,10 @@ import static org.oasisopen.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.ModelObject;
+import org.fabric3.model.type.contract.OperationDefinition;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.CompositeService;
-import org.fabric3.model.type.service.OperationDefinition;
-import org.fabric3.model.type.service.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;

@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 import org.fabric3.spi.transform.ComplexTypePullTransformer;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.PullTransformerRegistry;

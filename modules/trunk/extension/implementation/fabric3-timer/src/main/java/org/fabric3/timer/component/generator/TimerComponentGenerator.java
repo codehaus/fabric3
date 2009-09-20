@@ -45,7 +45,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.generator.JavaGenerationHelper;
 import org.fabric3.java.provision.JavaSourceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;

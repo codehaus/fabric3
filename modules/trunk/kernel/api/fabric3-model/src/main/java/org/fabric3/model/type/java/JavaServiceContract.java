@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.model.type.service;
+package org.fabric3.model.type.java;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -49,6 +49,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Represents a service contract specified using a Java interface

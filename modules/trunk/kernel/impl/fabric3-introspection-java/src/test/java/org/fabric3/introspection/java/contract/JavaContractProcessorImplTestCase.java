@@ -52,9 +52,9 @@ import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;

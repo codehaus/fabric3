@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;

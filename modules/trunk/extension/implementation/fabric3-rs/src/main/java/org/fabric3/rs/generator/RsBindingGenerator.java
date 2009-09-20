@@ -41,7 +41,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.rs.provision.RsSourceDefinition;
 import org.fabric3.rs.provision.RsTargetDefinition;

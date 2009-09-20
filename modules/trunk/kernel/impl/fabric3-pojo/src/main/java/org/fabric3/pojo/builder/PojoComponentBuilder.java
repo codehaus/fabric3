@@ -53,7 +53,7 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.java.InjectableAttribute;
 import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.spi.ObjectFactory;

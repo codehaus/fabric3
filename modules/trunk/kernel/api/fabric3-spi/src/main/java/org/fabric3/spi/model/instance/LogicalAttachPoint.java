@@ -42,8 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Represents a contract-based attachment point on an instantiated component, specifically a service, reference, or resource.

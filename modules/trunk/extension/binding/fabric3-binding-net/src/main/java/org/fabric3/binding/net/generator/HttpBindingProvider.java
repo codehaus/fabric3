@@ -46,8 +46,8 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.net.model.HttpBindingDefinition;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.binding.provider.BindingMatchResult;
 import org.fabric3.spi.binding.provider.BindingProvider;
 import org.fabric3.spi.binding.provider.BindingSelectionException;

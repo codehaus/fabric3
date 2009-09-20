@@ -42,7 +42,7 @@ import java.util.List;
 import org.fabric3.binding.net.model.HttpBindingDefinition;
 import org.fabric3.binding.net.provision.HttpSourceDefinition;
 import org.fabric3.binding.net.provision.HttpTargetDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;

@@ -46,7 +46,7 @@ import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;

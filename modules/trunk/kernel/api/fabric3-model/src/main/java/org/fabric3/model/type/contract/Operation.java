@@ -41,12 +41,13 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.model.type.service;
+package org.fabric3.model.type.contract;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.fabric3.model.type.AbstractPolicyAware;
+import org.fabric3.model.type.DataType;
 
 
 /**

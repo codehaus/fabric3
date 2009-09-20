@@ -37,7 +37,7 @@
 */
 package org.fabric3.spi.transform;
 
-import org.fabric3.model.type.service.DataType;
+import org.fabric3.model.type.DataType;
 
 /**
  * A specialized PullTransformer that converts a complex type to a Java type using a mapping such as JAXB.

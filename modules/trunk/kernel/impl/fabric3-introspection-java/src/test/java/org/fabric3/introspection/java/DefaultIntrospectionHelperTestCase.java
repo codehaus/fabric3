@@ -56,7 +56,7 @@ import junit.framework.TestCase;
 
 import org.fabric3.introspection.java.contract.JavaContractProcessorImpl;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;

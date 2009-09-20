@@ -39,7 +39,7 @@ package org.fabric3.wsdl.model;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * WSDL Service contract.

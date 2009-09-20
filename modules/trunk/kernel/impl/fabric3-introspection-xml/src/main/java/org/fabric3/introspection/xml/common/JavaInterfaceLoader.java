@@ -48,7 +48,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;

@@ -46,7 +46,7 @@ package org.fabric3.spi.generator;
 import java.util.List;
 
 import org.fabric3.model.type.component.BindingDefinition;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;

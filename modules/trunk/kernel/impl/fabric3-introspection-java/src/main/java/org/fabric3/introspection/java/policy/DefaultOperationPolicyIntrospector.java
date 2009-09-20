@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.service.DataType;
-import org.fabric3.model.type.service.Operation;
-import org.fabric3.model.type.service.ServiceContract;
+import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
