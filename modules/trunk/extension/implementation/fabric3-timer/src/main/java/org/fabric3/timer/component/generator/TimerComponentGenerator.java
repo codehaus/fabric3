@@ -61,7 +61,7 @@ import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
 
 /**
- * Generates a TimerComponentDefinition from a ComponentDefinition corresponding to a timer component implementation
+ * Generates physical metadata for a Timer component deployment.
  *
  * @version $Rev$ $Date$
  */
