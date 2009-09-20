@@ -41,7 +41,9 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.model.type;
+package org.fabric3.model.type.contract;
+
+import org.fabric3.model.type.ModelObject;
 
 /**
  * Representation of a user-supplied data type comprising a abstract logical form and a runtime-specific physical form. The logical form describes an

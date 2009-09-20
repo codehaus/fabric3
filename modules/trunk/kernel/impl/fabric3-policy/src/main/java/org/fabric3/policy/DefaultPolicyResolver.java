@@ -49,7 +49,7 @@ import org.fabric3.host.Namespaces;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicyPhase;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.policy.resolver.ImplementationPolicyResolver;
 import org.fabric3.policy.resolver.InteractionPolicyResolver;

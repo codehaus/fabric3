@@ -53,7 +53,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.transform.PushTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;

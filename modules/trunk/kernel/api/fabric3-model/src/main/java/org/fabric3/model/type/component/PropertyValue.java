@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.ModelObject;
 
 /**

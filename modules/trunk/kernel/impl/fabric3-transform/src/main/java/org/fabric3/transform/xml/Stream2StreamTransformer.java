@@ -52,7 +52,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.transform.PushTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;

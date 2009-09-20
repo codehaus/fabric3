@@ -57,7 +57,7 @@ import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.model.type.contract.Operation;
 import static org.fabric3.model.type.contract.Operation.CONVERSATION_END;

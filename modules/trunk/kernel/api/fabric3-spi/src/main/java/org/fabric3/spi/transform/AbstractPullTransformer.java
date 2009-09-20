@@ -40,7 +40,7 @@ package org.fabric3.spi.transform;
 import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Node;
 
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 
 /**

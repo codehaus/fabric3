@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import junit.framework.TestCase;
 
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 
 /**

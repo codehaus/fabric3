@@ -47,7 +47,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.fabric3.model.type.AbstractPolicyAware;
-import org.fabric3.model.type.DataType;
 
 
 /**

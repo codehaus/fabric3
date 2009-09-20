@@ -73,7 +73,7 @@ import org.osoa.sca.ServiceReference;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectableAttributeType;
 import org.fabric3.model.type.java.Signature;
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionHelper;

@@ -53,7 +53,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.DataType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.model.type.contract.ServiceContract;
 import static org.fabric3.model.type.contract.Operation.NO_CONVERSATION;
