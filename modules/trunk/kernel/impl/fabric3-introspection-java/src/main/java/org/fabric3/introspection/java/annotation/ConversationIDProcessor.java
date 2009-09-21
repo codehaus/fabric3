@@ -68,11 +68,11 @@ public class ConversationIDProcessor<I extends Implementation<? extends Injectin
 
     public void visitField(ConversationID annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         InjectionSite site = new FieldInjectionSite(field);
-        implementation.getComponentType().addInjectionSite(Injectable.CONVERSATION_ID, site);
+        implementation.getComponentType().addInjectionSite(site, Injectable.CONVERSATION_ID);
     }
 
     public void visitMethod(ConversationID annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         InjectionSite site = new MethodInjectionSite(method, 0);
-        implementation.getComponentType().addInjectionSite(Injectable.CONVERSATION_ID, site);
+        implementation.getComponentType().addInjectionSite(site, Injectable.CONVERSATION_ID);
     }
 }

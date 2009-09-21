@@ -91,9 +91,9 @@ public class OASISContextProcessor<I extends Implementation<? extends InjectingC
         if (!(type instanceof Class)) {
             context.addError(new InvalidContextType("Context type " + type + " is not supported in " + clazz.getName()));
         } else if (RequestContext.class.isAssignableFrom((Class<?>) type)) {
-            implementation.getComponentType().addInjectionSite(Injectable.OASIS_REQUEST_CONTEXT, site);
+            implementation.getComponentType().addInjectionSite(site, Injectable.OASIS_REQUEST_CONTEXT);
         } else if (ComponentContext.class.isAssignableFrom((Class<?>) type)) {
-            implementation.getComponentType().addInjectionSite(Injectable.OASIS_COMPONENT_CONTEXT, site);
+            implementation.getComponentType().addInjectionSite(site, Injectable.OASIS_COMPONENT_CONTEXT);
         } else {
             context.addError(new InvalidContextType("Context type is not supported: " + type));
         }

@@ -77,13 +77,13 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
 
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        Injectable attribute = null;
+        Injectable injectable = null;
         if (type instanceof Class) {
-            attribute = getContext((Class) type);
+            injectable = getContext((Class) type);
 
         }
-        if (attribute != null) {
-            implementation.getComponentType().addInjectionSite(attribute, site);
+        if (injectable != null) {
+            implementation.getComponentType().addInjectionSite(site, injectable);
         }
     }
 
@@ -97,7 +97,7 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
 
         }
         if (attribute != null) {
-            implementation.getComponentType().addInjectionSite(attribute, site);
+            implementation.getComponentType().addInjectionSite(site, attribute);
         }
     }
 

@@ -100,7 +100,7 @@ public class InjectingComponentType extends ComponentType {
     public void add(ReferenceDefinition reference, InjectionSite injectionSite) {
         super.add(reference);
         Injectable injectable = new Injectable(InjectableType.REFERENCE, reference.getName());
-        addInjectionSite(injectable, injectionSite);
+        addInjectionSite(injectionSite, injectable);
     }
 
     /**
@@ -112,7 +112,7 @@ public class InjectingComponentType extends ComponentType {
     public void add(Property property, InjectionSite injectionSite) {
         super.add(property);
         Injectable injectable = new Injectable(InjectableType.PROPERTY, property.getName());
-        addInjectionSite(injectable, injectionSite);
+        addInjectionSite(injectionSite, injectable);
     }
 
     /**
@@ -124,7 +124,7 @@ public class InjectingComponentType extends ComponentType {
     public void add(ResourceDefinition resource, InjectionSite injectionSite) {
         super.add(resource);
         Injectable injectable = new Injectable(InjectableType.RESOURCE, resource.getName());
-        addInjectionSite(injectable, injectionSite);
+        addInjectionSite(injectionSite, injectable);
     }
 
     /**
@@ -137,7 +137,7 @@ public class InjectingComponentType extends ComponentType {
         String name = definition.getName();
         callbacks.put(name, definition);
         Injectable injectable = new Injectable(InjectableType.CALLBACK, name);
-        addInjectionSite(injectable, injectionSite);
+        addInjectionSite(injectionSite, injectable);
     }
 
     /**
@@ -152,10 +152,10 @@ public class InjectingComponentType extends ComponentType {
     /**
      * Add the injection site for an injectable value.
      *
-     * @param source the value to be injected
      * @param site   the injection site
+     * @param source the value to be injected
      */
-    public void addInjectionSite(Injectable source, InjectionSite site) {
+    public void addInjectionSite(InjectionSite site, Injectable source) {
         injectionSites.put(site, source);
     }
 
