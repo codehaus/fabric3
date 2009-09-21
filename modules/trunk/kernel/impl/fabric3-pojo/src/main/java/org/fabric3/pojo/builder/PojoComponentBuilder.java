@@ -56,6 +56,12 @@ import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
+import org.fabric3.pojo.component.PojoComponent;
+import org.fabric3.pojo.component.PojoRequestContext;
+import org.fabric3.pojo.component.PojoComponentContext;
+import org.fabric3.pojo.component.OASISPojoRequestContext;
+import org.fabric3.pojo.component.OASISPojoComponentContext;
+import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -129,6 +135,27 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         }
     }
 
+    protected void buildContexts(PojoComponent component, InstanceFactoryProvider<T> provider) {
+        PojoRequestContext requestContext = new PojoRequestContext();
+        SingletonObjectFactory<PojoRequestContext> requestObjectFactory = new SingletonObjectFactory<PojoRequestContext>(requestContext);
+        provider.setObjectFactory(Injectable.REQUEST_CONTEXT, requestObjectFactory);
+        PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
+        SingletonObjectFactory<PojoComponentContext> componentObjectFactory = new SingletonObjectFactory<PojoComponentContext>(componentContext);
+        provider.setObjectFactory(Injectable.COMPONENT_CONTEXT, componentObjectFactory);
+        ConversationIDObjectFactory conversationIDObjectFactory = new ConversationIDObjectFactory();
+        provider.setObjectFactory(Injectable.CONVERSATION_ID, conversationIDObjectFactory);
+
+        OASISPojoRequestContext oasisRequestContext = new OASISPojoRequestContext();
+        SingletonObjectFactory<OASISPojoRequestContext> oasisRequestFactory =
+                new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext);
+        provider.setObjectFactory(Injectable.OASIS_REQUEST_CONTEXT, oasisRequestFactory);
+        OASISPojoComponentContext oasisComponentContext = new OASISPojoComponentContext(component, oasisRequestContext);
+        SingletonObjectFactory<OASISPojoComponentContext> oasisComponentFactory =
+                new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext);
+        provider.setObjectFactory(Injectable.OASIS_COMPONENT_CONTEXT, oasisComponentFactory);
+
+    }
+    
     private DataType<?> getDataType(Type type, TypeMapping typeMapping) {
         if (type instanceof Class) {
             // non-generic type
