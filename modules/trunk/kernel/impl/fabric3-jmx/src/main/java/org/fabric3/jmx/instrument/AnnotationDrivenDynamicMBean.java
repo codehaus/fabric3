@@ -53,47 +53,28 @@ import javax.management.ReflectionException;
  */
 public class AnnotationDrivenDynamicMBean implements DynamicMBean {
 
-    /**
-     * @see javax.management.DynamicMBean#getAttribute(java.lang.String)
-     */
     public Object getAttribute(String attribute)
             throws AttributeNotFoundException, MBeanException, ReflectionException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see javax.management.DynamicMBean#getAttributes(java.lang.String[])
-     */
     public AttributeList getAttributes(String[] attributes) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see javax.management.DynamicMBean#getMBeanInfo()
-     */
     public MBeanInfo getMBeanInfo() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see javax.management.DynamicMBean#invoke(java.lang.String,java.lang.Object[],java.lang.String[])
-     */
-    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException,
-            ReflectionException {
+    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see javax.management.DynamicMBean#setAttribute(javax.management.Attribute)
-     */
-    public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException,
-            MBeanException, ReflectionException {
+    public void setAttribute(Attribute attribute)
+            throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see javax.management.DynamicMBean#setAttributes(javax.management.AttributeList)
-     */
     public AttributeList setAttributes(AttributeList attributes) {
         throw new UnsupportedOperationException();
     }

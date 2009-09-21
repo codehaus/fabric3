@@ -63,10 +63,6 @@ public class InstrumentedComponent implements DynamicMBean {
      * Properties available on the component.
      */
     private final Map<String, PropertyValue> properties;
-
-    /**
-     * Name of the component.
-     */
     private URI componentId;
 
     /**
@@ -80,9 +76,6 @@ public class InstrumentedComponent implements DynamicMBean {
         this.componentId = component.getUri();
     }
 
-    /**
-     * @see javax.management.DynamicMBean#getAttribute(java.lang.String)
-     */
     public final Object getAttribute(final String attribute) throws AttributeNotFoundException {
         PropertyValue propertyValue = properties.get(attribute);
         if (propertyValue != null) {
@@ -91,9 +84,6 @@ public class InstrumentedComponent implements DynamicMBean {
         throw new AttributeNotFoundException(attribute + " not found.");
     }
 
-    /**
-     * @see javax.management.DynamicMBean#getAttributes(java.lang.String[])
-     */
     public final AttributeList getAttributes(final String[] attributes) {
 
         AttributeList list = new AttributeList();
@@ -108,9 +98,6 @@ public class InstrumentedComponent implements DynamicMBean {
 
     }
 
-    /**
-     * @see javax.management.DynamicMBean#getMBeanInfo()
-     */
     public final MBeanInfo getMBeanInfo() {
 
         final MBeanConstructorInfo[] constructors = null;
@@ -123,8 +110,9 @@ public class InstrumentedComponent implements DynamicMBean {
         if (properties != null) {
             int i = 0;
             for (PropertyValue propertyValue : properties.values()) {
-                attributes[i++] =
-                        new MBeanAttributeInfo(propertyValue.getName(), String.class.getName(), null, true, false, false);
+                String name = String.class.getName();
+                String valueName = propertyValue.getName();
+                attributes[i++] = new MBeanAttributeInfo(valueName, name, null, true, false, false);
             }
         }
 
@@ -132,23 +120,14 @@ public class InstrumentedComponent implements DynamicMBean {
 
     }
 
-    /**
-     * @see javax.management.DynamicMBean#invoke(java.lang.String,java.lang.Object[],java.lang.String[])
-     */
     public final Object invoke(final String actionName, final Object[] params, final String[] signature) {
         throw new UnsupportedOperationException("Managed ops not supported");
     }
 
-    /**
-     * @see javax.management.DynamicMBean#setAttribute(javax.management.Attribute)
-     */
     public final void setAttribute(final Attribute attribute) {
         throw new UnsupportedOperationException("Mutable props not supported");
     }
 
-    /**
-     * @see javax.management.DynamicMBean#setAttributes(javax.management.AttributeList)
-     */
     public final AttributeList setAttributes(final AttributeList attributes) {
         throw new UnsupportedOperationException("Mutable props not supported");
     }

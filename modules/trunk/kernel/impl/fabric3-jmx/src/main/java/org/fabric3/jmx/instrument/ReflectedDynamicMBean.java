@@ -66,40 +66,25 @@ import javax.management.ReflectionException;
  * are not supported. Any attribute or operation that needs to be excluded from the management information can be specified optionally in the factory
  * method.
  * <p/>
- * All the methods and properties on <code>java.lang.Object</code> are excluded by default. Also only public and non-static members are made available
- * for management.
+ * All the methods and properties on <code>java.lang.Object</code> are excluded by default. Also, only public and non-static members are made
+ * available for management.
  * <p/>
- * TODO Find a homw other than server.start for this class. TODO Tidy up, unit tests
  *
  * @version $Revsion$ $Date$
  */
 public class ReflectedDynamicMBean implements DynamicMBean {
 
-    /**
-     * Excluded methods.
-     */
     private static final List<String> DEFAULT_EXCLUDED_METHODS =
-            Arrays.asList(new String[]{"wait", "toString", "hashCode", "notify", "equals", "notifyAll", "getClass"});
+            Arrays.asList("wait", "toString", "hashCode", "notify", "equals", "notifyAll", "getClass");
 
-    /**
-     * Excluded properties.
-     */
-    private static final List<String> DEFAULT_EXCLUDED_PROPERTIES = Arrays.asList(new String[]{"class"});
+    private static final List<String> DEFAULT_EXCLUDED_PROPERTIES = Arrays.asList("class");
+
+    private String delegateClassName;
 
     /**
      * Proxied object that is managed.
      */
     private Object delegate;
-
-    /**
-     * Runtime type of the managed object.
-     */
-    private Class<?> delegateClass;
-
-    /**
-     * Delegate class name.
-     */
-    private String delegateClassName;
 
     /**
      * Cache of property write methods.
@@ -121,14 +106,7 @@ public class ReflectedDynamicMBean implements DynamicMBean {
      */
     private Map<String, PropertyDescriptor> properties = new HashMap<String, PropertyDescriptor>();
 
-    /**
-     * Excluded methods.
-     */
     private final List<String> excludedMethods = new ArrayList<String>();
-
-    /**
-     * Excluded properties.
-     */
     private final List<String> excludedProperties = new ArrayList<String>();
 
     /**
@@ -150,7 +128,7 @@ public class ReflectedDynamicMBean implements DynamicMBean {
     private ReflectedDynamicMBean(Object delegate, List<String> excludedMethods, List<String> excludedProperties) {
 
         this.delegate = delegate;
-        this.delegateClass = delegate.getClass();
+        Class<?> delegateClass = delegate.getClass();
         this.delegateClassName = delegateClass.getName();
 
         this.excludedMethods.addAll(excludedMethods);
@@ -193,9 +171,6 @@ public class ReflectedDynamicMBean implements DynamicMBean {
         return new ReflectedDynamicMBean(delegate);
     }
 
-    /**
-     * @see javax.management.DynamicMBean#getAttribute(java.lang.String)
-     */
     public Object getAttribute(String attribute)
             throws AttributeNotFoundException, MBeanException, ReflectionException {
 
@@ -213,9 +188,6 @@ public class ReflectedDynamicMBean implements DynamicMBean {
 
     }
 
-    /**
-     * @see javax.management.DynamicMBean#getAttributes(java.lang.String[])
-     */
     public AttributeList getAttributes(String[] attributes) {
 
         AttributeList list = new AttributeList();
@@ -255,8 +227,7 @@ public class ReflectedDynamicMBean implements DynamicMBean {
                 ops[count++] = new MBeanOperationInfo("", method);
             }
 
-            MBeanInfo mBeanInfo = new MBeanInfo(delegateClassName, "", attrs, null, ops, null);
-            return mBeanInfo;
+            return new MBeanInfo(delegateClassName, "", attrs, null, ops, null);
 
         } catch (javax.management.IntrospectionException ex) {
             throw new InstrumentationException(ex);
@@ -264,9 +235,6 @@ public class ReflectedDynamicMBean implements DynamicMBean {
 
     }
 
-    /**
-     * @see javax.management.DynamicMBean#invoke(java.lang.String,java.lang.Object[],java.lang.String[])
-     */
     public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException,
             ReflectionException {
 
@@ -284,11 +252,8 @@ public class ReflectedDynamicMBean implements DynamicMBean {
 
     }
 
-    /**
-     * @see javax.management.DynamicMBean#setAttribute(javax.management.Attribute)
-     */
-    public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException,
-            MBeanException, ReflectionException {
+    public void setAttribute(Attribute attribute)
+            throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
 
         Method writeMethod = propertyWriteMethods.get(attribute.getName());
         if (writeMethod == null) {
@@ -304,9 +269,6 @@ public class ReflectedDynamicMBean implements DynamicMBean {
 
     }
 
-    /**
-     * @see javax.management.DynamicMBean#setAttributes(javax.management.AttributeList)
-     */
     public AttributeList setAttributes(AttributeList attributes) {
         throw new UnsupportedOperationException();
     }
