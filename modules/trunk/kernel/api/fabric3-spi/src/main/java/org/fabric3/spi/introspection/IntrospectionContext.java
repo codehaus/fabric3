@@ -131,9 +131,9 @@ public interface IntrospectionContext {
     ClassLoader getClassLoader();
 
     /**
-     * Returns the location of the composite being deployed.
+     * Returns the location of the XML artifact being introspected.
      *
-     * @return the location of the composite being deployed. This may return null if the source is not a dereferenceable artifact.
+     * @return the location of the XML artifact being introspected. This may return null if the source is not a dereferenceable artifact.
      */
     URL getSourceBase();
 
@@ -152,8 +152,8 @@ public interface IntrospectionContext {
     void setTargetNamespace(String namespace);
 
     /**
-     * Returns a cache of mappings from formal parameter types to actual types for a class. Since the IntrospectionContext is disposed after a
-     * contribution has been installed, it is safe to cache pointers to classes.
+     * Used for introspecting Java generics. Returns a cache of mappings from formal parameter types to actual types for a class. Since the
+     * IntrospectionContext is disposed after a contribution has been installed, it is safe to cache pointers to classes.
      *
      * @param type the class
      * @return the cache of mappings from formal parameter types to actual types for a class or null if the mapping does not exist
@@ -161,7 +161,7 @@ public interface IntrospectionContext {
     TypeMapping getTypeMapping(Class<?> type);
 
     /**
-     * Returns the cache of classes and their resolved parameter types mapped to actual types.
+     * Used for introspecting Java generics. Returns the cache of classes and their resolved parameter types mapped to actual types.
      *
      * @return the cache of classes and their resolved parameter types mapped to actual types
      */

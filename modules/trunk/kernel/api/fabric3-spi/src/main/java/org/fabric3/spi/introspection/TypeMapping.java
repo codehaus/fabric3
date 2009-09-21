@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A mapping from formal types to actual types for a class hierarchy.
+ * A mapping from generic formal types to actual types for a class hierarchy.
  *
  * @version $Rev$ $Date$
  */
