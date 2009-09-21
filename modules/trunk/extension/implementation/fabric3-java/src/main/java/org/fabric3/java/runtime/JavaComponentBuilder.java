@@ -45,19 +45,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.java.Injectable;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.builder.ProxyService;
-import org.fabric3.pojo.component.OASISPojoComponentContext;
-import org.fabric3.pojo.component.OASISPojoRequestContext;
-import org.fabric3.pojo.component.PojoComponent;
-import org.fabric3.pojo.component.PojoComponentContext;
-import org.fabric3.pojo.component.PojoRequestContext;
-import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
@@ -91,7 +83,6 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
     public JavaComponent<T> build(JavaComponentDefinition definition) throws BuilderException {
         URI uri = definition.getComponentUri();
-        int initLevel = definition.getInitLevel();
         QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
@@ -109,8 +100,9 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         long idleTime = definition.getMaxIdleTime();
         long age = definition.getMaxAge();
+        boolean eager = definition.isEagerInit();
 
-        JavaComponent<T> component = new JavaComponent<T>(uri, provider, scopeContainer, deployable, initLevel, idleTime, age, proxyService);
+        JavaComponent<T> component = new JavaComponent<T>(uri, provider, scopeContainer, deployable, eager, idleTime, age, proxyService);
 
         buildContexts(component, provider);
 

@@ -52,7 +52,6 @@ import javax.xml.namespace.QName;
 import org.oasisopen.sca.Constants;
 import org.w3c.dom.Document;
 
-import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Autowire;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
@@ -266,24 +265,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public ComponentDefinition<I> getDefinition() {
         return definition;
-    }
-
-    /**
-     * Checks whether this component needs to be eager inited.
-     *
-     * @return True if the component needs to be eager inited.
-     */
-    public boolean isEagerInit() {
-
-        ComponentDefinition<? extends Implementation<?>> definition = getDefinition();
-        AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
-
-        Integer level = definition.getInitLevel();
-        if (level == null) {
-            level = componentType.getInitLevel();
-        }
-        return "COMPOSITE".equals(componentType.getScope()) && level > 0;
-
     }
 
     /**

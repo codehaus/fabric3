@@ -69,7 +69,6 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
     public void testBuildSimplePOJO() throws Exception {
         SystemComponent<T> component = builder.build(definition);
         assertEquals(componentId, component.getUri());
-        assertEquals(-1, component.getInitLevel());
     }
 
     @SuppressWarnings("unchecked")
@@ -96,17 +95,12 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
         IntrospectionHelper helper = EasyMock.createNiceMock(IntrospectionHelper.class);
         EasyMock.replay(helper);
 
-        builder = new SystemComponentBuilder<T>(scopeRegistry,
-                                                providerBuilders,
-                                                classLoaderRegistry,
-                                                null,
-												helper);
+        builder = new SystemComponentBuilder<T>(scopeRegistry, providerBuilders, classLoaderRegistry, null, helper);
         definition = new SystemComponentDefinition();
         definition.setDeployable(deployable);
         definition.setComponentUri(componentId);
         definition.setClassLoaderId(classLoaderId);
         definition.setScope("COMPOSITE");
-        definition.setInitLevel(-1);
         definition.setProviderDefinition(providerDefinition);
     }
 }

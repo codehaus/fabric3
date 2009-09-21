@@ -59,7 +59,6 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
 
     private final String name;
     private Autowire autowire = Autowire.INHERITED;
-    private Integer initLevel;
     private I implementation;
     private final Map<String, ComponentService> services = new HashMap<String, ComponentService>();
     private final Map<String, ComponentReference> references = new HashMap<String, ComponentReference>();
@@ -130,25 +129,6 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
      */
     public void setAutowire(Autowire autowire) {
         this.autowire = autowire;
-    }
-
-    /**
-     * Returns the initialization level of this component.
-     *
-     * @return the initialization level of this component
-     */
-    public Integer getInitLevel() {
-        return initLevel;
-    }
-
-    /**
-     * Sets the initialization level of this component. If set to null then the level from the componentType is used. If set to zero or a negative
-     * value then the component will not be eagerly initialized.
-     *
-     * @param initLevel the initialization level of this component
-     */
-    public void setInitLevel(Integer initLevel) {
-        this.initLevel = initLevel;
     }
 
     /**

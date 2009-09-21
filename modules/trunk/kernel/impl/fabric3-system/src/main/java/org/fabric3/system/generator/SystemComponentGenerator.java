@@ -90,7 +90,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         // create the physical component definition
         SystemComponentDefinition physical = new SystemComponentDefinition();
         physical.setScope(type.getScope());
-        physical.setInitLevel(helper.getInitLevel(definition, type));
+        physical.setEagerInit(type.isEagerInit());
         physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
 

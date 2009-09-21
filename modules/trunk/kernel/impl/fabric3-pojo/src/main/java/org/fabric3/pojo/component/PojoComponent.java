@@ -72,7 +72,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final InstanceFactoryProvider<T> provider;
     private final ScopeContainer scopeContainer;
     private final QName deployable;
-    private final int initLevel;
+    private final boolean eager;
     private final long maxIdleTime;
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
@@ -82,14 +82,14 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
                          InstanceFactoryProvider<T> provider,
                          ScopeContainer scopeContainer,
                          QName deployable,
-                         int initLevel,
+                         boolean eager,
                          long maxIdleTime,
                          long maxAge) {
         this.uri = componentId;
         this.provider = provider;
         this.scopeContainer = scopeContainer;
         this.deployable = deployable;
-        this.initLevel = initLevel;
+        this.eager = eager;
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
     }
@@ -111,11 +111,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     }
 
     public boolean isEagerInit() {
-        return initLevel > 0;
-    }
-
-    public int getInitLevel() {
-        return initLevel;
+        return eager;
     }
 
     public long getMaxIdleTime() {

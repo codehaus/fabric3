@@ -37,7 +37,6 @@
 */
 package org.fabric3.pojo.generator;
 
-import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
@@ -48,15 +47,6 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  * @version $Rev$ $Date$
  */
 public interface InstanceFactoryGenerationHelper {
-
-    /**
-     * Calculates the initialization level (e.g. eager or lazy) for the component.
-     *
-     * @param definition the component definition.
-     * @param type       the component type
-     * @return the initialization level
-     */
-    Integer getInitLevel(ComponentDefinition<?> definition, InjectingComponentType type);
 
     /**
      * Computes injectors for the component

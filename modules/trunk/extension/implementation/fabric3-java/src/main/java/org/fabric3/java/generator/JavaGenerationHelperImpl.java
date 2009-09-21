@@ -52,11 +52,11 @@ import org.fabric3.model.type.component.CallbackDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.GenerationException;
@@ -95,7 +95,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
 
         // create the physical component definition
         definition.setScope(scope);
-        definition.setInitLevel(helper.getInitLevel(logical, type));
+        definition.setEagerInit(type.isEagerInit());
         definition.setMaxAge(type.getMaxAge());
         definition.setMaxIdleTime(type.getMaxIdleTime());
         definition.setProviderDefinition(providerDefinition);

@@ -44,8 +44,6 @@
 package org.fabric3.fabric.component.scope;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -112,7 +110,6 @@ public class CompositeScopeContainer extends AbstractScopeContainer {
                     initQueues.put(deployable, initQueue);
                 }
                 initQueue.add(component);
-                Collections.sort(initQueue, COMPARATOR);
             }
         }
         instanceWrappers.put(component, EMPTY);
@@ -286,13 +283,6 @@ public class CompositeScopeContainer extends AbstractScopeContainer {
             initializeComponents(initQueue, workContext);
         }
     }
-
-    private static final Comparator<AtomicComponent<?>> COMPARATOR = new Comparator<AtomicComponent<?>>() {
-        public int compare(AtomicComponent<?> o1, AtomicComponent<?> o2) {
-            return o1.getInitLevel() - o2.getInitLevel();
-        }
-    };
-
 
     private static final InstanceWrapper<Object> EMPTY = new InstanceWrapper<Object>() {
         public Object getInstance() {

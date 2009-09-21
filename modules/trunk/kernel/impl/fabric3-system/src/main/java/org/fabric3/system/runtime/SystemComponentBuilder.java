@@ -82,7 +82,6 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
 
     public SystemComponent<T> build(SystemComponentDefinition definition) throws BuilderException {
         URI uri = definition.getComponentUri();
-        int initLevel = definition.getInitLevel();
         QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
@@ -95,6 +94,7 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
 
         createPropertyFactories(definition, provider);
 
-        return new SystemComponent<T>(uri, provider, scopeContainer, deployable, initLevel, -1, -1);
+        boolean eager = definition.isEagerInit();
+        return new SystemComponent<T>(uri, provider, scopeContainer, deployable, eager, -1, -1);
     }
 }

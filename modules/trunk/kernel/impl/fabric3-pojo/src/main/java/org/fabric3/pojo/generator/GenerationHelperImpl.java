@@ -43,7 +43,6 @@ import java.util.Set;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.Injectable;
@@ -59,14 +58,6 @@ import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
  * @version $Rev$ $Date$
  */
 public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
-
-    public Integer getInitLevel(ComponentDefinition<?> definition, InjectingComponentType type) {
-        Integer initLevel = definition.getInitLevel();
-        if (initLevel == null) {
-            initLevel = type.getInitLevel();
-        }
-        return initLevel;
-    }
 
     public void processInjectionSites(LogicalComponent<? extends Implementation<InjectingComponentType>> component,
                                       InstanceFactoryDefinition providerDefinition) {

@@ -88,7 +88,6 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
 
     public TimerComponent<T> build(TimerComponentDefinition definition) throws BuilderException {
         URI uri = definition.getComponentUri();
-        int initLevel = definition.getInitLevel();
         QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
@@ -112,11 +111,12 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
         }
         long idleTime = definition.getMaxIdleTime();
         long maxAge = definition.getMaxAge();
+        boolean eager = definition.isEagerInit();
         TimerComponent<T> component = new TimerComponent<T>(uri,
                                                             provider,
                                                             scopeContainer,
                                                             deployable,
-                                                            initLevel,
+                                                            eager,
                                                             idleTime,
                                                             maxAge,
                                                             proxyService,

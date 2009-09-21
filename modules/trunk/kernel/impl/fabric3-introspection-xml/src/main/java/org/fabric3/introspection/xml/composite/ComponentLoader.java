@@ -64,7 +64,6 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
@@ -93,7 +92,6 @@ public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefin
         ATTRIBUTES.put("requires", "requires");
         ATTRIBUTES.put("policySets", "policySets");
         ATTRIBUTES.put("key", "key");
-        ATTRIBUTES.put("initLevel", "initLevel");
     }
 
     private final LoaderHelper loaderHelper;
@@ -115,7 +113,6 @@ public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefin
         ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name);
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         componentDefinition.setAutowire(autowire);
-        loadInitLevel(componentDefinition, reader, context);
 
         String key = loaderHelper.loadKey(reader);
         componentDefinition.setKey(key);
@@ -268,19 +265,6 @@ public class ComponentLoader extends AbstractExtensibleTypeLoader<ComponentDefin
         for (Property property : properties.values()) {
             if (property.isRequired() && !values.containsKey(property.getName())) {
                 RequiredPropertyNotProvided failure = new RequiredPropertyNotProvided(property, definition.getName(), reader);
-                context.addError(failure);
-            }
-        }
-    }
-
-    private void loadInitLevel(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader, IntrospectionContext context) {
-        String initLevel = reader.getAttributeValue(null, "initLevel");
-        if (initLevel != null && initLevel.length() != 0) {
-            try {
-                Integer level = Integer.valueOf(initLevel);
-                componentDefinition.setInitLevel(level);
-            } catch (NumberFormatException e) {
-                InvalidValue failure = new InvalidValue("Component initialization level must be an integer: " + initLevel, reader);
                 context.addError(failure);
             }
         }

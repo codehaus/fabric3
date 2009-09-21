@@ -60,9 +60,9 @@ public abstract class PhysicalComponentDefinition implements Serializable {
     private URI uri;
     private String scope;
     private QName deployable;
-    private int initLevel;
     private long maxIdleTime;
     private long maxAge;
+    private boolean eager;
     private URI classLoaderId;
     private final List<PhysicalPropertyDefinition> propertyDefinitions = new ArrayList<PhysicalPropertyDefinition>();
 
@@ -120,23 +120,6 @@ public abstract class PhysicalComponentDefinition implements Serializable {
         this.classLoaderId = classLoaderId;
     }
 
-    /**
-     * Returns the component initialization level.
-     *
-     * @return the component initialization level
-     */
-    public int getInitLevel() {
-        return initLevel;
-    }
-
-    /**
-     * Sets the component initialization level.
-     *
-     * @param initLevel the component initialization level.
-     */
-    public void setInitLevel(int initLevel) {
-        this.initLevel = initLevel;
-    }
 
     /**
      * Gets the component scope.
@@ -190,6 +173,24 @@ public abstract class PhysicalComponentDefinition implements Serializable {
      */
     public void setMaxAge(long maxAge) {
         this.maxAge = maxAge;
+    }
+
+    /**
+     * Returns true if the component should be eager initialized.
+     *
+     * @return true if the component should be eager initialized
+     */
+    public boolean isEagerInit() {
+        return eager;
+    }
+
+    /**
+     * Sets if the component should be eager initialized.
+     *
+     * @param eager true if the component should be eager initialized
+     */
+    public void setEagerInit(boolean eager) {
+        this.eager = eager;
     }
 
     /**

@@ -71,13 +71,6 @@ public interface AtomicComponent<T> extends Component {
     boolean isEagerInit();
 
     /**
-     * Returns the initialization level for this component.
-     *
-     * @return the initialization level for this component
-     */
-    int getInitLevel();
-
-    /**
      * Returns the idle time allowed between operations in milliseconds if the implementation is conversational.
      *
      * @return the idle time allowed between operations in milliseconds if the implementation is conversational

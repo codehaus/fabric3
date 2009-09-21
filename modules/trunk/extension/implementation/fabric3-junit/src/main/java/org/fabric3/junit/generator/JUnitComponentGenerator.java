@@ -82,7 +82,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         ComponentDefinition<JUnitImplementation> definition = component.getDefinition();
         JUnitImplementation implementation = definition.getImplementation();
         InjectingComponentType type = implementation.getComponentType();
-        Integer level = helper.getInitLevel(definition, type);
         String scope = type.getScope();
 
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
@@ -96,7 +95,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         JavaComponentDefinition physical = new JavaComponentDefinition();
 
         physical.setScope(scope);
-        physical.setInitLevel(level);
         physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         return physical;
