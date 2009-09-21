@@ -49,23 +49,6 @@ public class RmiAgent extends AbstractAgent {
         super(minPort, maxPort);
     }
 
-    /**
-     * Gets the adaptor URL.
-     *
-     * @return Adaptor URL used by the agent.
-     * @throws ManagementException If unable to start the agent.
-     */
-    protected JMXServiceURL getAdaptorUrl() throws ManagementException {
-
-        try {
-            return new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + assignedPort + "/server");
-            // service:jmx:rmi:///jndi/rmi://localhost:1099/server
-        } catch (MalformedURLException ex) {
-            throw new ManagementException(ex);
-        }
-
-    }
-
     @Override
     public void preStart() throws ManagementException {
         int port = getMinPort();
@@ -111,4 +94,16 @@ public class RmiAgent extends AbstractAgent {
 
     }
 
+    protected JMXServiceURL getAdaptorUrl() throws ManagementException {
+
+        try {
+            return new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + assignedPort + "/server");
+            // service:jmx:rmi:///jndi/rmi://localhost:1099/server
+        } catch (MalformedURLException ex) {
+            throw new ManagementException(ex);
+        }
+
+    }
+
+    
 }

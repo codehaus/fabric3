@@ -42,7 +42,6 @@ import java.net.MalformedURLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
@@ -75,7 +74,6 @@ public abstract class AbstractAgent implements Agent {
      *
      * @param minPort the minimum port number
      * @param maxPort the maximum port number
-     * @throws ManagementException If unable to start the agent.
      */
     protected AbstractAgent(int minPort, int maxPort) {
         this.minPort = minPort;
@@ -85,16 +83,6 @@ public abstract class AbstractAgent implements Agent {
 
     public MBeanServer getMBeanServer() {
         return mBeanServer;
-    }
-
-    public final void register(Object instance, String name) throws ManagementException {
-
-        try {
-            mBeanServer.registerMBean(instance, new ObjectName(name));
-        } catch (Exception ex) {
-            throw new ManagementException(ex);
-        }
-
     }
 
     public final void start() throws ManagementException {
@@ -168,17 +156,17 @@ public abstract class AbstractAgent implements Agent {
      *
      * @return Adaptor URL.
      */
-    protected abstract JMXServiceURL getAdaptorUrl();
+    protected abstract JMXServiceURL getAdaptorUrl() throws ManagementException;
 
     /**
      * Any initialiation required for protocol specific agent.
      */
-    protected abstract void preStart();
+    protected abstract void preStart() throws ManagementException;
 
     /**
      * Any initialiation required for protocol specific agent.
      */
-    protected abstract void postStop();
+    protected abstract void postStop() throws ManagementException;
 
 
 }

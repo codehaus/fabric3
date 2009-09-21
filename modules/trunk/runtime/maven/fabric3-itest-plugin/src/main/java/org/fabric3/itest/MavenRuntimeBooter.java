@@ -63,6 +63,7 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
+import org.fabric3.jmx.agent.ManagementException;
 import org.fabric3.maven.MavenRuntime;
 import org.fabric3.util.io.FileHelper;
 
@@ -143,7 +144,12 @@ public class MavenRuntimeBooter {
         runtime.setJmxSubDomain(managementDomain);
 
         // TODO Add better host JMX support from the next release
-        Agent agent = new DefaultAgent();
+        Agent agent;
+        try {
+            agent = new DefaultAgent();
+        } catch (ManagementException e) {
+            throw new MojoExecutionException("Error initializing JMX Agent", e);
+        }
         runtime.setMBeanServer(agent.getMBeanServer());
 
         return runtime;

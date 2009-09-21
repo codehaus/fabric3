@@ -37,13 +37,13 @@
 */
 package org.fabric3.jmx.agent;
 
-import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3Exception;
 
 /**
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("serial")
-public class ManagementException extends Fabric3RuntimeException {
+public class ManagementException extends Fabric3Exception {
+    private static final long serialVersionUID = 2866267083085195800L;
 
     /**
      * Initializes the root cause.

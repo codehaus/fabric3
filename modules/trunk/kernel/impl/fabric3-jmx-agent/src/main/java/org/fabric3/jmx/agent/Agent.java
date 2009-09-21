@@ -47,15 +47,6 @@ import javax.management.MBeanServer;
 public interface Agent {
 
     /**
-     * Registers a managed bean.
-     *
-     * @param instance Instance to be registered.
-     * @param name     Object name of the instance.
-     * @throws ManagementException If unable to register the object.
-     */
-    void register(Object instance, String name) throws ManagementException;
-
-    /**
      * Gets the MBean server used by the agent.
      *
      * @return MBean server used by the agent.

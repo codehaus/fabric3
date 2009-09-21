@@ -53,6 +53,7 @@ import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.jmx.agent.DefaultAgent;
+import org.fabric3.jmx.agent.ManagementException;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_PARAM;
 
@@ -152,7 +153,13 @@ public class WebappUtilImpl implements WebappUtil {
      * @throws Fabric3InitException If unable to initialize the MBean server.
      */
     private MBeanServer createMBeanServer() throws Fabric3InitException {
-        return new DefaultAgent().getMBeanServer();
+        DefaultAgent agent;
+        try {
+            agent = new DefaultAgent();
+        } catch (ManagementException e) {
+            throw new Fabric3InitException(e);
+        }
+        return agent.getMBeanServer();
     }
 
     /**

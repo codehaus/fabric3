@@ -39,15 +39,13 @@ package org.fabric3.jmx.agent;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
 
 /**
- * Default agent.
+ * Default JMX agent.
  *
  * @version $Revison$ $Date$
  */
 public class DefaultAgent implements Agent {
-
     private static final String DOMAIN = "fabric3";
     private MBeanServer mBeanServer;
 
@@ -60,24 +58,8 @@ public class DefaultAgent implements Agent {
         mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);
     }
 
-    /**
-     * @see org.fabric3.jmx.agent.Agent#getMBeanServer()
-     */
     public MBeanServer getMBeanServer() {
         return mBeanServer;
-    }
-
-    /**
-     * @see org.fabric3.jmx.agent.Agent#register(java.lang.Object,java.lang.String)
-     */
-    public final void register(Object instance, String name) throws ManagementException {
-
-        try {
-            mBeanServer.registerMBean(instance, new ObjectName(name));
-        } catch (Exception ex) {
-            throw new ManagementException(ex);
-        }
-
     }
 
 
