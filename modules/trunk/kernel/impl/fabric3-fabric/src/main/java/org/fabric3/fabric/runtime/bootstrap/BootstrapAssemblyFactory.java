@@ -132,7 +132,8 @@ import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.jmx.runtime.JMXWireAttacher;
 import org.fabric3.pojo.generator.GenerationHelperImpl;
 import org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -262,9 +263,11 @@ public class BootstrapAssemblyFactory {
                                                                          String jmxSubDomain,
                                                                          HostInfo info) {
 
-        InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
-        ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder(providerRegistry, classLoaderRegistry);
-        provider.init();
+        DefaultInstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
+        ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder(classLoaderRegistry);
+        Map<Class<?>, InstanceFactoryBuilder> providers = new ConcurrentHashMap<Class<?>, InstanceFactoryBuilder>();
+        providers.put(InstanceFactoryDefinition.class, provider);
+        providerRegistry.setProviders(providers);
 
         DefaultPullTransformerRegistry transformerRegistry = new DefaultPullTransformerRegistry();
         List<PullTransformer<?, ?>> transformers = new ArrayList<PullTransformer<?, ?>>();

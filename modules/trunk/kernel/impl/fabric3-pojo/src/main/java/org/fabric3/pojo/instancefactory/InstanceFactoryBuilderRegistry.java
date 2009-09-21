@@ -53,14 +53,6 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 public interface InstanceFactoryBuilderRegistry {
 
     /**
-     * Registers an instance factory provider builder.
-     *
-     * @param clazz   Instance factory provider definition class.
-     * @param builder Instance factory provider builder.
-     */
-    <IFPD extends InstanceFactoryDefinition> void register(Class<?> clazz, InstanceFactoryBuilder<?, IFPD> builder);
-
-    /**
      * Builds an instance factory provider from a definition.
      *
      * @param factoryDefinition Provider definition.

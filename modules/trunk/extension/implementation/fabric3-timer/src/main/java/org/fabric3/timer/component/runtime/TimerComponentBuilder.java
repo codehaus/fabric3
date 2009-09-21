@@ -93,9 +93,9 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
         ScopeContainer scopeContainer = scopeRegistry.getScopeContainer(scope);
 
         // create the InstanceFactoryProvider based on the definition in the model
-        InstanceFactoryDefinition providerDefinition = definition.getFactoryDefinition();
+        InstanceFactoryDefinition factoryDefinition = definition.getFactoryDefinition();
 
-        InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
+        InstanceFactoryProvider<T> provider = providerBuilders.build(factoryDefinition, classLoader);
 
         createPropertyFactories(definition, provider);
         TriggerData data = definition.getTriggerData();

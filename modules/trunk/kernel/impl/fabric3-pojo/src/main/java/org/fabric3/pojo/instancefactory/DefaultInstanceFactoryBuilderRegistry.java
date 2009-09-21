@@ -46,6 +46,8 @@ package org.fabric3.pojo.instancefactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**
@@ -54,24 +56,22 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
  * @version $Revison$ $Date$
  */
 public class DefaultInstanceFactoryBuilderRegistry implements InstanceFactoryBuilderRegistry {
-    private Map<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
-            ? extends InstanceFactoryDefinition>> registry =
-            new ConcurrentHashMap<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
-                    ? extends InstanceFactoryDefinition>>();
+    private Map<Class<?>, InstanceFactoryBuilder> providers =  new ConcurrentHashMap<Class<?>, InstanceFactoryBuilder>();
+
+    @Reference
+    public void setProviders(Map<Class<?>, InstanceFactoryBuilder> providers) {
+        this.providers = providers;
+    }
 
     @SuppressWarnings("unchecked")
     public InstanceFactoryProvider build(InstanceFactoryDefinition factoryDefinition, ClassLoader cl) throws InstanceFactoryBuilderException {
-        Class<? extends InstanceFactoryDefinition> type = factoryDefinition.getClass();
-        InstanceFactoryBuilder builder = registry.get(type);
+        Class<?> type = factoryDefinition.getClass();
+        InstanceFactoryBuilder builder = providers.get(type);
         if (builder == null) {
             String id = type.toString();
             throw new NoRegisteredIFBuilderException("No registered builder for: " + id, id);
         }
         return builder.build(factoryDefinition, cl);
-    }
-
-    public <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass, InstanceFactoryBuilder<?, IFPD> builder) {
-        registry.put(ifpdClass, builder);
     }
 
 }

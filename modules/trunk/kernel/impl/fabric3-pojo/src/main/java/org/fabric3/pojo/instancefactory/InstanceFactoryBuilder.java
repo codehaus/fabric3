@@ -46,7 +46,7 @@ package org.fabric3.pojo.instancefactory;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**
- * Interface for building instance factories.
+ * Interface for building instance factory providers.
  *
  * @version $Revision$ $Date$
  * @param <P> the type of instance factory provider this implementation builds

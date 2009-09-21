@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.java.ConstructorInjectionSite;
@@ -59,7 +58,6 @@ import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
@@ -71,17 +69,10 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 @EagerInit
 public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
 
-    private final InstanceFactoryBuilderRegistry registry;
     private ClassLoaderRegistry classLoaderRegistry;
 
-    public ReflectiveInstanceFactoryBuilder(@Reference InstanceFactoryBuilderRegistry registry, @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.registry = registry;
+    public ReflectiveInstanceFactoryBuilder(@Reference ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void init() {
-        registry.register(InstanceFactoryDefinition.class, this);
     }
 
     public ReflectiveInstanceFactoryProvider<T> build(InstanceFactoryDefinition ifpd, ClassLoader cl) throws InstanceFactoryBuilderException {

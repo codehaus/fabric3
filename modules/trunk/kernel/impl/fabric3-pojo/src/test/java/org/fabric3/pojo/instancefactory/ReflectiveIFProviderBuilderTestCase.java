@@ -68,7 +68,7 @@ import org.fabric3.spi.classloader.DuplicateClassLoaderException;
  * @version $Date$ $Revision$
  */
 public class ReflectiveIFProviderBuilderTestCase extends TestCase {
-    private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder(null, new MockClassLoaderRegistry());
+    private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder(new MockClassLoaderRegistry());
     private InstanceFactoryDefinition definition;
     private Constructor<Foo> constructor;
     private ClassLoader cl;
