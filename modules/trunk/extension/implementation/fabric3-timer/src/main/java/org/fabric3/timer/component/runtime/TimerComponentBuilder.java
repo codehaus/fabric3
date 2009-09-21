@@ -45,7 +45,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.builder.BuilderException;
@@ -64,12 +64,12 @@ import org.fabric3.timer.spi.TimerService;
 @EagerInit
 public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerComponentDefinition, TimerComponent<?>> {
     private ScopeRegistry scopeRegistry;
-    private InstanceFactoryBuilderRegistry providerBuilders;
+    private InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder;
     private TimerService nonTrxTimerService;
     private TimerService trxTimerService;
 
     public TimerComponentBuilder(@Reference ScopeRegistry scopeRegistry,
-                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
+                                 @Reference InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference PullTransformerRegistry transformerRegistry,
                                  @Reference(name = "nonTrxTimerService") TimerService nonTrxTimerService,
@@ -77,7 +77,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
                                  @Reference IntrospectionHelper helper) {
         super(classLoaderRegistry, transformerRegistry, helper);
         this.scopeRegistry = scopeRegistry;
-        this.providerBuilders = providerBuilders;
+        this.factoryBuilder = factoryBuilder;
         this.nonTrxTimerService = nonTrxTimerService;
         this.trxTimerService = trxTimerService;
     }
@@ -95,7 +95,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
         // create the InstanceFactoryProvider based on the definition in the model
         InstanceFactoryDefinition factoryDefinition = definition.getFactoryDefinition();
 
-        InstanceFactoryProvider<T> provider = providerBuilders.build(factoryDefinition, classLoader);
+        InstanceFactoryProvider<T> provider = factoryBuilder.build(factoryDefinition, classLoader);
 
         createPropertyFactories(definition, provider);
         TriggerData data = definition.getTriggerData();

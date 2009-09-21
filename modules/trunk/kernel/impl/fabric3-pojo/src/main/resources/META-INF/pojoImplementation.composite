@@ -18,10 +18,6 @@
            name="PojoComposite"
            autowire="true">
 
-    <component name="InstanceFactoryBuilderRegistry">
-        <f3-impl:implementation.system class="org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry"/>
-    </component>
-
     <component name="ReflectiveInstanceFactoryBuilder" f3-core:key="org.fabric3.pojo.provision.InstanceFactoryDefinition">
         <f3-impl:implementation.system class="org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder"/>
     </component>

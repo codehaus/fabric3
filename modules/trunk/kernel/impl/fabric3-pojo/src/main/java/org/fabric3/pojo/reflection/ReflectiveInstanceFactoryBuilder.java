@@ -67,7 +67,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
  * @version $Date$ $Revision$
  */
 @EagerInit
-public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
+public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>> {
 
     private ClassLoaderRegistry classLoaderRegistry;
 

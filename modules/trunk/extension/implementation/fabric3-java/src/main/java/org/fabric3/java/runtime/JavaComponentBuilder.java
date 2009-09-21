@@ -46,7 +46,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.builder.BuilderException;
@@ -65,16 +65,16 @@ import org.fabric3.spi.transform.PullTransformerRegistry;
 @EagerInit
 public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaComponentDefinition, JavaComponent<T>> {
     private ScopeRegistry scopeRegistry;
-    private InstanceFactoryBuilderRegistry providerBuilders;
+    private InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder;
 
     public JavaComponentBuilder(@Reference ScopeRegistry scopeRegistry,
-                                @Reference InstanceFactoryBuilderRegistry providerBuilders,
+                                @Reference InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                 @Reference PullTransformerRegistry transformerRegistry,
                                 @Reference IntrospectionHelper helper) {
         super(classLoaderRegistry, transformerRegistry, helper);
         this.scopeRegistry = scopeRegistry;
-        this.providerBuilders = providerBuilders;
+        this.factoryBuilder = factoryBuilder;
     }
 
     public JavaComponent<T> build(JavaComponentDefinition definition) throws BuilderException {
@@ -90,7 +90,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         // create the InstanceFactoryProvider based on the definition in the model
         InstanceFactoryDefinition factoryDefinition = definition.getFactoryDefinition();
 
-        InstanceFactoryProvider<T> provider = providerBuilders.build(factoryDefinition, classLoader);
+        InstanceFactoryProvider<T> provider = factoryBuilder.build(factoryDefinition, classLoader);
 
         createPropertyFactories(definition, provider);
 
