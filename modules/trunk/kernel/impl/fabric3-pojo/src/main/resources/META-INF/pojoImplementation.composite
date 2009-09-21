@@ -29,7 +29,4 @@
         <f3-impl:implementation.system class="org.fabric3.pojo.generator.GenerationHelperImpl"/>
     </component>
 
-    <component name="BuildHelperImpl">
-        <f3-impl:implementation.system class="org.fabric3.pojo.instancefactory.BuildHelperImpl"/>
-    </component>
 </composite>

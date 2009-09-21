@@ -116,10 +116,10 @@ import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
+import org.fabric3.fabric.monitor.MonitorGenerator;
 import org.fabric3.fabric.monitor.MonitorResource;
 import org.fabric3.fabric.monitor.MonitorTargetDefinition;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
-import org.fabric3.fabric.monitor.MonitorGenerator;
 import org.fabric3.fabric.policy.NullPolicyAttacher;
 import org.fabric3.fabric.policy.NullPolicyResolver;
 import org.fabric3.host.domain.Domain;
@@ -131,9 +131,7 @@ import org.fabric3.jmx.control.JMXBindingGenerator;
 import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.jmx.runtime.JMXWireAttacher;
 import org.fabric3.pojo.generator.GenerationHelperImpl;
-import org.fabric3.pojo.instancefactory.BuildHelperImpl;
 import org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
@@ -180,8 +178,8 @@ import org.fabric3.transform.dom2java.generics.list.Node2ListOfQNameTransformer;
 import org.fabric3.transform.dom2java.generics.list.Node2ListOfString;
 import org.fabric3.transform.dom2java.generics.map.Node2MapOfStringsTransformer;
 import org.fabric3.transform.string2java.String2ClassTransformer;
-import org.fabric3.transform.string2java.String2QNameTransformer;
 import org.fabric3.transform.string2java.String2IntegerTransformer;
+import org.fabric3.transform.string2java.String2QNameTransformer;
 
 /**
  * Bootstraps services required for instantiation, generation, and deployment.
@@ -265,8 +263,7 @@ public class BootstrapAssemblyFactory {
                                                                          HostInfo info) {
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
-        InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
-        ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder(providerRegistry, buildHelper);
+        ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder(providerRegistry, classLoaderRegistry);
         provider.init();
 
         DefaultPullTransformerRegistry transformerRegistry = new DefaultPullTransformerRegistry();

@@ -56,11 +56,12 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
+import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * Builds a reflection-based instance factory provider.
@@ -71,11 +72,11 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
 
     private final InstanceFactoryBuilderRegistry registry;
-    private final InstanceFactoryBuildHelper helper;
+    private ClassLoaderRegistry classLoaderRegistry;
 
-    public ReflectiveInstanceFactoryBuilder(@Reference InstanceFactoryBuilderRegistry registry, @Reference InstanceFactoryBuildHelper helper) {
+    public ReflectiveInstanceFactoryBuilder(@Reference InstanceFactoryBuilderRegistry registry, @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.registry = registry;
-        this.helper = helper;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     @Init
@@ -86,9 +87,10 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
     public ReflectiveInstanceFactoryProvider<T> build(InstanceFactoryDefinition ifpd, ClassLoader cl) throws InstanceFactoryBuilderException {
 
         try {
+            String className = ifpd.getImplementationClass();
             @SuppressWarnings("unchecked")
-            Class<T> implClass = (Class<T>) helper.loadClass(cl, ifpd.getImplementationClass());
-            Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
+            Class<T> implClass = (Class<T>) classLoaderRegistry.loadClass(cl, className);
+            Constructor<T> ctr = getConstructor(implClass, ifpd.getConstructor());
 
             Map<InjectionSite, Injectable> injectionSites = ifpd.getConstruction();
             Injectable[] cdiSources = new Injectable[ctr.getParameterTypes().length];
@@ -105,8 +107,8 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
                 }
             }
 
-            Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
-            Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
+            Method initMethod = getMethod(implClass, ifpd.getInitMethod());
+            Method destroyMethod = getMethod(implClass, ifpd.getDestroyMethod());
 
             Map<InjectionSite, Injectable> postConstruction = ifpd.getPostConstruction();
             List<Injectable> list = Arrays.asList(cdiSources);
@@ -119,4 +121,16 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
             throw new InstanceFactoryBuilderException(ex);
         }
     }
+
+    private Method getMethod(Class<?> implClass, Signature signature) throws NoSuchMethodException, ClassNotFoundException {
+        return signature == null ? null : signature.getMethod(implClass);
+    }
+
+    private <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature) throws ClassNotFoundException, NoSuchMethodException {
+        Constructor<T> ctr = signature.getConstructor(implClass);
+        ctr.setAccessible(true);
+        return ctr;
+    }
+
+
 }
