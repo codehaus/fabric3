@@ -52,7 +52,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 
 /**
@@ -140,13 +140,13 @@ public interface IntrospectionHelper {
     boolean isManyValued(TypeMapping typeMapping, Type type);
 
     /**
-     * Returns the attribute type of the given type
+     * Heuristically determines the injection type of the field, method, or constructor parameter associated with the given type.
      *
      * @param type        the type to infer
      * @param typeMapping the type mapping for resolved parameters
      * @return the attribute type
      */
-    InjectableAttributeType inferType(Type type, TypeMapping typeMapping);
+    InjectableType inferType(Type type, TypeMapping typeMapping);
 
     /**
      * Determine if an annotation is present on this interface or any superinterface.

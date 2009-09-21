@@ -53,11 +53,6 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.fabric3.java.model.JavaImplementation;
-import org.fabric3.model.type.component.Property;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
 
@@ -98,14 +93,14 @@ public class JavaDataTypeHeuristic implements HeuristicProcessor<JavaImplementat
 
     public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
 
-        InjectingComponentType componentType = implementation.getComponentType();
-        Map<String, Property> properties = componentType.getProperties();
-        for (Map.Entry<InjectionSite, InjectableAttribute> entry : componentType.getInjectionSites().entrySet()) {
-            InjectionSite site = entry.getKey();
-            InjectableAttribute attribute = entry.getValue();
-            if (InjectableAttributeType.PROPERTY != attribute.getValueType()) {
-                continue;
-            }
+//        InjectingComponentType componentType = implementation.getComponentType();
+//        Map<String, Property> properties = componentType.getProperties();
+//        for (Map.Entry<InjectionSite, Injectable> entry : componentType.getInjectionSites().entrySet()) {
+//            InjectionSite site = entry.getKey();
+//            Injectable attribute = entry.getValue();
+//            if (InjectableType.PROPERTY != attribute.getType()) {
+//                continue;
+//            }
 
 //            Property property = properties.get(attribute.getName());
 //            if (property.getXmlType() != null) {
@@ -113,7 +108,7 @@ public class JavaDataTypeHeuristic implements HeuristicProcessor<JavaImplementat
 //            }
 
 //            property.setXmlType(getXmlType(site.getType()));
-        }
+//        }
     }
 
     QName getXmlType(String className) {

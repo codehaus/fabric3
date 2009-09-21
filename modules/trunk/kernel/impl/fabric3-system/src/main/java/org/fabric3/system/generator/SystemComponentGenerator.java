@@ -41,8 +41,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
@@ -102,7 +102,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         SystemSourceDefinition wireDefinition = new SystemSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
+        wireDefinition.setInjectable(new Injectable(InjectableType.REFERENCE, uri.getFragment()));
         ServiceContract serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
         wireDefinition.setInterfaceName(interfaceName);
@@ -127,8 +127,9 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         SystemSourceDefinition wireDefinition = new SystemSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
-
+        String name = uri.getFragment();
+        Injectable injectable = new Injectable(InjectableType.RESOURCE, name);
+        wireDefinition.setInjectable(injectable);
         return wireDefinition;
     }
 

@@ -51,8 +51,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
@@ -118,7 +118,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             String name = propertyDefinition.getName();
             Document value = propertyDefinition.getValue();
             Element element = value.getDocumentElement();
-            InjectableAttribute source = new InjectableAttribute(InjectableAttributeType.PROPERTY, name);
+            Injectable source = new Injectable(InjectableType.PROPERTY, name);
 
             Type type = provider.getGenericType(source);
             DataType<?> dataType = getDataType(type, typeMapping);

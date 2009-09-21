@@ -56,7 +56,7 @@ import org.osoa.sca.ComponentContext;
 
 import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.spi.AbstractLifecycle;
@@ -77,17 +77,17 @@ import org.fabric3.spi.invocation.WorkContext;
 public class SingletonComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
     private final URI uri;
     private T instance;
-    private Map<Member, InjectableAttribute> sites;
+    private Map<Member, Injectable> sites;
     private InstanceWrapper<T> wrapper;
     private Map<String, PropertyValue> defaultPropertyValues;
-    private Map<ObjectFactory, InjectableAttribute> reinjectionValues;
+    private Map<ObjectFactory, Injectable> reinjectionMappings;
     private URI classLoaderId;
 
-    public SingletonComponent(URI componentId, T instance, Map<InjectionSite, InjectableAttribute> mappings) {
+    public SingletonComponent(URI componentId, T instance, Map<InjectionSite, Injectable> mappings) {
         this.uri = componentId;
         this.instance = instance;
         this.wrapper = new SingletonWrapper<T>(instance);
-        this.reinjectionValues = new HashMap<ObjectFactory, InjectableAttribute>();
+        this.reinjectionMappings = new HashMap<ObjectFactory, Injectable>();
         initializeInjectionSites(instance, mappings);
     }
 
@@ -154,8 +154,8 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
      * @param attribute    the InjectableAttribute describing the site to reinject
      * @param paramFactory the object factory responsible for supplying a value to reinject
      */
-    public void addObjectFactory(InjectableAttribute attribute, ObjectFactory paramFactory) {
-        reinjectionValues.put(paramFactory, attribute);
+    public void addObjectFactory(Injectable attribute, ObjectFactory paramFactory) {
+        reinjectionMappings.put(paramFactory, attribute);
     }
 
     public String toString() {
@@ -168,9 +168,9 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
      * @param instance the instance this component wraps
      * @param mappings the mappings of injection sites
      */
-    private void initializeInjectionSites(T instance, Map<InjectionSite, InjectableAttribute> mappings) {
-        this.sites = new HashMap<Member, InjectableAttribute>();
-        for (Map.Entry<InjectionSite, InjectableAttribute> entry : mappings.entrySet()) {
+    private void initializeInjectionSites(T instance, Map<InjectionSite, Injectable> mappings) {
+        this.sites = new HashMap<Member, Injectable>();
+        for (Map.Entry<InjectionSite, Injectable> entry : mappings.entrySet()) {
             InjectionSite site = entry.getKey();
             if (site instanceof FieldInjectionSite) {
                 try {
@@ -234,14 +234,14 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         }
 
         public void reinject() {
-            for (Map.Entry<ObjectFactory, InjectableAttribute> entry : reinjectionValues.entrySet()) {
+            for (Map.Entry<ObjectFactory, Injectable> entry : reinjectionMappings.entrySet()) {
                 try {
                     inject(entry.getValue(), entry.getKey());
                 } catch (ObjectCreationException e) {
                     throw new AssertionError(e);
                 }
             }
-            reinjectionValues.clear();
+            reinjectionMappings.clear();
         }
 
         /**
@@ -251,8 +251,8 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
          * @param factory   the ObjectFactory that returns the value to inject
          * @throws ObjectCreationException if an error occurs during injection
          */
-        private void inject(InjectableAttribute attribute, ObjectFactory factory) throws ObjectCreationException {
-            for (Map.Entry<Member, InjectableAttribute> entry : sites.entrySet()) {
+        private void inject(Injectable attribute, ObjectFactory factory) throws ObjectCreationException {
+            for (Map.Entry<Member, Injectable> entry : sites.entrySet()) {
                 if (entry.getValue().equals(attribute)) {
                     Member member = entry.getKey();
                     if (member instanceof Field) {

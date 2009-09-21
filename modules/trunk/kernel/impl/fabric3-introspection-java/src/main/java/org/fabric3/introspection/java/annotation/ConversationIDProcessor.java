@@ -50,7 +50,7 @@ import org.osoa.sca.annotations.ConversationID;
 
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
@@ -68,11 +68,11 @@ public class ConversationIDProcessor<I extends Implementation<? extends Injectin
 
     public void visitField(ConversationID annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
         InjectionSite site = new FieldInjectionSite(field);
-        implementation.getComponentType().addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
+        implementation.getComponentType().addInjectionSite(Injectable.CONVERSATION_ID, site);
     }
 
     public void visitMethod(ConversationID annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
         InjectionSite site = new MethodInjectionSite(method, 0);
-        implementation.getComponentType().addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
+        implementation.getComponentType().addInjectionSite(Injectable.CONVERSATION_ID, site);
     }
 }

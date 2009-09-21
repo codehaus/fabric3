@@ -48,7 +48,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -86,9 +86,9 @@ public class SingletonSourceWireAttacher implements SourceWireAttacher<Singleton
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SingletonComponent<?> sourceComponent = (SingletonComponent<?>) manager.getComponent(sourceId);
-        InjectableAttribute attribute = source.getValueSource();
+        Injectable injectable = source.getValueSource();
         // Add the object factory for the target to be reinjected.
-        // The InjectableAttribute identifies the injection site (a field or method) on the singleton instance.
-        sourceComponent.addObjectFactory(attribute, objectFactory);
+        // The Injectable identifies the injection site (a field or method) on the singleton instance.
+        sourceComponent.addObjectFactory(injectable, objectFactory);
     }
 }

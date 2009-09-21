@@ -54,7 +54,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -77,7 +77,7 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
 
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        InjectableAttribute attribute = null;
+        Injectable attribute = null;
         if (type instanceof Class) {
             attribute = getContext((Class) type);
 
@@ -91,7 +91,7 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
 
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        InjectableAttribute attribute = null;
+        Injectable attribute = null;
         if (type instanceof Class) {
             attribute = getContext((Class) type);
 
@@ -101,11 +101,11 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
         }
     }
 
-    InjectableAttribute getContext(Class<?> type) {
+    Injectable getContext(Class<?> type) {
         if (RequestContext.class.isAssignableFrom(type)) {
-            return InjectableAttribute.REQUEST_CONTEXT;
+            return Injectable.REQUEST_CONTEXT;
         } else if (ComponentContext.class.isAssignableFrom(type)) {
-            return InjectableAttribute.COMPONENT_CONTEXT;
+            return Injectable.COMPONENT_CONTEXT;
         } else {
             return null;
         }

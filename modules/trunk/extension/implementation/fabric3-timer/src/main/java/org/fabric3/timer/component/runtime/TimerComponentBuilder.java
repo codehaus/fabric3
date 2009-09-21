@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.component.OASISPojoComponentContext;
@@ -132,20 +132,16 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
                                                             timerService);
 
         PojoRequestContext requestContext = new PojoRequestContext();
-        provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));
+        provider.setObjectFactory(Injectable.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));
         PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
-        provider.setObjectFactory(InjectableAttribute.COMPONENT_CONTEXT, new SingletonObjectFactory<PojoComponentContext>(componentContext));
-        provider.setObjectFactory(InjectableAttribute.CONVERSATION_ID, new ConversationIDObjectFactory());
+        provider.setObjectFactory(Injectable.COMPONENT_CONTEXT, new SingletonObjectFactory<PojoComponentContext>(componentContext));
+        provider.setObjectFactory(Injectable.CONVERSATION_ID, new ConversationIDObjectFactory());
 
         OASISPojoRequestContext oasisRequestContext = new OASISPojoRequestContext();
-        provider.setObjectFactory(InjectableAttribute.OASIS_REQUEST_CONTEXT,
-                                  new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext));
+        provider.setObjectFactory(Injectable.OASIS_REQUEST_CONTEXT, new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext));
         OASISPojoComponentContext oasisComponentContext = new OASISPojoComponentContext(component, oasisRequestContext);
-        provider.setObjectFactory(InjectableAttribute.OASIS_COMPONENT_CONTEXT,
-                                  new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext));
-
+        provider.setObjectFactory(Injectable.OASIS_COMPONENT_CONTEXT, new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext));
         return component;
-
     }
 
 }

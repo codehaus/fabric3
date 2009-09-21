@@ -45,7 +45,7 @@ package org.fabric3.pojo.instancefactory;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.spi.ObjectFactory;
 
 /**
@@ -65,16 +65,16 @@ public interface InstanceFactoryProvider<T> {
      * @param name          the injection site name
      * @param objectFactory the object factory
      */
-    void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory);
+    void setObjectFactory(Injectable name, ObjectFactory<?> objectFactory);
 
     /**
-     * Sets an object factory for an injection site.
+     * Sets an object factory for an injection site that is associated with a key.
      *
-     * @param attribute     the injection site
+     * @param name     the injection site
      * @param objectFactory the object factory
      * @param key           the key for Map-based injection sites
      */
-    void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory, Object key);
+    void setObjectFactory(Injectable name, ObjectFactory<?> objectFactory, Object key);
 
     /**
      * Returns a previously added object factory for the injection site.
@@ -82,14 +82,14 @@ public interface InstanceFactoryProvider<T> {
      * @param attribute the injection site
      * @return the object factory or null
      */
-    ObjectFactory<?> getObjectFactory(InjectableAttribute attribute);
+    ObjectFactory<?> getObjectFactory(Injectable attribute);
 
     /**
      * Removes an object factory for an injection site.
      *
      * @param name the injection site name
      */
-    void removeObjectFactory(InjectableAttribute name);
+    void removeObjectFactory(Injectable name);
 
     /**
      * Returns the type for the injection site
@@ -97,7 +97,7 @@ public interface InstanceFactoryProvider<T> {
      * @param attribute the injection site
      * @return the required type
      */
-    Class<?> getMemberType(InjectableAttribute attribute);
+    Class<?> getMemberType(Injectable attribute);
 
     /**
      * Returns the generic type for the injection site
@@ -105,7 +105,7 @@ public interface InstanceFactoryProvider<T> {
      * @param attribute the injection site
      * @return the required type
      */
-    Type getGenericType(InjectableAttribute attribute);
+    Type getGenericType(Injectable attribute);
 
     /**
      * Create an instance factory that can be used to create component instances.

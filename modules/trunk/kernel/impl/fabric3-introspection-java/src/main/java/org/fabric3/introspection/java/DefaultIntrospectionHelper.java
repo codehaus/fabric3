@@ -71,7 +71,7 @@ import org.oasisopen.sca.annotation.Service;
 import org.osoa.sca.ServiceReference;
 
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
@@ -207,13 +207,13 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         }
     }
 
-    public InjectableAttributeType inferType(Type type, TypeMapping typeMapping) {
+    public InjectableType inferType(Type type, TypeMapping typeMapping) {
         Class<?> baseType = getBaseType(type, typeMapping);
         Class<?> rawType = typeMapping.getRawType(baseType);
 
         // if it's not an interface, it must be a property
         if (!rawType.isInterface()) {
-            return InjectableAttributeType.PROPERTY;
+            return InjectableType.PROPERTY;
         }
 
         // it it's a context interfaces, it must be a context
@@ -221,7 +221,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
                 || org.osoa.sca.ComponentContext.class.isAssignableFrom(rawType)
                 || RequestContext.class.isAssignableFrom(rawType)
                 || org.osoa.sca.RequestContext.class.isAssignableFrom(rawType)) {
-            return InjectableAttributeType.CONTEXT;
+            return InjectableType.CONTEXT;
         }
 
         // if it's Remotable or a local Service, it must be a reference
@@ -229,16 +229,16 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
                 || isAnnotationPresent(rawType, org.osoa.sca.annotations.Remotable.class)
                 || isAnnotationPresent(rawType, Service.class)
                 || isAnnotationPresent(rawType, org.osoa.sca.annotations.Service.class)) {
-            return InjectableAttributeType.REFERENCE;
+            return InjectableType.REFERENCE;
         }
 
         // if it has a Callback anotation, it's a calback
         if (isAnnotationPresent(rawType, Callback.class) || isAnnotationPresent(rawType, org.osoa.sca.annotations.Callback.class)) {
-            return InjectableAttributeType.CALLBACK;
+            return InjectableType.CALLBACK;
         }
 
         // otherwise it's a property
-        return InjectableAttributeType.PROPERTY;
+        return InjectableType.PROPERTY;
     }
 
     public boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType) {

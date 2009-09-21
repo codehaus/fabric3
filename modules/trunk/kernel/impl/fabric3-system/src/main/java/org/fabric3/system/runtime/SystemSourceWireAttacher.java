@@ -48,8 +48,8 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
@@ -99,7 +99,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         URI sourceUri = source.getUri();
         URI sourceName = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> component = (SystemComponent) manager.getComponent(sourceName);
-        InjectableAttribute injectableAttribute = source.getValueSource();
+        Injectable injectable = source.getInjectable();
 
         Class<?> type;
         try {
@@ -108,7 +108,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
             String name = source.getInterfaceName();
             throw new WireAttachException("Unable to load interface class: " + name, sourceUri, null, e);
         }
-        if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
+        if (InjectableType.CALLBACK.equals(injectable.getType())) {
             throw new UnsupportedOperationException("Callbacks are not supported on system components");
         } else {
             String callbackUri = null;
@@ -118,8 +118,8 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
             }
 
             ObjectFactory<?> factory = proxyService.createObjectFactory(type, source.getInteractionType(), wire, callbackUri);
-            Object key = getKey(source, component, target, injectableAttribute);
-            component.setObjectFactory(injectableAttribute, factory, key);
+            Object key = getKey(source, component, target, injectable);
+            component.setObjectFactory(injectable, factory, key);
         }
     }
 
@@ -130,15 +130,15 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
     public void detachObjectFactory(SystemSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         URI sourceName = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> component = (SystemComponent) manager.getComponent(sourceName);
-        InjectableAttribute injectableAttribute = source.getValueSource();
-        component.removeObjectFactory(injectableAttribute);
+        Injectable injectable = source.getInjectable();
+        component.removeObjectFactory(injectable);
     }
 
     public void attachObjectFactory(SystemSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);
-        InjectableAttribute referenceSource = source.getValueSource();
+        Injectable referenceSource = source.getInjectable();
         Object key = getKey(source, sourceComponent, target, referenceSource);
         sourceComponent.setObjectFactory(referenceSource, objectFactory, key);
     }

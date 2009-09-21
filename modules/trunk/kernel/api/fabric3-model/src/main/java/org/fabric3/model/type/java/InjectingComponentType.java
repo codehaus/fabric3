@@ -60,7 +60,7 @@ import org.fabric3.model.type.component.ResourceDefinition;
 public class InjectingComponentType extends ComponentType {
     private static final long serialVersionUID = -2602867276842414240L;
 
-    private final Map<InjectionSite, InjectableAttribute> injectionSites = new HashMap<InjectionSite, InjectableAttribute>();
+    private final Map<InjectionSite, Injectable> injectionSites = new HashMap<InjectionSite, Injectable>();
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
@@ -99,8 +99,8 @@ public class InjectingComponentType extends ComponentType {
      */
     public void add(ReferenceDefinition reference, InjectionSite injectionSite) {
         super.add(reference);
-        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, reference.getName());
-        addInjectionSite(injectableAttribute, injectionSite);
+        Injectable injectable = new Injectable(InjectableType.REFERENCE, reference.getName());
+        addInjectionSite(injectable, injectionSite);
     }
 
     /**
@@ -111,8 +111,8 @@ public class InjectingComponentType extends ComponentType {
      */
     public void add(Property property, InjectionSite injectionSite) {
         super.add(property);
-        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.PROPERTY, property.getName());
-        addInjectionSite(injectableAttribute, injectionSite);
+        Injectable injectable = new Injectable(InjectableType.PROPERTY, property.getName());
+        addInjectionSite(injectable, injectionSite);
     }
 
     /**
@@ -123,8 +123,8 @@ public class InjectingComponentType extends ComponentType {
      */
     public void add(ResourceDefinition resource, InjectionSite injectionSite) {
         super.add(resource);
-        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.RESOURCE, resource.getName());
-        addInjectionSite(injectableAttribute, injectionSite);
+        Injectable injectable = new Injectable(InjectableType.RESOURCE, resource.getName());
+        addInjectionSite(injectable, injectionSite);
     }
 
     /**
@@ -136,8 +136,8 @@ public class InjectingComponentType extends ComponentType {
     public void add(CallbackDefinition definition, InjectionSite injectionSite) {
         String name = definition.getName();
         callbacks.put(name, definition);
-        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.CALLBACK, name);
-        addInjectionSite(injectableAttribute, injectionSite);
+        Injectable injectable = new Injectable(InjectableType.CALLBACK, name);
+        addInjectionSite(injectable, injectionSite);
     }
 
     /**
@@ -155,7 +155,7 @@ public class InjectingComponentType extends ComponentType {
      * @param source the value to be injected
      * @param site   the injection site
      */
-    public void addInjectionSite(InjectableAttribute source, InjectionSite site) {
+    public void addInjectionSite(Injectable source, InjectionSite site) {
         injectionSites.put(site, source);
     }
 
@@ -164,7 +164,7 @@ public class InjectingComponentType extends ComponentType {
      *
      * @return the map of all injection mappings
      */
-    public Map<InjectionSite, InjectableAttribute> getInjectionSites() {
+    public Map<InjectionSite, Injectable> getInjectionSites() {
         return injectionSites;
     }
 

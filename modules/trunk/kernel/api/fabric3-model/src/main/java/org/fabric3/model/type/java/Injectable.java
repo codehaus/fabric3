@@ -50,33 +50,32 @@ import org.fabric3.model.type.ModelObject;
  *
  * @version $Revision$ $Date$
  */
-public class InjectableAttribute extends ModelObject {
+public class Injectable extends ModelObject {
     private static final long serialVersionUID = -3313258224983902890L;
-    public static final InjectableAttribute COMPONENT_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "ComponentContext");
-    public static final InjectableAttribute REQUEST_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "OASISRequestContext");
-    public static final InjectableAttribute CONVERSATION_ID = new InjectableAttribute(InjectableAttributeType.CONTEXT, "ConversationId");
-    public static final InjectableAttribute OASIS_COMPONENT_CONTEXT =
-            new InjectableAttribute(InjectableAttributeType.CONTEXT, "OASISComponentContext");
-    public static final InjectableAttribute OASIS_REQUEST_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "RequestContext");
+    public static final Injectable COMPONENT_CONTEXT = new Injectable(InjectableType.CONTEXT, "ComponentContext");
+    public static final Injectable REQUEST_CONTEXT = new Injectable(InjectableType.CONTEXT, "OASISRequestContext");
+    public static final Injectable CONVERSATION_ID = new Injectable(InjectableType.CONTEXT, "ConversationId");
+    public static final Injectable OASIS_COMPONENT_CONTEXT = new Injectable(InjectableType.CONTEXT, "OASISComponentContext");
+    public static final Injectable OASIS_REQUEST_CONTEXT = new Injectable(InjectableType.CONTEXT, "RequestContext");
 
-    private InjectableAttributeType valueType;
+    private InjectableType type;
 
     private String name;
 
     /**
      * Constructor used for deserialization.
      */
-    public InjectableAttribute() {
+    public Injectable() {
     }
 
     /**
      * Constructor specifying type of value and logical name.
      *
-     * @param valueType the type of value
-     * @param name      the logical name
+     * @param type the type of value
+     * @param name the logical name
      */
-    public InjectableAttribute(InjectableAttributeType valueType, String name) {
-        this.valueType = valueType;
+    public Injectable(InjectableType type, String name) {
+        this.type = type;
         this.name = name;
     }
 
@@ -85,17 +84,17 @@ public class InjectableAttribute extends ModelObject {
      *
      * @return the type of value this source represents
      */
-    public InjectableAttributeType getValueType() {
-        return valueType;
+    public InjectableType getType() {
+        return type;
     }
 
     /**
      * Sets the type (callback, reference, property).
      *
-     * @param valueType the type of value this source represents
+     * @param type the type of value this source represents
      */
-    public void setValueType(InjectableAttributeType valueType) {
-        this.valueType = valueType;
+    public void setType(InjectableType type) {
+        this.type = type;
     }
 
     /**
@@ -117,7 +116,7 @@ public class InjectableAttribute extends ModelObject {
     }
 
     public String toString() {
-        return name + '[' + valueType + ']';
+        return name + '[' + type + ']';
     }
 
     @Override
@@ -125,13 +124,13 @@ public class InjectableAttribute extends ModelObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        InjectableAttribute that = (InjectableAttribute) o;
-        return name.equals(that.name) && valueType == that.valueType;
+        Injectable that = (Injectable) o;
+        return name.equals(that.name) && type == that.type;
 
     }
 
     @Override
     public int hashCode() {
-        return valueType.hashCode() * 31 + name.hashCode();
+        return type.hashCode() * 31 + name.hashCode();
     }
 }

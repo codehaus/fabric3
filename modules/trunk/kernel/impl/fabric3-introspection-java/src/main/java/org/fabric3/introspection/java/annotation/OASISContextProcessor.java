@@ -54,7 +54,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
@@ -91,9 +91,9 @@ public class OASISContextProcessor<I extends Implementation<? extends InjectingC
         if (!(type instanceof Class)) {
             context.addError(new InvalidContextType("Context type " + type + " is not supported in " + clazz.getName()));
         } else if (RequestContext.class.isAssignableFrom((Class<?>) type)) {
-            implementation.getComponentType().addInjectionSite(InjectableAttribute.OASIS_REQUEST_CONTEXT, site);
+            implementation.getComponentType().addInjectionSite(Injectable.OASIS_REQUEST_CONTEXT, site);
         } else if (ComponentContext.class.isAssignableFrom((Class<?>) type)) {
-            implementation.getComponentType().addInjectionSite(InjectableAttribute.OASIS_COMPONENT_CONTEXT, site);
+            implementation.getComponentType().addInjectionSite(Injectable.OASIS_COMPONENT_CONTEXT, site);
         } else {
             context.addError(new InvalidContextType("Context type is not supported: " + type));
         }

@@ -54,8 +54,8 @@ import junit.framework.TestCase;
 
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.java.Signature;
@@ -81,7 +81,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
      */
     public void testCdiSource() throws Exception {
         InstanceFactoryProvider provider = builder.build(definition, cl);
-        assertEquals(String.class, provider.getMemberType(new InjectableAttribute(InjectableAttributeType.PROPERTY, "a")));
+        assertEquals(String.class, provider.getMemberType(new Injectable(InjectableType.PROPERTY, "a")));
     }
 
     /**
@@ -90,13 +90,13 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
      * @throws Exception
      */
     public void testProtectedFieldInjectionSource() throws Exception {
-        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, "xyz");
+        Injectable injectable = new Injectable(InjectableType.REFERENCE, "xyz");
         Field field = Foo.class.getDeclaredField("xyz");
         InjectionSite injectionSite = new FieldInjectionSite(field);
-        definition.getPostConstruction().put(injectionSite, injectableAttribute);
+        definition.getPostConstruction().put(injectionSite, injectable);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
-        Class<?> clazz = provider.getMemberType(injectableAttribute);
+        Class<?> clazz = provider.getMemberType(injectable);
         assertEquals(Bar.class, clazz);
     }
 
@@ -106,13 +106,13 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
      * @throws Exception
      */
     public void testMethodInjectionSource() throws Exception {
-        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, "abc");
+        Injectable injectable = new Injectable(InjectableType.REFERENCE, "abc");
         Method method = Foo.class.getMethod("setAbc", Bar.class);
         InjectionSite injectionSite = new MethodInjectionSite(method, 0);
-        definition.getPostConstruction().put(injectionSite, injectableAttribute);
+        definition.getPostConstruction().put(injectionSite, injectable);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
-        Class<?> clazz = provider.getMemberType(injectableAttribute);
+        Class<?> clazz = provider.getMemberType(injectable);
         assertEquals(Bar.class, clazz);
     }
 
@@ -127,9 +127,9 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.setConstructor(new Signature(constructor));
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
-        Map<InjectionSite, InjectableAttribute> construction = definition.getConstruction();
-        construction.put(new ConstructorInjectionSite(constructor, 0), new InjectableAttribute(InjectableAttributeType.PROPERTY, "a"));
-        construction.put(new ConstructorInjectionSite(constructor, 1), new InjectableAttribute(InjectableAttributeType.REFERENCE, "b"));
+        Map<InjectionSite, Injectable> construction = definition.getConstruction();
+        construction.put(new ConstructorInjectionSite(constructor, 0), new Injectable(InjectableType.PROPERTY, "a"));
+        construction.put(new ConstructorInjectionSite(constructor, 1), new Injectable(InjectableType.REFERENCE, "b"));
     }
 
     public static class Foo {

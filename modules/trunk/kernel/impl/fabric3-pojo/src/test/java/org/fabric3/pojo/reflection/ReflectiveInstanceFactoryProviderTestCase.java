@@ -57,8 +57,8 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
@@ -75,8 +75,8 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     private Constructor<Foo> argConstructor;
-    private List<InjectableAttribute> ctrNames;
-    private Map<InjectionSite, InjectableAttribute> sites;
+    private List<Injectable> ctrNames;
+    private Map<InjectionSite, Injectable> sites;
     private ObjectFactory intFactory;
     private ObjectFactory stringFactory;
     private ReflectiveInstanceFactoryProvider<Foo> provider;
@@ -84,11 +84,11 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     private Field stringField;
     private Method intSetter;
     private Method stringSetter;
-    private InjectableAttribute intProperty = new InjectableAttribute(InjectableAttributeType.PROPERTY, "int");
-    private InjectableAttribute stringProperty = new InjectableAttribute(InjectableAttributeType.PROPERTY, "string");
+    private Injectable intProperty = new Injectable(InjectableType.PROPERTY, "int");
+    private Injectable stringProperty = new Injectable(InjectableType.PROPERTY, "string");
 
     public void testNoConstructorArgs() {
-        List<InjectableAttribute> sources = Collections.emptyList();
+        List<Injectable> sources = Collections.emptyList();
         ObjectFactory<?>[] args = provider.getConstructorParameterFactories(sources);
         assertEquals(0, args.length);
     }
@@ -169,8 +169,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
         stringField = Foo.class.getField("stringField");
         intSetter = Foo.class.getMethod("setIntField", int.class);
         stringSetter = Foo.class.getMethod("setStringField", String.class);
-        ctrNames = new ArrayList<InjectableAttribute>();
-        sites = new HashMap<InjectionSite, InjectableAttribute>();
+        ctrNames = new ArrayList<Injectable>();
+        sites = new HashMap<InjectionSite, Injectable>();
         provider = new ReflectiveInstanceFactoryProvider<Foo>(noArgConstructor,
                                                               ctrNames,
                                                               sites,

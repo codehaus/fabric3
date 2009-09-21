@@ -53,9 +53,9 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -162,8 +162,8 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
             mapping = new HashMap<String, InjectionSite>();
             mappings.put(definition.getName(), mapping);
         }
-        for (Map.Entry<String, Map<InjectionSite, InjectableAttribute>> entry : type.getInjectionSites().entrySet()) {
-            for (Map.Entry<InjectionSite, InjectableAttribute> siteMap : entry.getValue().entrySet()) {
+        for (Map.Entry<String, Map<InjectionSite, Injectable>> entry : type.getInjectionSites().entrySet()) {
+            for (Map.Entry<InjectionSite, Injectable> siteMap : entry.getValue().entrySet()) {
                 if (siteMap.getValue().getName().equals(definition.getName())) {
                     mapping.put(entry.getKey(), siteMap.getKey());
                 }
@@ -198,14 +198,13 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         Map<String, InjectionSite> oasisMapping = mappings.get(OASIS_CONTEXT_ATTRIBUTE);
         if (oasisMapping == null) {
             oasisMapping = new HashMap<String, InjectionSite>();
-            WebContextInjectionSite site =
-                    new WebContextInjectionSite(ComponentContext.class.getName(), SESSION_CONTEXT);
+            WebContextInjectionSite site = new WebContextInjectionSite(ComponentContext.class.getName(), SESSION_CONTEXT);
             oasisMapping.put(SESSION_CONTEXT_SITE, site);
             mappings.put(OASIS_CONTEXT_ATTRIBUTE, oasisMapping);
         }
-        for (Map.Entry<String, Map<InjectionSite, InjectableAttribute>> entry : type.getInjectionSites().entrySet()) {
-            for (Map.Entry<InjectionSite, InjectableAttribute> siteMap : entry.getValue().entrySet()) {
-                if (siteMap.getValue().equals(InjectableAttribute.OASIS_COMPONENT_CONTEXT)) {
+        for (Map.Entry<String, Map<InjectionSite, Injectable>> entry : type.getInjectionSites().entrySet()) {
+            for (Map.Entry<InjectionSite, Injectable> siteMap : entry.getValue().entrySet()) {
+                if (siteMap.getValue().equals(Injectable.OASIS_COMPONENT_CONTEXT)) {
                     oasisMapping.put(entry.getKey(), siteMap.getKey());
                 }
             }
@@ -215,14 +214,13 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         Map<String, InjectionSite> mapping = mappings.get(CONTEXT_ATTRIBUTE);
         if (mapping == null) {
             mapping = new HashMap<String, InjectionSite>();
-            WebContextInjectionSite site =
-                    new WebContextInjectionSite(ComponentContext.class.getName(), SESSION_CONTEXT);
+            WebContextInjectionSite site = new WebContextInjectionSite(ComponentContext.class.getName(), SESSION_CONTEXT);
             mapping.put(SESSION_CONTEXT_SITE, site);
             mappings.put(CONTEXT_ATTRIBUTE, mapping);
         }
-        for (Map.Entry<String, Map<InjectionSite, InjectableAttribute>> entry : type.getInjectionSites().entrySet()) {
-            for (Map.Entry<InjectionSite, InjectableAttribute> siteMap : entry.getValue().entrySet()) {
-                if (siteMap.getValue().equals(InjectableAttribute.COMPONENT_CONTEXT)) {
+        for (Map.Entry<String, Map<InjectionSite, Injectable>> entry : type.getInjectionSites().entrySet()) {
+            for (Map.Entry<InjectionSite, Injectable> siteMap : entry.getValue().entrySet()) {
+                if (siteMap.getValue().equals(Injectable.COMPONENT_CONTEXT)) {
                     mapping.put(entry.getKey(), siteMap.getKey());
                 }
             }
@@ -234,7 +232,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
     private void processPropertyValues(LogicalComponent<?> component, WebComponentDefinition physical) {
         for (Map.Entry<String, Document> entry : component.getPropertyValues().entrySet()) {
             String name = entry.getKey();
-            Document document  = entry.getValue();
+            Document document = entry.getValue();
             if (document != null) {
                 PhysicalPropertyDefinition definition = new PhysicalPropertyDefinition(name, document);
                 physical.setPropertyDefinition(definition);

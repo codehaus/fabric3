@@ -46,7 +46,7 @@ package org.fabric3.pojo.reflection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.Injector;
@@ -67,7 +67,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private boolean started;
-    private final InjectableAttribute[] attributes;
+    private final Injectable[] attributes;
     private final Injector<T>[] injectors;
     private final Set<Injector<T>> updatedInjectors;
 
@@ -76,7 +76,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
                                      ClassLoader cl,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
-                                     InjectableAttribute[] attributes,
+                                     Injectable[] attributes,
                                      Injector<T>[] injectors) {
         this.instance = instance;
         this.reinjectable = reinjectable;
@@ -163,7 +163,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
             throw new IllegalStateException("Implementation is not reinjectable");
         }
         for (int i = 0; i < attributes.length; i++) {
-            InjectableAttribute attribute = attributes[i];
+            Injectable attribute = attributes[i];
             if (attribute.getName().equals(referenceName)) {
                 Injector<T> injector = injectors[i];
                 injector.setObjectFactory(factory, key);
@@ -179,7 +179,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
             throw new IllegalStateException("Implementation is not reinjectable");
         }
         for (int i = 0; i < attributes.length; i++) {
-            InjectableAttribute attribute = attributes[i];
+            Injectable attribute = attributes[i];
             if (attribute.getName().equals(referenceName)) {
                 Injector<T> injector = injectors[i];
                 injector.clearObjectFactory();

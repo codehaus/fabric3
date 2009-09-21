@@ -48,10 +48,10 @@ import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
-import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -77,8 +77,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<JUnitImplementation> component)
-            throws GenerationException {
+    public PhysicalComponentDefinition generate(LogicalComponent<JUnitImplementation> component) throws GenerationException {
 
         ComponentDefinition<JUnitImplementation> definition = component.getDefinition();
         JUnitImplementation implementation = definition.getImplementation();
@@ -110,7 +109,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
         JavaSourceDefinition wireDefinition = new JavaSourceDefinition();
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
+        wireDefinition.setInjectable(new Injectable(InjectableType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
         if (serviceContract.isConversational()) {
             wireDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
@@ -136,7 +135,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
         JavaSourceDefinition wireDefinition = new JavaSourceDefinition();
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
+        wireDefinition.setInjectable(new Injectable(InjectableType.RESOURCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
         return wireDefinition;
     }

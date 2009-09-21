@@ -37,32 +37,32 @@
 */
 package org.fabric3.system.singleton;
 
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
 
 /**
  * @version $Rev$ $Date$
  */
 public class SingletonSourceDefinition extends PhysicalSourceDefinition {
     private static final long serialVersionUID = -8954551053778417834L;
-    private InjectableAttribute injectableAttribute;
+    private Injectable injectable;
 
     /**
      * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
      *
      * @return the value source for this wire
      */
-    public InjectableAttribute getValueSource() {
-        return injectableAttribute;
+    public Injectable getValueSource() {
+        return injectable;
     }
 
     /**
-     * Sets the value source for this wire.
+     * Sets the Injectable associated with this wire.
      *
-     * @param injectableAttribute the value source for this wire
+     * @param injectable the Injectable source associated with this wire
      */
-    public void setValueSource(InjectableAttribute injectableAttribute) {
-        this.injectableAttribute = injectableAttribute;
+    public void setInjectable(Injectable injectable) {
+        this.injectable = injectable;
     }
 
 

@@ -54,7 +54,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
@@ -90,11 +90,11 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
             Class<T> implClass = (Class<T>) helper.loadClass(cl, ifpd.getImplementationClass());
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
 
-            Map<InjectionSite, InjectableAttribute> injectionSites = ifpd.getConstruction();
-            InjectableAttribute[] cdiSources = new InjectableAttribute[ctr.getParameterTypes().length];
-            for (Map.Entry<InjectionSite, InjectableAttribute> entry : injectionSites.entrySet()) {
+            Map<InjectionSite, Injectable> injectionSites = ifpd.getConstruction();
+            Injectable[] cdiSources = new Injectable[ctr.getParameterTypes().length];
+            for (Map.Entry<InjectionSite, Injectable> entry : injectionSites.entrySet()) {
                 InjectionSite site = entry.getKey();
-                InjectableAttribute attribute = entry.getValue();
+                Injectable attribute = entry.getValue();
                 ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) site;
                 cdiSources[constructorSite.getParam()] = attribute;
             }
@@ -108,8 +108,8 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
             Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
 
-            Map<InjectionSite, InjectableAttribute> postConstruction = ifpd.getPostConstruction();
-            List<InjectableAttribute> list = Arrays.asList(cdiSources);
+            Map<InjectionSite, Injectable> postConstruction = ifpd.getPostConstruction();
+            List<Injectable> list = Arrays.asList(cdiSources);
             boolean reinjectable = ifpd.isReinjectable();
 
             return new ReflectiveInstanceFactoryProvider<T>(ctr, list, postConstruction, initMethod, destroyMethod, reinjectable, cl);

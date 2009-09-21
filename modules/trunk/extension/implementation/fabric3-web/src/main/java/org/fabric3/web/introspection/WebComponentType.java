@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fabric3.model.type.component.ComponentType;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectionSite;
 
 /**
@@ -51,7 +51,7 @@ import org.fabric3.model.type.java.InjectionSite;
  */
 public class WebComponentType extends ComponentType {
     private static final long serialVersionUID = 9213093177241637932L;
-    private final Map<String, Map<InjectionSite, InjectableAttribute>> sites = new HashMap<String, Map<InjectionSite, InjectableAttribute>>();
+    private final Map<String, Map<InjectionSite, Injectable>> sites = new HashMap<String, Map<InjectionSite, Injectable>>();
 
     /**
      * Returns a mapping from artifact id (e.g. servlet or filter class name, servlet context, session context) to injection site/injectable attribute
@@ -59,7 +59,7 @@ public class WebComponentType extends ComponentType {
      *
      * @return the mapping
      */
-    public Map<String, Map<InjectionSite, InjectableAttribute>> getInjectionSites() {
+    public Map<String, Map<InjectionSite, Injectable>> getInjectionSites() {
         return sites;
     }
 
@@ -70,10 +70,10 @@ public class WebComponentType extends ComponentType {
      * @param site       the injeciton site
      * @param attribute  the injectable attribute
      */
-    public void addMapping(String artifactId, InjectionSite site, InjectableAttribute attribute) {
-        Map<InjectionSite, InjectableAttribute> mapping = sites.get(artifactId);
+    public void addMapping(String artifactId, InjectionSite site, Injectable attribute) {
+        Map<InjectionSite, Injectable> mapping = sites.get(artifactId);
         if (mapping == null) {
-            mapping = new HashMap<InjectionSite, InjectableAttribute>();
+            mapping = new HashMap<InjectionSite, Injectable>();
             sites.put(artifactId, mapping);
         }
         mapping.put(site, attribute);

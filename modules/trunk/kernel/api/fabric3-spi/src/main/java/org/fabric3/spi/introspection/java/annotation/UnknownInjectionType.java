@@ -40,7 +40,7 @@ package org.fabric3.spi.introspection.java.annotation;
 import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
 
@@ -51,10 +51,10 @@ import org.fabric3.model.type.java.MethodInjectionSite;
  */
 public class UnknownInjectionType extends ValidationFailure {
     private InjectionSite site;
-    private InjectableAttributeType type;
+    private InjectableType type;
     private String clazz;
 
-    public UnknownInjectionType(InjectionSite site, InjectableAttributeType type, String clazz) {
+    public UnknownInjectionType(InjectionSite site, InjectableType type, String clazz) {
         super();
         this.site = site;
         this.type = type;

@@ -47,8 +47,8 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -76,7 +76,7 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
         URI uri = reference.getUri();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
+        wireDefinition.setInjectable(new Injectable(InjectableType.REFERENCE, uri.getFragment()));
 
         return wireDefinition;
     }
@@ -94,7 +94,7 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
         URI uri = resource.getUri();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
+        wireDefinition.setInjectable(new Injectable(InjectableType.RESOURCE, uri.getFragment()));
         return wireDefinition;
     }
 

@@ -51,8 +51,8 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
@@ -95,7 +95,7 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
 
     void evaluateConstructor(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, Injectable> sites = componentType.getInjectionSites();
         Constructor<?> constructor;
         try {
             constructor = componentType.getConstructor().getConstructor(implClass);
@@ -123,7 +123,7 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
 
     void evaluateSetters(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, Injectable> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping(implClass);
         Set<Method> setters = helper.getInjectionMethods(implClass, componentType.getServices().values());
         for (Method setter : setters) {
@@ -142,7 +142,7 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
 
     void evaluateFields(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, Injectable> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping(implClass);
         Set<Field> fields = helper.getInjectionFields(implClass);
         for (Field field : fields) {
@@ -166,7 +166,7 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
                              Type parameterType,
                              InjectionSite site,
                              IntrospectionContext context) {
-        InjectableAttributeType type = helper.inferType(parameterType, typeMapping);
+        InjectableType type = helper.inferType(parameterType, typeMapping);
         switch (type) {
         case PROPERTY:
             addProperty(componentType, typeMapping, name, parameterType, site);
@@ -175,7 +175,9 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
             addReference(componentType, typeMapping, name, parameterType, site, context);
             break;
         default:
-            context.addError(new UnknownInjectionType(site, type, componentType.getImplClass()));
+            String clazz = componentType.getImplClass();
+            UnknownInjectionType error = new UnknownInjectionType(site, type, clazz);
+            context.addError(error);
         }
     }
 

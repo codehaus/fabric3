@@ -51,8 +51,8 @@ import junit.framework.TestCase;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.Signature;
@@ -70,8 +70,8 @@ public class GenerationHelperImplTestCase extends TestCase {
     private ComponentDefinition<MockImplementation> componentDefinition;
     private MockImplementation implementation;
     private InjectingComponentType componentType;
-    private InjectableAttribute intProp;
-    private InjectableAttribute stringProp;
+    private Injectable intProp;
+    private Injectable stringProp;
 
     public void testSimpleConstructor() {
         Signature constructor = new Signature("Test", "int", "String");
@@ -81,7 +81,7 @@ public class GenerationHelperImplTestCase extends TestCase {
         componentType.addInjectionSite(intProp, intSite);
         componentType.addInjectionSite(stringProp, stringSite);
         helper.processInjectionSites(logicalComponent, providerDefinition);
-        Map<InjectionSite, InjectableAttribute> mapping = providerDefinition.getConstruction();
+        Map<InjectionSite, Injectable> mapping = providerDefinition.getConstruction();
         assertEquals(intProp, mapping.get(intSite));
         assertEquals(stringProp, mapping.get(stringSite));
         assertTrue(providerDefinition.getPostConstruction().isEmpty());
@@ -98,8 +98,8 @@ public class GenerationHelperImplTestCase extends TestCase {
         logicalComponent = new LogicalComponent<MockImplementation>(null, componentDefinition, null);
         providerDefinition = new InstanceFactoryDefinition();
 
-        intProp = new InjectableAttribute(InjectableAttributeType.PROPERTY, "intProp");
-        stringProp = new InjectableAttribute(InjectableAttributeType.PROPERTY, "stringProp");
+        intProp = new Injectable(InjectableType.PROPERTY, "intProp");
+        stringProp = new Injectable(InjectableType.PROPERTY, "stringProp");
     }
 
     private static class MockImplementation extends Implementation<InjectingComponentType> {

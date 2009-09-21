@@ -47,7 +47,7 @@ import org.w3c.dom.Document;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.Signature;
@@ -78,29 +78,29 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
         Implementation<InjectingComponentType> implementation = component.getDefinition().getImplementation();
         InjectingComponentType type = implementation.getComponentType();
-        Map<InjectionSite, InjectableAttribute> mappings = type.getInjectionSites();
+        Map<InjectionSite, Injectable> mappings = type.getInjectionSites();
 
         // add injections for all the active constructor args
-        Map<InjectionSite, InjectableAttribute> construction = providerDefinition.getConstruction();
+        Map<InjectionSite, Injectable> construction = providerDefinition.getConstruction();
         Signature constructor = type.getConstructor();
-        Set<InjectableAttribute> byConstruction = new HashSet<InjectableAttribute>(constructor.getParameterTypes().size());
+        Set<Injectable> byConstruction = new HashSet<Injectable>(constructor.getParameterTypes().size());
         for (int i = 0; i < constructor.getParameterTypes().size(); i++) {
             InjectionSite site = new ConstructorInjectionSite(constructor, i);
-            InjectableAttribute attribute = mappings.get(site);
+            Injectable attribute = mappings.get(site);
             construction.put(site, attribute);
             byConstruction.add(attribute);
         }
 
         // add field/method injections
-        Map<InjectionSite, InjectableAttribute> postConstruction = providerDefinition.getPostConstruction();
-        Map<InjectionSite, InjectableAttribute> reinjection = providerDefinition.getReinjection();
-        for (Map.Entry<InjectionSite, InjectableAttribute> entry : mappings.entrySet()) {
+        Map<InjectionSite, Injectable> postConstruction = providerDefinition.getPostConstruction();
+        Map<InjectionSite, Injectable> reinjection = providerDefinition.getReinjection();
+        for (Map.Entry<InjectionSite, Injectable> entry : mappings.entrySet()) {
             InjectionSite site = entry.getKey();
             if (site instanceof ConstructorInjectionSite) {
                 continue;
             }
 
-            InjectableAttribute attribute = entry.getValue();
+            Injectable attribute = entry.getValue();
             if (!byConstruction.contains(attribute)) {
                 postConstruction.put(site, attribute);
             }

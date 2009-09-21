@@ -53,8 +53,8 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
@@ -155,7 +155,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
 
     private void evaluateConstructor(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, Injectable> sites = componentType.getInjectionSites();
         Constructor<?> constructor;
         try {
             if (componentType.getConstructor() == null) {
@@ -188,7 +188,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
 
     void evaluateSetters(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, Injectable> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping(implClass);
         Set<Method> setters = helper.getInjectionMethods(implClass, componentType.getServices().values());
         for (Method setter : setters) {
@@ -208,7 +208,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
 
     void evaluateFields(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, Injectable> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping(implClass);
         Set<Field> fields = helper.getInjectionFields(implClass);
         for (Field field : fields) {
@@ -234,7 +234,7 @@ public class JUnitHeuristic implements HeuristicProcessor<JUnitImplementation> {
                              InjectionSite site,
                              Annotation[] annotations,
                              IntrospectionContext context) {
-        InjectableAttributeType type = helper.inferType(parameterType, typeMapping);
+        InjectableType type = helper.inferType(parameterType, typeMapping);
         switch (type) {
         case PROPERTY:
             addProperty(componentType, typeMapping, name, parameterType, site);

@@ -61,9 +61,9 @@ public class InjectionSite extends ModelObject {
     }
 
     /**
-     * Returns the type being injected.
+     * Returns the Java type being injected, i.e. the class name.
      *
-     * @return the name of the type being injected
+     * @return the name of the Java type being injected
      */
     public String getType() {
         return type;

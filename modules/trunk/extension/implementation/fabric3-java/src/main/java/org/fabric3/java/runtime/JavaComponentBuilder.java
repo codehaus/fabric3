@@ -45,7 +45,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.component.OASISPojoComponentContext;
@@ -57,11 +57,11 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.SingletonObjectFactory;
-import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.transform.PullTransformerRegistry;
 
 /**
@@ -113,21 +113,21 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         PojoRequestContext requestContext = new PojoRequestContext();
         SingletonObjectFactory<PojoRequestContext> requestObjectFactory = new SingletonObjectFactory<PojoRequestContext>(requestContext);
-        provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, requestObjectFactory);
+        provider.setObjectFactory(Injectable.REQUEST_CONTEXT, requestObjectFactory);
         PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
         SingletonObjectFactory<PojoComponentContext> componentObjectFactory = new SingletonObjectFactory<PojoComponentContext>(componentContext);
-        provider.setObjectFactory(InjectableAttribute.COMPONENT_CONTEXT, componentObjectFactory);
+        provider.setObjectFactory(Injectable.COMPONENT_CONTEXT, componentObjectFactory);
         ConversationIDObjectFactory conversationIDObjectFactory = new ConversationIDObjectFactory();
-        provider.setObjectFactory(InjectableAttribute.CONVERSATION_ID, conversationIDObjectFactory);
+        provider.setObjectFactory(Injectable.CONVERSATION_ID, conversationIDObjectFactory);
 
         OASISPojoRequestContext oasisRequestContext = new OASISPojoRequestContext();
         SingletonObjectFactory<OASISPojoRequestContext> oasisRequestFactory =
                 new SingletonObjectFactory<OASISPojoRequestContext>(oasisRequestContext);
-        provider.setObjectFactory(InjectableAttribute.OASIS_REQUEST_CONTEXT, oasisRequestFactory);
+        provider.setObjectFactory(Injectable.OASIS_REQUEST_CONTEXT, oasisRequestFactory);
         OASISPojoComponentContext oasisComponentContext = new OASISPojoComponentContext(component, oasisRequestContext);
         SingletonObjectFactory<OASISPojoComponentContext> oasisComponentFactory =
                 new SingletonObjectFactory<OASISPojoComponentContext>(oasisComponentContext);
-        provider.setObjectFactory(InjectableAttribute.OASIS_COMPONENT_CONTEXT, oasisComponentFactory);
+        provider.setObjectFactory(Injectable.OASIS_COMPONENT_CONTEXT, oasisComponentFactory);
 
 
         return component;

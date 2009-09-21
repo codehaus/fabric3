@@ -47,7 +47,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.Signature;
 
@@ -63,9 +63,9 @@ public class InstanceFactoryDefinition implements Serializable {
     private Signature initMethod;
     private Signature destroyMethod;
     private boolean reinjectable;
-    private Map<InjectionSite, InjectableAttribute> construction = new HashMap<InjectionSite, InjectableAttribute>();
-    private Map<InjectionSite, InjectableAttribute> postConstruction = new HashMap<InjectionSite, InjectableAttribute>();
-    private Map<InjectionSite, InjectableAttribute> reinjection = new HashMap<InjectionSite, InjectableAttribute>();
+    private Map<InjectionSite, Injectable> construction = new HashMap<InjectionSite, Injectable>();
+    private Map<InjectionSite, Injectable> postConstruction = new HashMap<InjectionSite, Injectable>();
+    private Map<InjectionSite, Injectable> reinjection = new HashMap<InjectionSite, Injectable>();
 
     /**
      * Returns the signature of the constrctor that should be used.
@@ -144,7 +144,7 @@ public class InstanceFactoryDefinition implements Serializable {
      *
      * @return the map of injections to be performed during construction
      */
-    public Map<InjectionSite, InjectableAttribute> getConstruction() {
+    public Map<InjectionSite, Injectable> getConstruction() {
         return construction;
     }
 
@@ -153,7 +153,7 @@ public class InstanceFactoryDefinition implements Serializable {
      *
      * @return the map of injections to be performed after construction
      */
-    public Map<InjectionSite, InjectableAttribute> getPostConstruction() {
+    public Map<InjectionSite, Injectable> getPostConstruction() {
         return postConstruction;
     }
 
@@ -162,7 +162,7 @@ public class InstanceFactoryDefinition implements Serializable {
      *
      * @return the map of injections to be performed during reinjection
      */
-    public Map<InjectionSite, InjectableAttribute> getReinjection() {
+    public Map<InjectionSite, Injectable> getReinjection() {
         return reinjection;
     }
 
@@ -176,7 +176,7 @@ public class InstanceFactoryDefinition implements Serializable {
     }
 
     /**
-     * sets if the implementation is reinjectable.
+     * Sets if the implementation is reinjectable.
      *
      * @param reinjectable true if the implementation is reinjectable
      */

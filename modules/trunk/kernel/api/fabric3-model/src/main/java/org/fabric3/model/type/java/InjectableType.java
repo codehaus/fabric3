@@ -49,7 +49,7 @@ package org.fabric3.model.type.java;
  * Currently supported types are: <ul> <li>Callbacks</li> <li>References</li> <li>Properties</li> <li>Resources</li> <li>Context (the
  * implementation-specific context)</li> </ul>
  */
-public enum InjectableAttributeType {
+public enum InjectableType {
     CALLBACK,
     REFERENCE,
     PROPERTY,

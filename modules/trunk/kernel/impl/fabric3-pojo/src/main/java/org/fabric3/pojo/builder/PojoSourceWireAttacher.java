@@ -49,7 +49,7 @@ import java.net.URI;
 import java.util.Map;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.provision.PojoSourceDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -80,7 +80,7 @@ public abstract class PojoSourceWireAttacher {
     protected Object getKey(PojoSourceDefinition sourceDefinition,
                             PojoComponent<?> source,
                             PhysicalTargetDefinition targetDefinition,
-                            InjectableAttribute referenceSource) throws PropertyTransformException {
+                            Injectable referenceSource) throws PropertyTransformException {
 
         if (!Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
             return null;

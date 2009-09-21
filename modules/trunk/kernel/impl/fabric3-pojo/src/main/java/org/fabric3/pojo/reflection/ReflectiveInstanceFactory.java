@@ -43,7 +43,7 @@
  */
 package org.fabric3.pojo.reflection;
 
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -57,7 +57,7 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
  */
 public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
     private final ObjectFactory<T> constructor;
-    private InjectableAttribute[] attributes;
+    private Injectable[] injectables;
     private final Injector<T>[] injectors;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
@@ -65,14 +65,14 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
     private final boolean reinjectable;
 
     public ReflectiveInstanceFactory(ObjectFactory<T> constructor,
-                                     InjectableAttribute[] attributes,
+                                     Injectable[] injectables,
                                      Injector<T>[] injectors,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
                                      boolean reinjectable,
                                      ClassLoader cl) {
         this.constructor = constructor;
-        this.attributes = attributes;
+        this.injectables = injectables;
         this.injectors = injectors;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
@@ -92,7 +92,7 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
                     injector.inject(instance);
                 }
             }
-            return new ReflectiveInstanceWrapper<T>(instance, reinjectable, cl, initInvoker, destroyInvoker, attributes, injectors);
+            return new ReflectiveInstanceWrapper<T>(instance, reinjectable, cl, initInvoker, destroyInvoker, injectables, injectors);
         } finally {
             WorkContextTunnel.setThreadWorkContext(oldContext);
             Thread.currentThread().setContextClassLoader(oldCl);

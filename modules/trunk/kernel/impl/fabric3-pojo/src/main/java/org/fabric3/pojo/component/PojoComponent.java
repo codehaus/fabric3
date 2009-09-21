@@ -49,7 +49,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.component.PropertyValue;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.pojo.injection.ComponentObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
@@ -168,7 +168,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
      *                      instances for
      * @param objectFactory the object factory
      */
-    public void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory) {
+    public void setObjectFactory(Injectable attribute, ObjectFactory<?> objectFactory) {
         setObjectFactory(attribute, objectFactory, null);
     }
 
@@ -180,7 +180,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
      * @param objectFactory the object factory
      * @param key           key value for a Map reference
      */
-    public void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory, Object key) {
+    public void setObjectFactory(Injectable attribute, ObjectFactory<?> objectFactory, Object key) {
         scopeContainer.addObjectFactory(this, objectFactory, attribute.getName(), key);
         provider.setObjectFactory(attribute, objectFactory, key);
         // Clear the instance factory as it has changed and will need to be re-created. This can happen if reinjection occurs after the first 
@@ -188,7 +188,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         instanceFactory = null;
     }
 
-    public void removeObjectFactory(InjectableAttribute attribute) {
+    public void removeObjectFactory(Injectable attribute) {
         scopeContainer.removeObjectFactory(this, attribute.getName());
         provider.removeObjectFactory(attribute);
         // Clear the instance factory as it has changed and will need to be re-created. This can happen if reinjection occurs after the first
@@ -196,15 +196,15 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         instanceFactory = null;
     }
 
-    public ObjectFactory<?> getObjectFactory(InjectableAttribute attribute) {
+    public ObjectFactory<?> getObjectFactory(Injectable attribute) {
         return provider.getObjectFactory(attribute);
     }
 
-    public Class<?> getMemberType(InjectableAttribute injectionSite) {
+    public Class<?> getMemberType(Injectable injectionSite) {
         return provider.getMemberType(injectionSite);
     }
 
-    public Type getGenericMemberType(InjectableAttribute injectionSite) {
+    public Type getGenericMemberType(Injectable injectionSite) {
         return provider.getGenericType(injectionSite);
     }
 

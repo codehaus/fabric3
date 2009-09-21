@@ -43,8 +43,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaSourceDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
@@ -83,7 +83,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         JavaComponent<?> source = (JavaComponent) manager.getComponent(sourceName);
-        InjectableAttribute injectableAttribute = sourceDefinition.getValueSource();
+        Injectable injectable = sourceDefinition.getInjectable();
 
         Class<?> type;
         try {
@@ -92,16 +92,16 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
             String name = sourceDefinition.getInterfaceName();
             throw new WireAttachException("Unable to load interface class: " + name, sourceUri, null, e);
         }
-        if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
+        if (InjectableType.CALLBACK.equals(injectable.getType())) {
             URI callbackUri = targetDefinition.getUri();
             ScopeContainer container = source.getScopeContainer();
-            ObjectFactory<?> factory = source.getObjectFactory(injectableAttribute);
+            ObjectFactory<?> factory = source.getObjectFactory(injectable);
             if (factory == null) {
                 factory = proxyService.createCallbackObjectFactory(type, container, callbackUri, wire);
             } else {
                 factory = proxyService.updateCallbackObjectFactory(factory, type, container, callbackUri, wire);
             }
-            source.setObjectFactory(injectableAttribute, factory);
+            source.setObjectFactory(injectable, factory);
         } else {
             String callbackUri = null;
             URI uri = targetDefinition.getCallbackUri();
@@ -110,8 +110,8 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
             }
 
             ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
-            Object key = getKey(sourceDefinition, source, targetDefinition, injectableAttribute);
-            source.setObjectFactory(injectableAttribute, factory, key);
+            Object key = getKey(sourceDefinition, source, targetDefinition, injectable);
+            source.setObjectFactory(injectable, factory, key);
         }
     }
 
@@ -122,17 +122,17 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
     public void detachObjectFactory(JavaSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         URI sourceName = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> component = (JavaComponent) manager.getComponent(sourceName);
-        InjectableAttribute injectableAttribute = source.getValueSource();
-        component.removeObjectFactory(injectableAttribute);
+        Injectable injectable = source.getInjectable();
+        component.removeObjectFactory(injectable);
     }
 
     public void attachObjectFactory(JavaSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);
-        InjectableAttribute injectableAttribute = source.getValueSource();
+        Injectable injectable = source.getInjectable();
 
-        Object key = getKey(source, sourceComponent, target, injectableAttribute);
-        sourceComponent.setObjectFactory(injectableAttribute, objectFactory, key);
+        Object key = getKey(source, sourceComponent, target, injectable);
+        sourceComponent.setObjectFactory(injectable, objectFactory, key);
     }
 }

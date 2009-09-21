@@ -53,8 +53,8 @@ import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.java.InjectableAttribute;
-import org.fabric3.model.type.java.InjectableAttributeType;
+import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
@@ -109,7 +109,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
 
         definition.setUri(uri);
-        definition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
+        definition.setInjectable(new Injectable(InjectableType.REFERENCE, uri.getFragment()));
         definition.setInterfaceName(interfaceName);
         // assume for now that any wire from a Java component can be optimized
         definition.setOptimizable(true);
@@ -137,9 +137,11 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
             throw new CallbackSiteNotFound("Callback injection site not found for type: " + interfaze, interfaze);
         }
 
-        definition.setValueSource(new InjectableAttribute(InjectableAttributeType.CALLBACK, name));
+        Injectable injectable = new Injectable(InjectableType.CALLBACK, name);
+        definition.setInjectable(injectable);
         definition.setInterfaceName(interfaceName);
-        definition.setUri(URI.create(component.getUri().toString() + "#" + name));
+        URI uri = URI.create(component.getUri().toString() + "#" + name);
+        definition.setUri(uri);
         definition.setOptimizable(false);
     }
 
@@ -149,7 +151,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
 
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
+        wireDefinition.setInjectable(new Injectable(InjectableType.RESOURCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
     }
 

@@ -43,7 +43,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.java.InjectableAttribute;
+import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
@@ -135,7 +135,7 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             }
         }
         // apply all injection sites
-        for (Map.Entry<InjectionSite, InjectableAttribute> entry : componentType.getInjectionSites().entrySet()) {
+        for (Map.Entry<InjectionSite, Injectable> entry : componentType.getInjectionSites().entrySet()) {
             webType.addMapping(componentType.getImplClass(), entry.getKey(), entry.getValue());
         }
     }
