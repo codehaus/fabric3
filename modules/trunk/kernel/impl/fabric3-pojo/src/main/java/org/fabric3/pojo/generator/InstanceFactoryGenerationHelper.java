@@ -37,12 +37,9 @@
 */
 package org.fabric3.pojo.generator;
 
-import java.lang.reflect.Method;
-
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -60,14 +57,6 @@ public interface InstanceFactoryGenerationHelper {
      * @return the initialization level
      */
     Integer getInitLevel(ComponentDefinition<?> definition, InjectingComponentType type);
-
-    /**
-     * Returns a signature for the method.
-     *
-     * @param method the method
-     * @return the signature
-     */
-    Signature getSignature(Method method);
 
     /**
      * Computes injectors for the component

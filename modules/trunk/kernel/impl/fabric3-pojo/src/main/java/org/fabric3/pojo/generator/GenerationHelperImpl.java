@@ -37,7 +37,6 @@
 */
 package org.fabric3.pojo.generator;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -67,10 +66,6 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             initLevel = type.getInitLevel();
         }
         return initLevel;
-    }
-
-    public Signature getSignature(Method method) {
-        return method == null ? null : new Signature(method);
     }
 
     public void processInjectionSites(LogicalComponent<? extends Implementation<InjectingComponentType>> component,
