@@ -84,7 +84,8 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
         TypeMapping typeMapping = context.getTypeMapping(implClass);
-        Property property = createDefinition(name, annotation.required(), type, typeMapping);
+        boolean required = annotation.required();
+        Property property = createDefinition(name, required, type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
 
@@ -101,7 +102,8 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         TypeMapping typeMapping = context.getTypeMapping(implClass);
-        Property property = createDefinition(name, annotation.required(), type, typeMapping);
+        boolean required = annotation.required();
+        Property property = createDefinition(name, required, type, typeMapping);
         implementation.getComponentType().add(property, site);
     }
 
@@ -165,7 +167,8 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         Property property = new Property();
         property.setName(name);
         property.setRequired(required);
-        property.setMany(helper.isManyValued(typeMapping, type));
+        boolean manyValued = helper.isManyValued(typeMapping, type);
+        property.setMany(manyValued);
         return property;
     }
 

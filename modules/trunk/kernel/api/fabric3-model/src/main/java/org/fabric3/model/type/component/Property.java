@@ -120,10 +120,20 @@ public class Property extends ModelObject {
         this.required = required;
     }
 
+    /**
+     * Returns the default property value as a DOM.
+     *
+     * @return the default property value
+     */
     public Document getDefaultValue() {
         return defaultValue;
     }
 
+    /**
+     * Sets the default property value.
+     *
+     * @param defaultValue the default property value
+     */
     public void setDefaultValue(Document defaultValue) {
         this.defaultValue = defaultValue;
     }
