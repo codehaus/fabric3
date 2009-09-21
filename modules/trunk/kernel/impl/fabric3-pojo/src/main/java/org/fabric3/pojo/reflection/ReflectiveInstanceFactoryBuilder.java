@@ -75,15 +75,15 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public ReflectiveInstanceFactoryProvider<T> build(InstanceFactoryDefinition ifpd, ClassLoader cl) throws InstanceFactoryBuilderException {
+    @SuppressWarnings("unchecked")
+    public ReflectiveInstanceFactoryProvider<T> build(InstanceFactoryDefinition definition, ClassLoader cl) throws InstanceFactoryBuilderException {
 
         try {
-            String className = ifpd.getImplementationClass();
-            @SuppressWarnings("unchecked")
+            String className = definition.getImplementationClass();
             Class<T> implClass = (Class<T>) classLoaderRegistry.loadClass(cl, className);
-            Constructor<T> ctr = getConstructor(implClass, ifpd.getConstructor());
+            Constructor<T> ctr = getConstructor(implClass, definition.getConstructor());
 
-            Map<InjectionSite, Injectable> injectionSites = ifpd.getConstruction();
+            Map<InjectionSite, Injectable> injectionSites = definition.getConstruction();
             Injectable[] cdiSources = new Injectable[ctr.getParameterTypes().length];
             for (Map.Entry<InjectionSite, Injectable> entry : injectionSites.entrySet()) {
                 InjectionSite site = entry.getKey();
@@ -98,14 +98,14 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
                 }
             }
 
-            Method initMethod = getMethod(implClass, ifpd.getInitMethod());
-            Method destroyMethod = getMethod(implClass, ifpd.getDestroyMethod());
+            Method initMethod = getMethod(implClass, definition.getInitMethod());
+            Method destroyMethod = getMethod(implClass, definition.getDestroyMethod());
 
-            Map<InjectionSite, Injectable> postConstruction = ifpd.getPostConstruction();
-            List<Injectable> list = Arrays.asList(cdiSources);
-            boolean reinjectable = ifpd.isReinjectable();
+            Map<InjectionSite, Injectable> postConstruction = definition.getPostConstruction();
+            List<Injectable> construction = Arrays.asList(cdiSources);
+            boolean reinjectable = definition.isReinjectable();
 
-            return new ReflectiveInstanceFactoryProvider<T>(ctr, list, postConstruction, initMethod, destroyMethod, reinjectable, cl);
+            return new ReflectiveInstanceFactoryProvider<T>(ctr, construction, postConstruction, initMethod, destroyMethod, reinjectable, cl);
         } catch (ClassNotFoundException ex) {
             throw new InstanceFactoryBuilderException(ex);
         } catch (NoSuchMethodException ex) {
