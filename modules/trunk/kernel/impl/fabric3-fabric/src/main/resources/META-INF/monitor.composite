@@ -21,7 +21,7 @@
     </component>
 
     <component name="MonitorWireGenerator" f3-core:key="org.fabric3.fabric.monitor.MonitorResource">
-        <f3-impl:implementation.system class="org.fabric3.fabric.monitor.MonitorWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.monitor.MonitorGenerator"/>
     </component>
 
     <component name="MonitorWireAttacher" f3-core:key="org.fabric3.fabric.monitor.MonitorTargetDefinition">

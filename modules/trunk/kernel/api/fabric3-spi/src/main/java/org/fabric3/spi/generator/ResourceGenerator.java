@@ -35,28 +35,26 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.jpa.control;
+package org.fabric3.spi.generator;
 
-import org.osoa.sca.annotations.EagerInit;
-
-import org.fabric3.jpa.provision.PersistenceUnitTargetDefinition;
-import org.fabric3.jpa.scdl.PersistenceUnitResource;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.ResourceWireGenerator;
+import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.spi.model.instance.LogicalResource;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 
 /**
+ * Wire generator for resources.
+ *
  * @version $Rev$ $Date$
  */
-@EagerInit
-public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerator<PersistenceUnitResource> {
+public interface ResourceGenerator<RD extends ResourceDefinition> {
 
-    public PersistenceUnitTargetDefinition generateWireTarget(LogicalResource<PersistenceUnitResource> logicalResource)
-            throws GenerationException {
-        PersistenceUnitTargetDefinition pwtd = new PersistenceUnitTargetDefinition();
-        pwtd.setOptimizable(true);
-        pwtd.setUnitName(logicalResource.getResourceDefinition().getUnitName());
-        return pwtd;
-    }
+    /**
+     * Generate the target wire definition for logical resource.
+     *
+     * @param logicalResource the resource being wired to
+     * @return Source wire definition.
+     * @throws GenerationException if there was a problem generating the wire
+     */
+    PhysicalTargetDefinition generateWireTarget(LogicalResource<RD> logicalResource) throws GenerationException;
 
 }

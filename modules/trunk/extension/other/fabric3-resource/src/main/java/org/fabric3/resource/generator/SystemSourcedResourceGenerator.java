@@ -35,27 +35,45 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.fabric.monitor;
+package org.fabric3.resource.generator;
+
+import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.resource.model.SystemSourcedResource;
+import org.fabric3.resource.model.SystemSourcedTargetDefinition;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.ResourceWireGenerator;
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.generator.ResourceGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
 
 /**
  * @version $Rev$ $Date$
  */
+@SuppressWarnings("unchecked")
 @EagerInit
-public class MonitorWireGenerator implements ResourceWireGenerator<MonitorResource> {
+public class SystemSourcedResourceGenerator implements ResourceGenerator<SystemSourcedResource> {
 
-    public MonitorTargetDefinition generateWireTarget(LogicalResource<MonitorResource> resource) throws GenerationException {
-        LogicalComponent<?> component = resource.getParent();
-        MonitorTargetDefinition definition = new MonitorTargetDefinition();
-        definition.setMonitorType(resource.getResourceDefinition().getServiceContract().getQualifiedInterfaceName());
-        definition.setUri(component.getUri());
-        definition.setOptimizable(true);
-        return definition;
+    private static final String SYSTEM_URI = "fabric3://runtime/";
+
+    public SystemSourcedTargetDefinition generateWireTarget(LogicalResource<SystemSourcedResource> logicalResource)
+            throws GenerationException {
+
+        SystemSourcedResource resourceDefinition = logicalResource.getResourceDefinition();
+        String mappedName = resourceDefinition.getMappedName();
+
+        if (mappedName == null) {
+            throw new MappedNameNotFoundException();
+        }
+
+        URI targetUri = URI.create(SYSTEM_URI + mappedName);
+
+        SystemSourcedTargetDefinition wtd = new SystemSourcedTargetDefinition();
+        wtd.setOptimizable(true);
+        wtd.setUri(targetUri);
+
+        return wtd;
+
     }
+
 }

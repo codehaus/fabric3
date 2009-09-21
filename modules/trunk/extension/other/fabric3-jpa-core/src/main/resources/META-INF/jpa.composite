@@ -30,12 +30,12 @@ Public License. See the accompanying license file for details.
 
     <!-- Persistence Unit Wire Target Definition Generator -->
     <component name="PersistenceUnitResourceWireGenerator" f3-core:key="org.fabric3.jpa.scdl.PersistenceUnitResource">
-        <f3-impl:implementation.system class="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.control.PersistenceUnitResourceGenerator"/>
     </component>
 
     <!-- Persistence Context Wire Target Definition Generator -->
     <component name="PersistenceContextResourceWireGenerator" f3-core:key="org.fabric3.jpa.scdl.PersistenceContextResource">
-        <f3-impl:implementation.system class="org.fabric3.jpa.control.PersistenceContextResourceWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.control.PersistenceContextResourceGenerator"/>
     </component>
 
     <!-- Persistence Unit Wire Target Attacher -->

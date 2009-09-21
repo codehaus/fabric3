@@ -52,7 +52,7 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
 import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.generator.ResourceWireGenerator;
+import org.fabric3.spi.generator.ResourceGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -88,7 +88,7 @@ public interface GeneratorRegistry {
      * @return the registered resource wire generator
      * @throws GeneratorNotFoundException if no generator is registered for the resource type
      */
-    <T extends ResourceDefinition> ResourceWireGenerator<T> getResourceWireGenerator(Class<T> clazz) throws GeneratorNotFoundException;
+    <T extends ResourceDefinition> ResourceGenerator<T> getResourceWireGenerator(Class<T> clazz) throws GeneratorNotFoundException;
 
     /**
      * Gets the interceptor definition generator for the qualified name.

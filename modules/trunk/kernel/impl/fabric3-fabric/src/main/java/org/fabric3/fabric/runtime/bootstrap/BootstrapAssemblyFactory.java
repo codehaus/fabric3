@@ -119,7 +119,7 @@ import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService
 import org.fabric3.fabric.monitor.MonitorResource;
 import org.fabric3.fabric.monitor.MonitorTargetDefinition;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
-import org.fabric3.fabric.monitor.MonitorWireGenerator;
+import org.fabric3.fabric.monitor.MonitorGenerator;
 import org.fabric3.fabric.policy.NullPolicyAttacher;
 import org.fabric3.fabric.policy.NullPolicyResolver;
 import org.fabric3.host.domain.Domain;
@@ -379,7 +379,7 @@ public class BootstrapAssemblyFactory {
         registry.register(SystemImplementation.class, systemComponentGenerator);
         registry.register(SingletonImplementation.class, singletonComponentGenerator);
         registry.register(JMXBinding.class, new JMXBindingGenerator());
-        registry.register(MonitorResource.class, new MonitorWireGenerator());
+        registry.register(MonitorResource.class, new MonitorGenerator());
         return registry;
     }
 

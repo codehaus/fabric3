@@ -60,7 +60,7 @@ import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
 import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.generator.ResourceWireGenerator;
+import org.fabric3.spi.generator.ResourceGenerator;
 import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -117,7 +117,7 @@ public class WireGeneratorImpl implements WireGenerator {
         PhysicalSourceDefinition sourceDefinition = sourceGenerator.generateResourceWireSource(resource);
         sourceDefinition.setClassLoaderId(component.getDefinition().getContributionUri());
         // Generates the target side of the wire
-        ResourceWireGenerator targetGenerator = getGenerator(resourceDefinition);
+        ResourceGenerator targetGenerator = getGenerator(resourceDefinition);
         PhysicalTargetDefinition targetDefinition = targetGenerator.generateWireTarget(resource);
         targetDefinition.setClassLoaderId(resource.getParent().getDefinition().getContributionUri());
         boolean optimizable = targetDefinition.isOptimizable();
@@ -443,8 +443,8 @@ public class WireGeneratorImpl implements WireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends ResourceDefinition> ResourceWireGenerator<T> getGenerator(T definition) throws GeneratorNotFoundException {
-        return (ResourceWireGenerator<T>) generatorRegistry.getResourceWireGenerator(definition.getClass());
+    private <T extends ResourceDefinition> ResourceGenerator<T> getGenerator(T definition) throws GeneratorNotFoundException {
+        return (ResourceGenerator<T>) generatorRegistry.getResourceWireGenerator(definition.getClass());
     }
 
     @SuppressWarnings("unchecked")

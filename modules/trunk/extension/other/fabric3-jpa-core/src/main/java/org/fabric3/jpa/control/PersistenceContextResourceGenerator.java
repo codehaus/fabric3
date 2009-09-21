@@ -35,45 +35,36 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.resource.generator;
+package org.fabric3.jpa.control;
 
-import java.net.URI;
+import javax.persistence.PersistenceContextType;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.resource.model.SystemSourcedResource;
-import org.fabric3.resource.model.SystemSourcedTargetDefinition;
+import org.fabric3.jpa.provision.PersistenceContextTargetDefinition;
+import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.ResourceWireGenerator;
+import org.fabric3.spi.generator.ResourceGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
 
 /**
  * @version $Rev$ $Date$
  */
-@SuppressWarnings("unchecked")
 @EagerInit
-public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator<SystemSourcedResource> {
+public class PersistenceContextResourceGenerator implements ResourceGenerator<PersistenceContextResource> {
 
-    private static final String SYSTEM_URI = "fabric3://runtime/";
-
-    public SystemSourcedTargetDefinition generateWireTarget(LogicalResource<SystemSourcedResource> logicalResource)
+    public PersistenceContextTargetDefinition generateWireTarget(LogicalResource<PersistenceContextResource> logicalResource)
             throws GenerationException {
-
-        SystemSourcedResource resourceDefinition = logicalResource.getResourceDefinition();
-        String mappedName = resourceDefinition.getMappedName();
-
-        if (mappedName == null) {
-            throw new MappedNameNotFoundException();
-        }
-
-        URI targetUri = URI.create(SYSTEM_URI + mappedName);
-
-        SystemSourcedTargetDefinition wtd = new SystemSourcedTargetDefinition();
-        wtd.setOptimizable(true);
-        wtd.setUri(targetUri);
-
-        return wtd;
-
+        PersistenceContextResource resource = logicalResource.getResourceDefinition();
+        String unitName = resource.getUnitName();
+        boolean multiThreaded = resource.isMultiThreaded();
+        boolean extended = PersistenceContextType.EXTENDED == resource.getType();
+        PersistenceContextTargetDefinition definition = new PersistenceContextTargetDefinition();
+        definition.setUnitName(unitName);
+        definition.setOptimizable(true);
+        definition.setExtended(extended);
+        definition.setMultiThreaded(multiThreaded);
+        return definition;
     }
 
 }

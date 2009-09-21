@@ -30,7 +30,7 @@ Public License. See the accompanying license file for details.
 
     <!-- Wire Target Definition Generator -->
     <component name="SystemSourcedResourceWireGenerator" f3-core:key="org.fabric3.resource.model.SystemSourcedResource">
-        <f3-impl:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceGenerator"/>
     </component>
 
     <!-- Wire Attacher for System Sourced Resources -->

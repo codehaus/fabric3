@@ -35,36 +35,27 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.jpa.control;
-
-import javax.persistence.PersistenceContextType;
+package org.fabric3.fabric.monitor;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.jpa.provision.PersistenceContextTargetDefinition;
-import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.ResourceWireGenerator;
+import org.fabric3.spi.generator.ResourceGenerator;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalResource;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class PersistenceContextResourceWireGenerator implements ResourceWireGenerator<PersistenceContextResource> {
+public class MonitorGenerator implements ResourceGenerator<MonitorResource> {
 
-    public PersistenceContextTargetDefinition generateWireTarget(LogicalResource<PersistenceContextResource> logicalResource)
-            throws GenerationException {
-        PersistenceContextResource resource = logicalResource.getResourceDefinition();
-        String unitName = resource.getUnitName();
-        boolean multiThreaded = resource.isMultiThreaded();
-        boolean extended = PersistenceContextType.EXTENDED == resource.getType();
-        PersistenceContextTargetDefinition definition = new PersistenceContextTargetDefinition();
-        definition.setUnitName(unitName);
+    public MonitorTargetDefinition generateWireTarget(LogicalResource<MonitorResource> resource) throws GenerationException {
+        LogicalComponent<?> component = resource.getParent();
+        MonitorTargetDefinition definition = new MonitorTargetDefinition();
+        definition.setMonitorType(resource.getResourceDefinition().getServiceContract().getQualifiedInterfaceName());
+        definition.setUri(component.getUri());
         definition.setOptimizable(true);
-        definition.setExtended(extended);
-        definition.setMultiThreaded(multiThreaded);
         return definition;
     }
-
 }
