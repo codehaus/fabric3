@@ -61,28 +61,20 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  * @version $Rev$ $Date$
  */
 public class DefaultComponentBuilderRegistry implements ComponentBuilderRegistry {
-
-    // Internal cache
-    private Map<Class<?>,
-            ComponentBuilder<? extends PhysicalComponentDefinition, ? extends Component>> registry =
-            new ConcurrentHashMap<Class<?>,
-                    ComponentBuilder<? extends PhysicalComponentDefinition, ? extends Component>>();
+    private Map<Class<?>, ComponentBuilder> registry = new ConcurrentHashMap<Class<?>, ComponentBuilder>();
 
     @Reference(required = false)
-    public void setRegistry(Map<Class<?>,
-            ComponentBuilder<? extends PhysicalComponentDefinition, ? extends Component>> registry) {
+    public void setRegistry(Map<Class<?>, ComponentBuilder> registry) {
         this.registry = registry;
     }
 
     /**
-     * Registers a physical component builder.
+     * Registers a component builder.
      *
-     * @param <PCD>           Type of the physical component definition.
      * @param definitionClass Class of the physical component definition.
      * @param builder         Builder for the physical component definition.
      */
-    public <PCD extends PhysicalComponentDefinition,
-            C extends Component> void register(Class<?> definitionClass, ComponentBuilder<PCD, C> builder) {
+    public void register(Class<?> definitionClass, ComponentBuilder builder) {
         registry.put(definitionClass, builder);
     }
 
