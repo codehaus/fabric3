@@ -46,7 +46,6 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
-import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
@@ -67,18 +66,15 @@ import org.fabric3.spi.transform.PullTransformerRegistry;
 public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaComponentDefinition, JavaComponent<T>> {
     private ScopeRegistry scopeRegistry;
     private InstanceFactoryBuilderRegistry providerBuilders;
-    private ProxyService proxyService;
 
     public JavaComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                 @Reference PullTransformerRegistry transformerRegistry,
-                                @Reference ProxyService proxyService,
                                 @Reference IntrospectionHelper helper) {
         super(classLoaderRegistry, transformerRegistry, helper);
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
-        this.proxyService = proxyService;
     }
 
     public JavaComponent<T> build(JavaComponentDefinition definition) throws BuilderException {
@@ -102,7 +98,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         long age = definition.getMaxAge();
         boolean eager = definition.isEagerInit();
 
-        JavaComponent<T> component = new JavaComponent<T>(uri, provider, scopeContainer, deployable, eager, idleTime, age, proxyService);
+        JavaComponent<T> component = new JavaComponent<T>(uri, provider, scopeContainer, deployable, eager, idleTime, age);
 
         buildContexts(component, provider);
 

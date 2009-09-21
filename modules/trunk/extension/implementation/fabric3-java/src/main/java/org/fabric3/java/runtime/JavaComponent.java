@@ -40,9 +40,6 @@ package org.fabric3.java.runtime;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.oasisopen.sca.ServiceReference;
-
-import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
@@ -54,7 +51,6 @@ import org.fabric3.spi.component.ScopeContainer;
  * @param <T> the implementation class for the defined component
  */
 public class JavaComponent<T> extends PojoComponent<T> {
-    private final ProxyService proxyService;
 
     /**
      * Constructor for a Java Component.
@@ -66,7 +62,6 @@ public class JavaComponent<T> extends PojoComponent<T> {
      * @param eager                   true if the component should be eagerly initialized
      * @param maxIdleTime             the time after which idle instances of this component can be expired
      * @param maxAge                  the time after which instances of this component can be expired
-     * @param proxyService            the service used to create reference proxies
      */
     public JavaComponent(URI componentId,
                          InstanceFactoryProvider<T> instanceFactoryProvider,
@@ -74,15 +69,9 @@ public class JavaComponent<T> extends PojoComponent<T> {
                          QName deployable,
                          boolean eager,
                          long maxIdleTime,
-                         long maxAge,
-                         ProxyService proxyService) {
+                         long maxAge) {
         super(componentId, instanceFactoryProvider, scopeContainer, deployable, eager, maxIdleTime, maxAge);
-        this.proxyService = proxyService;
     }
 
-    @SuppressWarnings("unchecked")
-    public <B, R extends ServiceReference<B>> R cast(B target) {
-        return (R) proxyService.cast(target);
-    }
 
 }

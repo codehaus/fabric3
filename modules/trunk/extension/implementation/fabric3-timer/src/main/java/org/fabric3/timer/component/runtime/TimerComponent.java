@@ -43,7 +43,6 @@ import java.util.concurrent.ScheduledFuture;
 import javax.xml.namespace.QName;
 
 import org.fabric3.java.runtime.JavaComponent;
-import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.timer.component.provision.TriggerData;
@@ -69,7 +68,6 @@ public class TimerComponent<T> extends JavaComponent<T> {
      * @param eager                   true if the component should be eager initialized
      * @param maxIdleTime             the time after which idle instances of this component can be expired
      * @param maxAge                  the time after which instances of this component can be expired
-     * @param proxyService            the service used to create reference proxies
      * @param data                    timer fire data
      * @param timerService            the timer service
      */
@@ -80,7 +78,6 @@ public class TimerComponent<T> extends JavaComponent<T> {
                           boolean eager,
                           long maxIdleTime,
                           long maxAge,
-                          ProxyService proxyService,
                           TriggerData data,
                           TimerService timerService) {
         super(componentId,
@@ -89,8 +86,8 @@ public class TimerComponent<T> extends JavaComponent<T> {
               deployable,
               eager,
               maxIdleTime,
-              maxAge,
-              proxyService);
+              maxAge
+        );
         this.data = data;
         this.timerService = timerService;
     }

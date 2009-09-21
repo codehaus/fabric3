@@ -45,7 +45,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
-import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
@@ -66,7 +65,6 @@ import org.fabric3.timer.spi.TimerService;
 public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerComponentDefinition, TimerComponent<?>> {
     private ScopeRegistry scopeRegistry;
     private InstanceFactoryBuilderRegistry providerBuilders;
-    private ProxyService proxyService;
     private TimerService nonTrxTimerService;
     private TimerService trxTimerService;
 
@@ -74,14 +72,12 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
                                  @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference PullTransformerRegistry transformerRegistry,
-                                 @Reference ProxyService proxyService,
                                  @Reference(name = "nonTrxTimerService") TimerService nonTrxTimerService,
                                  @Reference(name = "trxTimerService") TimerService trxTimerService,
                                  @Reference IntrospectionHelper helper) {
         super(classLoaderRegistry, transformerRegistry, helper);
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
-        this.proxyService = proxyService;
         this.nonTrxTimerService = nonTrxTimerService;
         this.trxTimerService = trxTimerService;
     }
@@ -119,7 +115,6 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
                                                             eager,
                                                             idleTime,
                                                             maxAge,
-                                                            proxyService,
                                                             data,
                                                             timerService);
 
