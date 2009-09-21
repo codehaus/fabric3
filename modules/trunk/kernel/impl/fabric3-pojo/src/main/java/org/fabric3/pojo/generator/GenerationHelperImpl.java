@@ -57,17 +57,17 @@ import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
 /**
  * @version $Rev$ $Date$
  */
-public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
+public class GenerationHelperImpl implements GenerationHelper {
 
     public void processInjectionSites(LogicalComponent<? extends Implementation<InjectingComponentType>> component,
-                                      InstanceFactoryDefinition providerDefinition) {
+                                      InstanceFactoryDefinition instanceFactoryDefinition) {
 
         Implementation<InjectingComponentType> implementation = component.getDefinition().getImplementation();
         InjectingComponentType type = implementation.getComponentType();
         Map<InjectionSite, Injectable> mappings = type.getInjectionSites();
 
         // add injections for all the active constructor args
-        Map<InjectionSite, Injectable> construction = providerDefinition.getConstruction();
+        Map<InjectionSite, Injectable> construction = instanceFactoryDefinition.getConstruction();
         Signature constructor = type.getConstructor();
         Set<Injectable> byConstruction = new HashSet<Injectable>(constructor.getParameterTypes().size());
         for (int i = 0; i < constructor.getParameterTypes().size(); i++) {
@@ -78,8 +78,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
 
         // add field/method injections
-        Map<InjectionSite, Injectable> postConstruction = providerDefinition.getPostConstruction();
-        Map<InjectionSite, Injectable> reinjection = providerDefinition.getReinjection();
+        Map<InjectionSite, Injectable> postConstruction = instanceFactoryDefinition.getPostConstruction();
+        Map<InjectionSite, Injectable> reinjection = instanceFactoryDefinition.getReinjectables();
         for (Map.Entry<InjectionSite, Injectable> entry : mappings.entrySet()) {
             InjectionSite site = entry.getKey();
             if (site instanceof ConstructorInjectionSite) {

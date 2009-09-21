@@ -60,7 +60,7 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
      *
      * @return Instance factory provider definition.
      */
-    public InstanceFactoryDefinition getProviderDefinition() {
+    public InstanceFactoryDefinition getFactoryDefinition() {
         return providerDefinition;
     }
 

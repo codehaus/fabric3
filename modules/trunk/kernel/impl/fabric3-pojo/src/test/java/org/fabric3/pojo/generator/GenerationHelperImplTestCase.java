@@ -64,7 +64,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  */
 public class GenerationHelperImplTestCase extends TestCase {
 
-    private InstanceFactoryGenerationHelper helper;
+    private GenerationHelper helper;
     private InstanceFactoryDefinition providerDefinition;
     private LogicalComponent<MockImplementation> logicalComponent;
     private ComponentDefinition<MockImplementation> componentDefinition;
@@ -85,7 +85,7 @@ public class GenerationHelperImplTestCase extends TestCase {
         assertEquals(intProp, mapping.get(intSite));
         assertEquals(stringProp, mapping.get(stringSite));
         assertTrue(providerDefinition.getPostConstruction().isEmpty());
-        assertTrue(providerDefinition.getReinjection().isEmpty());
+        assertTrue(providerDefinition.getReinjectables().isEmpty());
     }
 
     protected void setUp() throws Exception {

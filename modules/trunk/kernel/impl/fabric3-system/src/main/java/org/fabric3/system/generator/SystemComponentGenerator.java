@@ -45,7 +45,7 @@ import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.ServiceContract;
-import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
+import org.fabric3.pojo.generator.GenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -68,9 +68,9 @@ import org.fabric3.system.provision.SystemTargetDefinition;
 @EagerInit
 public class SystemComponentGenerator implements ComponentGenerator<LogicalComponent<SystemImplementation>> {
 
-    private final InstanceFactoryGenerationHelper helper;
+    private final GenerationHelper helper;
 
-    public SystemComponentGenerator(@Reference InstanceFactoryGenerationHelper helper) {
+    public SystemComponentGenerator(@Reference GenerationHelper helper) {
         this.helper = helper;
     }
 

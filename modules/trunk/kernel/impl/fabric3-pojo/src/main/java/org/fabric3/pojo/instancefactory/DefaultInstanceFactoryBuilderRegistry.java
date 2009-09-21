@@ -54,34 +54,22 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
  * @version $Revison$ $Date$
  */
 public class DefaultInstanceFactoryBuilderRegistry implements InstanceFactoryBuilderRegistry {
-
-    // Internal cache
     private Map<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
             ? extends InstanceFactoryDefinition>> registry =
             new ConcurrentHashMap<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
                     ? extends InstanceFactoryDefinition>>();
 
-    /**
-     * Builds an instnace factory provider from a definition.
-     *
-     * @param providerDefinition Provider definition.
-     * @param cl                 Clasloader to use.
-     * @return Instance factory provider.
-     */
     @SuppressWarnings("unchecked")
-    public InstanceFactoryProvider build(InstanceFactoryDefinition providerDefinition, ClassLoader cl) throws InstanceFactoryBuilderException {
-        Class<? extends InstanceFactoryDefinition> type = providerDefinition.getClass();
+    public InstanceFactoryProvider build(InstanceFactoryDefinition factoryDefinition, ClassLoader cl) throws InstanceFactoryBuilderException {
+        Class<? extends InstanceFactoryDefinition> type = factoryDefinition.getClass();
         InstanceFactoryBuilder builder = registry.get(type);
         if (builder == null) {
             String id = type.toString();
             throw new NoRegisteredIFBuilderException("No registered builder for: " + id, id);
         }
-        return builder.build(providerDefinition, cl);
+        return builder.build(factoryDefinition, cl);
     }
 
-    /**
-     * Registers the builder.
-     */
     public <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass, InstanceFactoryBuilder<?, IFPD> builder) {
         registry.put(ifpdClass, builder);
     }

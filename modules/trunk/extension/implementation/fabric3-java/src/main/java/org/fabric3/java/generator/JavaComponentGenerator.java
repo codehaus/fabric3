@@ -45,7 +45,7 @@ import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaSourceDefinition;
 import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
-import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
+import org.fabric3.pojo.generator.GenerationHelper;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -64,10 +64,10 @@ import org.fabric3.spi.policy.EffectivePolicy;
  */
 @EagerInit
 public class JavaComponentGenerator implements ComponentGenerator<LogicalComponent<JavaImplementation>> {
-    protected final InstanceFactoryGenerationHelper ifHelper;
+    protected final GenerationHelper ifHelper;
     private JavaGenerationHelper generationHelper;
 
-    public JavaComponentGenerator(@Reference JavaGenerationHelper generationHelper, @Reference InstanceFactoryGenerationHelper ifHelper) {
+    public JavaComponentGenerator(@Reference JavaGenerationHelper generationHelper, @Reference GenerationHelper ifHelper) {
         this.generationHelper = generationHelper;
         this.ifHelper = ifHelper;
     }

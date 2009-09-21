@@ -46,16 +46,16 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 /**
  * @version $Rev$ $Date$
  */
-public interface InstanceFactoryGenerationHelper {
+public interface GenerationHelper {
 
     /**
      * Computes injectors for the component
      *
      * @param component          the component
-     * @param providerDefinition the instance factor definition for creating component implementation instances
+     * @param factoryDefinition the instance factor definition for creating component implementation instances
      */
     void processInjectionSites(LogicalComponent<? extends Implementation<InjectingComponentType>> component,
-                               InstanceFactoryDefinition providerDefinition);
+                               InstanceFactoryDefinition factoryDefinition);
 
     /**
      * Set the actual values of the physical properties.

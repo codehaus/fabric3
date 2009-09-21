@@ -162,7 +162,7 @@ public class InstanceFactoryDefinition implements Serializable {
      *
      * @return the map of injections to be performed during reinjection
      */
-    public Map<InjectionSite, Injectable> getReinjection() {
+    public Map<InjectionSite, Injectable> getReinjectables() {
         return reinjection;
     }
 

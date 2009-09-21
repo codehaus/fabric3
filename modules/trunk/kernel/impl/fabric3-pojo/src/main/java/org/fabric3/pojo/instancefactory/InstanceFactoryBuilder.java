@@ -49,19 +49,19 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
  * Interface for building instance factories.
  *
  * @version $Revision$ $Date$
- * @param <IFP> the type of instance factory provider this implementation builds
- * @param <IFD> the type of definition this implementation builds from
+ * @param <P> the type of instance factory provider this implementation builds
+ * @param <D> the type of definition this implementation builds from
  */
-public interface InstanceFactoryBuilder<IFP extends InstanceFactoryProvider, IFD extends InstanceFactoryDefinition> {
+public interface InstanceFactoryBuilder<P extends InstanceFactoryProvider, D extends InstanceFactoryDefinition> {
 
     /**
      * Builds an instance factory provider from a definition.
      *
-     * @param ifd the definition that describes the provider
-     * @param cl  the classloader to use to load any implementation classes
+     * @param factoryDefinition the definition that describes the provider
+     * @param classLoader       the classloader to use to load any implementation classes
      * @return a provider built from the supplied definition
      * @throws InstanceFactoryBuilderException
      *          if there was a problem with the definition
      */
-    IFP build(IFD ifd, ClassLoader cl) throws InstanceFactoryBuilderException;
+    P build(D factoryDefinition, ClassLoader classLoader) throws InstanceFactoryBuilderException;
 }

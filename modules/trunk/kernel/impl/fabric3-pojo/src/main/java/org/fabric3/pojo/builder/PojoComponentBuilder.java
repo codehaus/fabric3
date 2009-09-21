@@ -156,6 +156,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
 
     }
     
+    @SuppressWarnings({"unchecked"})
     private DataType<?> getDataType(Type type, TypeMapping typeMapping) {
         if (type instanceof Class) {
             // non-generic type

@@ -57,7 +57,7 @@ import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.pojo.generator.InstanceFactoryGenerationHelper;
+import org.fabric3.pojo.generator.GenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -72,9 +72,9 @@ import org.fabric3.spi.policy.EffectivePolicy;
  */
 public class JavaGenerationHelperImpl implements JavaGenerationHelper {
     private static final QName PROPAGATES_CONVERSATION_POLICY = new QName(Namespaces.POLICY, "propagatesConversationPolicy");
-    private final InstanceFactoryGenerationHelper helper;
+    private final GenerationHelper helper;
 
-    public JavaGenerationHelperImpl(@Reference InstanceFactoryGenerationHelper helper) {
+    public JavaGenerationHelperImpl(@Reference GenerationHelper helper) {
         this.helper = helper;
     }
 
@@ -85,20 +85,20 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         String scope = type.getScope();
 
         // create the instance factory definition
-        InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
-        providerDefinition.setReinjectable(Scope.COMPOSITE.getScope().equals(scope));
-        providerDefinition.setConstructor(type.getConstructor());
-        providerDefinition.setInitMethod(type.getInitMethod());
-        providerDefinition.setDestroyMethod(type.getDestroyMethod());
-        providerDefinition.setImplementationClass(implementation.getImplementationClass());
-        helper.processInjectionSites(component, providerDefinition);
+        InstanceFactoryDefinition factoryDefinition = new InstanceFactoryDefinition();
+        factoryDefinition.setReinjectable(Scope.COMPOSITE.getScope().equals(scope));
+        factoryDefinition.setConstructor(type.getConstructor());
+        factoryDefinition.setInitMethod(type.getInitMethod());
+        factoryDefinition.setDestroyMethod(type.getDestroyMethod());
+        factoryDefinition.setImplementationClass(implementation.getImplementationClass());
+        helper.processInjectionSites(component, factoryDefinition);
 
         // create the physical component definition
         definition.setScope(scope);
         definition.setEagerInit(type.isEagerInit());
         definition.setMaxAge(type.getMaxAge());
         definition.setMaxIdleTime(type.getMaxIdleTime());
-        definition.setProviderDefinition(providerDefinition);
+        definition.setProviderDefinition(factoryDefinition);
         helper.processPropertyValues(component, definition);
     }
 

@@ -55,20 +55,20 @@ public interface InstanceFactoryBuilderRegistry {
     /**
      * Registers an instance factory provider builder.
      *
-     * @param ifpdClass Instance factory provider definition class.
-     * @param builder   Instance factory provider builder.
+     * @param clazz   Instance factory provider definition class.
+     * @param builder Instance factory provider builder.
      */
-    <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass, InstanceFactoryBuilder<?, IFPD> builder);
+    <IFPD extends InstanceFactoryDefinition> void register(Class<?> clazz, InstanceFactoryBuilder<?, IFPD> builder);
 
     /**
      * Builds an instance factory provider from a definition.
      *
-     * @param providerDefinition Provider definition.
-     * @param cl                 Clasloader to use.
-     * @param <T>                the type of instance the InstanceFactory creates
+     * @param factoryDefinition Provider definition.
+     * @param cl                Clasloader to use.
+     * @param <T>               the type of instance the InstanceFactory creates
      * @return Instance factory provider.
      * @throws InstanceFactoryBuilderException
      *          if an error occurs building the factory
      */
-    <T> InstanceFactoryProvider<T> build(InstanceFactoryDefinition providerDefinition, ClassLoader cl) throws InstanceFactoryBuilderException;
+    <T> InstanceFactoryProvider<T> build(InstanceFactoryDefinition factoryDefinition, ClassLoader cl) throws InstanceFactoryBuilderException;
 }
