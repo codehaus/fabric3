@@ -68,10 +68,10 @@ import org.fabric3.system.provision.SystemComponentDefinition;
 @EagerInit
 public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemComponentDefinition, SystemComponent<T>> {
     private ScopeRegistry scopeRegistry;
-    private InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder;
+    private InstanceFactoryBuilder<T> factoryBuilder;
 
     public SystemComponentBuilder(@Reference ScopeRegistry scopeRegistry,
-                                  @Reference InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder,
+                                  @Reference InstanceFactoryBuilder<T> factoryBuilder,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
                                   @Reference PullTransformerRegistry transformerRegistry,
                                   @Reference IntrospectionHelper helper) {

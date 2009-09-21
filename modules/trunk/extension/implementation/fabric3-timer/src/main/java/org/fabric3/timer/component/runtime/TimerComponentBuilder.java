@@ -64,12 +64,12 @@ import org.fabric3.timer.spi.TimerService;
 @EagerInit
 public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerComponentDefinition, TimerComponent<?>> {
     private ScopeRegistry scopeRegistry;
-    private InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder;
+    private InstanceFactoryBuilder<T> factoryBuilder;
     private TimerService nonTrxTimerService;
     private TimerService trxTimerService;
 
     public TimerComponentBuilder(@Reference ScopeRegistry scopeRegistry,
-                                 @Reference InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder,
+                                 @Reference InstanceFactoryBuilder<T> factoryBuilder,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference PullTransformerRegistry transformerRegistry,
                                  @Reference(name = "nonTrxTimerService") TimerService nonTrxTimerService,

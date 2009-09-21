@@ -65,10 +65,10 @@ import org.fabric3.spi.transform.PullTransformerRegistry;
 @EagerInit
 public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaComponentDefinition, JavaComponent<T>> {
     private ScopeRegistry scopeRegistry;
-    private InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder;
+    private InstanceFactoryBuilder<T> factoryBuilder;
 
     public JavaComponentBuilder(@Reference ScopeRegistry scopeRegistry,
-                                @Reference InstanceFactoryBuilder<InstanceFactoryProvider<T>> factoryBuilder,
+                                @Reference InstanceFactoryBuilder<T> factoryBuilder,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                 @Reference PullTransformerRegistry transformerRegistry,
                                 @Reference IntrospectionHelper helper) {
