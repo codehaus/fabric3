@@ -46,8 +46,8 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
-import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.annotation.InvalidImplementation;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.InvalidImplementation;
 
 /**
  * @version $Rev$ $Date$

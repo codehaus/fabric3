@@ -47,7 +47,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
-import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 
 /**
  * @version $Rev$ $Date$

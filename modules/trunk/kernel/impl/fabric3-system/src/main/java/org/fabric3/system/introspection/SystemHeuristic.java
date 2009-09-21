@@ -40,7 +40,7 @@ package org.fabric3.system.introspection;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.system.model.SystemImplementation;
 
 /**

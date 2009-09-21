@@ -60,8 +60,8 @@ import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
-import org.fabric3.spi.introspection.java.annotation.UnknownInjectionType;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.UnknownInjectionType;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.system.model.SystemImplementation;
 

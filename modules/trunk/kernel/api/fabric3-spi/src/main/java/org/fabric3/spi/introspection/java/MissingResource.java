@@ -41,20 +41,20 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.spi.introspection.java.annotation;
+package org.fabric3.spi.introspection.java;
 
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * Denotes an invalid implementation.
+ * Denotes a missing resource such as a class file.
  *
  * @version $Rev$ $Date$
  */
-public class InvalidImplementation extends ValidationFailure {
+public class MissingResource extends ValidationFailure {
     private String description;
     private String name;
 
-    public InvalidImplementation(String description, String name) {
+    public MissingResource(String description, String name) {
         super();
         this.description = description;
         this.name = name;

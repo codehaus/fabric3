@@ -54,7 +54,7 @@ import javax.xml.transform.Source;
 
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.annotation.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 
 /**
  * Heuristic that determines the XML type of Java properties.

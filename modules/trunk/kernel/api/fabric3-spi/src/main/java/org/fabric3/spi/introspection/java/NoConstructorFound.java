@@ -35,48 +35,22 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.introspection.java.annotation;
+package org.fabric3.spi.introspection.java;
 
 import org.fabric3.host.contribution.ValidationFailure;
-import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectableType;
-import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
 
 /**
- * Denotes an unknown InjectableAttributeType.
- *
  * @version $Rev$ $Date$
  */
-public class UnknownInjectionType extends ValidationFailure {
-    private InjectionSite site;
-    private InjectableType type;
-    private String clazz;
+public class NoConstructorFound extends ValidationFailure {
+    private Class<?> clazz;
 
-    public UnknownInjectionType(InjectionSite site, InjectableType type, String clazz) {
+    public NoConstructorFound(Class<?> clazz) {
         super();
-        this.site = site;
-        this.type = type;
         this.clazz = clazz;
     }
 
-    public String getImplementationClass() {
-        return clazz;
-    }
-
     public String getMessage() {
-        if (site instanceof FieldInjectionSite) {
-            FieldInjectionSite field = (FieldInjectionSite) site;
-            return "Unknow injection type " + type + " on field " + field.getName() + " in class " + clazz;
-        } else if (site instanceof MethodInjectionSite) {
-            MethodInjectionSite method = (MethodInjectionSite) site;
-            return "Unknow injection type " + type + " on method " + method.getSignature() + " in class " + clazz;
-        } else if (site instanceof ConstructorInjectionSite) {
-            ConstructorInjectionSite ctor = (ConstructorInjectionSite) site;
-            return "Unknow injection type " + type + " on constructor " + ctor.getSignature() + " in class " + clazz;
-        } else {
-            return "Unknow injection type " + type + " found in class " + clazz;
-        }
+        return "The class has multiple constructors, use @Constructor to select one: " + clazz.getName();
     }
 }
