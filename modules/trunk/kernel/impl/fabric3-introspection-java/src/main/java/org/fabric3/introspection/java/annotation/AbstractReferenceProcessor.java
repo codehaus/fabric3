@@ -43,59 +43,63 @@
  */
 package org.fabric3.introspection.java.annotation;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import org.oasisopen.sca.ComponentContext;
-import org.oasisopen.sca.RequestContext;
-import org.oasisopen.sca.annotation.Context;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.Injectable;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
+import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
- * Processes {@link Context} annotations.
+ * Contains functionality common to OASIS and OSOA <code>@Reference</code> annotation processors.
  *
  * @version $Rev$ $Date$
  */
-public class OASISContextProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Context, I> {
-    private final IntrospectionHelper helper;
+public abstract class AbstractReferenceProcessor<A extends Annotation, I extends Implementation<? extends InjectingComponentType>>
+        extends AbstractAnnotationProcessor<A, I> {
+    protected JavaContractProcessor contractProcessor;
+    protected IntrospectionHelper helper;
+    protected PolicyAnnotationProcessor policyProcessor;
 
-    public OASISContextProcessor(@Reference IntrospectionHelper helper) {
-        super(Context.class);
+    public AbstractReferenceProcessor(Class<A> annotation, JavaContractProcessor contractProcessor, IntrospectionHelper helper) {
+        super(annotation);
+        this.contractProcessor = contractProcessor;
         this.helper = helper;
     }
 
-    public void visitField(Context annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
-        Type type = field.getGenericType();
-        FieldInjectionSite site = new FieldInjectionSite(field);
-        visit(type, implementation, site, field.getDeclaringClass(), context);
+    @Reference
+    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
+        this.policyProcessor = processor;
     }
 
-    public void visitMethod(Context annotation, Method method, Class<?> implClass, I implementation, IntrospectionContext context) {
-        Type type = helper.getGenericType(method);
-        MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        visit(type, implementation, site, method.getDeclaringClass(), context);
-    }
-
-    private void visit(Type type, I implementation, InjectionSite site, Class<?> clazz, IntrospectionContext context) {
-        if (!(type instanceof Class)) {
-            context.addError(new InvalidContextType("Context type " + type + " is not supported in " + clazz.getName()));
-        } else if (RequestContext.class.isAssignableFrom((Class<?>) type)) {
-            implementation.getComponentType().addInjectionSite(site, Injectable.OASIS_REQUEST_CONTEXT);
-        } else if (ComponentContext.class.isAssignableFrom((Class<?>) type)) {
-            implementation.getComponentType().addInjectionSite(site, Injectable.OASIS_COMPONENT_CONTEXT);
-        } else {
-            context.addError(new InvalidContextType("Context type is not supported: " + type));
+    @SuppressWarnings({"unchecked"})
+    protected ReferenceDefinition createDefinition(String name,
+                                                   boolean required,
+                                                   Type type,
+                                                   Class<?> implClass,
+                                                   Annotation[] annotations,
+                                                   IntrospectionContext context) {
+        TypeMapping typeMapping = context.getTypeMapping(implClass);
+        Class<?> baseType = helper.getBaseType(type, typeMapping);
+        ServiceContract contract = contractProcessor.introspect(baseType, implClass, context);
+        ReferenceDefinition definition = new ReferenceDefinition(name, contract);
+        helper.processMultiplicity(definition, required, type, typeMapping);
+        if (policyProcessor != null) {
+            for (Annotation annotation : annotations) {
+                policyProcessor.process(annotation, definition, context);
+            }
         }
+        return definition;
     }
+
+
 }

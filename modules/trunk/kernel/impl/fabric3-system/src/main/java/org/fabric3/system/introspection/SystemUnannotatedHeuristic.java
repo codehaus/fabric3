@@ -46,9 +46,9 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.Injectable;
@@ -56,11 +56,11 @@ import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.MultiplicityType;
 import org.fabric3.spi.introspection.java.UnknownInjectionType;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.system.model.SystemImplementation;
@@ -181,9 +181,10 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
         }
     }
 
-    private void addProperty(InjectingComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
+    private void addProperty(InjectingComponentType componentType, TypeMapping typeMapping, String name, Type type, InjectionSite site) {
         Property property = new Property(name);
-        property.setMany(helper.isManyValued(typeMapping, parameterType));
+        MultiplicityType multiplicityType = helper.introspectMultiplicity(type, typeMapping);
+        property.setMany(MultiplicityType.COLLECTION == multiplicityType || MultiplicityType.DICTIONARY == multiplicityType);
         componentType.add(property, site);
     }
 
@@ -195,8 +196,8 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
                               IntrospectionContext context) {
         Class<?> type = helper.getBaseType(parameterType, typeMapping);
         ServiceContract contract = contractProcessor.introspect(type, context);
-        Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
-        ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
+        ReferenceDefinition reference = new ReferenceDefinition(name, contract);
+        helper.processMultiplicity(reference, false, parameterType, typeMapping);
         componentType.add(reference, site);
     }
 }

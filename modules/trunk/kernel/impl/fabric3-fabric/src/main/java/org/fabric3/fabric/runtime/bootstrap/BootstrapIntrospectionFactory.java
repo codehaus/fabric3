@@ -62,7 +62,7 @@ import org.fabric3.introspection.java.annotation.OASISReferenceProcessor;
 import org.fabric3.introspection.java.annotation.PropertyProcessor;
 import org.fabric3.introspection.java.annotation.ReferenceProcessor;
 import org.fabric3.introspection.java.contract.JavaContractProcessorImpl;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.annotation.AnnotationProcessor;
 import org.fabric3.spi.introspection.java.annotation.ClassVisitor;

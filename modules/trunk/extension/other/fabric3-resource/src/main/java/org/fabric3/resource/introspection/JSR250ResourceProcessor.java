@@ -52,7 +52,7 @@ import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;

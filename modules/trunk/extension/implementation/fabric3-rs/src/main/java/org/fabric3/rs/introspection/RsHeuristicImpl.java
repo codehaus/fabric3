@@ -60,7 +60,7 @@ import static org.fabric3.model.type.contract.Operation.NO_CONVERSATION;
 import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 
 /**
  * This would better have been implemented as a custom ImplementationProcessor/Heuristic but then it would have limited reuse of the Java

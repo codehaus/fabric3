@@ -51,7 +51,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.xml.LoaderUtil;

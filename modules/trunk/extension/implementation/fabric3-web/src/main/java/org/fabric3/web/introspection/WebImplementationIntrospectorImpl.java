@@ -48,7 +48,7 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.web.model.WebImplementation;

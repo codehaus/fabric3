@@ -58,8 +58,9 @@ import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.MultiplicityType;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 
 /**
@@ -163,12 +164,12 @@ public class OASISPropertyProcessor<I extends Implementation<? extends Injecting
         implementation.getComponentType().add(property, site);
     }
 
-    Property createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) {
+    private Property createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) {
         Property property = new Property();
         property.setName(name);
         property.setRequired(required);
-        boolean manyValued = helper.isManyValued(typeMapping, type);
-        property.setMany(manyValued);
+        MultiplicityType multiplicityType = helper.introspectMultiplicity(type, typeMapping);
+        property.setMany(MultiplicityType.COLLECTION == multiplicityType || MultiplicityType.DICTIONARY == multiplicityType);
         return property;
     }
 

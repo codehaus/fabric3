@@ -110,7 +110,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
             }
 
             ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
-            Object key = getKey(sourceDefinition, source, targetDefinition, injectable);
+            Object key = getKey(sourceDefinition, targetDefinition);
             source.setObjectFactory(injectable, factory, key);
         }
     }
@@ -132,7 +132,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);
         Injectable injectable = source.getInjectable();
 
-        Object key = getKey(source, sourceComponent, target, injectable);
+        Object key = getKey(source, target);
         sourceComponent.setObjectFactory(injectable, objectFactory, key);
     }
 }

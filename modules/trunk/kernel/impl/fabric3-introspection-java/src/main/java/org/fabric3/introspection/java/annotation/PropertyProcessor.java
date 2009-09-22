@@ -58,7 +58,8 @@ import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.MethodInjectionSite;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.MultiplicityType;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 
@@ -166,7 +167,8 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         Property property = new Property();
         property.setName(name);
         property.setRequired(required);
-        property.setMany(helper.isManyValued(typeMapping, type));
+        MultiplicityType multiplicityType = helper.introspectMultiplicity(type, typeMapping);
+        property.setMany(MultiplicityType.COLLECTION == multiplicityType || MultiplicityType.DICTIONARY == multiplicityType);
         return property;
     }
 

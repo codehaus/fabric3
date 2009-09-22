@@ -99,14 +99,21 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalSourceDefinition generateWireSource(LogicalReference reference, EffectivePolicy policy) throws GenerationException {
         URI uri = reference.getUri();
-        SystemSourceDefinition wireDefinition = new SystemSourceDefinition();
-        wireDefinition.setOptimizable(true);
-        wireDefinition.setUri(uri);
-        wireDefinition.setInjectable(new Injectable(InjectableType.REFERENCE, uri.getFragment()));
+        SystemSourceDefinition definition = new SystemSourceDefinition();
+        definition.setOptimizable(true);
+        definition.setUri(uri);
+        definition.setInjectable(new Injectable(InjectableType.REFERENCE, uri.getFragment()));
         ServiceContract serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        wireDefinition.setInterfaceName(interfaceName);
-        return wireDefinition;
+        definition.setInterfaceName(interfaceName);
+
+        if (reference.getDefinition().isKeyed()){
+            definition.setKeyed(true);
+            String className = reference.getDefinition().getKeyDataType().getPhysical().getName();
+            definition.setKeyClassName(className);
+        }
+        
+        return definition;
     }
 
     public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<SystemImplementation> source,
@@ -116,21 +123,21 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalTargetDefinition generateWireTarget(LogicalService service, EffectivePolicy policy) throws GenerationException {
-        SystemTargetDefinition wireDefinition = new SystemTargetDefinition();
-        wireDefinition.setOptimizable(true);
-        wireDefinition.setUri(service.getUri());
-        return wireDefinition;
+        SystemTargetDefinition definition = new SystemTargetDefinition();
+        definition.setOptimizable(true);
+        definition.setUri(service.getUri());
+        return definition;
     }
 
     public PhysicalSourceDefinition generateResourceWireSource(LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
-        SystemSourceDefinition wireDefinition = new SystemSourceDefinition();
-        wireDefinition.setOptimizable(true);
-        wireDefinition.setUri(uri);
+        SystemSourceDefinition definition = new SystemSourceDefinition();
+        definition.setOptimizable(true);
+        definition.setUri(uri);
         String name = uri.getFragment();
         Injectable injectable = new Injectable(InjectableType.RESOURCE, name);
-        wireDefinition.setInjectable(injectable);
-        return wireDefinition;
+        definition.setInjectable(injectable);
+        return definition;
     }
 
 

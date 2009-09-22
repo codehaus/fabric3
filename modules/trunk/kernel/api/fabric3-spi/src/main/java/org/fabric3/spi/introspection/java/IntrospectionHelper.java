@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.spi.introspection;
+package org.fabric3.spi.introspection.java;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -51,8 +51,11 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Set;
 
+import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectableType;
+import org.fabric3.spi.introspection.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 
 /**
@@ -129,15 +132,25 @@ public interface IntrospectionHelper {
     Type getGenericType(Constructor<?> constructor, int index);
 
     /**
-     * Returns true if the supplied type should be treated as many-valued.
+     * Add multiplicity metadata to the reference definition, including cardinality and if the multiplicity is keyed.
+     *
+     * @param definition  the reference definition
+     * @param required    whether a value must be supplied (implies 1.. multiplicity)
+     * @param type        the multiplicity of a type
+     * @param typeMapping the current introspection type mapping    @return the multiplicity of the type
+     */
+    public void processMultiplicity(ReferenceDefinition definition, boolean required, Type type, TypeMapping typeMapping);
+
+    /**
+     * Introspects the type Returns true if the supplied type should be treated as many-valued.
      * <p/>
      * This is generally true for arrays, Collection or Map types.
      *
-     * @param typeMapping the mapping to use to resolve any formal types
      * @param type        the type to check
+     * @param typeMapping the mapping to use to resolve any formal types
      * @return true if the type should be treated as many-valued
      */
-    boolean isManyValued(TypeMapping typeMapping, Type type);
+    MultiplicityType introspectMultiplicity(Type type, TypeMapping typeMapping);
 
     /**
      * Heuristically determines the injection type of the field, method, or constructor parameter associated with the given type.
@@ -175,7 +188,7 @@ public interface IntrospectionHelper {
      * @param typeMapping the type mapping to use for introspecting the class hierarchy
      * @return the TypeInfo
      */
-    public JavaTypeInfo createTypeInfo(Type type, TypeMapping typeMapping);
+    JavaTypeInfo createTypeInfo(Type type, TypeMapping typeMapping);
 
     /**
      * Returns the base type for the supplied type.

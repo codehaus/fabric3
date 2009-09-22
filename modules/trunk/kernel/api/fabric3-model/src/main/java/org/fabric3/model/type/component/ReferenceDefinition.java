@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fabric3.model.type.AbstractPolicyAware;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.OperationDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
 
@@ -60,6 +61,9 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     private final String name;
     private ServiceContract serviceContract;
     private Multiplicity multiplicity;
+    private boolean keyed;
+    private DataType<?> keyDataType;
+
     private final List<BindingDefinition> bindings = new ArrayList<BindingDefinition>();
     private final List<BindingDefinition> callbackBindings = new ArrayList<BindingDefinition>();
     private final List<OperationDefinition> operations = new ArrayList<OperationDefinition>();
@@ -142,45 +146,92 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     }
 
     /**
-     * @return List of bindings defined against the reference.
+     * Returns the bindings configured on the reference.
+     *
+     * @return the bindings configured on the reference
      */
     public List<BindingDefinition> getBindings() {
         return bindings;
     }
 
     /**
-     * @param binding Binding to be added.
+     * Adds a configured binding.
+     *
+     * @param binding the binding to be added
      */
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
     }
 
     /**
-     * @return List of callback bindings defined against the reference.
+     * Returns the callback bindings configured on the reference
+     *
+     * @return the callback bindings configured on the reference.
      */
     public List<BindingDefinition> getCallbackBindings() {
         return callbackBindings;
     }
 
     /**
-     * @param binding callback binding to be added.
+     * Adds a configured callback binding.
+     *
+     * @param binding callback binding to be added
      */
     public void addCallbackBinding(BindingDefinition binding) {
         this.callbackBindings.add(binding);
     }
 
     /**
-     * @return Get the list of operations defined against the reference.
+     * Returns the operation configurations for the reference.
+     *
+     * @return the operation configurations
      */
     public List<OperationDefinition> getOperations() {
         return operations;
     }
 
     /**
-     * @param operation Operation definition to be added.
+     * Adds a configured operation.
+     *
+     * @param operation the configured operation
      */
     public void addOperation(OperationDefinition operation) {
         operations.add(operation);
     }
 
+    /**
+     * Returns true if the reference is a keyed reference, i.e. is a map-style multiplicity.
+     *
+     * @return true if the reference is a keyed reference
+     */
+    public boolean isKeyed() {
+        return keyed;
+    }
+
+    /**
+     * Sets if if the reference is a keyed reference.
+     *
+     * @param keyed true if the reference is a keyed reference
+     */
+    public void setKeyed(boolean keyed) {
+        this.keyed = keyed;
+    }
+
+    /**
+     * Returns the reference key type.
+     *
+     * @return the reference key type.
+     */
+    public DataType<?> getKeyDataType() {
+        return keyDataType;
+    }
+
+    /**
+     * Sets the reference key type.
+     *
+     * @param keyDataType the reference key type
+     */
+    public void setKeyDataType(DataType<?> keyDataType) {
+        this.keyDataType = keyDataType;
+    }
 }

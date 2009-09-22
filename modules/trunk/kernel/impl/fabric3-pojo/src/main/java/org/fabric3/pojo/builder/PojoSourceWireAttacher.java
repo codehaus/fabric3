@@ -43,14 +43,9 @@
  */
 package org.fabric3.pojo.builder;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.Map;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.provision.PojoSourceDefinition;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
@@ -65,7 +60,6 @@ import org.fabric3.spi.transform.TransformationException;
  * @version $Rev$ $Date$
  */
 public abstract class PojoSourceWireAttacher {
-
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(String.class, XSDSimpleType.STRING);
 
     protected PullTransformerRegistry transformerRegistry;
@@ -74,71 +68,55 @@ public abstract class PojoSourceWireAttacher {
     protected PojoSourceWireAttacher(PullTransformerRegistry transformerRegistry, ClassLoaderRegistry loaderRegistry) {
         this.transformerRegistry = transformerRegistry;
         this.classLoaderRegistry = loaderRegistry;
-   }
+    }
 
     @SuppressWarnings("unchecked")
-    protected Object getKey(PojoSourceDefinition sourceDefinition,
-                            PojoComponent<?> source,
-                            PhysicalTargetDefinition targetDefinition,
-                            Injectable referenceSource) throws PropertyTransformException {
+    protected Object getKey(PojoSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition) throws KeyInstantiationException {
 
-        if (!Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
+        if (!sourceDefinition.isKeyed()) {
             return null;
         }
 
         String value = sourceDefinition.getKey();
 
-        if (value != null) {
-
-            URI targetId = targetDefinition.getClassLoaderId();
-            ClassLoader targetClassLoader = null;
-            if (targetId != null) {
-                targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
-            }
-
-            Type formalType;
-            Type type = source.getGenericMemberType(referenceSource);
-
-            if (type instanceof ParameterizedType) {
-                ParameterizedType genericType = (ParameterizedType) type;
-                formalType = genericType.getActualTypeArguments()[0];
-                if (formalType instanceof ParameterizedType && ((ParameterizedType) formalType).getRawType().equals(Class.class)) {
-                    formalType = ((ParameterizedType) formalType).getRawType();
-                } else if (formalType instanceof Class<?> && Enum.class.isAssignableFrom((Class<?>) formalType)) {
-                    Class<Enum> enumClass = (Class<Enum>) formalType;
-                    return Enum.valueOf(enumClass, value);
-                }
-                if (String.class.equals(formalType)){
-                    return value;
-                }
-            } else {
-                return value;
-            }
-
-            if (!(formalType instanceof Class)) {
-                throw new PropertyTransformException("Unsupported key type:: " + formalType);
-            }
-            DataType<?> targetType = new JavaClass((Class) formalType);
-            return createKey(targetType, value, targetClassLoader);
+        if (value == null) {
+            return null;
         }
+        // The target classloader must be used since the key class may not be visible to the source classloader, for example, when subclasses are
+        // used a keys
+        URI targetId = targetDefinition.getClassLoaderId();
+        ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
 
-        return null;
+        Class<?> keyType;
+        try {
+            keyType = classLoaderRegistry.loadClass(targetClassLoader, sourceDefinition.getKeyClassName());
+        } catch (ClassNotFoundException e) {
+            throw new KeyInstantiationException("Error loading reference key type for: " + sourceDefinition.getUri(), e);
+        }
+        if (String.class.equals(keyType)) {
+            // short-circuit the transformation and return the string
+            return value;
+        } else if (Enum.class.isAssignableFrom(keyType)) {
+            Class<Enum> enumClass = (Class<Enum>) keyType;
+            return Enum.valueOf(enumClass, value);
+        }
+        DataType<?> targetType = new JavaClass(keyType);
+        return createKey(targetType, value, targetClassLoader);
 
     }
 
 
     @SuppressWarnings("unchecked")
-    private Object createKey(DataType<?> targetType, String value, ClassLoader classLoader) throws PropertyTransformException {
-
+    private Object createKey(DataType<?> targetType, String value, ClassLoader classLoader) throws KeyInstantiationException {
         PullTransformer<String, ?> transformer = (PullTransformer<String, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
         if (transformer == null) {
-            throw new PropertyTransformException("No transformer for : " + targetType);
+            throw new KeyInstantiationException("No transformer for : " + targetType);
         }
         try {
             TransformContext context = new TransformContext(SOURCE_TYPE, targetType, classLoader);
             return transformer.transform(value, context);
         } catch (TransformationException e) {
-            throw new PropertyTransformException("Error transformatng property", e);
+            throw new KeyInstantiationException("Error transformatng property", e);
         }
     }
 

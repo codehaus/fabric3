@@ -70,14 +70,19 @@ import org.oasisopen.sca.annotation.Remotable;
 import org.oasisopen.sca.annotation.Service;
 import org.osoa.sca.ServiceReference;
 
+import org.fabric3.model.type.component.Multiplicity;
+import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.java.InjectableType;
-import org.fabric3.model.type.java.Signature;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.java.InjectableType;
+import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
-import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.MultiplicityType;
+import org.fabric3.spi.model.type.java.JavaClass;
+import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 
 /**
@@ -198,12 +203,34 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         }
     }
 
-    public boolean isManyValued(TypeMapping typeMapping, Type type) {
-        if (type instanceof GenericArrayType) {
-            return true;
+    public void processMultiplicity(ReferenceDefinition definition, boolean required, Type type, TypeMapping typeMapping) {
+        MultiplicityType multiplicityType = introspectMultiplicity(type, typeMapping);
+        if (MultiplicityType.COLLECTION == multiplicityType) {
+            Multiplicity multiplicity = required ? Multiplicity.ONE_N : Multiplicity.ZERO_N;
+            definition.setMultiplicity(multiplicity);
+        } else if (MultiplicityType.DICTIONARY == multiplicityType) {
+            Multiplicity multiplicity = required ? Multiplicity.ONE_N : Multiplicity.ZERO_N;
+            definition.setMultiplicity(multiplicity);
+            DataType<?> keyType = getKeyType(type, typeMapping);
+            definition.setKeyed(true);
+            definition.setKeyDataType(keyType);
         } else {
-            Class<?> clazz = typeMapping.getRawType(type);
-            return clazz.isArray() || WRAPPERS.contains(clazz) || Map.class.equals(clazz);
+            Multiplicity multiplicity = required ? Multiplicity.ONE_ONE : Multiplicity.ZERO_ONE;
+            definition.setMultiplicity(multiplicity);
+        }
+    }
+
+    public MultiplicityType introspectMultiplicity(Type type, TypeMapping typeMapping) {
+        if (type instanceof GenericArrayType) {
+            return MultiplicityType.COLLECTION;
+        } else {
+            Class<?> rawType = typeMapping.getRawType(type);
+            if (rawType.isArray() || WRAPPERS.contains(rawType)) {
+                return MultiplicityType.COLLECTION;
+            } else if (Map.class.isAssignableFrom(rawType)) {
+                return MultiplicityType.DICTIONARY;
+            }
+            return MultiplicityType.SINGLE;
         }
     }
 
@@ -424,6 +451,34 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
                 mapping.addMapping(typeVariables[i], arguments[i]);
             }
         }
+    }
+
+    /**
+     * Returns the key type of the given Map type.
+     *
+     * @param type        a type that is a Map
+     * @param typeMapping the type mapping for resolved parameters
+     * @return the key type
+     */
+    @SuppressWarnings({"unchecked"})
+    private DataType<?> getKeyType(Type type, TypeMapping typeMapping) {
+        Type actualType = typeMapping.getActualType(type);
+        if (actualType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) actualType;
+            Type actualKeyType = typeMapping.getActualType(parameterizedType.getActualTypeArguments()[0]);
+            if (actualKeyType instanceof Class) {
+                return new JavaClass((Class) actualKeyType);
+            } else {
+                return new JavaGenericType(createTypeInfo(actualKeyType, typeMapping));
+            }
+
+        } else if (actualType instanceof Map) {
+            // the map is not paramterized
+            return new JavaClass<Object>(Object.class);
+        } else {
+            throw new IllegalArgumentException("Type not a Map: " + type);
+        }
+
     }
 
 }

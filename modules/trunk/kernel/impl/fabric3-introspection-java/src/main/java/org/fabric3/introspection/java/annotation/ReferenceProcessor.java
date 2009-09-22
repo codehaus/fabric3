@@ -53,37 +53,22 @@ import java.lang.reflect.Type;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.FieldInjectionSite;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.MethodInjectionSite;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
-import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ReferenceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Reference, I> {
-    private final JavaContractProcessor contractProcessor;
-    private final IntrospectionHelper helper;
-    private PolicyAnnotationProcessor policyProcessor;
+public class ReferenceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractReferenceProcessor<Reference, I> {
 
     public ReferenceProcessor(@Reference JavaContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
-        super(Reference.class);
-        this.contractProcessor = contractProcessor;
-        this.helper = helper;
-    }
-
-    @Reference
-    public void setPolicyProcessor(PolicyAnnotationProcessor processor) {
-        this.policyProcessor = processor;
+        super(Reference.class, contractProcessor, helper);
     }
 
     public void visitField(Reference annotation, Field field, Class<?> implClass, I implementation, IntrospectionContext context) {
@@ -157,39 +142,4 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         implementation.getComponentType().add(definition, site);
     }
 
-    @SuppressWarnings({"unchecked"})
-    ReferenceDefinition createDefinition(String name,
-                                         boolean required,
-                                         Type type,
-                                         Class<?> implClass,
-                                         Annotation[] annotations,
-                                         IntrospectionContext context) {
-        TypeMapping typeMapping = context.getTypeMapping(implClass);
-        Class<?> baseType = helper.getBaseType(type, typeMapping);
-        ServiceContract contract = contractProcessor.introspect(baseType, implClass, context);
-        Multiplicity multiplicity = multiplicity(required, type, typeMapping);
-        ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
-        if (policyProcessor != null) {
-            for (Annotation annotation : annotations) {
-                policyProcessor.process(annotation, definition, context);
-            }
-        }
-        return definition;
-    }
-
-    /**
-     * Returns the multiplicity of a type based on whether it describes a single value or a collection.
-     *
-     * @param required    whether a value must be supplied (implies 1.. multiplicity)
-     * @param type        the multiplicity of a type
-     * @param typeMapping the current introspection type mapping
-     * @return the multiplicity of the type
-     */
-    Multiplicity multiplicity(boolean required, Type type, TypeMapping typeMapping) {
-        if (helper.isManyValued(typeMapping, type)) {
-            return required ? Multiplicity.ONE_N : Multiplicity.ZERO_N;
-        } else {
-            return required ? Multiplicity.ONE_ONE : Multiplicity.ZERO_ONE;
-        }
-    }
 }

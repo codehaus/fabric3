@@ -53,6 +53,8 @@ public class PojoSourceDefinition extends PhysicalSourceDefinition {
     private static final long serialVersionUID = -7594088400247150995L;
     private String interfaceName;
     private Injectable injectable;
+    private boolean keyed;
+    private String keyClassName;
 
     /**
      * Returns the name of the Java interface for the service contract.
@@ -90,5 +92,39 @@ public class PojoSourceDefinition extends PhysicalSourceDefinition {
         this.injectable = injectable;
     }
 
+    /**
+     * Returns true if the reference is a keyed reference, i.e. is a map-style multiplicity.
+     *
+     * @return true if the reference is a keyed reference
+     */
+    public boolean isKeyed() {
+        return keyed;
+    }
 
+    /**
+     * Sets if if the reference is a keyed reference.
+     *
+     * @param keyed true if the reference is a keyed reference
+     */
+    public void setKeyed(boolean keyed) {
+        this.keyed = keyed;
+    }
+
+    /**
+     * Returns the reference key class name.
+     *
+     * @return the reference key class name.
+     */
+    public String getKeyClassName() {
+        return keyClassName;
+    }
+
+    /**
+     * Sets the reference key class name.
+     *
+     * @param name the reference key class name.
+     */
+    public void setKeyClassName(String name) {
+        this.keyClassName = name;
+    }
 }

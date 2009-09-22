@@ -70,7 +70,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.expression.ExpressionExpander;
 import org.fabric3.spi.expression.ExpressionExpansionException;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
 import org.fabric3.spi.model.type.java.JavaClass;

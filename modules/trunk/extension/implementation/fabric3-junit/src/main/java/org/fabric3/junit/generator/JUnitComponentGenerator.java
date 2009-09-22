@@ -49,6 +49,7 @@ import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
@@ -115,6 +116,13 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
         // assume for now that any wire from a JUnit component can be optimized
         wireDefinition.setOptimizable(true);
+
+        if (reference.getDefinition().isKeyed()){
+            wireDefinition.setKeyed(true);
+            DataType<?> type = reference.getDefinition().getKeyDataType();
+            String className = type.getPhysical().getName();
+            wireDefinition.setKeyClassName(className);
+        }
 
         return wireDefinition;
     }

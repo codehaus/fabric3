@@ -66,7 +66,7 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$

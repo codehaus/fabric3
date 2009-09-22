@@ -43,7 +43,6 @@
  */
 package org.fabric3.pojo.component;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -194,14 +193,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public ObjectFactory<?> getObjectFactory(Injectable attribute) {
         return provider.getObjectFactory(attribute);
-    }
-
-    public Class<?> getMemberType(Injectable injectionSite) {
-        return provider.getMemberType(injectionSite);
-    }
-
-    public Type getGenericMemberType(Injectable injectionSite) {
-        return provider.getGenericType(injectionSite);
     }
 
     public String toString() {

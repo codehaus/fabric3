@@ -53,6 +53,7 @@ import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
@@ -116,6 +117,12 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
 
         boolean conversational = serviceContract.isConversational();
         calculateConversationalPolicy(definition, policy, conversational);
+        if (reference.getDefinition().isKeyed()){
+            definition.setKeyed(true);
+            DataType<?> type = reference.getDefinition().getKeyDataType();
+            String className = type.getPhysical().getName();
+            definition.setKeyClassName(className);
+        }
     }
 
     public void generateCallbackWireSource(JavaSourceDefinition definition, LogicalComponent<? extends JavaImplementation> component,
