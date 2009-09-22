@@ -126,7 +126,7 @@ public class PhysicalTargetDefinition implements Serializable {
      *
      * @return a list of supported physical data types by order of preference
      */
-    public static List<String> getPHYSICAL_DATA_TYPES() {
+    public static List<String> getPhysicalDataTypes() {
         return PHYSICAL_DATA_TYPES;
     }
 
