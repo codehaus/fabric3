@@ -45,10 +45,20 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
+ * Generates to stop component contexts during undeployment.
+ *
  * @version $Rev$ $Date$
  */
 public interface StopContextCommandGenerator {
 
-    Map<String, List<Command>> generate(List<LogicalComponent<?>> component) throws GenerationException;
+    /**
+     * Generate the commands.
+     *
+     * @param components the set of component being deployed
+     * @return return the map of generated commands keyed by deployment zone. The commands are ordered according to their deployable composite and the
+     *         order it is deployed.
+     * @throws GenerationException if a generation exception occurs
+     */
+    Map<String, List<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException;
 
 }

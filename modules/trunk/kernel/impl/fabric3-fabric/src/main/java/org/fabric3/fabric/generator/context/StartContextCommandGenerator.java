@@ -46,10 +46,22 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
+ * Generates commands to start component contexts in a zone.
+ *
  * @version $Rev$ $Date$
  */
 public interface StartContextCommandGenerator {
 
+    /**
+     * Generate the commands.
+     *
+     * @param components  the set of component being deployed
+     * @param map         the current command map
+     * @param incremental true if the deployment is incremental
+     * @return return the map of generated commands keyed by deployment zone. The commands are ordered according to their deployable composite and the
+     *         order it is deployed.
+     * @throws GenerationException if a generation exception occurs
+     */
     Map<String, List<Command>> generate(List<LogicalComponent<?>> components, CommandMap map, boolean incremental)
             throws GenerationException;
 
