@@ -101,7 +101,6 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
 
         }
         // create the logical wires
-        // xcv potentially remove if LogicalWires added to LogicalReference
         LogicalComponent parent = logicalReference.getParent();
         LogicalCompositeComponent grandParent = (LogicalCompositeComponent) parent.getParent();
         Set<LogicalWire> wires = new LinkedHashSet<LogicalWire>();
@@ -182,8 +181,31 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                 return null;
             }
         }
-        validateContracts(reference, targetService, context);
+        validate(reference, targetService, context);
         return targetService;
+    }
+
+    private void validate(LogicalReference reference, LogicalService service, InstantiationContext context) {
+        validateKeyedReference(reference, service, context);
+        validateContracts(reference, service, context);
+    }
+
+    /**
+     * Validates a target key is present for keyed references.
+     *
+     * @param reference the reference
+     * @param service   the service
+     * @param context   the logical context
+     */
+    private void validateKeyedReference(LogicalReference reference, LogicalService service, InstantiationContext context) {
+        if (!reference.getDefinition().isKeyed()) {
+            return;
+        }
+        LogicalComponent<?> parent = service.getParent();
+        if (parent.getDefinition().getKey() == null) {
+            KeyNotFound error = new KeyNotFound(reference.getUri(), parent.getUri(), parent.getDefinition().getContributionUri());
+            context.addError(error);
+        }
     }
 
     /**
