@@ -91,7 +91,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
         providerDefinition.setImplementationClass(implementation.getImplementationClass());
-        helper.processInjectionSites(component, providerDefinition);
+        helper.processInjectionSites(type, providerDefinition);
 
         JavaComponentDefinition physical = new JavaComponentDefinition();
 

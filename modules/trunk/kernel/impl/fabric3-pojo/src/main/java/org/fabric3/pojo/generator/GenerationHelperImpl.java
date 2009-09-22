@@ -43,7 +43,6 @@ import java.util.Set;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectingComponentType;
@@ -59,16 +58,13 @@ import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
  */
 public class GenerationHelperImpl implements GenerationHelper {
 
-    public void processInjectionSites(LogicalComponent<? extends Implementation<InjectingComponentType>> component,
-                                      InstanceFactoryDefinition instanceFactoryDefinition) {
+    public void processInjectionSites(InjectingComponentType componentType, InstanceFactoryDefinition factoryDefinition) {
 
-        Implementation<InjectingComponentType> implementation = component.getDefinition().getImplementation();
-        InjectingComponentType type = implementation.getComponentType();
-        Map<InjectionSite, Injectable> mappings = type.getInjectionSites();
+        Map<InjectionSite, Injectable> mappings = componentType.getInjectionSites();
 
         // add injections for all the active constructor args
-        Map<InjectionSite, Injectable> construction = instanceFactoryDefinition.getConstruction();
-        Signature constructor = type.getConstructor();
+        Map<InjectionSite, Injectable> construction = factoryDefinition.getConstruction();
+        Signature constructor = componentType.getConstructor();
         Set<Injectable> byConstruction = new HashSet<Injectable>(constructor.getParameterTypes().size());
         for (int i = 0; i < constructor.getParameterTypes().size(); i++) {
             InjectionSite site = new ConstructorInjectionSite(constructor, i);
@@ -78,8 +74,8 @@ public class GenerationHelperImpl implements GenerationHelper {
         }
 
         // add field/method injections
-        Map<InjectionSite, Injectable> postConstruction = instanceFactoryDefinition.getPostConstruction();
-        Map<InjectionSite, Injectable> reinjection = instanceFactoryDefinition.getReinjectables();
+        Map<InjectionSite, Injectable> postConstruction = factoryDefinition.getPostConstruction();
+        Map<InjectionSite, Injectable> reinjection = factoryDefinition.getReinjectables();
         for (Map.Entry<InjectionSite, Injectable> entry : mappings.entrySet()) {
             InjectionSite site = entry.getKey();
             if (site instanceof ConstructorInjectionSite) {

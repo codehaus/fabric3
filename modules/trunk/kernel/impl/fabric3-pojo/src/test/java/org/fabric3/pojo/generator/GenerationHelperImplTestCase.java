@@ -44,12 +44,9 @@
 package org.fabric3.pojo.generator;
 
 import java.util.Map;
-import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.ConstructorInjectionSite;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
@@ -57,7 +54,6 @@ import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
 import org.fabric3.model.type.java.Signature;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * @version $Rev$ $Date$
@@ -66,9 +62,6 @@ public class GenerationHelperImplTestCase extends TestCase {
 
     private GenerationHelper helper;
     private InstanceFactoryDefinition providerDefinition;
-    private LogicalComponent<MockImplementation> logicalComponent;
-    private ComponentDefinition<MockImplementation> componentDefinition;
-    private MockImplementation implementation;
     private InjectingComponentType componentType;
     private Injectable intProp;
     private Injectable stringProp;
@@ -80,7 +73,7 @@ public class GenerationHelperImplTestCase extends TestCase {
         componentType.setConstructor(constructor);
         componentType.addInjectionSite(intSite, intProp);
         componentType.addInjectionSite(stringSite, stringProp);
-        helper.processInjectionSites(logicalComponent, providerDefinition);
+        helper.processInjectionSites(componentType, providerDefinition);
         Map<InjectionSite, Injectable> mapping = providerDefinition.getConstruction();
         assertEquals(intProp, mapping.get(intSite));
         assertEquals(stringProp, mapping.get(stringSite));
@@ -93,22 +86,10 @@ public class GenerationHelperImplTestCase extends TestCase {
 
         helper = new GenerationHelperImpl();
         componentType = new InjectingComponentType(null);
-        implementation = new MockImplementation(componentType);
-        componentDefinition = new ComponentDefinition<MockImplementation>("mock", implementation);
-        logicalComponent = new LogicalComponent<MockImplementation>(null, componentDefinition, null);
         providerDefinition = new InstanceFactoryDefinition();
 
         intProp = new Injectable(InjectableType.PROPERTY, "intProp");
         stringProp = new Injectable(InjectableType.PROPERTY, "stringProp");
     }
 
-    private static class MockImplementation extends Implementation<InjectingComponentType> {
-        private MockImplementation(InjectingComponentType componentType) {
-            super(componentType);
-        }
-
-        public QName getType() {
-            return null;
-        }
-    }
 }

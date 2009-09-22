@@ -92,7 +92,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         factoryDefinition.setInitMethod(type.getInitMethod());
         factoryDefinition.setDestroyMethod(type.getDestroyMethod());
         factoryDefinition.setImplementationClass(implementation.getImplementationClass());
-        helper.processInjectionSites(component, factoryDefinition);
+        helper.processInjectionSites(type, factoryDefinition);
 
         // create the physical component definition
         definition.setScope(scope);
