@@ -50,7 +50,7 @@ import org.fabric3.spi.model.instance.LogicalScaArtifact;
 public interface PolicyEvaluator {
 
     /**
-     * Evaluates the XPath expression against the  to the target component, i.e. selects it or one of its children.
+     * Evaluates the XPath expression against the the target component, i.e. selects it or one of its children.
      *
      * @param xpathExpression the XPath expression
      * @param target          the target component
