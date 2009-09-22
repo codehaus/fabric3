@@ -79,9 +79,6 @@ public abstract class PojoSourceWireAttacher {
 
         String value = sourceDefinition.getKey();
 
-        if (value == null) {
-            return null;
-        }
         // The target classloader must be used since the key class may not be visible to the source classloader, for example, when subclasses are
         // used a keys
         URI targetId = targetDefinition.getClassLoaderId();

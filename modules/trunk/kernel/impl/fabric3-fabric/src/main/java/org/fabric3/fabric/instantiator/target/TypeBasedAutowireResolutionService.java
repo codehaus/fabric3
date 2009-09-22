@@ -187,15 +187,17 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
         Multiplicity refMultiplicity = logicalReference.getDefinition().getMultiplicity();
         boolean multiplicity = Multiplicity.ZERO_N.equals(refMultiplicity) || Multiplicity.ONE_N.equals(refMultiplicity);
         for (LogicalComponent<?> child : composite.getComponents()) {
-            for (LogicalService service : child.getServices()) {
-                ServiceContract targetContract = contractResolver.determineContract(service);
-                if (targetContract == null) {
-                    // This is a programming error since a non-composite service must have a service contract
-                    throw new AssertionError("No service contract specified on service: " + service.getUri());
-                }
-                if (contract.isAssignableFrom(targetContract)) {
-                    candidates.add(service);
-                    break;
+            if (validKey(logicalReference, child)) {  // if the reference is keyed and the target does not have a key, skip
+                for (LogicalService service : child.getServices()) {
+                    ServiceContract targetContract = contractResolver.determineContract(service);
+                    if (targetContract == null) {
+                        // This is a programming error since a non-composite service must have a service contract
+                        throw new AssertionError("No service contract specified on service: " + service.getUri());
+                    }
+                    if (contract.isAssignableFrom(targetContract)) {
+                        candidates.add(service);
+                        break;
+                    }
                 }
             }
             if (!candidates.isEmpty() && !multiplicity) {
@@ -213,7 +215,6 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
             QName deployable = target.getParent().getDeployable();
             LogicalWire wire = new LogicalWire(composite, logicalReference, uri, deployable);
 
-            // xcv potentially remove if LogicalWires added to LogicalReference
             LogicalComponent parent = logicalReference.getParent();
             LogicalCompositeComponent grandParent = (LogicalCompositeComponent) parent.getParent();
             if (grandParent != null) {
@@ -228,4 +229,16 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
 
     }
 
+    /**
+     * Returns true if the reference is not keyed, true if the reference is keyed and the target specifies a key, false if the reference is keyed and
+     * the target does not specify a key.
+     *
+     * @param logicalReference the logical reference
+     * @param target           the target
+     * @return true if the reference is not keyed, true if the reference is keyed and the target specifies a key, false if the reference is keyed and
+     *         the target does not specify a key
+     */
+    private boolean validKey(LogicalReference logicalReference, LogicalComponent<?> target) {
+        return !logicalReference.getDefinition().isKeyed() || target.getDefinition().getKey() != null;
+    }
 }

@@ -62,9 +62,11 @@ public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<M
     }
 
     public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
-        if (key != null) {
-            factories.put(key, objectFactory);
+        if (key == null) {
+            // programming error as null keys are checked during wire resolution
+            throw new IllegalArgumentException("Key was null");
         }
+        factories.put(key, objectFactory);
     }
 
     public void clear() {

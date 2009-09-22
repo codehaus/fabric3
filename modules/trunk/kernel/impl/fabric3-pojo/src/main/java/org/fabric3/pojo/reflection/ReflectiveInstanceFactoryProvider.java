@@ -311,7 +311,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             MultiplicityObjectFactory<?> multiplicityObjectFactory = (MultiplicityObjectFactory<?>) factory;
             multiplicityObjectFactory.addObjectFactory(objectFactory, key);
         } else {
-            //update / overwrite  the factory
+            //update or overwrite  the factory
             factories.put(name, objectFactory);
         }
     }
