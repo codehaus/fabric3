@@ -74,7 +74,7 @@ public abstract class PojoSourceWireAttacher {
     protected Object getKey(PojoSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition) throws KeyInstantiationException {
 
         if (!sourceDefinition.isKeyed()) {
-            return null;
+            throw new AssertionError("Attempt to read a key for a non-keyed reference");
         }
 
         String value = sourceDefinition.getKey();
@@ -94,6 +94,7 @@ public abstract class PojoSourceWireAttacher {
             // short-circuit the transformation and return the string
             return value;
         } else if (Enum.class.isAssignableFrom(keyType)) {
+            // enum, instantiate it directly
             Class<Enum> enumClass = (Class<Enum>) keyType;
             return Enum.valueOf(enumClass, value);
         }
