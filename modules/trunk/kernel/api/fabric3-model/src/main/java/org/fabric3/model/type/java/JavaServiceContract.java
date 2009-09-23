@@ -43,7 +43,6 @@
  */
 package org.fabric3.model.type.java;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +67,7 @@ public class JavaServiceContract extends ServiceContract {
     private String interfaceClass;
     private List<String> interfaces;
     private String superType;
-    private List<MethodSignature> methodSignatures;
+    private List<Signature> methodSignatures;
 
     //http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6176992
     private static final Map<Class, Class> PRIMITIVE_TYPES = new HashMap<Class, Class>();
@@ -86,14 +85,14 @@ public class JavaServiceContract extends ServiceContract {
     }
 
     public JavaServiceContract(Class<?> interfaceClazz) {
-        methodSignatures = new ArrayList<MethodSignature>();
+        methodSignatures = new ArrayList<Signature>();
         Class<?> superClass = interfaceClazz.getSuperclass();
         if (superClass != null) {
             superType = superClass.getName();
         }
         interfaces = new ArrayList<String>();
         for (Method method : interfaceClazz.getDeclaredMethods()) {
-            MethodSignature signature = new MethodSignature(method);
+            Signature signature = new Signature(method);
             if (!methodSignatures.contains(signature)) {
                 methodSignatures.add(signature);
             }
@@ -113,6 +112,18 @@ public class JavaServiceContract extends ServiceContract {
      */
     public String getInterfaceClass() {
         return interfaceClass;
+    }
+
+    public List<String> getInterfaces() {
+        return interfaces;
+    }
+
+    public String getSuperType() {
+        return superType;
+    }
+
+    public List<Signature> getMethodSignatures() {
+        return methodSignatures;
     }
 
     /*
@@ -135,7 +146,7 @@ public class JavaServiceContract extends ServiceContract {
             return false;
         }
         if (interfaceClass.equals(contract.interfaceClass)) {
-            for (MethodSignature signature : methodSignatures) {
+            for (Signature signature : methodSignatures) {
                 if (!contract.methodSignatures.contains(signature)) {
                     return false;
                 }
@@ -232,43 +243,4 @@ public class JavaServiceContract extends ServiceContract {
         }
     }
 
-    private class MethodSignature implements Serializable {
-
-        private static final long serialVersionUID = 8945587852354777957L;
-        String name;
-        List<String> parameters;
-        String returnType;
-
-        public MethodSignature(Method method) {
-            name = method.getName();
-            returnType = method.getReturnType().getName();
-            parameters = new ArrayList<String>();
-            for (Class<?> param : method.getParameterTypes()) {
-                parameters.add(param.getName());
-            }
-        }
-
-        public boolean equals(Object object) {
-            if (!(object instanceof MethodSignature)) {
-                return false;
-            }
-            MethodSignature other = (MethodSignature) object;
-            if (!name.equals(other.name)) {
-                return false;
-            }
-            if (!returnType.equals(other.returnType)) {
-                return false;
-            }
-            if (parameters.size() != other.parameters.size()) {
-                return false;
-            }
-            //noinspection ForLoopReplaceableByForEach
-            for (int i = 0; i < parameters.size(); i++) {
-                if (!parameters.get(i).equals(other.parameters.get(i))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
 }
