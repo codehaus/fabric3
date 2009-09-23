@@ -30,4 +30,16 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.wsdl.processor.Wsdl11ContractProcessor"/>
     </component>
 
+    <component name="WsdlContractMatcherExtension">
+        <f3-impl:implementation.system class="org.fabric3.wsdl.contract.WsdlContractMatcherExtension"/>
+    </component>
+
+    <component name="JavaToWsdlContractMatcherExtension">
+        <f3-impl:implementation.system class="org.fabric3.wsdl.contract.JavaToWsdlContractMatcherExtension"/>
+    </component>
+
+    <component name="WsdlToJavaContractMatcherExtension">
+        <f3-impl:implementation.system class="org.fabric3.wsdl.contract.WsdlToJavaContractMatcherExtension"/>
+    </component>
+
 </composite>
