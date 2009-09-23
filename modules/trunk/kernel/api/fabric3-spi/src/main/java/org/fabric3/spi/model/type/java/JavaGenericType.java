@@ -47,7 +47,7 @@ import org.fabric3.model.type.contract.DataType;
  *
  * @version $Rev$ $Date$
  */
-public class JavaGenericType extends DataType<JavaTypeInfo> {
+public class JavaGenericType extends JavaType<JavaTypeInfo> {
     private static final long serialVersionUID = -8832071773275935399L;
 
     public JavaGenericType(JavaTypeInfo info) {

@@ -37,7 +37,7 @@
 */
 package org.fabric3.spi.model.type.java;
 
-import java.lang.reflect.Type;
+import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.contract.DataType;
 
@@ -49,10 +49,19 @@ import org.fabric3.model.type.contract.DataType;
  *
  * @version $Rev$ $Date$
  */
-public abstract class JavaType<T extends Type> extends DataType<T> {
+public abstract class JavaType<T> extends DataType<T> {
+    private QName xsdType;
 
     public JavaType(Class<?> physical, T logical) {
         super(physical, logical);
     }
 
+    @Override
+    public QName getXsdType() {
+        return xsdType;
+    }
+
+    public void setXsdType(QName xsdType) {
+        this.xsdType = xsdType;
+    }
 }
