@@ -40,7 +40,6 @@ package org.fabric3.junit.introspection;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,15 +50,16 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.junit.model.JUnitServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
+import org.fabric3.spi.model.type.java.JavaClass;
 
 /**
  * @version $Rev$ $Date$
@@ -67,7 +67,7 @@ import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementation> {
     private static final String TEST_SERVICE_NAME = "testService";
     private static final List<DataType<?>> INPUT_TYPE = Collections.emptyList();
-    private static final DataType<Type> OUTPUT_TYPE = new DataType<Type>(void.class, void.class);
+    private static final JavaClass<Void> OUTPUT_TYPE = new JavaClass<Void>(void.class);
     private static final List<DataType<?>> FAULT_TYPE = Collections.emptyList();
 
     private final IntrospectionHelper helper;
