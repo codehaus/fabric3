@@ -46,10 +46,12 @@ import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.ClassVisitor;
 import org.fabric3.web.model.WebImplementation;
 
@@ -60,13 +62,16 @@ import org.fabric3.web.model.WebImplementation;
  */
 public class WebImplementationIntrospectorImpl implements WebImplementationIntrospector {
     private ClassVisitor<WebArtifactImplementation> classVisitor;
+    private ContractMatcher matcher;
     private IntrospectionHelper helper;
     private WebXmlIntrospector xmlIntrospector;
 
     public WebImplementationIntrospectorImpl(@Reference ClassVisitor<WebArtifactImplementation> classVisitor,
                                              @Reference WebXmlIntrospector xmlIntrospector,
+                                             @Reference ContractMatcher matcher,
                                              @Reference IntrospectionHelper helper) {
         this.classVisitor = classVisitor;
+        this.matcher = matcher;
         this.helper = helper;
         this.xmlIntrospector = xmlIntrospector;
     }
@@ -124,7 +129,9 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             String name = entry.getKey();
             ReferenceDefinition reference = webType.getReferences().get(name);
             if (reference != null) {
-                if (!reference.getServiceContract().isAssignableFrom(entry.getValue().getServiceContract())) {
+                ServiceContract source = reference.getServiceContract();
+                ServiceContract target = entry.getValue().getServiceContract();
+                if (!matcher.isAssignableFrom(source, target)) {
                     // TODO display areas where it was not matching
                     IncompatibleReferenceDefinitions failure = new IncompatibleReferenceDefinitions(name);
                     context.addError(failure);

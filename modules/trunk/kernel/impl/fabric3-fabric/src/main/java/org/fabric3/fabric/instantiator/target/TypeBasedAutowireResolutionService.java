@@ -56,6 +56,7 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -68,10 +69,12 @@ import org.fabric3.spi.model.instance.LogicalWire;
  * @version $Revsion$ $Date$
  */
 public class TypeBasedAutowireResolutionService implements TargetResolutionService {
-    private ServiceContractResolver contractResolver;
+    private ServiceContractResolver resolver;
+    private ContractMatcher matcher;
 
-    public TypeBasedAutowireResolutionService(@Reference ServiceContractResolver contractResolver) {
-        this.contractResolver = contractResolver;
+    public TypeBasedAutowireResolutionService(@Reference ServiceContractResolver resolver, @Reference ContractMatcher matcher) {
+        this.resolver = resolver;
+        this.matcher = matcher;
     }
 
     public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent, InstantiationContext context) {
@@ -85,7 +88,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
                 return;
             }
 
-            ServiceContract requiredContract = contractResolver.determineContract(logicalReference);
+            ServiceContract requiredContract = resolver.determineContract(logicalReference);
 
             Autowire autowire = calculateAutowire(compositeComponent, component);
             if (autowire == Autowire.ON) {
@@ -189,12 +192,12 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
         for (LogicalComponent<?> child : composite.getComponents()) {
             if (validKey(logicalReference, child)) {  // if the reference is keyed and the target does not have a key, skip
                 for (LogicalService service : child.getServices()) {
-                    ServiceContract targetContract = contractResolver.determineContract(service);
+                    ServiceContract targetContract = resolver.determineContract(service);
                     if (targetContract == null) {
                         // This is a programming error since a non-composite service must have a service contract
                         throw new AssertionError("No service contract specified on service: " + service.getUri());
                     }
-                    if (contract.isAssignableFrom(targetContract)) {
+                    if (matcher.isAssignableFrom(contract, targetContract)) {
                         candidates.add(service);
                         break;
                     }

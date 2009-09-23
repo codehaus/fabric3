@@ -64,11 +64,6 @@ public class XQueryServiceContract extends ServiceContract {
     }
 
     @Override
-    public boolean isAssignableFrom(ServiceContract contract) {
-        return true;
-    }
-
-    @Override
     public String getQualifiedInterfaceName() {
         return qname.toString();
     }

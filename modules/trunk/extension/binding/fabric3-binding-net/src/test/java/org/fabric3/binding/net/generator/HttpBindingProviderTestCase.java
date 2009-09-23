@@ -45,7 +45,7 @@ import org.easymock.EasyMock;
 import org.fabric3.binding.net.model.HttpBindingDefinition;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -59,8 +59,8 @@ public class HttpBindingProviderTestCase extends TestCase {
     private HttpBindingProvider bindingProvider;
 
     public void testGenerateServiceAndReference() throws Exception {
-        ServiceContract contract = new MockServiceContract();
-        ServiceContract callbackContract = new MockServiceContract();
+        JavaServiceContract contract = new JavaServiceContract();
+        JavaServiceContract callbackContract = new JavaServiceContract();
         contract.setCallbackContract(callbackContract);
 
         LogicalComponent<?> source = new LogicalComponent(URI.create("fabric3://runtime/source"), null, null);
@@ -108,14 +108,4 @@ public class HttpBindingProviderTestCase extends TestCase {
         bindingProvider.setDomainManager(manager);
     }
 
-    private class MockServiceContract extends ServiceContract {
-
-        public boolean isAssignableFrom(ServiceContract serviceContract) {
-            return false;
-        }
-
-        public String getQualifiedInterfaceName() {
-            return null;
-        }
-    }
 }

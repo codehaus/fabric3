@@ -51,7 +51,7 @@ import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.contract.Operation;
-import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -199,7 +199,7 @@ public class LogicalModelXPathTestCase extends TestCase {
         ComponentDefinition definition1 = new ComponentDefinition("child1");
         definition1.setImplementation(new MockImplementation());
         child1 = new LogicalComponent(child1Uri, definition1, domain);
-        ServiceContract referenceContract = new MockServiceContract();
+        JavaServiceContract referenceContract = new JavaServiceContract();
         referenceContract.setInterfaceName("ChildService");
         ReferenceDefinition referenceDefinition = new ReferenceDefinition("child1Reference", referenceContract);
         LogicalReference reference = new LogicalReference(URI.create("child1#child1Reference"), referenceDefinition, child1);
@@ -207,7 +207,7 @@ public class LogicalModelXPathTestCase extends TestCase {
         LogicalBinding binding = new LogicalBinding(definiton, reference);
         reference.addBinding(binding);
         child1.addReference(reference);
-        ServiceContract serviceContract = new MockServiceContract();
+        JavaServiceContract serviceContract = new JavaServiceContract();
         serviceContract.setInterfaceName("ChildService");
         Operation operation = new Operation("operation", null, null, null);
         List<Operation> operations = new ArrayList<Operation>();
@@ -261,15 +261,4 @@ public class LogicalModelXPathTestCase extends TestCase {
     }
 
 
-    private class MockServiceContract extends ServiceContract {
-        private static final long serialVersionUID = -2329187188933582430L;
-
-        public boolean isAssignableFrom(ServiceContract serviceContract) {
-            return false;
-        }
-
-        public String getQualifiedInterfaceName() {
-            return null;
-        }
-    }
 }

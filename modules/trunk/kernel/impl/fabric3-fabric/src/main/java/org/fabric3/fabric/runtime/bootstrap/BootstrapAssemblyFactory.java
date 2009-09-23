@@ -66,6 +66,8 @@ import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartContextCommand;
+import org.fabric3.fabric.contract.DefaultContractMatcher;
+import org.fabric3.fabric.contract.JavaContractMatcherExtension;
 import org.fabric3.fabric.documentloader.DocumentLoader;
 import org.fabric3.fabric.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.domain.ContributionHelper;
@@ -138,6 +140,7 @@ import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.ContributionWire;
 import org.fabric3.spi.contribution.MetaDataStore;
@@ -208,11 +211,17 @@ public class BootstrapAssemblyFactory {
                                               info);
 
         LocalRoutingService routingService = new LocalRoutingService(commandRegistry, scopeRegistry);
+
         PolicyAttacher policyAttacher = new NullPolicyAttacher();
         PolicyResolver policyResolver = new NullPolicyResolver();
-        Generator generator = createGenerator(logicalComponentManager, metaDataStore, policyResolver);
 
-        LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
+        DefaultContractMatcher matcher = new DefaultContractMatcher();
+        JavaContractMatcherExtension javaMatcher = new JavaContractMatcherExtension();
+        matcher.addMatcherExtension(javaMatcher);
+
+        Generator generator = createGenerator(logicalComponentManager, metaDataStore, policyResolver, matcher);
+        
+        LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager, matcher);
         Collector collector = new CollectorImpl();
         ContributionHelper contributionHelper = new ContributionHelperImpl(metaDataStore);
 
@@ -228,11 +237,11 @@ public class BootstrapAssemblyFactory {
                                  info);
     }
 
-    private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
+    private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager, ContractMatcher matcher) {
         PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
-        ServiceContractResolver serviceContractResolver = new ServiceContractResolverImpl();
-        ExplicitTargetResolutionService explicitTargetResolutionService = new ExplicitTargetResolutionService(serviceContractResolver);
-        TypeBasedAutowireResolutionService autowireResolutionService = new TypeBasedAutowireResolutionService(serviceContractResolver);
+        ServiceContractResolver resolver = new ServiceContractResolverImpl();
+        ExplicitTargetResolutionService explicitTargetResolutionService = new ExplicitTargetResolutionService(resolver, matcher);
+        TypeBasedAutowireResolutionService autowireResolutionService = new TypeBasedAutowireResolutionService(resolver, matcher);
         ResolutionService resolutionService =
                 new ResolutionServiceImpl(promotionResolutionService, explicitTargetResolutionService, autowireResolutionService);
 
@@ -338,11 +347,14 @@ public class BootstrapAssemblyFactory {
         return builder;
     }
 
-    private static Generator createGenerator(LogicalComponentManager lcm, MetaDataStore metaDataStore, PolicyResolver policyResolver) {
+    private static Generator createGenerator(LogicalComponentManager lcm,
+                                             MetaDataStore metaDataStore,
+                                             PolicyResolver resolver,
+                                             ContractMatcher matcher) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         PhysicalOperationMapper mapper = new PhysicalOperationMapperImpl();
-        WireGenerator wireGenerator = new WireGeneratorImpl(generatorRegistry, policyResolver, mapper);
+        WireGenerator wireGenerator = new WireGeneratorImpl(generatorRegistry, matcher, resolver, mapper);
 
         ClassLoaderWireGenerator<?> javaGenerator = new JavaContributionWireGeneratorImpl();
         ClassLoaderWireGenerator<?> locationGenerator = new LocationContributionWireGeneratorImpl();

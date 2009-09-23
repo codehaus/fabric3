@@ -53,6 +53,7 @@ import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.model.type.component.ComponentReference;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -66,10 +67,12 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Revsion$ $Date$
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
-    private ServiceContractResolver contractResolver;
+    private ServiceContractResolver resolver;
+    private ContractMatcher matcher;
 
-    public ExplicitTargetResolutionService(@Reference ServiceContractResolver contractResolver) {
-        this.contractResolver = contractResolver;
+    public ExplicitTargetResolutionService(@Reference ServiceContractResolver resolver, @Reference ContractMatcher matcher) {
+        this.resolver = resolver;
+        this.matcher = matcher;
     }
 
     public void resolve(LogicalReference logicalReference, LogicalCompositeComponent component, InstantiationContext context) {
@@ -216,9 +219,9 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
      * @param context   the logical context
      */
     private void validateContracts(LogicalReference reference, LogicalService service, InstantiationContext context) {
-        ServiceContract referenceContract = contractResolver.determineContract(reference);
-        ServiceContract serviceContract = contractResolver.determineContract(service);
-        if (!referenceContract.isAssignableFrom(serviceContract)) {
+        ServiceContract referenceContract = resolver.determineContract(reference);
+        ServiceContract serviceContract = resolver.determineContract(service);
+        if (!matcher.isAssignableFrom(referenceContract, serviceContract)) {
             URI uri = reference.getParent().getUri();
             URI referenceUri = reference.getUri();
             URI serviceUri = service.getUri();

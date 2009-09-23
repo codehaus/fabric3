@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.model.type.component.ComponentDefinition;
@@ -56,6 +57,7 @@ import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -85,6 +87,11 @@ import org.fabric3.xquery.scdl.XQueryServiceContract;
 @EagerInit
 public class XQueryComponentGenerator implements ComponentGenerator<LogicalComponent<XQueryImplementation>> {
     private ContributionUriEncoder encoder;
+    private ContractMatcher matcher;
+
+    public XQueryComponentGenerator(@Reference ContractMatcher matcher) {
+        this.matcher = matcher;
+    }
 
     public PhysicalComponentDefinition generate(LogicalComponent<XQueryImplementation> component) throws GenerationException {
         ComponentDefinition<XQueryImplementation> definition = component.getDefinition();
@@ -182,7 +189,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
             String name = entry.getKey();
             Document document = entry.getValue();
             if (document != null) {
-                PhysicalPropertyDefinition definition = new PhysicalPropertyDefinition(name,  document);
+                PhysicalPropertyDefinition definition = new PhysicalPropertyDefinition(name, document);
                 physical.setPropertyDefinition(definition);
             }
         }
@@ -223,7 +230,8 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (Map.Entry<String, ServiceDefinition> entry : type.getServices().entrySet()) {
-            if (entry.getValue().getServiceContract().isAssignableFrom(serviceContract)) {
+            ServiceContract candidateContract = entry.getValue().getServiceContract();
+            if (matcher.isAssignableFrom(candidateContract, serviceContract)) {
                 name = entry.getKey();
                 break;
             }

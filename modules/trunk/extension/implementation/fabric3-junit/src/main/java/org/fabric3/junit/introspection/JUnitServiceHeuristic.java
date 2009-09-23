@@ -48,12 +48,12 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.junit.model.JUnitImplementation;
-import org.fabric3.junit.model.JUnitServiceContract;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
@@ -86,7 +86,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
 
     public void applyHeuristics(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
 
-        JUnitServiceContract testContract = generateTestContract(implClass);
+        JavaServiceContract testContract = generateTestContract(implClass);
         ServiceDefinition testService = new ServiceDefinition(TEST_SERVICE_NAME, testContract);
         InjectingComponentType componentType = implementation.getComponentType();
         componentType.add(testService);
@@ -116,7 +116,7 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
         return definition;
     }
 
-    private JUnitServiceContract generateTestContract(Class<?> implClass) {
+    private JavaServiceContract generateTestContract(Class<?> implClass) {
         List<Operation> operations = new ArrayList<Operation>();
         for (Method method : implClass.getMethods()) {
             // see if this is a test method
@@ -136,6 +136,8 @@ public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementa
             Operation operation = new Operation(name, INPUT_TYPE, OUTPUT_TYPE, FAULT_TYPE);
             operations.add(operation);
         }
-        return new JUnitServiceContract(operations);
+        JavaServiceContract contract = new JavaServiceContract(implClass);
+        contract.setOperations(operations);
+        return contract;
     }
 }

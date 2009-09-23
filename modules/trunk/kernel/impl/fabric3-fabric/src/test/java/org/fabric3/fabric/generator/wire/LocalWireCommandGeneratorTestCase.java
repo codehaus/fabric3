@@ -48,7 +48,8 @@ import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -56,7 +57,6 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
  * @version $Rev$ $Date$
@@ -76,7 +76,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         URI targetUri = URI.create("target");
         ComponentDefinition<?> targetDefinition = new ComponentDefinition(null);
         LogicalComponent<?> target = new LogicalComponent(targetUri, targetDefinition, composite);
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
         ServiceDefinition serviceDefinition = new ServiceDefinition("service", contract);
         LogicalService service = new LogicalService(URI.create("source#service"), serviceDefinition, target);
         target.addService(service);
@@ -117,7 +117,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         ComponentDefinition<?> targetDefinition = new ComponentDefinition(null);
         LogicalComponent<?> target = new LogicalComponent(targetUri, targetDefinition, composite);
         target.setState(LogicalState.PROVISIONED);
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
         ServiceDefinition serviceDefinition = new ServiceDefinition("service", contract);
         LogicalService service = new LogicalService(URI.create("source#service"), serviceDefinition, target);
         target.addService(service);
@@ -159,7 +159,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         URI targetUri = URI.create("target");
         ComponentDefinition<?> targetDefinition = new ComponentDefinition(null);
         LogicalComponent<?> target = new LogicalComponent(targetUri, targetDefinition, composite);
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
         ServiceDefinition serviceDefinition = new ServiceDefinition("service", contract);
         LogicalService service = new LogicalService(URI.create("source#service"), serviceDefinition, target);
         target.addService(service);
@@ -201,7 +201,7 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
         LogicalCompositeComponent composite = new LogicalCompositeComponent(root, definition, null);
 
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
 
         URI targetUri2 = URI.create("target2");
         ComponentDefinition<?> targetDefinition2 = new ComponentDefinition(null);
@@ -266,16 +266,4 @@ public class LocalWireCommandGeneratorTestCase extends TestCase {
         generator = new LocalWireCommandGenerator(wireGenerator, null, lcm, 0);
     }
 
-    @SuppressWarnings({"SerializableInnerClassWithNonSerializableOuterClass"})
-    private class MockContract extends ServiceContract {
-        private static final long serialVersionUID = 5001057804874060940L;
-
-        public boolean isAssignableFrom(ServiceContract serviceContract) {
-            return false;
-        }
-
-        public String getQualifiedInterfaceName() {
-            return null;
-        }
-    }
 }

@@ -67,9 +67,8 @@ public interface ContractMatcherExtension<S extends ServiceContract, T extends S
      * @param source the source contract. Typically, this is the contract specified by a component reference.
      * @param target the ctarget contract. Typically this is the contract specified by a service.
      * @return true if the contracts are compatible
-     * @throws MatchingException if there is an exception performing the match
      */
-    boolean isAssignableFrom(S source, T target) throws MatchingException;
+    boolean isAssignableFrom(S source, T target);
 
 
 }

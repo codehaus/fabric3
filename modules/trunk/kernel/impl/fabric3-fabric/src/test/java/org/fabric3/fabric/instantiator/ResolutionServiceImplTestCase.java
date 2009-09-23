@@ -47,6 +47,8 @@ import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
+import org.fabric3.fabric.contract.DefaultContractMatcher;
+import org.fabric3.fabric.contract.JavaContractMatcherExtension;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.ComponentReference;
@@ -143,9 +145,12 @@ public class ResolutionServiceImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
-        ServiceContractResolver serviceContractResolver = new ServiceContractResolverImpl();
-        ExplicitTargetResolutionService resolutionService = new ExplicitTargetResolutionService(serviceContractResolver);
-        TypeBasedAutowireResolutionService autowireResolutionService = new TypeBasedAutowireResolutionService(serviceContractResolver);
+        ServiceContractResolver resolver = new ServiceContractResolverImpl();
+        DefaultContractMatcher matcher = new DefaultContractMatcher();
+        JavaContractMatcherExtension javaMatcher = new JavaContractMatcherExtension();
+        matcher.addMatcherExtension(javaMatcher);
+        ExplicitTargetResolutionService resolutionService = new ExplicitTargetResolutionService(resolver, matcher);
+        TypeBasedAutowireResolutionService autowireResolutionService = new TypeBasedAutowireResolutionService(resolver, matcher);
         this.resolutionService = new ResolutionServiceImpl(promotionResolutionService, resolutionService, autowireResolutionService);
         URI domainUri = URI.create("fabric3://runtime");
         domain = new LogicalCompositeComponent(domainUri, null, null);

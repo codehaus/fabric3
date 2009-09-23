@@ -46,32 +46,36 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.contract.ContractMatcherExtension;
-import org.fabric3.spi.contract.MatchingException;
 
 /**
- * The default ServiceContractMatcherRegistry implementation.
+ * The default ContractMatcher implementation.
  *
  * @version $Rev$ $Date$
  */
 public class DefaultContractMatcher implements ContractMatcher {
-    private Map<Key, ContractMatcherExtension<?,?>> cache = new HashMap<Key, ContractMatcherExtension<?,?>>();
+    private Map<Key, ContractMatcherExtension<?, ?>> cache = new HashMap<Key, ContractMatcherExtension<?, ?>>();
 
     @Reference
-    public void setMatcherExtensions(List<ContractMatcherExtension> matchers) {
+    public void setMatcherExtensions(List<ContractMatcherExtension<?, ?>> matchers) {
         cache.clear();
         for (ContractMatcherExtension<?, ?> matcher : matchers) {
-            Key key = new Key(matcher.getSource(), matcher.getTarget());
-            cache.put(key, matcher);
+            addMatcherExtension(matcher);
         }
     }
 
+    public void addMatcherExtension(ContractMatcherExtension<?, ?> matcher) {
+        Key key = new Key(matcher.getSource(), matcher.getTarget());
+        cache.put(key, matcher);
+    }
+
     @SuppressWarnings({"unchecked"})
-    public boolean isAssignableFrom(ServiceContract source, ServiceContract target) throws MatchingException {
+    public boolean isAssignableFrom(ServiceContract source, ServiceContract target) {
         Key key = new Key(source.getClass(), target.getClass());
         ContractMatcherExtension matcher = cache.get(key);
         if (matcher == null) {
+            // this is a programming error
             String name = ContractMatcherExtension.class.getSimpleName();
-            throw new MatchingException(name + " not found for converting from " + source.getClass() + " to " + target.getClass());
+            throw new AssertionError(name + " not found for converting from " + source.getClass() + " to " + target.getClass());
         }
         return matcher.isAssignableFrom(source, target);
     }

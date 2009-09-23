@@ -68,10 +68,6 @@ public class WsdlServiceContract extends ServiceContract {
         this.qname = qname;
     }
 
-    public boolean isAssignableFrom(ServiceContract serviceContract) {
-        throw new UnsupportedOperationException();
-    }
-
     public String getQualifiedInterfaceName() {
         return qname.toString();
     }

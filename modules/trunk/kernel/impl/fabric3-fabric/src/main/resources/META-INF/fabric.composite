@@ -36,4 +36,6 @@
 
     <include name="BindingComposite" scdlLocation="binding.composite"/>
 
+    <include name="ContractComposite" scdlLocation="contract.composite"/>
+
 </composite>

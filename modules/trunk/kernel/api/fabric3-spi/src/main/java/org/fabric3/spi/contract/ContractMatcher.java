@@ -56,7 +56,6 @@ public interface ContractMatcher {
      * @param source the source contract. This is the contract specified by a component reference.
      * @param target the ctarget contract. This is the contract specified by a service.
      * @return true if the contracts are compatible
-     * @throws MatchingException if there is an exception performing the match
      */
-    boolean isAssignableFrom(ServiceContract source, ServiceContract target) throws MatchingException;
+    boolean isAssignableFrom(ServiceContract source, ServiceContract target);
 }

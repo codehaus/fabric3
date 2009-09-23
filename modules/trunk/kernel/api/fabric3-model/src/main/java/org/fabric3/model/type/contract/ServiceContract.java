@@ -157,15 +157,6 @@ public abstract class ServiceContract extends ModelObject {
         this.callbackContract = callbackContract;
     }
 
-    /**
-     * Determines if this contract is compatible with the given contract. Compatibility is determined according to the specifics of the IDL's
-     * compatibility semantics.
-     *
-     * @param contract the contract to test compatibility with
-     * @return true if the contracts are compatible
-     */
-    public abstract boolean isAssignableFrom(ServiceContract contract);
-
     public abstract String getQualifiedInterfaceName();
 
     public String toString() {

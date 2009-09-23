@@ -45,7 +45,6 @@ package org.fabric3.model.type.component;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,6 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.PolicyAware;
-import org.fabric3.model.type.contract.ServiceContract;
 
 /**
  * Represents a composite.
@@ -234,30 +232,6 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
         componentsView.put(componentDefinition.getName(), componentDefinition);
         components.put(componentDefinition.getName(), componentDefinition);
     }
-
-
-    /**
-     * Returns a collection of potential target services that match the supplied contract.
-     * <p/>
-     * This can be used to determine potential autowire targets for the service, based on compatibility of the contract.
-     *
-     * @param contract the candidate contract
-     * @return a collection of potential targets
-     */
-    public Collection<URI> getTargets(ServiceContract contract) {
-        Collection<URI> targets = new ArrayList<URI>();
-        for (ComponentDefinition<? extends Implementation<?>> component : getComponents().values()) {
-            AbstractComponentType<?, ?, ?, ?> componentType = component.getComponentType();
-            for (ServiceDefinition service : componentType.getServices().values()) {
-                if (contract.isAssignableFrom(service.getServiceContract())) {
-                    URI uri = URI.create(component.getName() + '#' + service.getName());
-                    targets.add(uri);
-                }
-            }
-        }
-        return targets;
-    }
-
 
     /**
      * Get all wires including the ones are from included composites

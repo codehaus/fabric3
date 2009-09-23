@@ -55,6 +55,7 @@ import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -89,20 +90,16 @@ import org.fabric3.spi.policy.PolicyResult;
  */
 public class WireGeneratorImpl implements WireGenerator {
     private final GeneratorRegistry generatorRegistry;
+    private ContractMatcher matcher;
     private final PolicyResolver policyResolver;
     private final PhysicalOperationMapper mapper;
 
-    /**
-     * Constructor.
-     *
-     * @param generatorRegistry the generator registry.
-     * @param policyResolver    the policy resolver
-     * @param mapper            the physical operation helper
-     */
     public WireGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
+                             @Reference ContractMatcher matcher,
                              @Reference PolicyResolver policyResolver,
                              @Reference PhysicalOperationMapper mapper) {
         this.generatorRegistry = generatorRegistry;
+        this.matcher = matcher;
         this.policyResolver = policyResolver;
         this.mapper = mapper;
     }
@@ -419,10 +416,10 @@ public class WireGeneratorImpl implements WireGenerator {
     }
 
     private <S extends LogicalComponent<?>> URI generateCallbackUri(S source, ServiceContract contract, String sourceName)
-            throws CallbackServiceNotFoundException {
+            throws GenerationException {
         LogicalService candidate = null;
         for (LogicalService entry : source.getServices()) {
-            if (contract.isAssignableFrom(entry.getDefinition().getServiceContract())) {
+            if (matcher.isAssignableFrom(contract, entry.getDefinition().getServiceContract())) {
                 candidate = entry;
                 break;
             }

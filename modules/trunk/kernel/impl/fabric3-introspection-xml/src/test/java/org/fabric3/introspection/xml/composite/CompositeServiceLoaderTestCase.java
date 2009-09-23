@@ -57,10 +57,11 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.fabric3.model.type.ModelObject;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
@@ -152,17 +153,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     }
 
     public void testWithInterface() throws LoaderException, XMLStreamException {
-        ServiceContract sc = new ServiceContract() {
-            public boolean isAssignableFrom(ServiceContract contract) {
-                return false;
-            }
-
-            @Override
-            public String getQualifiedInterfaceName() {
-                return null;
-            }
-
-        };
+        ServiceContract sc = new JavaServiceContract();
         expect(mockReader.getAttributeCount()).andReturn(0);
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);

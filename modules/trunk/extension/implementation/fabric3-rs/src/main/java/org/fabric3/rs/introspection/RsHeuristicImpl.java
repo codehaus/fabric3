@@ -129,11 +129,6 @@ public class RsHeuristicImpl implements RsHeuristic {
         ServiceContract serviceContract = new ServiceContract() {
 
             @Override
-            public boolean isAssignableFrom(ServiceContract contract) {
-                return false;
-            }
-
-            @Override
             public String getQualifiedInterfaceName() {
                 return impl.getImplementationClass();
             }

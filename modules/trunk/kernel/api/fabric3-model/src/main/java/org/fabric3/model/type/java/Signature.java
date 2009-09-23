@@ -60,11 +60,13 @@ import org.fabric3.model.type.ModelObject;
  */
 public class Signature extends ModelObject {
     private static final long serialVersionUID = 4851321624672183132L;
+    //http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6176992
     private static final Map<String, Class<?>> PRIMITIVES_TYPES;
 
     static {
         PRIMITIVES_TYPES = new HashMap<String, Class<?>>();
         PRIMITIVES_TYPES.put("boolean", Boolean.TYPE);
+        PRIMITIVES_TYPES.put("char", Character.class);
         PRIMITIVES_TYPES.put("byte", Byte.TYPE);
         PRIMITIVES_TYPES.put("short", Short.TYPE);
         PRIMITIVES_TYPES.put("int", Integer.TYPE);

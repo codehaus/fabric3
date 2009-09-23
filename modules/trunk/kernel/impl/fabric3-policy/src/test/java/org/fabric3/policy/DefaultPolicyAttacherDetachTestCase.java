@@ -51,6 +51,7 @@ import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -115,7 +116,7 @@ public class DefaultPolicyAttacherDetachTestCase extends TestCase {
         child1 = new LogicalComponent(child1Uri, definition1, domain);
         child1.setState(LogicalState.PROVISIONED);
         child1.addPolicySet(POLICY_SET);
-        ServiceContract referenceContract = new MockServiceContract();
+        ServiceContract referenceContract = new JavaServiceContract();
         referenceContract.setInterfaceName("ChildService");
         ReferenceDefinition referenceDefinition = new ReferenceDefinition("child1Reference", referenceContract);
         child1Reference = new LogicalReference(URI.create("child1#child1Reference"), referenceDefinition, child1);
@@ -126,7 +127,7 @@ public class DefaultPolicyAttacherDetachTestCase extends TestCase {
         child1Reference.addBinding(child1ReferenceBinding);
         child1Reference.addPolicySet(POLICY_SET);
         child1.addReference(child1Reference);
-        ServiceContract serviceContract = new MockServiceContract();
+        ServiceContract serviceContract = new JavaServiceContract();
         serviceContract.setInterfaceName("ChildService");
         Operation operation = new Operation("operation", null, null, null);
         List<Operation> operations = new ArrayList<Operation>();
@@ -157,17 +158,5 @@ public class DefaultPolicyAttacherDetachTestCase extends TestCase {
         }
     }
 
-
-    private class MockServiceContract extends ServiceContract {
-        private static final long serialVersionUID = -2329187188933582430L;
-
-        public boolean isAssignableFrom(ServiceContract serviceContract) {
-            return false;
-        }
-
-        public String getQualifiedInterfaceName() {
-            return null;
-        }
-    }
 
 }

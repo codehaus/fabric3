@@ -52,14 +52,15 @@ import org.fabric3.model.type.component.CallbackDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.contract.DataType;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
 import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.pojo.generator.GenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
+import org.fabric3.spi.contract.ContractMatcher;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -74,9 +75,11 @@ import org.fabric3.spi.policy.EffectivePolicy;
 public class JavaGenerationHelperImpl implements JavaGenerationHelper {
     private static final QName PROPAGATES_CONVERSATION_POLICY = new QName(Namespaces.POLICY, "propagatesConversationPolicy");
     private final GenerationHelper helper;
+    private ContractMatcher matcher;
 
-    public JavaGenerationHelperImpl(@Reference GenerationHelper helper) {
+    public JavaGenerationHelperImpl(@Reference GenerationHelper helper, @Reference ContractMatcher matcher) {
         this.helper = helper;
+        this.matcher = matcher;
     }
 
     public void generate(JavaComponentDefinition definition, LogicalComponent<? extends JavaImplementation> component) throws GenerationException {
@@ -134,7 +137,8 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         for (CallbackDefinition entry : type.getCallbacks().values()) {
             // NB: This currently only supports the case where one callback injection site of the same type is on an implementation.
             // TODO clarify with the spec if having more than one callback injection site of the same type is valid
-            if (entry.getServiceContract().isAssignableFrom(serviceContract)) {
+            ServiceContract candidate = entry.getServiceContract();
+            if (matcher.isAssignableFrom(candidate, serviceContract)) {
                 name = entry.getName();
                 break;
             }

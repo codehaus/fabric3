@@ -46,7 +46,7 @@ import org.fabric3.fabric.command.ConnectionCommand;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -68,7 +68,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
         LogicalCompositeComponent composite = new LogicalCompositeComponent(root, definition, null);
 
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
 
         URI sourceUri = URI.create("source");
         ComponentDefinition<?> sourceDefinition = new ComponentDefinition(null);
@@ -98,7 +98,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
         LogicalCompositeComponent composite = new LogicalCompositeComponent(root, definition, null);
 
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
 
         URI sourceUri = URI.create("source");
         ComponentDefinition<?> sourceDefinition = new ComponentDefinition(null);
@@ -129,7 +129,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
         LogicalCompositeComponent composite = new LogicalCompositeComponent(root, definition, null);
 
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
 
         URI sourceUri = URI.create("source");
         ComponentDefinition<?> sourceDefinition = new ComponentDefinition(null);
@@ -166,7 +166,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
         LogicalCompositeComponent composite = new LogicalCompositeComponent(root, definition, null);
 
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
 
         URI sourceUri = URI.create("source");
         ComponentDefinition<?> sourceDefinition = new ComponentDefinition(null);
@@ -193,7 +193,7 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(null);
         LogicalCompositeComponent composite = new LogicalCompositeComponent(root, definition, null);
 
-        MockContract contract = new MockContract();
+        JavaServiceContract contract = new JavaServiceContract();
 
         URI sourceUri = URI.create("source");
         ComponentDefinition<?> sourceDefinition = new ComponentDefinition(null);
@@ -223,16 +223,4 @@ public class ReferenceWireCommandGeneratorTestCase extends TestCase {
         generator = new ReferenceWireCommandGenerator(wireGenerator, 0);
     }
 
-    @SuppressWarnings({"SerializableInnerClassWithNonSerializableOuterClass"})
-    private class MockContract extends ServiceContract {
-        private static final long serialVersionUID = 5001057804874060940L;
-
-        public boolean isAssignableFrom(ServiceContract serviceContract) {
-            return false;
-        }
-
-        public String getQualifiedInterfaceName() {
-            return null;
-        }
-    }
 }
