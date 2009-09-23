@@ -43,6 +43,8 @@
  */
 package org.fabric3.model.type.contract;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.model.type.ModelObject;
 
 /**
@@ -54,10 +56,10 @@ import org.fabric3.model.type.ModelObject;
  * @version $Rev$ $Date$
  * @param <L> the type of identifier for the logical type system used by this DataType (such as an XML QName or Java Class)
  */
-public class DataType<L> extends ModelObject {
+public abstract class DataType<L> extends ModelObject {
     private static final long serialVersionUID = 1848442023940979720L;
-    private final Class<?> physical;
-    private final L logical;
+    private Class<?> physical;
+    private L logical;
 
     /**
      * Construct a data type specifying the physical and logical types.
@@ -87,6 +89,15 @@ public class DataType<L> extends ModelObject {
      */
     public L getLogical() {
         return logical;
+    }
+
+    /**
+     * Returns the XML Schema type or null if this data type cannot be mapped to the Schema type system
+     *
+     * @return the XML Schema type as a qualified name or null
+     */
+    public QName getXsdType() {
+        return null;
     }
 
     public int hashCode() {
