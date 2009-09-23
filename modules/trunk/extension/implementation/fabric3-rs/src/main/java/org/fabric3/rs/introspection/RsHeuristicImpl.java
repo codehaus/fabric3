@@ -52,15 +52,16 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
-import org.fabric3.model.type.contract.ServiceContract;
 import static org.fabric3.model.type.contract.Operation.NO_CONVERSATION;
+import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
+import org.fabric3.spi.model.type.java.JavaClass;
 
 /**
  * This would better have been implemented as a custom ImplementationProcessor/Heuristic but then it would have limited reuse of the Java
@@ -145,6 +146,7 @@ public class RsHeuristicImpl implements RsHeuristic {
         return definition;
     }
 
+    @SuppressWarnings({"unchecked"})
     private Operation getOperations(Method method) {
 
         Class<?> returnType = method.getReturnType();
@@ -152,14 +154,16 @@ public class RsHeuristicImpl implements RsHeuristic {
         Class<?>[] faultTypes = method.getExceptionTypes();
 
 
-        DataType<Type> returnDataType = new DataType<Type>(returnType, returnType);
+        DataType<Type> returnDataType = new JavaClass(returnType);
         List<DataType<?>> paramDataTypes = new ArrayList<DataType<?>>(paramTypes.length);
         for (Class<?> paramType : paramTypes) {
-            paramDataTypes.add(new DataType<Class>(paramType, paramType));
+            JavaClass paramDataType = new JavaClass(paramType);
+            paramDataTypes.add(paramDataType);
         }
         List<DataType<?>> faultDataTypes = new ArrayList<DataType<?>>(faultTypes.length);
         for (Class<?> faultType : faultTypes) {
-            faultDataTypes.add(new DataType<Class>(faultType, faultType));
+            DataType<Class> faultDataType = new JavaClass(faultType);
+            faultDataTypes.add(faultDataType);
         }
 
         return new Operation(method.getName(), paramDataTypes, returnDataType, faultDataTypes, NO_CONVERSATION);
