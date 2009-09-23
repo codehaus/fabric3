@@ -37,31 +37,42 @@
 */
 package org.fabric3.jaxb.introspection;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.XMLConstants;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.model.type.java.JavaClass;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JAXBTypeIntrospectorTestCase extends TestCase {
+    private static final QName XSD_INT = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "int");
     private JAXBTypeIntrospector introspector;
 
     public void testJAXBIntrospection() throws Exception {
         Operation jaxbOperation = createOperation("jaxbMethod", Param.class);
-        introspector.introspect(jaxbOperation, Contract.class.getMethod("jaxbMethod", Param.class), null);
+        introspector.introspect(jaxbOperation, null, new DefaultIntrospectionContext());
         assertEquals("jaxb", jaxbOperation.getDatabinding());
+    }
+
+    public void testDefaultMapping() throws Exception {
+        Operation operation = createOperation("operation", int.class);
+        introspector.introspect(operation, null, new DefaultIntrospectionContext());
+        DataType<?> dataType = operation.getInputTypes().get(0);
+        assertEquals(XSD_INT, dataType.getXsdType());
     }
 
     public void testNoJAXBIntrospection() throws Exception {
         Operation nonJaxbOperation = createOperation("nonJaxbMethod", String.class);
-        introspector.introspect(nonJaxbOperation, Contract.class.getMethod("nonJaxbMethod", String.class), null);
+        introspector.introspect(nonJaxbOperation, null, new DefaultIntrospectionContext());
         assertNull(nonJaxbOperation.getDatabinding());
     }
 
@@ -70,21 +81,12 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
         introspector = new JAXBTypeIntrospector();
     }
 
+    @SuppressWarnings({"unchecked"})
     private Operation createOperation(String name, Class<?> paramType) {
-        DataType<Type> type = new DataType<Type>(paramType, paramType);
+        JavaClass<?> type = new JavaClass(paramType);
         List<DataType<?>> in = new ArrayList<DataType<?>>();
         in.add(type);
         return new Operation(name, in, null, null);
-    }
-
-    private class Contract {
-        public void jaxbMethod(Param param) {
-
-        }
-
-        public void nonJaxbMethod(String param) {
-
-        }
     }
 
     @XmlRootElement
