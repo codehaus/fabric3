@@ -65,7 +65,7 @@ public enum LogLevels {
      * Encapsulates the logic used to read monitor method log level annotations. Argument <code>Method</code> instances should be annotated with a
      * {@link LogLevel} directly or with one of the level annotations which have a {@link LogLevel} meta-annotation.
      *
-     * @param the annotated monitor method
+     * @param method monitor method
      * @return the annotated <code>LogLevels</code> value
      */
     public static LogLevels getAnnotatedLogLevel(Method method) {
