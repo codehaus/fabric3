@@ -54,4 +54,9 @@ public abstract class XSDType extends DataType<QName> {
     protected XSDType(Class<?> physical, QName logical) {
         super(physical, logical);
     }
+
+    @Override
+    public QName getXsdType() {
+        return getLogical();
+    }
 }
