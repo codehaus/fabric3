@@ -110,11 +110,4 @@ public class MockComponent<T> extends AbstractLifecycle implements AtomicCompone
         return null;
     }
 
-    public Map<String, PropertyValue> getDefaultPropertyValues() {
-        return null;
-    }
-
-    public void setDefaultPropertyValues(Map<String, PropertyValue> propertyValues) {
-    }
-
 }

@@ -140,14 +140,6 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         return null;
     }
 
-    public Map<String, PropertyValue> getDefaultPropertyValues() {
-        return defaultPropertyValues;
-    }
-
-    public void setDefaultPropertyValues(Map<String, PropertyValue> defaultPropertyValues) {
-        this.defaultPropertyValues = defaultPropertyValues;
-    }
-
     /**
      * Adds an ObjectFactory to be reinjected
      *

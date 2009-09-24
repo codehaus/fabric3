@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -79,14 +78,6 @@ public abstract class XQueryComponent<T> extends AbstractLifecycle implements At
 
     public void setClassLoaderId(URI classLoaderId) {
         this.classLoaderId = classLoaderId;
-    }
-
-    public Map<String, PropertyValue> getDefaultPropertyValues() {
-        return null;
-    }
-
-    public void setDefaultPropertyValues(Map<String, PropertyValue> defaultPropertyValues) {
-
     }
 
     public abstract void attachSourceWire(String name, InteractionType interactionType, String callbackUri, Wire wire) throws WiringException;

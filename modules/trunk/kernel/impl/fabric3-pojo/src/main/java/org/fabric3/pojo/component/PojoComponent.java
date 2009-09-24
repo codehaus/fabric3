@@ -44,10 +44,8 @@
 package org.fabric3.pojo.component;
 
 import java.net.URI;
-import java.util.Map;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.pojo.injection.ComponentObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
@@ -139,13 +137,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     @SuppressWarnings({"unchecked"})
     public ObjectFactory<T> createObjectFactory() {
         return new ComponentObjectFactory(this, scopeContainer);
-    }
-
-    public Map<String, PropertyValue> getDefaultPropertyValues() {
-        return null;
-    }
-
-    public void setDefaultPropertyValues(Map<String, PropertyValue> defaultPropertyValues) {
     }
 
     public ScopeContainer getScopeContainer() {

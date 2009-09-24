@@ -44,9 +44,7 @@
 package org.fabric3.spi.component;
 
 import java.net.URI;
-import java.util.Map;
 
-import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.spi.Lifecycle;
 
 /**
@@ -76,20 +74,5 @@ public interface Component extends Lifecycle {
      * @param classLoaderId the classloader the component is associated with.
      */
     void setClassLoaderId(URI classLoaderId);
-
-    /**
-     * Returns the default property values associated with the component.
-     *
-     * @return default property values associated with the component.
-     */
-    Map<String, PropertyValue> getDefaultPropertyValues();
-
-    /**
-     * Sets the default property values associated with the component.
-     *
-     * @param defaultPropertyValues Default property values associated with the component.
-     */
-    void setDefaultPropertyValues(Map<String, PropertyValue> defaultPropertyValues);
-
 
 }
