@@ -47,8 +47,6 @@ import org.easymock.IMocksControl;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.IntrospectionHelper;
-import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 
 /**
@@ -63,10 +61,6 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
         EasyMock.expect(context.getClassLoader()).andReturn(getClass().getClassLoader());
         EasyMock.replay(context);
 
-        IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);
-        helper.resolveTypeParameters(EasyMock.isA(Class.class), (TypeMapping) EasyMock.isNull());
-        EasyMock.expect(helper.isAnnotationPresent(EasyMock.isA(Class.class), EasyMock.isA(Class.class))).andReturn(false).atLeastOnce();
-        EasyMock.replay(helper);
 
         JavaContractProcessor processor = EasyMock.createMock(JavaContractProcessor.class);
         JavaServiceContract controlContract = new JavaServiceContract(IMocksControl.class);
@@ -79,7 +73,7 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
                 EasyMock.isA(IntrospectionContext.class))).andReturn(fooContract);
         EasyMock.replay(processor);
 
-        MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(helper, processor);
+        MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(processor);
 
         List<String> mockedInterfaces = new LinkedList<String>();
         mockedInterfaces.add("org.fabric3.mock.Foo");
