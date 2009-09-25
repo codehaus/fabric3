@@ -50,6 +50,8 @@ import java.util.Map;
 import java.util.UUID;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchema;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -113,24 +115,57 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
             }
             if (introspectJAXB((JavaType<?>) type)) {
                 operation.setDatabinding("jaxb");
-                return;
             }
         }
+        for (DataType<?> type : operation.getFaultTypes()) {
+            // FIXME need to process fault beans
+            if (!(type instanceof JavaType)) {
+                // programming error
+                throw new AssertionError("Java contracts must use " + JavaType.class);
+            }
+            if (introspectJAXB((JavaType<?>) type)) {
+                operation.setDatabinding("jaxb");
+            }
+        }
+        DataType<?> outputType = operation.getOutputType();
+        if (!(outputType instanceof JavaType)) {
+                // programming error
+                throw new AssertionError("Java contracts must use " + JavaType.class);
+            }
+        if (introspectJAXB((JavaType<?>) outputType)) {
+            operation.setDatabinding("jaxb");
+        }
+
     }
 
     private boolean introspectJAXB(JavaType<?> dataType) {
         Class<?> physical = dataType.getPhysical();
-        XmlRootElement annotation = physical.getAnnotation(XmlRootElement.class);
-        if (annotation != null) {
-            QName name = new QName(annotation.namespace(), annotation.name());
-            dataType.setXsdType(name);
-            return true;
-        } else {
-            // not an explicit JAXB type, but it can potentially be mapped
-            QName name = JAXB_MAPPING.get(physical);
+        // not an explicit JAXB type, but it can potentially be mapped
+        QName name = JAXB_MAPPING.get(physical);
+        if (name != null) {
             dataType.setXsdType(name);
             return false;
         }
+        XmlRootElement annotation = physical.getAnnotation(XmlRootElement.class);
+        if (annotation != null) {
+            QName xsdName = new QName(annotation.namespace(), annotation.name());
+            dataType.setXsdType(xsdName);
+            return true;
+        }
+        XmlType typeAnnotation = physical.getAnnotation(XmlType.class);
+        if (typeAnnotation != null) {
+            String namespace = typeAnnotation.namespace();
+            if (namespace == null || "##default".equals(namespace)) {
+                XmlSchema schemaAnnotation = physical.getPackage().getAnnotation(XmlSchema.class);
+                if (schemaAnnotation != null) {
+                    namespace = schemaAnnotation.namespace();
+                }
+            }
+            QName xsdName = new QName(namespace, typeAnnotation.name());
+            dataType.setXsdType(xsdName);
+            return true;
+        }
+        return false;
     }
 
 }

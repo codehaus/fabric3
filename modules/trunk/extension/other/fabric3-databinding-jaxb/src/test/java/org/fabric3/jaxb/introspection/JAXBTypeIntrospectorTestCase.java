@@ -86,7 +86,8 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
         JavaClass<?> type = new JavaClass(paramType);
         List<DataType<?>> in = new ArrayList<DataType<?>>();
         in.add(type);
-        return new Operation(name, in, null, null);
+        JavaClass<Void> outputType = new JavaClass<Void>(Void.class);
+        return new Operation(name, in, outputType, null);
     }
 
     @XmlRootElement
