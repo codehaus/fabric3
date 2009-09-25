@@ -66,7 +66,7 @@ public abstract class AbstractXsdContractMatcherExtension<S extends ServiceContr
         }
         return true;
     }
-
+    // TODO throw explicit error if DataType.getXsdType() == null saying XSD mapping extension is not installed
     protected boolean matchOperation(Operation operation, List<Operation> operations) {
         for (Operation candidate : operations) {
             if (!operation.getName().equalsIgnoreCase(candidate.getName())) {
@@ -92,15 +92,16 @@ public abstract class AbstractXsdContractMatcherExtension<S extends ServiceContr
                 continue;
             }
             // check fault types
-            List<DataType<?>> faultTypes = operation.getFaultTypes();
-            List<DataType<?>> candidateFaultTypes = candidate.getFaultTypes();
-            for (int i = 0; i < faultTypes.size(); i++) {
-                DataType<?> faultType = faultTypes.get(i);
-                DataType<?> candidateFaultType = candidateFaultTypes.get(i);
-                if (faultType.getXsdType() == null || !faultType.getXsdType().equals(candidateFaultType.getXsdType())) {
-                    return false;
-                }
-            }
+            // FIXME handle web faults
+//            List<DataType<?>> faultTypes = operation.getFaultTypes();
+//            List<DataType<?>> candidateFaultTypes = candidate.getFaultTypes();
+//            for (int i = 0; i < faultTypes.size(); i++) {
+//                DataType<?> faultType = faultTypes.get(i);
+//                DataType<?> candidateFaultType = candidateFaultTypes.get(i);
+//                if (faultType.getXsdType() == null || !faultType.getXsdType().equals(candidateFaultType.getXsdType())) {
+//                    return false;
+//                }
+//            }
         }
         return true;
     }
