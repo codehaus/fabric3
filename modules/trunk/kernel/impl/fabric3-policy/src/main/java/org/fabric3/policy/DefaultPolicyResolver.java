@@ -46,11 +46,11 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Namespaces;
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.model.type.contract.Operation;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicyPhase;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.contract.DataType;
-import org.fabric3.model.type.contract.Operation;
 import org.fabric3.policy.resolver.ImplementationPolicyResolver;
 import org.fabric3.policy.resolver.InteractionPolicyResolver;
 import org.fabric3.spi.model.instance.Bindable;
@@ -216,6 +216,25 @@ public class DefaultPolicyResolver implements PolicyResolver {
                 Operation definition = candidate.getDefinition();
                 if (outputType.equals(definition.getOutputType()) && inputTypes.equals(definition.getInputTypes())) {
                     return candidate;
+                }
+                // types could be from different type systems, determine equivalence based on XSD if available
+                if (outputType.getXsdType() != null && definition.getOutputType() != null && inputTypes.size() == definition.getInputTypes().size()) {
+                    if (outputType.getXsdType().equals(definition.getOutputType().getXsdType())) {
+                        boolean found = true;
+                        for (int i = 0; i < inputTypes.size(); i++) {
+                            DataType<?> inputType = inputTypes.get(i);
+                            DataType<?> otherInputType = definition.getInputTypes().get(i);
+                            if (inputType.getXsdType() != null && otherInputType.getXsdType() != null) {
+                                if (!inputType.getXsdType().equals(otherInputType.getXsdType())) {
+                                    found = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (found) {
+                            return candidate;
+                        }
+                    }
                 }
             }
         }
