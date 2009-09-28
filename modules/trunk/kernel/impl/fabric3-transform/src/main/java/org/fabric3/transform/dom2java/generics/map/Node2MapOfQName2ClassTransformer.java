@@ -52,7 +52,7 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
-import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
@@ -63,7 +63,7 @@ import org.fabric3.spi.transform.TransformationException;
  *
  * @version $Rev$ $Date$
  */
-public class Node2MapOfQName2ClassTransformer extends AbstractPullTransformer<Node, Map<QName, Class<?>>> {
+public class Node2MapOfQName2ClassTransformer extends AbstractSingleTypeTransformer<Node, Map<QName, Class<?>>> {
 
     private static JavaGenericType TARGET = null;
 

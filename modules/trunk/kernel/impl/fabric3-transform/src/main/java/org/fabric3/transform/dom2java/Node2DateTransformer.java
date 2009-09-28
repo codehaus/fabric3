@@ -46,7 +46,7 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
@@ -55,7 +55,7 @@ import org.fabric3.spi.transform.TransformationException;
  *
  * @version $Rev$ $Date$
  */
-public class Node2DateTransformer extends AbstractPullTransformer<Node, Date> {
+public class Node2DateTransformer extends AbstractSingleTypeTransformer<Node, Date> {
     private static final JavaClass<Date> TARGET = new JavaClass<Date>(Date.class);
 
     /**

@@ -47,7 +47,7 @@ import org.fabric3.spi.model.type.xsd.XSDSimpleType;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTransformer<SOURCE, TARGET> {
+public abstract class AbstractSingleTypeTransformer<SOURCE, TARGET> implements SingleTypeTransformer<SOURCE, TARGET> {
      // the default source to be used
     private static final XSDSimpleType DEFAULT_SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 

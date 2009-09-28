@@ -47,7 +47,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
@@ -55,7 +55,7 @@ import org.fabric3.spi.transform.TransformationException;
  *
  * @version $Rev$ $Date$
  */
-public class Node2StringTransformer extends AbstractPullTransformer<Node, String> {
+public class Node2StringTransformer extends AbstractSingleTypeTransformer<Node, String> {
 
     public String transform(Node source, TransformContext context) throws TransformationException {
 

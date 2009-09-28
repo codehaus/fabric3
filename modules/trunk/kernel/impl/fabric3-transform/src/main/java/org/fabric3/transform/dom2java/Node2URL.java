@@ -44,14 +44,14 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
-/**
+  /**
  * String to URL Transformer
  */
-public class Node2URL extends AbstractPullTransformer<Node, URL> {
+public class Node2URL extends AbstractSingleTypeTransformer<Node, URL> {
 	private static final JavaClass<URL> TARGET = new JavaClass<URL>(URL.class);
 
 	public DataType<?> getTargetType() {

@@ -62,7 +62,7 @@ import org.w3c.dom.Text;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 import org.fabric3.spi.transform.TransformContext;
 
 /**
@@ -72,7 +72,7 @@ import org.fabric3.spi.transform.TransformContext;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class Stream2DocumentTransformer extends AbstractPullTransformer<XMLStreamReader, Document> {
+public class Stream2DocumentTransformer extends AbstractSingleTypeTransformer<XMLStreamReader, Document> {
 
     private static final JavaClass<Document> TARGET = new JavaClass<Document>(Document.class);
     private static final DocumentBuilderFactory FACTORY;

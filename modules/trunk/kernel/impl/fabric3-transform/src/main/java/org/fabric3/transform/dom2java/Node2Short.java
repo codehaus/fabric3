@@ -43,12 +43,12 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 
-/**
+  /**
  * @version $Rev$ $Date$
  */
-public class Node2Short extends AbstractPullTransformer<Node, Short> {
+public class Node2Short extends AbstractSingleTypeTransformer<Node, Short> {
     private static final JavaClass<Short> TARGET = new JavaClass<Short>(Short.class);
 
     public DataType<?> getTargetType() {

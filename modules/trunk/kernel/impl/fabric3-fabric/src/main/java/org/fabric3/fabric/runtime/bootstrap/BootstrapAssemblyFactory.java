@@ -156,7 +156,7 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.binding.JMXBinding;
 import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.system.generator.SystemComponentGenerator;
 import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
@@ -273,7 +273,7 @@ public class BootstrapAssemblyFactory {
         ReflectiveInstanceFactoryBuilder factoryBuilder = new ReflectiveInstanceFactoryBuilder(classLoaderRegistry);
 
         DefaultTransformerRegistry transformerRegistry = new DefaultTransformerRegistry();
-        List<PullTransformer<?, ?>> transformers = new ArrayList<PullTransformer<?, ?>>();
+        List<SingleTypeTransformer<?, ?>> transformers = new ArrayList<SingleTypeTransformer<?, ?>>();
         transformers.add(new Node2String());
         transformers.add(new Node2IntegerTransformer());
         transformers.add(new Node2BooleanTransformer());

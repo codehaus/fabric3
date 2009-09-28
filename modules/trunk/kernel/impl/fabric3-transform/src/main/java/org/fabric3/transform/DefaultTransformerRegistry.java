@@ -45,7 +45,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformerFactory;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.transform.TransformationException;
@@ -58,14 +58,14 @@ import org.fabric3.spi.transform.Transformer;
  */
 public class DefaultTransformerRegistry implements TransformerRegistry {
     // cache of single type transformers
-    private Map<Key, PullTransformer<?, ?>> transformers = new HashMap<Key, PullTransformer<?, ?>>();
+    private Map<Key, SingleTypeTransformer<?, ?>> transformers = new HashMap<Key, SingleTypeTransformer<?, ?>>();
 
     // cache of transformer factories
     private List<TransformerFactory<?, ?>> factories = new ArrayList<TransformerFactory<?, ?>>();
 
     @Reference(required = false)
-    public void setTransformers(List<PullTransformer<?, ?>> transformers) {
-        for (PullTransformer<?, ?> transformer : transformers) {
+    public void setTransformers(List<SingleTypeTransformer<?, ?>> transformers) {
+        for (SingleTypeTransformer<?, ?> transformer : transformers) {
             Key pair = new Key(transformer.getSourceType(), transformer.getTargetType());
             this.transformers.put(pair, transformer);
         }

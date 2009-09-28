@@ -46,7 +46,7 @@ import org.w3c.dom.Node;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
-import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformerFactory;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
@@ -60,8 +60,8 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
     private DefaultTransformerRegistry registry;
 
     public void testTransformerRegistration() throws Exception {
-        PullTransformer<?, ?> transformer = new Node2IntegerTransformer();
-        List<PullTransformer<?, ?>> transformers = new ArrayList<PullTransformer<?, ?>>();
+        SingleTypeTransformer<?, ?> transformer = new Node2IntegerTransformer();
+        List<SingleTypeTransformer<?, ?>> transformers = new ArrayList<SingleTypeTransformer<?, ?>>();
         transformers.add(transformer);
         registry.setTransformers(transformers);
         XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);

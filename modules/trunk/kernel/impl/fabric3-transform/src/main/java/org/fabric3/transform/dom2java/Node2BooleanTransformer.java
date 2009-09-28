@@ -43,12 +43,12 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.AbstractPullTransformer;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 
-/**
+  /**
  * @version $Rev$ $Date$
  */
-public class Node2BooleanTransformer extends AbstractPullTransformer<Node, Boolean> {
+public class Node2BooleanTransformer extends AbstractSingleTypeTransformer<Node, Boolean> {
     private static final JavaClass<Boolean> TARGET = new JavaClass<Boolean>(Boolean.class);
 
     public DataType<?> getTargetType() {

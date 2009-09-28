@@ -41,11 +41,11 @@ import org.fabric3.model.type.contract.DataType;
 
 
 /**
- * Transforms a source instance to a target type, returning a new target instance.
+ * Transforms a single source type to a target type, returning a new target instance.
  *
  * @version $Rev$ $Date$
  */
-public interface PullTransformer<SOURCE, TARGET> extends Transformer<SOURCE, TARGET> {
+public interface SingleTypeTransformer<SOURCE, TARGET> extends Transformer<SOURCE, TARGET> {
 
     /**
      * Returns the type the transformer transforms from.
