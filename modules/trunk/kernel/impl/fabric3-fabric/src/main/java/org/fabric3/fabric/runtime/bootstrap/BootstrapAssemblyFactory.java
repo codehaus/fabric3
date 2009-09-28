@@ -171,7 +171,7 @@ import org.fabric3.system.singleton.SingletonSourceDefinition;
 import org.fabric3.system.singleton.SingletonSourceWireAttacher;
 import org.fabric3.system.singleton.SingletonTargetDefinition;
 import org.fabric3.system.singleton.SingletonTargetWireAttacher;
-import org.fabric3.transform.DefaultPullTransformerRegistry;
+import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.Node2BooleanTransformer;
 import org.fabric3.transform.dom2java.Node2IntegerTransformer;
 import org.fabric3.transform.dom2java.Node2String;
@@ -272,7 +272,7 @@ public class BootstrapAssemblyFactory {
 
         ReflectiveInstanceFactoryBuilder factoryBuilder = new ReflectiveInstanceFactoryBuilder(classLoaderRegistry);
 
-        DefaultPullTransformerRegistry transformerRegistry = new DefaultPullTransformerRegistry();
+        DefaultTransformerRegistry transformerRegistry = new DefaultTransformerRegistry();
         List<PullTransformer<?, ?>> transformers = new ArrayList<PullTransformer<?, ?>>();
         transformers.add(new Node2String());
         transformers.add(new Node2IntegerTransformer());

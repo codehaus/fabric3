@@ -51,17 +51,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.java.Injectable;
 import org.fabric3.model.type.java.InjectableType;
-import org.fabric3.model.type.contract.DataType;
+import org.fabric3.pojo.component.OASISPojoComponentContext;
+import org.fabric3.pojo.component.OASISPojoRequestContext;
+import org.fabric3.pojo.component.PojoComponent;
+import org.fabric3.pojo.component.PojoComponentContext;
+import org.fabric3.pojo.component.PojoRequestContext;
+import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
-import org.fabric3.pojo.component.PojoComponent;
-import org.fabric3.pojo.component.PojoRequestContext;
-import org.fabric3.pojo.component.PojoComponentContext;
-import org.fabric3.pojo.component.OASISPojoRequestContext;
-import org.fabric3.pojo.component.OASISPojoComponentContext;
-import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -70,17 +70,17 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.expression.ExpressionExpander;
 import org.fabric3.spi.expression.ExpressionExpansionException;
-import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.util.ParamTypes;
 
 /**
@@ -92,12 +92,12 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
     protected ClassLoaderRegistry classLoaderRegistry;
-    protected PullTransformerRegistry transformerRegistry;
+    protected TransformerRegistry transformerRegistry;
     protected ExpressionExpander expander;
 
     protected IntrospectionHelper helper;
 
-    protected PojoComponentBuilder(ClassLoaderRegistry classLoaderRegistry, PullTransformerRegistry transformerRegistry, IntrospectionHelper helper) {
+    protected PojoComponentBuilder(ClassLoaderRegistry classLoaderRegistry, TransformerRegistry transformerRegistry, IntrospectionHelper helper) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.transformerRegistry = transformerRegistry;
         this.helper = helper;
@@ -177,13 +177,14 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     @SuppressWarnings("unchecked")
     private ObjectFactory<?> createObjectFactory(String name, DataType<?> dataType, Element value, ClassLoader classLoader) throws BuilderException {
 
-        PullTransformer<Node, ?> transformer = (PullTransformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, dataType);
-        if (transformer == null) {
-            throw new PropertyTransformException("No transformer for property " + name + " of type: " + dataType);
-        }
 
         try {
-            TransformContext context = new TransformContext(SOURCE_TYPE, dataType, classLoader);
+            Class<?> physical = dataType.getPhysical();
+            Transformer<Node, ?> transformer = (Transformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, dataType, physical);
+            if (transformer == null) {
+                throw new PropertyTransformException("No transformer for property " + name + " of type: " + dataType);
+            }
+            TransformContext context = new TransformContext(classLoader);
             Object instance = transformer.transform(value, context);
             if (instance instanceof String && expander != null) {
                 // if the property value is a string, expand it if it contains expressions

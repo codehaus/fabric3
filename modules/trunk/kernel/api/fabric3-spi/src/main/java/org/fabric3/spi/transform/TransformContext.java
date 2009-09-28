@@ -37,8 +37,6 @@
 */
 package org.fabric3.spi.transform;
 
-import org.fabric3.model.type.contract.DataType;
-
 /**
  * Context information applicable during a transformation.
  *
@@ -46,38 +44,14 @@ import org.fabric3.model.type.contract.DataType;
  */
 public class TransformContext {
     private ClassLoader targetClassLoader;
-    private DataType<?> sourceType;
-    private DataType<?> targetType;
 
     /**
      * Constructor.
      *
-     * @param sourceType        the data type to transform from
-     * @param targetType        the data type to transform to
      * @param targetClassLoader a ClassLoader that can be used instantiate transformation results
      */
-    public TransformContext(DataType<?> sourceType, DataType<?> targetType, ClassLoader targetClassLoader) {
-        this.sourceType = sourceType;
-        this.targetType = targetType;
+    public TransformContext(ClassLoader targetClassLoader) {
         this.targetClassLoader = targetClassLoader;
-    }
-
-    /**
-     * The data type to transform from.
-     *
-     * @return data type to transform from
-     */
-    public DataType<?> getSourceType() {
-        return sourceType;
-    }
-
-    /**
-     * The data type to transform to.
-     *
-     * @return data type to transform to
-     */
-    public DataType<?> getTargetType() {
-        return targetType;
     }
 
     /**

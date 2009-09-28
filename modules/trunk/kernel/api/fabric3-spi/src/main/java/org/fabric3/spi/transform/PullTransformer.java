@@ -37,21 +37,28 @@
 */
 package org.fabric3.spi.transform;
 
+import org.fabric3.model.type.contract.DataType;
+
 
 /**
  * Transforms a source instance to a target type, returning a new target instance.
  *
  * @version $Rev$ $Date$
  */
-public interface PullTransformer<SOURCE, TARGET> extends Transformer {
+public interface PullTransformer<SOURCE, TARGET> extends Transformer<SOURCE, TARGET> {
 
     /**
-     * Transforms the source instance into a new instance of the target type.
+     * Returns the type the transformer transforms from.
      *
-     * @param source  the source instance
-     * @param context the context for this transformation
-     * @return a new instance of the target type
-     * @throws TransformationException if there was a problem during the transformation
+     * @return the type
      */
-    TARGET transform(SOURCE source, TransformContext context) throws TransformationException;
+    DataType<?> getSourceType();
+
+    /**
+     * Returns the type the transformer transforms to.
+     *
+     * @return the type
+     */
+    DataType<?> getTargetType();
+
 }

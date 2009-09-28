@@ -49,6 +49,7 @@ import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.jaxb.factory.JAXBContextFactoryImpl;
 
 /**
  * @version $Rev$ $Date$
@@ -70,7 +71,8 @@ public class JAXBParameterEncoderFactoryTestCase extends TestCase {
 
         Message message = new MessageImpl();
         message.setBody(new Object[]{new Foo()});
-        JAXBParameterEncoderFactory factory = new JAXBParameterEncoderFactory();
+        JAXBContextFactoryImpl jaxbFactory = new JAXBContextFactoryImpl();
+        JAXBParameterEncoderFactory factory = new JAXBParameterEncoderFactory(jaxbFactory);
         ParameterEncoder encoder = factory.getInstance(wire, getClass().getClassLoader());
         String serialized = encoder.encodeText(message);
         Object deserialized = encoder.decode("", serialized);

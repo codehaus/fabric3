@@ -37,68 +37,75 @@
 */
 package org.fabric3.transform;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.transform.ComplexTypePullTransformer;
 import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformerFactory;
+import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.Transformer;
 
 /**
- * Default PullTransformerRegistry implementation.
+ * Default TransformerRegistry implementation.
  *
  * @version $Rev$ $Date$
  */
-public class DefaultPullTransformerRegistry implements PullTransformerRegistry {
-    private Map<TransformerPair, PullTransformer<?, ?>> transformers = new ConcurrentHashMap<TransformerPair, PullTransformer<?, ?>>();
-    private ComplexTypePullTransformer complexTransformer;
+public class DefaultTransformerRegistry implements TransformerRegistry {
+    // cache of single type transformers
+    private Map<Key, PullTransformer<?, ?>> transformers = new HashMap<Key, PullTransformer<?, ?>>();
+
+    // cache of transformer factories
+    private List<TransformerFactory<?, ?>> factories = new ArrayList<TransformerFactory<?, ?>>();
 
     @Reference(required = false)
     public void setTransformers(List<PullTransformer<?, ?>> transformers) {
-        this.transformers.clear();
         for (PullTransformer<?, ?> transformer : transformers) {
-            TransformerPair pair = new TransformerPair(transformer.getSourceType(), transformer.getTargetType());
+            Key pair = new Key(transformer.getSourceType(), transformer.getTargetType());
             this.transformers.put(pair, transformer);
         }
     }
 
     @Reference(required = false)
-    public void setComplexTransformer(ComplexTypePullTransformer complexTransformer) {
-        this.complexTransformer = complexTransformer;
+    public void setFactories(List<TransformerFactory<?, ?>> factories) {
+        this.factories = factories;
     }
 
-    @SuppressWarnings({"unchecked"})
-    public PullTransformer<?, ?> getTransformer(DataType<?> source, DataType<?> target) {
-        TransformerPair pair = new TransformerPair(source, target);
-        PullTransformer<?, ?> transformer = transformers.get(pair);
-        if (transformer == null) {
-            if (complexTransformer != null && complexTransformer.canTransform(target)) {
-                transformer = complexTransformer;
+    public Transformer<?, ?> getTransformer(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
+        Key key = new Key(source, target);
+        Transformer<?, ?> transformer = transformers.get(key);
+        if (transformer != null) {
+            return transformer;
+        }
+
+        for (TransformerFactory<?, ?> factory : factories) {
+            if (factory.canTransform(source, target)) {
+                return factory.create(classes);
             }
         }
-        return transformer;
+
+        return null;
     }
 
-    private static class TransformerPair {
+    private static class Key {
         private final DataType<?> source;
         private final DataType<?> target;
 
-
-        public TransformerPair(DataType<?> source, DataType<?> target) {
+        public Key(DataType<?> source, DataType<?> target) {
             this.source = source;
             this.target = target;
         }
-
 
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            TransformerPair that = (TransformerPair) o;
+            Key that = (Key) o;
 
             return source.equals(that.source) && target.equals(that.target);
 
@@ -111,4 +118,5 @@ public class DefaultPullTransformerRegistry implements PullTransformerRegistry {
             return result;
         }
     }
+
 }

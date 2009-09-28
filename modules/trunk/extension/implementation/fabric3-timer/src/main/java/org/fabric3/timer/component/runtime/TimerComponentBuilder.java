@@ -53,7 +53,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
@@ -71,7 +71,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
     public TimerComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                  @Reference InstanceFactoryBuilder<T> factoryBuilder,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference PullTransformerRegistry transformerRegistry,
+                                 @Reference TransformerRegistry transformerRegistry,
                                  @Reference(name = "nonTrxTimerService") TimerService nonTrxTimerService,
                                  @Reference(name = "trxTimerService") TimerService trxTimerService,
                                  @Reference IntrospectionHelper helper) {

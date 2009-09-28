@@ -35,23 +35,48 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.transform;
+package org.fabric3.jaxb.transform;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
+
+import org.fabric3.jaxb.factory.JAXBContextFactory;
 import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.Transformer;
+import org.fabric3.spi.transform.TransformerFactory;
 
 /**
- * A specialized PullTransformer that converts a complex type to a Java type using a mapping such as JAXB.
+ * Creates {@link JAXB2DocumentTransformer}s
  *
  * @version $Rev$ $Date$
  */
-public interface ComplexTypePullTransformer<SOURCE, TARGET> extends PullTransformer<SOURCE, TARGET> {
+public class JAXB2DocumentTransformerFactory implements TransformerFactory<Object, Document> {
+    private JAXBContextFactory contextFactory;
 
-    /**
-     * Returns true if the transformer can transform the given type.
-     *
-     * @param type the type
-     * @return true if the transformer can transform the given type
-     */
-    boolean canTransform(DataType<?> type);
+    public JAXB2DocumentTransformerFactory(@Reference JAXBContextFactory contextFactory) {
+        this.contextFactory = contextFactory;
+    }
+
+    public boolean canTransform(DataType<?> source, DataType<?> target) {
+        Class<?> physical = source.getPhysical();
+        return target.getPhysical().equals(Document.class)
+                && (physical.isAnnotationPresent(XmlRootElement.class) || physical.isAnnotationPresent(XmlType.class));
+    }
+
+    public Transformer<Object, Document> create(Class<?>... classes) throws TransformationException {
+        try {
+            JAXBContext jaxbContext = contextFactory.createJAXBContext(classes);
+            return new JAXB2DocumentTransformer(jaxbContext);
+        } catch (JAXBException e) {
+            throw new TransformationException(e);
+        }
+    }
+
 
 }

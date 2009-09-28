@@ -59,7 +59,7 @@ import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.system.provision.SystemSourceDefinition;
@@ -74,7 +74,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
     private ProxyService proxyService;
 
     public SystemSourceWireAttacher(@Reference ComponentManager manager,
-                                    @Reference PullTransformerRegistry transformerRegistry,
+                                    @Reference TransformerRegistry transformerRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;

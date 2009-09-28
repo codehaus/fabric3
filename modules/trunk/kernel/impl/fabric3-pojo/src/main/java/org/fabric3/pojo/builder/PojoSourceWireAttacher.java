@@ -51,10 +51,10 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.Transformer;
 
 /**
  * @version $Rev$ $Date$
@@ -62,10 +62,10 @@ import org.fabric3.spi.transform.TransformationException;
 public abstract class PojoSourceWireAttacher {
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(String.class, XSDSimpleType.STRING);
 
-    protected PullTransformerRegistry transformerRegistry;
+    protected TransformerRegistry transformerRegistry;
     protected ClassLoaderRegistry classLoaderRegistry;
 
-    protected PojoSourceWireAttacher(PullTransformerRegistry transformerRegistry, ClassLoaderRegistry loaderRegistry) {
+    protected PojoSourceWireAttacher(TransformerRegistry transformerRegistry, ClassLoaderRegistry loaderRegistry) {
         this.transformerRegistry = transformerRegistry;
         this.classLoaderRegistry = loaderRegistry;
     }
@@ -106,12 +106,13 @@ public abstract class PojoSourceWireAttacher {
 
     @SuppressWarnings("unchecked")
     private Object createKey(DataType<?> targetType, String value, ClassLoader classLoader) throws KeyInstantiationException {
-        PullTransformer<String, ?> transformer = (PullTransformer<String, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
-        if (transformer == null) {
-            throw new KeyInstantiationException("No transformer for : " + targetType);
-        }
         try {
-            TransformContext context = new TransformContext(SOURCE_TYPE, targetType, classLoader);
+            Class<?> physical = targetType.getPhysical();
+            Transformer<String, ?> transformer = (Transformer<String, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType, physical);
+            if (transformer == null) {
+                throw new KeyInstantiationException("No transformer for : " + targetType);
+            }
+            TransformContext context = new TransformContext(classLoader);
             return transformer.transform(value, context);
         } catch (TransformationException e) {
             throw new KeyInstantiationException("Error transformatng property", e);

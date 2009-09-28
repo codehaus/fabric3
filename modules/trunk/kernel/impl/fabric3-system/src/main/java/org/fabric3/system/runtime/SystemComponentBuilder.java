@@ -59,7 +59,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.system.provision.SystemComponentDefinition;
 
 /**
@@ -73,7 +73,7 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
     public SystemComponentBuilder(@Reference ScopeRegistry scopeRegistry,
                                   @Reference InstanceFactoryBuilder<T> factoryBuilder,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference PullTransformerRegistry transformerRegistry,
+                                  @Reference TransformerRegistry transformerRegistry,
                                   @Reference IntrospectionHelper helper) {
         super(classLoaderRegistry, transformerRegistry, helper);
         this.scopeRegistry = scopeRegistry;

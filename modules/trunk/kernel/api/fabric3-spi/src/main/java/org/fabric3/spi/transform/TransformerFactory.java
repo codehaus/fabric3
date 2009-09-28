@@ -40,18 +40,27 @@ package org.fabric3.spi.transform;
 import org.fabric3.model.type.contract.DataType;
 
 /**
- * Registry for push transformers.
+ * Creates a transformer capable of converting a set of classes from a source to target type.
  *
- * @version $Rev: 7146 $ $Date: 2009-06-14 16:28:54 -0700 (Sun, 14 Jun 2009) $
+ * @version $Rev: 7606 $ $Date: 2009-09-09 16:00:11 +0200 (Wed, 09 Sep 2009) $
  */
-public interface PushTransformerRegistry {
+public interface TransformerFactory<SOURCE, TARGET> {
 
     /**
-     * Returns a transformer for the source and target types.
+     * Returns true if the factory creates transformers that can transform from the source to target data types.
      *
-     * @param source the type to transform from
-     * @param target the type to transform to
-     * @return the transformer
+     * @param source the source datatype
+     * @param target the target datatype
+     * @return true if the factory creates transformers that can transform from the source to target data types
      */
-    PushTransformer<?,?> getTransformer(DataType<?> source, DataType<?> target);
+    boolean canTransform(DataType<?> source, DataType<?> target);
+
+    /**
+     * Creates a transformer capable of transforming to or from the given set of classes.
+     *
+     * @param classes the classes to transform
+     * @return the transformer
+     * @throws TransformationException if there was an error creating the transformer
+     */
+    Transformer<SOURCE, TARGET> create(Class<?>... classes) throws TransformationException;
 }

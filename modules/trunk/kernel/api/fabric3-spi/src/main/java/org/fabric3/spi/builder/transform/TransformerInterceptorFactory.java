@@ -35,23 +35,44 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.transform;
+package org.fabric3.spi.builder.transform;
 
 import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.wire.Interceptor;
+
 
 /**
- * Registry for pull transformers.
+ * Creates interceptors that transform input and output paramters from one format to another, e.g. DOM to Java and vice versa.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7606 $ $Date: 2009-09-09 16:00:11 +0200 (Wed, 09 Sep 2009) $
  */
-public interface PullTransformerRegistry {
+public interface TransformerInterceptorFactory {
 
     /**
-     * Returns a transformer for the source and target types.
+     * Creates an interceptor that transforms input parameters from the given source to target type.
      *
-     * @param source the type to transform from
-     * @param target the type to transform to
-     * @return the transformer
+     * @param operation the operation to create the interceptor for
+     * @param source    the source type
+     * @param target    the target type
+     * @param loader    the target service's contribution classloader
+     * @return the interceptor
+     * @throws WiringException if there is an error creating the interceptor
      */
-    PullTransformer<?,?> getTransformer(DataType<?> source, DataType<?> target);
+    Interceptor createInputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, DataType<?> target, ClassLoader loader)
+            throws WiringException;
+
+    /**
+     * Creates an interceptor that transforms output and fault parameters from the given source to target type.
+     *
+     * @param operation the operation to create the interceptor for
+     * @param source    the source type
+     * @param target    the target type
+     * @param loader    the target service's contribution classloader
+     * @return the interceptor
+     * @throws WiringException if there is an error creating the interceptor
+     */
+    Interceptor createOutputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, DataType<?> target, ClassLoader loader)
+            throws WiringException;
 }

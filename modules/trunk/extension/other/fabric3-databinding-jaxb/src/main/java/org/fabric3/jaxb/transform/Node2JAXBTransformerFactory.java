@@ -34,69 +34,46 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * --- Original Apache License ---
- *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.    
- */
+*/
 package org.fabric3.jaxb.transform;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.w3c.dom.Element;
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.jaxb.factory.JAXBContextFactory;
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.type.java.JavaType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
+import org.fabric3.spi.transform.TransformerFactory;
 
 /**
- * Converts from a DOM Node to a JAXB type.
+ * Creates {@link Node2JaxbTransformer}s.
  *
  * @version $Rev$ $Date$
  */
-public class Node2JaxbTransformer implements Transformer<Node, Object> {
-    private JAXBContext jaxbContext;
+public class Node2JAXBTransformerFactory implements TransformerFactory<Node, Object> {
+    private JAXBContextFactory contextFactory;
 
-    public Node2JaxbTransformer(JAXBContext jaxbContext) {
-
-        this.jaxbContext = jaxbContext;
+    public Node2JAXBTransformerFactory(@Reference JAXBContextFactory contextFactory) {
+        this.contextFactory = contextFactory;
     }
 
-    public Object transform(Node source, TransformContext context) throws TransformationException {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(context.getTargetClassLoader());
-            NodeList children = source.getChildNodes();
-            for (int i = 0; i < children.getLength(); i++) {
-                if (children.item(i) instanceof Element) {
-                    return jaxbContext.createUnmarshaller().unmarshal(children.item(i));
-                }
-            }
-            throw new TransformationException("Unexpected content");
+    public boolean canTransform(DataType<?> source, DataType<?> target) {
+        return Node.class.isAssignableFrom(source.getPhysical()) && target instanceof JavaType;
+    }
 
+    public Transformer<Node, Object> create(Class<?>... classes) throws TransformationException {
+        try {
+            JAXBContext jaxbContext = contextFactory.createJAXBContext(classes);
+            return new Node2JaxbTransformer(jaxbContext);
         } catch (JAXBException e) {
             throw new TransformationException(e);
-        } finally {
-            Thread.currentThread().setContextClassLoader(cl);
         }
     }
+
 
 }

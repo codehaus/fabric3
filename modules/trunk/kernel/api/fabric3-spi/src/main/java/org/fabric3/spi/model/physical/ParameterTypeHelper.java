@@ -35,12 +35,11 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.binding.format;
+package org.fabric3.spi.model.physical;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.util.ParamTypes;
 
 /**
@@ -48,8 +47,8 @@ import org.fabric3.spi.util.ParamTypes;
  *
  * @version $Rev$ $Date$
  */
-public class OperationTypeHelper {
-    private OperationTypeHelper() {
+public class ParameterTypeHelper {
+    private ParameterTypeHelper() {
     }
 
     /**
@@ -58,9 +57,9 @@ public class OperationTypeHelper {
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
-     * @throws EncoderException if an error occurs loading the types
+     * @throws ClassNotFoundException if an error occurs loading the types
      */
-    public static Set<Class<?>> loadInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws EncoderException {
+    public static Set<Class<?>> loadInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         Set<Class<?>> types = new HashSet<Class<?>>();
         for (String param : operation.getParameters()) {
             Class<?> clazz = loadClass(param, loader);
@@ -75,9 +74,9 @@ public class OperationTypeHelper {
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
-     * @throws EncoderException if an error occurs loading the types
+     * @throws ClassNotFoundException if an error occurs loading the types
      */
-    public static Set<Class<?>> loadFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws EncoderException {
+    public static Set<Class<?>> loadFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         Set<Class<?>> types = new HashSet<Class<?>>();
         for (String param : operation.getFaultTypes()) {
             Class<?> clazz = loadClass(param, loader);
@@ -92,9 +91,9 @@ public class OperationTypeHelper {
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
-     * @throws EncoderException if an error occurs loading the types
+     * @throws ClassNotFoundException if an error occurs loading the types
      */
-    public static Class<?> loadOutputType(PhysicalOperationDefinition operation, ClassLoader loader) throws EncoderException {
+    public static Class<?> loadOutputType(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         // currently only one type is supported although WSDL allows multiple
         return loadClass(operation.getReturnType(), loader);
     }
@@ -105,17 +104,13 @@ public class OperationTypeHelper {
      * @param name   the class name
      * @param loader the classloader to use for loading
      * @return the class
-     * @throws EncoderException if an error occurs loading the class
+     * @throws ClassNotFoundException if an error occurs loading the class
      */
-    private static Class<?> loadClass(String name, ClassLoader loader) throws EncoderException {
+    private static Class<?> loadClass(String name, ClassLoader loader) throws ClassNotFoundException {
         Class<?> clazz;
         clazz = ParamTypes.PRIMITIVES_TYPES.get(name);
         if (clazz == null) {
-            try {
-                clazz = loader.loadClass(name);
-            } catch (ClassNotFoundException e) {
-                throw new EncoderException(e);
-            }
+            clazz = loader.loadClass(name);
         }
         return clazz;
     }

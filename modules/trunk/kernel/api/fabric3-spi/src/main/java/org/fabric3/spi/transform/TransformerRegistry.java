@@ -35,52 +35,27 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.xml;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
-import org.w3c.dom.Element;
+package org.fabric3.spi.transform;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.transform.PushTransformer;
-import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.TransformationException;
 
 /**
+ * Registry of Transformers.
+ *
  * @version $Rev$ $Date$
  */
-public class Stream2ElementTransformer implements PushTransformer<XMLStreamReader, Element> {
-    private final Stream2StreamTransformer streamTransformer;
+public interface TransformerRegistry {
+
+    /**
+     * Returns a transformer for the source and target types.
+     *
+     * @param source  the type to transform from
+     * @param target  the type to transform to
+     * @param classes the types that must be converted to or from
+     * @return the transformer
+     * @throws TransformationException if an error occurs returning the transformer
+     */
+    Transformer<?, ?> getTransformer(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException;
 
 
-    public Stream2ElementTransformer(Stream2StreamTransformer streamTransformer) {
-        this.streamTransformer = streamTransformer;
-    }
-
-    public boolean canTransform(DataType<?> type) {
-        return false;
-    }
-
-    public DataType<?> getSourceType() {
-        return null;
-    }
-
-    public DataType<?> getTargetType() {
-        return null;
-    }
-
-    public void transform(XMLStreamReader reader, Element element, TransformContext context) throws TransformationException {
-        XMLStreamWriter writer = new DOMStreamWriter(element.getOwnerDocument(), element);
-        try {
-            streamTransformer.transform(reader, writer, null);
-        } finally {
-            try {
-                writer.close();
-            } catch (XMLStreamException e) {
-                // ignore
-            }
-        }
-    }
 }

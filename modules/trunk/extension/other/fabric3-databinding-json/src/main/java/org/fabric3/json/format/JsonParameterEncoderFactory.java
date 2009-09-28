@@ -44,9 +44,9 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.OperationTypeHelper;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.model.physical.ParameterTypeHelper;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -64,7 +64,12 @@ public class JsonParameterEncoderFactory implements ParameterEncoderFactory {
         for (InvocationChain chain : wire.getInvocationChains()) {
             PhysicalOperationDefinition definition = chain.getPhysicalOperation();
             String name = definition.getName();
-            Set<Class<?>> inParams = OperationTypeHelper.loadInParameterTypes(definition, loader);
+            Set<Class<?>> inParams;
+            try {
+                inParams = ParameterTypeHelper.loadInParameterTypes(definition, loader);
+            } catch (ClassNotFoundException e) {
+                throw new EncoderException(e);
+            }
             if (inParams.size() > 1) {
                 throw new EncoderException("Multiple parameters not supported");
             }
@@ -75,10 +80,14 @@ public class JsonParameterEncoderFactory implements ParameterEncoderFactory {
             } else {
                 inParam = inParams.iterator().next();
             }
-            Class<?> outParam = OperationTypeHelper.loadOutputType(definition, loader);
-            Set<Class<?>> faults = OperationTypeHelper.loadFaultTypes(definition, loader);
-            OperationTypes types = new OperationTypes(inParam, outParam, faults);
-            mappings.put(name, types);
+            try {
+                Class<?> outParam = ParameterTypeHelper.loadOutputType(definition, loader);
+                Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
+                OperationTypes types = new OperationTypes(inParam, outParam, faults);
+                mappings.put(name, types);
+            } catch (ClassNotFoundException e) {
+                throw new EncoderException(e);
+            }
         }
         return new JsonParameterEncoder(mappings);
     }

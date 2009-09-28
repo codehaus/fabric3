@@ -43,11 +43,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.jaxb.factory.JAXBContextFactory;
 import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.OperationTypeHelper;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoderFactory;
+import org.fabric3.spi.model.physical.ParameterTypeHelper;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -59,45 +61,35 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class JAXBParameterEncoderFactory implements ParameterEncoderFactory {
+    private JAXBContextFactory factory;
+
+    public JAXBParameterEncoderFactory(@Reference JAXBContextFactory factory) {
+        this.factory = factory;
+    }
 
     public ParameterEncoder getInstance(Wire wire, ClassLoader loader) throws EncoderException {
 
-        Set<Class<?>> types = new HashSet<Class<?>>();
-        for (InvocationChain chain : wire.getInvocationChains()) {
-            PhysicalOperationDefinition definition = chain.getPhysicalOperation();
-            Set<Class<?>> inParams = OperationTypeHelper.loadInParameterTypes(definition, loader);
-            types.addAll(inParams);
-            Class<?> outParam = OperationTypeHelper.loadOutputType(definition, loader);
-            types.add(outParam);
-            Set<Class<?>> faults = OperationTypeHelper.loadFaultTypes(definition, loader);
-            types.addAll(faults);
-        }
-
         try {
-            JAXBContext jaxbContext = createJAXBContext(types);
+            Set<Class<?>> types = new HashSet<Class<?>>();
+            for (InvocationChain chain : wire.getInvocationChains()) {
+                PhysicalOperationDefinition definition = chain.getPhysicalOperation();
+                Set<Class<?>> inParams = ParameterTypeHelper.loadInParameterTypes(definition, loader);
+                types.addAll(inParams);
+                Class<?> outParam = ParameterTypeHelper.loadOutputType(definition, loader);
+                types.add(outParam);
+                Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
+                types.addAll(faults);
+            }
+
+            JAXBContext jaxbContext = factory.createJAXBContext(types.toArray(new Class<?>[types.size()]));
             return new JAXBParameterEncoder(jaxbContext);
         } catch (JAXBException e) {
+            throw new EncoderException(e);
+        } catch (ClassNotFoundException e) {
             throw new EncoderException(e);
         }
     }
 
-    /**
-     * Constructs a JAXB context by introspecting a set of classnames.
-     *
-     * @param types the context class types
-     * @return a JAXB context
-     * @throws JAXBException if an error occurs creating the JAXB context
-     */
-    private JAXBContext createJAXBContext(Set<Class<?>> types) throws JAXBException {
-        Class<?>[] classes = types.toArray(new Class<?>[types.size()]);
-        ClassLoader old = Thread.currentThread().getContextClassLoader();
-        try {
-            ClassLoader cl = getClass().getClassLoader();
-            Thread.currentThread().setContextClassLoader(cl);
-            return JAXBContext.newInstance(classes);
-        } finally {
-            Thread.currentThread().setContextClassLoader(old);
-        }
-    }
+
 
 }

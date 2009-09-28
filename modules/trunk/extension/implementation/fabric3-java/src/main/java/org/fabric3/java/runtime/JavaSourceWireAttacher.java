@@ -55,7 +55,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.transform.PullTransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 
@@ -73,7 +73,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
     public JavaSourceWireAttacher(@Reference ComponentManager manager,
                                   @Reference ProxyService proxyService,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference PullTransformerRegistry transformerRegistry) {
+                                  @Reference TransformerRegistry transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
         this.proxyService = proxyService;

@@ -15,8 +15,8 @@ Public License. See the accompanying license file for details.
            name="TransformComposite"
            autowire="true">
 
-    <component name="PullTransformerRegistry">
-        <f3-impl:implementation.system class="org.fabric3.transform.DefaultPullTransformerRegistry"/>
+    <component name="TransformerRegistry">
+        <f3-impl:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
     </component>
 
     <component name="Node2BooleanTransformer">
