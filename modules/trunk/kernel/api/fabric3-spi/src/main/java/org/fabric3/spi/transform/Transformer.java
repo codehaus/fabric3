@@ -47,12 +47,11 @@ public interface Transformer<SOURCE, TARGET> {
     /**
      * Transforms the source instance into a new instance of the target type.
      *
-     * @param source  the source instance
-     * @param context the context for this transformation
+     * @param source the source instance
+     * @param loader the classloader for instantiating target types
      * @return a new instance of the target type
      * @throws TransformationException if there was a problem during the transformation
      */
-    TARGET transform(SOURCE source, TransformContext context) throws TransformationException;
-
+    TARGET transform(SOURCE source, ClassLoader loader) throws TransformationException;
 
 }

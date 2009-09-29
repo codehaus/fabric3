@@ -37,51 +37,28 @@
    */
 package org.fabric3.transform.dom2java;
 
+import org.w3c.dom.Node;
+
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 
-/**
- * Tests String to Float Transform
+  /**
+ * @version $Rev$ $Date$
  */
-public class Node2FloatTestCase extends BaseTransformTest {
+public class Node2ShortTransformer extends AbstractSingleTypeTransformer<Node, Short> {
+    private static final JavaClass<Short> TARGET = new JavaClass<Short>(Short.class);
 
-	/**
-	 * Test of converting String to Float
-	 */
-	public void testFloatTransform() {
-		final String ANY_FLOAT_NUMBER = "99.00";
-		final String xml = "<string_to_float>" + ANY_FLOAT_NUMBER + "</string_to_float>";
-		try {
-			final double convertedFloat = getStringToFloat().transform(getNode(xml), null);
-			assertNotNull(convertedFloat);
-            assertEquals(99.00, convertedFloat);
-		} catch (TransformationException te) {
-			fail("Transform exception should not occur " + te);
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
-	
-	/**
-	 * Test failure of converting String to Float
-	 */
-	public void testFloatTransformFailure() {
-	    final String NON_FLOAT = "NON FLOAT";
-		final String xml = "<string_to_float>" + NON_FLOAT + "</string_to_float>";
-		try {
-			getStringToFloat().transform(getNode(xml), null);
-			fail("Should not reach here something wrong in [ String2Float ] code");
-		} catch (TransformationException te) {
-			assertNotNull(te);
-			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
+    public DataType<?> getTargetType() {
+        return TARGET;
+    }
 
-	/**
-	 * @return
-	 */
-	private Node2FloatTransformer getStringToFloat() {
-		return new Node2FloatTransformer();
-	}
+    public Short transform(Node node, ClassLoader loader) throws TransformationException {
+        try {
+            return Short.valueOf(node.getTextContent());
+        } catch (NumberFormatException ex) {
+            throw new TransformationException("Unsupportable short " + node.getTextContent(), ex);
+        }
+    }
 }

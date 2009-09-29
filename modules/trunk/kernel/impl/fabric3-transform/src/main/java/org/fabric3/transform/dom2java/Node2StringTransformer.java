@@ -35,62 +35,26 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.dom2java.generics.map;
+package org.fabric3.transform.dom2java;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.java.JavaGenericType;
-import org.fabric3.spi.model.type.java.JavaTypeInfo;
+import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Expects the property to be dfined in the format,
- * <p/>
- * <code> <key1>value1</key1> <key2>value2</key2> </code>
- *
  * @version $Rev$ $Date$
  */
-public class Node2MapOfStringsTransformer extends AbstractSingleTypeTransformer<Node, Map<String, String>> {
-
-    private static JavaGenericType TARGET = null;
-
-    static {
-        JavaTypeInfo stringInfo = new JavaTypeInfo(String.class);
-        List<JavaTypeInfo> list = new ArrayList<JavaTypeInfo>();
-        list.add(stringInfo);
-        list.add(stringInfo);
-        JavaTypeInfo mapInfo = new JavaTypeInfo(Map.class, list);
-        TARGET = new JavaGenericType(mapInfo);
-    }
+public class Node2StringTransformer extends AbstractSingleTypeTransformer<Node, String> {
+    private static final JavaClass<String> TARGET = new JavaClass<String>(String.class);
 
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
-    public Map<String, String> transform(final Node node, ClassLoader loader)
-            throws TransformationException {
-
-        final Map<String, String> map = new HashMap<String, String>();
-        final NodeList nodeList = node.getChildNodes();
-
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node child = nodeList.item(i);
-            if (child instanceof Element) {
-                Element element = (Element) child;
-                map.put(element.getTagName(), child.getTextContent());
-            }
-        }
-        return map;
+    public String transform(Node node, ClassLoader loader) throws TransformationException {
+        return node.getTextContent();
     }
-
-
 }

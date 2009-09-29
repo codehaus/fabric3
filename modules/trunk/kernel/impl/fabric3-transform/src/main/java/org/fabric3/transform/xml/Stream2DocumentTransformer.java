@@ -63,9 +63,8 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 
-/**
+  /**
  * Pull transformer that will convert a Stax stream to a DOM representation. The transformer expects the cursor to be at the element from which the
  * info set needs to transferred into the DOM tree.
  *
@@ -86,7 +85,7 @@ public class Stream2DocumentTransformer extends AbstractSingleTypeTransformer<XM
         return TARGET;
     }
 
-    public Document transform(XMLStreamReader reader, TransformContext context) throws TransformationException {
+    public Document transform(XMLStreamReader reader, ClassLoader loader) throws TransformationException {
 
         if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
             throw new TransformationException("The stream needs to be at te start of an element");

@@ -37,51 +37,35 @@
    */
 package org.fabric3.transform.dom2java;
 
+import java.io.IOException;
+import java.io.StringBufferInputStream;
+import java.util.Properties;
+
+import org.w3c.dom.Node;
+
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 
-/**
- * Tests String to Double Transform
+  /**
+ * @version $Rev$ $Date$
  */
-public class Node2DoubleTestCase extends BaseTransformTest {
+public class Node2PropertiesTransformer extends AbstractSingleTypeTransformer<Node, Properties> {
+    private static final JavaClass<Properties> TARGET = new JavaClass<Properties>(Properties.class);
 
-	/**
-	 * Test of converting String to Double
-	 */
-	public void testDoubleTransform() {
-		final String ANY_DOUBLE_NUMBER = "99919329323.00102345";
-		final String xml = "<string_to_double>" + ANY_DOUBLE_NUMBER + "</string_to_double>";
-		try {
-			double convertedDouble = getStringToDouble().transform(getNode(xml), null);
-			assertNotNull(convertedDouble);
-            assertEquals(99919329323.00102345, convertedDouble);
-		} catch (TransformationException te) {
-			fail("Transform exception should not occur " + te);
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
-	
-	/**
-	 * Test failure of converting String to Double
-	 */
-	public void testDoubleTransformFailure() {
-	    final String NON_DOUBLE = "NOT DOUBLE";
-		final String xml = "<string_to_double>" + NON_DOUBLE + "</string_to_double>";
-		try {
-			getStringToDouble().transform(getNode(xml), null);
-			fail("Should not reach here something wrong in [ String2Double ] code");
-		} catch (TransformationException te) {
-			assertNotNull(te);
-			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
+    public DataType<?> getTargetType() {
+        return TARGET;
+    }
 
-	/**
-	 * @return
-	 */
-	private Node2DoubleTransformer getStringToDouble() {
-		return new Node2DoubleTransformer();
-	}
+    public Properties transform(Node node, ClassLoader loader) throws TransformationException {
+        String content = node.getTextContent();
+        Properties properties = new Properties();
+        try {
+            properties.load(new StringBufferInputStream(content));
+        } catch (IOException e) {
+            throw new TransformationException(e);
+        }
+        return properties;
+    }
 }

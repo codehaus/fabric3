@@ -44,7 +44,6 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -67,9 +66,9 @@ public class String2ClassTransformer extends AbstractSingleTypeTransformer<Strin
         return TARGET;
     }
 
-    public Class<?> transform(String source, TransformContext context) throws TransformationException {
+    public Class<?> transform(String source, ClassLoader loader) throws TransformationException {
         try {
-            return classLoaderRegistry.loadClass(context.getTargetClassLoader(), source);
+            return classLoaderRegistry.loadClass(loader, source);
         } catch (ClassNotFoundException e) {
             throw new TransformationException(e);
         }

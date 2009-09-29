@@ -51,10 +51,9 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
-import org.fabric3.spi.transform.TransformerRegistry;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -112,8 +111,7 @@ public abstract class PojoSourceWireAttacher {
             if (transformer == null) {
                 throw new KeyInstantiationException("No transformer for : " + targetType);
             }
-            TransformContext context = new TransformContext(classLoader);
-            return transformer.transform(value, context);
+            return transformer.transform(value, classLoader);
         } catch (TransformationException e) {
             throw new KeyInstantiationException("Error transformatng property", e);
         }

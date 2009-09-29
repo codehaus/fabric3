@@ -48,7 +48,6 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -74,7 +73,7 @@ public class Node2ListOfQNameTransformer extends AbstractSingleTypeTransformer<N
         return TARGET;
     }
 
-    public List<QName> transform(final Node node, final TransformContext context) throws TransformationException {
+    public List<QName> transform(final Node node, ClassLoader loader) throws TransformationException {
 
         final List<QName> list = new ArrayList<QName>();
         final StringTokenizer tokenizer = new StringTokenizer(node.getTextContent(), " \t\n\r\f,");

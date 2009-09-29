@@ -37,57 +37,28 @@
    */
 package org.fabric3.transform.dom2java;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Map;
 
-import org.fabric3.spi.transform.TransformationException;
+import org.w3c.dom.Node;
 
+import org.fabric3.transform.dom2java.generics.map.Node2MapOfStringsTransformer;
 
-/**
- * Tests String to URI Transform
- */
-public class Node2URITestCase extends BaseTransformTest {
+  public class Node2MapOfStringTransformerTestCase extends BaseTransformTest {
 
-	/**
-	 * Test for successful transformation from String to URI 
-	 */
-	public void testURITransformSuccess() {
-		final String uriContent = "xmlns:f3";
-		final String xml = "<string_to_uri>" + uriContent + "</string_to_uri>";
-		
-		try {
-			final URI transformedURI = getStringToURI().transform(getNode(xml), null);
-			assertNotNull(transformedURI);
-			assertEquals(uriContent, transformedURI.toString());
-		} catch (TransformationException te) {
-			fail("TransformationException : - Should Not Occur" + te);
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
-	
-	/**
-	 * Test for unsuccessful Conversion from String URI
-	 */
-	public void testURITransformationSuccess() {
-		final String errorURIContent = "[[[[]]io9876^^^hasx";
-		final String xml = "<string_to_urierror>" + errorURIContent + "</string_to_urierror>";
-		
-		try {
-			getStringToURI().transform(getNode(xml), null);
-			fail("Should not convert to URI");
-		} catch (TransformationException te) {
-			assertNotNull(te);
-		    URISyntaxException.class.isAssignableFrom(te.getClass());
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
-	
-	/**
-	 * @return StringToURI
-	 */
-	private Node2URI getStringToURI() {
-		return new Node2URI();
-	}
+    public void testTransform() throws Exception {
+
+        Node2MapOfStringsTransformer transformer = new Node2MapOfStringsTransformer();
+
+        String xml = "<value><apple>yellow</apple><lime>green</lime><grape>black</grape></value>";
+
+        Node node = getNode(xml);
+        
+        Map<String, String> map = transformer.transform(node, getClass().getClassLoader());
+
+        assertEquals(3, map.size());
+        assertEquals("yellow", map.get("apple"));
+        assertEquals("green", map.get("lime"));
+        assertEquals("black", map.get("grape"));
+    }
+
 }

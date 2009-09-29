@@ -50,7 +50,7 @@ import org.xml.sax.InputSource;
 /**
  * @version $Rev$ $Date$
  */
-public class Node2ListOfQNameTestCase extends TestCase {
+public class Node2ListOfQNameTransformerTestCase extends TestCase {
     private static final DocumentBuilderFactory DOCUMENT_FACTORY;
     private static final String PREFIX = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String NO_NAMESPACES_XML = PREFIX + "<test>zero, one, two</test>";
@@ -65,7 +65,7 @@ public class Node2ListOfQNameTestCase extends TestCase {
 
     public void testNoNamespacesTransform() throws Exception {
         Element element = createTestNode(NO_NAMESPACES_XML);
-        List<QName> list = transformer.transform(element, null);
+        List<QName> list = transformer.transform(element, getClass().getClassLoader());
         assertEquals(3, list.size());
         assertEquals("zero", list.get(0).getLocalPart());
         assertEquals("one", list.get(1).getLocalPart());
@@ -74,7 +74,7 @@ public class Node2ListOfQNameTestCase extends TestCase {
 
     public void testNamespacesTransform() throws Exception {
         Element element = createTestNode(NAMESPACES_XML);
-        List<QName> list = transformer.transform(element, null);
+        List<QName> list = transformer.transform(element, getClass().getClassLoader());
         assertEquals(3, list.size());
         assertEquals("ns", list.get(0).getNamespaceURI());
         assertEquals("ns", list.get(1).getNamespaceURI());

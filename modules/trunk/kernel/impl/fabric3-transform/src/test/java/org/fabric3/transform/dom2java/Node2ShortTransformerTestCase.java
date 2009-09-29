@@ -37,57 +37,46 @@
 */
 package org.fabric3.transform.dom2java;
 
+import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Tests String to boolean transform.
+ * Tests String to Integer transform.
  *
  * @version $Rev$ $Date$
  */
-public class Node2BooleanTestCase extends BaseTransformTest {
+public class Node2ShortTransformerTestCase extends BaseTransformTest {
 
     /**
-     * Test of converting String to Boolean on true
+     * Test of converting String to Short
      */
-    public void testBooleanTransformForTrue() {
-        final String TRUE = "true";
-        final String xml = "<string_to_boolean>" + TRUE + "</string_to_boolean>";
+    public void testShortTransform() {
+        final String ANY_SHORT = "153";
+        final String xml = "<string_to_short>" + ANY_SHORT + "</string_to_short>";
         try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            final boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertTrue(convBoolean);
+            Node2ShortTransformer transformer = new Node2ShortTransformer();
+            final short convertedShort = transformer.transform(getNode(xml), getClass().getClassLoader());
+            assertNotNull(convertedShort);
+            assertEquals(153, convertedShort);
+        } catch (TransformationException te) {
+            fail("Transform exception should not occur " + te);
         } catch (Exception e) {
             fail("Unexpexcted Exception Should not occur " + e);
         }
     }
 
     /**
-     * Test failure of converting String to boolean on False
+     * Test failure of converting String to Short
      */
-    public void testBooleanTransformForFalse() {
-        final String FALSE = "false";
-        final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
+    public void testShortTransformFailure() {
+        final String INVALID_SHORT = "153908765";
+        final String xml = "<string_to_short>" + INVALID_SHORT + "</string_to_short>";
         try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertFalse(convBoolean);
-        } catch (Exception e) {
-            fail("Unexpexcted Exception Should not occur " + e);
-        }
-    }
-
-    /**
-     * Test failure of converting String to boolean on False
-     */
-    public void testBooleanOnUnspecifiedFalse() {
-        final String FALSE = "SHOULD BE FALSE";
-        final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
-        try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertFalse(convBoolean);
+            Node2ShortTransformer transformer = new Node2ShortTransformer();
+            transformer.transform(getNode(xml), getClass().getClassLoader());
+            fail("Should not reach here something wrong in [ String2Short ] code");
+        } catch (TransformationException te) {
+            assertNotNull(te);
+            assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
         } catch (Exception e) {
             fail("Unexpexcted Exception Should not occur " + e);
         }

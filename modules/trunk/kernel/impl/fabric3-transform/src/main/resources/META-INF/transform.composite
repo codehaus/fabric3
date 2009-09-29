@@ -28,7 +28,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="Node2ShortTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2Short"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2ShortTransformer"/>
     </component>
 
     <component name="Node2IntegerTransformer">
@@ -36,7 +36,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="Node2LongTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2Long"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2LongTransformer"/>
     </component>
 
     <component name="Node2FloatTransformer">
@@ -48,7 +48,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="Node2QNameTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2QName"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2QNameTransformer"/>
     </component>
 
     <component name="Node2ClassTransformer">
@@ -64,15 +64,15 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="Node2StringTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2String"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2StringTransformer"/>
     </component>
 
     <component name="Node2URITransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URI"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URITransformer"/>
     </component>
 
     <component name="Node2URLTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URL"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URLTransformer"/>
     </component>
 
     <component name="Node2MapOfStringsTransformer">
@@ -84,7 +84,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="Node2ListOfStringTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Node2ListOfString"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Node2ListOfStringTransformer"/>
     </component>
 
     <component name="Node2ListOfQNameTransformer">
@@ -92,7 +92,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="Node2PropertiesTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2Properties"/>
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2PropertiesTransformer"/>
     </component>
 
     <component name="Element2StreamTransformer">

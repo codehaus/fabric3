@@ -48,7 +48,6 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -57,7 +56,7 @@ import org.fabric3.spi.transform.TransformationException;
  */
 public class Node2StringTransformer extends AbstractSingleTypeTransformer<Node, String> {
 
-    public String transform(Node source, TransformContext context) throws TransformationException {
+    public String transform(Node source, ClassLoader loader) throws TransformationException {
 
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();

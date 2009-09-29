@@ -48,7 +48,6 @@ import org.w3c.dom.Element;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.xml.XMLFactory;
 
@@ -68,7 +67,7 @@ public class Element2StreamTransformer extends AbstractSingleTypeTransformer<Ele
         return TARGET;
     }
 
-    public XMLStreamReader transform(Element element, TransformContext context) throws TransformationException {
+    public XMLStreamReader transform(Element element, ClassLoader loader) throws TransformationException {
         DOMSource source = new DOMSource(element);
         try {
             return xmlFactory.createXMLStreamReader(source);

@@ -41,7 +41,6 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 
@@ -55,7 +54,7 @@ public class Node2DoubleTransformer extends AbstractSingleTypeTransformer<Node, 
         return TARGET;
     }
 
-    public Double transform(Node node, TransformContext context) throws TransformationException {
+    public Double transform(Node node, ClassLoader loader) throws TransformationException {
         try {
             return Double.valueOf(node.getTextContent());
         } catch (NumberFormatException ex) {

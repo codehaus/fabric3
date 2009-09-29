@@ -37,51 +37,42 @@
    */
 package org.fabric3.transform.dom2java;
 
+import javax.xml.namespace.QName;
+
+import org.w3c.dom.Node;
+
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 
 /**
- * Tests String to Integer Transform
+ * @version $Rev$ $Date$
  */
-public class Node2ShortTestCase extends BaseTransformTest {
+public class Node2QNameTransformer extends AbstractSingleTypeTransformer<Node, QName> {
+    private static final JavaClass<QName> TARGET = new JavaClass<QName>(QName.class);
 
-	/**
-	 * Test of converting String to Short
-	 */
-	public void testShortTransform() {
-		final String ANY_SHORT = "153";
-		final String xml = "<string_to_short>" + ANY_SHORT + "</string_to_short>";
-		try {
-			final short convertedShort = getStringToShort().transform(getNode(xml), null);
-			assertNotNull(convertedShort);
-            assertEquals(153, convertedShort);
-		} catch (TransformationException te) {
-			fail("Transform exception should not occur " + te);
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
-	
-	/**
-	 * Test failure of converting String to Short
-	 */
-	public void testShortTransformFailure() {
-		final String INVALID_SHORT = "153908765";
-		final String xml = "<string_to_short>" + INVALID_SHORT + "</string_to_short>";
-		try {
-			getStringToShort().transform(getNode(xml), null);
-			fail("Should not reach here something wrong in [ String2Short ] code");
-		} catch (TransformationException te) {
-			assertNotNull(te);
-			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
+    public DataType<?> getTargetType() {
+        return TARGET;
+    }
 
-	/**
-	 * @return
-	 */
-	private Node2Short getStringToShort() {
-		return new Node2Short();
+    public QName transform(final Node node, ClassLoader loader) throws TransformationException {
+        String content = node.getTextContent();
+        // see if the content looks like it might reference a namespace
+        int index = content.indexOf(':');
+        if (index != -1) {
+            String prefix = content.substring(0, index);
+            String uri = node.lookupNamespaceURI(prefix);
+            // a prefix was found that resolved to a namespace - return the associated QName
+            if (uri != null) {
+                String localPart = content.substring(index + 1);
+                return new QName(uri, localPart, prefix);
+            }
+        }
+        try {
+            return QName.valueOf(content);
+        } catch (IllegalArgumentException ie) {
+            throw new TransformationException("Unable to transform on QName ", ie);
+        }
 	}
 }

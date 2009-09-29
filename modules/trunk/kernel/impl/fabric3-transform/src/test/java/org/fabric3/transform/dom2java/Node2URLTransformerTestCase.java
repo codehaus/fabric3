@@ -37,60 +37,55 @@
 */
 package org.fabric3.transform.dom2java;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.fabric3.spi.transform.TransformationException;
+
 
 /**
- * Tests String to boolean transform.
+ * Tests String to URL transformation.
  *
  * @version $Rev$ $Date$
  */
-public class Node2BooleanTestCase extends BaseTransformTest {
+public class Node2URLTransformerTestCase extends BaseTransformTest {
 
     /**
-     * Test of converting String to Boolean on true
+     * Test for successful transformation from String to URL
      */
-    public void testBooleanTransformForTrue() {
-        final String TRUE = "true";
-        final String xml = "<string_to_boolean>" + TRUE + "</string_to_boolean>";
+    public void testURLTransformSuccess() {
+        final String urlContent = "ftp://testf3.org";
+        final String xml = "<string_to_url>" + urlContent + "</string_to_url>";
+
         try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            final boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertTrue(convBoolean);
+            Node2URLTransformer transformer = new Node2URLTransformer();
+            final URL transformedURL = transformer.transform(getNode(xml), getClass().getClassLoader());
+            assertNotNull(transformedURL);
+        } catch (TransformationException te) {
+            fail("TransformationException : - Should Not Occur" + te);
         } catch (Exception e) {
             fail("Unexpexcted Exception Should not occur " + e);
         }
     }
 
     /**
-     * Test failure of converting String to boolean on False
+     * Test for unsuccessful Conversion from String URL
      */
-    public void testBooleanTransformForFalse() {
-        final String FALSE = "false";
-        final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
-        try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertFalse(convBoolean);
-        } catch (Exception e) {
-            fail("Unexpexcted Exception Should not occur " + e);
-        }
-    }
+    public void testURLTransformationSuccess() {
+        final String erroredURL = "failedURL";
+        final String xml = "<string_to_urlerror>" + erroredURL + "</string_to_urlerror>";
 
-    /**
-     * Test failure of converting String to boolean on False
-     */
-    public void testBooleanOnUnspecifiedFalse() {
-        final String FALSE = "SHOULD BE FALSE";
-        final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
         try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertFalse(convBoolean);
+            Node2URLTransformer transformer = new Node2URLTransformer();
+            transformer.transform(getNode(xml), getClass().getClassLoader());
+            fail("Should not convert to URL");
+        } catch (TransformationException te) {
+            assertNotNull(te);
+            MalformedURLException.class.isAssignableFrom(te.getCause().getClass());
         } catch (Exception e) {
             fail("Unexpexcted Exception Should not occur " + e);
         }
     }
+	
 
 }

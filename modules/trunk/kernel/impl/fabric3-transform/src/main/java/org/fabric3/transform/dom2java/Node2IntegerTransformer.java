@@ -42,7 +42,6 @@ import org.w3c.dom.Node;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -55,7 +54,7 @@ public class Node2IntegerTransformer extends AbstractSingleTypeTransformer<Node,
         return TARGET;
     }
 
-    public Integer transform(Node node, TransformContext context) throws TransformationException {
+    public Integer transform(Node node, ClassLoader loader) throws TransformationException {
         try {
             return Integer.valueOf(node.getTextContent());
         } catch (NumberFormatException ex) {

@@ -37,56 +37,28 @@
    */
 package org.fabric3.transform.dom2java;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.w3c.dom.Node;
 
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.TransformationException;
-
+import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
 
 /**
- * Tests String to URL Transformation
+ * @version $Rev$ $Date$
  */
-public class Node2URLTestCase extends BaseTransformTest {
+public class Node2LongTransformer extends AbstractSingleTypeTransformer<Node, Long> {
+    private static final JavaClass<Long> TARGET = new JavaClass<Long>(Long.class);
 
-	/**
-	 * Test for successful transformation from String to URL 
-	 */
-	public void testURLTransformSuccess() {
-		final String urlContent = "ftp://testf3.org";
-		final String xml = "<string_to_url>" + urlContent + "</string_to_url>";
-		
-		try {
-			final URL transformedURL = getStringToURL().transform(getNode(xml), null);
-			assertNotNull(transformedURL);
-		} catch (TransformationException te) {
-			fail("TransformationException : - Should Not Occur" + te);
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
-	
-	/**
-	 * Test for unsuccessful Conversion from String URL
-	 */
-	public void testURLTransformationSuccess() {
-		final String erroredURL = "failedURL";
-		final String xml = "<string_to_urlerror>" + erroredURL + "</string_to_urlerror>";
-		
-		try {
-			getStringToURL().transform(getNode(xml), null);
-			fail("Should not convert to URL");
-		} catch (TransformationException te) {
-			assertNotNull(te);
-			MalformedURLException.class.isAssignableFrom(te.getCause().getClass());
-		} catch (Exception e) {
-			fail("Unexpexcted Exception Should not occur " + e);
-		}
-	}
-	
-	/**
-	 * @return StringToURL
-	 */
-	private Node2URL getStringToURL() {
-		return new Node2URL();
-	}
+    public DataType<?> getTargetType() {
+        return TARGET;
+    }
+
+    public Long transform(Node node, ClassLoader loader) throws TransformationException {
+        try {
+            return Long.valueOf(node.getTextContent());
+        } catch (NumberFormatException ex) {
+            throw new TransformationException("Unsupportable long " + node.getTextContent(), ex);
+        }
+    }
 }

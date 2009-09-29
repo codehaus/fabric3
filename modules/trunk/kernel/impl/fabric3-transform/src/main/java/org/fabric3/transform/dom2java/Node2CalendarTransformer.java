@@ -47,7 +47,6 @@ import org.w3c.dom.Node;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -68,7 +67,7 @@ public class Node2CalendarTransformer extends AbstractSingleTypeTransformer<Node
         return TARGET;
     }
 
-    public Calendar transform(final Node node, final TransformContext context) throws TransformationException {
+    public Calendar transform(final Node node, ClassLoader loader) throws TransformationException {
         XMLGregorianCalendar xmlCalendar = factory.newXMLGregorianCalendar(node.getTextContent());
         return xmlCalendar.toGregorianCalendar();
     }

@@ -47,7 +47,6 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -57,7 +56,7 @@ import org.fabric3.spi.transform.TransformationException;
  *
  * @version $Rev$ $Date$
  */
-public class Node2ListOfString extends AbstractSingleTypeTransformer<Node, List<String>> {
+public class Node2ListOfStringTransformer extends AbstractSingleTypeTransformer<Node, List<String>> {
 
     private static JavaGenericType TARGET = null;
 
@@ -73,7 +72,7 @@ public class Node2ListOfString extends AbstractSingleTypeTransformer<Node, List<
         return TARGET;
     }
 
-    public List<String> transform(final Node node, final TransformContext context) throws TransformationException {
+    public List<String> transform(final Node node, ClassLoader loader) throws TransformationException {
 
         final List<String> list = new ArrayList<String>();
         final StringTokenizer tokenizer = new StringTokenizer(node.getTextContent());

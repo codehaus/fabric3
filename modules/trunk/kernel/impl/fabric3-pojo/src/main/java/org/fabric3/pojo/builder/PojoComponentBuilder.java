@@ -77,10 +77,9 @@ import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
-import org.fabric3.spi.transform.TransformerRegistry;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.ParamTypes;
 
 /**
@@ -184,8 +183,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             if (transformer == null) {
                 throw new PropertyTransformException("No transformer for property " + name + " of type: " + dataType);
             }
-            TransformContext context = new TransformContext(classLoader);
-            Object instance = transformer.transform(value, context);
+            Object instance = transformer.transform(value, classLoader);
             if (instance instanceof String && expander != null) {
                 // if the property value is a string, expand it if it contains expressions
                 instance = expander.expand((String) instance);

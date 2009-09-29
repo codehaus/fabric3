@@ -40,7 +40,6 @@ package org.fabric3.fabric.builder.transform;
 import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.wire.Interceptor;
@@ -55,12 +54,12 @@ import org.fabric3.spi.wire.Interceptor;
  */
 public class InputTransformerInterceptor implements Interceptor {
     private Transformer<Object, Object> transformer;
-    private TransformContext context;
+    private ClassLoader loader;
     private Interceptor next;
 
     public InputTransformerInterceptor(Transformer<Object, Object> transformer,  ClassLoader loader) {
         this.transformer = transformer;
-        context = new TransformContext(loader);
+        this.loader = loader;
     }
 
     public Message invoke(Message msg) {
@@ -72,11 +71,11 @@ public class InputTransformerInterceptor implements Interceptor {
                     Object[] paramArray = (Object[]) params;
                     for (int i = 0; i < paramArray.length; i++) {
                         Object param = paramArray[i];
-                        Object transformed = transformer.transform(param, context);
+                        Object transformed = transformer.transform(param, loader);
                         paramArray[i] = transformed;
                     }
                 } else {
-                    Object transformed = transformer.transform(params, context);
+                    Object transformed = transformer.transform(params, loader);
                     msg.setBody(transformed);
                 }
             } catch (TransformationException e) {

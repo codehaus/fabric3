@@ -63,7 +63,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 
@@ -80,10 +79,10 @@ public class Node2JaxbTransformer implements Transformer<Node, Object> {
         this.jaxbContext = jaxbContext;
     }
 
-    public Object transform(Node source, TransformContext context) throws TransformationException {
+    public Object transform(Node source, ClassLoader loader) throws TransformationException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(context.getTargetClassLoader());
+            Thread.currentThread().setContextClassLoader(loader);
             NodeList children = source.getChildNodes();
             for (int i = 0; i < children.getLength(); i++) {
                 if (children.item(i) instanceof Element) {

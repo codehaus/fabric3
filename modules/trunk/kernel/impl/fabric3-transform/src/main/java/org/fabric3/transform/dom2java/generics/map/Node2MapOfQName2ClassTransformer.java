@@ -53,7 +53,6 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -90,7 +89,7 @@ public class Node2MapOfQName2ClassTransformer extends AbstractSingleTypeTransfor
         return TARGET;
     }
 
-    public Map<QName, Class<?>> transform(final Node node, final TransformContext context) throws TransformationException {
+    public Map<QName, Class<?>> transform(final Node node, ClassLoader loader) throws TransformationException {
 
         final Map<QName, Class<?>> map = new HashMap<QName, Class<?>>();
         final NodeList nodeList = node.getChildNodes();
@@ -106,7 +105,7 @@ public class Node2MapOfQName2ClassTransformer extends AbstractSingleTypeTransfor
                 String classText = element.getTextContent();
 
                 try {
-                    Class<?> clazz = classLoaderRegistry.loadClass(context.getTargetClassLoader(), classText);
+                    Class<?> clazz = classLoaderRegistry.loadClass(loader, classText);
                     map.put(qname, clazz);
                 } catch (ClassNotFoundException e) {
                     throw new TransformationException(e);

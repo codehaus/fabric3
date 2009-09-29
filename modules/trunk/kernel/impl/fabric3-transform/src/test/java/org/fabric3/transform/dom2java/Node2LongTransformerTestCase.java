@@ -35,32 +35,52 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.transform;
+package org.fabric3.transform.dom2java;
+
+import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Context information applicable during a transformation.
+ * Tests String to Integer transform.
  *
  * @version $Rev$ $Date$
  */
-public class TransformContext {
-    private ClassLoader targetClassLoader;
+public class Node2LongTransformerTestCase extends BaseTransformTest {
 
     /**
-     * Constructor.
-     *
-     * @param targetClassLoader a ClassLoader that can be used instantiate transformation results
+     * Test of converting String to Long
      */
-    public TransformContext(ClassLoader targetClassLoader) {
-        this.targetClassLoader = targetClassLoader;
+    public void testLongTransform() {
+        final String ANY_LONG = "9965732839230";
+        final String xml = "<string_to_long>" + ANY_LONG + "</string_to_long>";
+        try {
+            Node2LongTransformer transformer = new Node2LongTransformer();
+            final long convertedLong = transformer.transform(getNode(xml), getClass().getClassLoader());
+            assertNotNull(convertedLong);
+            assertEquals(9965732839230l, convertedLong);
+        } catch (TransformationException te) {
+            fail("Transform exception should not occur " + te);
+        } catch (Exception e) {
+            fail("Unexpexcted Exception Should not occur " + e);
+        }
     }
 
     /**
-     * Returns a ClassLoader that can be used to instantiate transformation results.
-     *
-     * @return a ClassLoader that can be used to instantiate transformation results
+     * Test failure of converting String to Integer
      */
-    public ClassLoader getTargetClassLoader() {
-        return targetClassLoader;
+    public void testLongTransformFailure() {
+        final String NON_INTEGER = "11l";
+        final String xml = "<string_to_long>" + NON_INTEGER + "</string_to_long>";
+        try {
+            Node2LongTransformer transformer = new Node2LongTransformer();
+            transformer.transform(getNode(xml), getClass().getClassLoader());
+            fail("Should not reach here something wrong in [ String2Long ] code");
+        } catch (TransformationException te) {
+            assertNotNull(te);
+            assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
+        } catch (Exception e) {
+            fail("Unexpexcted Exception Should not occur " + e);
+        }
     }
+
 
 }

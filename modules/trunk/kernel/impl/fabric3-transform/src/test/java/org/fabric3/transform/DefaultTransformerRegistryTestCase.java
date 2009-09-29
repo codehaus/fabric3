@@ -48,7 +48,6 @@ import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformerFactory;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.transform.dom2java.Node2IntegerTransformer;
@@ -91,7 +90,7 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
 
     private class MockTransformer implements Transformer<Object, Object> {
 
-        public Object transform(Object o, TransformContext context) throws TransformationException {
+        public Object transform(Object o, ClassLoader loader) throws TransformationException {
             return null;
         }
 

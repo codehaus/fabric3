@@ -46,7 +46,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 
@@ -65,7 +64,7 @@ public class JAXB2DocumentTransformer implements Transformer<Object, Document> {
         factory.setNamespaceAware(true);
     }
 
-    public Document transform(Object source, TransformContext context) throws TransformationException {
+    public Document transform(Object source, ClassLoader loader) throws TransformationException {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();

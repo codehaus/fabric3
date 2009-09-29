@@ -44,7 +44,6 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -63,9 +62,9 @@ public class Node2ClassTransformer extends AbstractSingleTypeTransformer<Node, C
         return TARGET;
     }
 
-    public Class<?> transform(Node node, TransformContext context) throws TransformationException {
+    public Class<?> transform(Node node, ClassLoader loader) throws TransformationException {
         try {
-            return classLoaderRegistry.loadClass(context.getTargetClassLoader(), node.getTextContent());
+            return classLoaderRegistry.loadClass(loader, node.getTextContent());
         } catch (ClassNotFoundException e) {
             throw new TransformationException(e);
         }

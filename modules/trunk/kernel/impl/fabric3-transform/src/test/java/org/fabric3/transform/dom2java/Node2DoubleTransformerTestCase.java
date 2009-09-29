@@ -37,57 +37,46 @@
 */
 package org.fabric3.transform.dom2java;
 
+import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Tests String to boolean transform.
+ * Tests String to Double transform.
  *
  * @version $Rev$ $Date$
  */
-public class Node2BooleanTestCase extends BaseTransformTest {
+public class Node2DoubleTransformerTestCase extends BaseTransformTest {
 
     /**
-     * Test of converting String to Boolean on true
+     * Test of converting String to Double
      */
-    public void testBooleanTransformForTrue() {
-        final String TRUE = "true";
-        final String xml = "<string_to_boolean>" + TRUE + "</string_to_boolean>";
+    public void testDoubleTransform() {
+        final String ANY_DOUBLE_NUMBER = "99919329323.00102345";
+        final String xml = "<string_to_double>" + ANY_DOUBLE_NUMBER + "</string_to_double>";
         try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            final boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertTrue(convBoolean);
+            Node2DoubleTransformer transformer = new Node2DoubleTransformer();
+            double convertedDouble = transformer.transform(getNode(xml), getClass().getClassLoader());
+            assertNotNull(convertedDouble);
+            assertEquals(99919329323.00102345, convertedDouble);
+        } catch (TransformationException te) {
+            fail("Transform exception should not occur " + te);
         } catch (Exception e) {
             fail("Unexpexcted Exception Should not occur " + e);
         }
     }
 
     /**
-     * Test failure of converting String to boolean on False
+     * Test failure of converting String to Double
      */
-    public void testBooleanTransformForFalse() {
-        final String FALSE = "false";
-        final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
+    public void testDoubleTransformFailure() {
+        final String NON_DOUBLE = "NOT DOUBLE";
+        final String xml = "<string_to_double>" + NON_DOUBLE + "</string_to_double>";
         try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertFalse(convBoolean);
-        } catch (Exception e) {
-            fail("Unexpexcted Exception Should not occur " + e);
-        }
-    }
-
-    /**
-     * Test failure of converting String to boolean on False
-     */
-    public void testBooleanOnUnspecifiedFalse() {
-        final String FALSE = "SHOULD BE FALSE";
-        final String xml = "<string_to_boolean>" + FALSE + "</string_to_boolean>";
-        try {
-            Node2BooleanTransformer transformer = new Node2BooleanTransformer();
-            boolean convBoolean = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convBoolean);
-            assertFalse(convBoolean);
+            Node2DoubleTransformer transformer = new Node2DoubleTransformer();
+            transformer.transform(getNode(xml), getClass().getClassLoader());
+            fail("Should not reach here something wrong in [ String2Double ] code");
+        } catch (TransformationException te) {
+            assertNotNull(te);
+            assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
         } catch (Exception e) {
             fail("Unexpexcted Exception Should not occur " + e);
         }

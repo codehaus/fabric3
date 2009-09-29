@@ -37,26 +37,29 @@
 */
 package org.fabric3.transform.dom2java;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Tests String to Byte transform.
+ * Tests String to QName transform.
  *
  * @version $Rev$ $Date$
  */
-public class Node2ByteTestCase extends BaseTransformTest {
+public class Node2QNameTransformerTestCase extends BaseTransformTest {
 
     /**
-     * Test of converting String to Byte success
+     * Test of converting String to QName
      */
-    public void testByteTransform() {
-        final String BYTE = "125";
-        final String xml = "<string_to_byte>" + BYTE + "</string_to_byte>";
+    public void testQNameTransform() {
+        final String Q_NAME = "<string_to_qname>{http://f3.com/ns/fabric/test}f3</string_to_qname>";
         try {
-            Node2ByteTransformer transformer = new Node2ByteTransformer();
-            final byte convertedByte = transformer.transform(getNode(xml), getClass().getClassLoader());
-            assertNotNull(convertedByte);
-            assertEquals(Byte.valueOf(BYTE).byteValue(), convertedByte);
+            Node2QNameTransformer transformer = new Node2QNameTransformer();
+            final QName qname = transformer.transform(getNode(Q_NAME), getClass().getClassLoader());
+            assertNotNull(qname);
+            assertEquals("{http://f3.com/ns/fabric/test}f3", qname.toString());
+            assertEquals("http://f3.com/ns/fabric/test", qname.getNamespaceURI());
+            assertEquals("f3", qname.getLocalPart());
         } catch (TransformationException te) {
             fail("Transform exception should not occur " + te);
         } catch (Exception e) {
@@ -65,22 +68,40 @@ public class Node2ByteTestCase extends BaseTransformTest {
     }
 
     /**
-     * Test failure of converting String to Byte
+     * Test of converting String to QName
      */
-    public void testDateTransformFailure() {
-        final String OUT_OF_RANGE_BYTE = "129";
-        final String xml = "<string_to_byte>" + OUT_OF_RANGE_BYTE + "</string_to_byte>";
+    public void testQNameTransformWithNamespace() {
+        final String Q_NAME = "<string_to_qname xmlns:foo='http://f3.com/ns/fabric/test'>foo:f3</string_to_qname>";
         try {
-            Node2ByteTransformer transformer = new Node2ByteTransformer();
-            transformer.transform(getNode(xml), getClass().getClassLoader());
-            fail("Should not reach here something wrong in [ String2Byte ] code");
+            Node2QNameTransformer transformer = new Node2QNameTransformer();
+            final QName qname = transformer.transform(getNode(Q_NAME), getClass().getClassLoader());
+            assertNotNull(qname);
+            assertEquals("{http://f3.com/ns/fabric/test}f3", qname.toString());
+            assertEquals("http://f3.com/ns/fabric/test", qname.getNamespaceURI());
+            assertEquals("f3", qname.getLocalPart());
+            assertEquals("foo", qname.getPrefix());
         } catch (TransformationException te) {
-            assertNotNull(te);
-            assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
+            fail("Transform exception should not occur " + te);
         } catch (Exception e) {
             fail("Unexpexcted Exception Should not occur " + e);
         }
     }
 
+    /**
+     * Test failure converting String to QName
+     */
+    public void testQNameTransformFailure() {
+        final String Q_NAME = "<string_to_qname>{}</string_to_qname>";
+        try {
+            Node2QNameTransformer transformer = new Node2QNameTransformer();
+            transformer.transform(getNode(Q_NAME), null);
+            fail("Should not reach here something wrong in [ String2QName ] code");
+        } catch (TransformationException te) {
+            assertNotNull(te);
+            assertTrue(IllegalArgumentException.class.isAssignableFrom(te.getCause().getClass()));
+        } catch (Exception e) {
+            fail("Unexpexcted Exception Should not occur " + e);
+        }
+    }
 
 }
