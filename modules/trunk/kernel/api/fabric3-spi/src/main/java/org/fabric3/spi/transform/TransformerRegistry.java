@@ -52,7 +52,7 @@ public interface TransformerRegistry {
      * @param source  the type to transform from
      * @param target  the type to transform to
      * @param classes the types that must be converted to or from
-     * @return the transformer
+     * @return the transformer or null if one is not found
      * @throws TransformationException if an error occurs returning the transformer
      */
     Transformer<?, ?> getTransformer(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException;
