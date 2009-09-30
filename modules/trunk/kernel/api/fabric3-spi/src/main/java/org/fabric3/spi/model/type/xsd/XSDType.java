@@ -43,15 +43,15 @@ import javax.xml.namespace.QName;
 import org.fabric3.model.type.contract.DataType;
 
 /**
- * Specialization of DataType representing types from the XML Schema type system.
+ * Serves as the root of complex and simple types from the XML Schema type system.
  *
  * @version $Rev$ $Date$
  */
-public abstract class XSDType extends DataType<QName> {
+public class XSDType extends DataType<QName> {
     private static final long serialVersionUID = 4837060732513291971L;
     public static final String XSD_NS = XMLConstants.W3C_XML_SCHEMA_NS_URI;
-
-    protected XSDType(Class<?> physical, QName logical) {
+ 
+    public XSDType(Class<?> physical, QName logical) {
         super(physical, logical);
     }
 
