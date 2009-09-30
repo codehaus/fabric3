@@ -37,7 +37,6 @@
 */
 package org.fabric3.binding.jms.test.jaxb;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -46,8 +45,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version $Rev$ $Date$
  */
 @XmlRootElement
-public class WeatherRequest implements Serializable {
-    private static final long serialVersionUID = -3896071380449163733L;
+public class WeatherRequest {
 
     private String city;
 
