@@ -33,5 +33,9 @@
     <component name="ClassLoaderWireBuilder">
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderWireBuilderImpl"/>
     </component>
-    
+
+    <component name="TransformerInterceptorFactory">
+        <f3-impl:implementation.system class="org.fabric3.fabric.builder.transform.TransformerInterceptorFactoryImpl"/>
+    </component>
+
 </composite>
