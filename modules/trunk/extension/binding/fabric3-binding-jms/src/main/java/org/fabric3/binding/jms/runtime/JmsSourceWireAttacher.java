@@ -45,7 +45,6 @@ package org.fabric3.binding.jms.runtime;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +89,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
     private ServiceListenerMonitor monitor;
     private ClassLoaderRegistry classLoaderRegistry;
     private AdministeredObjectResolver resolver;
-    private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
+    private ParameterEncoderFactory parameterEncoderFactory;
 
     public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
@@ -103,8 +102,11 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
     }
 
     @Reference
-    public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) {
-        this.parameterEncoderFactories = parameterEncoderFactories;
+    public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) throws WiringException {
+        parameterEncoderFactory = parameterEncoderFactories.get("jaxb");
+        if (parameterEncoderFactory == null) {
+            throw new WiringException("JAXB parameter encoder factory not found");
+        }
     }
 
     public void attach(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
@@ -234,12 +236,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         }
         ParameterEncoder parameterEncoder = null;
         if (createEncoder) {
-            ParameterEncoderFactory factory = parameterEncoderFactories.get("jaxb");
-            if (factory == null) {
-                throw new WiringException("JAXB parameter encoder factory not found");
-            }
             try {
-                parameterEncoder = factory.getInstance(wire, classloader);
+                parameterEncoder = parameterEncoderFactory.getInstance(wire, classloader);
             } catch (EncoderException e) {
                 throw new WiringException(e);
             }
