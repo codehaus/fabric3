@@ -41,4 +41,16 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.jaxb.transform.JAXB2DocumentTransformerFactory"/>
     </component>
 
+    <component name="JAXB2StringTransformerFactory">
+        <f3-impl:implementation.system class="org.fabric3.jaxb.transform.JAXB2StringTransformerFactory"/>
+    </component>
+
+    <component name="String2JAXBTransformerFactory">
+        <f3-impl:implementation.system class="org.fabric3.jaxb.transform.String2JAXBTransformerFactory"/>
+    </component>
+
+    <component name="JAXBQNameMapper">
+        <f3-impl:implementation.system class="org.fabric3.jaxb.transform.JAXBQNameMapperImpl"/>
+    </component>
+
 </composite>
