@@ -51,6 +51,7 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -67,15 +68,17 @@ import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.host.ListenerConfiguration;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.ParameterEncoder;
-import org.fabric3.spi.binding.format.ParameterEncoderFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.transform.TransformerInterceptorFactory;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.type.java.JavaClass;
+import org.fabric3.spi.model.type.xsd.XSDType;
+import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -85,28 +88,22 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefinition>, JmsSourceWireAttacherMBean {
+    private AdministeredObjectResolver resolver;
+    private ClassLoaderRegistry classLoaderRegistry;
+    private TransformerInterceptorFactory interceptorFactory;
     private JmsHost jmsHost;
     private ServiceListenerMonitor monitor;
-    private ClassLoaderRegistry classLoaderRegistry;
-    private AdministeredObjectResolver resolver;
-    private ParameterEncoderFactory parameterEncoderFactory;
 
     public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
+                                 @Reference TransformerInterceptorFactory interceptorFactory,
                                  @Reference JmsHost jmsHost,
                                  @Monitor ServiceListenerMonitor monitor) {
         this.resolver = resolver;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.interceptorFactory = interceptorFactory;
         this.jmsHost = jmsHost;
         this.monitor = monitor;
-    }
-
-    @Reference
-    public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) throws WiringException {
-        parameterEncoderFactory = parameterEncoderFactories.get("jaxb");
-        if (parameterEncoderFactory == null) {
-            throw new WiringException("JAXB parameter encoder factory not found");
-        }
     }
 
     public void attach(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
@@ -222,28 +219,19 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         Map<String, PayloadType> payloadTypes = source.getPayloadTypes();
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
         List<InvocationChainHolder> chainHolders = new ArrayList<InvocationChainHolder>();
-        boolean createEncoder = false;
         for (InvocationChain chain : wire.getInvocationChains()) {
             PhysicalOperationDefinition definition = chain.getPhysicalOperation();
             PayloadType payloadType = payloadTypes.get(definition.getName());
             if (payloadType == null) {
                 throw new WiringException("Payload type not found for operation: " + definition.getName());
             }
-             if (PayloadType.XML == payloadType) {
-                 createEncoder = true;
-             }
+            if (PayloadType.XML == payloadType) {
+                addTransformers(chain, classloader);
+            }
+
             chainHolders.add(new InvocationChainHolder(chain, payloadType));
         }
-        ParameterEncoder parameterEncoder = null;
-        if (createEncoder) {
-            try {
-                parameterEncoder = parameterEncoderFactory.getInstance(wire, classloader);
-            } catch (EncoderException e) {
-                throw new WiringException(e);
-            }
-        }
-
-        return new WireHolder(chainHolders, callbackUri, correlationScheme, trxType, parameterEncoder);
+        return new WireHolder(chainHolders, callbackUri, correlationScheme, trxType);
     }
 
     /**
@@ -261,6 +249,21 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
                 connectionFactoryDefinition.setName(JmsConstants.DEFAULT_CONNECTION_FACTORY);
             }
         }
+    }
+
+    // TODO move to connector
+    private void addTransformers(InvocationChain chain, ClassLoader classloader) throws WiringException {
+        PhysicalOperationDefinition definition = chain.getPhysicalOperation();
+        DataType<?> any = new XSDType(String.class, new QName(XSDType.XSD_NS, "anyType"));
+        JavaClass<Object> javaClass = new JavaClass<Object>(Object.class);
+        List<DataType<?>> inTargets = new ArrayList<DataType<?>>();
+        inTargets.add(javaClass);
+        Interceptor inputInterceptor = interceptorFactory.createInputInterceptor(definition, any, inTargets, classloader);
+        List<DataType<?>> outTargets = new ArrayList<DataType<?>>();
+        outTargets.add(any);
+        Interceptor outputInterceptor = interceptorFactory.createOutputInterceptor(definition, javaClass, outTargets, classloader);
+        chain.addInterceptor(0, outputInterceptor);
+        chain.addInterceptor(0, inputInterceptor);
     }
 
     private class ResolvedObjects {

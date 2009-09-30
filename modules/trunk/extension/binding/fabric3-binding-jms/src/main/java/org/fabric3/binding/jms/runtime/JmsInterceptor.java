@@ -70,8 +70,6 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
-import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -92,7 +90,6 @@ public class JmsInterceptor implements Interceptor {
     private ConnectionFactory connectionFactory;
     private CorrelationScheme correlationScheme;
     private ResponseListener responseListener;
-    private ParameterEncoder parameterEncoder;
     private ClassLoader cl;
     private boolean oneWay;
     private TransactionType transactionType;
@@ -117,7 +114,6 @@ public class JmsInterceptor implements Interceptor {
         this.oneWay = configuration.isOneWay();
         this.methodName = configuration.getOperationName();
         this.payloadType = configuration.getPayloadType();
-        this.parameterEncoder = configuration.getParameterEncoder();
 
     }
 
@@ -226,15 +222,6 @@ public class JmsInterceptor implements Interceptor {
         }
         Object payload = MessageHelper.getPayload(resultMessage, payloadType);
         Message response = new MessageImpl();
-        if (PayloadType.XML == payloadType) {
-            try {
-                payload = parameterEncoder.decode(methodName, (String) payload);
-            } catch (EncoderException e) {
-                JMSException ex = new JMSException(e.getMessage());
-                ex.setLinkedException(e);
-                throw ex;
-            }
-        }
         if (resultMessage.getBooleanProperty(JmsConstants.FAULT_HEADER)) {
             response.setBodyWithFault(payload);
         } else {
@@ -263,17 +250,6 @@ public class JmsInterceptor implements Interceptor {
         case STREAM:
             throw new UnsupportedOperationException("Not yet implemented");
         case XML:
-            try {
-                String content = parameterEncoder.encodeText(message);
-                jmsMessage = session.createTextMessage(content);
-                setRoutingHeaders(message, jmsMessage);
-                return jmsMessage;
-            } catch (EncoderException e) {
-                JMSException ex = new JMSException(e.getMessage());
-                ex.setLinkedException(e);
-                throw ex;
-            }
-
         case TEXT:
             if (payload.length != 1) {
                 throw new UnsupportedOperationException("Only single parameter operations are supported");

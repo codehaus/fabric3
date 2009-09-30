@@ -63,8 +63,6 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
-import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
@@ -131,8 +129,7 @@ public class ServiceListener implements MessageListener {
                 invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
                 break;
             case XML:
-                ParameterEncoder encoder = wireHolder.getParameterEncoder();
-                decodeAndInvoke(request, opName, interceptor, payload, encoder, payloadType, responseDestination, oneWay, transactionType);
+                invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
                 break;
             case TEXT:
                 // non-encoded text
@@ -157,64 +154,6 @@ public class ServiceListener implements MessageListener {
         }
     }
 
-    private void decodeAndInvoke(Message request,
-                                 String opName,
-                                 Interceptor interceptor,
-                                 Object payload,
-                                 ParameterEncoder parameterEncoder,
-                                 PayloadType payloadType,
-                                 Destination responseDestination,
-                                 boolean oneWay,
-                                 TransactionType transactionType) throws JMSException, JmsBadMessageException {
-        try {
-            WorkContext workContext = createWorkContext(request, wireHolder.getCallbackUri());
-            org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
-            Object deserialized = parameterEncoder.decode(opName, (String) inMessage.getBody());
-            if (deserialized == null) {
-                inMessage.setBody(null);
-            } else {
-                inMessage.setBody(new Object[]{deserialized});
-            }
-            String callbackUri = wireHolder.getCallbackUri();
-            addCallFrame(inMessage, callbackUri);
-            org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
-            if (oneWay) {
-                return;
-            }
-            String serialized = parameterEncoder.encodeText(outMessage);
-            if (outMessage.isFault()) {
-                outMessage.setBodyWithFault(serialized);
-            } else {
-                outMessage.setBody(serialized);
-            }
-
-            Connection connection = null;
-            Session responseSession = null;
-            try {
-                // TODO username, password
-                connection = responseFactory.createConnection();
-                connection.start();
-                if (TransactionType.GLOBAL == transactionType) {
-                    responseSession = connection.createSession(true, Session.SESSION_TRANSACTED);
-                } else {
-                    responseSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                }
-                Message response = createMessage(serialized, responseSession, payloadType);
-                sendResponse(request, responseSession, responseDestination, outMessage, response);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
-                if (responseSession != null) {
-                    responseSession.close();
-                }
-
-            }
-        } catch (EncoderException e) {
-            throw new JmsBadMessageException("Error decoding message", e);
-        }
-    }
-
     private void invoke(Message request,
                         Interceptor interceptor,
                         Object payload,
@@ -223,6 +162,9 @@ public class ServiceListener implements MessageListener {
                         boolean oneWay,
                         TransactionType transactionType) throws JMSException, JmsBadMessageException {
         WorkContext workContext = createWorkContext(request, wireHolder.getCallbackUri());
+        if (PayloadType.XML == payloadType) {
+            payload = new Object[]{payload};
+        }
         org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
         org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
         if (oneWay) {
@@ -355,19 +297,5 @@ public class ServiceListener implements MessageListener {
             throw new JmsBadMessageException("Error deserializing callframe", ex);
         }
     }
-
-    private void addCallFrame(org.fabric3.spi.invocation.Message message, String callbackUri) {
-        WorkContext workContext = message.getWorkContext();
-        CallFrame previous = workContext.peekCallFrame();
-        // Copy correlation and conversation information from incoming frame to new frame
-        // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
-        // bidirectional service
-        Serializable id = previous.getCorrelationId(Serializable.class);
-        ConversationContext context = previous.getConversationContext();
-        F3Conversation conversation = previous.getConversation();
-        CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
-        workContext.addCallFrame(frame);
-    }
-
 
 }

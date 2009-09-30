@@ -38,7 +38,6 @@
 package org.fabric3.binding.jms.runtime;
 
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.spi.binding.format.ParameterEncoder;
 
 /**
  * Template for configuring a JmsInterceptor.
@@ -48,7 +47,6 @@ import org.fabric3.spi.binding.format.ParameterEncoder;
 public class InterceptorConfiguration {
     private String operationName;
     private PayloadType payloadType;
-    private ParameterEncoder parameterEncoder;
     private boolean oneWay;
     private WireConfiguration wireConfiguration;
 
@@ -74,14 +72,6 @@ public class InterceptorConfiguration {
 
     public void setPayloadType(PayloadType payloadType) {
         this.payloadType = payloadType;
-    }
-
-    public ParameterEncoder getParameterEncoder() {
-        return parameterEncoder;
-    }
-
-    public void setParameterEncoder(ParameterEncoder parameterEncoder) {
-        this.parameterEncoder = parameterEncoder;
     }
 
     public boolean isOneWay() {
