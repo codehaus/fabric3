@@ -48,6 +48,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fabric3.model.type.contract.DataType;
+
 /**
  * Represents the target side of a physical wire.
  *
@@ -55,7 +57,7 @@ import java.util.List;
  */
 public class PhysicalTargetDefinition implements Serializable {
     private static final long serialVersionUID = -8430498259706831133L;
-    private static List<String> PHYSICAL_DATA_TYPES = new ArrayList<String>();
+    private static List<DataType<?>> PHYSICAL_DATA_TYPES = new ArrayList<DataType<?>>();
 
     static {
         PHYSICAL_DATA_TYPES.add(PhysicalDataTypes.JAVA_TYPE);
@@ -126,7 +128,7 @@ public class PhysicalTargetDefinition implements Serializable {
      *
      * @return a list of supported physical data types by order of preference
      */
-    public static List<String> getPhysicalDataTypes() {
+    public List<DataType<?>> getPhysicalDataTypes() {
         return PHYSICAL_DATA_TYPES;
     }
 

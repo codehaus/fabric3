@@ -37,6 +37,15 @@
 */
 package org.fabric3.spi.model.physical;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+
+import org.w3c.dom.Document;
+
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.type.java.JavaClass;
+import org.fabric3.spi.model.type.xsd.XSDType;
+
 /**
  * Defines well-known physical data types. Binding and component extensions may declare the physical data types they support for service operation
  * parameters on {@link PhysicalTargetDefinition}.
@@ -48,26 +57,16 @@ public interface PhysicalDataTypes {
     /**
      * Denotes a Java type, i.e. an object or primitive
      */
-    String JAVA_TYPE = "java";
-
-    /**
-     * Denotes a <code>JAXBObject</code>
-     */
-    String JAXB_OBJECT = "jaxb_object";
-
-    /**
-     * Denotes a <code>java.io.InputStream</code>
-     */
-    String STREAM = "stream";
+    DataType<?> JAVA_TYPE = new JavaClass<Object>(Object.class);
 
     /**
      * Denotes an XML DOM
      */
-    String DOM = "dom";
+    DataType<?> DOM = new XSDType(Document.class, new QName(XSDType.XSD_NS, "anyType"));
 
     /**
      * Denotes a <code>javax.xml.stream.XMLStreamReader</code>
      */
-    String XML_STREAM_READER = "xml_stream_reader";
+    DataType<?> XML_STREAM_READER = new XSDType(XMLStreamReader.class, new QName(XSDType.XSD_NS, "anyType"));
 
 }
