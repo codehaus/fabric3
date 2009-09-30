@@ -38,8 +38,10 @@
 package org.fabric3.jaxb.transform;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,26 +52,42 @@ import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 
 /**
- * Transforms from a JAXB instance to a DOM Document.
+ * Transforms from a JAXB instance not annotated with XmlRootElement to a DOM Document.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7714 $ $Date: 2009-09-29 10:24:45 +0200 (Tue, 29 Sep 2009) $
  */
-public class JAXB2DocumentTransformer implements Transformer<Object, Document> {
+public class JAXBElement2DocumentTransformer implements Transformer<Object, Document> {
     private JAXBContext jaxbContext;
     private DocumentBuilderFactory factory;
+    private QName name = null;
 
-    public JAXB2DocumentTransformer(JAXBContext jaxbContext)  {
+    public JAXBElement2DocumentTransformer(JAXBContext jaxbContext, QName name) {
         this.jaxbContext = jaxbContext;
+        this.name = name;
         factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
     }
 
+    @SuppressWarnings({"unchecked"})
     public Document transform(Object source, ClassLoader loader) throws TransformationException {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();
             Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.marshal(source, document);
+
+            Class<?> type = source.getClass();
+            JAXBElement<?> element = new JAXBElement(name, type, source);
+            marshaller.marshal(element, document);
+
+            /*
+            Source s1 = new DOMSource(document);
+            StringWriter stringWriter = new StringWriter();
+            Result result = new StreamResult(stringWriter);
+            TransformerFactory factory = TransformerFactory.newInstance();
+            javax.xml.transform.Transformer transformer = factory.newTransformer();
+            transformer.transform(s1, result);
+            System.out.println(stringWriter.getBuffer().toString());    */
+
             return document;
         } catch (JAXBException e) {
             throw new TransformationException(e);
@@ -77,5 +95,6 @@ public class JAXB2DocumentTransformer implements Transformer<Object, Document> {
             throw new TransformationException(e);
         }
     }
+
 
 }

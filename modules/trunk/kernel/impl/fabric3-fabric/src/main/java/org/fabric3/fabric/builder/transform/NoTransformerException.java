@@ -35,45 +35,17 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.jaxb.transform;
+package org.fabric3.fabric.builder.transform;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Node;
-
-import org.fabric3.jaxb.factory.JAXBContextFactory;
-import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.java.JavaType;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.Transformer;
-import org.fabric3.spi.transform.TransformerFactory;
+import org.fabric3.spi.builder.WiringException;
 
 /**
- * Creates {@link Node2JaxbTransformer}s.
- *
  * @version $Rev$ $Date$
  */
-public class Node2JAXBTransformerFactory implements TransformerFactory<Node, Object> {
-    private JAXBContextFactory contextFactory;
+public class NoTransformerException extends WiringException {
+    private static final long serialVersionUID = -3119130836236306468L;
 
-    public Node2JAXBTransformerFactory(@Reference JAXBContextFactory contextFactory) {
-        this.contextFactory = contextFactory;
+    public NoTransformerException(String message) {
+        super(message);
     }
-
-    public boolean canTransform(DataType<?> source, DataType<?> target) {
-        return Node.class.isAssignableFrom(source.getPhysical()) && target instanceof JavaType;
-    }
-
-    public Transformer<Node, Object> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
-        try {
-            JAXBContext jaxbContext = contextFactory.createJAXBContext(classes);
-            return new Node2JaxbTransformer(jaxbContext);
-        } catch (JAXBException e) {
-            throw new TransformationException(e);
-        }
-    }
-
-
 }

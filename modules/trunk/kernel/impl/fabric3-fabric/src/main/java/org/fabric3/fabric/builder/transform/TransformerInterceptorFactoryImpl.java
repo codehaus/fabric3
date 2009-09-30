@@ -38,6 +38,7 @@
 package org.fabric3.fabric.builder.transform;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
@@ -47,9 +48,9 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.transform.TransformerInterceptorFactory;
 import org.fabric3.spi.model.physical.ParameterTypeHelper;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
@@ -63,11 +64,23 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
     }
 
     @SuppressWarnings({"unchecked"})
-    public Interceptor createInputInterceptor(PhysicalOperationDefinition definition, DataType<?> source, DataType<?> target, ClassLoader loader)
-            throws WiringException {
+    public Interceptor createInputInterceptor(PhysicalOperationDefinition definition,
+                                              DataType<?> source,
+                                              List<DataType<?>> targets,
+                                              ClassLoader loader) throws WiringException {
         Class<?>[] types = loadInputTypes(definition, loader);
         try {
-            Transformer<Object, Object> transformer = (Transformer<Object, Object>) registry.getTransformer(source, target, types);
+
+            Transformer<Object, Object> transformer = null;
+            for (DataType<?> target : targets) {
+                transformer = (Transformer<Object, Object>) registry.getTransformer(source, target, types);
+                if (transformer != null) {
+                    break;
+                }
+            }
+            if (transformer == null) {
+                throw new NoTransformerException("No transformer for source type " + source + " to target types");
+            }
             return new InputTransformerInterceptor(transformer, loader);
         } catch (TransformationException e) {
             throw new WiringException(e);
@@ -75,11 +88,22 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
     }
 
     @SuppressWarnings({"unchecked"})
-    public Interceptor createOutputInterceptor(PhysicalOperationDefinition definition, DataType<?> source, DataType<?> target, ClassLoader loader)
-            throws WiringException {
+    public Interceptor createOutputInterceptor(PhysicalOperationDefinition definition,
+                                               DataType<?> source,
+                                               List<DataType<?>> targets,
+                                               ClassLoader loader) throws WiringException {
         Class<?>[] types = loadOutputTypes(definition, loader);
         try {
-            Transformer<Object, Object> transformer = (Transformer<Object, Object>) registry.getTransformer(source, target, types);
+            Transformer<Object, Object> transformer = null;
+            for (DataType<?> target : targets) {
+                transformer = (Transformer<Object, Object>) registry.getTransformer(source, target, types);
+                if (transformer != null) {
+                    break;
+                }
+            }
+            if (transformer == null) {
+                throw new NoTransformerException("No transformer for source type " + source + " to target types");
+            }
             return new OutputTransformerInterceptor(transformer, loader);
         } catch (TransformationException e) {
             throw new WiringException(e);

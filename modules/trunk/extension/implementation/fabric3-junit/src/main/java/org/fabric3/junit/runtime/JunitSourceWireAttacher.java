@@ -42,11 +42,14 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.junit.common.ContextConfiguration;
 import org.fabric3.junit.provision.JUnitSourceDefinition;
+import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.security.AuthenticationService;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -56,11 +59,14 @@ import org.fabric3.test.spi.TestWireHolder;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitSourceDefinition> {
+public class JunitSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<JUnitSourceDefinition> {
     private TestWireHolder holder;
     private AuthenticationService authenticationService;
 
-    public JunitSourceWireAttacher(@Reference TestWireHolder holder) {
+    public JunitSourceWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
+                                   @Reference TransformerRegistry transformerRegistry,
+                                   @Reference TestWireHolder holder) {
+        super(transformerRegistry, classLoaderRegistry);
         this.holder = holder;
     }
 
@@ -85,6 +91,7 @@ public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitSourceDe
                 chain.addInterceptor(0, interceptor);
             }
         }
+        processTransform(wire, target);
         holder.add(testName, wire);
     }
 
@@ -100,4 +107,6 @@ public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitSourceDe
     public void detachObjectFactory(JUnitSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
+
+
 }

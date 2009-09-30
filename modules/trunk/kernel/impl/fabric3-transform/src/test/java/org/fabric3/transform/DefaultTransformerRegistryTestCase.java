@@ -47,9 +47,9 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 import org.fabric3.spi.transform.SingleTypeTransformer;
-import org.fabric3.spi.transform.TransformerFactory;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
+import org.fabric3.spi.transform.TransformerFactory;
 import org.fabric3.transform.dom2java.Node2IntegerTransformer;
 
 /**
@@ -83,7 +83,7 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
             return true;
         }
 
-        public Transformer<Object, Object> create(Class<?>... classes) throws TransformationException {
+        public Transformer<Object, Object> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
             return new MockTransformer();
         }
     }

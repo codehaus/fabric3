@@ -37,6 +37,8 @@
 */
 package org.fabric3.spi.builder.transform;
 
+import java.util.List;
+
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -55,12 +57,12 @@ public interface TransformerInterceptorFactory {
      *
      * @param operation the operation to create the interceptor for
      * @param source    the source type
-     * @param target    the target type
+     * @param targets   the supported target types, in order of preference
      * @param loader    the target service's contribution classloader
      * @return the interceptor
-     * @throws WiringException if there is an error creating the interceptor
+     * @throws WiringException if there is an error creating the interceptor such a transformer not being available for any of the target types
      */
-    Interceptor createInputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, DataType<?> target, ClassLoader loader)
+    Interceptor createInputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, List<DataType<?>> targets, ClassLoader loader)
             throws WiringException;
 
     /**
@@ -68,11 +70,11 @@ public interface TransformerInterceptorFactory {
      *
      * @param operation the operation to create the interceptor for
      * @param source    the source type
-     * @param target    the target type
+     * @param targets   the supported target types, in order of preference
      * @param loader    the target service's contribution classloader
      * @return the interceptor
-     * @throws WiringException if there is an error creating the interceptor
+     * @throws WiringException if there is an error creating the interceptor such a transformer not being available for any of the target types
      */
-    Interceptor createOutputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, DataType<?> target, ClassLoader loader)
+    Interceptor createOutputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, List<DataType<?>> targets, ClassLoader loader)
             throws WiringException;
 }

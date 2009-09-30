@@ -39,38 +39,41 @@ package org.fabric3.jaxb.transform;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Node;
+import org.w3c.dom.Document;
 
-import org.fabric3.jaxb.factory.JAXBContextFactory;
-import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.java.JavaType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
-import org.fabric3.spi.transform.TransformerFactory;
 
 /**
- * Creates {@link Node2JaxbTransformer}s.
+ * Transforms from a JAXB top-level element instance to a DOM Document.
  *
  * @version $Rev$ $Date$
  */
-public class Node2JAXBTransformerFactory implements TransformerFactory<Node, Object> {
-    private JAXBContextFactory contextFactory;
+public class JAXBObject2DocumentTransformer implements Transformer<Object, Document> {
+    private JAXBContext jaxbContext;
+    private DocumentBuilderFactory factory;
 
-    public Node2JAXBTransformerFactory(@Reference JAXBContextFactory contextFactory) {
-        this.contextFactory = contextFactory;
+    public JAXBObject2DocumentTransformer(JAXBContext jaxbContext) {
+        this.jaxbContext = jaxbContext;
+        factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
     }
 
-    public boolean canTransform(DataType<?> source, DataType<?> target) {
-        return Node.class.isAssignableFrom(source.getPhysical()) && target instanceof JavaType;
-    }
-
-    public Transformer<Node, Object> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
+    public Document transform(Object source, ClassLoader loader) throws TransformationException {
         try {
-            JAXBContext jaxbContext = contextFactory.createJAXBContext(classes);
-            return new Node2JaxbTransformer(jaxbContext);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.newDocument();
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.marshal(source, document);
+            return document;
         } catch (JAXBException e) {
+            throw new TransformationException(e);
+        } catch (ParserConfigurationException e) {
             throw new TransformationException(e);
         }
     }

@@ -58,9 +58,11 @@ public interface TransformerFactory<SOURCE, TARGET> {
     /**
      * Creates a transformer capable of transforming to or from the given set of classes.
      *
+     * @param source  the source datatype
+     * @param target  the target datatype
      * @param classes the classes to transform
      * @return the transformer
      * @throws TransformationException if there was an error creating the transformer
      */
-    Transformer<SOURCE, TARGET> create(Class<?>... classes) throws TransformationException;
+    Transformer<SOURCE, TARGET> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException;
 }

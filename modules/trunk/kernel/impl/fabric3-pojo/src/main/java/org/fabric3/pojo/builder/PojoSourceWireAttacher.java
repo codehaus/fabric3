@@ -44,18 +44,30 @@
 package org.fabric3.pojo.builder;
 
 import java.net.URI;
+import java.util.List;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.pojo.provision.PojoSourceDefinition;
+import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.builder.transform.TransformerInterceptorFactory;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import static org.fabric3.spi.model.physical.PhysicalDataTypes.JAVA_TYPE;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Wire;
 
 /**
+ * Contains functionality common to Java-based SourceWireAttachers.
+ *
  * @version $Rev$ $Date$
  */
 public abstract class PojoSourceWireAttacher {
@@ -63,12 +75,48 @@ public abstract class PojoSourceWireAttacher {
 
     protected TransformerRegistry transformerRegistry;
     protected ClassLoaderRegistry classLoaderRegistry;
+    protected TransformerInterceptorFactory transformerFactory;
 
     protected PojoSourceWireAttacher(TransformerRegistry transformerRegistry, ClassLoaderRegistry loaderRegistry) {
         this.transformerRegistry = transformerRegistry;
         this.classLoaderRegistry = loaderRegistry;
     }
 
+    @Reference
+    public void setTransformerFactory(TransformerInterceptorFactory transformerFactory) {
+        this.transformerFactory = transformerFactory;
+    }
+
+    /**
+     * Adds transforming interceptors to a wire if data conversion is required between a source and target.
+     *
+     * @param wire             the wire
+     * @param targetDefinition the target definition containing the target data type requirements.
+     * @throws WiringException if an error occurs creating a transforming interceptor
+     */
+    protected void processTransform(Wire wire, PhysicalTargetDefinition targetDefinition) throws WiringException {
+        if (targetDefinition.getPhysicalDataTypes().contains(JAVA_TYPE)) {
+            // the target type supports Java types, no transform necessary
+            return;
+        }
+        URI targetId = targetDefinition.getClassLoaderId();
+        ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
+            List<DataType<?>> types = targetDefinition.getPhysicalDataTypes();
+            Interceptor interceptor = transformerFactory.createInputInterceptor(operation, JAVA_TYPE, types, targetClassLoader);
+            chain.addInterceptor(interceptor);
+        }
+    }
+
+    /**
+     * Creates a key for a map-style reference.
+     *
+     * @param sourceDefinition the source metadata
+     * @param targetDefinition the target metadata
+     * @return the key
+     * @throws KeyInstantiationException if there is an error instantiating the key
+     */
     @SuppressWarnings("unchecked")
     protected Object getKey(PojoSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition) throws KeyInstantiationException {
 
