@@ -59,9 +59,11 @@ import org.fabric3.spi.transform.TransformerFactory;
  */
 public class JAXB2DocumentTransformerFactory implements TransformerFactory<Object, Document> {
     private JAXBContextFactory contextFactory;
+    private JAXBQNameMapper mapper;
 
-    public JAXB2DocumentTransformerFactory(@Reference JAXBContextFactory contextFactory) {
+    public JAXB2DocumentTransformerFactory(@Reference JAXBContextFactory contextFactory, @Reference JAXBQNameMapper mapper) {
         this.contextFactory = contextFactory;
+        this.mapper = mapper;
     }
 
     public boolean canTransform(DataType<?> source, DataType<?> target) {
@@ -80,7 +82,7 @@ public class JAXB2DocumentTransformerFactory implements TransformerFactory<Objec
             if (type.isAnnotationPresent(XmlRootElement.class)) {
                 return new JAXBObject2DocumentTransformer(jaxbContext);
             } else {
-                QName name = deriveQName(type);
+                QName name = mapper.deriveQName(type);
                 return new JAXBElement2DocumentTransformer(jaxbContext, name);
             }
         } catch (JAXBException e) {
@@ -88,68 +90,5 @@ public class JAXB2DocumentTransformerFactory implements TransformerFactory<Objec
         }
     }
 
-    /**
-     * Derives a qualified name to use for the XML element when a class is not annotated with JAXB metadata.
-     *
-     * @param type the class
-     * @return the derived qualified name
-     */
-    private QName deriveQName(Class<?> type) {
-        QName name;
-        XmlType xmlType = type.getAnnotation(XmlType.class);
-        if (xmlType != null) {
-            String namespace = xmlType.namespace();
-            if ("##default".equals(namespace)) {
-                namespace = deriveNamespace(type);
-            }
-            String localName = xmlType.name();
-            if ("##default".equals(localName)) {
-                localName = deriveLocalName(type);
-            }
-            name = new QName(namespace, localName);
-        } else {
-            String namespace = deriveNamespace(type);
-            String localName = deriveLocalName(type);
-            name = new QName(namespace, localName);
-        }
-        return name;
-    }
-
-    /**
-     * Derives an XML namespace from a Java package according to JAXB rules. For example, org.foo is rendered as http://foo.org/.
-     * <p/>
-     * TODO this is duplicated in the Metro extension
-     *
-     * @param type the Java type
-     * @return the XML namespace
-     */
-    String deriveNamespace(Class<?> type) {
-        String pkg = type.getPackage().getName();
-        String[] tokens = pkg.split("\\.");
-        StringBuilder builder = new StringBuilder("http://");
-        for (int i = tokens.length - 1; i >= 0; i--) {
-            String token = tokens[i];
-            builder.append(token);
-            if (i != 0) {
-                builder.append(".");
-            } else {
-                builder.append("/");
-            }
-        }
-        return builder.toString();
-    }
-
-    /**
-     * Derives a local name from the class name by converting the first character to lowercase.
-     *
-     * @param type the class to derive the name from
-     * @return the derived name
-     */
-    private String deriveLocalName(Class<?> type) {
-        String localName;
-        String simpleName = type.getSimpleName();
-        localName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
-        return localName;
-    }
 
 }
