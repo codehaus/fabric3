@@ -53,7 +53,6 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -71,9 +70,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
-import org.fabric3.spi.binding.format.EncodeCallback;
 import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
@@ -95,7 +92,6 @@ public class JmsInterceptor implements Interceptor {
     private ConnectionFactory connectionFactory;
     private CorrelationScheme correlationScheme;
     private ResponseListener responseListener;
-    private MessageEncoder messageEncoder;
     private ParameterEncoder parameterEncoder;
     private ClassLoader cl;
     private boolean oneWay;
@@ -121,7 +117,6 @@ public class JmsInterceptor implements Interceptor {
         this.oneWay = configuration.isOneWay();
         this.methodName = configuration.getOperationName();
         this.payloadType = configuration.getPayloadType();
-        this.messageEncoder = configuration.getMessageEncoder();
         this.parameterEncoder = configuration.getParameterEncoder();
 
     }
@@ -231,52 +226,21 @@ public class JmsInterceptor implements Interceptor {
         }
         Object payload = MessageHelper.getPayload(resultMessage, payloadType);
         Message response = new MessageImpl();
-        if (messageEncoder != null) {
-            decode(response, payload);
-        } else {
-            if (resultMessage.getBooleanProperty(JmsConstants.FAULT_HEADER)) {
-                response.setBodyWithFault(payload);
-            } else {
-                response.setBody(payload);
+        if (PayloadType.XML == payloadType) {
+            try {
+                payload = parameterEncoder.decode(methodName, (String) payload);
+            } catch (EncoderException e) {
+                JMSException ex = new JMSException(e.getMessage());
+                ex.setLinkedException(e);
+                throw ex;
             }
+        }
+        if (resultMessage.getBooleanProperty(JmsConstants.FAULT_HEADER)) {
+            response.setBodyWithFault(payload);
+        } else {
+            response.setBody(payload);
         }
         return response;
-    }
-
-    /**
-     * Decodes a serialized response message payload.
-     *
-     * @param response the response message
-     * @param payload  the payload
-     */
-    private void decode(Message response, Object payload) {
-        try {
-            if (payload == null) {
-                throw new ServiceRuntimeException("Response body was null");
-            } else if (String.class.equals(payload.getClass())) {
-                Message ret = messageEncoder.decodeResponse((String) payload);
-                if (ret.isFault()) {
-                    Throwable deserialized = parameterEncoder.decodeFault(methodName, (String) ret.getBody());
-                    response.setBodyWithFault(deserialized);
-                } else {
-                    Object deserialized = parameterEncoder.decodeResponse(methodName, (String) ret.getBody());
-                    response.setBody(deserialized);
-                }
-            } else if (byte[].class.equals(payload.getClass())) {
-                Message ret = messageEncoder.decodeResponse((byte[]) payload);
-                if (ret.isFault()) {
-                    Throwable deserialized = parameterEncoder.decodeFault(methodName, (byte[]) ret.getBody());
-                    response.setBodyWithFault(deserialized);
-                } else {
-                    Object deserialized = parameterEncoder.decodeResponse(methodName, (byte[]) ret.getBody());
-                    response.setBody(deserialized);
-                }
-            } else {
-                throw new ServiceRuntimeException("Unnown response payload type: " + payload.getClass().getName());
-            }
-        } catch (EncoderException e) {
-            throw new ServiceRuntimeException(e);
-        }
     }
 
     /**
@@ -298,29 +262,25 @@ public class JmsInterceptor implements Interceptor {
             return jmsMessage;
         case STREAM:
             throw new UnsupportedOperationException("Not yet implemented");
+        case XML:
+            try {
+                String content = parameterEncoder.encodeText(message);
+                jmsMessage = session.createTextMessage(content);
+                setRoutingHeaders(message, jmsMessage);
+                return jmsMessage;
+            } catch (EncoderException e) {
+                JMSException ex = new JMSException(e.getMessage());
+                ex.setLinkedException(e);
+                throw ex;
+            }
+
         case TEXT:
             if (payload.length != 1) {
                 throw new UnsupportedOperationException("Only single parameter operations are supported");
             }
-            if (messageEncoder != null) {
-                try {
-                    String serialied = parameterEncoder.encodeText(message);
-                    message.setBody(serialied);
-                    // Add empty string as workaround for ActiveMQ bug:
-                    //     https://issues.apache.org/activemq/browse/AMQ-2197
-                    TextMessage textMessage = session.createTextMessage("");
-                    EncodeCallback callback = new JMSEncodeCallback(textMessage);
-                    String serializedMessage = messageEncoder.encodeText(methodName, message, callback);
-                    textMessage.setText(serializedMessage);
-                    return textMessage;
-                } catch (EncoderException e) {
-                    throw new ServiceRuntimeException(e);
-                }
-            } else {
-                jmsMessage = session.createTextMessage((String) payload[0]);
-                setRoutingHeaders(message, jmsMessage);
-                return jmsMessage;
-            }
+            jmsMessage = session.createTextMessage((String) payload[0]);
+            setRoutingHeaders(message, jmsMessage);
+            return jmsMessage;
         default:
             if (payload.length != 1) {
                 throw new AssertionError("Bytes messages must have a single parameter");

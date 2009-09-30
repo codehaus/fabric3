@@ -64,7 +64,6 @@ public class PhysicalOperationDefinition implements Serializable {
     private boolean callback;
     private boolean oneWay;
     private boolean endsConversation;
-    private String databinding;
 
     // Interceptors defined against the operation
     private Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
@@ -222,21 +221,4 @@ public class PhysicalOperationDefinition implements Serializable {
         faultTypes.add(name);
     }
 
-    /**
-     * Returns the required databinding type or null if none is specified.
-     *
-     * @return the required databinding type or null if none is specified
-     */
-    public String getDatabinding() {
-        return databinding;
-    }
-
-    /**
-     * Sets the required databinding for the operation.
-     *
-     * @param databinding the databinding
-     */
-    public void setDatabinding(String databinding) {
-        this.databinding = databinding;
-    }
 }

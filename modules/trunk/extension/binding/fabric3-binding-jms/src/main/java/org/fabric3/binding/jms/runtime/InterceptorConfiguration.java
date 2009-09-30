@@ -38,7 +38,6 @@
 package org.fabric3.binding.jms.runtime;
 
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 
 /**
@@ -49,7 +48,6 @@ import org.fabric3.spi.binding.format.ParameterEncoder;
 public class InterceptorConfiguration {
     private String operationName;
     private PayloadType payloadType;
-    private MessageEncoder messageEncoder;
     private ParameterEncoder parameterEncoder;
     private boolean oneWay;
     private WireConfiguration wireConfiguration;
@@ -76,14 +74,6 @@ public class InterceptorConfiguration {
 
     public void setPayloadType(PayloadType payloadType) {
         this.payloadType = payloadType;
-    }
-
-    public MessageEncoder getMessageEncoder() {
-        return messageEncoder;
-    }
-
-    public void setMessageEncoder(MessageEncoder messageEncoder) {
-        this.messageEncoder = messageEncoder;
     }
 
     public ParameterEncoder getParameterEncoder() {

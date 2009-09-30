@@ -41,7 +41,6 @@ import java.util.List;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 
 /**
@@ -54,7 +53,6 @@ public class WireHolder {
     private String callbackUri;
     private CorrelationScheme correlationScheme;
     private TransactionType transactionType;
-    private MessageEncoder messageEncoder;
     private ParameterEncoder parameterEncoder;
 
     /**
@@ -64,20 +62,17 @@ public class WireHolder {
      * @param callbackUri       the callback URI or null if the wire is unidirectional
      * @param correlationScheme the correlation scheme if the wire uses request-response, otherwise null
      * @param transactionType   the transaction type if the wire uses request-response, otherwise null
-     * @param messageEncoder    the message encoder
      * @param parameterEncoder  the encoder for parameter types
      */
     public WireHolder(List<InvocationChainHolder> chains,
                       String callbackUri,
                       CorrelationScheme correlationScheme,
                       TransactionType transactionType,
-                      MessageEncoder messageEncoder,
                       ParameterEncoder parameterEncoder) {
         this.chains = chains;
         this.callbackUri = callbackUri;
         this.correlationScheme = correlationScheme;
         this.transactionType = transactionType;
-        this.messageEncoder = messageEncoder;
         this.parameterEncoder = parameterEncoder;
     }
 
@@ -95,10 +90,6 @@ public class WireHolder {
 
     public List<InvocationChainHolder> getInvocationChains() {
         return chains;
-    }
-
-    public MessageEncoder getMessageEncoder() {
-        return messageEncoder;
     }
 
     public ParameterEncoder getParameterEncoder() {

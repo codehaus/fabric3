@@ -62,7 +62,6 @@ import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoderFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -84,7 +83,6 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
     private TransactionManager tm;
     private ClassLoaderRegistry classLoaderRegistry;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
-    private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
 
     public JmsTargetWireAttacher(@Reference AdministeredObjectResolver resolver,
@@ -98,11 +96,6 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
     @Reference
     public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) {
         this.parameterEncoderFactories = parameterEncoderFactories;
-    }
-
-    @Reference
-    public void setMessageFormatters(Map<String, MessageEncoder> messageFormatters) {
-        this.messageFormatters = messageFormatters;
     }
 
     public void attach(PhysicalSourceDefinition source, JmsTargetDefinition target, Wire wire) throws WiringException {
@@ -127,7 +120,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
             configuration.setOneWay(op.isOneWay());
             PayloadType payloadType = payloadTypes.get(operationName);
             configuration.setPayloadType(payloadType);
-            resolveEncoders(op, wire, classloader, configuration);
+            resolveEncoders(payloadType, wire, classloader, configuration);
             Interceptor interceptor = new JmsInterceptor(configuration);
             chain.addInterceptor(interceptor);
         }
@@ -189,13 +182,13 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
         }
     }
 
-    private void resolveEncoders(PhysicalOperationDefinition op, Wire wire, ClassLoader classloader, InterceptorConfiguration configuration)
+    
+    private void resolveEncoders(PayloadType payloadType, Wire wire, ClassLoader classloader, InterceptorConfiguration configuration)
             throws WiringException {
-        String dataBinding = op.getDatabinding();
-        if (dataBinding != null) {
-            ParameterEncoderFactory factory = parameterEncoderFactories.get(dataBinding);
+        if (PayloadType.XML == payloadType) {
+            ParameterEncoderFactory factory = parameterEncoderFactories.get("jaxb");
             if (factory == null) {
-                throw new WiringException("Parameter encoder factory not found for: " + dataBinding);
+                throw new WiringException("JAXB Parameter encoder factory not found");
             }
             try {
                 ParameterEncoder parameterEncoder = factory.getInstance(wire, classloader);
@@ -203,11 +196,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
             } catch (EncoderException e) {
                 throw new WiringException(e);
             }
-            MessageEncoder messageEncoder = messageFormatters.get(dataBinding);
-            if (messageEncoder == null) {
-                throw new WiringException("Message encoder not found for: " + dataBinding);
-            }
-            configuration.setMessageEncoder(messageEncoder);
+
         }
     }
 

@@ -57,23 +57,11 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
     private static final QName XSD_INT = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "int");
     private JAXBTypeIntrospector introspector;
 
-    public void testJAXBIntrospection() throws Exception {
-        Operation jaxbOperation = createOperation("jaxbMethod", Param.class);
-        introspector.introspect(jaxbOperation, null, new DefaultIntrospectionContext());
-        assertEquals("jaxb", jaxbOperation.getDatabinding());
-    }
-
     public void testDefaultMapping() throws Exception {
         Operation operation = createOperation("operation", int.class);
         introspector.introspect(operation, null, new DefaultIntrospectionContext());
         DataType<?> dataType = operation.getInputTypes().get(0);
         assertEquals(XSD_INT, dataType.getXsdType());
-    }
-
-    public void testNoJAXBIntrospection() throws Exception {
-        Operation nonJaxbOperation = createOperation("nonJaxbMethod", String.class);
-        introspector.introspect(nonJaxbOperation, null, new DefaultIntrospectionContext());
-        assertNull(nonJaxbOperation.getDatabinding());
     }
 
     protected void setUp() throws Exception {

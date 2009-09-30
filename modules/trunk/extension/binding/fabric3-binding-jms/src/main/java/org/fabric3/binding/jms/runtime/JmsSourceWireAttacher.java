@@ -70,7 +70,6 @@ import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoderFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -92,7 +91,6 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
     private ClassLoaderRegistry classLoaderRegistry;
     private AdministeredObjectResolver resolver;
     private Map<String, ParameterEncoderFactory> parameterEncoderFactories = new HashMap<String, ParameterEncoderFactory>();
-    private Map<String, MessageEncoder> messageFormatters = new HashMap<String, MessageEncoder>();
 
     public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
@@ -107,11 +105,6 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
     @Reference
     public void setParameterEncoderFactories(Map<String, ParameterEncoderFactory> parameterEncoderFactories) {
         this.parameterEncoderFactories = parameterEncoderFactories;
-    }
-
-    @Reference
-    public void setMessageFormatters(Map<String, MessageEncoder> messageFormatters) {
-        this.messageFormatters = messageFormatters;
     }
 
     public void attach(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
@@ -227,37 +220,32 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         Map<String, PayloadType> payloadTypes = source.getPayloadTypes();
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
         List<InvocationChainHolder> chainHolders = new ArrayList<InvocationChainHolder>();
-        MessageEncoder messageEncoder = null;
-        ParameterEncoder parameterEncoder = null;
-        String dataBinding = null;
-        // FIXME terrible hack to set databinding from operation to wire level
+        boolean createEncoder = false;
         for (InvocationChain chain : wire.getInvocationChains()) {
             PhysicalOperationDefinition definition = chain.getPhysicalOperation();
-            if (definition.getDatabinding() != null) {
-                dataBinding = definition.getDatabinding();
-            }
             PayloadType payloadType = payloadTypes.get(definition.getName());
             if (payloadType == null) {
                 throw new WiringException("Payload type not found for operation: " + definition.getName());
             }
+             if (PayloadType.XML == payloadType) {
+                 createEncoder = true;
+             }
             chainHolders.add(new InvocationChainHolder(chain, payloadType));
         }
-        if (dataBinding != null) {
-            ParameterEncoderFactory factory = parameterEncoderFactories.get(dataBinding);
+        ParameterEncoder parameterEncoder = null;
+        if (createEncoder) {
+            ParameterEncoderFactory factory = parameterEncoderFactories.get("jaxb");
             if (factory == null) {
-                throw new WiringException("Parameter encoder factory not found for: " + dataBinding);
+                throw new WiringException("JAXB parameter encoder factory not found");
             }
             try {
                 parameterEncoder = factory.getInstance(wire, classloader);
             } catch (EncoderException e) {
                 throw new WiringException(e);
             }
-            messageEncoder = messageFormatters.get(dataBinding);
-            if (messageEncoder == null) {
-                throw new WiringException("Message encoder not found for: " + dataBinding);
-            }
         }
-        return new WireHolder(chainHolders, callbackUri, correlationScheme, trxType, messageEncoder, parameterEncoder);
+
+        return new WireHolder(chainHolders, callbackUri, correlationScheme, trxType, parameterEncoder);
     }
 
     /**

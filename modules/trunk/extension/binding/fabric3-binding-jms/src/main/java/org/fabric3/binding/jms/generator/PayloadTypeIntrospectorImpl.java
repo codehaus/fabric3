@@ -46,6 +46,8 @@ package org.fabric3.binding.jms.generator;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.model.type.contract.DataType;
@@ -55,10 +57,10 @@ import org.fabric3.model.type.contract.Operation;
  * Default implementation of the PayloadTypeIntrospector. Message types are determined as follows:
  * <pre>
  * <ul>
- * <li>If the operation has a JAXB databinding, a text type is returned
- * <li>If the parameters are Serializable, an object message is returned
  * <li>If the parameters are primitives, the specific primitive type is returned
  * <li>If the parameters are a stream, a stream message is returned
+ * <li>If the parameters are Serializable, an object message is returned
+ * <li>If the paramter is annotated with @XmlRootElement or @XmlType, an XML type is returned
  * <ul>
  * </pre>
  *
@@ -68,9 +70,7 @@ public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
 
     public PayloadType introspect(Operation operation) throws JmsGenerationException {
         // TODO perform error checking, e.g. mixing of databindings
-        if ("jaxb".equals(operation.getDatabinding())) {
-            return PayloadType.TEXT;
-        }
+
         List<DataType<?>> inputTypes = operation.getInputTypes();
         if (inputTypes.size() == 1) {
             DataType<?> param = inputTypes.get(0);
@@ -83,6 +83,8 @@ public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
                 return PayloadType.TEXT;
             } else if (Serializable.class.isAssignableFrom(physical)) {
                 return PayloadType.OBJECT;
+            } else if (physical.isAnnotationPresent(XmlRootElement.class) || physical.isAnnotationPresent(XmlType.class)) {
+                return PayloadType.XML;
             }
         }
         // more than one parameter, use an object type message

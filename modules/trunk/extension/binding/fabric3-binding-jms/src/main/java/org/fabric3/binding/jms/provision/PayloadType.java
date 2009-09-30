@@ -49,6 +49,6 @@ package org.fabric3.binding.jms.provision;
  * @version $Rev$ $Date$
  */
 public enum PayloadType {
-    TEXT, OBJECT, STREAM, SHORT, INTEGER, DOUBLE, FLOAT, LONG, CHARACTER, BOOLEAN, BYTE
+    TEXT, OBJECT, STREAM, SHORT, INTEGER, DOUBLE, FLOAT, LONG, CHARACTER, BOOLEAN, BYTE, XML
 
 }

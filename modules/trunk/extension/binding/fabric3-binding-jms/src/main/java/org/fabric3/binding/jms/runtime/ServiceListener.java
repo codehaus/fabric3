@@ -63,9 +63,7 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
-import org.fabric3.spi.binding.format.EncodeCallback;
 import org.fabric3.spi.binding.format.EncoderException;
-import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.component.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
@@ -81,7 +79,6 @@ import org.fabric3.spi.wire.Interceptor;
  * @version $Revison$ $Date$
  */
 public class ServiceListener implements MessageListener {
-    public static final EncodeCallback CALLBACK = new ReturnEncodeCallback();
     protected WireHolder wireHolder;
     protected Map<String, InvocationChainHolder> invocationChainMap;
     protected InvocationChainHolder onMessageHolder;
@@ -133,15 +130,14 @@ public class ServiceListener implements MessageListener {
                 }
                 invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
                 break;
+            case XML:
+                ParameterEncoder encoder = wireHolder.getParameterEncoder();
+                decodeAndInvoke(request, opName, interceptor, payload, encoder, payloadType, responseDestination, oneWay, transactionType);
+                break;
             case TEXT:
-                MessageEncoder messageEncoder = wireHolder.getMessageEncoder();
-                if (messageEncoder != null) {
-                    decodeAndInvoke(request, opName, interceptor, payload, payloadType, messageEncoder, responseDestination, oneWay, transactionType);
-                } else {
-                    // non-encoded text
-                    payload = new Object[]{payload};
-                    invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
-                }
+                // non-encoded text
+                payload = new Object[]{payload};
+                invoke(request, interceptor, payload, payloadType, responseDestination, oneWay, transactionType);
                 break;
             case STREAM:
                 throw new UnsupportedOperationException();
@@ -165,15 +161,14 @@ public class ServiceListener implements MessageListener {
                                  String opName,
                                  Interceptor interceptor,
                                  Object payload,
+                                 ParameterEncoder parameterEncoder,
                                  PayloadType payloadType,
-                                 MessageEncoder messageEncoder,
                                  Destination responseDestination,
                                  boolean oneWay,
                                  TransactionType transactionType) throws JMSException, JmsBadMessageException {
         try {
-            JMSHeaderContext context = new JMSHeaderContext(request);
-            org.fabric3.spi.invocation.Message inMessage = messageEncoder.decode((String) payload, context);
-            ParameterEncoder parameterEncoder = wireHolder.getParameterEncoder();
+            WorkContext workContext = createWorkContext(request, wireHolder.getCallbackUri());
+            org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             Object deserialized = parameterEncoder.decode(opName, (String) inMessage.getBody());
             if (deserialized == null) {
                 inMessage.setBody(null);
@@ -193,8 +188,6 @@ public class ServiceListener implements MessageListener {
                 outMessage.setBody(serialized);
             }
 
-            String serializedMessage = messageEncoder.encodeText(opName, outMessage, CALLBACK);
-
             Connection connection = null;
             Session responseSession = null;
             try {
@@ -206,7 +199,7 @@ public class ServiceListener implements MessageListener {
                 } else {
                     responseSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
                 }
-                Message response = createMessage(serializedMessage, responseSession, payloadType);
+                Message response = createMessage(serialized, responseSession, payloadType);
                 sendResponse(request, responseSession, responseDestination, outMessage, response);
             } finally {
                 if (connection != null) {
@@ -245,7 +238,6 @@ public class ServiceListener implements MessageListener {
             } else {
                 responseSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             }
-//            responseSession = connection.createSession(true, Session.SESSION_TRANSACTED);
             Object responsePayload = outMessage.getBody();
             Message response = createMessage(responsePayload, responseSession, payloadType);
             sendResponse(request, responseSession, responseDestination, outMessage, response);
@@ -286,6 +278,7 @@ public class ServiceListener implements MessageListener {
         switch (payloadType) {
         case STREAM:
             throw new UnsupportedOperationException("Stream message not yet supported");
+        case XML:
         case TEXT:
             if (payload != null && !(payload instanceof String)) {
                 // this should not happen
@@ -377,22 +370,4 @@ public class ServiceListener implements MessageListener {
     }
 
 
-    private static class ReturnEncodeCallback implements EncodeCallback {
-
-        public void encodeContentLengthHeader(long length) {
-            // no op
-        }
-
-        public void encodeOperationHeader(String name) {
-            // no op
-        }
-
-        public void encodeRoutingHeader(String header) {
-            // no op
-        }
-
-        public void encodeRoutingHeader(byte[] header) {
-            // no op
-        }
-    }
 }

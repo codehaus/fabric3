@@ -53,9 +53,9 @@ import org.fabric3.spi.util.Base64;
 
 /**
  * MessageEncoder that uses JDK serialization to encode a message in "unwrapped" form. An "unwrapped" message is used for wire formats that encode
- * message headers as part of the transport "packet". For example, the OASIS HTTP and JMS bindings require the default wire format to encode message
- * header information as HTTP headers and JMS message properties respectively. This base implementation uses an EncodeCallback to pass serialed header
- * information to the client to encode as part of the transport packet.
+ * message headers as part of the transport "packet". For example, the OASIS HTTP binding requires the default wire format to encode message header
+ * information as HTTP headers. This base implementation uses an EncodeCallback to pass serialed header information to the client to encode as part of
+ * the transport packet.
  *
  * @version $Rev$ $Date$
  */

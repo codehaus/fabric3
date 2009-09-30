@@ -113,9 +113,7 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
                 // programming error
                 throw new AssertionError("Java contracts must use " + JavaType.class);
             }
-            if (introspectJAXB((JavaType<?>) type)) {
-                operation.setDatabinding("jaxb");
-            }
+            introspectJAXB((JavaType<?>) type);
         }
         for (DataType<?> type : operation.getFaultTypes()) {
             // FIXME need to process fault beans
@@ -123,34 +121,30 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
                 // programming error
                 throw new AssertionError("Java contracts must use " + JavaType.class);
             }
-            if (introspectJAXB((JavaType<?>) type)) {
-                operation.setDatabinding("jaxb");
-            }
+            introspectJAXB((JavaType<?>) type);
         }
         DataType<?> outputType = operation.getOutputType();
         if (!(outputType instanceof JavaType)) {
                 // programming error
                 throw new AssertionError("Java contracts must use " + JavaType.class);
             }
-        if (introspectJAXB((JavaType<?>) outputType)) {
-            operation.setDatabinding("jaxb");
-        }
+        introspectJAXB((JavaType<?>) outputType);
 
     }
 
-    private boolean introspectJAXB(JavaType<?> dataType) {
+    private void introspectJAXB(JavaType<?> dataType) {
         Class<?> physical = dataType.getPhysical();
         // not an explicit JAXB type, but it can potentially be mapped
         QName name = JAXB_MAPPING.get(physical);
         if (name != null) {
             dataType.setXsdType(name);
-            return false;
+            return;
         }
         XmlRootElement annotation = physical.getAnnotation(XmlRootElement.class);
         if (annotation != null) {
             QName xsdName = new QName(annotation.namespace(), annotation.name());
             dataType.setXsdType(xsdName);
-            return true;
+            return;
         }
         XmlType typeAnnotation = physical.getAnnotation(XmlType.class);
         if (typeAnnotation != null) {
@@ -163,9 +157,7 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
             }
             QName xsdName = new QName(namespace, typeAnnotation.name());
             dataType.setXsdType(xsdName);
-            return true;
         }
-        return false;
     }
 
 }

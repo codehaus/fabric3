@@ -105,6 +105,10 @@ public class MessageHelper {
             TextMessage textMessage = (TextMessage) message;
             payload = textMessage.getText();
             break;
+        case XML:
+            TextMessage xmlMessage = (TextMessage) message;
+            payload = xmlMessage.getText();
+            break;
         case BOOLEAN:
             BytesMessage booleanMessage = (BytesMessage) message;
             return booleanMessage.readBoolean();

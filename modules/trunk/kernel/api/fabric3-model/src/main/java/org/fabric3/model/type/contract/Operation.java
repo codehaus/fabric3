@@ -157,24 +157,6 @@ public class Operation extends AbstractPolicyAware {
         this.conversationSequence = conversationSequence;
     }
 
-    /**
-     * Returns the required databinding type or null if none is specified.
-     *
-     * @return the required databinding type or null if none is specified
-     */
-    public String getDatabinding() {
-        return databinding;
-    }
-
-    /**
-     * Sets the required databinding for the operation.
-     *
-     * @param databinding the databinding
-     */
-    public void setDatabinding(String databinding) {
-        this.databinding = databinding;
-    }
-
     public String toString() {
         return new StringBuilder().append("Operation [").append(name).append("]").toString();
     }
