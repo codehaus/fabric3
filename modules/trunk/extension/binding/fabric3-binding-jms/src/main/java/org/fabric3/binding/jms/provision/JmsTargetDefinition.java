@@ -48,6 +48,7 @@ import java.util.Map;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 
 /**
@@ -62,14 +63,35 @@ public class JmsTargetDefinition extends PhysicalTargetDefinition {
     private Map<String, PayloadType> payloadTypes;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param uri             The target service URI
-     * @param metadata        Metadata to be initialized.
-     * @param payloadTypes    The payload types keyed by operation name
-     * @param transactionType Transaction type
+     * @param uri             the service URI
+     * @param metadata        metadata used to create a JMS message producer.
+     * @param payloadTypes    the JMS payload types keyed by operation name
+     * @param transactionType the transaction type
      */
     public JmsTargetDefinition(URI uri, JmsBindingMetadata metadata, Map<String, PayloadType> payloadTypes, TransactionType transactionType) {
+        this.metadata = metadata;
+        this.transactionType = transactionType;
+        this.payloadTypes = payloadTypes;
+        setUri(uri);
+    }
+
+    /**
+     * Constructor that defines an alternative set of supported data types.
+     *
+     * @param uri             the service URI
+     * @param metadata        metadata used to create a JMS message producer.
+     * @param payloadTypes    the JMS payload types keyed by operation name
+     * @param transactionType the transaction type
+     * @param types           the allowable datatypes. For example, this may be used to constrain a source type to string XML
+     */
+    public JmsTargetDefinition(URI uri,
+                               JmsBindingMetadata metadata,
+                               Map<String, PayloadType> payloadTypes,
+                               TransactionType transactionType,
+                               DataType<?>... types) {
+        super(types);
         this.metadata = metadata;
         this.transactionType = transactionType;
         this.payloadTypes = payloadTypes;
@@ -91,6 +113,5 @@ public class JmsTargetDefinition extends PhysicalTargetDefinition {
     public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
     }
-
 
 }

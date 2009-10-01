@@ -45,7 +45,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.transform.TransformerInterceptorFactory;
 import org.fabric3.spi.model.physical.ParameterTypeHelper;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.transform.TransformationException;
@@ -64,47 +63,44 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
     }
 
     @SuppressWarnings({"unchecked"})
-    public Interceptor createInputInterceptor(PhysicalOperationDefinition definition,
-                                              DataType<?> source,
-                                              List<DataType<?>> targets,
-                                              ClassLoader loader) throws WiringException {
-        Class<?>[] types = loadInputTypes(definition, loader);
+    public Interceptor createInterceptor(PhysicalOperationDefinition definition,
+                                         List<DataType<?>> sources,
+                                         List<DataType<?>> targets,
+                                         ClassLoader targetLoader,
+                                         ClassLoader sourceLoader) throws WiringException {
+        Class<?>[] inTypes = loadInputTypes(definition, targetLoader);
         try {
 
-            Transformer<Object, Object> transformer = null;
-            for (DataType<?> target : targets) {
-                transformer = (Transformer<Object, Object>) registry.getTransformer(source, target, types);
-                if (transformer != null) {
+            Transformer<Object, Object> inTransformer = null;
+            DataType<?> selectedSource = null;
+            DataType<?> selectedTarget = null;
+            for (DataType<?> source : sources) {
+                for (DataType<?> target : targets) {
+                    inTransformer = (Transformer<Object, Object>) registry.getTransformer(source, target, inTypes);
+                    if (inTransformer != null) {
+                        selectedSource = source;
+                        selectedTarget = target;
+                        break;
+                    }
+                }
+                if (selectedSource != null) {
                     break;
                 }
             }
-            if (transformer == null) {
-                throw new NoTransformerException("No transformer for source type " + source + " to target types");
+            if (inTransformer == null) {
+                throw new NoTransformerException("No transformer found for operation: " + definition.getName());
             }
-            return new InputTransformerInterceptor(transformer, loader);
-        } catch (TransformationException e) {
-            throw new WiringException(e);
-        }
-    }
 
-    @SuppressWarnings({"unchecked"})
-    public Interceptor createOutputInterceptor(PhysicalOperationDefinition definition,
-                                               DataType<?> source,
-                                               List<DataType<?>> targets,
-                                               ClassLoader loader) throws WiringException {
-        Class<?>[] types = loadOutputTypes(definition, loader);
-        try {
-            Transformer<Object, Object> transformer = null;
-            for (DataType<?> target : targets) {
-                transformer = (Transformer<Object, Object>) registry.getTransformer(source, target, types);
-                if (transformer != null) {
-                    break;
-                }
+            // create the output transformer which flips the source and target types of the forward interceptor
+            Class<?>[] outTypes = loadOutputTypes(definition, targetLoader);
+            Transformer<Object, Object> outTransformer =
+                    (Transformer<Object, Object>) registry.getTransformer(selectedTarget, selectedSource, outTypes);
+            if (outTransformer == null) {
+                throw new NoTransformerException("No transformer from type " + selectedTarget + " to type " + selectedSource);
             }
-            if (transformer == null) {
-                throw new NoTransformerException("No transformer for source type " + source + " to target types");
-            }
-            return new OutputTransformerInterceptor(transformer, loader);
+
+
+            return new TransformerInterceptor(inTransformer, outTransformer, targetLoader, sourceLoader);
         } catch (TransformationException e) {
             throw new WiringException(e);
         }
@@ -140,8 +136,9 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
         try {
             Class<?> outParam = ParameterTypeHelper.loadOutputType(definition, loader);
             types.add(outParam);
-            Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
-            types.addAll(faults);
+            // TODO handle fault types
+            //  Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
+            //  types.addAll(faults);
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         }

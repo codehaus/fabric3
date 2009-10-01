@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.builder.transform;
+package org.fabric3.fabric.builder.transform;
 
 import java.util.List;
 
@@ -46,35 +46,30 @@ import org.fabric3.spi.wire.Interceptor;
 
 
 /**
- * Creates interceptors that transform input and output parameters from one format to another, e.g. DOM to Java and vice versa.
+ * Creates interceptors that transform input and output parameters from one format to another, e.g. DOM to Java or vice versa.
  *
  * @version $Rev: 7606 $ $Date: 2009-09-09 16:00:11 +0200 (Wed, 09 Sep 2009) $
  */
 public interface TransformerInterceptorFactory {
 
     /**
-     * Creates an interceptor that transforms input parameters from the given source to target type.
+     * Creates a transforming interceptor for a service operation. The interceptor converts input parameters from a source to a target type and ouput
+     * parameters from a target to a source type. The source and target types are selected from the list of supported source and target types based on
+     * order of preference (the source and target types are sorted in descending order) and the availability of a tranformer.
      *
-     * @param operation the operation to create the interceptor for
-     * @param source    the source type
-     * @param targets   the supported target types, in order of preference
-     * @param loader    the target service's contribution classloader
-     * @return the interceptor
-     * @throws WiringException if there is an error creating the interceptor such a transformer not being available for any of the target types
+     * @param operation    the operation to create the interceptor for
+     * @param sources      the source types in desending order of preference
+     * @param targets      the supported target types, in desending order of preference
+     * @param targetLoader the target service contribution classloader
+     * @param sourceLoader the source component contribution classloader
+     * @return the transforming interceptor
+     * @throws WiringException if there is an error creating the interceptor such a transformer not being available for any of the source-target type
+     *                         combinations
      */
-    Interceptor createInputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, List<DataType<?>> targets, ClassLoader loader)
-            throws WiringException;
+    Interceptor createInterceptor(PhysicalOperationDefinition operation,
+                                  List<DataType<?>> sources,
+                                  List<DataType<?>> targets,
+                                  ClassLoader targetLoader,
+                                  ClassLoader sourceLoader) throws WiringException;
 
-    /**
-     * Creates an interceptor that transforms output and fault parameters from the given source to target type.
-     *
-     * @param operation the operation to create the interceptor for
-     * @param source    the source type
-     * @param targets   the supported target types, in order of preference
-     * @param loader    the target service's contribution classloader
-     * @return the interceptor
-     * @throws WiringException if there is an error creating the interceptor such a transformer not being available for any of the target types
-     */
-    Interceptor createOutputInterceptor(PhysicalOperationDefinition operation, DataType<?> source, List<DataType<?>> targets, ClassLoader loader)
-            throws WiringException;
 }

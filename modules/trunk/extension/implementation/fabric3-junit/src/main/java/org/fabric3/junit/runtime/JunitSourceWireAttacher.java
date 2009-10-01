@@ -91,7 +91,6 @@ public class JunitSourceWireAttacher extends PojoSourceWireAttacher implements S
                 chain.addInterceptor(0, interceptor);
             }
         }
-        processTransform(wire, target);
         holder.add(testName, wire);
     }
 

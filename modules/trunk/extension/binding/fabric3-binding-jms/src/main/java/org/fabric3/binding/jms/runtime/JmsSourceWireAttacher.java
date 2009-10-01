@@ -51,7 +51,6 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -68,17 +67,12 @@ import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.host.ListenerConfiguration;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.transform.TransformerInterceptorFactory;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.model.type.xsd.XSDType;
-import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -88,29 +82,27 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefinition>, JmsSourceWireAttacherMBean {
+
     private AdministeredObjectResolver resolver;
     private ClassLoaderRegistry classLoaderRegistry;
-    private TransformerInterceptorFactory interceptorFactory;
     private JmsHost jmsHost;
     private ServiceListenerMonitor monitor;
 
     public JmsSourceWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference TransformerInterceptorFactory interceptorFactory,
                                  @Reference JmsHost jmsHost,
                                  @Monitor ServiceListenerMonitor monitor) {
         this.resolver = resolver;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.interceptorFactory = interceptorFactory;
         this.jmsHost = jmsHost;
         this.monitor = monitor;
     }
 
     public void attach(JmsSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
         URI serviceUri = target.getUri();
-        ClassLoader classloader = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
+        ClassLoader sourceClassLoader = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
         TransactionType trxType = source.getTransactionType();
-        WireHolder wireHolder = createWireHolder(wire, source, target, classloader, trxType);
+        WireHolder wireHolder = createWireHolder(wire, source, target, trxType);
 
         ResolvedObjects objects = resolveAdministeredObjects(source);
 
@@ -120,7 +112,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
             Destination requestDestination = objects.getRequestDestination();
             ConnectionFactory responseFactory = objects.getResponseFactory();
             Destination responseDestination = objects.getResponseDestination();
-            ServiceListener listener = new ServiceListener(wireHolder, responseDestination, responseFactory, trxType, classloader, monitor);
+            ServiceListener listener = new ServiceListener(wireHolder, responseDestination, responseFactory, trxType, sourceClassLoader, monitor);
             configuration.setDestination(requestDestination);
             configuration.setFactory(requestFactory);
             configuration.setMessageListener(listener);
@@ -205,11 +197,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
         }
     }
 
-    private WireHolder createWireHolder(Wire wire,
-                                        JmsSourceDefinition source,
-                                        PhysicalTargetDefinition target,
-                                        ClassLoader classloader,
-                                        TransactionType trxType) throws WiringException {
+    private WireHolder createWireHolder(Wire wire, JmsSourceDefinition source, PhysicalTargetDefinition target, TransactionType trxType)
+            throws WiringException {
         String callbackUri = null;
         if (target.getCallbackUri() != null) {
             callbackUri = target.getCallbackUri().toString();
@@ -225,10 +214,6 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
             if (payloadType == null) {
                 throw new WiringException("Payload type not found for operation: " + definition.getName());
             }
-            if (PayloadType.XML == payloadType) {
-                addTransformers(chain, classloader);
-            }
-
             chainHolders.add(new InvocationChainHolder(chain, payloadType));
         }
         return new WireHolder(chainHolders, callbackUri, correlationScheme, trxType);
@@ -249,21 +234,6 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsSourceDefini
                 connectionFactoryDefinition.setName(JmsConstants.DEFAULT_CONNECTION_FACTORY);
             }
         }
-    }
-
-    // TODO move to connector
-    private void addTransformers(InvocationChain chain, ClassLoader classloader) throws WiringException {
-        PhysicalOperationDefinition definition = chain.getPhysicalOperation();
-        DataType<?> any = new XSDType(String.class, new QName(XSDType.XSD_NS, "anyType"));
-        JavaClass<Object> javaClass = new JavaClass<Object>(Object.class);
-        List<DataType<?>> inTargets = new ArrayList<DataType<?>>();
-        inTargets.add(javaClass);
-        Interceptor inputInterceptor = interceptorFactory.createInputInterceptor(definition, any, inTargets, classloader);
-        List<DataType<?>> outTargets = new ArrayList<DataType<?>>();
-        outTargets.add(any);
-        Interceptor outputInterceptor = interceptorFactory.createOutputInterceptor(definition, javaClass, outTargets, classloader);
-        chain.addInterceptor(0, outputInterceptor);
-        chain.addInterceptor(0, inputInterceptor);
     }
 
     private class ResolvedObjects {

@@ -45,6 +45,11 @@ package org.fabric3.spi.model.physical;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.fabric3.model.type.contract.DataType;
 
 /**
  * Represents the source side of a wire.
@@ -59,6 +64,18 @@ public class PhysicalSourceDefinition implements Serializable {
     private boolean optimizable;
     private String key;
     private InteractionType type = InteractionType.STATELESS;
+    protected List<DataType<?>> physicalDataTypes = new ArrayList<DataType<?>>();
+
+    public PhysicalSourceDefinition() {
+        // default to Java
+        physicalDataTypes.add(PhysicalDataTypes.JAVA_TYPE);
+    }
+
+    public PhysicalSourceDefinition(DataType<?>... types) {
+        if (types != null) {
+            physicalDataTypes.addAll(Arrays.asList(types));
+        }
+    }
 
     /**
      * Returns the URI of the physical component that is the source of invocations on this wire.
@@ -149,4 +166,14 @@ public class PhysicalSourceDefinition implements Serializable {
     public void setKey(String key) {
         this.key = key;
     }
+
+    /**
+     * Returns a list of supported physical data types by order of preference.
+     *
+     * @return a list of supported physical data types by order of preference
+     */
+    public List<DataType<?>> getPhysicalDataTypes() {
+        return physicalDataTypes;
+    }
+
 }

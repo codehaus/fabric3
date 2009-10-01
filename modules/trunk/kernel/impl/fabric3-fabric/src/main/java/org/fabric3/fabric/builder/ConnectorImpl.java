@@ -43,22 +43,29 @@
  */
 package org.fabric3.fabric.builder;
 
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.builder.transform.TransformerInterceptorFactory;
 import org.fabric3.fabric.wire.InvocationChainImpl;
 import org.fabric3.fabric.wire.WireImpl;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -73,7 +80,21 @@ public class ConnectorImpl implements Connector {
     private Map<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>> sourceAttachers;
     private Map<Class<? extends PhysicalTargetDefinition>, TargetWireAttacher<? extends PhysicalTargetDefinition>> targetAttachers;
 
+    private ClassLoaderRegistry classLoaderRegistry;
+    private TransformerInterceptorFactory transformerFactory;
+    private boolean transform;
+
+    /**
+     * Constructor used during bootstrap
+     */
     public ConnectorImpl() {
+    }
+
+    @Constructor
+    public ConnectorImpl(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference TransformerInterceptorFactory transformerFactory) {
+        this.classLoaderRegistry = classLoaderRegistry;
+        this.transformerFactory = transformerFactory;
+        transform = true;
     }
 
     @Reference
@@ -146,7 +167,36 @@ public class ConnectorImpl implements Connector {
             }
             wire.addInvocationChain(chain);
         }
+        processTransform(wire, definition);
         return wire;
+    }
+
+    private void processTransform(Wire wire, PhysicalWireDefinition definition) throws WiringException {
+        if (!transform) {
+            // short-circuit during bootstrap
+            return;
+        }
+        PhysicalSourceDefinition sourceDefinition = definition.getSource();
+        PhysicalTargetDefinition targetDefinition = definition.getTarget();
+        for (DataType<?> sourceType : sourceDefinition.getPhysicalDataTypes()) {
+            if (targetDefinition.getPhysicalDataTypes().contains(sourceType)) {
+                // no transform necessary
+                // TODO record source and target types on physical operation definition
+                return;
+            }
+        }
+        URI targetId = targetDefinition.getClassLoaderId();
+        ClassLoader targetLoader = classLoaderRegistry.getClassLoader(targetId);
+        URI sourceId = sourceDefinition.getClassLoaderId();
+        ClassLoader sourceLoader = classLoaderRegistry.getClassLoader(sourceId);
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
+            List<DataType<?>> sourceTypes = sourceDefinition.getPhysicalDataTypes();
+            List<DataType<?>> targetTypes = targetDefinition.getPhysicalDataTypes();
+            Interceptor interceptor = transformerFactory.createInterceptor(operation, sourceTypes, targetTypes, targetLoader, sourceLoader);
+            // TODO record source and target types on physical operation definition
+            chain.addInterceptor(interceptor);
+        }
     }
 
 

@@ -48,6 +48,7 @@ import java.util.Map;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
@@ -62,12 +63,12 @@ public class JmsSourceDefinition extends PhysicalSourceDefinition {
     private Map<String, PayloadType> payloadTypes;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param uri             The service URI
-     * @param metadata        Metadata to be initialized.
-     * @param payloadTypes    The JMS payload types keyed by operation name
-     * @param transactionType Transaction type
+     * @param uri             the service URI
+     * @param metadata        metadata used to create a JMS message consumer.
+     * @param payloadTypes    the JMS payload types keyed by operation name
+     * @param transactionType the transaction type
      */
     public JmsSourceDefinition(URI uri, JmsBindingMetadata metadata, Map<String, PayloadType> payloadTypes, TransactionType transactionType) {
         this.metadata = metadata;
@@ -75,6 +76,28 @@ public class JmsSourceDefinition extends PhysicalSourceDefinition {
         this.payloadTypes = payloadTypes;
         setUri(uri);
     }
+
+    /**
+     * Constructor that defines an alternative set of supported data types.
+     *
+     * @param uri             the service URI
+     * @param metadata        metadataused to create a JMS message consumer.
+     * @param payloadTypes    the JMS payload types keyed by operation name
+     * @param transactionType the transaction type
+     * @param types           the allowable datatypes. For example, this may be used to constrain a source type to string XML
+     */
+    public JmsSourceDefinition(URI uri,
+                               JmsBindingMetadata metadata,
+                               Map<String, PayloadType> payloadTypes,
+                               TransactionType transactionType,
+                               DataType<?>... types) {
+        super(types);
+        setUri(uri);
+        this.metadata = metadata;
+        this.transactionType = transactionType;
+        this.payloadTypes = payloadTypes;
+    }
+
 
     public JmsBindingMetadata getMetadata() {
         return metadata;

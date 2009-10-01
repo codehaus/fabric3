@@ -43,14 +43,11 @@
  */
 package org.fabric3.binding.jms.runtime;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.transaction.TransactionManager;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -62,16 +59,12 @@ import org.fabric3.binding.jms.provision.JmsTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.AdministeredObjectResolver;
 import org.fabric3.binding.jms.runtime.lookup.JmsLookupException;
-import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.transform.TransformerInterceptorFactory;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
-import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.model.type.xsd.XSDType;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -84,25 +77,22 @@ import org.fabric3.spi.wire.Wire;
 public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefinition> {
     private AdministeredObjectResolver resolver;
     private TransactionManager tm;
-    private TransformerInterceptorFactory interceptorFactory;
     private ClassLoaderRegistry classLoaderRegistry;
 
 
     public JmsTargetWireAttacher(@Reference AdministeredObjectResolver resolver,
                                  @Reference TransactionManager tm,
-                                 @Reference TransformerInterceptorFactory interceptorFactory,
                                  @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.resolver = resolver;
         this.tm = tm;
-        this.interceptorFactory = interceptorFactory;
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public void attach(PhysicalSourceDefinition source, JmsTargetDefinition target, Wire wire) throws WiringException {
 
         WireConfiguration wireConfiguration = new WireConfiguration();
-        ClassLoader classloader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
-        wireConfiguration.setClassloader(classloader);
+        ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
+        wireConfiguration.setClassloader(targetClassLoader);
         wireConfiguration.setCorrelationScheme(target.getMetadata().getCorrelationScheme());
         wireConfiguration.setTransactionManager(tm);
         wireConfiguration.setTransactionType(target.getTransactionType());
@@ -120,10 +110,6 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
             configuration.setOneWay(op.isOneWay());
             PayloadType payloadType = payloadTypes.get(operationName);
             configuration.setPayloadType(payloadType);
-            if (PayloadType.XML == payloadType) {
-                addTransformers(chain, classloader);
-            }
-
             Interceptor interceptor = new JmsInterceptor(configuration);
             chain.addInterceptor(interceptor);
         }
@@ -184,22 +170,5 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsTargetDefini
             }
         }
     }
-
-    // TODO move to connector
-    private void addTransformers(InvocationChain chain, ClassLoader classloader) throws WiringException {
-        PhysicalOperationDefinition definition = chain.getPhysicalOperation();
-        DataType<?> any = new XSDType(String.class, new QName(XSDType.XSD_NS, "anyType"));
-        JavaClass<Object> javaClass = new JavaClass<Object>(Object.class);
-        List<DataType<?>> inTargets = new ArrayList<DataType<?>>();
-        inTargets.add(any);
-        Interceptor inputInterceptor = interceptorFactory.createInputInterceptor(definition, javaClass, inTargets, classloader);
-        List<DataType<?>> outTargets = new ArrayList<DataType<?>>();
-        outTargets.add(javaClass);
-        Interceptor outputInterceptor = interceptorFactory.createOutputInterceptor(definition, any, outTargets, classloader);
-        chain.addInterceptor(0, outputInterceptor);
-        chain.addInterceptor(0, inputInterceptor);
-    }
-
-
 
 }

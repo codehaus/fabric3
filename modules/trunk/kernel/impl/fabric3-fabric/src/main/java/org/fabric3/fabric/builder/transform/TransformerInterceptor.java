@@ -45,22 +45,65 @@ import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Transforms the return and fault parameters of an invocation to a different data format by delegating to an underlying Transformer.
+ * Converts the input parameters of an invocation to a target format and the output parameters from the target format by delegating to underlying
+ * transformers.
  *
  * @version $Rev$ $Date$
  */
-public class OutputTransformerInterceptor implements Interceptor {
-    private Transformer<Object, Object> transformer;
-    private ClassLoader loader;
+public class TransformerInterceptor implements Interceptor {
+    private Transformer<Object, Object> inTransformer;
+    private Transformer<Object, Object> outTransformer;
+    private ClassLoader inLoader;
+    private ClassLoader outLoader;
     private Interceptor next;
 
-    public OutputTransformerInterceptor(Transformer<Object, Object> transformer, ClassLoader loader) {
-        this.transformer = transformer;
-        this.loader = loader;
+    /**
+     * Constructor.
+     *
+     * @param inTransformer  the input parameter transformer
+     * @param outTransformer the output parameter transformer
+     * @param inLoader       the input parameter classloader, i.e. the target service contributon classloader
+     * @param outLoader      the output parameter classloader, i.e. the source component contributon classloader
+     */
+    public TransformerInterceptor(Transformer<Object, Object> inTransformer,
+                                  Transformer<Object, Object> outTransformer,
+                                  ClassLoader inLoader,
+                                  ClassLoader outLoader) {
+        this.inTransformer = inTransformer;
+        this.outTransformer = outTransformer;
+        this.inLoader = inLoader;
+        this.outLoader = outLoader;
     }
 
     public Message invoke(Message msg) {
+        transformInput(msg);
         Message ret = next.invoke(msg);
+        return transformOutput(ret);
+    }
+
+    private void transformInput(Message msg) {
+        Object params = msg.getBody();
+        // TODO handle null types
+        if (params != null) {
+            try {
+                if (params.getClass().isArray()) {
+                    Object[] paramArray = (Object[]) params;
+                    for (int i = 0; i < paramArray.length; i++) {
+                        Object param = paramArray[i];
+                        Object transformed = inTransformer.transform(param, inLoader);
+                        paramArray[i] = transformed;
+                    }
+                } else {
+                    Object transformed = inTransformer.transform(params, inLoader);
+                    msg.setBody(transformed);
+                }
+            } catch (TransformationException e) {
+                throw new ServiceRuntimeException(e);
+            }
+        }
+    }
+
+    private Message transformOutput(Message ret) {
         Object params = ret.getBody();
         // TODO handle null types
         if (params != null) {
@@ -69,11 +112,11 @@ public class OutputTransformerInterceptor implements Interceptor {
                     Object[] paramArray = (Object[]) params;
                     for (int i = 0; i < paramArray.length; i++) {
                         Object param = paramArray[i];
-                        Object transformed = transformer.transform(param, loader);
+                        Object transformed = outTransformer.transform(param, outLoader);
                         paramArray[i] = transformed;
                     }
                 } else {
-                    Object transformed = transformer.transform(params, loader);
+                    Object transformed = outTransformer.transform(params, outLoader);
                     ret.setBody(transformed);
                 }
             } catch (TransformationException e) {
@@ -83,7 +126,6 @@ public class OutputTransformerInterceptor implements Interceptor {
         return ret;
     }
 
-
     public void setNext(Interceptor next) {
         this.next = next;
     }
@@ -91,4 +133,5 @@ public class OutputTransformerInterceptor implements Interceptor {
     public Interceptor getNext() {
         return next;
     }
+
 }

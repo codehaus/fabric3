@@ -99,7 +99,6 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         } else {
             processReference(wire, sourceDefinition, targetDefinition, source, injectable, type);
         }
-        processTransform(wire, targetDefinition);
     }
 
     public void detach(JavaSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {

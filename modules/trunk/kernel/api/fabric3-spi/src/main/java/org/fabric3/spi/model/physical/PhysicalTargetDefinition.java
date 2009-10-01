@@ -46,6 +46,7 @@ package org.fabric3.spi.model.physical;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.fabric3.model.type.contract.DataType;
@@ -57,17 +58,24 @@ import org.fabric3.model.type.contract.DataType;
  */
 public class PhysicalTargetDefinition implements Serializable {
     private static final long serialVersionUID = -8430498259706831133L;
-    private static List<DataType<?>> PHYSICAL_DATA_TYPES = new ArrayList<DataType<?>>();
-
-    static {
-        PHYSICAL_DATA_TYPES.add(PhysicalDataTypes.JAVA_TYPE);
-    }
 
     private URI uri;
     private boolean optimizable;
     private boolean callback;
     private URI callbackUri;
     private URI classLoaderId;
+    protected List<DataType<?>> physicalDataTypes = new ArrayList<DataType<?>>();
+
+    public PhysicalTargetDefinition() {
+        // default to Java
+        physicalDataTypes.add(PhysicalDataTypes.JAVA_TYPE);
+    }
+
+    public PhysicalTargetDefinition(DataType<?>... types) {
+        if (types != null) {
+            physicalDataTypes.addAll(Arrays.asList(types));
+        }
+    }
 
     /**
      * Returns the URI of the physical component targeted by this wire.
@@ -129,7 +137,7 @@ public class PhysicalTargetDefinition implements Serializable {
      * @return a list of supported physical data types by order of preference
      */
     public List<DataType<?>> getPhysicalDataTypes() {
-        return PHYSICAL_DATA_TYPES;
+        return physicalDataTypes;
     }
 
     /**

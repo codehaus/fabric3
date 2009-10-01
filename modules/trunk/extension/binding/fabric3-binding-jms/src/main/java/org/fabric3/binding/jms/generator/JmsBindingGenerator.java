@@ -59,13 +59,15 @@ import org.fabric3.binding.jms.model.JmsBindingDefinition;
 import org.fabric3.binding.jms.provision.JmsSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsTargetDefinition;
 import org.fabric3.binding.jms.provision.PayloadType;
-import org.fabric3.model.type.definitions.Intent;
+import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.model.type.contract.ServiceContract;
+import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalOperation;
+import org.fabric3.spi.model.type.xsd.XSDType;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
@@ -80,6 +82,8 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
     private static final QName TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName IMMEDIATE_ONEWAY = new QName(Constants.SCA_NS, "immediateOneWay");
     private static final QName ONEWAY = new QName(Constants.SCA_NS, "oneWay");
+
+    private static final DataType<?> ANY = new XSDType(String.class, new QName(XSDType.XSD_NS, "anyType"));
 
     private PayloadTypeIntrospector introspector;
 
@@ -98,6 +102,12 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         validateResponseDestination(metadata, contract);
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
         URI uri = logicalBinding.getDefinition().getTargetUri();
+        for (PayloadType payloadType : payloadTypes.values()) {
+            if (PayloadType.XML == payloadType) {
+                // set the source type to string XML
+                 return new JmsSourceDefinition(uri, metadata, payloadTypes, transactionType, ANY);
+            }
+        }
         return new JmsSourceDefinition(uri, metadata, payloadTypes, transactionType);
     }
 
@@ -112,6 +122,13 @@ public class JmsBindingGenerator implements BindingGenerator<JmsBindingDefinitio
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getJmsMetadata();
         validateResponseDestination(metadata, contract);
         Map<String, PayloadType> payloadTypes = processPayloadTypes(contract);
+
+        // FIXME hack
+        for (PayloadType payloadType : payloadTypes.values()) {
+            if (PayloadType.XML == payloadType) {
+                 return new JmsTargetDefinition(uri, metadata, payloadTypes, transactionType, ANY);
+            }
+        }
         return new JmsTargetDefinition(uri, metadata, payloadTypes, transactionType);
     }
 
