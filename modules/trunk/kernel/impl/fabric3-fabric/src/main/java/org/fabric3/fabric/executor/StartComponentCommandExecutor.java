@@ -51,11 +51,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.StartComponentCommand;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.cm.ComponentManager;
 
 /**
  * Eagerly initializes a component on a service node.

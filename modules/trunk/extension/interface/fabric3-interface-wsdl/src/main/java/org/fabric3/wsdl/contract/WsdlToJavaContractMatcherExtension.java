@@ -38,7 +38,7 @@
 
 package org.fabric3.wsdl.contract;
 
-import org.fabric3.model.type.java.JavaServiceContract;
+import org.fabric3.spi.model.type.java.JavaServiceContract;
 import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**

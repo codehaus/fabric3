@@ -43,11 +43,11 @@ import java.util.Set;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.java.Signature;
+import org.fabric3.spi.model.type.java.ConstructorInjectionSite;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.InjectionSite;
+import org.fabric3.spi.model.type.java.Signature;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;

@@ -56,7 +56,7 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import static org.fabric3.model.type.contract.Operation.NO_CONVERSATION;
 import org.fabric3.model.type.contract.ServiceContract;
-import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;

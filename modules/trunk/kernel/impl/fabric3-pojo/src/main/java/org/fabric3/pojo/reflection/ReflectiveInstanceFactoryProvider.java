@@ -54,12 +54,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.model.type.java.InjectableType;
-import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.spi.model.type.java.ConstructorInjectionSite;
+import org.fabric3.spi.model.type.java.FieldInjectionSite;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.InjectionSite;
+import org.fabric3.spi.model.type.java.MethodInjectionSite;
 import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
 import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;

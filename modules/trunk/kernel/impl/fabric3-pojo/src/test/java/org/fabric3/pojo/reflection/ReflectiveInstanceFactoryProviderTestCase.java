@@ -56,11 +56,11 @@ import java.util.Map;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.model.type.java.InjectableType;
-import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.spi.model.type.java.FieldInjectionSite;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.InjectionSite;
+import org.fabric3.spi.model.type.java.MethodInjectionSite;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;

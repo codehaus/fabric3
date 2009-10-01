@@ -44,12 +44,12 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.StopComponentCommand;
+import org.fabric3.spi.cm.ComponentManager;
+import org.fabric3.spi.cm.RegistrationException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.cm.ComponentManager;
-import org.fabric3.spi.cm.RegistrationException;
 
 @EagerInit
 public class StopComponentCommandExecutor implements CommandExecutor<StopComponentCommand> {

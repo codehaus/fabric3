@@ -43,7 +43,7 @@
  */
 package org.fabric3.pojo.reflection;
 
-import org.fabric3.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.Injectable;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;

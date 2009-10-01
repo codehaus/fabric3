@@ -53,9 +53,9 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.CallbackDefinition;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.FieldInjectionSite;
-import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.java.MethodInjectionSite;
+import org.fabric3.spi.model.type.java.FieldInjectionSite;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.MethodInjectionSite;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;

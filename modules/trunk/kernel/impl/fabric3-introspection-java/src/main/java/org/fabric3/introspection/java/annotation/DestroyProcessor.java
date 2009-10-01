@@ -48,8 +48,8 @@ import java.lang.reflect.Method;
 import org.osoa.sca.annotations.Destroy;
 
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.InjectingComponentType;
-import org.fabric3.model.type.java.Signature;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.Signature;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 

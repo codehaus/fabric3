@@ -52,10 +52,10 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.java.ConstructorInjectionSite;
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.model.type.java.InjectionSite;
-import org.fabric3.model.type.java.Signature;
+import org.fabric3.spi.model.type.java.ConstructorInjectionSite;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectionSite;
+import org.fabric3.spi.model.type.java.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;

@@ -38,10 +38,10 @@
 package org.fabric3.fabric.runtime;
 
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.lcm.LogicalComponentManager;
 
 /**
@@ -94,5 +94,5 @@ public interface RuntimeServices {
      * @return the MetaDataStore used to index contribution resources
      */
     MetaDataStore getMetaDataStore();
- 
+
 }

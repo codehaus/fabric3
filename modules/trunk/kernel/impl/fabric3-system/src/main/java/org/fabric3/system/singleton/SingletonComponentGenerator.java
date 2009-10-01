@@ -47,8 +47,8 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;

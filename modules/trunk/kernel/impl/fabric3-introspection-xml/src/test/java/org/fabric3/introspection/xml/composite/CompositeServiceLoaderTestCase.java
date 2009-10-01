@@ -61,7 +61,7 @@ import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
-import org.fabric3.model.type.java.JavaServiceContract;
+import org.fabric3.spi.model.type.java.JavaServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;

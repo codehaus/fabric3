@@ -51,9 +51,9 @@ import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.domain.DomainListener;
 import org.fabric3.spi.domain.RoutingService;
-import org.fabric3.spi.policy.PolicyRegistry;
-import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.lcm.LogicalComponentManager;
+import org.fabric3.spi.policy.PolicyAttacher;
+import org.fabric3.spi.policy.PolicyRegistry;
 
 /**
  * Implements a distributed domain containing user-defined services.

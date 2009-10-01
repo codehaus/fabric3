@@ -51,6 +51,7 @@ import org.fabric3.model.type.component.CompositeImplementation;
 import org.fabric3.model.type.component.Multiplicity;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -58,7 +59,6 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.lcm.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -77,8 +77,8 @@ public class LocalWireCommandGenerator implements CommandGenerator {
      * Constructor used during bootstrap.
      *
      * @param wireGenerator the bootstrap physical wire generator
-     * @param runtimeLCM            the bootstrap LogicalComponentManager
-     * @param order                 the order value for commands generated
+     * @param runtimeLCM    the bootstrap LogicalComponentManager
+     * @param order         the order value for commands generated
      */
     public LocalWireCommandGenerator(WireGenerator wireGenerator, LogicalComponentManager runtimeLCM, int order) {
         this.wireGenerator = wireGenerator;
@@ -91,10 +91,10 @@ public class LocalWireCommandGenerator implements CommandGenerator {
      * containing system components and the application domain containing end-user components. On runtime nodes, the application domain may not be
      * active, in which case a null value may be injected.
      *
-     * @param wireGenerator the bootstrap physical wire generator
-     * @param runtimeLCM            the LogicalComponentManager associated with the runtime domain
-     * @param applicationLCM        the LogicalComponentManager associated with the application domain
-     * @param order                 the order value for commands generated
+     * @param wireGenerator  the bootstrap physical wire generator
+     * @param runtimeLCM     the LogicalComponentManager associated with the runtime domain
+     * @param applicationLCM the LogicalComponentManager associated with the application domain
+     * @param order          the order value for commands generated
      */
     @Constructor
     public LocalWireCommandGenerator(@Reference WireGenerator wireGenerator,
@@ -168,7 +168,7 @@ public class LocalWireCommandGenerator implements CommandGenerator {
                 command.add(attachCommand);
             }
             // generate physical callback wires if the forward service is bidirectional
-            if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {   
+            if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
                 PhysicalWireDefinition pwd = wireGenerator.generateCollocatedCallbackWire(targetService, reference);
                 if (attach) {
                     AttachWireCommand attachCommand = new AttachWireCommand();

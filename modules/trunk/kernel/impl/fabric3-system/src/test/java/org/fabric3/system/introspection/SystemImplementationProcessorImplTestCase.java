@@ -49,7 +49,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
-import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;

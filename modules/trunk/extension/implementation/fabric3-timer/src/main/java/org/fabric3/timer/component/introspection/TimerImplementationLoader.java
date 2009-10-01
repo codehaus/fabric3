@@ -47,7 +47,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.introspection.ImplementationArtifactNotFound;
-import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;

@@ -51,7 +51,7 @@ import org.fabric3.api.annotation.scope.Request;
 import org.fabric3.api.annotation.scope.Scopes;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.introspection.java.annotation.RequestProcessor;
 
 @SuppressWarnings("unchecked")

@@ -54,7 +54,6 @@ import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.lcm.LogicalComponentManagerImpl;
-import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;

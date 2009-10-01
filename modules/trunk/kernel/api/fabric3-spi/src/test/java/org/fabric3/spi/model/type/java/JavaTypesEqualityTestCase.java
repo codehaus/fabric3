@@ -42,10 +42,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.model.type.java.JavaGenericType;
-import org.fabric3.spi.model.type.java.JavaTypeInfo;
-
 /**
  * @version $Rev$ $Date$
  */

@@ -46,7 +46,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.container.web.spi.WebApplicationActivator;
-import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.spi.model.type.java.InjectionSite;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;

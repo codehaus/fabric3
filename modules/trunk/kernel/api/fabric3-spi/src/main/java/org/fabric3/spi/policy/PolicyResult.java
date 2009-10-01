@@ -44,20 +44,19 @@ import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalOperation;
 
 /**
- * Result of resolving intents and policy sets configured on a wire. 
- *
- *
- * The policies are resolved for the source and target bindings as well as the source and
- * target component implementation types. A wire can be between two components or between a component and a binding.
+ * Result of resolving intents and policy sets configured on a wire.
  * <p/>
- * For a wire between two components, the result will include:
- * <ol>
+ * <p/>
+ * The policies are resolved for the source and target bindings as well as the source and target component implementation types. A wire can be between
+ * two components or between a component and a binding.
+ * <p/>
+ * For a wire between two components, the result will include: <ol>
  * <p/>
  * <li>Implementation intents that are requested for each operation on the source side and may be provided by the source component implementation
  * type.
  * <p/>
- * <li>Implementation intents that are requested for each operation on the target side and may be provided by the target component
- * implementation type.
+ * <li>Implementation intents that are requested for each operation on the target side and may be provided by the target component implementation
+ * type.
  * <p/>
  * <li>Policy sets that map to implementation intents on each operation on the source side and understood by the source component
  * <p/>

@@ -46,7 +46,7 @@ package org.fabric3.pojo.component;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.Injectable;
 import org.fabric3.pojo.injection.ComponentObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;

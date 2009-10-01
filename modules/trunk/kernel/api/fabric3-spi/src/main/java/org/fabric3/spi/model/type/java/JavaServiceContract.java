@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.model.type.java;
+package org.fabric3.spi.model.type.java;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -73,6 +73,7 @@ public class JavaServiceContract extends ServiceContract {
 
     /**
      * Constructor.
+     *
      * @param interfaceClass the class representing the service contract
      */
     public JavaServiceContract(Class<?> interfaceClass) {

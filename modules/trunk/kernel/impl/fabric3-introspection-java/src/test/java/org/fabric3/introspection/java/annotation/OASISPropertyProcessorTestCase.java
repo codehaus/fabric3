@@ -53,7 +53,7 @@ import org.oasisopen.sca.annotation.Property;
 import org.fabric3.introspection.java.DefaultIntrospectionHelper;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;

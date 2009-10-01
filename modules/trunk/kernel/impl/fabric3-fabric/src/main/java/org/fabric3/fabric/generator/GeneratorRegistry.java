@@ -56,8 +56,8 @@ import org.fabric3.spi.generator.ResourceGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, and {@link InterceptorGenerator}s . Generators are responsible for
- * producing physical model objects that are provisioned to service nodes from their logical counterparts.
+ * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, and {@link InterceptorGenerator}s . Generators are responsible for producing
+ * physical model objects that are provisioned to service nodes from their logical counterparts.
  *
  * @version $Rev$ $Date$
  */

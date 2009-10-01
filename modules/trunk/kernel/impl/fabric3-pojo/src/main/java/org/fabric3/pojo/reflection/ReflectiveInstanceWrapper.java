@@ -46,7 +46,7 @@ package org.fabric3.pojo.reflection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.Injectable;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.Injector;

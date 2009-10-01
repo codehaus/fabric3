@@ -49,7 +49,7 @@ import org.fabric3.model.type.component.Implementation;
 import static org.fabric3.model.type.component.Scope.COMPOSITE;
 import static org.fabric3.model.type.component.Scope.CONVERSATION;
 import static org.fabric3.model.type.component.Scope.STATELESS;
-import org.fabric3.model.type.java.InjectingComponentType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor;
 

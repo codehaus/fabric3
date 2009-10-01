@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
-import org.fabric3.model.type.java.JavaServiceContract;
+import org.fabric3.spi.model.type.java.JavaServiceContract;
 
 /**
  * Default EndpointSynthesizer implementation.

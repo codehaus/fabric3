@@ -38,9 +38,9 @@
 
 package org.fabric3.fabric.contract;
 
-import org.fabric3.model.type.java.JavaServiceContract;
-import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.contract.ContractMatcherExtension;
+import org.fabric3.spi.model.type.java.JavaServiceContract;
+import org.fabric3.spi.model.type.java.Signature;
 
 /**
  * Compares JavaServiceContracts for compatibility.

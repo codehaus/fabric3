@@ -69,8 +69,8 @@ public interface ResourceProcessor {
     /**
      * Loads the the Resource
      *
-     * @param resource        the resource to process
-     * @param context         the context to which validation errors and warnings are reported
+     * @param resource the resource to process
+     * @param context  the context to which validation errors and warnings are reported
      * @throws InstallException if an error processing the contribution occurs
      */
     void process(Resource resource, IntrospectionContext context) throws InstallException;

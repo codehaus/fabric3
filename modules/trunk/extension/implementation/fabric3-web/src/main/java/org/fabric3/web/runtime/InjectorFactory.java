@@ -40,7 +40,7 @@ package org.fabric3.web.runtime;
 import java.util.List;
 import java.util.Map;
 
-import org.fabric3.model.type.java.InjectionSite;
+import org.fabric3.spi.model.type.java.InjectionSite;
 import org.fabric3.spi.Injector;
 import org.fabric3.spi.ObjectFactory;
 

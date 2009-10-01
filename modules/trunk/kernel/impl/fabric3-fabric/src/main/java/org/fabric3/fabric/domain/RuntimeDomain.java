@@ -46,9 +46,9 @@ import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.domain.RoutingService;
-import org.fabric3.spi.policy.PolicyRegistry;
-import org.fabric3.spi.policy.PolicyAttacher;
 import org.fabric3.spi.lcm.LogicalComponentManager;
+import org.fabric3.spi.policy.PolicyAttacher;
+import org.fabric3.spi.policy.PolicyRegistry;
 
 /**
  * Implements a domain for system components in a runtime. Fabric3 runtimes are constituted using SCA components and the runtime domain manages

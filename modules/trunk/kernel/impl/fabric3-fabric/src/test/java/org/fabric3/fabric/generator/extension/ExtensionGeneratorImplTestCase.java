@@ -57,7 +57,6 @@ import org.fabric3.model.type.component.BindingDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.java.InjectingComponentType;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
@@ -65,6 +64,7 @@ import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 
 /**
  * @version $Rev$ $Date$

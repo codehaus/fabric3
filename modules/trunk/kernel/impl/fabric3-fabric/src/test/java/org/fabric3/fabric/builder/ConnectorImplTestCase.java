@@ -55,9 +55,9 @@ import org.easymock.EasyMock;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**

@@ -48,7 +48,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.Injectable;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;

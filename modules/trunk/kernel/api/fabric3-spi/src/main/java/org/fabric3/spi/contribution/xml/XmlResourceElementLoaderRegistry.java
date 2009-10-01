@@ -68,9 +68,9 @@ public interface XmlResourceElementLoaderRegistry {
     /**
      * Dispatches to an XmlResourceElementLoader to loads an element in an XML resource
      *
-     * @param reader          the StAX reader, positioned at the start of the element to laod
-     * @param resource        the resource
-     * @param context         the context to which validation errors and warnings are reported
+     * @param reader   the StAX reader, positioned at the start of the element to laod
+     * @param resource the resource
+     * @param context  the context to which validation errors and warnings are reported
      * @throws InstallException   if a fatal error loading the resource occurs
      * @throws XMLStreamException if an error parsing the XML stream occurs
      */

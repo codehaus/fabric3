@@ -63,7 +63,7 @@ import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.model.type.java.JavaServiceContract;
+import org.fabric3.spi.model.type.java.JavaServiceContract;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.generator.BindingGenerator;

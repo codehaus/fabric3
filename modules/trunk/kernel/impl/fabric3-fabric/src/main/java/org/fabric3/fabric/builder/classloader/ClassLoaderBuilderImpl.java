@@ -58,13 +58,13 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.cm.ComponentManager;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.contribution.ContributionUriResolver;
 import org.fabric3.spi.contribution.ResolutionException;
 import org.fabric3.spi.contribution.archive.ClasspathProcessorRegistry;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderWireDefinition;
-import org.fabric3.spi.cm.ComponentManager;
 
 /**
  * Default implementation of ClassLoaderBuilder.

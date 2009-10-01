@@ -42,13 +42,13 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.fabric3.fabric.contract.DefaultContractMatcher;
+import org.fabric3.fabric.contract.JavaContractMatcherExtension;
 import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
 import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
-import org.fabric3.fabric.contract.DefaultContractMatcher;
-import org.fabric3.fabric.contract.JavaContractMatcherExtension;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.ComponentReference;
@@ -60,12 +60,12 @@ import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ResourceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.model.type.java.JavaServiceContract;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.type.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$

@@ -52,8 +52,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
 import org.fabric3.pojo.component.OASISPojoComponentContext;
 import org.fabric3.pojo.component.OASISPojoRequestContext;
 import org.fabric3.pojo.component.PojoComponent;

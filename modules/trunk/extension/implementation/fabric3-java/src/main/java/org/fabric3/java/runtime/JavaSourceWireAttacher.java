@@ -43,8 +43,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaSourceDefinition;
-import org.fabric3.model.type.java.Injectable;
-import org.fabric3.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
 import org.fabric3.pojo.builder.KeyInstantiationException;
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.pojo.builder.ProxyService;

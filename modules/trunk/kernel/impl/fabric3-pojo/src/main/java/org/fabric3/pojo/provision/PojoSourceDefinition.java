@@ -43,7 +43,7 @@
  */
 package org.fabric3.pojo.provision;
 
-import org.fabric3.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.Injectable;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**

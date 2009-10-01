@@ -82,5 +82,5 @@ public interface TargetWireAttacher<PTD extends PhysicalTargetDefinition> {
      * @throws WiringException if an exception occurs during the attach operation
      */
     ObjectFactory<?> createObjectFactory(PTD target) throws WiringException;
-    
+
 }
