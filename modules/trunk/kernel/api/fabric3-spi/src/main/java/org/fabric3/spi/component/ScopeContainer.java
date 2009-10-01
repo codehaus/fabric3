@@ -54,7 +54,7 @@ import org.fabric3.spi.invocation.WorkContext;
 
 
 /**
- * Manages the lifecycle and visibility of instances associated with a an {@link AtomicComponent}.
+ * Manages the lifecycle and visibility of instances associated with an {@link AtomicComponent}.
  *
  * @version $Rev$ $Date$
  */
