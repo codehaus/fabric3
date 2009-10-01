@@ -38,7 +38,7 @@
 package org.fabric3.spi.transform;
 
 /**
- * Base transformer interface for pull- and push-style transformations.
+ * Base transformer interface data format conversions.
  *
  * @version $Rev$ $Date$
  */

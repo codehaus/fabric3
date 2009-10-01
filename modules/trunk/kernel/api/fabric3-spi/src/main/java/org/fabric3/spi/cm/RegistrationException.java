@@ -46,7 +46,7 @@ package org.fabric3.spi.cm;
 import org.fabric3.spi.component.ComponentException;
 
 /**
- * Thrown when an error is encountered registering a service or reference on a composite
+ * Thrown when an error is encountered registering a component with the ComponentManager.
  *
  * @version $Rev$ $Date$
  */
