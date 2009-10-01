@@ -48,7 +48,6 @@ import java.util.List;
 
 import org.fabric3.model.type.AbstractPolicyAware;
 
-
 /**
  * Represents an operation that is part of a service contract.
  *
@@ -65,7 +64,6 @@ public class Operation extends AbstractPolicyAware {
     private List<DataType<?>> inputTypes;
     private List<DataType<?>> faultTypes;
     private int conversationSequence = NO_CONVERSATION;
-    private String databinding;
 
     /**
      * Construct a minimally-specified operation
