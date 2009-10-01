@@ -52,7 +52,7 @@ public interface ExpirationPolicy {
     boolean isExpired();
 
     /**
-     * Renews the associated conversation if it is renewable/
+     * Renews the associated conversation if it is renewable.
      */
     void renew();
 
