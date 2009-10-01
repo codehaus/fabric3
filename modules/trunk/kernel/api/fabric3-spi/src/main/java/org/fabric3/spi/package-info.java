@@ -43,6 +43,6 @@
  */
 
 /**
- * Overview of Apache Fabric3 SPI for extensions.
+ * Overview of Fabric3 SPI for extensions.
  */
 package org.fabric3.spi;
