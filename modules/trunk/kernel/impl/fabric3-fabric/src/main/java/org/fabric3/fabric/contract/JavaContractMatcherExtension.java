@@ -43,6 +43,8 @@ import org.fabric3.model.type.java.Signature;
 import org.fabric3.spi.contract.ContractMatcherExtension;
 
 /**
+ * Compares JavaServiceContracts for compatibility.
+ *
  * @version $Rev$ $Date$
  */
 public class JavaContractMatcherExtension implements ContractMatcherExtension<JavaServiceContract, JavaServiceContract> {
