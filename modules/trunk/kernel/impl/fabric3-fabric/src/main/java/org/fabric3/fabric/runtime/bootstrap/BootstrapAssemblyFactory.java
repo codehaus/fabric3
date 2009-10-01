@@ -57,7 +57,6 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl;
 import org.fabric3.fabric.builder.classloader.ClassLoaderWireBuilderImpl;
-import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.collector.CollectorImpl;
 import org.fabric3.fabric.command.AttachWireCommand;
@@ -135,6 +134,7 @@ import org.fabric3.jmx.runtime.JMXWireAttacher;
 import org.fabric3.pojo.generator.GenerationHelperImpl;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.spi.builder.classloader.ClassLoaderWireBuilder;
+import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -220,7 +220,7 @@ public class BootstrapAssemblyFactory {
         matcher.addMatcherExtension(javaMatcher);
 
         Generator generator = createGenerator(logicalComponentManager, metaDataStore, policyResolver, matcher);
-        
+
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager, matcher);
         Collector collector = new CollectorImpl();
         ContributionHelper contributionHelper = new ContributionHelperImpl(metaDataStore);
@@ -284,16 +284,8 @@ public class BootstrapAssemblyFactory {
         transformers.add(new String2QNameTransformer());
         transformers.add(new String2IntegerTransformer());
         transformerRegistry.setTransformers(transformers);
-        DefaultComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(scopeRegistry,
-                                                                               factoryBuilder,
-                                                                               classLoaderRegistry,
-                                                                               transformerRegistry,
-                                                                               helper);
-
-        registry.register(SystemComponentDefinition.class, builder);
 
         Map<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>> sourceAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalSourceDefinition>, SourceWireAttacher<? extends PhysicalSourceDefinition>>();
@@ -320,7 +312,17 @@ public class BootstrapAssemblyFactory {
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
 
         commandRegistry.register(StartContextCommand.class, new StartContextCommandExecutor(scopeRegistry));
-        commandRegistry.register(BuildComponentCommand.class, new BuildComponentCommandExecutor(registry, componentManager));
+
+        SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(scopeRegistry,
+                                                                               factoryBuilder,
+                                                                               classLoaderRegistry,
+                                                                               transformerRegistry,
+                                                                               helper);
+        Map<Class<?>, ComponentBuilder> builders = new HashMap<Class<?>, ComponentBuilder>();
+        builders.put(SystemComponentDefinition.class, builder);
+        BuildComponentCommandExecutor executor = new BuildComponentCommandExecutor(componentManager);
+        executor.setBuilders(builders);
+        commandRegistry.register(BuildComponentCommand.class, executor);
         commandRegistry.register(AttachWireCommand.class, new AttachWireCommandExecutor(connector));
         commandRegistry.register(StartComponentCommand.class, new StartComponentCommandExecutor(componentManager));
         commandRegistry.register(ProvisionClassloaderCommand.class, new ProvisionClassloaderCommandExecutor(classLoaderBuilder));

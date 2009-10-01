@@ -22,10 +22,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.ConnectorImpl"/>
     </component>
 
-    <component name="ComponentBuilderRegistry">
-        <f3-impl:implementation.system class="org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry"/>
-    </component>
-
     <component name="ClassLoaderBuilder">
         <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
     </component>

@@ -44,22 +44,24 @@
 package org.fabric3.fabric.executor;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.builder.component.ComponentBuilderRegistry;
+import org.fabric3.fabric.builder.BuilderNotFoundException;
 import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.component.ComponentBuilder;
+import org.fabric3.spi.cm.ComponentManager;
+import org.fabric3.spi.cm.RegistrationException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.cm.ComponentManager;
-import org.fabric3.spi.cm.RegistrationException;
 
 /**
  * Eagerly initializes a component on a service node.
@@ -69,21 +71,17 @@ import org.fabric3.spi.cm.RegistrationException;
 @EagerInit
 public class BuildComponentCommandExecutor implements CommandExecutor<BuildComponentCommand> {
 
-    private final ComponentBuilderRegistry componentBuilderRegistry;
-    private final ComponentManager componentManager;
+    private ComponentManager componentManager;
     private CommandExecutorRegistry commandExecutorRegistry;
+    private Map<Class<?>, ComponentBuilder> builders;
 
     @Constructor
-    public BuildComponentCommandExecutor(@Reference ComponentBuilderRegistry componentBuilderRegistry,
-                                         @Reference ComponentManager componentManager,
-                                         @Reference CommandExecutorRegistry commandExecutorRegistry) {
-        this.componentBuilderRegistry = componentBuilderRegistry;
+    public BuildComponentCommandExecutor(@Reference ComponentManager componentManager, @Reference CommandExecutorRegistry commandExecutorRegistry) {
         this.componentManager = componentManager;
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public BuildComponentCommandExecutor(ComponentBuilderRegistry componentBuilderRegistry, ComponentManager componentManager) {
-        this.componentBuilderRegistry = componentBuilderRegistry;
+    public BuildComponentCommandExecutor(ComponentManager componentManager) {
         this.componentManager = componentManager;
     }
 
@@ -92,11 +90,16 @@ public class BuildComponentCommandExecutor implements CommandExecutor<BuildCompo
         commandExecutorRegistry.register(BuildComponentCommand.class, this);
     }
 
+    @Reference(required = false)
+    public void setBuilders(Map<Class<?>, ComponentBuilder> builders) {
+        this.builders = builders;
+    }
+
     public void execute(BuildComponentCommand command) throws ExecutionException {
 
         try {
             PhysicalComponentDefinition physicalComponentDefinition = command.getDefinition();
-            Component component = componentBuilderRegistry.build(physicalComponentDefinition);
+            Component component = build(physicalComponentDefinition);
             URI classLoaderId = physicalComponentDefinition.getClassLoaderId();
             component.setClassLoaderId(classLoaderId);
             componentManager.register(component);
@@ -106,4 +109,24 @@ public class BuildComponentCommandExecutor implements CommandExecutor<BuildCompo
             throw new ExecutionException(e.getMessage(), e);
         }
     }
+
+    /**
+     * Builds a physical component from component definition.
+     *
+     * @param componentDefinition Component definition.
+     * @return Component to be built.
+     * @throws BuilderException if an exception building is encountered
+     */
+    @SuppressWarnings("unchecked")
+    public Component build(PhysicalComponentDefinition componentDefinition) throws BuilderException {
+
+        ComponentBuilder builder = builders.get(componentDefinition.getClass());
+        if (builder == null) {
+            throw new BuilderNotFoundException("Builder not found for " + componentDefinition.getClass().getName());
+        }
+        return builder.build(componentDefinition);
+
+    }
+
+
 }
