@@ -52,8 +52,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.java.Injectable;
-import org.fabric3.spi.model.type.java.InjectableType;
 import org.fabric3.pojo.component.OASISPojoComponentContext;
 import org.fabric3.pojo.component.OASISPojoRequestContext;
 import org.fabric3.pojo.component.PojoComponent;
@@ -73,10 +71,12 @@ import org.fabric3.spi.expression.ExpressionExpansionException;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
-import org.fabric3.spi.model.type.xsd.XSDSimpleType;
+import static org.fabric3.spi.model.type.xsd.XSDConstants.PROPERTY_TYPE;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -88,7 +88,6 @@ import org.fabric3.spi.util.ParamTypes;
  * @version $Rev$ $Date$
  */
 public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinition, C extends Component> implements ComponentBuilder<PCD, C> {
-    private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
     protected ClassLoaderRegistry classLoaderRegistry;
     protected TransformerRegistry transformerRegistry;
@@ -179,7 +178,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
 
         try {
             Class<?> physical = dataType.getPhysical();
-            Transformer<Node, ?> transformer = (Transformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, dataType, physical);
+            Transformer<Node, ?> transformer = (Transformer<Node, ?>) transformerRegistry.getTransformer(PROPERTY_TYPE, dataType, physical);
             if (transformer == null) {
                 throw new PropertyTransformException("No transformer for property " + name + " of type: " + dataType);
             }

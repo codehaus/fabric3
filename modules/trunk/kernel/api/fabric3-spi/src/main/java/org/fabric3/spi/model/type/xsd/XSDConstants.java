@@ -35,46 +35,21 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.string2java;
+package org.fabric3.spi.model.type.xsd;
 
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
-import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.model.type.xsd.XSDSimpleType;
-import org.fabric3.spi.model.type.xsd.XSDType;
-import org.fabric3.spi.transform.SingleTypeTransformer;
-import org.fabric3.spi.transform.TransformationException;
+import org.w3c.dom.Node;
 
 /**
+ * Defines Schema-related constants
+ *
  * @version $Rev$ $Date$
  */
-public class String2ClassTransformer implements SingleTypeTransformer<String, Class<?>> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(String.class, new QName(XSDType.XSD_NS, "string"));
-    private static final JavaClass<Class> TARGET = new JavaClass<Class>(Class.class);
-    private ClassLoaderRegistry classLoaderRegistry;
+public interface XSDConstants {
 
-    public String2ClassTransformer(@Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
-
-    public DataType<?> getTargetType() {
-        return TARGET;
-    }
-
-    public Class<?> transform(String source, ClassLoader loader) throws TransformationException {
-        try {
-            return classLoaderRegistry.loadClass(loader, source);
-        } catch (ClassNotFoundException e) {
-            throw new TransformationException(e);
-        }
-    }
-
+    /**
+     * Defines a component property.
+     */
+    XSDComplexType PROPERTY_TYPE = new XSDComplexType(Node.class, new QName(XSDType.XSD_NS, "property"));
 }

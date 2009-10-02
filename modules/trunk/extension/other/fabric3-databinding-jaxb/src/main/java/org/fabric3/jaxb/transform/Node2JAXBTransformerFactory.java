@@ -47,7 +47,7 @@ import org.w3c.dom.Node;
 import org.fabric3.jaxb.factory.JAXBContextFactory;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaType;
-import org.fabric3.spi.model.type.xsd.XSDSimpleType;
+import org.fabric3.spi.model.type.xsd.XSDConstants;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerFactory;
@@ -58,7 +58,6 @@ import org.fabric3.spi.transform.TransformerFactory;
  * @version $Rev$ $Date$
  */
 public class Node2JAXBTransformerFactory implements TransformerFactory<Node, Object> {
-    private static final XSDSimpleType PROPERTY_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private JAXBContextFactory contextFactory;
 
     public Node2JAXBTransformerFactory(@Reference JAXBContextFactory contextFactory) {
@@ -79,7 +78,7 @@ public class Node2JAXBTransformerFactory implements TransformerFactory<Node, Obj
 
             Class<?> type = classes[0];
             if (type.isAnnotationPresent(XmlRootElement.class)) {
-                if (PROPERTY_TYPE.equals(source)) {
+                if (XSDConstants.PROPERTY_TYPE.equals(source)) {
                     // the value is a property
                     return new PropertyValue2JAXBTransformer(jaxbContext);
                 } else {

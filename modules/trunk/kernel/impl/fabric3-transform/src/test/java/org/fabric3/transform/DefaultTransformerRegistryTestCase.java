@@ -41,11 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.model.type.xsd.XSDSimpleType;
+import org.fabric3.spi.model.type.xsd.XSDConstants;
 import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
@@ -63,18 +62,16 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
         List<SingleTypeTransformer<?, ?>> transformers = new ArrayList<SingleTypeTransformer<?, ?>>();
         transformers.add(transformer);
         registry.setTransformers(transformers);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
         JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(source, target));
+        assertSame(transformer, registry.getTransformer(XSDConstants.PROPERTY_TYPE, target));
     }
 
     public void testTransformerFactoryRegistration() throws Exception {
         List<TransformerFactory<?, ?>> factories = new ArrayList<TransformerFactory<?, ?>>();
         factories.add(new MockFactory());
         registry.setFactories(factories);
-        XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
         JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertNotNull(registry.getTransformer(source, target));
+        assertNotNull(registry.getTransformer(XSDConstants.PROPERTY_TYPE, target));
     }
 
     private class MockFactory implements TransformerFactory<Object, Object> {

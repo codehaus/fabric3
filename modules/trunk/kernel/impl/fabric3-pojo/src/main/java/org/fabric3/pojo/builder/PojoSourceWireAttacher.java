@@ -44,6 +44,7 @@
 package org.fabric3.pojo.builder;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.pojo.provision.PojoSourceDefinition;
@@ -51,6 +52,7 @@ import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
+import org.fabric3.spi.model.type.xsd.XSDType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -61,7 +63,7 @@ import org.fabric3.spi.transform.TransformerRegistry;
  * @version $Rev$ $Date$
  */
 public abstract class PojoSourceWireAttacher {
-    private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(String.class, XSDSimpleType.STRING);
+    private static final XSDSimpleType STRING_TYPE = new XSDSimpleType(String.class, new QName(XSDType.XSD_NS, "string"));
 
     protected TransformerRegistry transformerRegistry;
     protected ClassLoaderRegistry classLoaderRegistry;
@@ -117,7 +119,7 @@ public abstract class PojoSourceWireAttacher {
     private Object createKey(DataType<?> targetType, String value, ClassLoader classLoader) throws KeyInstantiationException {
         try {
             Class<?> physical = targetType.getPhysical();
-            Transformer<String, ?> transformer = (Transformer<String, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType, physical);
+            Transformer<String, ?> transformer = (Transformer<String, ?>) transformerRegistry.getTransformer(STRING_TYPE, targetType, physical);
             if (transformer == null) {
                 throw new KeyInstantiationException("No transformer for : " + targetType);
             }

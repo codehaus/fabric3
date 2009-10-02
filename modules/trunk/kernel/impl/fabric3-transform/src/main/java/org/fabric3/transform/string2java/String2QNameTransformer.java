@@ -42,14 +42,15 @@ import javax.xml.namespace.QName;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDSimpleType;
-import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
+import org.fabric3.spi.model.type.xsd.XSDType;
+import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class String2QNameTransformer extends AbstractSingleTypeTransformer<String, QName> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(String.class, XSDSimpleType.STRING);
+public class String2QNameTransformer implements SingleTypeTransformer<String, QName> {
+    private static final XSDSimpleType SOURCE = new XSDSimpleType(String.class, new QName(XSDType.XSD_NS, "string"));
     private static final JavaClass<QName> TARGET = new JavaClass<QName>(QName.class);
 
     public DataType<?> getSourceType() {

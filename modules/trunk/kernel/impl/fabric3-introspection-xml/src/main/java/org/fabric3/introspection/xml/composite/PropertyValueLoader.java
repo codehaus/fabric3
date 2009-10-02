@@ -54,7 +54,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.oasisopen.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import org.fabric3.model.type.component.PropertyValue;
 import org.fabric3.model.type.contract.DataType;
@@ -65,7 +64,7 @@ import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.model.type.xsd.XSDSimpleType;
+import org.fabric3.spi.model.type.xsd.XSDConstants;
 
 /**
  * Loads property values configured on a component.
@@ -143,7 +142,7 @@ public class PropertyValueLoader extends AbstractExtensibleTypeLoader<PropertyVa
             // TODO support element attribute
             throw new UnsupportedOperationException();
         } else {
-            dataType = new XSDSimpleType(Element.class, XSDSimpleType.STRING);
+            dataType = XSDConstants.PROPERTY_TYPE;
         }
 
         Document value = helper.loadValue(reader);

@@ -38,10 +38,9 @@
 package org.fabric3.spi.transform;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.xsd.XSDSimpleType;
+import org.fabric3.spi.model.type.xsd.XSDConstants;
 
 /**
  * @version $Rev$ $Date$
@@ -49,10 +48,9 @@ import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 @EagerInit
 public abstract class AbstractSingleTypeTransformer<SOURCE, TARGET> implements SingleTypeTransformer<SOURCE, TARGET> {
     // the default source to be used
-    private static final XSDSimpleType DEFAULT_SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
     public DataType<?> getSourceType() {
-        return DEFAULT_SOURCE;
+        return XSDConstants.PROPERTY_TYPE;
     }
 
 }
