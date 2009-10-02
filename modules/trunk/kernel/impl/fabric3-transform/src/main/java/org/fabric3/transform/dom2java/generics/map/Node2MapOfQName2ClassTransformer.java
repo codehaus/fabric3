@@ -52,7 +52,8 @@ import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
-import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
+import org.fabric3.spi.model.type.xsd.XSDConstants;
+import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
@@ -62,7 +63,7 @@ import org.fabric3.spi.transform.TransformationException;
  *
  * @version $Rev$ $Date$
  */
-public class Node2MapOfQName2ClassTransformer extends AbstractSingleTypeTransformer<Node, Map<QName, Class<?>>> {
+public class Node2MapOfQName2ClassTransformer implements SingleTypeTransformer<Node, Map<QName, Class<?>>> {
 
     private static JavaGenericType TARGET = null;
 
@@ -83,6 +84,10 @@ public class Node2MapOfQName2ClassTransformer extends AbstractSingleTypeTransfor
 
     public Node2MapOfQName2ClassTransformer(@Reference ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
+    }
+
+    public DataType<?> getSourceType() {
+        return XSDConstants.PROPERTY_TYPE;
     }
 
     public DataType<?> getTargetType() {

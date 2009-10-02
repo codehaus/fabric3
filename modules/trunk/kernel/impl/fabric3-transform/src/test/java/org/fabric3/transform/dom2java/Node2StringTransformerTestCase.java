@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.xml;
+package org.fabric3.transform.dom2java;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -50,8 +50,6 @@ public class Node2StringTransformerTestCase extends TestCase {
 
     public void testTransform() throws Exception {
 
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><policy xmlns=\"http://www.fabric3.org\">Test data</policy>";
-
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
         Element el = doc.createElementNS("http://www.fabric3.org", "policy");
@@ -59,7 +57,7 @@ public class Node2StringTransformerTestCase extends TestCase {
 
         Node2StringTransformer transformer = new Node2StringTransformer();
         String output = transformer.transform(el, getClass().getClassLoader());
-        assertEquals(expected, output);
+        assertEquals("Test data", output);
     }
 
 }

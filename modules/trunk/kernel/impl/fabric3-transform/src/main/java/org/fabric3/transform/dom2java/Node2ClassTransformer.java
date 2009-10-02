@@ -43,16 +43,21 @@ import org.w3c.dom.Node;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
+import org.fabric3.spi.model.type.xsd.XSDConstants;
+import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Node2ClassTransformer extends AbstractSingleTypeTransformer<Node, Class<?>> {
+public class Node2ClassTransformer implements SingleTypeTransformer<Node, Class<?>> {
     private static final JavaClass<Class> TARGET = new JavaClass<Class>(Class.class);
 
     private final ClassLoaderRegistry classLoaderRegistry;
+
+    public DataType<?> getSourceType() {
+        return XSDConstants.PROPERTY_TYPE;
+    }
 
     public Node2ClassTransformer(@Reference ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;

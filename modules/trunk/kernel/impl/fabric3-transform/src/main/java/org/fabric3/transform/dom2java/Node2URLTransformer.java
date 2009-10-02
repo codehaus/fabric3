@@ -44,15 +44,21 @@ import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.transform.AbstractSingleTypeTransformer;
+import org.fabric3.spi.model.type.xsd.XSDConstants;
+import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Node to URL Transformer
+ * Transforms from a Node to a URL.
+ *
  * @version $Rev$ $Date$
  */
-public class Node2URLTransformer extends AbstractSingleTypeTransformer<Node, URL> {
+public class Node2URLTransformer implements SingleTypeTransformer<Node, URL> {
     private static final JavaClass<URL> TARGET = new JavaClass<URL>(URL.class);
+
+    public DataType<?> getSourceType() {
+        return XSDConstants.PROPERTY_TYPE;
+    }
 
     public DataType<?> getTargetType() {
         return TARGET;
