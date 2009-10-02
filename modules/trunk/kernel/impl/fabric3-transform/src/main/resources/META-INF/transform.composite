@@ -19,84 +19,84 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
     </component>
 
-    <component name="Node2BooleanTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2BooleanTransformer"/>
+    <component name="Property2BooleanTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2BooleanTransformer"/>
     </component>
 
-    <component name="Node2ByteTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2ByteTransformer"/>
+    <component name="Property2ByteTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2ByteTransformer"/>
     </component>
 
-    <component name="Node2ShortTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2ShortTransformer"/>
+    <component name="Property2ShortTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2ShortTransformer"/>
     </component>
 
-    <component name="Node2IntegerTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2IntegerTransformer"/>
+    <component name="Property2IntegerTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2IntegerTransformer"/>
     </component>
 
-    <component name="Node2LongTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2LongTransformer"/>
+    <component name="Property2LongTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2LongTransformer"/>
     </component>
 
-    <component name="Node2FloatTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2FloatTransformer"/>
+    <component name="Property2FloatTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2FloatTransformer"/>
     </component>
 
-    <component name="Node2DoubleTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2DoubleTransformer"/>
+    <component name="Property2DoubleTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2DoubleTransformer"/>
     </component>
 
-    <component name="Node2QNameTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2QNameTransformer"/>
+    <component name="Property2QNameTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2QNameTransformer"/>
     </component>
 
-    <component name="Node2ClassTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2ClassTransformer"/>
+    <component name="Property2ClassTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2ClassTransformer"/>
     </component>
 
-    <component name="Node2DateTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2DateTransformer"/>
+    <component name="Property2DateTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2DateTransformer"/>
     </component>
 
-    <component name="Node2CalendarTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2CalendarTransformer"/>
+    <component name="Property2CalendarTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2CalendarTransformer"/>
     </component>
 
-    <component name="Node2StringTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2StringTransformer"/>
+    <component name="Property2StringTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2StringTransformer"/>
     </component>
 
-    <component name="Node2URITransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URITransformer"/>
+    <component name="Property2URITransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2URITransformer"/>
     </component>
 
-    <component name="Node2URLTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2URLTransformer"/>
+    <component name="Property2URLTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2URLTransformer"/>
     </component>
 
-    <component name="Node2MapOfStringsTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.Node2MapOfStringsTransformer"/>
+    <component name="Property2MapOfStringsTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.Property2MapOfStringsTransformer"/>
     </component>
 
-    <component name="Node2MapOfQName2ClassTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.Node2MapOfQName2ClassTransformer"/>
+    <component name="Property2MapOfQName2ClassTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.map.Property2MapOfQName2ClassTransformer"/>
     </component>
 
-    <component name="Node2ListOfStringTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Node2ListOfStringTransformer"/>
+    <component name="Property2ListOfStringTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Property2ListOfStringTransformer"/>
     </component>
 
-    <component name="Node2ListOfQNameTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Node2ListOfQNameTransformer"/>
+    <component name="Property2ListOfQNameTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.generics.list.Property2ListOfQNameTransformer"/>
     </component>
 
-    <component name="Node2PropertiesTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2PropertiesTransformer"/>
+    <component name="Property2PropertiesTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2PropertiesTransformer"/>
     </component>
 
-    <component name="Node2StreamTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2StreamTransformer"/>
+    <component name="Property2StreamTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Property2StreamTransformer"/>
     </component>
 
     <component name="String2QNameTransformer">

@@ -49,21 +49,21 @@ import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerFactory;
-import org.fabric3.transform.dom2java.Node2IntegerTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DefaultTransformerRegistryTestCase extends TestCase {
+    private static final JavaClass<Integer> TARGET = new JavaClass<Integer>(Integer.class);
+
     private DefaultTransformerRegistry registry;
 
     public void testTransformerRegistration() throws Exception {
-        SingleTypeTransformer<?, ?> transformer = new Node2IntegerTransformer();
+        SingleTypeTransformer<?, ?> transformer = new MockSingleTypeTransformer();
         List<SingleTypeTransformer<?, ?>> transformers = new ArrayList<SingleTypeTransformer<?, ?>>();
         transformers.add(transformer);
         registry.setTransformers(transformers);
-        JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertSame(transformer, registry.getTransformer(XSDConstants.PROPERTY_TYPE, target));
+        assertSame(transformer, registry.getTransformer(XSDConstants.PROPERTY_TYPE, TARGET));
     }
 
     public void testTransformerFactoryRegistration() throws Exception {
@@ -91,17 +91,27 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
             return null;
         }
 
-        public DataType<?> getSourceType() {
+    }
+
+    private class MockSingleTypeTransformer implements SingleTypeTransformer<Object, Object> {
+
+        public Object transform(Object o, ClassLoader loader) throws TransformationException {
             return null;
         }
 
+        public DataType<?> getSourceType() {
+            return XSDConstants.PROPERTY_TYPE;
+        }
+
         public DataType<?> getTargetType() {
-            return null;
+            return TARGET;
         }
     }
+
 
     protected void setUp() throws Exception {
         super.setUp();
         registry = new DefaultTransformerRegistry();
     }
+
 }
