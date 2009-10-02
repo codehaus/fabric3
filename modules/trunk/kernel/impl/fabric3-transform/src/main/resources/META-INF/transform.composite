@@ -95,8 +95,8 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2PropertiesTransformer"/>
     </component>
 
-    <component name="Element2StreamTransformer">
-        <f3-impl:implementation.system class="org.fabric3.transform.xml.Element2StreamTransformer"/>
+    <component name="Node2StreamTransformer">
+        <f3-impl:implementation.system class="org.fabric3.transform.dom2java.Node2StreamTransformer"/>
     </component>
 
     <component name="String2QNameTransformer">

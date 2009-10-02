@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.xml;
+package org.fabric3.transform.dom2java;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -43,7 +43,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.dom.DOMSource;
 
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
@@ -55,7 +55,7 @@ import org.fabric3.spi.xml.XMLFactory;
 /**
  * @version $Rev$ $Date$
  */
-public class Element2StreamTransformer implements SingleTypeTransformer<Element, XMLStreamReader> {
+public class Node2StreamTransformer implements SingleTypeTransformer<Node, XMLStreamReader> {
     private static final JavaClass<XMLStreamReader> TARGET = new JavaClass<XMLStreamReader>(XMLStreamReader.class);
 
     private final XMLInputFactory xmlFactory;
@@ -64,15 +64,16 @@ public class Element2StreamTransformer implements SingleTypeTransformer<Element,
         return XSDConstants.PROPERTY_TYPE;
     }
 
-    public Element2StreamTransformer(@Reference XMLFactory xmlFactory) {
-        this.xmlFactory = xmlFactory.newInputFactoryInstance();
-    }
-
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
-    public XMLStreamReader transform(Element element, ClassLoader loader) throws TransformationException {
+    public Node2StreamTransformer(@Reference XMLFactory xmlFactory) {
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
+    }
+
+
+    public XMLStreamReader transform(Node element, ClassLoader loader) throws TransformationException {
         DOMSource source = new DOMSource(element);
         try {
             return xmlFactory.createXMLStreamReader(source);
