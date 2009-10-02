@@ -41,7 +41,7 @@ import java.util.Map;
 
 import org.w3c.dom.Node;
 
-import org.fabric3.transform.property.generics.map.Property2MapOfStringsTransformer;
+import org.fabric3.transform.property.collection.map.Property2MapOfStringsTransformer;
 
 public class Property2MapOfStringTransformerTestCase extends BaseTransformTest {
 

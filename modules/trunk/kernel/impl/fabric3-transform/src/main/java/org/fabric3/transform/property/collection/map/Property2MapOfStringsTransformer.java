@@ -35,13 +35,16 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.property.generics.list;
+package org.fabric3.transform.property.collection.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Map;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaGenericType;
@@ -51,13 +54,13 @@ import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Expects the property to be defined in the format,
+ * Expects the property to be dfined in the format,
  * <p/>
- * <code> value1, value2, value3 </code>
+ * <code> <key1>value1</key1> <key2>value2</key2> </code>
  *
  * @version $Rev$ $Date$
  */
-public class Property2ListOfStringTransformer implements SingleTypeTransformer<Node, List<String>> {
+public class Property2MapOfStringsTransformer implements SingleTypeTransformer<Node, Map<String, String>> {
 
     private static JavaGenericType TARGET = null;
 
@@ -65,8 +68,9 @@ public class Property2ListOfStringTransformer implements SingleTypeTransformer<N
         JavaTypeInfo stringInfo = new JavaTypeInfo(String.class);
         List<JavaTypeInfo> list = new ArrayList<JavaTypeInfo>();
         list.add(stringInfo);
-        JavaTypeInfo listInfo = new JavaTypeInfo(List.class, list);
-        TARGET = new JavaGenericType(listInfo);
+        list.add(stringInfo);
+        JavaTypeInfo mapInfo = new JavaTypeInfo(Map.class, list);
+        TARGET = new JavaGenericType(mapInfo);
     }
 
     public DataType<?> getSourceType() {
@@ -77,17 +81,21 @@ public class Property2ListOfStringTransformer implements SingleTypeTransformer<N
         return TARGET;
     }
 
-    public List<String> transform(final Node node, ClassLoader loader) throws TransformationException {
+    public Map<String, String> transform(final Node node, ClassLoader loader)
+            throws TransformationException {
 
-        final List<String> list = new ArrayList<String>();
-        final StringTokenizer tokenizer = new StringTokenizer(node.getTextContent());
+        final Map<String, String> map = new HashMap<String, String>();
+        final NodeList nodeList = node.getChildNodes();
 
-        while (tokenizer.hasMoreElements()) {
-            list.add(tokenizer.nextToken());
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node child = nodeList.item(i);
+            if (child instanceof Element) {
+                Element element = (Element) child;
+                map.put(element.getTagName(), child.getTextContent());
+            }
         }
-
-        return list;
-
+        return map;
     }
+
 
 }

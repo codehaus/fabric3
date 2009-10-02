@@ -35,16 +35,21 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.property.generics.list;
+package org.fabric3.transform.property.collection.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Map;
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.model.type.java.JavaGenericType;
 import org.fabric3.spi.model.type.java.JavaTypeInfo;
 import org.fabric3.spi.model.type.xsd.XSDConstants;
@@ -52,22 +57,33 @@ import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Converts a DOM node to a list of QNames. Expects the property to be defined in the format, <p/><code> value1, value2, value3 </code>
+ * Expects the property to be defined in the format,
  * <p/>
- * where values correspond to the format specified by {@link QName#valueOf(String)}.
+ * <code> <key1>value1</key1> <key2>value2</key2> </code>
  *
  * @version $Rev$ $Date$
  */
-public class Property2ListOfQNameTransformer implements SingleTypeTransformer<Node, List<QName>> {
+public class Property2MapOfQName2ClassTransformer implements SingleTypeTransformer<Node, Map<QName, Class<?>>> {
 
     private static JavaGenericType TARGET = null;
 
+    private ClassLoaderRegistry classLoaderRegistry;
+
     static {
         JavaTypeInfo qNameInfo = new JavaTypeInfo(QName.class);
+        JavaTypeInfo obectInfo = new JavaTypeInfo(Object.class);
         List<JavaTypeInfo> list = new ArrayList<JavaTypeInfo>();
+        list.add(obectInfo);
+        JavaTypeInfo classInfo = new JavaTypeInfo(Class.class, list);
+        list = new ArrayList<JavaTypeInfo>();
         list.add(qNameInfo);
-        JavaTypeInfo listInfo = new JavaTypeInfo(List.class, list);
-        TARGET = new JavaGenericType(listInfo);
+        list.add(classInfo);
+        JavaTypeInfo mapInfo = new JavaTypeInfo(Map.class, list);
+        TARGET = new JavaGenericType(mapInfo);
+    }
+
+    public Property2MapOfQName2ClassTransformer(@Reference ClassLoaderRegistry classLoaderRegistry) {
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public DataType<?> getSourceType() {
@@ -78,17 +94,31 @@ public class Property2ListOfQNameTransformer implements SingleTypeTransformer<No
         return TARGET;
     }
 
-    public List<QName> transform(final Node node, ClassLoader loader) throws TransformationException {
+    public Map<QName, Class<?>> transform(final Node node, ClassLoader loader) throws TransformationException {
 
-        final List<QName> list = new ArrayList<QName>();
-        final StringTokenizer tokenizer = new StringTokenizer(node.getTextContent(), " \t\n\r\f,");
+        final Map<QName, Class<?>> map = new HashMap<QName, Class<?>>();
+        final NodeList nodeList = node.getChildNodes();
 
-        while (tokenizer.hasMoreElements()) {
-            list.add(QName.valueOf(tokenizer.nextToken()));
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node child = nodeList.item(i);
+            if (child instanceof Element) {
+                Element element = (Element) child;
+
+                String localPart = element.getTagName();
+                String namespaceUri = element.getNamespaceURI();
+                QName qname = new QName(namespaceUri, localPart);
+                String classText = element.getTextContent();
+
+                try {
+                    Class<?> clazz = classLoaderRegistry.loadClass(loader, classText);
+                    map.put(qname, clazz);
+                } catch (ClassNotFoundException e) {
+                    throw new TransformationException(e);
+                }
+            }
         }
-
-        return list;
-
+        return map;
     }
+
 
 }

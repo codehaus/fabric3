@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transform.property.generics.list;
+package org.fabric3.transform.property.collection.list;
 
 import java.io.StringReader;
 import java.util.List;
