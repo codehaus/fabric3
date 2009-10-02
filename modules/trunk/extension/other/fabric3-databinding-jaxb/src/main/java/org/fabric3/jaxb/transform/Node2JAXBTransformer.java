@@ -59,9 +59,7 @@ package org.fabric3.jaxb.transform;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
@@ -69,12 +67,12 @@ import org.fabric3.spi.transform.Transformer;
 /**
  * Converts from a DOM Node to a JAXB type.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7714 $ $Date: 2009-09-29 10:24:45 +0200 (Tue, 29 Sep 2009) $
  */
-public class Node2JaxbTransformer implements Transformer<Node, Object> {
+public class Node2JAXBTransformer implements Transformer<Node, Object> {
     private JAXBContext jaxbContext;
 
-    public Node2JaxbTransformer(JAXBContext jaxbContext) {
+    public Node2JAXBTransformer(JAXBContext jaxbContext) {
 
         this.jaxbContext = jaxbContext;
     }
@@ -83,14 +81,7 @@ public class Node2JaxbTransformer implements Transformer<Node, Object> {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(loader);
-            NodeList children = source.getChildNodes();
-            for (int i = 0; i < children.getLength(); i++) {
-                if (children.item(i) instanceof Element) {
-                    return jaxbContext.createUnmarshaller().unmarshal(children.item(i));
-                }
-            }
-            throw new TransformationException("Unexpected content");
-
+            return jaxbContext.createUnmarshaller().unmarshal(source);
         } catch (JAXBException e) {
             throw new TransformationException(e);
         } finally {

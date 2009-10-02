@@ -34,64 +34,60 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
-*/
+ *
+ * --- Original Apache License ---
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.    
+ */
 package org.fabric3.jaxb.transform;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlRootElement;
 
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Node;
 
-import org.fabric3.jaxb.factory.JAXBContextFactory;
-import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.java.JavaType;
-import org.fabric3.spi.model.type.xsd.XSDSimpleType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
-import org.fabric3.spi.transform.TransformerFactory;
 
 /**
- * Creates transformers to convert from a DOM Node to a JAXB object.
+ * Converts from a DOM Node to a JAXB type serialized as a JAXBElement.
  *
  * @version $Rev$ $Date$
  */
-public class Node2JAXBTransformerFactory implements TransformerFactory<Node, Object> {
-    private static final XSDSimpleType PROPERTY_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-    private JAXBContextFactory contextFactory;
+public class Node2JAXBElementTransformer implements Transformer<Node, Object> {
+    private JAXBContext jaxbContext;
+    private Class<?> declaredType;
 
-    public Node2JAXBTransformerFactory(@Reference JAXBContextFactory contextFactory) {
-        this.contextFactory = contextFactory;
+    public Node2JAXBElementTransformer(JAXBContext jaxbContext, Class<?> declaredType) {
+        this.jaxbContext = jaxbContext;
+        this.declaredType = declaredType;
     }
 
-    public boolean canTransform(DataType<?> source, DataType<?> target) {
-        return Node.class.isAssignableFrom(source.getPhysical()) && target instanceof JavaType;
-    }
-
-    public Transformer<Node, Object> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
+    public Object transform(Node source, ClassLoader loader) throws TransformationException {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try {
-            if (classes == null || classes.length != 1) {
-                throw new UnsupportedOperationException("Null and multiparameter operations not yet supported");
-            }
-
-            JAXBContext jaxbContext = contextFactory.createJAXBContext(classes);
-
-            Class<?> type = classes[0];
-            if (type.isAnnotationPresent(XmlRootElement.class)) {
-                if (PROPERTY_TYPE.equals(source)) {
-                    // the value is a property
-                    return new PropertyValue2JAXBTransformer(jaxbContext);
-                } else {
-                    return new Node2JAXBTransformer(jaxbContext);
-                }
-            } else {
-                return new Node2JAXBElementTransformer(jaxbContext, type);
-            }
+            Thread.currentThread().setContextClassLoader(loader);
+            return jaxbContext.createUnmarshaller().unmarshal(source, declaredType).getValue();
         } catch (JAXBException e) {
             throw new TransformationException(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
         }
     }
-
 
 }
