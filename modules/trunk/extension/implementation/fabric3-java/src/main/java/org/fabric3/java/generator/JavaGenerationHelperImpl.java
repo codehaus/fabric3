@@ -55,9 +55,6 @@ import org.fabric3.model.type.component.Scope;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.model.type.java.Injectable;
-import org.fabric3.spi.model.type.java.InjectableType;
-import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.pojo.generator.GenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.contract.ContractMatcher;
@@ -67,6 +64,9 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
@@ -120,7 +120,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
 
         boolean conversational = serviceContract.isConversational();
         calculateConversationalPolicy(definition, policy, conversational);
-        if (reference.getDefinition().isKeyed()){
+        if (reference.getDefinition().isKeyed()) {
             definition.setKeyed(true);
             DataType<?> type = reference.getDefinition().getKeyDataType();
             String className = type.getPhysical().getName();
@@ -168,8 +168,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
 
     public void generateWireTarget(JavaTargetDefinition definition, LogicalService service) throws GenerationException {
         LogicalComponent<?> component = service.getParent();
-        URI uri;
-        uri = service.getUri();
+        URI uri = service.getUri();
         definition.setUri(uri);
 
         // assume only wires to composite scope components can be optimized
