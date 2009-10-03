@@ -12,6 +12,7 @@
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-binding="urn:fabric3.org:binding"
            xmlns:weather="urn:weather"
+           xmlns:pojo-weather="http://pojo.wsdl.tests.fabric3.org/"
            targetNamespace="org.codehaus.fabric3"
            name="WsdlTestComposite">
 
@@ -32,6 +33,15 @@
 
     <component name="XmlRootElementWeatherService">
         <f3-impl:implementation.wsdl service="weather:WeatherPortType" stub="org.fabric3.tests.wsdl.xmlrootelement.WeatherStub"/>
+    </component>
+
+    <component name="PojoTestClient">
+        <f3-impl:junit class="org.fabric3.tests.wsdl.pojo.TestClient"/>
+        <reference name="service" target="PojoWeatherService"/>
+    </component>
+
+    <component name="PojoWeatherService">
+        <f3-impl:implementation.wsdl service="pojo-weather:WeatherPortType" stub="org.fabric3.tests.wsdl.pojo.WeatherStub"/>
     </component>
 
 </composite>
