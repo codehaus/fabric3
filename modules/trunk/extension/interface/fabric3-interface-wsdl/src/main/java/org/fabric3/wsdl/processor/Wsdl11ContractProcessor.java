@@ -71,12 +71,12 @@ import org.fabric3.wsdl.model.WsdlServiceContract;
  */
 public class Wsdl11ContractProcessor implements WsdlContractProcessor {
 
-    public WsdlServiceContract introspect(PortType portType, XmlSchemaCollection schemaCollection, IntrospectionContext context) {
+    public WsdlServiceContract introspect(PortType portType, XmlSchemaCollection collection, IntrospectionContext context) {
         WsdlServiceContract contract = new WsdlServiceContract();
         List<Operation> operations = new LinkedList<Operation>();
         for (Object object : portType.getOperations()) {
             javax.wsdl.Operation wsdlOperation = (javax.wsdl.Operation) object;
-            Operation operation = createOperation(wsdlOperation, schemaCollection);
+            Operation operation = createOperation(wsdlOperation, collection, portType, context);
             operations.add(operation);
         }
         contract.setOperations(operations);
@@ -87,31 +87,36 @@ public class Wsdl11ContractProcessor implements WsdlContractProcessor {
     /**
      * Creates a operation model object from a WSDL operation.
      *
-     * @param operation        the WSDL operation
-     * @param schemaCollection parsed schema included in or referenced by the WSDL
+     * @param operation  the WSDL operation
+     * @param collection parsed schema included in or referenced by the WSDL
+     * @param portType   the port type being introspected
+     * @param context    the introspection context
      * @return the operation model object
      */
-    private Operation createOperation(javax.wsdl.Operation operation, XmlSchemaCollection schemaCollection) {
+    private Operation createOperation(javax.wsdl.Operation operation,
+                                      XmlSchemaCollection collection,
+                                      PortType portType,
+                                      IntrospectionContext context) {
         Input input = operation.getInput();
         Message message = input.getMessage();
-        List<DataType<?>> inputTypes = getInputTypes(message, schemaCollection);
+        List<DataType<?>> inputTypes = getInputTypes(message, collection, portType, context);
 
         Map faults = operation.getFaults();
-        List<DataType<?>> faultTypes = getFaultTypes(faults, schemaCollection);
+        List<DataType<?>> faultTypes = getFaultTypes(faults, collection, portType, context);
 
         Output output = operation.getOutput();
-        DataType<?> outputType = getOutputType(output, schemaCollection);
+        DataType<?> outputType = getOutputType(output, collection, portType, context);
 
         String name = operation.getName();
         return new Operation(name, inputTypes, outputType, faultTypes);
     }
 
     @SuppressWarnings({"unchecked"})
-    private List<DataType<?>> getInputTypes(Message message, XmlSchemaCollection schemaCollection) {
+    private List<DataType<?>> getInputTypes(Message message, XmlSchemaCollection collection, PortType portType, IntrospectionContext context) {
         List<DataType<?>> types = new ArrayList<DataType<?>>();
         for (Part part : (Collection<Part>) message.getParts().values()) {
             QName name = part.getElementName();
-            XSDType dataType = getDataType(name, schemaCollection);
+            XSDType dataType = getDataType(name, collection, portType, context);
             if (dataType != null) {
                 types.add(dataType);
             }
@@ -120,12 +125,12 @@ public class Wsdl11ContractProcessor implements WsdlContractProcessor {
     }
 
     @SuppressWarnings("unchecked")
-    private List<DataType<?>> getFaultTypes(Map faults, XmlSchemaCollection schemaCollection) {
+    private List<DataType<?>> getFaultTypes(Map faults, XmlSchemaCollection collection, PortType portType, IntrospectionContext context) {
         List<DataType<?>> types = new LinkedList<DataType<?>>();
         for (Fault fault : (Collection<Fault>) faults.values()) {
             Part part = (Part) fault.getMessage().getOrderedParts(null).get(0);
             QName name = part.getElementName();
-            XSDType dataType = getDataType(name, schemaCollection);
+            XSDType dataType = getDataType(name, collection, portType, context);
             if (dataType != null) {
                 types.add(dataType);
             }
@@ -134,18 +139,23 @@ public class Wsdl11ContractProcessor implements WsdlContractProcessor {
 
     }
 
-    private DataType<?> getOutputType(Output output, XmlSchemaCollection schemaCollection) {
+    private DataType<?> getOutputType(Output output, XmlSchemaCollection collection, PortType portType, IntrospectionContext context) {
         if (output == null) {
             return null;
         }
         Message message = output.getMessage();
         Part part = (Part) message.getOrderedParts(null).get(0);
         QName name = part.getElementName();
-        return getDataType(name, schemaCollection);
+        return getDataType(name, collection, portType, context);
     }
 
-    private XSDType getDataType(QName elementName, XmlSchemaCollection schemaCollection) {
-        XmlSchemaElement element = schemaCollection.getElementByQName(elementName);
+    private XSDType getDataType(QName elementName, XmlSchemaCollection collection, PortType portType, IntrospectionContext context) {
+        XmlSchemaElement element = collection.getElementByQName(elementName);
+        if (element == null) {
+            SchemaTypeNotFound error = new SchemaTypeNotFound("Schema type " + element + " not found referenced in: " + portType.getQName());
+            context.addError(error);
+            return null;
+        }
         XmlSchemaType type = element.getSchemaType();
         QName name = type.getQName();
         if (type instanceof XmlSchemaComplexType) {
