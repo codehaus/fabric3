@@ -42,42 +42,38 @@ package org.fabric3.host;
  *
  * @version $Rev$ $Date$
  */
-public class Namespaces {
+public interface Namespaces {
 
     /**
      * Namespace URI used for core Fabric3. Intended usage for map keys in composite files etc. Recommended prefix f3-core.
      */
-    public static final String CORE = "urn:fabric3.org:core";
+    String CORE = "urn:fabric3.org:core";
 
     /**
      * Namespace URI used for fabric3 binding extensions. Recommended prefix f3-binding.
      */
-    public static final String BINDING = "urn:fabric3.org:binding";
+    String BINDING = "urn:fabric3.org:binding";
 
     /**
      * Namespace URI used for fabric3 implementation extensions. Recommended prefix f3-implementation.
      */
-    public static final String IMPLEMENTATION = "urn:fabric3.org:implementation";
+    String IMPLEMENTATION = "urn:fabric3.org:implementation";
 
     /**
      * Namespace URI used for fabric3 policy extensions. Recommended prefix f3-policy.
      */
-    public static final String POLICY = "urn:fabric3.org:policy";
+    String POLICY = "urn:fabric3.org:policy";
 
     /**
      * Namespace URI used for miscellaneous extensions. Recommended prefix f3-other.
      */
-    public static final String OTHER = "urn:fabric3.org:other";
+    String OTHER = "urn:fabric3.org:other";
 
     /**
      * Namespace URI used for fabric3 Maven extensions. Recommended prefix f3-maven.
      */
-    public static final String MAVEN = "urn:fabric3.org:maven";
+    String MAVEN = "urn:fabric3.org:maven";
 
-    /**
-     * Private constructor.
-     */
-    private Namespaces() {
-    }
+
 
 }
