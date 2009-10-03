@@ -57,6 +57,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.jaxb.mapper.JAXBQNameMapper;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -104,6 +107,11 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
         JAXB_MAPPING.put(byte[].class, new QName(W3C_XML_SCHEMA_NS_URI, "base64Binary"));
     }
 
+    private JAXBQNameMapper mapper;
+
+    public JAXBTypeIntrospector(@Reference JAXBQNameMapper mapper) {
+        this.mapper = mapper;
+    }
 
     public void introspect(Operation operation, Method method, IntrospectionContext context) {
         // TODO perform error checking, e.g. mixing of databindings
@@ -135,14 +143,14 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
     private void introspectJAXB(JavaType<?> dataType) {
         Class<?> physical = dataType.getPhysical();
         // not an explicit JAXB type, but it can potentially be mapped
-        QName name = JAXB_MAPPING.get(physical);
-        if (name != null) {
-            dataType.setXsdType(name);
+        QName xsdName = JAXB_MAPPING.get(physical);
+        if (xsdName != null) {
+            dataType.setXsdType(xsdName);
             return;
         }
         XmlRootElement annotation = physical.getAnnotation(XmlRootElement.class);
         if (annotation != null) {
-            QName xsdName = new QName(annotation.namespace(), annotation.name());
+            xsdName = new QName(annotation.namespace(), annotation.name());
             dataType.setXsdType(xsdName);
             return;
         }
@@ -155,9 +163,13 @@ public class JAXBTypeIntrospector implements OperationIntrospector {
                     namespace = schemaAnnotation.namespace();
                 }
             }
-            QName xsdName = new QName(namespace, typeAnnotation.name());
+            xsdName = new QName(namespace, typeAnnotation.name());
             dataType.setXsdType(xsdName);
+            return;
         }
+        // the type is an unannotated Java class, heuristically determine a schema mapping
+        xsdName = mapper.deriveQName(physical);
+        dataType.setXsdType(xsdName);
     }
 
 }

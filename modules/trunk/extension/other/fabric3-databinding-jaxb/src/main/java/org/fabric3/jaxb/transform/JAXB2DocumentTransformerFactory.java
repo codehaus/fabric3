@@ -40,14 +40,15 @@ package org.fabric3.jaxb.transform;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.jaxb.factory.JAXBContextFactory;
+import org.fabric3.jaxb.mapper.JAXBQNameMapper;
 import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.type.java.JavaType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerFactory;
@@ -67,9 +68,7 @@ public class JAXB2DocumentTransformerFactory implements TransformerFactory<Objec
     }
 
     public boolean canTransform(DataType<?> source, DataType<?> target) {
-        Class<?> physical = source.getPhysical();
-        return target.getPhysical().equals(Document.class)
-                && (physical.isAnnotationPresent(XmlRootElement.class) || physical.isAnnotationPresent(XmlType.class));
+        return target.getPhysical().equals(Document.class) && source instanceof JavaType;
     }
 
     public Transformer<Object, Document> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {

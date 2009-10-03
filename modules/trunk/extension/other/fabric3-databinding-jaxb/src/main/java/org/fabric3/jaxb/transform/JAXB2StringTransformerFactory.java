@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jaxb.factory.JAXBContextFactory;
+import org.fabric3.jaxb.mapper.JAXBQNameMapper;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;

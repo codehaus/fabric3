@@ -45,6 +45,8 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.fabric3.jaxb.mapper.JAXBQNameMapper;
+import org.fabric3.jaxb.mapper.JAXBQNameMapperImpl;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
@@ -66,7 +68,8 @@ public class JAXBTypeIntrospectorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        introspector = new JAXBTypeIntrospector();
+        JAXBQNameMapper mapper = new JAXBQNameMapperImpl();
+        introspector = new JAXBTypeIntrospector(mapper);
     }
 
     @SuppressWarnings({"unchecked"})

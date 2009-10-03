@@ -35,10 +35,10 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.jaxb.transform;
+package org.fabric3.jaxb.mapper;
 
-import javax.xml.namespace.QName;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.namespace.QName;
 
 /**
  * @version $Rev$ $Date$
@@ -69,13 +69,18 @@ public class JAXBQNameMapperImpl implements JAXBQNameMapper {
     /**
      * Derives an XML namespace from a Java package according to JAXB rules. For example, org.foo is rendered as http://foo.org/.
      * <p/>
+     * <p/>
      * TODO this is duplicated in the Metro extension
      *
      * @param type the Java type
      * @return the XML namespace
      */
     String deriveNamespace(Class<?> type) {
-        String pkg = type.getPackage().getName();
+        Package thePackage = type.getPackage();
+        if (thePackage == null) {
+            return null;
+        }
+        String pkg = thePackage.getName();
         String[] tokens = pkg.split("\\.");
         StringBuilder builder = new StringBuilder("http://");
         for (int i = tokens.length - 1; i >= 0; i--) {
@@ -91,7 +96,7 @@ public class JAXBQNameMapperImpl implements JAXBQNameMapper {
     }
 
     /**
-     * Derives a local name from the class name by converting the first character to lowercase.
+     * Derives a local name from the class name by converting the first character to lowercase according to JAXB rules (Section 8.12.1).
      *
      * @param type the class to derive the name from
      * @return the derived name

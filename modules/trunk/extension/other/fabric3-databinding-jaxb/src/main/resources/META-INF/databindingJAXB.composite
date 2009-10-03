@@ -50,7 +50,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="JAXBQNameMapper">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.transform.JAXBQNameMapperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.jaxb.mapper.JAXBQNameMapperImpl"/>
     </component>
 
 </composite>

@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.jaxb.transform;
+package org.fabric3.jaxb.mapper;
 
 import javax.xml.namespace.QName;
 
