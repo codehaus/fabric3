@@ -64,6 +64,8 @@
                 <module>test-runtime-tomcat</module>
                 <module>test-binding-jms</module>
                 <module>test-binding-net</module> 
+                <module>test-implementation-wsdl</module>
+                <module>test-wsdl</module> 
             </modules>
         </profile>
         <profile>
@@ -83,6 +85,8 @@
                 <module>test-binding-tcp</module>
                 <module>test-runtime-jetty</module>
                 <module>test-runtime-tomcat</module>
+                <module>test-implementation-wsdl</module>
+                <module>test-wsdl</module> 
             </modules>
         </profile>
     </profiles>
