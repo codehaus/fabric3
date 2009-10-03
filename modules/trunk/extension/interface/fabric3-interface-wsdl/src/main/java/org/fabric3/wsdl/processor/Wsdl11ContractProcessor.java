@@ -157,6 +157,11 @@ public class Wsdl11ContractProcessor implements WsdlContractProcessor {
             return null;
         }
         XmlSchemaType type = element.getSchemaType();
+        if (type == null) {
+            SchemaTypeNotFound error = new SchemaTypeNotFound("Invalid schema type " + elementName + " referenced in: " + portType.getQName());
+            context.addError(error);
+            return null;
+        }
         QName name = type.getQName();
         if (type instanceof XmlSchemaComplexType) {
             return new XSDComplexType(Object.class, name);
