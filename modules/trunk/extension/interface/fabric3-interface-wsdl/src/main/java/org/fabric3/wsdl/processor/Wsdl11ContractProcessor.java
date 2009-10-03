@@ -152,7 +152,7 @@ public class Wsdl11ContractProcessor implements WsdlContractProcessor {
     private XSDType getDataType(QName elementName, XmlSchemaCollection collection, PortType portType, IntrospectionContext context) {
         XmlSchemaElement element = collection.getElementByQName(elementName);
         if (element == null) {
-            SchemaTypeNotFound error = new SchemaTypeNotFound("Schema type " + element + " not found referenced in: " + portType.getQName());
+            SchemaTypeNotFound error = new SchemaTypeNotFound("Schema type " + elementName + " not found referenced in: " + portType.getQName());
             context.addError(error);
             return null;
         }
