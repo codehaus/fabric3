@@ -23,8 +23,12 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.impl.GeneratorRegistryImpl"/>
     </component>
 
-    <component name="PhysicalOperationMapper">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationMapperImpl"/>
+    <component name="PhysicalOperationGenerator">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationGeneratorImpl"/>
+    </component>
+
+    <component name="OperationResolver">
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.OperationResolverImpl"/>
     </component>
 
     <component name="Generator">

@@ -38,44 +38,41 @@
 package org.fabric3.fabric.generator.wire;
 
 import java.util.List;
-import javax.xml.namespace.QName;
+import java.util.Set;
 
-import org.oasisopen.sca.Constants;
-
-import org.fabric3.model.type.contract.DataType;
-import org.fabric3.model.type.contract.Operation;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.policy.PolicyResult;
 
 /**
+ * Generates PhysicalOperationDefinitions which are used to instantiate interceptor chains for a service operation on a runtime.
+ *
  * @version $Rev$ $Date$
  */
-public class PhysicalOperationMapperImpl implements PhysicalOperationMapper {
-    private static final QName OASIS_ONEWAY = new QName(Constants.SCA_NS, "oneWay");
+public interface PhysicalOperationGenerator {
 
-    @SuppressWarnings({"unchecked"})
-    public PhysicalOperationDefinition map(Operation o) {
+    /**
+     * Generates a PhysicalOperationDefinition when the source reference and target service contracts are the same.
+     *
+     * @param operations the logical operations to generate from
+     * @param result     resolved policy metadata
+     * @return the PhysicalOperationDefinition
+     * @throws GenerationException if there is an error generatoring the operations
+     */
+    Set<PhysicalOperationDefinition> generateOperations(List<LogicalOperation> operations, PolicyResult result) throws GenerationException;
 
-        PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
-        operation.setName(o.getName());
-        operation.setEndsConversation(o.getConversationSequence() == Operation.CONVERSATION_END);
-        if (o.getIntents().contains(OASIS_ONEWAY)) {
-            operation.setOneWay(true);
-        }
-        Class<?> returnType = o.getOutputType().getPhysical();
-        operation.setReturnType(returnType.getName());
 
-        for (DataType<?> fault : o.getFaultTypes()) {
-            Class<?> faultType = fault.getPhysical();
-            operation.addFaultType(faultType.getName());
-        }
-
-        List<DataType<?>> params = o.getInputTypes();
-        for (DataType<?> param : params) {
-            Class<?> paramType = param.getPhysical();
-            operation.addParameter(paramType.getName());
-        }
-        return operation;
-
-    }
+    /**
+     * Generates a PhysicalOperationDefinition when the source reference and target service contracts are different.
+     *
+     * @param sources the source logical operations to generate from
+     * @param targets the target logical operations to generate from
+     * @param result  resolved policy metadata
+     * @return the PhysicalOperationDefinition
+     * @throws GenerationException if there is an error generatoring the operations
+     */
+    Set<PhysicalOperationDefinition> generateOperations(List<LogicalOperation> sources, List<LogicalOperation> targets, PolicyResult result)
+            throws GenerationException;
 
 }

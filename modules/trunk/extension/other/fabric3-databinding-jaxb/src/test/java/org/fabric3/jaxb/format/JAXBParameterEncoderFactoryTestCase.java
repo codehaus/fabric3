@@ -58,8 +58,8 @@ public class JAXBParameterEncoderFactoryTestCase extends TestCase {
 
     public void testSerializeDeserialize() throws Exception {
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
-        operation.addParameter(Foo.class.getName());
-        operation.setReturnType(Void.class.getName());
+        operation.addSourceParameterType(Foo.class.getName());
+        operation.setSourceReturnType(Void.class.getName());
 
         InvocationChain chain = EasyMock.createMock(InvocationChain.class);
         EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);

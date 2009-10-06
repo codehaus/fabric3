@@ -61,7 +61,7 @@ public class ParameterTypeHelper {
      */
     public static Set<Class<?>> loadInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         Set<Class<?>> types = new HashSet<Class<?>>();
-        for (String param : operation.getParameters()) {
+        for (String param : operation.getSourceParameterTypes()) {
             Class<?> clazz = loadClass(param, loader);
             types.add(clazz);
         }
@@ -78,7 +78,7 @@ public class ParameterTypeHelper {
      */
     public static Set<Class<?>> loadFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         Set<Class<?>> types = new HashSet<Class<?>>();
-        for (String param : operation.getFaultTypes()) {
+        for (String param : operation.getSourceFaultTypes()) {
             Class<?> clazz = loadClass(param, loader);
             types.add(clazz);
         }
@@ -95,7 +95,7 @@ public class ParameterTypeHelper {
      */
     public static Class<?> loadOutputType(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         // currently only one type is supported although WSDL allows multiple
-        return loadClass(operation.getReturnType(), loader);
+        return loadClass(operation.getSourceReturnType(), loader);
     }
 
     /**

@@ -34,32 +34,20 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.spi.builder.component;
+*/
+package org.fabric3.fabric.generator.wire;
 
-import java.net.URI;
-
-import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Thrown when an error is encountered attaching a wire to a component or transport.
+ * Thrown when an operation cannot be resolved against a set of target operations.
  *
  * @version $Rev$ $Date$
  */
-public class WireAttachException extends WiringException {
-    private static final long serialVersionUID = 4976504310808006829L;
+public class OperationNotFoundException extends GenerationException {
+    private static final long serialVersionUID = 1636517908715626972L;
 
-    public WireAttachException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public WireAttachException(String message, URI sourceUri, URI targetUri, Throwable cause) {
-        super(message, sourceUri, targetUri, cause);
+    public OperationNotFoundException(String msg) {
+        super(msg);
     }
 }

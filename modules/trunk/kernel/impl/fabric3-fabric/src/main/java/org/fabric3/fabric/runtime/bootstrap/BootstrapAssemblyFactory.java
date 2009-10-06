@@ -95,8 +95,10 @@ import org.fabric3.fabric.generator.context.StopContextCommandGeneratorImpl;
 import org.fabric3.fabric.generator.impl.GeneratorImpl;
 import org.fabric3.fabric.generator.impl.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
-import org.fabric3.fabric.generator.wire.PhysicalOperationMapper;
-import org.fabric3.fabric.generator.wire.PhysicalOperationMapperImpl;
+import org.fabric3.fabric.generator.wire.OperationResolver;
+import org.fabric3.fabric.generator.wire.OperationResolverImpl;
+import org.fabric3.fabric.generator.wire.PhysicalOperationGenerator;
+import org.fabric3.fabric.generator.wire.PhysicalOperationGeneratorImpl;
 import org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.WireGenerator;
@@ -355,8 +357,9 @@ public class BootstrapAssemblyFactory {
                                              ContractMatcher matcher) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
-        PhysicalOperationMapper mapper = new PhysicalOperationMapperImpl();
-        WireGenerator wireGenerator = new WireGeneratorImpl(generatorRegistry, matcher, resolver, mapper);
+        OperationResolver operationResolver = new OperationResolverImpl();
+        PhysicalOperationGenerator operationGenerator = new PhysicalOperationGeneratorImpl(operationResolver, generatorRegistry);
+        WireGenerator wireGenerator = new WireGeneratorImpl(generatorRegistry, matcher, resolver, operationGenerator);
 
         ClassLoaderWireGenerator<?> javaGenerator = new JavaContributionWireGeneratorImpl();
         ClassLoaderWireGenerator<?> locationGenerator = new LocationContributionWireGeneratorImpl();

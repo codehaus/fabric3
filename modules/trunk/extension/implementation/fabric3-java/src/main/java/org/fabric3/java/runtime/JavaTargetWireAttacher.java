@@ -89,8 +89,8 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaTargetDefi
 
         // attach the invoker interceptor to forward invocation chains
         for (InvocationChain chain : wire.getInvocationChains()) {
-            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
-            List<String> params = operation.getParameters();
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();                                                             
+            List<String> params = operation.getTargetParameterTypes();
             Class<?>[] paramTypes = new Class<?>[params.size()];
             assert loader != null;
             for (int i = 0; i < params.size(); i++) {
@@ -100,7 +100,7 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaTargetDefi
                 } catch (ClassNotFoundException e) {
                     URI sourceUri = sourceDefinition.getUri();
                     URI targetUri = targetDefinition.getUri();
-                    throw new WireAttachException("Implementation class not found", sourceUri, targetUri, e);
+                    throw new WireAttachException("Implementation class not found when wiring " + sourceUri + " to " + targetUri, e);
                 }
             }
             Method method;
@@ -109,7 +109,7 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaTargetDefi
             } catch (NoSuchMethodException e) {
                 URI sourceUri = sourceDefinition.getUri();
                 URI targetUri = targetDefinition.getUri();
-                throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
+                throw new WireAttachException("No matching method found when wiring " + sourceUri + " to " + targetUri, e);
             }
             boolean endsConversation = operation.isEndsConversation();
             boolean callback = targetDefinition.isCallback();

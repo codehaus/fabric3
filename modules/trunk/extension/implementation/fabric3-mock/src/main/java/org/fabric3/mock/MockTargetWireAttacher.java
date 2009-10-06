@@ -104,7 +104,7 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockTargetDefi
     private Method getOperationMethod(Class<?> mockedInterface, PhysicalOperationDefinition op,
                                       PhysicalSourceDefinition sourceDefinition,
                                       MockTargetDefinition wireTargetDefinition) throws WireAttachException {
-        List<String> parameters = op.getParameters();
+        List<String> parameters = op.getTargetParameterTypes();
         for (Method method : mockedInterface.getMethods()) {
             if (method.getName().equals(op.getName())) {
                 Class<?>[] parameterTypes = method.getParameterTypes();
@@ -121,7 +121,7 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockTargetDefi
             }
         }
 
-        throw new WireAttachException("Failed to match method: " + op.getName() + " " + op.getParameters(),
+        throw new WireAttachException("Failed to match method: " + op.getName() + " " + op.getSourceParameterTypes(),
                                       sourceDefinition.getUri(),
                                       wireTargetDefinition.getUri(),
                                       null);

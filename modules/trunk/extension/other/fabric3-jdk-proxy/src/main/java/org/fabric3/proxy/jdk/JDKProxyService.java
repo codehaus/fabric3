@@ -185,7 +185,7 @@ public class JDKProxyService implements ProxyService {
      */
     private Method findMethod(Class<?> clazz, PhysicalOperationDefinition operation) throws NoSuchMethodException, ClassNotFoundException {
         String name = operation.getName();
-        List<String> params = operation.getParameters();
+        List<String> params = operation.getSourceParameterTypes();
         Class<?>[] types = new Class<?>[params.size()];
         for (int i = 0; i < params.size(); i++) {
             types[i] = classLoaderRegistry.loadClass(clazz.getClassLoader(), params.get(i));

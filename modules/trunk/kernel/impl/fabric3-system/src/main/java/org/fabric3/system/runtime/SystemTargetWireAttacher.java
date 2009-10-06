@@ -90,7 +90,7 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemTarget
         for (InvocationChain chain : wire.getInvocationChains()) {
             PhysicalOperationDefinition operation = chain.getPhysicalOperation();
 
-            List<String> params = operation.getParameters();
+            List<String> params = operation.getSourceParameterTypes();
             Class<?>[] paramTypes = new Class<?>[params.size()];
             for (int i = 0; i < params.size(); i++) {
                 String param = params.get(i);

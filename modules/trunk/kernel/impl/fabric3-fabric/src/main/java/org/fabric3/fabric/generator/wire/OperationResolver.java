@@ -34,32 +34,29 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- *
- * ----------------------------------------------------
- *
- * Portions originally based on Apache Tuscany 2007
- * licensed under the Apache 2.0 license.
- *
- */
-package org.fabric3.spi.builder.component;
+*/
+package org.fabric3.fabric.generator.wire;
 
-import java.net.URI;
+import java.util.List;
 
-import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.model.instance.LogicalOperation;
 
 /**
- * Thrown when an error is encountered attaching a wire to a component or transport.
+ * Resolves a source operation against a collection of target operations when the interface contracts are different but compatible, i.e. Java and
+ * WSDL.
  *
  * @version $Rev$ $Date$
  */
-public class WireAttachException extends WiringException {
-    private static final long serialVersionUID = 4976504310808006829L;
+public interface OperationResolver {
 
-    public WireAttachException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    /**
+     * Resolves the source operation against a set of targets.
+     *
+     * @param source  the source operation to resolve
+     * @param targets the target operations to resolve against
+     * @return the resolved operation
+     * @throws OperationNotFoundException if a target operation cannot be found
+     */
+    LogicalOperation resolve(LogicalOperation source, List<LogicalOperation> targets) throws OperationNotFoundException;
 
-    public WireAttachException(String message, URI sourceUri, URI targetUri, Throwable cause) {
-        super(message, sourceUri, targetUri, cause);
-    }
 }

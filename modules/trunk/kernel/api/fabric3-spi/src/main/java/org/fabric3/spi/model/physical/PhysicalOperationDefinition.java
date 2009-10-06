@@ -44,23 +44,32 @@
 package org.fabric3.spi.model.physical;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Represents an operation.
+ * Represents a service operation and its invocation chain on a runtime. Since the source side of a wire (reference or forward service making a
+ * callback) may have a service contract that is different from the target side (forward service or client being called back), in-, out- and fault
+ * parameter types are stored for both sides. When attaching a wire to its source or target, the appropriate parameter types must be used.
  *
  * @version $Revision$ $Date$
  */
 public class PhysicalOperationDefinition implements Serializable {
     private static final long serialVersionUID = -4270990709748460450L;
 
+    private String name;
+
     private List<String> parameterTypes = new LinkedList<String>();
     private List<String> faultTypes = new LinkedList<String>();
     private String returnType;
-    private String name;
+
+    private List<String> targetParameterTypes = new ArrayList<String>();
+    private List<String> targetFaultTypes = new ArrayList<String>();
+    private String targetReturnType;
+
     private boolean callback;
     private boolean oneWay;
     private boolean endsConversation;
@@ -69,39 +78,129 @@ public class PhysicalOperationDefinition implements Serializable {
     private Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
 
     /**
-     * Returns the fully qualified parameter types for this operation.
+     * Gets the name of the operation.
      *
-     * @return Parameter types.
+     * @return Operation name.
      */
-    public List<String> getParameters() {
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name of the operation.
+     *
+     * @param name Operation name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the fully qualified name of source parameter types for this operation. Parameter types are returned in order.
+     *
+     * @return the source parameter types.
+     */
+    public List<String> getSourceParameterTypes() {
         return parameterTypes;
     }
 
     /**
-     * Add the fully qualified parameter type to the operation.
+     * Add the fully qualified name of the source parameter type to the operation.
      *
-     * @param parameter Parameter type to be added.
+     * @param type the source parameter type to be added.
      */
-    public void addParameter(String parameter) {
-        parameterTypes.add(parameter);
+    public void addSourceParameterType(String type) {
+        parameterTypes.add(type);
     }
 
     /**
-     * Gets the fuly qualified return type for this operation.
+     * Returns the fuly qualified source return type for this operation.
      *
-     * @return Return type for this operation.
+     * @return the source return type for this operation.
      */
-    public String getReturnType() {
+    public String getSourceReturnType() {
         return returnType;
     }
 
     /**
-     * Sets the fully qualified return type for this operation.
+     * Sets the fully qualified source return type for this operation.
      *
-     * @param returnType Return type for this operation.
+     * @param type the source return type for this operation.
      */
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
+    public void setSourceReturnType(String type) {
+        this.returnType = type;
+    }
+
+    /**
+     * Returns the fully qualified name of the source fault types.
+     *
+     * @return the source fault types
+     */
+    public List<String> getSourceFaultTypes() {
+        return faultTypes;
+    }
+
+    /**
+     * Adds the fully qualified name of a source fault type for this operation.
+     *
+     * @param type the source fault type
+     */
+    public void addSourceFaultType(String type) {
+        faultTypes.add(type);
+    }
+
+    /**
+     * Returns the fully qualified name of target parameter types for this operation. Parameter types are returned in order.
+     *
+     * @return the target parameter types.
+     */
+    public List<String> getTargetParameterTypes() {
+        return targetParameterTypes;
+    }
+
+    /**
+     * Add the fully qualified name of the target parameter type to the operation.
+     *
+     * @param type the target parameter type to be added.
+     */
+    public void addTargetParameterType(String type) {
+        this.targetParameterTypes.add(type);
+    }
+
+    /**
+     * Returns the fully qualified name of the target fault types.
+     *
+     * @return the target fault types
+     */
+    public List<String> getTargetFaultTypes() {
+        return targetFaultTypes;
+    }
+
+    /**
+     * Adds the fully qualified name of a target fault type for this operation.
+     *
+     * @param type the target fault type
+     */
+    public void addTargetFaultType(String type) {
+        targetFaultTypes.add(type);
+    }
+
+    /**
+     * Returns the fuly qualified target return type for this operation.
+     *
+     * @return the target return type for this operation.
+     */
+    public String getTargetReturnType() {
+        return targetReturnType;
+    }
+
+    /**
+     * Sets the fully qualified target return type for this operation.
+     *
+     * @param type the target return type for this operation.
+     */
+    public void setTargetReturnType(String type) {
+        this.targetReturnType = type;
     }
 
     /**
@@ -129,24 +228,6 @@ public class PhysicalOperationDefinition implements Serializable {
      */
     public void addInterceptor(PhysicalInterceptorDefinition interceptor) {
         interceptors.add(interceptor);
-    }
-
-    /**
-     * Gets the name of the operation.
-     *
-     * @return Operation name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of the operation.
-     *
-     * @param name Operation name.
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -201,24 +282,6 @@ public class PhysicalOperationDefinition implements Serializable {
      */
     public void setOneWay(boolean oneWay) {
         this.oneWay = oneWay;
-    }
-
-    /**
-     * Returns the fault types.
-     *
-     * @return the fault types
-     */
-    public List<String> getFaultTypes() {
-        return faultTypes;
-    }
-
-    /**
-     * Adds a fault type.
-     *
-     * @param name the type
-     */
-    public void addFaultType(String name) {
-        faultTypes.add(name);
     }
 
 }
