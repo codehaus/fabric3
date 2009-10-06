@@ -45,10 +45,6 @@ import org.fabric3.host.Fabric3Exception;
  * @version $Rev$ $Date$
  */
 public class PolicyResolutionException extends Fabric3Exception {
-
-    /**
-     * Serial version UID.
-     */
     private static final long serialVersionUID = 8016179162459803135L;
 
     /**
