@@ -35,43 +35,14 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
+
 package org.fabric3.tests.wsdl.generatedFromWsdl;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
  */
-public class WeatherStub {
-
-    public void setWire(String name, Wire wire) {
-        System.out.println("wire set:" + name);
-    }
-
-    public Node invoke(Object object) throws JAXBException, ParserConfigurationException {
-        if (!(object instanceof Document)) {
-            throw new AssertionError();
-        }
-        WeatherResponse response = new WeatherResponse();
-        response.setForecast("Hot");
-        response.setTemperature(40);
-        JAXBContext context = JAXBContext.newInstance(WeatherResponse.class);
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = builder.newDocument();
-        QName qName = new QName("urn:weather", "WeatherResponse");
-        JAXBElement<WeatherResponse> element = new JAXBElement<WeatherResponse>(qName, WeatherResponse.class, response);
-        context.createMarshaller().marshal(element, document);
-        return document;
+public class WeatherServiceImpl implements WeatherService {
+    public WeatherResponse getWeather(WeatherRequest weatherRequest) {
+        return new WeatherResponse();
     }
 }
