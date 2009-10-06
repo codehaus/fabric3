@@ -39,6 +39,7 @@ package org.fabric3.tests.implementation.wsdl.loader;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -46,6 +47,8 @@ import org.oasisopen.sca.annotation.Reference;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.host.contribution.StoreException;
+import org.fabric3.model.type.component.Multiplicity;
+import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.ResourceElement;
@@ -54,7 +57,6 @@ import org.fabric3.spi.introspection.xml.ElementLoadFailure;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.tests.implementation.wsdl.model.TestWsdlComponentType;
@@ -76,11 +78,35 @@ public class TestWsdlImplementationLoader implements TypeLoader<TestWsdlImplemen
     }
 
     public TestWsdlImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-        String name = reader.getAttributeValue(null, "service");
+        String stub = reader.getAttributeValue(null, "stub");
+        TestWsdlComponentType type = new TestWsdlComponentType();
+        TestWsdlImplementation impl = new TestWsdlImplementation(stub);
+        impl.setComponentType(type);
+        while (true) {
+            int code = reader.next();
+            switch (code) {
+            case XMLStreamConstants.START_ELEMENT:
+                if ("service".equals(reader.getName().getLocalPart())) {
+                    parseService(type, reader, context);
+                    break;
+                } else if ("reference".equals(reader.getName().getLocalPart())) {
+                    parseReference(type, reader, context);
+                    break;
+                }
+            case XMLStreamConstants.END_ELEMENT:
+                if ("implementation.wsdl".equals(reader.getName().getLocalPart())) {
+                    return impl;
+                }
+            }
+        }
+    }
+
+    private void parseService(TestWsdlComponentType type, XMLStreamReader reader, IntrospectionContext context) {
+        String name = reader.getAttributeValue(null, "contract");
         if (name == null) {
-            MissingAttribute error = new MissingAttribute("Missing service attribute", reader);
+            MissingAttribute error = new MissingAttribute("Missing service name attribute", reader);
             context.addError(error);
-            return null;
+            return;
         }
 
         QName qName;
@@ -91,20 +117,12 @@ public class TestWsdlImplementationLoader implements TypeLoader<TestWsdlImplemen
             URI uri = context.getContributionUri();
             context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in contribution " + uri
                     + " is invalid", reader));
-            return null;
+            return;
         }
 
-        String stub = reader.getAttributeValue(null, "stub");
-
-        LoaderUtil.skipToEndElement(reader);
-        TestWsdlComponentType type = new TestWsdlComponentType();
         WsdlServiceContract contract = resolveContract(qName, reader, context);
         ServiceDefinition service = new ServiceDefinition(name, contract);
         type.add(service);
-        TestWsdlImplementation impl = new TestWsdlImplementation(stub);
-        impl.setComponentType(type);
-        return impl;
-
     }
 
     private WsdlServiceContract resolveContract(QName portTypeName, XMLStreamReader reader, IntrospectionContext context) {
@@ -126,5 +144,37 @@ public class TestWsdlImplementationLoader implements TypeLoader<TestWsdlImplemen
         return element.getValue();
     }
 
+    private void parseReference(TestWsdlComponentType type, XMLStreamReader reader, IntrospectionContext context) {
+        String name = reader.getAttributeValue(null, "name");
+        if (name == null) {
+            MissingAttribute error = new MissingAttribute("Missing reference name attribute", reader);
+            context.addError(error);
+            return;
+        }
+
+
+        String contractName = reader.getAttributeValue(null, "contract");
+        if (contractName == null) {
+            MissingAttribute error = new MissingAttribute("Missing reference contract attribute", reader);
+            context.addError(error);
+            return;
+        }
+
+        QName qName;
+        try {
+            qName = helper.createQName(contractName, reader);
+        } catch (InvalidPrefixException e) {
+            String prefix = e.getPrefix();
+            URI uri = context.getContributionUri();
+            context.addError(new InvalidQNamePrefix("The prefix " + prefix + " specified in contribution " + uri
+                    + " is invalid", reader));
+            return;
+        }
+        boolean required = Boolean.valueOf(reader.getAttributeValue(null, "required"));
+        Multiplicity multiplicity = (required) ? Multiplicity.ONE_ONE : Multiplicity.ZERO_ONE;
+        WsdlServiceContract contract = resolveContract(qName, reader, context);
+        ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
+        type.add(reference);
+    }
 
 }

@@ -32,8 +32,12 @@
         <f3-impl:implementation.system class="org.fabric3.tests.implementation.wsdl.runtime.TestWsdlComponentBuilder"/>
     </component>
 
-    <component name="TestWsdlSourceAttacher" f3-core:key="org.fabric3.tests.implementation.wsdl.provision.PhysicalWsdlTargetDefinition">
+    <component name="TestWsdlTargetWireAttacher" f3-core:key="org.fabric3.tests.implementation.wsdl.provision.PhysicalWsdlTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.tests.implementation.wsdl.runtime.TestWsdlTargetWireAttacher"/>
+    </component>
+
+    <component name="TestWsdlSourceWireAttacher" f3-core:key="org.fabric3.tests.implementation.wsdl.provision.PhysicalWsdlSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.tests.implementation.wsdl.runtime.TestWsdlSourceWireAttacher"/>
     </component>
 
 </composite>

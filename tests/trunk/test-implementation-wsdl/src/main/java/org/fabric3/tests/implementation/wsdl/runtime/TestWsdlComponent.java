@@ -37,12 +37,14 @@
 */
 package org.fabric3.tests.implementation.wsdl.runtime;
 
-import java.net.URI;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URI;
 
 import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.component.Component;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
@@ -51,16 +53,23 @@ public class TestWsdlComponent implements Component {
     private URI classLoaderId;
     private URI uri;
     private Object instance;
-    private Method method;
+    private Method invokeMethod;
+    private Method setWireMethod;
 
     public TestWsdlComponent(URI uri, Object instance) {
         this.uri = uri;
         this.instance = instance;
         try {
-            method = instance.getClass().getMethod("invoke", Object.class);
+            invokeMethod = instance.getClass().getMethod("invoke", Object.class);
         } catch (NoSuchMethodException e) {
-           throw new AssertionError("Stub class must have an invoke(Object) method");
+            throw new AssertionError("Stub class must have an invoke(Object) method");
         }
+        try {
+            setWireMethod = instance.getClass().getMethod("setWire", String.class, Wire.class);
+        } catch (NoSuchMethodException e) {
+            // no method defined
+        }
+
     }
 
     public URI getUri() {
@@ -87,13 +96,28 @@ public class TestWsdlComponent implements Component {
 
     }
 
+    public void setWire(String name, Wire wire) throws WiringException {
+        if (setWireMethod == null) {
+            throw new WiringException("Stub class " + instance.getClass() + " must have a setWire(String, Wire) method if it is wired");
+        }
+        try {
+            setWireMethod.invoke(instance, name, wire);
+        } catch (IllegalAccessException e) {
+            throw new WiringException(e);
+        } catch (InvocationTargetException e) {
+            throw new WiringException(e);
+        }
+
+    }
+
     public Object invoke(Object object) {
         try {
-            return method.invoke(instance, object);
+            return invokeMethod.invoke(instance, object);
         } catch (IllegalAccessException e) {
-             throw new AssertionError(e);
+            throw new AssertionError(e);
         } catch (InvocationTargetException e) {
             throw new AssertionError(e);
         }
     }
+
 }
