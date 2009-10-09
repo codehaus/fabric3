@@ -24,12 +24,12 @@
     <component name="FromWsdlWeatherService">
         <f3-impl:implementation.wsdl stub="org.fabric3.tests.wsdl.generatedFromWsdl.WeatherStub">
             <service contract="weather:WeatherPortType"/>
-            <reference required="false" name="foo" contract="weather:WeatherPortType"/>
+            <reference name="weatherService" contract="weather:WeatherPortType"/>
         </f3-impl:implementation.wsdl>
-        <reference name="foo" target="FromWSDLWeatherService"/>
+        <reference name="weatherService" target="WeatherService"/>
     </component>
 
-    <component name="FromWSDLWeatherService">
+    <component name="WeatherService">
         <implementation.java class="org.fabric3.tests.wsdl.generatedFromWsdl.WeatherServiceImpl"/>
     </component>
 

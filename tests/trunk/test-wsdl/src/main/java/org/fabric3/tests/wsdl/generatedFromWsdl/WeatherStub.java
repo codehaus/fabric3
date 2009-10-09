@@ -37,41 +37,41 @@
 */
 package org.fabric3.tests.wsdl.generatedFromWsdl;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
  */
 public class WeatherStub {
+    private Wire wire;
 
     public void setWire(String name, Wire wire) {
-        System.out.println("wire set:" + name);
+        this.wire = wire;
     }
 
     public Node invoke(Object object) throws JAXBException, ParserConfigurationException {
         if (!(object instanceof Document)) {
-            throw new AssertionError();
+            throw new AssertionError("Invocation parameter was not a document");
         }
-        WeatherResponse response = new WeatherResponse();
-        response.setForecast("Hot");
-        response.setTemperature(40);
-        JAXBContext context = JAXBContext.newInstance(WeatherResponse.class);
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = builder.newDocument();
-        QName qName = new QName("urn:weather", "WeatherResponse");
-        JAXBElement<WeatherResponse> element = new JAXBElement<WeatherResponse>(qName, WeatherResponse.class, response);
-        context.createMarshaller().marshal(element, document);
-        return document;
+
+        InvocationChain chain = wire.getInvocationChains().get(0);
+        Message message = new MessageImpl();
+        message.setBody(new Object[]{object});
+
+        Message messageResponse = chain.getHeadInterceptor().invoke(message);
+
+        if (!(messageResponse.getBody() instanceof Document)) {
+            throw new AssertionError("Pojo invocation did not return a document");
+        }
+        return (Document) messageResponse.getBody();
     }
 }

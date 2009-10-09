@@ -43,6 +43,9 @@ package org.fabric3.tests.wsdl.generatedFromWsdl;
  */
 public class WeatherServiceImpl implements WeatherService {
     public WeatherResponse getWeather(WeatherRequest weatherRequest) {
-        return new WeatherResponse();
+        WeatherResponse response = new WeatherResponse();
+        response.setForecast("Hot");
+        response.setTemperature(40);
+        return response;
     }
 }
