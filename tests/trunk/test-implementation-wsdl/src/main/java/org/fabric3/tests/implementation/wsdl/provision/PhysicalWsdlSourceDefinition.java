@@ -39,7 +39,11 @@
 package org.fabric3.tests.implementation.wsdl.provision;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.physical.PhysicalDataTypes;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
@@ -47,14 +51,22 @@ import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
  */
 public class PhysicalWsdlSourceDefinition extends PhysicalSourceDefinition {
     private static final long serialVersionUID = -6401712349639574580L;
+    private List<DataType<?>> physicalDataTypes = new ArrayList<DataType<?>>();
+
     private String name;
 
     public PhysicalWsdlSourceDefinition(String name, URI componentUri) {
         this.name = name;
         setUri(componentUri);
+        physicalDataTypes.add(PhysicalDataTypes.DOM);
     }
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public List<DataType<?>> getPhysicalDataTypes() {
+        return physicalDataTypes;
     }
 }
