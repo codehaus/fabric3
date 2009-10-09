@@ -38,14 +38,15 @@
 package org.fabric3.transform;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.type.java.JavaClass;
 import org.fabric3.spi.model.type.xsd.XSDConstants;
-import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerFactory;
@@ -54,24 +55,16 @@ import org.fabric3.spi.transform.TransformerFactory;
  * @version $Rev$ $Date$
  */
 public class DefaultTransformerRegistryTestCase extends TestCase {
-    private static final JavaClass<Integer> TARGET = new JavaClass<Integer>(Integer.class);
-
     private DefaultTransformerRegistry registry;
-
-    public void testTransformerRegistration() throws Exception {
-        SingleTypeTransformer<?, ?> transformer = new MockSingleTypeTransformer();
-        List<SingleTypeTransformer<?, ?>> transformers = new ArrayList<SingleTypeTransformer<?, ?>>();
-        transformers.add(transformer);
-        registry.setTransformers(transformers);
-        assertSame(transformer, registry.getTransformer(XSDConstants.PROPERTY_TYPE, TARGET));
-    }
 
     public void testTransformerFactoryRegistration() throws Exception {
         List<TransformerFactory<?, ?>> factories = new ArrayList<TransformerFactory<?, ?>>();
         factories.add(new MockFactory());
         registry.setFactories(factories);
         JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);
-        assertNotNull(registry.getTransformer(XSDConstants.PROPERTY_TYPE, target));
+        Set<Class<?>> targets = new HashSet<Class<?>>();
+        targets.add(Integer.class);
+        assertNotNull(registry.getTransformer(XSDConstants.PROPERTY_TYPE, target, targets, targets));
     }
 
     private class MockFactory implements TransformerFactory<Object, Object> {
@@ -80,9 +73,11 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
             return true;
         }
 
-        public Transformer<Object, Object> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
+        public Transformer<Object, Object> create(DataType<?> source, DataType<?> target, Set<Class<?>> sourceTypes, Set<Class<?>> targetTypes)
+                throws TransformationException {
             return new MockTransformer();
         }
+
     }
 
     private class MockTransformer implements Transformer<Object, Object> {
@@ -92,22 +87,6 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
         }
 
     }
-
-    private class MockSingleTypeTransformer implements SingleTypeTransformer<Object, Object> {
-
-        public Object transform(Object o, ClassLoader loader) throws TransformationException {
-            return null;
-        }
-
-        public DataType<?> getSourceType() {
-            return XSDConstants.PROPERTY_TYPE;
-        }
-
-        public DataType<?> getTargetType() {
-            return TARGET;
-        }
-    }
-
 
     protected void setUp() throws Exception {
         super.setUp();

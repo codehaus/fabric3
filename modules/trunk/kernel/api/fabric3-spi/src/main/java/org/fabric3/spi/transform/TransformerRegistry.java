@@ -37,6 +37,8 @@
 */
 package org.fabric3.spi.transform;
 
+import java.util.Set;
+
 import org.fabric3.model.type.contract.DataType;
 
 /**
@@ -47,15 +49,18 @@ import org.fabric3.model.type.contract.DataType;
 public interface TransformerRegistry {
 
     /**
-     * Returns a transformer for the source and target types.
+     * Returns a transformer that can convert a set of classes from the source to target data type. The source and target data types may be Java
+     * types, XML Schema types, etc. The in and out types represent the classes that must be converted.
      *
-     * @param source  the type to transform from
-     * @param target  the type to transform to
-     * @param classes the types that must be converted to or from
+     * @param source   the data type to transform from
+     * @param target   the data type to transform to
+     * @param inTypes  the classes that must be converted from
+     * @param outTypes the classes that must be converted to
      * @return the transformer or null if one is not found
      * @throws TransformationException if an error occurs returning the transformer
      */
-    Transformer<?, ?> getTransformer(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException;
+    Transformer<?, ?> getTransformer(DataType<?> source, DataType<?> target, Set<Class<?>> inTypes, Set<Class<?>> outTypes)
+            throws TransformationException;
 
 
 }

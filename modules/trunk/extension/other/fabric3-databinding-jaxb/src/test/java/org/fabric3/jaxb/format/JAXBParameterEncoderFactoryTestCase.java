@@ -43,13 +43,13 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
+import org.fabric3.jaxb.factory.JAXBContextFactoryImpl;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.jaxb.factory.JAXBContextFactoryImpl;
 
 /**
  * @version $Rev$ $Date$
@@ -59,7 +59,9 @@ public class JAXBParameterEncoderFactoryTestCase extends TestCase {
     public void testSerializeDeserialize() throws Exception {
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.addSourceParameterType(Foo.class.getName());
+        operation.addTargetParameterType(Foo.class.getName());
         operation.setSourceReturnType(Void.class.getName());
+        operation.setTargetReturnType(Void.class.getName());
 
         InvocationChain chain = EasyMock.createMock(InvocationChain.class);
         EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);

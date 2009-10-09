@@ -66,7 +66,7 @@ public class JsonParameterEncoderFactory implements ParameterEncoderFactory {
             String name = definition.getName();
             Set<Class<?>> inParams;
             try {
-                inParams = ParameterTypeHelper.loadInParameterTypes(definition, loader);
+                inParams = ParameterTypeHelper.loadSourceInParameterTypes(definition, loader);
             } catch (ClassNotFoundException e) {
                 throw new EncoderException(e);
             }
@@ -81,8 +81,8 @@ public class JsonParameterEncoderFactory implements ParameterEncoderFactory {
                 inParam = inParams.iterator().next();
             }
             try {
-                Class<?> outParam = ParameterTypeHelper.loadOutputType(definition, loader);
-                Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
+                Class<?> outParam = ParameterTypeHelper.loadTargetOutputType(definition, loader);
+                Set<Class<?>> faults = ParameterTypeHelper.loadSourceFaultTypes(definition, loader);
                 OperationTypes types = new OperationTypes(inParam, outParam, faults);
                 mappings.put(name, types);
             } catch (ClassNotFoundException e) {

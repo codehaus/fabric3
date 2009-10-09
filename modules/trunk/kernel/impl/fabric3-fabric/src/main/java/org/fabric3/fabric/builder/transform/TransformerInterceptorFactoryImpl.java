@@ -68,15 +68,17 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
                                          List<DataType<?>> targets,
                                          ClassLoader targetLoader,
                                          ClassLoader sourceLoader) throws WiringException {
-        Class<?>[] inTypes = loadInputTypes(definition, targetLoader);
+        Set<Class<?>> targetTypes = loadTargetInputTypes(definition, targetLoader);
+        Set<Class<?>> sourceTypes = loadSourceInputTypes(definition, targetLoader);
         try {
-
+            // Find a transformer that can convert from a type supported by the source component or binding to one supported by the target component
+            // or binding. A search is performed by iterating the supported source and target types in order of preference.
             Transformer<Object, Object> inTransformer = null;
             DataType<?> selectedSource = null;
             DataType<?> selectedTarget = null;
             for (DataType<?> source : sources) {
                 for (DataType<?> target : targets) {
-                    inTransformer = (Transformer<Object, Object>) registry.getTransformer(source, target, inTypes);
+                    inTransformer = (Transformer<Object, Object>) registry.getTransformer(source, target, sourceTypes, targetTypes);
                     if (inTransformer != null) {
                         selectedSource = source;
                         selectedTarget = target;
@@ -84,6 +86,7 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
                     }
                 }
                 if (selectedSource != null) {
+                    // a transformer was found
                     break;
                 }
             }
@@ -92,14 +95,13 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
             }
 
             // create the output transformer which flips the source and target types of the forward interceptor
-            Class<?>[] outTypes = loadOutputTypes(definition, targetLoader);
+            Set<Class<?>> sourceOutTypes = loadSourceOutputTypes(definition, targetLoader);
+            Set<Class<?>> targetOutTypes = loadTargetOutputTypes(definition, targetLoader);
             Transformer<Object, Object> outTransformer =
-                    (Transformer<Object, Object>) registry.getTransformer(selectedTarget, selectedSource, outTypes);
+                    (Transformer<Object, Object>) registry.getTransformer(selectedTarget, selectedSource, targetOutTypes, sourceOutTypes);
             if (outTransformer == null) {
                 throw new NoTransformerException("No transformer from type " + selectedTarget + " to type " + selectedSource);
             }
-
-
             return new TransformerInterceptor(inTransformer, outTransformer, targetLoader, sourceLoader);
         } catch (TransformationException e) {
             throw new WiringException(e);
@@ -107,34 +109,49 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
     }
 
     /**
-     * Loads the input physical parameter types in the contribution classloader associated of the target service.
+     * Loads the source-side parameter types in the contribution classloader associated with the source component.
      *
      * @param definition the physical operation definition
      * @param loader     the  contribution classloader
      * @return a collection of loaded parameter types
      * @throws WiringException if an error occurs loading the parameter types
      */
-    private Class<?>[] loadInputTypes(PhysicalOperationDefinition definition, ClassLoader loader) throws WiringException {
+    private Set<Class<?>> loadSourceInputTypes(PhysicalOperationDefinition definition, ClassLoader loader) throws WiringException {
         try {
-            Set<Class<?>> types = ParameterTypeHelper.loadInParameterTypes(definition, loader);
-            return types.toArray(new Class<?>[types.size()]);
+            return ParameterTypeHelper.loadSourceInParameterTypes(definition, loader);
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         }
     }
 
     /**
-     * Loads the output physical parameter types in the contribution classloader associated of the target service.
+     * Loads the target-side parameter types in the contribution classloader associated with the target service.
      *
      * @param definition the physical operation definition
      * @param loader     the  contribution classloader
      * @return a collection of loaded parameter types
      * @throws WiringException if an error occurs loading the parameter types
      */
-    private Class<?>[] loadOutputTypes(PhysicalOperationDefinition definition, ClassLoader loader) throws WiringException {
+    private Set<Class<?>> loadTargetInputTypes(PhysicalOperationDefinition definition, ClassLoader loader) throws WiringException {
+        try {
+            return ParameterTypeHelper.loadTargetInParameterTypes(definition, loader);
+        } catch (ClassNotFoundException e) {
+            throw new WiringException(e);
+        }
+    }
+
+    /**
+     * Loads the source-side output parameter types in the contribution classloader associated of the source component.
+     *
+     * @param definition the physical operation definition
+     * @param loader     the  contribution classloader
+     * @return a collection of loaded parameter types
+     * @throws WiringException if an error occurs loading the parameter types
+     */
+    private Set<Class<?>> loadSourceOutputTypes(PhysicalOperationDefinition definition, ClassLoader loader) throws WiringException {
         Set<Class<?>> types = new HashSet<Class<?>>();
         try {
-            Class<?> outParam = ParameterTypeHelper.loadOutputType(definition, loader);
+            Class<?> outParam = ParameterTypeHelper.loadSourceOutputType(definition, loader);
             types.add(outParam);
             // TODO handle fault types
             //  Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
@@ -142,7 +159,29 @@ public class TransformerInterceptorFactoryImpl implements TransformerInterceptor
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         }
-        return types.toArray(new Class<?>[types.size()]);
+        return types;
+    }
+
+    /**
+     * Loads the target-side output parameter types in the contribution classloader associated of the target service.
+     *
+     * @param definition the physical operation definition
+     * @param loader     the  contribution classloader
+     * @return a collection of loaded parameter types
+     * @throws WiringException if an error occurs loading the parameter types
+     */
+    private Set<Class<?>> loadTargetOutputTypes(PhysicalOperationDefinition definition, ClassLoader loader) throws WiringException {
+        Set<Class<?>> types = new HashSet<Class<?>>();
+        try {
+            Class<?> outParam = ParameterTypeHelper.loadTargetOutputType(definition, loader);
+            types.add(outParam);
+            // TODO handle fault types
+            //  Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
+            //  types.addAll(faults);
+        } catch (ClassNotFoundException e) {
+            throw new WiringException(e);
+        }
+        return types;
     }
 
 }

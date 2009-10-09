@@ -37,6 +37,8 @@
 */
 package org.fabric3.jaxb.transform;
 
+import java.util.Set;
+import java.util.HashSet;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -68,15 +70,17 @@ public class Node2JAXBTransformerFactory implements TransformerFactory<Node, Obj
         return Node.class.isAssignableFrom(source.getPhysical()) && target instanceof JavaType;
     }
 
-    public Transformer<Node, Object> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
+    public Transformer<Node, Object> create(DataType<?> source, DataType<?> target, Set<Class<?>> sourceTypes, Set<Class<?>> targetTypes)
+            throws TransformationException {
         try {
-            if (classes == null || classes.length != 1) {
+            if (targetTypes.size() != 1) {
                 throw new UnsupportedOperationException("Null and multiparameter operations not yet supported");
             }
+            Set<Class<?>> types = new HashSet<Class<?>>(sourceTypes);
+            types.addAll(targetTypes);
+            JAXBContext jaxbContext = contextFactory.createJAXBContext(types.toArray(new Class<?>[types.size()]));
 
-            JAXBContext jaxbContext = contextFactory.createJAXBContext(classes);
-
-            Class<?> type = classes[0];
+            Class<?> type = targetTypes.iterator().next();
             if (type.isAnnotationPresent(XmlRootElement.class)) {
                 if (XSDConstants.PROPERTY_TYPE.equals(source)) {
                     // the value is a property

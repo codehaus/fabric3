@@ -73,11 +73,11 @@ public class JAXBParameterEncoderFactory implements ParameterEncoderFactory {
             Set<Class<?>> types = new HashSet<Class<?>>();
             for (InvocationChain chain : wire.getInvocationChains()) {
                 PhysicalOperationDefinition definition = chain.getPhysicalOperation();
-                Set<Class<?>> inParams = ParameterTypeHelper.loadInParameterTypes(definition, loader);
+                Set<Class<?>> inParams = ParameterTypeHelper.loadSourceInParameterTypes(definition, loader);
                 types.addAll(inParams);
-                Class<?> outParam = ParameterTypeHelper.loadOutputType(definition, loader);
+                Class<?> outParam = ParameterTypeHelper.loadTargetOutputType(definition, loader);
                 types.add(outParam);
-                Set<Class<?>> faults = ParameterTypeHelper.loadFaultTypes(definition, loader);
+                Set<Class<?>> faults = ParameterTypeHelper.loadSourceFaultTypes(definition, loader);
                 types.addAll(faults);
             }
 

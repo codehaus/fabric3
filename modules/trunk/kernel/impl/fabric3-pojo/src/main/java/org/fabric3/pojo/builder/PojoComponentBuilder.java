@@ -44,7 +44,9 @@
 package org.fabric3.pojo.builder;
 
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
@@ -174,11 +176,11 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
 
     @SuppressWarnings("unchecked")
     private ObjectFactory<?> createObjectFactory(String name, DataType<?> dataType, Element value, ClassLoader classLoader) throws BuilderException {
-
-
         try {
             Class<?> physical = dataType.getPhysical();
-            Transformer<Node, ?> transformer = (Transformer<Node, ?>) transformerRegistry.getTransformer(PROPERTY_TYPE, dataType, physical);
+            Set<Class<?>> types = new HashSet<Class<?>>();
+            types.add(physical);
+            Transformer<Node, ?> transformer = (Transformer<Node, ?>) transformerRegistry.getTransformer(PROPERTY_TYPE, dataType, types, types);
             if (transformer == null) {
                 throw new PropertyTransformException("No transformer for property " + name + " of type: " + dataType);
             }

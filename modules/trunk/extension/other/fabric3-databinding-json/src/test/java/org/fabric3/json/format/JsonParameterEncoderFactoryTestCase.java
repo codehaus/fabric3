@@ -61,7 +61,9 @@ public class JsonParameterEncoderFactoryTestCase extends TestCase {
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName("test");
         operation.addSourceParameterType(String.class.getName());
+        operation.addTargetParameterType(String.class.getName());
         operation.setSourceReturnType(Void.class.getName());
+        operation.setTargetReturnType(Void.class.getName());
 
         InvocationChain chain = EasyMock.createMock(InvocationChain.class);
         EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);
@@ -85,6 +87,7 @@ public class JsonParameterEncoderFactoryTestCase extends TestCase {
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName("test");
         operation.setSourceReturnType(Void.class.getName());
+        operation.setTargetReturnType(Void.class.getName());
 
         InvocationChain chain = EasyMock.createMock(InvocationChain.class);
         EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);
@@ -107,7 +110,9 @@ public class JsonParameterEncoderFactoryTestCase extends TestCase {
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName("test");
         operation.addSourceParameterType(Foo.class.getName());
+        operation.addTargetParameterType(Foo.class.getName());
         operation.setSourceReturnType(Void.class.getName());
+        operation.setTargetReturnType(Void.class.getName());
 
         InvocationChain chain = EasyMock.createMock(InvocationChain.class);
         EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);
@@ -131,7 +136,9 @@ public class JsonParameterEncoderFactoryTestCase extends TestCase {
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName("test");
         operation.addSourceFaultType(FooException.class.getName());
+        operation.addTargetFaultType(FooException.class.getName());
         operation.setSourceReturnType(Void.class.getName());
+        operation.setTargetReturnType(Void.class.getName());
 
         InvocationChain chain = EasyMock.createMock(InvocationChain.class);
         EasyMock.expect(chain.getPhysicalOperation()).andReturn(operation);

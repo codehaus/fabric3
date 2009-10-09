@@ -37,32 +37,36 @@
 */
 package org.fabric3.spi.transform;
 
+import java.util.Set;
+
 import org.fabric3.model.type.contract.DataType;
 
 /**
- * Creates a transformer capable of converting a set of classes from a source to target type.
+ * Creates a transformer capable of converting a set of classes from a source to target data type.
  *
  * @version $Rev: 7606 $ $Date: 2009-09-09 16:00:11 +0200 (Wed, 09 Sep 2009) $
  */
 public interface TransformerFactory<SOURCE, TARGET> {
 
     /**
-     * Returns true if the factory creates transformers that can transform from the source to target data types.
+     * Returns true if the factory creates transformers that can convert from the source to target data types.
      *
      * @param source the source datatype
      * @param target the target datatype
-     * @return true if the factory creates transformers that can transform from the source to target data types
+     * @return true if the factory creates transformers that can convert from the source to target data types
      */
     boolean canTransform(DataType<?> source, DataType<?> target);
 
     /**
-     * Creates a transformer capable of transforming to or from the given set of classes.
+     * Creates a transformer capable of converting from the source to target data types.
      *
-     * @param source  the source datatype
-     * @param target  the target datatype
-     * @param classes the classes to transform
-     * @return the transformer
+     * @param source   the source data type
+     * @param target   the target data type
+     * @param inTypes  the physical types of the source data
+     * @param outTypes the physical types of the converted data
+     * @return the transformer the transformer
      * @throws TransformationException if there was an error creating the transformer
      */
-    Transformer<SOURCE, TARGET> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException;
+    Transformer<SOURCE, TARGET> create(DataType<?> source, DataType<?> target, Set<Class<?>> inTypes, Set<Class<?>> outTypes)
+            throws TransformationException;
 }

@@ -41,12 +41,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.java.JavaClass;
-import org.fabric3.spi.model.type.java.JavaType;
 import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.Transformer;
@@ -78,59 +77,20 @@ public class DefaultTransformerRegistry implements TransformerRegistry {
         this.factories = factories;
     }
 
-    public Transformer<?, ?> getTransformer(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
+    public Transformer<?, ?> getTransformer(DataType<?> source, DataType<?> target, Set<Class<?>> inTypes, Set<Class<?>> outTypes)
+            throws TransformationException {
         Key key = new Key(source, target);
         Transformer<?, ?> transformer = transformers.get(key);
         if (transformer != null) {
             return transformer;
         }
-
-        if (classes != null) {
-            boolean fromJava = source instanceof JavaType;
-            for (TransformerFactory<?, ?> factory : factories) {
-                if (canTransform(factory, source, target, fromJava, classes)) {
-                    return factory.create(source, target, classes);
-                }
-            }
-        } else {
-            for (TransformerFactory<?, ?> factory : factories) {
-                if (factory.canTransform(source, target)) {
-                    return factory.create(source, target, classes);
-                }
+        for (TransformerFactory<?, ?> factory : factories) {
+            boolean canTransform = factory.canTransform(source, target);
+            if (canTransform) {
+                return factory.create(source, target, inTypes, outTypes);
             }
         }
-
         return null;
-    }
-
-    /**
-     * Returns true if the TransformerFactory can transform the given classes.
-     *
-     * @param factory  the TransformerFactory
-     * @param source   the source type
-     * @param target   the target type
-     * @param fromJava if the classes are the source or target of the transformation
-     * @param classes  the classes
-     * @return true if the TransformerFactory can transform the given classes
-     */
-    @SuppressWarnings({"unchecked"})
-    private boolean canTransform(TransformerFactory<?, ?> factory, DataType<?> source, DataType<?> target, boolean fromJava, Class<?>... classes) {
-        boolean canTransform = true;
-        for (Class<?> clazz : classes) {
-            DataType<?> type = new JavaClass(clazz);
-            if (fromJava) {
-                if (!factory.canTransform(type, target)) {
-                    canTransform = false;
-                    break;
-                }
-            } else {
-                if (!factory.canTransform(source, type)) {
-                    canTransform = false;
-                    break;
-                }
-            }
-        }
-        return canTransform;
     }
 
     private static class Key {

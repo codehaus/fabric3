@@ -52,14 +52,14 @@ public class ParameterTypeHelper {
     }
 
     /**
-     * Loads input parameter types.
+     * Loads input parameter types for the source side of an operation.
      *
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
      * @throws ClassNotFoundException if an error occurs loading the types
      */
-    public static Set<Class<?>> loadInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
+    public static Set<Class<?>> loadSourceInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         Set<Class<?>> types = new HashSet<Class<?>>();
         for (String param : operation.getSourceParameterTypes()) {
             Class<?> clazz = loadClass(param, loader);
@@ -69,14 +69,31 @@ public class ParameterTypeHelper {
     }
 
     /**
-     * Loads declared fault parameter types.
+     * Loads input parameter types for the target side of an operation.
      *
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
      * @throws ClassNotFoundException if an error occurs loading the types
      */
-    public static Set<Class<?>> loadFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
+    public static Set<Class<?>> loadTargetInParameterTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
+        Set<Class<?>> types = new HashSet<Class<?>>();
+        for (String param : operation.getTargetParameterTypes()) {
+            Class<?> clazz = loadClass(param, loader);
+            types.add(clazz);
+        }
+        return types;
+    }
+
+    /**
+     * Loads declared fault parameter types for the source side of an operation.
+     *
+     * @param operation the operation
+     * @param loader    the classloader to use for loading types
+     * @return the loaded types
+     * @throws ClassNotFoundException if an error occurs loading the types
+     */
+    public static Set<Class<?>> loadSourceFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         Set<Class<?>> types = new HashSet<Class<?>>();
         for (String param : operation.getSourceFaultTypes()) {
             Class<?> clazz = loadClass(param, loader);
@@ -86,16 +103,46 @@ public class ParameterTypeHelper {
     }
 
     /**
-     * Loads output parameter type.
+     * Loads declared fault parameter types for the target side of an operation.
      *
      * @param operation the operation
      * @param loader    the classloader to use for loading types
      * @return the loaded types
      * @throws ClassNotFoundException if an error occurs loading the types
      */
-    public static Class<?> loadOutputType(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
+    public static Set<Class<?>> loadTargetFaultTypes(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
+        Set<Class<?>> types = new HashSet<Class<?>>();
+        for (String param : operation.getTargetFaultTypes()) {
+            Class<?> clazz = loadClass(param, loader);
+            types.add(clazz);
+        }
+        return types;
+    }
+
+    /**
+     * Loads the output parameter type for the source side of an operation.
+     *
+     * @param operation the operation
+     * @param loader    the classloader to use for loading types
+     * @return the loaded types
+     * @throws ClassNotFoundException if an error occurs loading the types
+     */
+    public static Class<?> loadSourceOutputType(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
         // currently only one type is supported although WSDL allows multiple
         return loadClass(operation.getSourceReturnType(), loader);
+    }
+
+    /**
+     * Loads the output parameter type for the target side of an operation.
+     *
+     * @param operation the operation
+     * @param loader    the classloader to use for loading types
+     * @return the loaded types
+     * @throws ClassNotFoundException if an error occurs loading the types
+     */
+    public static Class<?> loadTargetOutputType(PhysicalOperationDefinition operation, ClassLoader loader) throws ClassNotFoundException {
+        // currently only one type is supported although WSDL allows multiple
+        return loadClass(operation.getTargetReturnType(), loader);
     }
 
     /**

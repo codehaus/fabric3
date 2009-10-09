@@ -37,6 +37,8 @@
 */
 package org.fabric3.jaxb.transform;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -63,16 +65,19 @@ public class String2JAXBTransformerFactory implements TransformerFactory<String,
     }
 
     public boolean canTransform(DataType<?> source, DataType<?> target) {
-         return String.class.equals(source.getPhysical()) && target instanceof JavaType;
+        return String.class.equals(source.getPhysical()) && target instanceof JavaType;
     }
 
-    public Transformer<String, Object> create(DataType<?> source, DataType<?> target, Class<?>... classes) throws TransformationException {
+    public Transformer<String, Object> create(DataType<?> source, DataType<?> target, Set<Class<?>> sourceTypes, Set<Class<?>> targetTypes)
+            throws TransformationException {
         try {
-            if (classes == null || classes.length != 1) {
+            if (sourceTypes.size() != 1) {
                 throw new UnsupportedOperationException("Null and multiparameter operations not yet supported");
             }
-            JAXBContext jaxbContext = contextFactory.createJAXBContext(classes);
-            Class<?> type = classes[0];
+            Set<Class<?>> types = new HashSet<Class<?>>(sourceTypes);
+            types.addAll(targetTypes);
+            JAXBContext jaxbContext = contextFactory.createJAXBContext(types.toArray(new Class<?>[types.size()]));
+            Class<?> type = targetTypes.iterator().next();
             if (type.isAnnotationPresent(XmlRootElement.class)) {
                 return new String2JAXBObjectTransformer(jaxbContext);
             } else {
