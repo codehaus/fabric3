@@ -90,7 +90,12 @@ public class PhysicalOperationGeneratorImpl implements PhysicalOperationGenerato
             if (policyResult != null) {
                 List<PolicySet> policies = policyResult.getInterceptedPolicySets(operation);
                 List<PolicySet> allPolicies = new ArrayList<PolicySet>(endpointPolicySets);
-                allPolicies.addAll(policies);
+                for (PolicySet policy : policies) {
+                    // strip duplicates from endpoint and operation policies 
+                    if (!allPolicies.contains(policy)) {
+                        allPolicies.add(policy);
+                    }
+                }
                 PolicyMetadata metadata = policyResult.getMetadata();
                 Set<PhysicalInterceptorDefinition> interceptors = generateInterceptors(operation, allPolicies, metadata);
                 physicalOperation.setInterceptors(interceptors);
