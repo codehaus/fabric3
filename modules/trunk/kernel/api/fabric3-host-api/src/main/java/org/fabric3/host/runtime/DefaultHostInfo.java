@@ -57,6 +57,7 @@ import org.fabric3.host.RuntimeMode;
 public class DefaultHostInfo implements HostInfo {
     private final RuntimeMode runtimeMode;
     private final URI domain;
+    private String jmxSubDomain;
     private final File baseDir;
     private File modeConfigDirectory;
     private final Properties properties;
@@ -70,6 +71,7 @@ public class DefaultHostInfo implements HostInfo {
      *
      * @param runtimeMode         the mode the runtime is started in
      * @param domain              the SCA domain this runtime belongs to
+     * @param jmxSubDomain           the JMX subdomain name
      * @param baseDir             directory containing the standalone installation
      * @param repositoryDirectory directory containing the standalone repository
      * @param configDir           directory containing the standalone configuration
@@ -80,6 +82,7 @@ public class DefaultHostInfo implements HostInfo {
      */
     public DefaultHostInfo(RuntimeMode runtimeMode,
                            URI domain,
+                           String jmxSubDomain,
                            File baseDir,
                            File repositoryDirectory,
                            File configDir,
@@ -89,6 +92,7 @@ public class DefaultHostInfo implements HostInfo {
                            File dataDirectory) {
         this.runtimeMode = runtimeMode;
         this.domain = domain;
+        this.jmxSubDomain = jmxSubDomain;
         this.baseDir = baseDir;
         this.repositoryDirectory = repositoryDirectory;
         this.configDirectory = configDir;
@@ -104,6 +108,10 @@ public class DefaultHostInfo implements HostInfo {
 
     public URI getDomain() {
         return domain;
+    }
+
+    public String getJMXSubDomain() {
+        return jmxSubDomain;
     }
 
     public final File getBaseDir() {

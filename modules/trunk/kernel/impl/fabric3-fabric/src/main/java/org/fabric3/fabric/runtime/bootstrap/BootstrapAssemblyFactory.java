@@ -198,7 +198,6 @@ public class BootstrapAssemblyFactory {
                                       LogicalComponentManager logicalComponentManager,
                                       MetaDataStore metaDataStore,
                                       MBeanServer mbServer,
-                                      String jmxSubDomain,
                                       HostInfo info) throws InitializationException {
 
         BindingSelector bindingSelector = new BindingSelectorImpl(logicalComponentManager);
@@ -209,7 +208,6 @@ public class BootstrapAssemblyFactory {
                                               componentManager,
                                               mbServer,
                                               metaDataStore,
-                                              jmxSubDomain,
                                               info);
 
         LocalRoutingService routingService = new LocalRoutingService(commandRegistry, scopeRegistry);
@@ -269,7 +267,6 @@ public class BootstrapAssemblyFactory {
                                                                          ComponentManager componentManager,
                                                                          MBeanServer mbeanServer,
                                                                          MetaDataStore metaDataStore,
-                                                                         String jmxSubDomain,
                                                                          HostInfo info) {
 
         ReflectiveInstanceFactoryBuilder factoryBuilder = new ReflectiveInstanceFactoryBuilder(classLoaderRegistry);
@@ -295,7 +292,7 @@ public class BootstrapAssemblyFactory {
         sourceAttachers.put(SystemSourceDefinition.class, wireAttacher);
         sourceAttachers.put(SingletonSourceDefinition.class, new SingletonSourceWireAttacher(componentManager));
 
-        sourceAttachers.put(JMXSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxSubDomain));
+        sourceAttachers.put(JMXSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, info));
 
         Map<Class<? extends PhysicalTargetDefinition>, TargetWireAttacher<? extends PhysicalTargetDefinition>> targetAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalTargetDefinition>, TargetWireAttacher<? extends PhysicalTargetDefinition>>();

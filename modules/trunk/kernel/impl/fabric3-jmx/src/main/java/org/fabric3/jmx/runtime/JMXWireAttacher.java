@@ -53,9 +53,9 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -78,10 +78,10 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> 
 
     public JMXWireAttacher(@Reference MBeanServer mBeanServer,
                            @Reference ClassLoaderRegistry classLoaderRegistry,
-                           @Property(name = "subDomain") String subDomain) {
+                           @Reference HostInfo info) {
         this.mBeanServer = mBeanServer;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.subDomain = subDomain;
+        this.subDomain = info.getJMXSubDomain();
     }
 
     public void attach(JMXSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {

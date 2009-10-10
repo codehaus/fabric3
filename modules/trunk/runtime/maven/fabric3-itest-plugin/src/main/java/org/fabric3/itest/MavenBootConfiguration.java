@@ -11,7 +11,7 @@ import org.apache.maven.plugin.logging.Log;
 
 public class MavenBootConfiguration {
     private URL systemScdl;
-    private String managementDomain;
+    private String jmxSubDomain;
     private Properties properties;
     private File outputDirectory;
     private String systemConfigDir;
@@ -32,12 +32,12 @@ public class MavenBootConfiguration {
         this.systemScdl = systemScdl;
     }
 
-    public String getManagementDomain() {
-        return managementDomain;
+    public String getJMXSubDomain() {
+        return jmxSubDomain;
     }
 
-    public void setManagementDomain(String managementDomain) {
-        this.managementDomain = managementDomain;
+    public void setJMXSubDomain(String domain) {
+        this.jmxSubDomain = domain;
     }
 
     public Properties getProperties() {

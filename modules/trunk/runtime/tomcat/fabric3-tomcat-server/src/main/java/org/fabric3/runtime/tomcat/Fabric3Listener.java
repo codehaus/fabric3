@@ -117,7 +117,7 @@ public class Fabric3Listener implements LifecycleListener {
             ClassLoader hostLoader = BootstrapHelper.createClassLoader(systemClassLoader, hostDir);
             ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 
-            HostInfo hostInfo = BootstrapHelper.createHostInfo(RuntimeMode.VM, installDirectory, configDir, modeConfigDir, props);
+            HostInfo hostInfo = BootstrapHelper.createHostInfo(RuntimeMode.VM, JMX_DOMAIN, installDirectory, configDir, modeConfigDir, props);
 
             MonitorFactory monitorFactory = createMonitorFactory(configDir, props, bootLoader);
 
@@ -125,7 +125,6 @@ public class Fabric3Listener implements LifecycleListener {
 
             // set the Tomcat JMX server
             runtime.setMBeanServer(MBeanUtils.createServer());
-            runtime.setJmxSubDomain(JMX_DOMAIN);
 
             monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
 

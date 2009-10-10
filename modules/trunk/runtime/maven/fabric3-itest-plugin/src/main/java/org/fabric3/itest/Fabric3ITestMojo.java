@@ -372,7 +372,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MavenBootConfiguration configuration = new MavenBootConfiguration();
         configuration.setBootClassLoader(bootClassLoader);
         configuration.setHostClassLoader(hostClassLoader);
-        configuration.setManagementDomain(managementDomain);
+        configuration.setJMXSubDomain(managementDomain);
         configuration.setLog(getLog());
         configuration.setExtensionHelper(extensionHelper);
 

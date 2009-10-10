@@ -171,14 +171,14 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         // register primordial components provided by the runtime itself
         registerRuntimeComponents(components);
 
+        MBeanServer mbeanServer = runtime.getMBeanServer();
         runtimeDomain = BootstrapAssemblyFactory.createDomain(monitorFactory,
                                                               classLoaderRegistry,
                                                               scopeRegistry,
                                                               componentManager,
                                                               logicalComponetManager,
                                                               metaDataStore,
-                                                              runtime.getMBeanServer(),
-                                                              runtime.getJMXSubDomain(),
+                                                              mbeanServer,
                                                               hostInfo);
 
         // create and register bootstrap components provided by this bootstrapper

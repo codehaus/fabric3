@@ -127,7 +127,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             coordinator.joinDomain(-1);
             coordinator.start();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
-            monitor.started(runtime.getJMXSubDomain());
+            monitor.started(runtime.getHostInfo().getJMXSubDomain());
             // deploy the application composite
             QName qName = new QName(compositeNamespace, compositeName);
             runtime.deploy(qName, componentId);
@@ -161,13 +161,12 @@ public class Fabric3ContextListener implements ServletContextListener {
             File tempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
             tempDir.mkdir();
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://domain"));
-            WebappHostInfo info = new WebappHostInfoImpl(context, domain, baseDir, tempDir);
+            String jmxSubDomain = utils.getInitParameter(MANAGEMENT_DOMAIN_PARAM, DEFAULT_MANAGEMENT_DOMAIN);
+            WebappHostInfo info = new WebappHostInfoImpl(context, jmxSubDomain, domain, baseDir, tempDir);
 
             WebappRuntime runtime = utils.getRuntime(webappClassLoader);
             runtime.setHostInfo(info);
             runtime.setHostClassLoader(webappClassLoader);
-            String managementDomain = utils.getInitParameter(MANAGEMENT_DOMAIN_PARAM, DEFAULT_MANAGEMENT_DOMAIN);
-            runtime.setJmxSubDomain(managementDomain);
 
             return runtime;
 

@@ -125,22 +125,6 @@ public interface Fabric3Runtime<HI extends HostInfo> {
     <I> I getComponent(Class<I> service, URI uri);
 
     /**
-     * Returns the JMX sub domain this runtime should use.
-     *
-     * @return the JMX sub domain this runtime should use
-     */
-    String getJMXSubDomain();
-
-    /**
-     * Sets the JMX sub domain this runtime should use.
-     * <p/>
-     * This will be used as the sub domain portion of the ObjectName for all MBeans registered with the MBeanServer
-     *
-     * @param jmxSubDomain the JMX domain this runtime should use
-     */
-    void setJmxSubDomain(String jmxSubDomain);
-
-    /**
      * Boots core services in the runtime.
      *
      * @throws InitializationException if there is an error initializing the runtime
