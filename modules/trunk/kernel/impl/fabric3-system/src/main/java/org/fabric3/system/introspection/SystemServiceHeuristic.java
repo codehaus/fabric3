@@ -97,7 +97,7 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
         }
     }
 
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, IntrospectionContext context) {
+    private ServiceDefinition createServiceDefinition(Class<?> serviceInterface, IntrospectionContext context) {
         ServiceContract contract = contractProcessor.introspect(serviceInterface, context);
         ServiceDefinition service = new ServiceDefinition(contract.getInterfaceName(), contract);
         service.setManagement(serviceInterface.isAnnotationPresent(Management.class));
