@@ -74,12 +74,12 @@ import org.fabric3.management.domain.InvalidDeploymentException;
  */
 public class DomainControllerImpl implements DomainController {
     private static final String CONTRIBUTION_SERVICE_MBEAN =
-            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/ContibutionServiceMBean\",service=ContributionServiceMBean";
+            "f3-management:SubDomain=standalone,type=service,component=\"fabric3://runtime/ContibutionServiceMBean\",service=ContributionServiceMBean";
     private static final String DOMAIN_MBEAN =
-            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/DistributedDomainMBean\",service=DomainMBean";
+            "f3-management:SubDomain=standalone,type=service,component=\"fabric3://runtime/DistributedDomainMBean\",service=DomainMBean";
 
     private static final String RUNTIME_DOMAIN_MBEAN =
-            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/RuntimeDomainMBean\",service=RuntimeDomainMBean";
+            "f3-management:SubDomain=standalone,type=service,component=\"fabric3://runtime/RuntimeDomainMBean\",service=RuntimeDomainMBean";
 
     private String username;
     private String password;
