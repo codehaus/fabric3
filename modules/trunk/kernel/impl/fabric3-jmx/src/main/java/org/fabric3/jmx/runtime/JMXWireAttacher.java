@@ -89,7 +89,15 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> 
     }
 
     public void detach(JMXSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        URI uri = source.getUri();
+        String component = UriHelper.getDefragmentedNameAsString(uri);
+        String service = uri.getFragment();
+        try {
+            ObjectName name = new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ",type=service,component=\"" + component + "\",service=" + service);
+            mBeanServer.unregisterMBean(name);
+        } catch (JMException e) {
+            throw new WiringException(e);
+        }
     }
 
     public void attachObjectFactory(JMXSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalTargetDefinition target)
