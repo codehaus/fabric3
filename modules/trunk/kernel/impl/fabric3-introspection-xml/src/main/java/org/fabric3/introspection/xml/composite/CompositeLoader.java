@@ -46,6 +46,7 @@ package org.fabric3.introspection.xml.composite;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -67,7 +68,9 @@ import org.fabric3.model.type.component.CompositeReference;
 import org.fabric3.model.type.component.CompositeService;
 import org.fabric3.model.type.component.Include;
 import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.component.WireDefinition;
+import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
@@ -370,16 +373,33 @@ public class CompositeLoader extends AbstractExtensibleTypeLoader<Composite> {
                 childContext.addError(error);
             } else {
                 String serviceName = promotedUri.getFragment();
-                if (serviceName == null && promoted.getComponentType().getServices().size() != 1) {
-                    PromotionNotFound error =
-                            new PromotionNotFound("A promoted service must be specified for " + service.getName(), reader);
-                    childContext.addError(error);
+                AbstractComponentType<?,?,?,?> componentType = promoted.getComponentType();
+                if (serviceName != null) {
+                    if (!componentType.getServices().containsKey(serviceName)) {
+                        PromotionNotFound error =
+                                new PromotionNotFound("Service " + serviceName + " promoted by " + service.getName() + " not found", reader);
+                        childContext.addError(error);
+                    }
+                } else {
+                    Map<String, ? extends ServiceDefinition> services = componentType.getServices();
+                    int numberOfServices = services.size();
+                    if (numberOfServices == 2){
+                        Iterator<? extends ServiceDefinition> iter = services.values().iterator();
+                        ServiceDefinition one = iter.next();
+                        ServiceDefinition two = iter.next();
+                        if (!one.isManagement() && !two.isManagement()) {
+                            PromotionNotFound error =
+                                    new PromotionNotFound("A promoted service must be specified for " + service.getName(), reader);
+                            childContext.addError(error);
+                        }
+
+                    } else if (numberOfServices > 2){
+                        PromotionNotFound error =
+                                new PromotionNotFound("A promoted service must be specified for " + service.getName(), reader);
+                        childContext.addError(error);
+                    }
                 }
-                if (serviceName != null && !promoted.getComponentType().getServices().containsKey(serviceName)) {
-                    PromotionNotFound error =
-                            new PromotionNotFound("Service " + serviceName + " promoted by " + service.getName() + " not found", reader);
-                    childContext.addError(error);
-                }
+
             }
         }
     }

@@ -51,6 +51,7 @@ import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.CompositeImplementation;
+import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -73,15 +74,15 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
     }
 
     public void testMultipleServicesWithNoServiceFragment() throws Exception {
-
-        LogicalService logicalService = new LogicalService(URI.create("service"), null, domain);
+        ServiceDefinition definition = new ServiceDefinition("");
+        LogicalService logicalService = new LogicalService(URI.create("service"), definition, domain);
         logicalService.setPromotedUri(URI.create("component"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
                                                                                                              null,
                                                                                                              domain);
-        logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
-        logicalComponent.addService(new LogicalService(URI.create("component#service2"), null, domain));
+        logicalComponent.addService(new LogicalService(URI.create("component#service1"), definition, domain));
+        logicalComponent.addService(new LogicalService(URI.create("component#service2"), definition, domain));
 
         domain.addComponent(logicalComponent);
         InstantiationContext change = new InstantiationContext(domain);

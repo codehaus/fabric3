@@ -38,20 +38,22 @@
 package org.fabric3.java.introspection;
 
 import java.lang.annotation.Annotation;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Management;
 import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
-import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -83,20 +85,41 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
             return;
         }
 
-        // if the class implements a single interface, use it, otherwise the contract is the class itself
         Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
         if (interfaces.size() == 1) {
+            // The class implements a single interface, use it
             Class<?> service = interfaces.iterator().next();
             ServiceDefinition serviceDefinition = createServiceDefinition(service, implClass, context);
             componentType.add(serviceDefinition);
+        } else if (interfaces.size() == 2) {
+            // The class implements two interfaces. If one of them is a management interface, use the other
+            Iterator<Class<?>> iter = interfaces.iterator();
+            Class<?> serviceOne = iter.next();
+            Class<?> serviceTwo = iter.next();
+            if (serviceOne.isAnnotationPresent(Management.class)) {
+                ServiceDefinition serviceOneDefinition = createManagementServiceDefinition(serviceOne, implClass, context);
+                componentType.add(serviceOneDefinition);
+                ServiceDefinition serviceTwoDefinition = createServiceDefinition(serviceTwo, implClass, context);
+                componentType.add(serviceTwoDefinition);
+            } else if (serviceTwo.isAnnotationPresent(Management.class)) {
+                ServiceDefinition serviceOneDefinition = createServiceDefinition(serviceOne, implClass, context);
+                componentType.add(serviceOneDefinition);
+                ServiceDefinition serviceTwoDefinition = createManagementServiceDefinition(serviceTwo, implClass, context);
+                componentType.add(serviceTwoDefinition);
+            } else {
+                // No management interfaces, use the impl class per SCA rules
+                ServiceDefinition serviceDefinition = createServiceDefinition(implClass, implClass, context);
+                componentType.add(serviceDefinition);
+            }
         } else {
+            // <ultiple interfaces, use the impl class per SCA rules
             ServiceDefinition serviceDefinition = createServiceDefinition(implClass, implClass, context);
             componentType.add(serviceDefinition);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, Class<?> implClass, IntrospectionContext context) {
+    private ServiceDefinition createServiceDefinition(Class<?> serviceInterface, Class<?> implClass, IntrospectionContext context) {
         ServiceContract contract = contractProcessor.introspect(serviceInterface, context);
 
         ServiceDefinition definition = new ServiceDefinition(contract.getInterfaceName(), contract);
@@ -110,6 +133,13 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
 
         }
         return definition;
+    }
+
+    private ServiceDefinition createManagementServiceDefinition(Class<?> serviceInterface, Class<?> implClass, IntrospectionContext context) {
+        ServiceContract contract = contractProcessor.introspect(serviceInterface, implClass, context);
+        ServiceDefinition service = new ServiceDefinition(contract.getInterfaceName(), contract);
+        service.setManagement(true);
+        return service;
     }
 
 }

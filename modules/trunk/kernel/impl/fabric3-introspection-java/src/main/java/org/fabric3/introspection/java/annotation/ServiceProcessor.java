@@ -57,6 +57,7 @@ import org.fabric3.spi.introspection.java.annotation.AbstractAnnotationProcessor
 import org.fabric3.spi.introspection.java.annotation.PolicyAnnotationProcessor;
 import org.fabric3.spi.introspection.java.contract.JavaContractProcessor;
 import org.fabric3.spi.introspection.java.policy.OperationPolicyIntrospector;
+import org.fabric3.api.annotation.Management;
 
 /**
  * Processes the @Service annotation on a component implementaiton class.
@@ -98,6 +99,7 @@ public class ServiceProcessor<I extends Implementation<? extends InjectingCompon
     private ServiceDefinition createDefinition(Class<?> service, Class<?> implClass, IntrospectionContext context) {
         ServiceContract serviceContract = contractProcessor.introspect(service, implClass, context);
         ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
+        definition.setManagement(service.isAnnotationPresent(Management.class));
         Annotation[] annotations = service.getAnnotations();
         if (policyProcessor != null) {
             for (Annotation annotation : annotations) {

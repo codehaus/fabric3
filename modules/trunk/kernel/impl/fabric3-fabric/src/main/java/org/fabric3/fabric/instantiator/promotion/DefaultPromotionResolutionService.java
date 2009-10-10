@@ -39,6 +39,7 @@ package org.fabric3.fabric.instantiator.promotion;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.fabric3.fabric.instantiator.AmbiguousReference;
@@ -89,33 +90,26 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         if (promotedServiceName == null) {
             Collection<LogicalService> componentServices = promotedComponent.getServices();
             if (componentServices.size() == 0) {
-                LogicalComponent<?> parent = logicalService.getParent();
-                URI componentUri = parent.getUri();
-                URI contributionUri = parent.getDefinition().getContributionUri();
-                String msg = "No services available on component: " + promotedComponentUri;
-                NoServiceOnComponent error = new NoServiceOnComponent(msg, componentUri, contributionUri);
-                context.addError(error);
-                return;
-            } else if (componentServices.size() != 1) {
-                String msg = "The promoted service " + logicalService.getUri() + " must explicitly specify the service it is promoting on component "
-                        + promotedComponentUri + " as the component has more than one service";
-                LogicalComponent<?> parent = logicalService.getParent();
-                URI componentUri = parent.getUri();
-                URI contributionUri = parent.getDefinition().getContributionUri();
-                AmbiguousService error = new AmbiguousService(msg, componentUri, contributionUri);
-                context.addError(error);
-                return;
+                raiseNoServiceError(logicalService, promotedComponentUri, context);
+            } else if (componentServices.size() == 2) {
+                Iterator<LogicalService> iter = componentServices.iterator();
+                LogicalService one = iter.next();
+                LogicalService two = iter.next();
+                if (one.getDefinition().isManagement()) {
+                    logicalService.setPromotedUri(two.getUri());
+                } else if (two.getDefinition().isManagement()) {
+                    logicalService.setPromotedUri(one.getUri());
+                } else {
+                    raiseAmbiguousServiceError(logicalService, promotedComponentUri, context);
+                }
+            } else if (componentServices.size() > 2) {
+                raiseAmbiguousServiceError(logicalService, promotedComponentUri, context);
+            } else {
+                logicalService.setPromotedUri(componentServices.iterator().next().getUri());
             }
-            logicalService.setPromotedUri(componentServices.iterator().next().getUri());
         } else {
             if (promotedComponent.getService(promotedServiceName) == null) {
-                String message = "Service " + promotedServiceName + " promoted from " + logicalService.getUri()
-                        + " not found on component " + promotedComponentUri;
-                URI componentUri = logicalService.getParent().getUri();
-                URI contributionUri = logicalService.getParent().getDefinition().getContributionUri();
-                URI serviceUri = logicalService.getUri();
-                ServiceNotFound error = new ServiceNotFound(message, serviceUri, componentUri, contributionUri);
-                context.addError(error);
+                raiseServiceNotFoundError(logicalService, promotedComponentUri, promotedServiceName, context);
             }
         }
 
@@ -184,5 +178,34 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         }
 
     }
+
+    private void raiseServiceNotFoundError(LogicalService logicalService, URI uri, String name, InstantiationContext context) {
+        String message = "Service " + name + " promoted from " + logicalService.getUri() + " not found on component " + uri;
+        URI componentUri = logicalService.getParent().getUri();
+        URI contributionUri = logicalService.getParent().getDefinition().getContributionUri();
+        URI serviceUri = logicalService.getUri();
+        ServiceNotFound error = new ServiceNotFound(message, serviceUri, componentUri, contributionUri);
+        context.addError(error);
+    }
+
+    private void raiseNoServiceError(LogicalService logicalService, URI uri, InstantiationContext context) {
+        LogicalComponent<?> parent = logicalService.getParent();
+        URI componentUri = parent.getUri();
+        URI contributionUri = parent.getDefinition().getContributionUri();
+        String msg = "No services available on component: " + uri;
+        NoServiceOnComponent error = new NoServiceOnComponent(msg, componentUri, contributionUri);
+        context.addError(error);
+    }
+
+    private void raiseAmbiguousServiceError(LogicalService logicalService, URI uri, InstantiationContext context) {
+        String msg = "The promoted service " + logicalService.getUri() + " must explicitly specify the service it is promoting on component "
+                + uri + " as the component has more than one service";
+        LogicalComponent<?> parent = logicalService.getParent();
+        URI componentUri = parent.getUri();
+        URI contributionUri = parent.getDefinition().getContributionUri();
+        AmbiguousService error = new AmbiguousService(msg, componentUri, contributionUri);
+        context.addError(error);
+    }
+
 
 }
