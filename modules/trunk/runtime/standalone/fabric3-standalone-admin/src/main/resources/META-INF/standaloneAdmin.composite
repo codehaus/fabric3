@@ -24,6 +24,7 @@
     <component name="DistributedDomainMBean">
         <f3-impl:implementation.system class="org.fabric3.admin.controller.DistributedDomainMBean"/>
         <reference name="domain" target="ApplicationDomain"/>
+        <reference name="lcm" target="LogicalComponentManager"/>
     </component>
 
     <component name="RuntimeDomainMBean">

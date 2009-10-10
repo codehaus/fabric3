@@ -53,7 +53,7 @@ public class DistributedDomainMBean extends AbstractDomainMBean implements Domai
 
     public DistributedDomainMBean(@Reference(name = "domain") Domain domain,
                                   @Reference MetaDataStore store,
-                                  @Reference LogicalComponentManager lcm,
+                                  @Reference(name = "lcm") LogicalComponentManager lcm,
                                   @Reference HostInfo info,
                                   @Monitor DomainMBeanMonitor monitor) {
         super(domain, store, lcm, info, monitor);
