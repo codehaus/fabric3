@@ -57,21 +57,15 @@ import org.fabric3.maven.MavenHostInfo;
  */
 public class MavenHostInfoImpl implements MavenHostInfo {
     private final URI domain;
-    private String jmxSubDomain;
     private final Properties hostProperties;
     private final Set<URL> dependencyUrls;
     private final File tempDir;
 
-    public MavenHostInfoImpl(URI domain, String jmxSubDomain, Properties hostProperties, Set<URL> dependencyUrls, File tempDir) {
+    public MavenHostInfoImpl(URI domain, Properties hostProperties, Set<URL> dependencyUrls, File tempDir) {
         this.domain = domain;
-        this.jmxSubDomain = jmxSubDomain;
         this.hostProperties = hostProperties;
         this.dependencyUrls = dependencyUrls;
         this.tempDir = tempDir;
-    }
-
-    public String getJMXSubDomain() {
-        return jmxSubDomain;
     }
 
     public File getBaseDir() {

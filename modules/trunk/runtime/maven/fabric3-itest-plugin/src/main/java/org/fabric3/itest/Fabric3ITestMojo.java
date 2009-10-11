@@ -99,13 +99,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     protected MavenProject project;
 
     /**
-     * Optional parameter for management domain.
-     *
-     * @parameter
-     */
-    public String managementDomain = "itest-host";
-
-    /**
      * Optional parameter for thread pool size.
      *
      * @parameter
@@ -372,7 +365,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MavenBootConfiguration configuration = new MavenBootConfiguration();
         configuration.setBootClassLoader(bootClassLoader);
         configuration.setHostClassLoader(hostClassLoader);
-        configuration.setJMXSubDomain(managementDomain);
         configuration.setLog(getLog());
         configuration.setExtensionHelper(extensionHelper);
 

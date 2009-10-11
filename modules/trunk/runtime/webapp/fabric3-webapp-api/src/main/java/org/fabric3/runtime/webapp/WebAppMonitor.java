@@ -55,7 +55,7 @@ import org.fabric3.api.annotation.logging.Severe;
 public interface WebAppMonitor {
 
     @Info
-    void started(String domain);
+    void started();
 
     @Info
     void stopped();

@@ -50,11 +50,13 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.Names;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jmx.provision.JMXSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
@@ -71,17 +73,17 @@ import org.fabric3.spi.wire.Wire;
 @EagerInit
 public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> {
 
-    private static final String DOMAIN = "f3-management";
+    private static final String DOMAIN = "fabric3";
     private final MBeanServer mBeanServer;
     private final ClassLoaderRegistry classLoaderRegistry;
-    private final String subDomain;
+    private final URI applicationDomain;
 
     public JMXWireAttacher(@Reference MBeanServer mBeanServer,
                            @Reference ClassLoaderRegistry classLoaderRegistry,
                            @Reference HostInfo info) {
         this.mBeanServer = mBeanServer;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.subDomain = info.getJMXSubDomain();
+        this.applicationDomain = info.getDomain();
     }
 
     public void attach(JMXSourceDefinition source, PhysicalTargetDefinition target, Wire wire) throws WiringException {
@@ -89,11 +91,9 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> 
     }
 
     public void detach(JMXSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
-        URI uri = source.getUri();
-        String component = UriHelper.getDefragmentedNameAsString(uri);
-        String service = uri.getFragment();
         try {
-            ObjectName name = new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ",type=service,component=\"" + component + "\",service=" + service);
+            URI uri = source.getUri();
+            ObjectName name = getObjectName(uri);
             mBeanServer.unregisterMBean(name);
         } catch (JMException e) {
             throw new WiringException(e);
@@ -106,12 +106,10 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> 
             return;
         }
 
-        URI uri = source.getUri();
-        String component = UriHelper.getDefragmentedNameAsString(uri);
-        String service = uri.getFragment();
         try {
             Class<?> managementInterface = classLoaderRegistry.loadClass(source.getClassLoaderId(), source.getInterfaceName());
-            ObjectName name = new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ",type=service,component=\"" + component + "\",service=" + service);
+            URI uri = source.getUri();
+            ObjectName name = getObjectName(uri);
             OptimizedMBean<?> mbean = createOptimizedMBean(objectFactory, managementInterface);
             if (!mBeanServer.isRegistered(name)) {
                 mBeanServer.registerMBean(mbean, name);
@@ -125,6 +123,19 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXSourceDefinition> 
 
     public void detachObjectFactory(JMXSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         throw new AssertionError();
+    }
+
+    private ObjectName getObjectName(URI uri) throws MalformedObjectNameException {
+        String component;
+        String subDomain;
+        if (uri.toString().startsWith(Names.RUNTIME_NAME)) {
+            subDomain = "runtime";
+            component = UriHelper.getDefragmentedNameAsString(uri).substring(Names.RUNTIME_NAME.length() + 1);
+        } else {
+            subDomain = applicationDomain.getAuthority();
+            component = UriHelper.getDefragmentedNameAsString(uri).substring(applicationDomain.toString().length() + 1);
+        }
+        return new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ", type=component, name=" + component);
     }
 
     private <T> OptimizedMBean<T> createOptimizedMBean(ObjectFactory<T> objectFactory, Class<?> service) throws IntrospectionException {

@@ -55,14 +55,12 @@ import org.fabric3.host.RuntimeMode;
 public class WebappHostInfoImpl implements WebappHostInfo {
 
     private final ServletContext servletContext;
-    private String jmxSubDomain;
     private final URI domain;
     private final File baseDir;
     private final File tempDirectory;
 
-    public WebappHostInfoImpl(ServletContext servletContext, String jmxSubDomain, URI domain, File baseDir, File tempDirectory) {
+    public WebappHostInfoImpl(ServletContext servletContext, URI domain, File baseDir, File tempDirectory) {
         this.servletContext = servletContext;
-        this.jmxSubDomain = jmxSubDomain;
         this.domain = domain;
         this.baseDir = baseDir;
         this.tempDirectory = tempDirectory;
@@ -70,10 +68,6 @@ public class WebappHostInfoImpl implements WebappHostInfo {
 
     public ServletContext getServletContext() {
         return servletContext;
-    }
-
-    public String getJMXSubDomain() {
-        return jmxSubDomain;
     }
 
     public File getBaseDir() {

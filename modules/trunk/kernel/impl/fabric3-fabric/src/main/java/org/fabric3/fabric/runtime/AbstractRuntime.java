@@ -77,7 +77,6 @@ import org.fabric3.spi.lcm.LogicalComponentManager;
 public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Runtime<HI>, RuntimeServices {
     private Class<HI> hostInfoType;
     private MBeanServer mbServer;
-    private String jmxSubDomain;
 
     private HI hostInfo;
     private MonitorFactory monitorFactory;
@@ -133,14 +132,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
 
     public void setMBeanServer(MBeanServer mbServer) {
         this.mbServer = mbServer;
-    }
-
-    public String getJMXSubDomain() {
-        return jmxSubDomain;
-    }
-
-    public void setJmxSubDomain(String jmxDomain) {
-        this.jmxSubDomain = jmxDomain;
     }
 
     public void boot() throws InitializationException {

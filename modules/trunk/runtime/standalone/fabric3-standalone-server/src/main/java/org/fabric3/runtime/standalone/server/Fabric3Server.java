@@ -75,7 +75,6 @@ import org.fabric3.jmx.agent.rmi.RmiAgent;
  * @version $Rev$ $Date$
  */
 public class Fabric3Server implements Fabric3ServerMBean {
-    private static final String JMX_DOMAIN = "fabric3.jmx";
     private static final String JMX_PORT = "fabric3.jmx.port";
     private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
     private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
@@ -96,8 +95,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         Fabric3Server server = new Fabric3Server();
 
         RuntimeMode runtimeMode = getRuntimeMode(args);
-        String jmxSubDomain = System.getProperty(JMX_DOMAIN, "standalone");
-        server.startRuntime(runtimeMode, jmxSubDomain);
+        server.startRuntime(runtimeMode);
         server.shutdownRuntime();
 
         System.exit(0);
@@ -127,7 +125,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
     }
 
-    public final void startRuntime(RuntimeMode runtimeMode, String jmxSubDomain) {
+    public final void startRuntime(RuntimeMode runtimeMode) {
         HostInfo hostInfo;
         Fabric3Runtime<HostInfo> runtime;
         try {
@@ -181,7 +179,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 
             // create the HostInfo, MonitorFactory, and runtime
-            hostInfo = BootstrapHelper.createHostInfo(runtimeMode, jmxSubDomain, installDirectory, configDir, modeConfigDir, props);
+            hostInfo = BootstrapHelper.createHostInfo(runtimeMode, installDirectory, configDir, modeConfigDir, props);
             String monitorFactoryName = props.getProperty("fabric3.monitorFactoryClass");
             MonitorFactory monitorFactory;
             if (monitorFactoryName != null) {
@@ -230,7 +228,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             // create the shutdown daemon
             CountDownLatch latch = new CountDownLatch(1);
             ShutdownDaemon daemon = new ShutdownDaemon(minMonitorPort, maxMonitorPort, monitorKey, latch);
-            monitor.started(runtimeMode.toString(), jmxSubDomain, agent.getAssignedPort(), daemon.getPort());
+            monitor.started(runtimeMode.toString(), agent.getAssignedPort(), daemon.getPort());
             try {
                 latch.await();
             } catch (InterruptedException e) {
@@ -305,7 +303,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         void runError(Exception e);
 
         @Info
-        void started(String mode, String domain, int jmxPort, int monitorPort);
+        void started(String mode, int jmxPort, int monitorPort);
 
         @Info
         void stopped();

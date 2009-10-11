@@ -50,9 +50,8 @@ public interface Fabric3ServerMBean {
      * Starts a runtime specified by the bootpath.
      *
      * @param mode      the mode to start the runtime in
-     * @param jmxDomain JMX domain the runtime.
      */
-    public void startRuntime(RuntimeMode mode, String jmxDomain);
+    public void startRuntime(RuntimeMode mode);
 
     /**
      * Shuts down a runtime specified by the bootpath.

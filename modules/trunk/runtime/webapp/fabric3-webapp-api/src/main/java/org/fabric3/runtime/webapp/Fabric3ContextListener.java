@@ -79,9 +79,7 @@ import static org.fabric3.runtime.webapp.Constants.APPLICATION_COMPOSITE_PATH_PA
 import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
 import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 
 /**
@@ -127,7 +125,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             coordinator.joinDomain(-1);
             coordinator.start();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
-            monitor.started(runtime.getHostInfo().getJMXSubDomain());
+            monitor.started();
             // deploy the application composite
             QName qName = new QName(compositeNamespace, compositeName);
             runtime.deploy(qName, componentId);
@@ -161,8 +159,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             File tempDir = new File(System.getProperty("java.io.tmpdir"), ".f3");
             tempDir.mkdir();
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://domain"));
-            String jmxSubDomain = utils.getInitParameter(MANAGEMENT_DOMAIN_PARAM, DEFAULT_MANAGEMENT_DOMAIN);
-            WebappHostInfo info = new WebappHostInfoImpl(context, jmxSubDomain, domain, baseDir, tempDir);
+            WebappHostInfo info = new WebappHostInfoImpl(context, domain, baseDir, tempDir);
 
             WebappRuntime runtime = utils.getRuntime(webappClassLoader);
             runtime.setHostInfo(info);

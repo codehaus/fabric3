@@ -80,7 +80,6 @@ public class MavenRuntimeBooter {
 
     // configuration elements
     private URL systemScdl;
-    private String jmxSubDomain;
     private Properties properties;
     private File outputDirectory;
     private String systemConfigDir;
@@ -98,7 +97,6 @@ public class MavenRuntimeBooter {
 
     public MavenRuntimeBooter(MavenBootConfiguration configuration) {
         systemScdl = configuration.getSystemScdl();
-        jmxSubDomain = configuration.getJMXSubDomain();
         properties = configuration.getProperties();
         outputDirectory = configuration.getOutputDirectory();
         systemConfigDir = configuration.getSystemConfigDir();
@@ -138,7 +136,7 @@ public class MavenRuntimeBooter {
         }
         tempDir.mkdir();
 
-        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(DOMAIN), jmxSubDomain, hostProperties, moduleDependencies, tempDir);
+        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(DOMAIN), hostProperties, moduleDependencies, tempDir);
         runtime.setHostInfo(hostInfo);
 
         // TODO Add better host JMX support from the next release

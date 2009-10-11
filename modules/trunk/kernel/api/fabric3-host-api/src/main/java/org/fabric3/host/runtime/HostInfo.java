@@ -72,13 +72,6 @@ public interface HostInfo {
     URI getDomain();
 
     /**
-     * Returns the JMX subdomain for the runtime.
-     *
-     * @return the JMX subdomain for the runtime
-     */
-    String getJMXSubDomain();
-
-    /**
      * Gets the base directory for the runtime.
      *
      * @return The base directory for the runtime or null if the runtime does not support persistent capabilities

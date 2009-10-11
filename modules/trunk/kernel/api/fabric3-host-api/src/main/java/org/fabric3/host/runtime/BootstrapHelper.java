@@ -197,7 +197,7 @@ public final class BootstrapHelper {
         }
     }
 
-    public static HostInfo createHostInfo(RuntimeMode runtimeMode, String jmxSubDomain, File baseDir, File configDir, File modeDir, Properties props)
+    public static HostInfo createHostInfo(RuntimeMode runtimeMode, File baseDir, File configDir, File modeDir, Properties props)
             throws InitializationException, IOException {
 
         File repositoryDir = getDirectory(baseDir, "repository");
@@ -215,7 +215,7 @@ public final class BootstrapHelper {
                 throw new InitializationException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new DefaultHostInfo(runtimeMode, domain, jmxSubDomain, baseDir, repositoryDir, configDir, modeDir, props, tempDir, dataDir);
+            return new DefaultHostInfo(runtimeMode, domain, baseDir, repositoryDir, configDir, modeDir, props, tempDir, dataDir);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }

@@ -77,9 +77,7 @@ import org.fabric3.host.runtime.ShutdownException;
  * @version $Rev$ $Date$
  */
 public class Fabric3Listener implements LifecycleListener {
-    private static final String JMX_DOMAIN = "fabric3.jmx";
     private static final String HIDE_PACKAGES = "fabric3.hidden.packages";
-    private static final String BASE_DIR = "fabric3";
 
     private RuntimeLifecycleCoordinator coordinator;
     private ServerMonitor monitor;
@@ -117,7 +115,7 @@ public class Fabric3Listener implements LifecycleListener {
             ClassLoader hostLoader = BootstrapHelper.createClassLoader(systemClassLoader, hostDir);
             ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 
-            HostInfo hostInfo = BootstrapHelper.createHostInfo(RuntimeMode.VM, JMX_DOMAIN, installDirectory, configDir, modeConfigDir, props);
+            HostInfo hostInfo = BootstrapHelper.createHostInfo(RuntimeMode.VM, installDirectory, configDir, modeConfigDir, props);
 
             MonitorFactory monitorFactory = createMonitorFactory(configDir, props, bootLoader);
 
