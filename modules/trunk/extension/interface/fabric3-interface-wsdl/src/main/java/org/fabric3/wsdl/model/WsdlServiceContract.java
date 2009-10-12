@@ -37,6 +37,8 @@
  */
 package org.fabric3.wsdl.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.model.type.contract.ServiceContract;
@@ -48,25 +50,11 @@ import org.fabric3.model.type.contract.ServiceContract;
  */
 public class WsdlServiceContract extends ServiceContract {
     private static final long serialVersionUID = 8084985972954894699L;
-
+    private Map<QName, Object> extensionElements = new HashMap<QName, Object>();
     /**
      * QName for the port type/interface.
      */
     private QName qname;
-
-    /**
-     * @return QName for the port type/interface.
-     */
-    public QName getQname() {
-        return qname;
-    }
-
-    /**
-     * @param qname QName for the port type/interface.
-     */
-    public void setQname(QName qname) {
-        this.qname = qname;
-    }
 
     public String getQualifiedInterfaceName() {
         return qname.toString();
@@ -82,5 +70,53 @@ public class WsdlServiceContract extends ServiceContract {
         if (!remotable) {
             throw new IllegalArgumentException("WSDL interfaces are always remotable");
         }
+    }
+
+    /**
+     * Returns the qualified name  for the port type/interface.
+     *
+     * @return the qualified name for the port type/interface
+     */
+    public QName getQname() {
+        return qname;
+    }
+
+    /**
+     * Sets the the qualified name for the port type/interface.
+     *
+     * @param qname the qualified name for the port type/interface
+     */
+    public void setQname(QName qname) {
+        this.qname = qname;
+    }
+
+    /**
+     * Adds an extension element.
+     *
+     * @param key     the element key
+     * @param element the extension element
+     */
+    public void addExtensonElement(QName key, Object element) {
+        extensionElements.put(key, element);
+    }
+
+    /**
+     * Returns the extension element.
+     *
+     * @param type the element type
+     * @param key  the element key
+     * @return the extension element.
+     */
+    public <T> T getExtensionElement(Class<T> type, QName key) {
+        return type.cast(extensionElements.get(key));
+    }
+
+    /**
+     * Returns all extension elements.
+     *
+     * @return all extension elements
+     */
+    public Map<QName, Object> getExtensionElements() {
+        return extensionElements;
     }
 }
