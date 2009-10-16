@@ -139,7 +139,7 @@ public class WarClasspathProcessor implements ClasspathProcessor {
                     File pathAndPackageName;
                     if (lastDelimeter < 16) { // 16 is length of "WEB-INF/classes
                         // in case there is no trailing '/', i.e. properties files or other resources under WEB_INF/classes
-                        pathAndPackageName = new File(classesDir, path.substring(16));
+                        pathAndPackageName = classesDir;
                     } else {
                         pathAndPackageName = new File(classesDir, path.substring(16, lastDelimeter));
                     }
