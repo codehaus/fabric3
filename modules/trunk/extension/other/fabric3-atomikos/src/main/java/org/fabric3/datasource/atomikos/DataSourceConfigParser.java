@@ -80,7 +80,7 @@ public class DataSourceConfigParser {
                         String username = reader.getAttributeValue(null, "username");
                         configuration.setUsername(username);
                         String password = reader.getAttributeValue(null, "password");
-                        configuration.setUsername(password);
+                        configuration.setPassword(password);
                     } else {
                         // check to ensure the <datasource> element comes before a property or other element
                         if (configuration != null) {
