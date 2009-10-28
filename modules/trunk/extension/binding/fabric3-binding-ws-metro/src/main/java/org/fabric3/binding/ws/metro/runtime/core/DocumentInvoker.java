@@ -48,10 +48,18 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.WebServiceException;
 
+import com.sun.xml.ws.api.SOAPVersion;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.server.Invoker;
+import com.sun.xml.ws.fault.SOAPFaultBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import org.fabric3.binding.ws.metro.runtime.MetroConstants;
 import org.fabric3.spi.invocation.Message;
@@ -62,22 +70,36 @@ import org.fabric3.spi.wire.InvocationChain;
 
 
 /**
- * Invoker that receives a web service invocation from the Metro transport layer and dispatches it through the interceptor chain.
+ * Receives a web service invocation from the Metro transport layer and dispatches it through an interceptor chain to a target service that accepts
+ * Document parameter types, avoiding JAXB deserialization.
  *
  * @version $Rev$ $Date$
  */
-public class MetroServiceInvoker extends Invoker {
+public class DocumentInvoker extends Invoker {
     private Map<String, InvocationChain> chains = new HashMap<String, InvocationChain>();
+    private MessageFactory factory;
 
     /**
      * Constructor.
      *
-     * @param chains Invocation chains.
+     * @param chains the invocation chains for the wire.
      */
-    public MetroServiceInvoker(List<InvocationChain> chains) {
+    public DocumentInvoker(List<InvocationChain> chains) {
         for (InvocationChain chain : chains) {
             this.chains.put(chain.getPhysicalOperation().getName(), chain);
         }
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            // set classloader to pick up correct SAAJ implementation
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            factory = MessageFactory.newInstance();
+        } catch (SOAPException e) {
+            // programming error
+            throw new AssertionError(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+
     }
 
     public Object invoke(Packet packet, Method method, Object... args) throws InvocationTargetException {
@@ -87,16 +109,32 @@ public class MetroServiceInvoker extends Invoker {
             // programming error
             throw new AssertionError("Work context not set");
         }
-        Message input = new MessageImpl(args, false, workContext);
-
-        Interceptor head = chains.get(method.getName()).getHeadInterceptor();
+        Message input;
+        try {
+            if (args.length != 1) {
+                throw new UnsupportedOperationException("Illegal number of arguments");
+            }
+            if (!(args[0] instanceof SOAPMessage)) {
+                throw new UnsupportedOperationException("Expected SOAPMessage but was: " + args[0].getClass());
+            }
+            SOAPMessage soapMessage = (SOAPMessage) args[0];
+            Node node = soapMessage.getSOAPBody().extractContentAsDocument();
+            input = new MessageImpl(node, false, workContext);
+        } catch (SOAPException e) {
+            throw new InvocationTargetException(e);
+        }
+        String operationName = packet.getWSDLOperation().getLocalPart();
+        if (operationName == null) {
+            throw new AssertionError("No invocation chain found for WSDL operation: " + operationName);
+        }
+        Interceptor head = chains.get(operationName).getHeadInterceptor();
         Message ret = head.invoke(input);
 
+        Object body = ret.getBody();
         if (!ret.isFault()) {
-            return ret.getBody();
+            return createResponse(body);
         } else {
-            Throwable th = (Throwable) ret.getBody();
-            throw new InvocationTargetException(th);
+            return createFault((Throwable) body);
         }
     }
 
@@ -105,6 +143,27 @@ public class MetroServiceInvoker extends Invoker {
      */
     @Override
     public void start(WebServiceContext wsc) {
+    }
+
+    private Object createResponse(Object body) throws InvocationTargetException {
+        try {
+            SOAPMessage soapMessage = factory.createMessage();
+            soapMessage.getSOAPBody().addDocument((Document) body);
+            soapMessage.saveChanges();
+            return soapMessage;
+        } catch (SOAPException e) {
+            throw new InvocationTargetException(e);
+        }
+    }
+
+    private SOAPMessage createFault(Throwable e) {
+        try {
+            // FIXME SOAP 1.1
+            com.sun.xml.ws.api.message.Message fault = SOAPFaultBuilder.createSOAPFaultMessage(SOAPVersion.SOAP_11, null, e);
+            return fault.readAsSOAPMessage();
+        } catch (SOAPException e2) {
+            throw new WebServiceException(e2);
+        }
     }
 
 }

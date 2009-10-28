@@ -51,9 +51,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
-import org.fabric3.model.type.definitions.PolicySet;
+import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
+import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
+import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
+import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.EffectivePolicy;
@@ -70,8 +73,19 @@ public class GenerationHelper {
     /**
      * Maps policy expressions to the operations they are attached to.
      *
-     * @param serviceClass the service endpoint class
+     * @param policy the policy for the wire
+     * @return the policy expression mappings
+     * @throws GenerationException if the policy expression is invalid
+     */
+    public static List<PolicyExpressionMapping> createMappings(EffectivePolicy policy) throws GenerationException {
+        return createMappings(policy, null);
+    }
+
+    /**
+     * Maps policy expressions to the operations they are attached to for a service contract defined by a JAX-WS interface.
+     *
      * @param policy       the policy for the wire
+     * @param serviceClass the service endpoint class
      * @return the policy expression mappings
      * @throws GenerationException if the policy expression is invalid
      */
@@ -95,11 +109,77 @@ public class GenerationHelper {
                     mapping = new PolicyExpressionMapping(id, expression);
                     mappings.put(id, mapping);
                 }
-                String operationName = getWsdlName(definition, serviceClass);
+                String operationName;
+                if (serviceClass == null) {
+                    operationName = getWsdlName(definition, serviceClass);
+                } else {
+                    operationName = definition.getName();
+                }
                 mapping.addOperationName(operationName);
             }
         }
         return new ArrayList<PolicyExpressionMapping>(mappings.values());
+    }
+
+    /**
+     * Parses security information and creates a security configuration.
+     *
+     * @param definition the binding definition
+     * @return the security configuration
+     */
+    public static SecurityConfiguration createSecurityConfiguration(WsBindingDefinition definition) {
+        SecurityConfiguration configuration = null;
+        Map<String, String> configProperties = definition.getConfiguration();
+        if (configProperties != null) {
+            String alias = configProperties.get("alias");
+            if (alias != null) {
+                configuration = new SecurityConfiguration(alias);
+            } else {
+                String username = configProperties.get("username");
+                String password = configProperties.get("password");
+                configuration = new SecurityConfiguration(username, password);
+            }
+        }
+        return configuration;
+    }
+
+    /**
+     * Parses HTTP connection information and creates a connection configuration.
+     *
+     * @param definition the binding definition
+     * @return the HTTP configuration
+     * @throws InvalidConfigurationException if a configuration value is invalid
+     */
+    public static ConnectionConfiguration createConnectionConfiguration(WsBindingDefinition definition) throws InvalidConfigurationException {
+        ConnectionConfiguration configuration = new ConnectionConfiguration();
+        Map<String, String> configProperties = definition.getConfiguration();
+        if (configProperties != null) {
+            String connectTimeout = configProperties.get("connectTimeout");
+            if (connectTimeout != null) {
+                try {
+                    configuration.setConnectTimeout(Integer.parseInt(connectTimeout));
+                } catch (NumberFormatException e) {
+                    throw new InvalidConfigurationException("Invalid connectTimeout", e);
+                }
+            }
+            String requestTimeout = configProperties.get("requestTimeout");
+            if (requestTimeout != null) {
+                try {
+                    configuration.setRequestTimeout(Integer.parseInt(requestTimeout));
+                } catch (NumberFormatException e) {
+                    throw new InvalidConfigurationException("Invalid requestTimeout", e);
+                }
+            }
+            String clientStreamingChunkSize = configProperties.get("clientStreamingChunkSize");
+            if (clientStreamingChunkSize != null) {
+                try {
+                    configuration.setClientStreamingChunkSize(Integer.parseInt(clientStreamingChunkSize));
+                } catch (NumberFormatException e) {
+                    throw new InvalidConfigurationException("Invalid clientStreamingChunkSize", e);
+                }
+            }
+        }
+        return configuration;
     }
 
     /**

@@ -37,6 +37,12 @@
     <dependencies>
 
         <dependency>
+           <groupId>org.codehaus.fabric3</groupId>
+           <artifactId>fabric3-interface-wsdl</artifactId>
+           <version>${project.version}</version>
+       </dependency>
+        
+        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-databinding-jaxb</artifactId>
             <version>${project.version}</version>

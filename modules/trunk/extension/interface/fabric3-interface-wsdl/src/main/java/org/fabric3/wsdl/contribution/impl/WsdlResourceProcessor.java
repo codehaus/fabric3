@@ -41,8 +41,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
 import javax.wsdl.Definition;
+import javax.wsdl.Port;
 import javax.wsdl.PortType;
+import javax.wsdl.Service;
 import javax.wsdl.Types;
 import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.schema.Schema;
@@ -63,6 +66,7 @@ import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.ResourceProcessor;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.wsdl.contribution.PortSymbol;
 import org.fabric3.wsdl.contribution.PortTypeSymbol;
 import org.fabric3.wsdl.contribution.WsdlServiceContractSymbol;
 import org.fabric3.wsdl.contribution.WsdlSymbol;
@@ -133,10 +137,21 @@ public class WsdlResourceProcessor implements ResourceProcessor {
         // parse the WSDL
         URL wsdlLocation = resource.getUrl();
         Definition definition = parseWsdl(wsdlLocation);
-        WsdlSymbol wsdlSymbol = new WsdlSymbol(definition.getQName());
+        QName wsdlQName = definition.getQName();
+        WsdlSymbol wsdlSymbol = new WsdlSymbol(wsdlQName);
         ResourceElement<WsdlSymbol, Definition> wsdlElement = new ResourceElement<WsdlSymbol, Definition>(wsdlSymbol, definition);
         resource.addResourceElement(wsdlElement);
 
+        Map<String, Service> services = definition.getServices();
+        for (Service service : services.values()) {
+            Map<String, Port> ports = service.getPorts();
+            for (Port port : ports.values()) {
+                QName name = new QName(definition.getTargetNamespace(), port.getName());
+                PortSymbol portSymbol = new PortSymbol(name);
+                ResourceElement<PortSymbol, Port> portElement = new ResourceElement<PortSymbol, Port>(portSymbol, port);
+                resource.addResourceElement(portElement);
+            }
+        }
         for (Object object : definition.getPortTypes().values()) {
             PortType portType = (PortType) object;
             QName name = portType.getQName();
@@ -151,7 +166,7 @@ public class WsdlResourceProcessor implements ResourceProcessor {
         // introspect port type service contracts
         for (Object object : definition.getPortTypes().values()) {
             PortType portType = (PortType) object;
-            WsdlServiceContract contract = contractProcessor.introspect(portType, schemaCollection, context);
+            WsdlServiceContract contract = contractProcessor.introspect(portType, wsdlQName, schemaCollection, context);
             QName name = portType.getQName();
             WsdlServiceContractSymbol symbol = new WsdlServiceContractSymbol(name);
             ResourceElement<WsdlServiceContractSymbol, WsdlServiceContract> element =

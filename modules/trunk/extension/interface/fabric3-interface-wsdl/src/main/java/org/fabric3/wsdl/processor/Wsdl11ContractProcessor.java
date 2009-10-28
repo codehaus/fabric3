@@ -71,14 +71,15 @@ import org.fabric3.wsdl.model.WsdlServiceContract;
  */
 public class Wsdl11ContractProcessor implements WsdlContractProcessor {
 
-    public WsdlServiceContract introspect(PortType portType, XmlSchemaCollection collection, IntrospectionContext context) {
-        WsdlServiceContract contract = new WsdlServiceContract();
+    public WsdlServiceContract introspect(PortType portType, QName wsdlQName, XmlSchemaCollection collection, IntrospectionContext context) {
         List<Operation> operations = new LinkedList<Operation>();
         for (Object object : portType.getOperations()) {
             javax.wsdl.Operation wsdlOperation = (javax.wsdl.Operation) object;
             Operation operation = createOperation(wsdlOperation, collection, portType, context);
             operations.add(operation);
         }
+        QName portTypeQName = portType.getQName();
+        WsdlServiceContract contract = new WsdlServiceContract(portTypeQName, wsdlQName);
         contract.setOperations(operations);
         return contract;
 

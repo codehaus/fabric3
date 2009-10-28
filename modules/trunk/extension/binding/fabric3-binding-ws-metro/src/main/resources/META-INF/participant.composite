@@ -15,8 +15,12 @@ Public License. See the accompanying license file for details.
            name="MetroParticipantExtension"
            autowire="true">
 
-    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroSourceDefinition" name="MetroSourceWireAttacher">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroSourceWireAttacher"/>
+    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroJavaSourceDefinition" name="MetroJavaSourceWireAttacher">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroJavaSourceWireAttacher"/>
+    </component>
+
+    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroWsdlSourceDefinition" name="MetroWsdlSourceWireAttacher">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroWsdlSourceWireAttacher"/>
     </component>
 
     <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroTargetDefinition" name="MetroTargetWireAttacher">
@@ -56,5 +60,8 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGeneratorImpl"/>
     </component>
 
+    <component name="EndpointService">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.core.EndpointServiceImpl"/>
+    </component>
 
 </composite>

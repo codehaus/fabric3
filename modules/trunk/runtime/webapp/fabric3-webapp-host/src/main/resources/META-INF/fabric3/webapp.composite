@@ -43,5 +43,8 @@
 
     <include name="TransformComposite" scdlResource="META-INF/transform.composite"/>
 
+    <component name="FSArtifactCache">
+         <f3-impl:implementation.system class="org.fabric3.fabric.artifact.FSArtifactCache"/>
+     </component>
 
 </composite>

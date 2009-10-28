@@ -51,13 +51,16 @@ import org.fabric3.model.type.contract.ServiceContract;
 public class WsdlServiceContract extends ServiceContract {
     private static final long serialVersionUID = 8084985972954894699L;
     private Map<QName, Object> extensionElements = new HashMap<QName, Object>();
-    /**
-     * QName for the port type/interface.
-     */
-    private QName qname;
+    private QName portTypeQname;
+    private QName wsdlQName;
+
+    public WsdlServiceContract(QName portTypeQname, QName wsdlQName) {
+        this.portTypeQname = portTypeQname;
+        this.wsdlQName = wsdlQName;
+    }
 
     public String getQualifiedInterfaceName() {
-        return qname.toString();
+        return portTypeQname.toString();
     }
 
     @Override
@@ -73,21 +76,21 @@ public class WsdlServiceContract extends ServiceContract {
     }
 
     /**
-     * Returns the qualified name  for the port type/interface.
+     * Returns the qualified name for the port type/interface.
      *
      * @return the qualified name for the port type/interface
      */
-    public QName getQname() {
-        return qname;
+    public QName getPortTypeQname() {
+        return portTypeQname;
     }
 
     /**
-     * Sets the the qualified name for the port type/interface.
+     * Returns the qualied WSDL name.
      *
-     * @param qname the qualified name for the port type/interface
+     * @return the qualied WSDL name
      */
-    public void setQname(QName qname) {
-        this.qname = qname;
+    public QName getWsdlQName() {
+        return wsdlQName;
     }
 
     /**

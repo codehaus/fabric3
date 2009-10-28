@@ -37,23 +37,22 @@
 */
 package org.fabric3.binding.ws.metro.generator;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import javax.wsdl.Definition;
+import javax.wsdl.Port;
+import javax.wsdl.Service;
+import javax.wsdl.WSDLException;
+import javax.wsdl.extensions.ExtensibilityElement;
+import javax.wsdl.extensions.soap.SOAPAddress;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.stream.StreamSource;
 
-import com.sun.xml.ws.api.model.wsdl.WSDLModel;
-import com.sun.xml.ws.api.model.wsdl.WSDLPort;
-import com.sun.xml.ws.api.model.wsdl.WSDLService;
-import com.sun.xml.ws.wsdl.parser.RuntimeWSDLParser;
 import org.osoa.sca.annotations.Reference;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
@@ -63,6 +62,7 @@ import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
 import org.fabric3.spi.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.util.UriHelper;
+import org.fabric3.wsdl.contribution.PortSymbol;
 
 /**
  * Default EndpointResolver implementation.
@@ -70,7 +70,8 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Rev$ $Date$
  */
 public class EndpointResolverImpl implements EndpointResolver {
-    private static final EntityResolver RESOLVER = new NullResolver();
+    private static final QName SOAP11_ADDRESS = new QName("http://schemas.xmlsoap.org/wsdl/soap/", "address");
+    private static final QName SOAP12_ADDRESS = new QName("http://www.w3.org/2003/05/soap/bindings/HTTP/", "address");
     private MetaDataStore store;
 
     public EndpointResolverImpl(@Reference MetaDataStore store) {
@@ -78,6 +79,11 @@ public class EndpointResolverImpl implements EndpointResolver {
     }
 
     public ServiceEndpointDefinition resolveServiceEndpoint(QName deployable, URI wsdlElement, URL wsdlLocation) throws EndpointResolutionException {
+        return resolveServiceEndpoint(deployable, wsdlElement, wsdlLocation, null);
+    }
+
+    public ServiceEndpointDefinition resolveServiceEndpoint(QName deployable, URI wsdlElement, URL wsdlLocation, URI uri)
+            throws EndpointResolutionException {
         String namespace = UriHelper.getDefragmentedNameAsString(wsdlElement);
         String fragment = wsdlElement.getFragment();
 
@@ -90,9 +96,9 @@ public class EndpointResolverImpl implements EndpointResolver {
             QName serviceName = new QName(namespace, tokens[0]);
             QName portName = new QName(namespace, tokens[1]);
             if (wsdlLocation != null) {
-                return resolveServicePort(serviceName, portName, wsdlLocation);
+                return resolveServicePort(serviceName, portName, wsdlLocation, uri);
             } else {
-                return resolveServicePort(namespace, serviceName, portName, deployable);
+                return resolveServicePort(serviceName, portName, deployable, uri);
             }
         } else {
             throw new EndpointResolutionException("Expression not supported: " + fragment);
@@ -115,114 +121,117 @@ public class EndpointResolverImpl implements EndpointResolver {
             if (wsdlLocation != null) {
                 return resolveReferencePort(serviceName, portName, wsdlLocation);
             } else {
-                return resolveReferencePort(namespace, serviceName, portName, deployable);
+                return resolveReferencePort(serviceName, portName, deployable);
             }
         } else {
             throw new EndpointResolutionException("Expression not supported: " + fragment);
         }
     }
 
-    private ServiceEndpointDefinition resolveServicePort(QName serviceName, QName portName, URL wsdlLocation)
+    private ServiceEndpointDefinition resolveServicePort(QName serviceName, QName portName, URL wsdlLocation, URI uri)
             throws EndpointResolutionException {
-        try {
-            WSDLPort port = parseWsdl(serviceName, portName, wsdlLocation);
-            URL url = port.getAddress().getURL();
-            URI servicePath = URI.create(url.getPath());
-            return new ServiceEndpointDefinition(serviceName, portName, servicePath);
-        } catch (IOException e) {
-            throw new EndpointResolutionException(e);
-        } catch (SAXException e) {
-            throw new EndpointResolutionException(e);
-        } catch (XMLStreamException e) {
-            throw new EndpointResolutionException(e);
+        Port port = parseWsdl(serviceName, portName, wsdlLocation);
+        URI servicePath;
+        if (uri == null) {
+            URL url = getAddress(port);
+            servicePath = URI.create(url.getPath());
+        } else {
+            servicePath = uri;
         }
-    }
-
-    private ServiceEndpointDefinition resolveServicePort(String namespace, QName serviceName, QName portName, QName deployable)
-            throws EndpointResolutionException {
-
-        Contribution contribution = store.resolveContainingContribution(new QNameSymbol(deployable));
-        URI contributionUri = contribution.getUri();
-        List<Resource> resources = store.resolveResources(contributionUri);
-
-        WSDLPort port = resolvePort(namespace, serviceName, portName, resources);
-        if (port == null) {
-            throw new EndpointResolutionException("WSDL port not found: " + portName);
-        }
-        URL url = port.getAddress().getURL();
-        URI servicePath = URI.create(url.getPath());
         return new ServiceEndpointDefinition(serviceName, portName, servicePath);
     }
 
-    private ReferenceEndpointDefinition resolveReferencePort(QName serviceName, QName portName, URL wsdlLocation)
+    private ServiceEndpointDefinition resolveServicePort(QName serviceName, QName portName, QName deployable, URI uri)
             throws EndpointResolutionException {
-        try {
-            WSDLPort port = parseWsdl(serviceName, portName, wsdlLocation);
-            URL url = port.getAddress().getURL();
-            QName portTypeName = port.getBinding().getPortTypeName();
-            return new ReferenceEndpointDefinition(serviceName, false, portName, portTypeName, url);
-        } catch (IOException e) {
-            throw new EndpointResolutionException(e);
-        } catch (SAXException e) {
-            throw new EndpointResolutionException(e);
-        } catch (XMLStreamException e) {
-            throw new EndpointResolutionException(e);
+
+        Contribution contribution = store.resolveContainingContribution(new QNameSymbol(deployable));
+        URI contributionUri = contribution.getUri();
+        List<Resource> resources = store.resolveResources(contributionUri);
+
+        Port port = resolvePort(portName, resources);
+        if (port == null) {
+            throw new EndpointResolutionException("WSDL port not found: " + portName);
         }
+        URL url = getAddress(port);
+        URI servicePath;
+        if (uri == null) {
+            servicePath = URI.create(url.getPath());
+        } else {
+            servicePath = uri;
+        }
+        return new ServiceEndpointDefinition(serviceName, portName, servicePath);
     }
 
-    private ReferenceEndpointDefinition resolveReferencePort(String namespace, QName serviceName, QName portName, QName deployable)
+    private ReferenceEndpointDefinition resolveReferencePort(QName serviceName, QName portName, URL wsdlLocation) throws EndpointResolutionException {
+        Port port = parseWsdl(serviceName, portName, wsdlLocation);
+        URL url = getAddress(port);
+        QName portTypeName = port.getBinding().getPortType().getQName();
+        return new ReferenceEndpointDefinition(serviceName, false, portName, portTypeName, url);
+    }
+
+    private ReferenceEndpointDefinition resolveReferencePort(QName serviceName, QName portName, QName deployable)
             throws EndpointResolutionException {
         Contribution contribution = store.resolveContainingContribution(new QNameSymbol(deployable));
         URI contributionUri = contribution.getUri();
         List<Resource> resources = store.resolveResources(contributionUri);
-        WSDLPort port = resolvePort(namespace, serviceName, portName, resources);
-        URL url = port.getAddress().getURL();
-        QName portTypeName = port.getBinding().getPortTypeName();
+        Port port = resolvePort(portName, resources);
+        QName portTypeName = port.getBinding().getPortType().getQName();
+        URL url = getAddress(port);
         return new ReferenceEndpointDefinition(serviceName, false, portName, portTypeName, url);
     }
 
-    private WSDLPort parseWsdl(QName serviceName, QName portName, URL wsdlLocation)
-            throws IOException, XMLStreamException, SAXException, EndpointResolutionException {
-        InputStream stream = wsdlLocation.openStream();
-        StreamSource source = new StreamSource(stream);
-        WSDLModel model = RuntimeWSDLParser.parse(wsdlLocation, source, RESOLVER, false, null);
-
-        return getPort(serviceName, portName, model);
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private WSDLPort resolvePort(String namespace, QName serviceName, QName portName, List<Resource> resources) throws EndpointResolutionException {
-        for (Resource resource : resources) {
-            if ("text/wsdl+xml".equals(resource.getContentType())) {
-                // resource type is a WSDL
-                ResourceElement<QNameSymbol, WSDLModel> element = (ResourceElement<QNameSymbol, WSDLModel>) resource.getResourceElements().get(0);
-                if (namespace.equals(element.getSymbol().getKey().getNamespaceURI())) {
-                    WSDLModel model = element.getValue();
-                    return getPort(serviceName, portName, model);
+    private URL getAddress(Port port) throws EndpointResolutionException {
+        for (Object o : port.getExtensibilityElements()) {
+            ExtensibilityElement element = (ExtensibilityElement) o;
+            QName elementType = element.getElementType();
+            if (SOAP11_ADDRESS.equals(elementType) || SOAP12_ADDRESS.equals(elementType)) {
+                try {
+                    return new URL(((SOAPAddress) element).getLocationURI());
+                } catch (MalformedURLException e) {
+                    throw new EndpointResolutionException("Invalid URL specified for port " + port.getName());
                 }
             }
         }
-        return null;
+        throw new EndpointResolutionException("SOAP address not found on port " + port.getName());
     }
 
-    private WSDLPort getPort(QName serviceName, QName portName, WSDLModel model) throws EndpointResolutionException {
-        WSDLService service = model.getService(serviceName);
-        if (service == null) {
-            throw new EndpointResolutionException("WSDL service not found: " + serviceName);
+    private Port parseWsdl(QName serviceName, QName portName, URL wsdlLocation) throws EndpointResolutionException {
+        try {
+            WSDLFactory factory = WSDLFactory.newInstance();
+            WSDLReader reader = factory.newWSDLReader();
+            reader.setFeature("javax.wsdl.verbose", false);
+            // TODO add support for SCA-specific extensions
+            reader.setExtensionRegistry(factory.newPopulatedExtensionRegistry());
+            Definition definition = reader.readWSDL(wsdlLocation.toURI().toString());
+            Service service = definition.getService(serviceName);
+            if (service == null) {
+                throw new EndpointResolutionException("Service " + serviceName + " not found in WSDL " + wsdlLocation);
+            }
+            return service.getPort(portName.getLocalPart());
+        } catch (WSDLException e) {
+            throw new EndpointResolutionException(e);
+        } catch (URISyntaxException e) {
+            throw new EndpointResolutionException(e);
         }
-        for (WSDLPort port : service.getPorts()) {
-            if (portName.equals(port.getName())) {
-                return port;
+    }
+
+
+    @SuppressWarnings({"unchecked"})
+    private Port resolvePort(QName portName, List<Resource> resources) throws EndpointResolutionException {
+        for (Resource resource : resources) {
+            if ("text/wsdl+xml".equals(resource.getContentType())) {
+                // resource type is a WSDL
+                for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                    if (element.getSymbol() instanceof PortSymbol) {
+                        PortSymbol symbol = (PortSymbol) element.getSymbol();
+                        if (portName.equals(symbol.getKey())) {
+                            return (Port) element.getValue();
+                        }
+                    }
+                }
             }
         }
-        throw new EndpointResolutionException("WSDL port not found: " + portName);
-    }
-
-    private static class NullResolver implements EntityResolver {
-
-        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-            return null;
-        }
+        throw new EndpointResolutionException("Port not found: " + portName);
     }
 
 }

@@ -60,6 +60,7 @@ import org.fabric3.wsdl.model.WsdlServiceContract;
  */
 public class Wsdl11ContractProcessorTestCase extends TestCase {
     private static final QName STOCK_QUOTE_PORT_TYPE = new QName("http://example.com/stockquote.wsdl", "StockQuotePortType");
+    private static final QName STOCK_QUOTE_WSDL = new QName("http://example.com/stockquote.wsdl", "Wsdl");
     private WsdlContractProcessor processor;
     private PortType portType;
     private XmlSchemaCollection schemaCollection;
@@ -68,7 +69,7 @@ public class Wsdl11ContractProcessorTestCase extends TestCase {
     public void testIntrospect() throws Exception {
         DefaultIntrospectionContext context = new DefaultIntrospectionContext();
 
-        WsdlServiceContract contract = processor.introspect(portType, schemaCollection, context);
+        WsdlServiceContract contract = processor.introspect(portType, STOCK_QUOTE_WSDL, schemaCollection, context);
 
         assertEquals(1, contract.getOperations().size());
         Operation operation = contract.getOperations().get(0);

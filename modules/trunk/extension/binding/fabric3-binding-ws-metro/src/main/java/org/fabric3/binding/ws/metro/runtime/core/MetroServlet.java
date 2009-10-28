@@ -57,6 +57,7 @@ import javax.xml.ws.WebServiceFeature;
 import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.api.WSBinding;
 import com.sun.xml.ws.api.server.Container;
+import com.sun.xml.ws.api.server.Invoker;
 import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.binding.BindingImpl;
@@ -81,7 +82,7 @@ public class MetroServlet extends WSServlet {
     private WorkScheduler scheduler;
     private SecurityEnvironment securityEnvironment;
 
-    private List<RegistrationHolder> holders = new ArrayList<RegistrationHolder>();
+    private List<EndpointConfiguration> configurations = new ArrayList<EndpointConfiguration>();
     private ServletAdapterFactory servletAdapterFactory = new ServletAdapterFactory();
     private volatile F3ServletDelegate delegate;
     private F3Container container;
@@ -125,87 +126,52 @@ public class MetroServlet extends WSServlet {
             Thread.currentThread().setContextClassLoader(classLoader);
         }
         // register services
-        for (RegistrationHolder holder : holders) {
-            registerService(holder.getSei(),
-                            holder.getServiceName(),
-                            holder.getPortName(),
-                            holder.getWsdlUrl(),
-                            holder.getServicePath(),
-                            holder.getInvoker(),
-                            holder.getFeatures(),
-                            holder.getBindingID(),
-                            holder.getWsitConfiguration(),
-                            holder.getSchemas());
+        for (EndpointConfiguration configuration : configurations) {
+            registerService(configuration);
         }
     }
 
-    /**
-     * Registers a new service endpoint.
-     *
-     * @param sei               service endpoint interface.
-     * @param serviceName       service name
-     * @param portName          port name
-     * @param wsdlUrl           Optional URL to the WSDL document.
-     * @param servicePath       Relative path on which the service is provisioned.
-     * @param invoker           Invoker for receiving the web service request.
-     * @param features          Web service features to enable.
-     * @param bindingID         Binding ID to use.
-     * @param wsitConfiguration the generated WSDL used for WSIT configuration or null if no policy is configured
-     * @param schemas           the handles to schemas (XSDs) imported by the WSDL or null if none exist
-     */
-    public void registerService(Class<?> sei,
-                                QName serviceName,
-                                QName portName,
-                                URL wsdlUrl,
-                                String servicePath,
-                                MetroServiceInvoker invoker,
-                                WebServiceFeature[] features,
-                                BindingID bindingID,
-                                File wsitConfiguration,
-                                List<File> schemas) {
-
+    public void registerService(EndpointConfiguration configuration) {
         if (delegate == null) {
             // servlet has not be initalized, delay service registration
-            delayRegisterService(sei,
-                                 serviceName,
-                                 portName,
-                                 wsdlUrl,
-                                 servicePath,
-                                 invoker,
-                                 features,
-                                 bindingID,
-                                 wsitConfiguration,
-                                 schemas);
+            configurations.add(configuration);
             return;
         }
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-        ClassLoader seiClassLoader = sei.getClassLoader();
+        Class<?> seiClass = configuration.getSeiClass();
+        ClassLoader classLoader = seiClass.getClassLoader();
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(seiClassLoader);
-
-            WSBinding binding = BindingImpl.create(bindingID, features);
+            Thread.currentThread().setContextClassLoader(classLoader);
+            URL wsdlLocation = configuration.getWsdlLocation();
+            SDDocumentSource primaryWsdl = null;
+            if (wsdlLocation != null) {
+                // WSDL may not be defined for a Java-based endpoint, in which case it will be introspected from the SEI class
+                primaryWsdl = SDDocumentSource.create(wsdlLocation);
+            }
+            BindingID bindingId = configuration.getBindingId();
+            WebServiceFeature[] features = configuration.getFeatures();
+            WSBinding binding = BindingImpl.create(bindingId, features);
             Container endpointContainer = container;
             List<SDDocumentSource> metadata = null;
-            if (wsitConfiguration != null) {
+            File generatedWsdl = configuration.getGeneratedWsdl();
+            if (generatedWsdl != null) {
                 // create a container wrapper used by Metro to resolve the WSIT configuration
-                endpointContainer = new WsitConfigurationContainer(container, wsitConfiguration);
+                endpointContainer = new WsitConfigurationContainer(container, generatedWsdl);
                 // Compile the list of imported schemas so they can be resolved using ?xsd GET requests. Metro will re-write the WSDL import
                 // so clients can dereference the imports when they obtain the WSDL.
                 metadata = new ArrayList<SDDocumentSource>();
+                List<File> schemas = configuration.getGeneratedSchemas();
                 if (schemas != null) {
                     for (File schema : schemas) {
                         metadata.add(SDDocumentSource.create(schema.toURI().toURL()));
                     }
                 }
             }
-            SDDocumentSource primaryWsdl = null;
-            if (wsdlUrl != null) {
-                primaryWsdl = SDDocumentSource.create(wsdlUrl);
-            }
-
-
-            WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei,
+            String servicePath = configuration.getServicePath();
+            Invoker invoker = configuration.getInvoker();
+            QName serviceName = configuration.getServiceName();
+            QName portName = configuration.getPortName();
+            WSEndpoint<?> wsEndpoint = WSEndpoint.create(seiClass,
                                                          false,
                                                          invoker,
                                                          serviceName,
@@ -218,50 +184,17 @@ public class MetroServlet extends WSServlet {
                                                          true);
             wsEndpoint.setExecutor(scheduler);
             ServletAdapter adapter = servletAdapterFactory.createAdapter(servicePath, servicePath, wsEndpoint);
-            delegate.registerServletAdapter(adapter, seiClassLoader);
+            delegate.registerServletAdapter(adapter, F3Provider.class.getClassLoader());
 
             String mexPath = servicePath + MEX_SUFFIX;
             ServletAdapter mexAdapter = servletAdapterFactory.createAdapter(mexPath, mexPath, mexEndpoint);
-            delegate.registerServletAdapter(mexAdapter, seiClassLoader);
+            delegate.registerServletAdapter(mexAdapter, F3Provider.class.getClassLoader());
         } catch (MalformedURLException e) {
             // this should not happen
             throw new AssertionError(e);
         } finally {
-            Thread.currentThread().setContextClassLoader(classLoader);
+            Thread.currentThread().setContextClassLoader(old);
         }
-
-    }
-
-    /**
-     * Used to delay service registration until after the MetroServlet has been initialized. This can happen in the webapp runtime where registering
-     * services may happen before the servlet container has fully initialized.
-     * <p/>
-     * TODO Remove this method when the webapp runtime is replaced
-     *
-     * @param sei               service endpoint interface.
-     * @param serviceName       service name
-     * @param portName          port name
-     * @param wsdlUrl           Optional URL to the WSDL document.
-     * @param servicePath       Relative path on which the service is provisioned.
-     * @param invoker           Invoker for receiving the web service request.
-     * @param features          Web service features to enable.
-     * @param bindingID         Binding ID to use.
-     * @param wsitConfiguration the generated WSDL used for WSIT configuration or null if no policy is configured
-     * @param schemas           the handles to schemas (XSDs) imported by the WSDL or null if none exist
-     */
-    private void delayRegisterService(Class<?> sei,
-                                      QName serviceName,
-                                      QName portName,
-                                      URL wsdlUrl,
-                                      String servicePath,
-                                      MetroServiceInvoker invoker,
-                                      WebServiceFeature[] features,
-                                      BindingID bindingID,
-                                      File wsitConfiguration,
-                                      List<File> schemas) {
-        RegistrationHolder holder =
-                new RegistrationHolder(sei, serviceName, portName, wsdlUrl, servicePath, invoker, features, bindingID, wsitConfiguration, schemas);
-        holders.add(holder);
     }
 
     /**
@@ -294,80 +227,4 @@ public class MetroServlet extends WSServlet {
         return delegate;
     }
 
-
-    private class RegistrationHolder {
-        private Class<?> sei;
-        private QName serviceName;
-        private QName portName;
-        private URL wsdlUrl;
-        private String servicePath;
-        private MetroServiceInvoker invoker;
-        private WebServiceFeature[] features;
-        private BindingID bindingID;
-        private File wsitConfiguration;
-        private List<File> schemas;
-
-        public RegistrationHolder(Class<?> sei,
-                                  QName serviceName,
-                                  QName portName,
-                                  URL wsdlUrl,
-                                  String servicePath,
-                                  MetroServiceInvoker invoker,
-                                  WebServiceFeature[] features,
-                                  BindingID bindingID,
-                                  File wsitConfiguration,
-                                  List<File> schemas) {
-
-            this.sei = sei;
-            this.serviceName = serviceName;
-            this.portName = portName;
-            this.wsdlUrl = wsdlUrl;
-            this.servicePath = servicePath;
-            this.invoker = invoker;
-            this.features = features;
-            this.bindingID = bindingID;
-            this.wsitConfiguration = wsitConfiguration;
-            this.schemas = schemas;
-        }
-
-        public Class<?> getSei() {
-            return sei;
-        }
-
-        public QName getServiceName() {
-            return serviceName;
-        }
-
-        public QName getPortName() {
-            return portName;
-        }
-
-        public URL getWsdlUrl() {
-            return wsdlUrl;
-        }
-
-        public String getServicePath() {
-            return servicePath;
-        }
-
-        public MetroServiceInvoker getInvoker() {
-            return invoker;
-        }
-
-        public WebServiceFeature[] getFeatures() {
-            return features;
-        }
-
-        public BindingID getBindingID() {
-            return bindingID;
-        }
-
-        public File getWsitConfiguration() {
-            return wsitConfiguration;
-        }
-
-        public List<File> getSchemas() {
-            return schemas;
-        }
-    }
 }

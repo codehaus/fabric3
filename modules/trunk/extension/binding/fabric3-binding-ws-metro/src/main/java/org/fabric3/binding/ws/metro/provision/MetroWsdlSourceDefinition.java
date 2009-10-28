@@ -37,77 +37,55 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
-import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import org.fabric3.model.type.contract.DataType;
+import org.fabric3.spi.model.physical.PhysicalDataTypes;
 
 /**
- * Base class for Metro Wire source definitions.
+ * Wire source definition for services that use WSDL-based contracts.
  *
  * @version $Rev$ $Date$
  */
-public abstract class MetroSourceDefinition extends PhysicalSourceDefinition {
-    private static final long serialVersionUID = -7874049193479847748L;
+public class MetroWsdlSourceDefinition extends MetroSourceDefinition {
+    private static final long serialVersionUID = -1905843346636208650L;
 
-    private List<QName> intents;
-    private List<Element> policies;
-    private List<PolicyExpressionMapping> mappings;
-    private ServiceEndpointDefinition endpointDefinition;
+    private String wsdl;
+    private static List<DataType<?>> PHYSICAL_DATA_TYPES = new ArrayList<DataType<?>>();
+
+    static {
+        PHYSICAL_DATA_TYPES.add(PhysicalDataTypes.DOM);
+    }
 
     /**
      * Constructor.
      *
      * @param endpointDefinition endpoint metadta
+     * @param wsdl               the WSDL document as a string
      * @param intents            intents configured at the endpoint level that are provided natively by the Metro
      * @param policies           policy expressions to be attached to the endpoint
      * @param mappings           mappings of policy expressions to the operations they are attached to. Used to generate endpoint WSDL.
      */
-    public MetroSourceDefinition(ServiceEndpointDefinition endpointDefinition,
-                                 List<QName> intents,
-                                 List<Element> policies,
-                                 List<PolicyExpressionMapping> mappings) {
-        this.endpointDefinition = endpointDefinition;
-        this.intents = intents;
-        this.policies = policies;
-        this.mappings = mappings;
+    public MetroWsdlSourceDefinition(ServiceEndpointDefinition endpointDefinition,
+                                     String wsdl,
+                                     List<QName> intents,
+                                     List<Element> policies,
+                                     List<PolicyExpressionMapping> mappings) {
+        super(endpointDefinition, intents, policies, mappings);
+        this.wsdl = wsdl;
+        physicalDataTypes.add(PhysicalDataTypes.DOM);
     }
 
-    /**
-     * Returns the endpoint information.
-     *
-     * @return the endpoint information
-     */
-    public ServiceEndpointDefinition getEndpointDefinition() {
-        return endpointDefinition;
+    public String getWsdl() {
+        return wsdl;
     }
 
-    /**
-     * Returns the configured endpoint intents provided by the Metro.
-     *
-     * @return the intents
-     */
-    public List<QName> getIntents() {
-        return intents;
-    }
-
-    /**
-     * Returns the policy expressions to be attached to the endpoint
-     *
-     * @return the policy expressions
-     */
-    public List<Element> getPolicies() {
-        return policies;
-    }
-
-    /**
-     * Returns the mappings from policy expression to operations.
-     *
-     * @return the mappings from policy expression to operations
-     */
-    public List<PolicyExpressionMapping> getMappings() {
-        return mappings;
+    @Override
+    public List<DataType<?>> getPhysicalDataTypes() {
+        return PHYSICAL_DATA_TYPES;
     }
 }

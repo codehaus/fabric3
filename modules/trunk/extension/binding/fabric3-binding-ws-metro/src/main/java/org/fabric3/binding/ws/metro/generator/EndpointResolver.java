@@ -67,6 +67,19 @@ public interface EndpointResolver {
     ServiceEndpointDefinition resolveServiceEndpoint(QName deployable, URI wsdlElement, URL wsdlLocation) throws EndpointResolutionException;
 
     /**
+     * Resolves service-side endpoint information, overriding the target URI specified in the WSDL.
+     *
+     * @param deployable   the deployable composite the endpoint is deployed with
+     * @param wsdlElement  the WSDL element expression identifying how endpoint information should be resolved, e.g.
+     *                     <code><WSDL-namespace-URI>#wsdl.port(servicename/portname)</code>
+     * @param wsdlLocation the wsdl location. If null, the endpoint information will be resolved against the contribution imports.
+     * @param uri          the URI to override the WSDL-specified URI with
+     * @return the service-side endpoint information
+     * @throws EndpointResolutionException if an error performing resolution is encountered
+     */
+    ServiceEndpointDefinition resolveServiceEndpoint(QName deployable, URI wsdlElement, URL wsdlLocation, URI uri) throws EndpointResolutionException;
+
+    /**
      * Resolves reference-side endpoint information.
      *
      * @param deployable   the deployable composite the reference is deployed with

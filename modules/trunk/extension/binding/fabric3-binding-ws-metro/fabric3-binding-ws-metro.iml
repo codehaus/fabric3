@@ -13,8 +13,21 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library name="wsdl4j:wsdl4j:1.6.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library">
-      <library name="javax.xml.bind:jaxb-api:2.1">
+      <library name="javax.xml.bind:jasxb-api:2.1">
         <CLASSES>
           <root url="jar://$M2_REPO$/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1.jar!/" />
         </CLASSES>
@@ -126,6 +139,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-interface-wsdl" />
   </component>
 </module>
 

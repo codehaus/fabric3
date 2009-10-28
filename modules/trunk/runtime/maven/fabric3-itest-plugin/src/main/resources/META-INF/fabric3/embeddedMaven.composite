@@ -41,4 +41,8 @@
 
     <include name="JMXComposite" scdlResource="META-INF/jmx.composite"/>
 
+    <component name="FSArtifactCache">
+        <f3-impl:implementation.system class="org.fabric3.fabric.artifact.FSArtifactCache"/>
+    </component>
+    
 </composite>

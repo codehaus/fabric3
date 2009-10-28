@@ -37,77 +37,59 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
+import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
-import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
-
 /**
- * Base class for Metro Wire source definitions.
+ * Wire source definition for services that use Java interface-based contracts.
  *
  * @version $Rev$ $Date$
  */
-public abstract class MetroSourceDefinition extends PhysicalSourceDefinition {
-    private static final long serialVersionUID = -7874049193479847748L;
-
-    private List<QName> intents;
-    private List<Element> policies;
-    private List<PolicyExpressionMapping> mappings;
-    private ServiceEndpointDefinition endpointDefinition;
+public class MetroJavaSourceDefinition extends MetroSourceDefinition {
+    private static final long serialVersionUID = 2898989563911925959L;
+    private String interfaze;
+    private URL wsdlLocation;
 
     /**
      * Constructor.
      *
      * @param endpointDefinition endpoint metadta
+     * @param wsdlLocation       optional URL to the WSDL location
+     * @param interfaze          the service contract name.
      * @param intents            intents configured at the endpoint level that are provided natively by the Metro
      * @param policies           policy expressions to be attached to the endpoint
      * @param mappings           mappings of policy expressions to the operations they are attached to. Used to generate endpoint WSDL.
      */
-    public MetroSourceDefinition(ServiceEndpointDefinition endpointDefinition,
-                                 List<QName> intents,
-                                 List<Element> policies,
-                                 List<PolicyExpressionMapping> mappings) {
-        this.endpointDefinition = endpointDefinition;
-        this.intents = intents;
-        this.policies = policies;
-        this.mappings = mappings;
+    public MetroJavaSourceDefinition(ServiceEndpointDefinition endpointDefinition,
+                                     String interfaze,
+                                     URL wsdlLocation,
+                                     List<QName> intents,
+                                     List<Element> policies, List<PolicyExpressionMapping> mappings) {
+        super(endpointDefinition, intents, policies, mappings);
+        this.interfaze = interfaze;
+        this.wsdlLocation = wsdlLocation;
     }
 
     /**
-     * Returns the endpoint information.
+     * Returns the service contract name.
      *
-     * @return the endpoint information
+     * @return the service contract name
      */
-    public ServiceEndpointDefinition getEndpointDefinition() {
-        return endpointDefinition;
+    public String getInterface() {
+        return interfaze;
     }
 
     /**
-     * Returns the configured endpoint intents provided by the Metro.
+     * Returns an optional URL to the WSDL document.
      *
-     * @return the intents
+     * @return optional URL to the WSDL document
      */
-    public List<QName> getIntents() {
-        return intents;
+    public URL getWsdlLocation() {
+        return wsdlLocation;
     }
 
-    /**
-     * Returns the policy expressions to be attached to the endpoint
-     *
-     * @return the policy expressions
-     */
-    public List<Element> getPolicies() {
-        return policies;
-    }
 
-    /**
-     * Returns the mappings from policy expression to operations.
-     *
-     * @return the mappings from policy expression to operations
-     */
-    public List<PolicyExpressionMapping> getMappings() {
-        return mappings;
-    }
 }

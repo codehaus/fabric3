@@ -76,6 +76,7 @@ import org.fabric3.spi.xml.XMLFactory;
  * @version $Rev$ $Date$
  */
 @EagerInit
+@Deprecated
 public class WsdlResourceProcessor implements ResourceProcessor {
     private static final QName DEFINITIONS = new QName("http://schemas.xmlsoap.org/wsdl", "definitions");
     private static final String MIME_TYPE = "text/wsdl+xml";

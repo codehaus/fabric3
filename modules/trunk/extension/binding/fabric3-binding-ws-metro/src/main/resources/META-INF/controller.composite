@@ -15,10 +15,6 @@ Public License. See the accompanying license file for details.
            name="MetroControllerExtension"
            autowire="true">
 
-    <component name="WsdlResourceProcessor">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.wsdl.WsdlResourceProcessor"/>
-    </component>
-
     <component name="EndpointResolver">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.EndpointResolverImpl"/>
     </component>
@@ -29,6 +25,14 @@ Public License. See the accompanying license file for details.
 
     <component name="MetroBindingGenerator" f3-core:key="org.fabric3.binding.ws.model.WsBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.MetroBindingGenerator"/>
+    </component>
+
+    <component name="WsdlGeneratorDelegate" f3-core:key="org.fabric3.wsdl.model.WsdlServiceContract">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.WsdlGeneratorDelegate"/>
+    </component>
+
+    <component name="JavaGeneratorDelegate" f3-core:key="org.fabric3.spi.model.type.java.JavaServiceContract">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.JavaGeneratorDelegate"/>
     </component>
 
 </composite>
