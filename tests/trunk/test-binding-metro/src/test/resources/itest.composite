@@ -14,5 +14,5 @@
     <include name="SecurityPolicyTest" />
     <include name="MtomTest" />
     <include name="RestTest" />
-
+    <include name="WsdlTest"/>
 </composite>

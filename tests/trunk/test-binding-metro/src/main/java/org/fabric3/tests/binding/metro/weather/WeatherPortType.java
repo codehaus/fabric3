@@ -7,7 +7,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
 
-@WebService(name = "WeatherPortType", targetNamespace = "urn:weather")
+@WebService(name = "WeatherPortType", portName = "WeatherPort", targetNamespace = "urn:weather")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 public interface WeatherPortType {
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright (c) 2009 Metaform Systems
+
+ Fabric3 integration tests are licensed under the Apache 2.0 license.
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-policy="urn:fabric3.org:policy"
+           xmlns:wsdli="http://www.w3.org/2004/08/wsdl-instance"
+           xmlns:helloworld="urn:helloworld"
+           name="WsdlTest">
+
+    <component name="WsdlTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.metro.WsdlTest"/>
+        <reference name="portType">
+            <binding.ws uri="http://localhost:8900/HelloWorldService"/>
+        </reference>
+    </component>
+
+    <component name="HelloWorldService">
+        <f3-impl:implementation.wsdl stub="org.fabric3.tests.binding.metro.wsdl.HelloStub">
+            <service contract="helloworld:HelloWorldPortType"/>
+        </f3-impl:implementation.wsdl>
+        <service name="helloworld:HelloWorldPortType">
+            <binding.ws uri="/HelloWorldService" wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)"/>
+        </service>
+    </component>
+
+
+</composite>
