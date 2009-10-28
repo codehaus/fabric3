@@ -47,7 +47,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
-import org.oasisopen.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.contribution.wire.ContributionWireInstantiatorRegistry;
@@ -73,7 +72,6 @@ import org.fabric3.spi.introspection.IntrospectionContext;
  * @version $Rev$ $Date$
  */
 public class MetaDataStoreImpl implements MetaDataStore {
-    public static final QName COMPOSITE = new QName(Constants.SCA_NS, "composite");
     private Map<URI, Contribution> cache = new ConcurrentHashMap<URI, Contribution>();
     private Map<QName, Map<Export, Contribution>> exportsToContributionCache = new ConcurrentHashMap<QName, Map<Export, Contribution>>();
     private ProcessorRegistry processorRegistry;
