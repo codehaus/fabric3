@@ -116,7 +116,14 @@ public class TestWsdlComponent implements Component {
         } catch (IllegalAccessException e) {
             throw new AssertionError(e);
         } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof Exception && !(e.getCause() instanceof RuntimeException)) {
+                return e.getCause();
+            }
             throw new AssertionError(e);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            return e;
         }
     }
 

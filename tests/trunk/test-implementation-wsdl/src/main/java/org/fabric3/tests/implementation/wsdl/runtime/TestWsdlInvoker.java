@@ -37,6 +37,8 @@
 */
 package org.fabric3.tests.implementation.wsdl.runtime;
 
+import org.w3c.dom.Node;
+
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
@@ -57,17 +59,25 @@ public class TestWsdlInvoker implements Interceptor {
         if (body == null) {
             returnValue = component.invoke(null);
         } else {
-            if (!body.getClass().isArray()) {
+            if (body.getClass().isArray()) {
+                Object[] bodyArray = (Object[]) body;
+                if (bodyArray.length != 1) {
+                    throw new AssertionError("Illegal parameter length: " + bodyArray.length);
+                }
+                returnValue = component.invoke(bodyArray[0]);
+            } else if (body instanceof Node) {
+                returnValue = component.invoke(body);
+            } else {
                 throw new AssertionError("Unexpected input format");
             }
-            Object[] bodyArray = (Object[]) body;
-            if (bodyArray.length != 1) {
-                throw new AssertionError("Illegal parameter length: " + bodyArray.length);
-            }
-            returnValue = component.invoke(bodyArray[0]);
         }
         Message ret = new MessageImpl();
-        ret.setBody(returnValue);
+        if (returnValue instanceof Exception && !(returnValue instanceof RuntimeException)) {
+            // checked exception was thrown
+            ret.setBodyWithFault(returnValue);
+        } else {
+            ret.setBody(returnValue);
+        }
         return ret;
     }
 
