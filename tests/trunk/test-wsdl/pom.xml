@@ -71,17 +71,16 @@
                             <version>${fabric3.version}</version>
                         </dependency>
                         <dependency>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-jaxb</artifactId>
-                           <version>${fabric3.version}</version>
-                       </dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jaxb</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
                         <dependency>
-                             <groupId>org.codehaus.fabric3.tests</groupId>
-                             <artifactId>test-implementation-wsdl</artifactId>
-                             <version>0.1-SNAPSHOT</version>
-                         </dependency>
-
-                     </extensions>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
+                            <artifactId>test-implementation-wsdl</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
+                    </extensions>
 
                 </configuration>
                 <executions>
