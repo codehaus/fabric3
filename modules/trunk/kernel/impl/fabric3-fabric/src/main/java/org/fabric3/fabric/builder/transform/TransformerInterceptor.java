@@ -117,7 +117,11 @@ public class TransformerInterceptor implements Interceptor {
                     }
                 } else {
                     Object transformed = outTransformer.transform(params, outLoader);
-                    ret.setBody(transformed);
+                    if (ret.isFault()) {
+                        ret.setBodyWithFault(transformed);
+                    } else {
+                        ret.setBody(transformed);
+                    }
                 }
             } catch (TransformationException e) {
                 throw new ServiceRuntimeException(e);
