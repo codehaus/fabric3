@@ -111,8 +111,8 @@ import com.sun.xml.ws.util.ServiceFinder;
 import com.sun.xml.wss.impl.XWSSecurityRuntimeException;
 import com.sun.xml.wss.impl.misc.SecurityUtil;
 import com.sun.xml.wss.provider.wsit.JMACAuthConfigFactory;
-import src.com.sun.xml.xwss.XWSSClientTube;
-import src.com.sun.xml.xwss.XWSSServerTube;
+import com.sun.xml.xwss.XWSSClientTube;
+import com.sun.xml.xwss.XWSSServerTube;
 
 /**
  * This TubeFactory reproduces the WSIT SecurityTubeFactory and creates {@link F3SecurityClientTube} and {@link F3SecurityServerTube} instances in its

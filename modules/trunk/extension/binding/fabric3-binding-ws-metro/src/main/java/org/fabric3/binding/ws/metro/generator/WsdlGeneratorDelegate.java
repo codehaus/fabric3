@@ -102,11 +102,13 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
                 endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri, wsdlLocation, targetUri);
             } else {
                 throw new UnsupportedOperationException("wsdlElement must be specified for service:" + binding.getParent().getUri());
-//                String targetNamespace = UriHelper.getDefragmentedNameAsString(binding.getParent().getUri());
-//                String localName = binding.getParent().getUri().getFragment();
-//                QName serviceName = new QName(targetNamespace, localName);
-//                QName portName = new QName(targetNamespace, localName + "Port");
-//                endpointDefinition = new ServiceEndpointDefinition(serviceName, portName, targetUri);
+                // FIXME update wsdl4j model - clone and generate service and port definitions. Doc literal, rpc
+                // TODO look to move policy generation here
+                // String targetNamespace = UriHelper.getDefragmentedNameAsString(binding.getParent().getUri());
+                // String localName = binding.getParent().getUri().getFragment();
+                // QName serviceName = new QName(targetNamespace, localName);
+                // QName portName = new QName(targetNamespace, localName + "Port");
+                // endpointDefinition = new ServiceEndpointDefinition(serviceName, portName, targetUri);
             }
         } else {
             // no target uri specified, check wsdlElement

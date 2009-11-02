@@ -145,7 +145,7 @@ public class DocumentInvoker extends Invoker {
     public void start(WebServiceContext wsc) {
     }
 
-    private Object createResponse(Object body) throws InvocationTargetException {
+    private SOAPMessage createResponse(Object body) throws InvocationTargetException {
         try {
             SOAPMessage soapMessage = factory.createMessage();
             soapMessage.getSOAPBody().addDocument((Document) body);
@@ -159,8 +159,11 @@ public class DocumentInvoker extends Invoker {
     private SOAPMessage createFault(Throwable e) {
         try {
             // FIXME SOAP 1.1
+            // FIXME If SOAPFault, get details and use SAAJ to create SOAPMessage otherwise system exception and do below
+            // The following only works for Java exceptions
             com.sun.xml.ws.api.message.Message fault = SOAPFaultBuilder.createSOAPFaultMessage(SOAPVersion.SOAP_11, null, e);
-            return fault.readAsSOAPMessage();
+            SOAPMessage message = fault.readAsSOAPMessage();
+            return message;
         } catch (SOAPException e2) {
             throw new WebServiceException(e2);
         }

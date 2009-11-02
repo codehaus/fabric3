@@ -70,6 +70,7 @@
                 <include>javax.annotation:com.springsource.javax.annotation</include>
                 <include>javax.activation:activation</include>
                 <include>javax.xml.bind:jaxb-api:jar:2.1</include>
+                <include>javax.xml:webservices-api-osgi:jar</include>
                 <include>stax:stax-api</include>
             </includes>
             <outputDirectory>host</outputDirectory>

@@ -42,8 +42,9 @@ Public License. See the accompanying license file for details.
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
             <version>1.6.2</version>
+            <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
@@ -75,7 +76,21 @@ Public License. See the accompanying license file for details.
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>webservices-rt</artifactId>
-            <version>2.0-b11</version>
+            <version>${web.services.version}</version>
+            <exclusions>
+                <exclusion>
+                    <!-- included in host dependencies -->
+                    <groupId>javax.xml</groupId>
+                    <artifactId>webservices-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
+            <version>${web.services.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

@@ -61,7 +61,7 @@ licensed under the Apache 2.0 license.
             <artifactId>fabric3-fabric</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx</artifactId>
@@ -79,7 +79,7 @@ licensed under the Apache 2.0 license.
             <artifactId>fabric3-security-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
 
         <!-- provided scope dependencies that need to be resolved -->
         <dependency>
@@ -135,6 +135,13 @@ licensed under the Apache 2.0 license.
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>${jaxb.api.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
+            <version>${web.services.version}</version>
             <scope>runtime</scope>
         </dependency>
 

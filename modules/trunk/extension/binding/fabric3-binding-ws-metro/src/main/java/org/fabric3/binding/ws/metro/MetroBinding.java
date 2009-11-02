@@ -72,6 +72,8 @@ public class MetroBinding implements VoidService {
         // turn down Metro logging
         Logger.getLogger("javax.enterprise.resource.webservices").setLevel(logLevel);
         monitor.extensionStarted();
+        // turn monitoring off as management is handled by the Fabric3 JMX infrastructure
+        System.setProperty("com.sun.xml.ws.monitoring.endpoint", "false");
     }
 
 

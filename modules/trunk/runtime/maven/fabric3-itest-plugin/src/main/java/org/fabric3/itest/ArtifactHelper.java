@@ -202,6 +202,13 @@ public class ArtifactHelper {
         jaxbAPI.setVersion("2.1");
         hostArtifacts.addAll(resolveArtifacts(jaxbAPI, true));
 
+        // ad web services API
+        Dependency wsAPI = new Dependency();
+        wsAPI.setGroupId("javax.xml");
+        wsAPI.setArtifactId("webservices-api-osgi");
+        wsAPI.setVersion("2.0-b24");
+        hostArtifacts.addAll(resolveArtifacts(wsAPI, true));
+
         // add shared artifacts to the host classpath
         if (shared != null) {
             for (Dependency sharedDependency : shared) {

@@ -279,7 +279,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      *
      * @parameter
      */
-    public String[] hiddenPackages = new String[]{"javax.xml.bind.", "javax.xml.ws."};
+    public String[] hiddenPackages = new String[]{"javax.xml.bind.", "javax.xml.ws.", "javax.xml.soap."};
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -435,9 +435,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
     }
 
-    /***
+    /**
      * Returns the core runtime extensions as a set of dependencies
-     * @return  the extensions
+     *
+     * @return the extensions
      */
     private Set<Dependency> getCoreExtensions() {
         Set<Dependency> extensions = new HashSet<Dependency>();

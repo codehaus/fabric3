@@ -50,12 +50,6 @@ import com.sun.xml.ws.binding.SOAPBindingImpl;
 import com.sun.xml.ws.developer.BindingTypeFeature;
 import com.sun.xml.ws.developer.JAXWSProperties;
 import com.sun.xml.ws.rx.rm.ReliableMessagingFeature;
-import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_ACK_REQUESTED_INTERVAL;
-import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_CLOSE_SEQUENCE_OPERATION_TIMEOUT;
-import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_DESTINATION_BUFFER_QUOTA;
-import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_MESSAGE_RETRANSMISSION_INTERVAL;
-import static com.sun.xml.ws.rx.rm.ReliableMessagingFeature.DEFAULT_SEQUENCE_INACTIVITY_TIMEOUT;
-import static com.sun.xml.ws.rx.rm.RmVersion.WSRM200702;
 
 /**
  * Default implementation of FeatureResolver.
@@ -128,17 +122,7 @@ public class DefaultFeatureResolver implements FeatureResolver {
 
     private WebServiceFeature createReliableMessagingFeature(ReliableMessagingFeature.DeliveryAssurance delivery) {
         // TODO values should be configurable
-        return new ReliableMessagingFeature(true,
-                                            WSRM200702,
-                                            DEFAULT_SEQUENCE_INACTIVITY_TIMEOUT,
-                                            DEFAULT_DESTINATION_BUFFER_QUOTA,
-                                            false,
-                                            delivery,
-                                            ReliableMessagingFeature.SecurityBinding.getDefault(),
-                                            DEFAULT_MESSAGE_RETRANSMISSION_INTERVAL,
-                                            ReliableMessagingFeature.BackoffAlgorithm.getDefault(),
-                                            DEFAULT_ACK_REQUESTED_INTERVAL,
-                                            DEFAULT_CLOSE_SEQUENCE_OPERATION_TIMEOUT);
+        return new ReliableMessagingFeature(true);
 
     }
 }

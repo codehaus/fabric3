@@ -101,7 +101,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import com.sun.org.apache.xml.internal.security.utils.RFC2253Parser;
 import com.sun.xml.ws.security.impl.kerberos.KerberosContext;
-import com.sun.xml.wss.NonceManager;
 import com.sun.xml.wss.SecurityEnvironment;
 import com.sun.xml.wss.XWSSConstants;
 import com.sun.xml.wss.XWSSecurityException;
@@ -505,6 +504,7 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         validateTimestamp(context, timestamp.getCreated(), timestamp.getExpires(), maxClockSkew, freshnessLimit);
     }
 
+    
     public void validateTimestamp(Map context, String created, String expires, long maxClockSkew, long freshnessLimit) {
         checkEnabled();
         if (expiresBeforeCreated(created, expires)) {
@@ -594,10 +594,8 @@ public class F3SecurityEnvironment implements SecurityEnvironment {
         throw new UnsupportedOperationException();
     }
 
-    public boolean validateAndCacheNonce(String nonce, String created, long maxNonceAge) throws XWSSecurityException {
-        checkEnabled();
-        NonceManager nonceMgr = NonceManager.getInstance(maxNonceAge);
-        return nonceMgr.validateNonce(nonce, created);
+    public boolean validateAndCacheNonce(Map map, String s, String s1, long l) throws XWSSecurityException {
+        throw new UnsupportedOperationException();
     }
 
     public boolean isSelfCertificate(X509Certificate cert) {

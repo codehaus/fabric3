@@ -120,8 +120,8 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/com/sun/xml/ws/webservices-rt/2.0-b11/webservices-rt-2.0-b11.jar!/" />
-          <root url="jar://$M2_REPO$/javax/xml/webservices-api/2.0-b11/webservices-api-2.0-b11.jar!/" />
+          <root url="jar://$M2_REPO$/com/sun/xml/ws/webservices-rt/2.0-b25/webservices-rt-2.0-b25.jar!/" />
+          <root url="jar://$M2_REPO$/javax/xml/webservices-api/2.0-b25/webservices-api-2.0-b25.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>

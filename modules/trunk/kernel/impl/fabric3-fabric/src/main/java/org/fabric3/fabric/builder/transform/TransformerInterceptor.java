@@ -104,6 +104,7 @@ public class TransformerInterceptor implements Interceptor {
     }
 
     private Message transformOutput(Message ret) {
+        // FIXME For exception transformation, if it is checked convert as application fault
         Object params = ret.getBody();
         // TODO handle null types
         if (params != null) {
