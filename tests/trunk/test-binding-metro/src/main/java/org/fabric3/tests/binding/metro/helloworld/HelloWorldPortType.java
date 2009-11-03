@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * Generated source version: 2.1
  * 
  */
-@WebService(name = "HelloWorldPortType", portName="HelloWorldPort", targetNamespace = "urn:helloworld")
+@WebService(name = "HelloWorldPortType", portName="HelloWorldPortTypePort", targetNamespace = "urn:helloworld")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @XmlSeeAlso({
     ObjectFactory.class

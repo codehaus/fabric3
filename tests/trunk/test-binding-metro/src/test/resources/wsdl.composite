@@ -24,8 +24,8 @@
         <f3-impl:implementation.wsdl stub="org.fabric3.tests.binding.metro.wsdl.HelloStub">
             <service contract="helloworld:HelloWorldPortType"/>
         </f3-impl:implementation.wsdl>
-        <service name="helloworld:HelloWorldPortType">
-            <binding.ws uri="/HelloWorldService" wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)"/>
+        <service name="HelloWorldPortType">
+            <binding.ws uri="/HelloWorldService"/>
         </service>
     </component>
 
