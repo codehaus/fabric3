@@ -37,25 +37,47 @@
 */
 package org.fabric3.binding.ws.metro.generator;
 
+import java.net.URI;
+import java.net.URL;
+import javax.wsdl.Definition;
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Denotes an error resolving endpoint information from a WSDL document.
+ * Resolves parsed WSDLs against an external location or those visible to a contribution installed in the domain.
  *
  * @version $Rev$ $Date$
  */
-public class EndpointResolutionException extends GenerationException {
-    private static final long serialVersionUID = 6481333003446910943L;
+public interface WsdlResolver {
 
-    public EndpointResolutionException(String message) {
-        super(message);
-    }
+    /**
+     * Resolve the WSDL against the external location.
+     *
+     * @param wsdlLocation the location of the WSDL docuemnt
+     * @return the parsed WSDL
+     * @throws EndpointResolutionException if a resolution error occurs
+     */
+    Definition parseWsdl(URL wsdlLocation) throws EndpointResolutionException;
 
-    public EndpointResolutionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    /**
+     * Resolve the WSDL against the WSDLs installed in the domain for the given contribution.
+     *
+     * @param contributionUri the contribution URI
+     * @param wsdlName        the WSDL name
+     * @return the parsed WSDL
+     * @throws EndpointResolutionException if a resolution error occurs
+     */
+    Definition resolveWsdl(URI contributionUri, QName wsdlName) throws GenerationException;
 
-    public EndpointResolutionException(Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Resolve the WSDL against the WSDLs installed in the domain for the given contribution by port name.
+     *
+     * @param contributionUri the contribution URI
+     * @param portName        the WSDL port name
+     * @return the parsed WSDL
+     * @throws EndpointResolutionException if a resolution error occurs
+     */
+    Definition resolveWsdlByPortName(URI contributionUri, QName portName) throws GenerationException;
+
 }

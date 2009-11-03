@@ -38,8 +38,7 @@
 package org.fabric3.binding.ws.metro.generator;
 
 import java.net.URI;
-import java.net.URL;
-import javax.xml.namespace.QName;
+import javax.wsdl.Definition;
 
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
@@ -55,40 +54,35 @@ import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 public interface EndpointResolver {
 
     /**
-     * Resolves service-side endpoint information.
+     * Resolves service-side endpoint information against a parsed WSDLdocument.
      *
-     * @param deployable   the deployable composite the endpoint is deployed with
-     * @param wsdlElement  the WSDL element expression identifying how endpoint information should be resolved, e.g.
-     *                     <code><WSDL-namespace-URI>#wsdl.port(servicename/portname)</code>
-     * @param wsdlLocation the wsdl location. If null, the endpoint information will be resolved against the contribution imports.
+     * @param wsdlElement the parsed WSDL element expression
+     * @param wsdl        the parsed WSL
      * @return the service-side endpoint information
      * @throws EndpointResolutionException if an error performing resolution is encountered
      */
-    ServiceEndpointDefinition resolveServiceEndpoint(QName deployable, URI wsdlElement, URL wsdlLocation) throws EndpointResolutionException;
+    ServiceEndpointDefinition resolveServiceEndpoint(WsdlElement wsdlElement, Definition wsdl) throws EndpointResolutionException;
 
     /**
-     * Resolves service-side endpoint information, overriding the target URI specified in the WSDL.
+     * Resolves service-side endpoint information against a parsed WSDLdocument, overriding the target URI specified in the WSDL.
      *
-     * @param deployable   the deployable composite the endpoint is deployed with
-     * @param wsdlElement  the WSDL element expression identifying how endpoint information should be resolved, e.g.
-     *                     <code><WSDL-namespace-URI>#wsdl.port(servicename/portname)</code>
-     * @param wsdlLocation the wsdl location. If null, the endpoint information will be resolved against the contribution imports.
-     * @param uri          the URI to override the WSDL-specified URI with
+     * @param wsdlElement the parsed WSDL element expression
+     * @param wsdl        the parsed WSL
+     * @param uri         the URI to override the WSDL-specified URI with
      * @return the service-side endpoint information
      * @throws EndpointResolutionException if an error performing resolution is encountered
      */
-    ServiceEndpointDefinition resolveServiceEndpoint(QName deployable, URI wsdlElement, URL wsdlLocation, URI uri) throws EndpointResolutionException;
+    ServiceEndpointDefinition resolveServiceEndpoint(WsdlElement wsdlElement, Definition wsdl, URI uri) throws EndpointResolutionException;
+
 
     /**
-     * Resolves reference-side endpoint information.
+     * Resolves reference-side endpoint information against a parsed WSDLdocument.
      *
-     * @param deployable   the deployable composite the reference is deployed with
-     * @param wsdlElement  the WSDL element expression identifying how endpoint information should be resolved, e.g.
-     *                     <code><WSDL-namespace-URI>#wsdl.port(servicename/portname)</code>
-     * @param wsdlLocation the wsdl location. If null, the endpoint information will be resolved against the contribution imports.
+     * @param wsdlElement the parsed WSDL element expression
+     * @param wsdl        the parsed WSL
      * @return the reference-side endpoint information
      * @throws EndpointResolutionException if an error performing resolution is encountered
      */
-    ReferenceEndpointDefinition resolveReferenceEndpoint(QName deployable, URI wsdlElement, URL wsdlLocation) throws EndpointResolutionException;
+    ReferenceEndpointDefinition resolveReferenceEndpoint(WsdlElement wsdlElement, Definition wsdl) throws EndpointResolutionException;
 
 }

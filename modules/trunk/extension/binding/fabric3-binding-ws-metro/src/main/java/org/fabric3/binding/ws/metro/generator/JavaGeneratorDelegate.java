@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.jws.WebService;
+import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
@@ -76,15 +77,18 @@ import org.fabric3.spi.policy.EffectivePolicy;
  */
 public class JavaGeneratorDelegate implements MetroGeneratorDelegate<JavaServiceContract> {
 
+    private WsdlResolver wsdlResolver;
     private EndpointResolver endpointResolver;
     private EndpointSynthesizer synthesizer;
     private ClassLoaderRegistry classLoaderRegistry;
     private HostInfo info;
 
-    public JavaGeneratorDelegate(@Reference EndpointResolver endpointResolver,
+    public JavaGeneratorDelegate(@Reference WsdlResolver wsdlResolver,
+                                 @Reference EndpointResolver endpointResolver,
                                  @Reference EndpointSynthesizer synthesizer,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference HostInfo info) {
+        this.wsdlResolver = wsdlResolver;
         this.endpointResolver = endpointResolver;
         this.synthesizer = synthesizer;
         this.classLoaderRegistry = classLoaderRegistry;
@@ -103,9 +107,20 @@ public class JavaGeneratorDelegate implements MetroGeneratorDelegate<JavaService
             endpointDefinition = synthesizer.synthesizeServiceEndpoint(contract, serviceClass, targetUri);
         } else {
             // no target uri specified, check wsdlElement
-            URI uri = URI.create(binding.getDefinition().getWsdlElement());
-            QName deployable = binding.getParent().getParent().getDeployable();
-            endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri, wsdlLocation);
+            String wsdlElementString = binding.getDefinition().getWsdlElement();
+            if (wsdlElementString == null) {
+                URI bindableUri = binding.getParent().getUri();
+                throw new GenerationException("Either a uri or wsdlElement must be specified for the web service binding on " + bindableUri);
+            }
+            WsdlElement wsdlElement = GenerationHelper.parseWsdlElement(wsdlElementString);
+            if (wsdlLocation == null) {
+                URI contributionUri = binding.getParent().getParent().getDefinition().getContributionUri();
+                Definition wsdl = wsdlResolver.resolveWsdlByPortName(contributionUri, wsdlElement.getPortName());
+                endpointDefinition = endpointResolver.resolveServiceEndpoint(wsdlElement, wsdl);
+            } else {
+                Definition wsdl = wsdlResolver.parseWsdl(wsdlLocation);
+                endpointDefinition = endpointResolver.resolveServiceEndpoint(wsdlElement, wsdl);
+            }
         }
 
         String interfaze = contract.getQualifiedInterfaceName();
@@ -149,9 +164,16 @@ public class JavaGeneratorDelegate implements MetroGeneratorDelegate<JavaService
             }
         } else {
             // no target uri specified, introspect from wsdlElement
-            URI uri = URI.create(definition.getWsdlElement());
-            QName deployable = binding.getParent().getParent().getDeployable();
-            endpointDefinition = endpointResolver.resolveReferenceEndpoint(deployable, uri, wsdlLocation);
+            WsdlElement wsdlElement = GenerationHelper.parseWsdlElement(definition.getWsdlElement());
+            if (wsdlLocation == null) {
+                URI contributionUri = binding.getParent().getParent().getDefinition().getContributionUri();
+                Definition wsdl = wsdlResolver.resolveWsdlByPortName(contributionUri, wsdlElement.getPortName());
+                endpointDefinition = endpointResolver.resolveReferenceEndpoint(wsdlElement, wsdl);
+            } else {
+                Definition wsdl = wsdlResolver.parseWsdl(wsdlLocation);
+                endpointDefinition = endpointResolver.resolveReferenceEndpoint(wsdlElement, wsdl);
+            }
+
         }
 
         String interfaze = contract.getQualifiedInterfaceName();

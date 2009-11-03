@@ -15,6 +15,10 @@ Public License. See the accompanying license file for details.
            name="MetroControllerExtension"
            autowire="true">
 
+    <component name="WsdlResolver">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.WsdlResolverImpl"/>
+    </component>
+
     <component name="EndpointResolver">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.EndpointResolverImpl"/>
     </component>

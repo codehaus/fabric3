@@ -40,6 +40,7 @@ package org.fabric3.binding.ws.metro.generator;
 
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,9 +51,9 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
-import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
@@ -60,6 +61,7 @@ import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalOperation;
 import org.fabric3.spi.policy.EffectivePolicy;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -68,6 +70,33 @@ public class GenerationHelper {
     private static final String WS_SECURITY_UTILITY_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
     private GenerationHelper() {
+    }
+
+    public static WsdlElement parseWsdlElement(String wsdlElement) throws WsdlElementParseException {
+        if (wsdlElement == null) {
+            throw new IllegalArgumentException("Null wsdlElement");
+        }
+        URI uri;
+        try {
+            uri = new URI(wsdlElement);
+        } catch (URISyntaxException e) {
+            throw new WsdlElementParseException(e);
+        }
+        String namespace = UriHelper.getDefragmentedNameAsString(uri);
+        String fragment = uri.getFragment();
+        if (!fragment.startsWith("wsdl.port(")) {
+            // TODO support wsdl.service
+            throw new WsdlElementParseException("Expression not supported: " + fragment);
+        }
+        String name = fragment.substring(10, fragment.length() - 1); // wsdl.port(servicename/portname)
+        String[] tokens = name.split("/");
+        if (tokens.length != 2) {
+            throw new WsdlElementParseException("Invalid wsdlElement expression: " + fragment);
+        }
+        QName serviceName = new QName(namespace, tokens[0]);
+        QName portName = new QName(namespace, tokens[1]);
+
+        return new WsdlElement(serviceName, portName);
     }
 
     /**
@@ -221,6 +250,5 @@ public class GenerationHelper {
             throw new AssertionError(e);
         }
     }
-
 
 }

@@ -37,25 +37,27 @@
 */
 package org.fabric3.binding.ws.metro.generator;
 
-import org.fabric3.spi.generator.GenerationException;
+import javax.xml.namespace.QName;
 
 /**
- * Denotes an error resolving endpoint information from a WSDL document.
+ * A parsed WSDL element expression.
  *
  * @version $Rev$ $Date$
  */
-public class EndpointResolutionException extends GenerationException {
-    private static final long serialVersionUID = 6481333003446910943L;
+public class WsdlElement {
+    private QName serviceName;
+    private QName portName;
 
-    public EndpointResolutionException(String message) {
-        super(message);
+    public WsdlElement(QName serviceName, QName portName) {
+        this.serviceName = serviceName;
+        this.portName = portName;
     }
 
-    public EndpointResolutionException(String message, Throwable cause) {
-        super(message, cause);
+    public QName getServiceName() {
+        return serviceName;
     }
 
-    public EndpointResolutionException(Throwable cause) {
-        super(cause);
+    public QName getPortName() {
+        return portName;
     }
 }

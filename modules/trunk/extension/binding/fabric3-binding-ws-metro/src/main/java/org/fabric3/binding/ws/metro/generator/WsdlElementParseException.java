@@ -40,22 +40,22 @@ package org.fabric3.binding.ws.metro.generator;
 import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Denotes an error resolving endpoint information from a WSDL document.
+ * Denotes an error parsing a WSDL element expression.
  *
  * @version $Rev$ $Date$
  */
-public class EndpointResolutionException extends GenerationException {
-    private static final long serialVersionUID = 6481333003446910943L;
+public class WsdlElementParseException extends GenerationException {
+    private static final long serialVersionUID = -8688190225461732683L;
 
-    public EndpointResolutionException(String message) {
+    public WsdlElementParseException(String message) {
         super(message);
     }
 
-    public EndpointResolutionException(String message, Throwable cause) {
+    public WsdlElementParseException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public EndpointResolutionException(Throwable cause) {
+    public WsdlElementParseException(Throwable cause) {
         super(cause);
     }
 }

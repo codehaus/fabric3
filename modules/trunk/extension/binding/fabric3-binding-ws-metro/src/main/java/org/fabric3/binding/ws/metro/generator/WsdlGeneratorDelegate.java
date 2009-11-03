@@ -38,10 +38,7 @@
 
 package org.fabric3.binding.ws.metro.generator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -50,6 +47,10 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLWriter;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
@@ -66,12 +67,9 @@ import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 import org.fabric3.binding.ws.model.WsBindingDefinition;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.EffectivePolicy;
-import org.fabric3.wsdl.contribution.WsdlSymbol;
 import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**
@@ -80,26 +78,35 @@ import org.fabric3.wsdl.model.WsdlServiceContract;
  * @version $Rev$ $Date$
  */
 public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlServiceContract> {
+    private WsdlResolver wsdlResolver;
     private EndpointResolver endpointResolver;
-    private MetaDataStore store;
+    private WSDLFactory wsdlFactory;
 
-    public WsdlGeneratorDelegate(@Reference EndpointResolver endpointResolver, @Reference MetaDataStore store) {
+    public WsdlGeneratorDelegate(@Reference WsdlResolver wsdlResolver, @Reference EndpointResolver endpointResolver) throws WSDLException {
+        this.wsdlResolver = wsdlResolver;
         this.endpointResolver = endpointResolver;
-        this.store = store;
+        wsdlFactory = WSDLFactory.newInstance();
     }
 
     public MetroSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding, WsdlServiceContract contract, EffectivePolicy policy)
             throws GenerationException {
-        URL wsdlLocation = getWsdlLocation(binding, contract.getWsdlQName());
-        String wsdl = convertToString(wsdlLocation);
-        ServiceEndpointDefinition endpointDefinition;
         URI targetUri = binding.getDefinition().getTargetUri();
+        Definition wsdl;
+        URL wsdlLocation = getWsdlLocation(binding);
+        if (wsdlLocation != null) {
+            wsdl = wsdlResolver.parseWsdl(wsdlLocation);
+        } else {
+            URI contributionUri = binding.getParent().getParent().getDefinition().getContributionUri();
+            QName wsdlName = contract.getWsdlQName();
+            wsdl = wsdlResolver.resolveWsdl(contributionUri, wsdlName);
+        }
+
+        ServiceEndpointDefinition endpointDefinition;
         if (targetUri != null) {
-            String wsdlElement = binding.getDefinition().getWsdlElement();
-            if (wsdlElement != null) {
-                URI uri = URI.create(wsdlElement);
-                QName deployable = binding.getParent().getParent().getDeployable();
-                endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri, wsdlLocation, targetUri);
+            String wsdlElementString = binding.getDefinition().getWsdlElement();
+            if (wsdlElementString != null) {
+                WsdlElement wsdlElement = GenerationHelper.parseWsdlElement(wsdlElementString);
+                endpointDefinition = endpointResolver.resolveServiceEndpoint(wsdlElement, wsdl, targetUri);
             } else {
                 throw new UnsupportedOperationException("wsdlElement must be specified for service:" + binding.getParent().getUri());
                 // FIXME update wsdl4j model - clone and generate service and port definitions. Doc literal, rpc
@@ -112,9 +119,13 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
             }
         } else {
             // no target uri specified, check wsdlElement
-            URI uri = URI.create(binding.getDefinition().getWsdlElement());
-            QName deployable = binding.getParent().getParent().getDeployable();
-            endpointDefinition = endpointResolver.resolveServiceEndpoint(deployable, uri, wsdlLocation);
+            String wsdlElementString = binding.getDefinition().getWsdlElement();
+            if (wsdlElementString == null){
+                URI bindableUri = binding.getParent().getUri();
+                throw new GenerationException("Either a uri or wsdlElement must be specified for the web service binding on " + bindableUri);
+            }
+            WsdlElement wsdlElement = GenerationHelper.parseWsdlElement(wsdlElementString);
+            endpointDefinition = endpointResolver.resolveServiceEndpoint(wsdlElement, wsdl, targetUri);
         }
 
         // handle endpoint-level intents provided by Metro
@@ -130,10 +141,13 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
             policyExpressions.add(policySet.getExpression());
         }
 
+        String serializedWsdl = convertToString(wsdl);
+
         // Note operation level provided intents are not currently supported. Intents are mapped to JAX-WS features, which are per endpoint.
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
-        return new MetroWsdlSourceDefinition(endpointDefinition, wsdl, intentNames, policyExpressions, mappings);
+        return new MetroWsdlSourceDefinition(endpointDefinition, serializedWsdl, intentNames, policyExpressions, mappings);
     }
+
 
     public MetroTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                     WsdlServiceContract contract,
@@ -141,7 +155,15 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
         WsBindingDefinition definition = binding.getDefinition();
         URI targetUri = definition.getTargetUri();
         ReferenceEndpointDefinition endpointDefinition;
-        URL wsdlLocation = getWsdlLocation(binding, contract.getWsdlQName());
+        URL wsdlLocation = getWsdlLocation(binding);
+        Definition wsdl;
+        if (wsdlLocation != null) {
+            wsdl = wsdlResolver.parseWsdl(wsdlLocation);
+        } else {
+            URI contributionUri = binding.getParent().getParent().getDefinition().getContributionUri();
+            QName wsdlName = contract.getWsdlQName();
+            wsdl = wsdlResolver.resolveWsdl(contributionUri, wsdlName);
+        }
         if (targetUri != null) {
             try {
                 // TODO get rid of need to decode
@@ -155,10 +177,14 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
                 throw new GenerationException(e);
             }
         } else {
-            // no target uri specified, introspect from wsdlElement
-            URI uri = URI.create(definition.getWsdlElement());
-            QName deployable = binding.getParent().getParent().getDeployable();
-            endpointDefinition = endpointResolver.resolveReferenceEndpoint(deployable, uri, wsdlLocation);
+            // no target uri specified, check wsdlElement
+            String wsdlElementString = binding.getDefinition().getWsdlElement();
+            if (wsdlElementString == null){
+                URI bindableUri = binding.getParent().getUri();
+                throw new GenerationException("Either a uri or wsdlElement must be specified for the web service binding on " + bindableUri);
+            }
+            WsdlElement wsdlElement = GenerationHelper.parseWsdlElement(wsdlElementString);
+            endpointDefinition = endpointResolver.resolveReferenceEndpoint(wsdlElement, wsdl);
         }
 
         String interfaze = contract.getQualifiedInterfaceName();
@@ -199,12 +225,11 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
     /**
      * Returns the WSDL location if one is defined in the binding configuration or null.
      *
-     * @param binding   the logical binding
-     * @param wsdlQName the qualified WSDL name
+     * @param binding the logical binding
      * @return the WSDL location or null
      * @throws GenerationException if the WSDL location is invalid
      */
-    private URL getWsdlLocation(LogicalBinding<WsBindingDefinition> binding, QName wsdlQName) throws GenerationException {
+    private URL getWsdlLocation(LogicalBinding<WsBindingDefinition> binding) throws GenerationException {
         WsBindingDefinition definition = binding.getDefinition();
         try {
             String location = definition.getWsdlLocation();
@@ -214,42 +239,26 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
         } catch (MalformedURLException e) {
             throw new GenerationException(e);
         }
-        URI contributionUri = binding.getParent().getParent().getDefinition().getContributionUri();
-        WsdlSymbol symbol = new WsdlSymbol(wsdlQName);
-        Resource resource = store.resolveContainingResource(contributionUri, symbol);
-        return resource.getUrl();
+        return null;
     }
 
     /**
-     * Reads the contents of a URL as a string.
+     * Serializes the contents of a parsed WSDL as a string.
      *
-     * @param url the URL
-     * @return the string
+     * @param wsdl the WSDL
+     * @return the serialized WSDL
      * @throws GenerationException if an error occurs reading the URL
      */
-    private String convertToString(URL url) throws GenerationException {
-        InputStream is = null;
+    private String convertToString(Definition wsdl) throws GenerationException {
         try {
-            is = url.openStream();
-            InputStreamReader streamReader = new InputStreamReader(is);
-            BufferedReader reader = new BufferedReader(streamReader);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            return sb.toString();
-        } catch (IOException e) {
+            WSDLWriter writer = wsdlFactory.newWSDLWriter();
+            StringWriter stringWriter = new StringWriter();
+            writer.writeWSDL(wsdl, stringWriter);
+            return stringWriter.toString();
+        } catch (WSDLException e) {
             throw new GenerationException(e);
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                // ignore
-                e.printStackTrace();
-            }
         }
     }
+
+
 }
