@@ -121,7 +121,7 @@ public class TestWsdlImplementationLoader implements TypeLoader<TestWsdlImplemen
         }
 
         WsdlServiceContract contract = resolveContract(qName, reader, context);
-        ServiceDefinition service = new ServiceDefinition(name, contract);
+        ServiceDefinition service = new ServiceDefinition(qName.getLocalPart(), contract);
         type.add(service);
     }
 
