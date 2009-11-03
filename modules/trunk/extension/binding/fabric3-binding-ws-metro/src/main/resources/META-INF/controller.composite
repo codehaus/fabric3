@@ -27,6 +27,10 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.EndpointSynthesizerImpl"/>
     </component>
 
+    <component name="WsdlSynthesizer">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.WsdlSynthesizerImpl"/>
+    </component>
+
     <component name="MetroBindingGenerator" f3-core:key="org.fabric3.binding.ws.model.WsBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.MetroBindingGenerator"/>
     </component>
