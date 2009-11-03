@@ -52,7 +52,6 @@ import org.fabric3.host.contribution.StoreException;
 import org.fabric3.spi.contribution.MetaDataStore;
 import org.fabric3.spi.contribution.Resource;
 import org.fabric3.spi.contribution.ResourceElement;
-import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.wsdl.contribution.PortSymbol;
 import org.fabric3.wsdl.contribution.WsdlSymbol;
 
@@ -70,7 +69,7 @@ public class WsdlResolverImpl implements WsdlResolver {
         wsdlFactory = WSDLFactory.newInstance();
     }
 
-    public Definition parseWsdl(URL wsdlLocation) throws EndpointResolutionException {
+    public Definition parseWsdl(URL wsdlLocation) throws WsdlResolutionException {
         try {
             WSDLReader reader = wsdlFactory.newWSDLReader();
             reader.setFeature("javax.wsdl.verbose", false);
@@ -78,38 +77,38 @@ public class WsdlResolverImpl implements WsdlResolver {
             reader.setExtensionRegistry(wsdlFactory.newPopulatedExtensionRegistry());
             return reader.readWSDL(wsdlLocation.toURI().toString());
         } catch (WSDLException e) {
-            throw new EndpointResolutionException(e);
+            throw new WsdlResolutionException(e);
         } catch (URISyntaxException e) {
-            throw new EndpointResolutionException(e);
+            throw new WsdlResolutionException(e);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    public Definition resolveWsdl(URI contributionUri, QName wsdlName) throws GenerationException {
+    public Definition resolveWsdl(URI contributionUri, QName wsdlName) throws WsdlResolutionException {
         WsdlSymbol symbol = new WsdlSymbol(wsdlName);
         try {
             ResourceElement<WsdlSymbol, Definition> element = store.resolve(contributionUri, Definition.class, symbol, null);
             if (element == null) {
-                throw new GenerationException("WSDL not found: " + wsdlName);
+                throw new WsdlResolutionException("WSDL not found: " + wsdlName);
             }
             return element.getValue();
         } catch (StoreException e) {
-            throw new GenerationException(e);
+            throw new WsdlResolutionException(e);
         }
     }
 
-    public Definition resolveWsdlByPortName(URI contributionUri, QName portName) throws GenerationException {
+    public Definition resolveWsdlByPortName(URI contributionUri, QName portName) throws WsdlResolutionException {
         PortSymbol symbol = new PortSymbol(portName);
         Resource resource = store.resolveContainingResource(contributionUri, symbol);
         if (resource == null) {
-            throw new GenerationException("WSDL port not found: " + portName);
+            throw new WsdlResolutionException("WSDL port not found: " + portName);
         }
         for (ResourceElement<?, ?> element : resource.getResourceElements()) {
             if (element.getSymbol() instanceof WsdlSymbol) {
                 return (Definition) element.getValue();
             }
         }
-        throw new EndpointResolutionException("WSDL for port not found: " + portName);
+        throw new WsdlResolutionException("WSDL for port not found: " + portName);
     }
 
 }
