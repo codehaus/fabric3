@@ -48,11 +48,8 @@ import org.fabric3.java.provision.JavaTargetDefinition;
 import org.fabric3.junit.model.JUnitImplementation;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.model.type.contract.DataType;
-import org.fabric3.spi.model.type.java.Injectable;
-import org.fabric3.spi.model.type.java.InjectableType;
-import org.fabric3.spi.model.type.java.InjectingComponentType;
+import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.pojo.generator.GenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -65,6 +62,9 @@ import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
@@ -117,7 +117,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         // assume for now that any wire from a JUnit component can be optimized
         wireDefinition.setOptimizable(true);
 
-        if (reference.getDefinition().isKeyed()){
+        if (reference.getDefinition().isKeyed()) {
             wireDefinition.setKeyed(true);
             DataType<?> type = reference.getDefinition().getKeyDataType();
             String className = type.getPhysical().getName();
@@ -127,9 +127,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return wireDefinition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<JUnitImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 

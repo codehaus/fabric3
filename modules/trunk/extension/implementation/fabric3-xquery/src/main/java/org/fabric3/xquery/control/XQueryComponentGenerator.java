@@ -223,21 +223,22 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<XQueryImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    @SuppressWarnings({"unchecked"})
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
+        ServiceContract callbackContract = service.getDefinition().getServiceContract().getCallbackContract();
         XQueryComponentSourceDefinition sourceDefinition = new XQueryComponentSourceDefinition();
+        LogicalComponent<XQueryImplementation> source = (LogicalComponent<XQueryImplementation>) service.getParent();
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (Map.Entry<String, ServiceDefinition> entry : type.getServices().entrySet()) {
             ServiceContract candidateContract = entry.getValue().getServiceContract();
-            if (matcher.isAssignableFrom(candidateContract, serviceContract)) {
+            if (matcher.isAssignableFrom(candidateContract, callbackContract)) {
                 name = entry.getKey();
                 break;
             }
         }
         if (name == null) {
-            String interfaze = serviceContract.getQualifiedInterfaceName();
+            String interfaze = callbackContract.getQualifiedInterfaceName();
             throw new GenerationException("Callback  not found for type: " + interfaze, interfaze);
         }
         sourceDefinition.setUri(URI.create(source.getUri().toString() + "#" + name));

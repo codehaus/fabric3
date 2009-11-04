@@ -44,6 +44,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.generator.JavaGenerationHelper;
+import org.fabric3.java.model.JavaImplementation;
 import org.fabric3.java.provision.JavaSourceDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -90,11 +91,12 @@ public class TimerComponentGenerator implements ComponentGenerator<LogicalCompon
         return definition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<TimerImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    @SuppressWarnings({"unchecked"})
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
-        generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);
+        ServiceContract callbackContract = service.getDefinition().getServiceContract().getCallbackContract();
+        LogicalComponent<JavaImplementation> source = (LogicalComponent<JavaImplementation>) service.getParent();
+        generationHelper.generateCallbackWireSource(definition, source, callbackContract, policy);
         return definition;
     }
 

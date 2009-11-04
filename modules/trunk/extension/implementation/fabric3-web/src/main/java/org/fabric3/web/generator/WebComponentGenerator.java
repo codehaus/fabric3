@@ -54,8 +54,6 @@ import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Property;
 import org.fabric3.model.type.component.ReferenceDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
-import org.fabric3.spi.model.type.java.Injectable;
-import org.fabric3.spi.model.type.java.InjectionSite;
 import org.fabric3.spi.contribution.ContributionUriEncoder;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -68,6 +66,8 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalPropertyDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectionSite;
 import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.model.WebImplementation;
@@ -128,9 +128,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         return sourceDefinition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<WebImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 

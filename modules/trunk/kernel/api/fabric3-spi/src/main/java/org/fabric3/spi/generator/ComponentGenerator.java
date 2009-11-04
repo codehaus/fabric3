@@ -45,7 +45,6 @@ package org.fabric3.spi.generator;
 
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.component.Implementation;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -101,13 +100,12 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * PhysicalWireSourceDefinition is specific to the component implementation type and used when the wire is attached to its source on a service
      * node.
      *
-     * @param source          the logical component for the wire source
-     * @param serviceContract callback service contract
-     * @param policy          the provided intents and policy sets
+     * @param service the forward service the callback is being generated for
+     * @param policy  the provided intents and policy sets
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalSourceDefinition generateCallbackWireSource(C source, ServiceContract serviceContract, EffectivePolicy policy) throws GenerationException;
+    PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalSourceDefinition} used to attach a resource to a source component. Metadata contained in the

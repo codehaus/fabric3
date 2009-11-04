@@ -47,9 +47,6 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.model.type.java.Injectable;
-import org.fabric3.spi.model.type.java.InjectableType;
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -59,6 +56,8 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
@@ -98,9 +97,7 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
         return wireDefinition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<SingletonImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 

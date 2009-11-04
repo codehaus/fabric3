@@ -84,11 +84,12 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return definition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    @SuppressWarnings({"unchecked"})
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         JavaSourceDefinition definition = new JavaSourceDefinition();
-        generationHelper.generateCallbackWireSource(definition, source, serviceContract, policy);
+        ServiceContract callbackContract = service.getDefinition().getServiceContract().getCallbackContract();
+        LogicalComponent<JavaImplementation> source = (LogicalComponent<JavaImplementation>) service.getParent();
+        generationHelper.generateCallbackWireSource(definition, source, callbackContract, policy);
         return definition;
     }
 

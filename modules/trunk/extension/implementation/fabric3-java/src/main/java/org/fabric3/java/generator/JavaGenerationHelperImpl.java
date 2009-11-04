@@ -128,7 +128,8 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         }
     }
 
-    public void generateCallbackWireSource(JavaSourceDefinition definition, LogicalComponent<? extends JavaImplementation> component,
+    public void generateCallbackWireSource(JavaSourceDefinition definition,
+                                           LogicalComponent<? extends JavaImplementation> component,
                                            ServiceContract serviceContract,
                                            EffectivePolicy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();

@@ -80,9 +80,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationMock> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         return new MockSourceDefinition();
     }
 

@@ -41,9 +41,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.spi.model.type.java.Injectable;
-import org.fabric3.spi.model.type.java.InjectableType;
-import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.pojo.generator.GenerationHelper;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
@@ -56,6 +53,9 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.spi.model.type.java.Injectable;
+import org.fabric3.spi.model.type.java.InjectableType;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.system.model.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
@@ -107,18 +107,16 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         String interfaceName = serviceContract.getQualifiedInterfaceName();
         definition.setInterfaceName(interfaceName);
 
-        if (reference.getDefinition().isKeyed()){
+        if (reference.getDefinition().isKeyed()) {
             definition.setKeyed(true);
             String className = reference.getDefinition().getKeyDataType().getPhysical().getName();
             definition.setKeyClassName(className);
         }
-        
+
         return definition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<SystemImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
