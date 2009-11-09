@@ -39,7 +39,6 @@ package org.fabric3.tests.implementation.wsdl.generator;
 
 import java.net.URI;
 
-import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -52,8 +51,8 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.tests.implementation.wsdl.model.TestWsdlImplementation;
 import org.fabric3.tests.implementation.wsdl.provision.PhysicalWsdlComponentDefinition;
-import org.fabric3.tests.implementation.wsdl.provision.PhysicalWsdlTargetDefinition;
 import org.fabric3.tests.implementation.wsdl.provision.PhysicalWsdlSourceDefinition;
+import org.fabric3.tests.implementation.wsdl.provision.PhysicalWsdlTargetDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -78,9 +77,7 @@ public class TestWsdlImplementationGenerator implements ComponentGenerator<Logic
         return definition;
     }
 
-    public PhysicalSourceDefinition generateCallbackWireSource(LogicalComponent<TestWsdlImplementation> source,
-                                                               ServiceContract serviceContract,
-                                                               EffectivePolicy policy) throws GenerationException {
+    public PhysicalSourceDefinition generateCallbackWireSource(LogicalService service, EffectivePolicy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
