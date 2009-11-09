@@ -133,7 +133,8 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         URL[] classpath = resolveClasspath(definition.getContributionUri());
 
         // build the classloader using the locally cached resources
-        MultiParentClassLoader loader = new MultiParentClassLoader(uri, classpath, null);
+        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CONTRIBUTION);
+        MultiParentClassLoader loader = new MultiParentClassLoader(uri, classpath, hostClassLoader);
         for (PhysicalClassLoaderWireDefinition wireDefinition : definition.getWireDefinitions()) {
             wireBuilder.build(loader, wireDefinition);
         }
