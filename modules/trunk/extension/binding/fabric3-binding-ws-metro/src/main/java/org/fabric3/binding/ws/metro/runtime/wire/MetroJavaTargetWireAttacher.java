@@ -52,13 +52,13 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
-import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.MetroJavaTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
 import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
 import org.fabric3.binding.ws.metro.runtime.core.MetroProxyObjectFactory;
-import org.fabric3.binding.ws.metro.runtime.core.MetroTargetInterceptor;
+import org.fabric3.binding.ws.metro.runtime.core.MetroJavaTargetInterceptor;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.GeneratedArtifacts;
@@ -81,7 +81,7 @@ import org.fabric3.spi.xml.XMLFactory;
  *
  * @version $Rev$ $Date$
  */
-public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDefinition> {
+public class MetroJavaTargetWireAttacher implements TargetWireAttacher<MetroJavaTargetDefinition> {
 
     private ClassLoaderRegistry registry;
     private BindingIdResolver bindingIdResolver;
@@ -94,7 +94,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
     private XMLInputFactory xmlInputFactory;
 
 
-    public MetroTargetWireAttacher(@Reference ClassLoaderRegistry registry,
+    public MetroJavaTargetWireAttacher(@Reference ClassLoaderRegistry registry,
                                    @Reference BindingIdResolver bindingIdResolver,
                                    @Reference FeatureResolver resolver,
                                    @Reference InterfaceGenerator interfaceGenerator,
@@ -114,7 +114,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
         this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
     }
 
-    public void attach(PhysicalSourceDefinition source, MetroTargetDefinition target, Wire wire) throws WiringException {
+    public void attach(PhysicalSourceDefinition source, MetroJavaTargetDefinition target, Wire wire) throws WiringException {
 
         try {
             ReferenceEndpointDefinition endpointDefinition = target.getEndpointDefinition();
@@ -166,8 +166,8 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
                     }
                 }
                 boolean oneWay = chain.getPhysicalOperation().isOneWay();
-                MetroTargetInterceptor targetInterceptor =
-                        new MetroTargetInterceptor(proxyFactory, method, oneWay, securityConfiguration, connectionConfiguration);
+                MetroJavaTargetInterceptor targetInterceptor =
+                        new MetroJavaTargetInterceptor(proxyFactory, method, oneWay, securityConfiguration, connectionConfiguration);
                 chain.addInterceptor(targetInterceptor);
             }
         } catch (ClassNotFoundException e) {
@@ -180,11 +180,11 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroTargetDe
 
     }
 
-    public ObjectFactory<?> createObjectFactory(MetroTargetDefinition target) throws WiringException {
+    public ObjectFactory<?> createObjectFactory(MetroJavaTargetDefinition target) throws WiringException {
         return null;
     }
 
-    public void detach(PhysicalSourceDefinition source, MetroTargetDefinition target) throws WiringException {
+    public void detach(PhysicalSourceDefinition source, MetroJavaTargetDefinition target) throws WiringException {
         // no-op
     }
 

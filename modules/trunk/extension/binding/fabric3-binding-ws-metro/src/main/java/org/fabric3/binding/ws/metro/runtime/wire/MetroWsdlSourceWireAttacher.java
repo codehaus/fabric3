@@ -52,11 +52,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWsdlSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
+import org.fabric3.binding.ws.metro.runtime.core.DocumentInvoker;
 import org.fabric3.binding.ws.metro.runtime.core.EndpointConfiguration;
+import org.fabric3.binding.ws.metro.runtime.core.EndpointException;
 import org.fabric3.binding.ws.metro.runtime.core.EndpointService;
 import org.fabric3.binding.ws.metro.runtime.core.F3Provider;
-import org.fabric3.binding.ws.metro.runtime.core.DocumentInvoker;
-import org.fabric3.binding.ws.metro.runtime.core.EndpointException;
 import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
 import org.fabric3.spi.artifact.ArtifactCache;
@@ -140,9 +140,11 @@ public class MetroWsdlSourceWireAttacher extends AbstractMetroSourceWireAttacher
     @Override
     public void detach(MetroWsdlSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
         try {
-            cache.release(source.getEndpointDefinition().getServicePath());
+            URI servicePath = source.getEndpointDefinition().getServicePath();
+            cache.release(servicePath);
         } catch (CacheException e) {
             throw new WiringException(e);
         }
     }
+
 }

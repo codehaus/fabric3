@@ -46,6 +46,7 @@ import java.net.URI;
 import javax.wsdl.Binding;
 import javax.wsdl.BindingInput;
 import javax.wsdl.BindingOperation;
+import javax.wsdl.BindingOutput;
 import javax.wsdl.Definition;
 import javax.wsdl.Port;
 import javax.wsdl.Service;
@@ -53,6 +54,7 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap.SOAPBody;
+import javax.wsdl.extensions.soap.SOAPOperation;
 import javax.xml.namespace.QName;
 
 import org.fabric3.binding.ws.model.WsBindingDefinition;
@@ -64,6 +66,8 @@ import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**
  * Default WsdlSynthesizer implementation.
+ * <p>
+ * TODO This implementation only supports doc/lit/wrapped web services. It needs to be enhanced to support other invocation styles.
  *
  * @version $Rev: 7740 $ $Date: 2009-10-01 23:52:12 +0200 (Thu, 01 Oct 2009) $
  */
@@ -71,9 +75,11 @@ public class WsdlSynthesizerImpl implements WsdlSynthesizer {
     private static final QName SOAP_BINDING = new QName("http://schemas.xmlsoap.org/wsdl/soap/", "binding");
     private static final QName SOAP_ADDRESS = new QName("http://schemas.xmlsoap.org/wsdl/soap/", "address");
     private static final QName SOAP_BODY = new QName("http://schemas.xmlsoap.org/wsdl/soap/", "body");
+    private static final QName SOAP_OPERATION = new QName("http://schemas.xmlsoap.org/wsdl/soap/", "operation");
     public static final String HTTP_TRANSPORT = "http://schemas.xmlsoap.org/soap/http";
 
     public ConcreateWsdlResult synthesize(LogicalBinding<WsBindingDefinition> logicalBinding,
+                                          String endpointAddress,
                                           WsdlServiceContract contract,
                                           EffectivePolicy policy,
                                           Definition wsdl) throws WsdlSynthesisException {
@@ -101,14 +107,25 @@ public class WsdlSynthesizerImpl implements WsdlSynthesizer {
             binding.addExtensibilityElement(soapBinding);
             for (Operation operation : contract.getOperations()) {
                 BindingOperation bindingOperation = copy.createBindingOperation();
-                // TODO SOAP action?
-                // operation.addExtensibilityElement(new SOAPOperation());
                 bindingOperation.setName(operation.getName());
+
+                // SOAP operation
+                SOAPOperation soapOperation = (SOAPOperation) copy.getExtensionRegistry().createExtension(BindingOperation.class, SOAP_OPERATION);
+                soapOperation.setSoapActionURI("");
+                bindingOperation.addExtensibilityElement(soapOperation);
+
                 BindingInput input = copy.createBindingInput();
                 SOAPBody soapBody = (SOAPBody) copy.getExtensionRegistry().createExtension(BindingInput.class, SOAP_BODY);
                 soapBody.setUse("literal");
                 input.addExtensibilityElement(soapBody);
                 bindingOperation.setBindingInput(input);
+
+                BindingOutput output = copy.createBindingOutput();
+                SOAPBody outSoapBody = (SOAPBody) copy.getExtensionRegistry().createExtension(BindingInput.class, SOAP_BODY);
+                outSoapBody.setUse("literal");
+                output.addExtensibilityElement(outSoapBody);
+                bindingOperation.setBindingOutput(output);
+
                 binding.addBindingOperation(bindingOperation);
                 binding.setUndefined(false);
             }
@@ -120,7 +137,7 @@ public class WsdlSynthesizerImpl implements WsdlSynthesizer {
             port.setName(localPortName);
             port.setBinding(binding);
             SOAPAddress soapAddress = (SOAPAddress) copy.getExtensionRegistry().createExtension(Port.class, SOAP_ADDRESS);
-            soapAddress.setLocationURI("REPLACE_WITH_ACTUAL_URL");
+            soapAddress.setLocationURI(endpointAddress);
             port.addExtensibilityElement(soapAddress);
             Service service = copy.createService();
             service.setQName(serviceName);
@@ -136,14 +153,14 @@ public class WsdlSynthesizerImpl implements WsdlSynthesizer {
     }
 
     /**
-     * Clones a parsed WSDL via serialization as <code>Definition</code> is not cloneable and removes any existing concrete WSDL information.
+     * Clones a parsed WSDL via serialization as <code>Definition</code> does  not implement<code>Cloneable</code>. Existing concrete WSDL information
+     * will also be removed.
      *
      * @param wsdl the WSDL
      * @return the cloned WSDL
      * @throws WsdlSynthesisException if an error cloning is encountered
      */
     private Definition clone(Definition wsdl) throws WsdlSynthesisException {
-        Definition copy;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(bos);
@@ -153,19 +170,18 @@ public class WsdlSynthesizerImpl implements WsdlSynthesizer {
             // classloader that has visibility to implementation classes (the Metro extension classloader does not have visibility to WSDL
             // implementation classes).
             ObjectInputStream is = new ClassLoaderObjectInputStream(bis, Definition.class.getClassLoader());
-            copy = (Definition) is.readObject();
+            Definition copy = (Definition) is.readObject();
 
             // remove concrete WSDL information
             copy.getServices().clear();
             copy.getBindings().clear();
-
+            return copy;
         } catch (IOException e) {
             throw new WsdlSynthesisException(e);
         } catch (ClassNotFoundException e) {
             // should not happen
             throw new AssertionError(e);
         }
-        return copy;
     }
 
 

@@ -120,13 +120,13 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/com/sun/xml/ws/webservices-rt/2.0-b25/webservices-rt-2.0-b25.jar!/" />
-          <root url="jar://$M2_REPO$/javax/xml/webservices-api/2.0-b25/webservices-api-2.0-b25.jar!/" />
+          <root url="jar://$M2_REPO$/com/sun/xml/ws/webservices-rt/2.0-b24/webservices-rt-2.0-b24.jar!/" />
+          <root url="jar://$M2_REPO$/javax/xml/webservices-api/2.0-b24/webservices-api-2.0-b24.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$SOURCES$/metro/metro.ea.2.0/rt/src" />
-          <root url="jar://$SOURCES$/metro/metro.ea.2.0/lib/runtime/jaxws-rt.src.zip!/" />
+          <root url="file://$SOURCES$/metro/metro2.2-branch/jax-ws-sources/jaxws-ri/rt/src" />
+          <root url="jar://$SOURCES$/metro/metro2.2-branch/jax-ws-sources/jaxws-ri/lib/jaxws-rt.src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>

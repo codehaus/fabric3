@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
- * Base class for Metro Wire source definitions.
+ * Base class for service-side wire definitions.
  *
  * @version $Rev$ $Date$
  */

@@ -37,103 +37,65 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
+import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
 
-import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-
 /**
- * Base class for reference-side wire definitions.
+ * Reference-side wire target information defined by a Java interface.
  *
  * @version $Rev$ $Date$
  */
-public abstract class MetroTargetDefinition extends PhysicalTargetDefinition {
-    private static final long serialVersionUID = 5758003268658918242L;
+public class MetroJavaTargetDefinition extends MetroTargetDefinition {
+    private static final long serialVersionUID = 5332578680612891881L;
 
-    private ReferenceEndpointDefinition endpointDefinition;
-    private List<QName> intents;
-    private List<PolicyExpressionMapping> mappings;
-    private SecurityConfiguration securityConfiguration;
-    private ConnectionConfiguration connectionConfiguration;
-    private List<Element> policies;
+    private URL wsdlLocation;
+    private String interfaze;
 
     /**
      * Constructor.
      *
      * @param endpointDefinition      endpoint metadata
+     * @param wsdlLocation            optional URL to the WSDL location
+     * @param interfaze               the service contract name
      * @param intents                 intents configured at the endpoint level that are provided natively by the Metro
      * @param policies                policy expressions to be attached to the endpoint
      * @param mappings                mappings of policy expressions to the operations they are attached to. Used to generate client WSDL.
      * @param securityConfiguration   the security configuration or null if security is not configured
      * @param connectionConfiguration the HTTP configuration or null if defaults should be used
      */
-    public MetroTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
-                                 List<QName> intents,
-                                 List<Element> policies,
-                                 List<PolicyExpressionMapping> mappings,
-                                 SecurityConfiguration securityConfiguration,
-                                 ConnectionConfiguration connectionConfiguration) {
-        this.endpointDefinition = endpointDefinition;
-        this.intents = intents;
-        this.policies = policies;
-        this.mappings = mappings;
-        this.securityConfiguration = securityConfiguration;
-        this.connectionConfiguration = connectionConfiguration;
+    public MetroJavaTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
+                                     URL wsdlLocation,
+                                     String interfaze,
+                                     List<QName> intents,
+                                     List<Element> policies,
+                                     List<PolicyExpressionMapping> mappings,
+                                     SecurityConfiguration securityConfiguration,
+                                     ConnectionConfiguration connectionConfiguration) {
+        super(endpointDefinition, intents, policies, mappings, securityConfiguration, connectionConfiguration);
+        this.wsdlLocation = wsdlLocation;
+        this.interfaze = interfaze;
     }
 
     /**
-     * Returns the endpoint information.
+     * Returns an optional URL to the WSDL document.
      *
-     * @return the endpoint information
+     * @return optional URL to the WSDL document
      */
-    public ReferenceEndpointDefinition getEndpointDefinition() {
-        return endpointDefinition;
+    public URL getWsdlLocation() {
+        return wsdlLocation;
+    }
+    
+    /**
+     * Returns the service contract name.
+     *
+     * @return the service contract name
+     */
+    public String getInterface() {
+        return interfaze;
     }
 
-    /**
-     * Returns the configured endpoint intents provided by the Metro.
-     *
-     * @return the intents
-     */
-    public List<QName> getIntents() {
-        return intents;
-    }
 
-    /**
-     * Returns the policy expressions to be attached to the endpoint
-     *
-     * @return the policy expressions
-     */
-    public List<Element> getPolicies() {
-        return policies;
-    }
-
-    /**
-     * Returns the mappings from policy expression to operations.
-     *
-     * @return the mappings from policy expression to operations
-     */
-    public List<PolicyExpressionMapping> getMappings() {
-        return mappings;
-    }
-
-    /**
-     * Returns the security configuration.
-     *
-     * @return the security configuration
-     */
-    public SecurityConfiguration getSecurityConfiguration() {
-        return securityConfiguration;
-    }
-
-    /**
-     * Returns the HTTP connection configuration.
-     *
-     * @return the HTTP connection configuration
-     */
-    public ConnectionConfiguration getConnectionConfiguration() {
-        return connectionConfiguration;
-    }
 }

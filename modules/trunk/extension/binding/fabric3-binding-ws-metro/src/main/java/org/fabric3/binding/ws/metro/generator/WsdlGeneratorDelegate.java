@@ -60,6 +60,7 @@ import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.MetroSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWsdlSourceDefinition;
+import org.fabric3.binding.ws.metro.provision.MetroWsdlTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
@@ -73,11 +74,12 @@ import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**
- * Generates MetroSourceDefinitions and MetroTargetDefinitions for a WsdlServiceContact.
+ * Generates source and target definitions for an endpoint defined by a WSDL-based service contract.
  *
  * @version $Rev$ $Date$
  */
 public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlServiceContract> {
+    private static final String REPLACEABLE_ADDRESS = "REPLACE_WITH_ACTUAL_URL";
     private WsdlResolver wsdlResolver;
     private EndpointResolver endpointResolver;
     private WsdlSynthesizer wsdlSynthesizer;
@@ -113,7 +115,7 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
                 endpointDefinition = endpointResolver.resolveServiceEndpoint(wsdlElement, wsdl, targetUri);
             } else {
                 // A port type is used. Synthesize concrete WSDL for the port type.
-                ConcreateWsdlResult result = wsdlSynthesizer.synthesize(binding, contract, policy, wsdl);
+                ConcreateWsdlResult result = wsdlSynthesizer.synthesize(binding, REPLACEABLE_ADDRESS, contract, policy, wsdl);
                 wsdl = result.getDefiniton();
                 endpointDefinition = new ServiceEndpointDefinition(result.getServiceName(), result.getPortName(), targetUri);
             }
@@ -143,7 +145,7 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
             policyExpressions.add(policySet.getExpression());
         }
 
-        String serializedWsdl = convertToString(wsdl);
+        String serializedWsdl = serializeToString(wsdl);
 
         // Note operation level provided intents are not currently supported. Intents are mapped to JAX-WS features, which are per endpoint.
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
@@ -167,16 +169,26 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
             wsdl = wsdlResolver.resolveWsdl(contributionUri, wsdlName);
         }
         if (targetUri != null) {
-            try {
-                // TODO get rid of need to decode
-                URL url = new URL(URLDecoder.decode(targetUri.toASCIIString(), "UTF-8"));
-                // FIXME null service name
-                QName portTypeName = contract.getPortTypeQname();
-                endpointDefinition = new ReferenceEndpointDefinition(null, false, portTypeName, portTypeName, url);
-            } catch (MalformedURLException e) {
-                throw new GenerationException(e);
-            } catch (UnsupportedEncodingException e) {
-                throw new GenerationException(e);
+            String wsdlElementString = binding.getDefinition().getWsdlElement();
+            if (wsdlElementString != null) {
+                WsdlElement wsdlElement = GenerationHelper.parseWsdlElement(wsdlElementString);
+                endpointDefinition = endpointResolver.resolveReferenceEndpoint(wsdlElement, wsdl);
+            } else {
+                try {
+                    // TODO get rid of need to decode
+                    URL url = new URL(URLDecoder.decode(targetUri.toASCIIString(), "UTF-8"));
+                    // A port type is used. Synthesize concrete WSDL for the port type.
+                    String endpointAddress = url.toString();
+                    ConcreateWsdlResult result = wsdlSynthesizer.synthesize(binding, endpointAddress, contract, policy, wsdl);
+                    wsdl = result.getDefiniton();
+                    // FIXME null service name
+                    QName portTypeName = contract.getPortTypeQname();
+                    endpointDefinition = new ReferenceEndpointDefinition(result.getServiceName(), false, result.getPortName(), portTypeName, url);
+                } catch (MalformedURLException e) {
+                    throw new GenerationException(e);
+                } catch (UnsupportedEncodingException e) {
+                    throw new GenerationException(e);
+                }
             }
         } else {
             // no target uri specified, check wsdlElement
@@ -188,8 +200,6 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
             WsdlElement wsdlElement = GenerationHelper.parseWsdlElement(wsdlElementString);
             endpointDefinition = endpointResolver.resolveReferenceEndpoint(wsdlElement, wsdl);
         }
-
-        String interfaze = contract.getQualifiedInterfaceName();
 
         Set<Intent> endpointIntents = policy.getEndpointIntents();
         List<QName> intentNames = new ArrayList<QName>();
@@ -214,14 +224,15 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
         // obtain connection information
         ConnectionConfiguration connectionConfiguration = GenerationHelper.createConnectionConfiguration(definition);
 
-        return new MetroTargetDefinition(endpointDefinition,
-                                         wsdlLocation,
-                                         interfaze,
-                                         intentNames,
-                                         policyExpressions,
-                                         mappings,
-                                         securityConfiguration,
-                                         connectionConfiguration);
+        String serializedWsdl = serializeToString(wsdl);
+
+        return new MetroWsdlTargetDefinition(endpointDefinition,
+                                             serializedWsdl,
+                                             intentNames,
+                                             policyExpressions,
+                                             mappings,
+                                             securityConfiguration,
+                                             connectionConfiguration);
     }
 
     /**
@@ -251,7 +262,7 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
      * @return the serialized WSDL
      * @throws GenerationException if an error occurs reading the URL
      */
-    private String convertToString(Definition wsdl) throws GenerationException {
+    private String serializeToString(Definition wsdl) throws GenerationException {
         try {
             WSDLWriter writer = wsdlFactory.newWSDLWriter();
             StringWriter stringWriter = new StringWriter();

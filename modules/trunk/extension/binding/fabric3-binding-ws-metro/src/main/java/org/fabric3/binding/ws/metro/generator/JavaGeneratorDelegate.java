@@ -55,6 +55,7 @@ import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.MetroJavaSourceDefinition;
+import org.fabric3.binding.ws.metro.provision.MetroJavaTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
@@ -71,7 +72,7 @@ import org.fabric3.spi.model.type.java.JavaServiceContract;
 import org.fabric3.spi.policy.EffectivePolicy;
 
 /**
- * Generates MetroSourceDefinitions and MetroTargetDefinitions for a JavaServiceContact.
+ * Generates source and target definitions for an endpoint defined by a Java-based service contract.
  *
  * @version $Rev$ $Date$
  */
@@ -201,14 +202,14 @@ public class JavaGeneratorDelegate implements MetroGeneratorDelegate<JavaService
         // obtain connection information
         ConnectionConfiguration connectionConfiguration = GenerationHelper.createConnectionConfiguration(definition);
 
-        return new MetroTargetDefinition(endpointDefinition,
-                                         wsdlLocation,
-                                         interfaze,
-                                         intentNames,
-                                         policyExpressions,
-                                         mappings,
-                                         securityConfiguration,
-                                         connectionConfiguration);
+        return new MetroJavaTargetDefinition(endpointDefinition,
+                                             wsdlLocation,
+                                             interfaze,
+                                             intentNames,
+                                             policyExpressions,
+                                             mappings,
+                                             securityConfiguration,
+                                             connectionConfiguration);
     }
 
     /**

@@ -45,24 +45,28 @@ import org.fabric3.spi.policy.EffectivePolicy;
 import org.fabric3.wsdl.model.WsdlServiceContract;
 
 /**
- * Synthesizes concrete WSDL metadata, i.e. port and binding information.
+ * Synthesizes a concrete WSDL (i.e. service, port and binding information) from a binding configuration and an abstract WSDL definition.
  *
  * @version $Rev$ $Date$
  */
 public interface WsdlSynthesizer {
 
     /**
-     * Preform the synthesis using the given abstract WSDL, returning a result that contains a new concrete WSDL.
+     * Generate a concrete WSDL using the given abstract WSDL and binding configuration.
      *
-     * @param binding  the binding to synthesize the WSDL for
-     * @param contract the service contract used by the endpoint
-     * @param policy   configured policy for the service
-     * @param wsdl     the abstract WSDL
-     * @return a result containing the synthesized concrete WSDL
+     * @param binding         the binding to synthesize the WSDL for
+     * @param endpointAddress the service endpoint address
+     * @param contract        the endpoint service contract
+     * @param policy          configured policy for the service
+     * @param wsdl            the abstract WSDL
+     * @return a result containing the concrete WSDL and the generated service and port names
      * @throws WsdlSynthesisException if an error occurs during synthesis
      */
-    ConcreateWsdlResult synthesize(LogicalBinding<WsBindingDefinition> binding, WsdlServiceContract contract, EffectivePolicy policy, Definition wsdl)
-            throws WsdlSynthesisException;
+    ConcreateWsdlResult synthesize(LogicalBinding<WsBindingDefinition> binding,
+                                   String endpointAddress,
+                                   WsdlServiceContract contract,
+                                   EffectivePolicy policy,
+                                   Definition wsdl) throws WsdlSynthesisException;
 
 
 }

@@ -39,36 +39,30 @@ package org.fabric3.binding.ws.metro.runtime.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 import javax.xml.ws.BindingProvider;
 
-import com.sun.xml.ws.developer.JAXWSProperties;
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 import org.oasisopen.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
-import org.fabric3.binding.ws.metro.runtime.MetroConstants;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.wire.Interceptor;
 
 /**
- * Interceptor for invoking a web service proxy.
+ * Interceptor for invoking a JAX-WS proxy generated from a Java interface.  Used by invocation chains that dispatch to a web service endpoint defined
+ * by a Java interface (as opposed to a WSDL contract).
+ * <p/>
+ * This interceptor requires message payloads to be a JAXB types.
  *
  * @version $Rev$ $Date$
  */
-public class MetroTargetInterceptor implements Interceptor {
-    // blank response for one-way operations 
-    private static final Message NULL_RESPONSE = new MessageImpl();
-
+public class MetroJavaTargetInterceptor extends AbstractMetroTargetInterceptor {
     private ObjectFactory<?> proxyFactory;
     private Method method;
     private boolean oneWay;
-    private SecurityConfiguration securityConfiguration;
-    private ConnectionConfiguration connectionConfiguration;
 
     /**
      * Constructor.
@@ -79,17 +73,15 @@ public class MetroTargetInterceptor implements Interceptor {
      * @param securityConfiguration   the security configuration or null if security is not configured
      * @param connectionConfiguration the underlying HTTP connection configuration or null if defaults should be used
      */
-    public MetroTargetInterceptor(ObjectFactory<?> proxyFactory,
-                                  Method method,
-                                  boolean oneWay,
-                                  SecurityConfiguration securityConfiguration,
-                                  ConnectionConfiguration connectionConfiguration) {
+    public MetroJavaTargetInterceptor(ObjectFactory<?> proxyFactory,
+                                      Method method,
+                                      boolean oneWay,
+                                      SecurityConfiguration securityConfiguration,
+                                      ConnectionConfiguration connectionConfiguration) {
+        super(securityConfiguration, connectionConfiguration);
         this.proxyFactory = proxyFactory;
         this.method = method;
         this.oneWay = oneWay;
-        this.securityConfiguration = securityConfiguration;
-        this.connectionConfiguration = connectionConfiguration;
-
     }
 
     public Message invoke(Message msg) {
@@ -122,57 +114,4 @@ public class MetroTargetInterceptor implements Interceptor {
             Thread.currentThread().setContextClassLoader(old);
         }
     }
-
-    /**
-     * Configures the outbound security context.
-     *
-     * @param provider the binding provider for the invocation
-     */
-    private void configureSecurity(BindingProvider provider) {
-        if (securityConfiguration == null) {
-            // no security
-            return;
-        }
-        // User authentication configured
-        // Places authentication information in the invocation context, which is used by the Fabric3 security environment to include the
-        // credentials in the message header.
-        Map<String, Object> context = provider.getRequestContext();
-        if (securityConfiguration.getUsername() != null) {
-            context.put(MetroConstants.USERNAME, securityConfiguration.getUsername());
-            context.put(MetroConstants.PASSWORD, securityConfiguration.getPassword());
-        } else if (securityConfiguration.getAlias() != null) {
-            context.put(MetroConstants.KEYSTORE_ALIAS, securityConfiguration.getAlias());
-        }
-    }
-
-    /**
-     * Configures the outbound HTTP connection.
-     *
-     * @param provider the binding provider for the invocation
-     */
-    private void configureConnection(BindingProvider provider) {
-        if (connectionConfiguration == null) {
-            // use defaults
-            return;
-        }
-        Map<String, Object> context = provider.getRequestContext();
-        if (connectionConfiguration.getConnectTimeout() != ConnectionConfiguration.DEFAULT) {
-            context.put(JAXWSProperties.CONNECT_TIMEOUT, connectionConfiguration.getConnectTimeout());
-        }
-        if (connectionConfiguration.getRequestTimeout() != ConnectionConfiguration.DEFAULT) {
-            context.put(JAXWSProperties.REQUEST_TIMEOUT, connectionConfiguration.getRequestTimeout());
-        }
-        if (connectionConfiguration.getClientStreamingChunkSize() != ConnectionConfiguration.DEFAULT) {
-            context.put(JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, connectionConfiguration.getClientStreamingChunkSize());
-        }
-    }
-
-    public Interceptor getNext() {
-        return null;
-    }
-
-    public void setNext(Interceptor next) {
-        throw new IllegalStateException("This interceptor must be the last in the chain");
-    }
-
 }
