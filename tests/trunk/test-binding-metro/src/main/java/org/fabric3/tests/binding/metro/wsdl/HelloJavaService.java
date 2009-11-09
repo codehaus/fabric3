@@ -34,38 +34,14 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
+*/
+package org.fabric3.tests.binding.metro.wsdl;
+
+/**
+ * @version $Rev$ $Date$
  */
-package org.fabric3.tests.binding.metro;
+public interface HelloJavaService {
 
-import javax.xml.ws.soap.SOAPFaultException;
-
-import junit.framework.TestCase;
-import org.oasisopen.sca.annotation.Reference;
-
-import org.fabric3.tests.binding.metro.helloworld.HelloWorldPortType;
-
-public class WsdlTest extends TestCase {
-
-    @Reference
-    protected HelloWorldPortType portType;
-
-    public void testHello() throws Exception {
-        String hello = portType.sayHello("hello");
-        assertEquals("hello", hello);
-    }
-
-    public void testCallout() throws Exception {
-        String hello = portType.sayHello("callout");
-        assertEquals("callout", hello);
-    }
-
-    public void testFault() throws Exception {
-        try {
-            portType.sayHello("fault");
-            fail("Exception expected");
-        } catch (SOAPFaultException e) {
-            System.out.println("");
-        }
-    }
+    String hello(String message);
 
 }

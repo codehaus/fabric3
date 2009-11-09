@@ -27,6 +27,13 @@
             <version>${sca.api.version}</version>
         </dependency>
 
+        <!-- required for WSDL stub test -->
+        <dependency>
+           <groupId>org.codehaus.fabric3</groupId>
+           <artifactId>fabric3-spi</artifactId>
+           <version>${fabric3.version}</version>
+       </dependency>
+
         <dependency>
             <groupId>javax.xml</groupId>
             <artifactId>webservices-api-osgi</artifactId>
