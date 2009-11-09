@@ -81,7 +81,7 @@ public class FSArtifactCache implements ArtifactCache {
             throw new CacheRuntimeException("Entry for URI already exists: " + uri);
         }
         try {
-            File file = new File(tempDir, uri.toString());
+            File file = File.createTempFile("fabric3-", null, tempDir);
             FileHelper.write(stream, file);
             URL url = file.toURI().toURL();
             Entry entry = new Entry(url, file);
