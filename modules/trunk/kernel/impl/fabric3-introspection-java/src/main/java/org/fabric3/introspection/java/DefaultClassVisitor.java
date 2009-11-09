@@ -103,9 +103,9 @@ public class DefaultClassVisitor<I extends Implementation<? extends InjectingCom
             walkSuperClasses(implementation, clazz, implClass, context);
         }
 
-        walkInterfaces(implementation, implClass, clazz, context);
+        walkInterfaces(implementation, clazz, implClass, context);
 
-        walkClass(implementation, clazz, implClass, context);
+        walkClass(implementation, clazz, context);
 
         walkFields(implementation, clazz, implClass, context);
 
@@ -131,9 +131,9 @@ public class DefaultClassVisitor<I extends Implementation<? extends InjectingCom
         }
     }
 
-    private void walkClass(I implementation, Class<?> clazz, Class<?> implClass, IntrospectionContext context) {
+    private void walkClass(I implementation, Class<?> clazz, IntrospectionContext context) {
         for (Annotation annotation : clazz.getDeclaredAnnotations()) {
-            visitType(annotation, implClass, implementation, context);
+            visitType(annotation, clazz, implementation, context);
         }
     }
 
