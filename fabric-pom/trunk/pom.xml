@@ -38,7 +38,8 @@
     <repositories>
         <repository>
             <id>java.net</id>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
+            <url>http://download.java.net/maven/1</url>
+            <!-- <url>https://maven-repository.dev.java.net/nonav/repository</url>-->
             <layout>legacy</layout>
             <snapshots>
                 <enabled>false</enabled>
