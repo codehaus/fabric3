@@ -102,6 +102,9 @@ public class MultiParentClassLoader extends URLClassLoader {
      */
     public MultiParentClassLoader(URI name, URL[] urls, ClassLoader parent) {
         super(urls, parent);
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent classloader cannot be null");
+        }
         this.name = name;
     }
 
