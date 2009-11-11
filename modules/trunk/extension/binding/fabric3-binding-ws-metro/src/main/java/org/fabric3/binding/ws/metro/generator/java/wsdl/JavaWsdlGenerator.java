@@ -35,44 +35,30 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator.java;
+package org.fabric3.binding.ws.metro.generator.java.wsdl;
 
-import java.io.ByteArrayInputStream;
-import javax.jws.WebService;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.sun.xml.ws.api.BindingID;
-import junit.framework.TestCase;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
+ * Generates temporary WSDL documents from an SEI or implementation class. The returned generated abstract WSDL is used to attach policy expressions
+ * with the resulting document passed to the Metro infrastructure when an endpoint is provisioned. Since generation and policy attachment are
+ * idempotent, WSDL documents are only persisted temporarily and will be marked for deletion on JVM exit.
+ *
  * @version $Rev$ $Date$
  */
-public class JavaWsdlGeneratorImplTestCase extends TestCase {
-    private JavaWsdlGenerator generator = new JavaWsdlGeneratorImpl();
+public interface JavaWsdlGenerator {
 
-    public void testWsdlGeneration() throws Exception {
-        GeneratedArtifacts artifacts = generator.generate(TestEndpoint.class, new QName("foo", "bar"), BindingID.SOAP11_HTTP, false);
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = builder.parse(new ByteArrayInputStream(artifacts.getWsdl().getBytes()));
-        Element root = document.getDocumentElement();
-        for (int i = 0; i < root.getChildNodes().getLength(); i++) {
-            Node node = root.getChildNodes().item(i);
-            if ("portType".equals(node.getNodeName())) {
-                    return;
-            }
-        }
-        fail("Abstract WSDL elements not found");
-    }
-
-    @WebService
-    public static interface TestEndpoint {
-
-        void operation(String param);
-
-    }
+    /**
+     * Generates the WSDL.
+     *
+     * @param seiClass     the SEI or implementaiton class
+     * @param serviceQName the service qualified name
+     * @param bindingId    the SOAP version to use
+     * @param client       true if client WSDL is being generated  @return the handles to the generated WSDL and schemas.
+     * @return a handle to the generated WSDLs and XSDs
+     * @throws WsdlGenerationException if an error occurs during generation
+     */
+    GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, BindingID bindingId, boolean client) throws WsdlGenerationException;
 }

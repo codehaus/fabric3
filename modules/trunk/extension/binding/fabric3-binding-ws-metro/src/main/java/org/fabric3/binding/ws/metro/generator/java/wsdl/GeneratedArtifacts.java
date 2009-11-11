@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator.java;
+package org.fabric3.binding.ws.metro.generator.java.wsdl;
 
 import java.util.List;
 
