@@ -53,11 +53,13 @@ import com.sun.enterprise.ee.cms.core.SignalReleaseException;
 public class DispatchingMessageActionFactory implements MessageActionFactory {
     private String serviceName;
     private final FederationCallback callback;
+    private ClassLoader loader;
     private FederationServiceMonitor monitor;
 
-    public DispatchingMessageActionFactory(String serviceName, FederationCallback callback, FederationServiceMonitor monitor) {
+    public DispatchingMessageActionFactory(String serviceName, FederationCallback callback, ClassLoader loader, FederationServiceMonitor monitor) {
         this.serviceName = serviceName;
         this.callback = callback;
+        this.loader = loader;
         this.monitor = monitor;
     }
 
@@ -68,7 +70,10 @@ public class DispatchingMessageActionFactory implements MessageActionFactory {
     private class DispatchingMessageAction implements MessageAction {
 
         public void consumeSignal(Signal signal) throws ActionException {
+            ClassLoader old = Thread.currentThread().getContextClassLoader();
             try {
+                // set the classloader so it is not the context classloader
+                Thread.currentThread().setContextClassLoader(loader);
                 signal.acquire();
                 callback.onSignal(signal);
             } catch (SignalAcquireException e) {
@@ -76,6 +81,7 @@ public class DispatchingMessageActionFactory implements MessageActionFactory {
             } catch (FederationCallbackException e) {
                 monitor.onException("Error processing signal", serviceName, e);
             } finally {
+                Thread.currentThread().setContextClassLoader(old);
                 try {
                     signal.release();
                 } catch (SignalReleaseException e) {

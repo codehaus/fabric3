@@ -54,7 +54,9 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.Names;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.topology.RuntimeService;
 
@@ -67,18 +69,22 @@ import org.fabric3.spi.topology.RuntimeService;
 @Service(interfaces = {RuntimeService.class, ParticipantFederationService.class})
 public class ParticipantFederationServiceImpl extends AbstractFederationService implements RuntimeService, ParticipantFederationService {
     private GroupManagementService zoneGMS;
+    private ClassLoaderRegistry classLoaderRegistry;
 
     /**
      * Constructor
      *
-     * @param eventService the runtime event service
-     * @param info         the host runtime information
-     * @param monitor      the monitor for controller events
+     * @param eventService        the runtime event service
+     * @param info                the host runtime information
+     * @param classLoaderRegistry the classloader registry
+     * @param monitor             the monitor for controller events
      */
     public ParticipantFederationServiceImpl(@Reference EventService eventService,
                                             @Reference HostInfo info,
+                                            @Reference ClassLoaderRegistry classLoaderRegistry,
                                             @Monitor FederationServiceMonitor monitor) {
         super(eventService, info, monitor);
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public GroupManagementService getZoneGMS() {
@@ -166,7 +172,8 @@ public class ParticipantFederationServiceImpl extends AbstractFederationService 
             // TODO handle failure recovery
             // DispatchingFailureRecoveryActionFactory factory =new DispatchingFailureRecoveryActionFactory(serviceName, entry.getValue(), monitor)
             // gms.addActionFactory(serviceName, factory, serviceName));
-            DispatchingMessageActionFactory factory = new DispatchingMessageActionFactory(serviceName, entry.getValue(), monitor);
+            ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(Names.HOST_CONTRIBUTION);
+            DispatchingMessageActionFactory factory = new DispatchingMessageActionFactory(serviceName, entry.getValue(), hostClassLoader, monitor);
             gms.addActionFactory(factory, serviceName);
         }
     }
