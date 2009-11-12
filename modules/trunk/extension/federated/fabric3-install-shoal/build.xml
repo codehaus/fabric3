@@ -16,7 +16,7 @@
 -->
 <project name="Shoal-Installer">
 
-    <property name="shoal.version" value="1.1_12142008"/>
+    <property name="shoal.version" value="1.1_08182009"/>
 
     <target name="check-installed">
         <condition property="already.installed" >
@@ -37,7 +37,7 @@
     <target name="check-downloaded" depends="check-installed" unless="already.installed">
     <mkdir dir="${basedir}/target/shoal-download/"/>
 
-            <get src="http://download.java.net/glassfish/shoal/promoted/shoal-1.1_12142008.zip"
+            <get src="http://download.java.net/glassfish/shoal/promoted/shoal-1.1_08182009.zip"
                 dest="${basedir}/target/shoal-download/shoal.zip"
                 verbose="true"
             usetimestamp="true" ignoreErrors="true"/>
