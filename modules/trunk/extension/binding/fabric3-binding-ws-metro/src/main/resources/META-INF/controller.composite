@@ -52,7 +52,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="JavaGeneratorDelegate" f3-core:key="org.fabric3.spi.model.type.java.JavaServiceContract">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.JavaGeneratorDelegate"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.java.JavaGeneratorDelegate"/>
     </component>
 
 </composite>

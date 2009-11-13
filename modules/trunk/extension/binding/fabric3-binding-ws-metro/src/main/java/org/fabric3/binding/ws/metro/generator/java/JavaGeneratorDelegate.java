@@ -36,7 +36,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.java;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -74,6 +74,12 @@ import org.fabric3.binding.ws.metro.generator.java.codegen.InterfaceGenerator;
 import org.fabric3.binding.ws.metro.generator.java.wsdl.GeneratedArtifacts;
 import org.fabric3.binding.ws.metro.generator.java.wsdl.JavaWsdlGenerator;
 import org.fabric3.binding.ws.metro.generator.policy.WsdlPolicyAttacher;
+import org.fabric3.binding.ws.metro.generator.MetroGeneratorDelegate;
+import org.fabric3.binding.ws.metro.generator.WsdlResolver;
+import org.fabric3.binding.ws.metro.generator.EndpointResolver;
+import org.fabric3.binding.ws.metro.generator.EndpointSynthesizer;
+import org.fabric3.binding.ws.metro.generator.GenerationHelper;
+import org.fabric3.binding.ws.metro.generator.WsdlElement;
 import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.MetroJavaSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroJavaTargetDefinition;
