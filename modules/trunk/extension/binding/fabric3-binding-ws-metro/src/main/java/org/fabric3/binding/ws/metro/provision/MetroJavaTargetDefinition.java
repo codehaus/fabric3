@@ -109,6 +109,6 @@ public class MetroJavaTargetDefinition extends MetroTargetDefinition {
     public URL getWsdlLocation() {
         return wsdlLocation;
     }
-    
+
 
 }

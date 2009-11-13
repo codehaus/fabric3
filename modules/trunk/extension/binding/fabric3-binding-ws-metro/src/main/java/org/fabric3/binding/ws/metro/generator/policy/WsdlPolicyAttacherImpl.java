@@ -43,7 +43,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
+import org.fabric3.binding.ws.metro.generator.PolicyExpressionMapping;
 
 /**
  * Default implementation of WsdlPolicyAttacher. Policy expression attachement is performed by cloning the policy expression element and appending it

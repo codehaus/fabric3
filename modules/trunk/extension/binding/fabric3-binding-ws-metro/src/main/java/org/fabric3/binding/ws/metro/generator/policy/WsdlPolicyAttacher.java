@@ -42,7 +42,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
+import org.fabric3.binding.ws.metro.generator.PolicyExpressionMapping;
 
 
 /**
