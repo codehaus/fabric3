@@ -37,12 +37,14 @@
 */
 package org.fabric3.binding.ws.metro.generator.java.wsdl;
 
+import org.fabric3.spi.generator.GenerationException;
+
 /**
- * Thrown when an error is encountered generating a WSDL from an SEI or implementation class.
+ * Thrown when an error is encountered generating a WSDL.
  *
  * @version $Rev$ $Date$
  */
-public class WsdlGenerationException extends Exception {
+public class WsdlGenerationException extends GenerationException {
     private static final long serialVersionUID = 8535292703636164039L;
 
     public WsdlGenerationException(String message) {

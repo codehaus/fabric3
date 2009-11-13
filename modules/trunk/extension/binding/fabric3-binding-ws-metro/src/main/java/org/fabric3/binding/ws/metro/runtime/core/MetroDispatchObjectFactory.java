@@ -117,7 +117,8 @@ public class MetroDispatchObjectFactory implements ObjectFactory<Dispatch<Source
             WsitClientConfigurationContainer container;
             if (wsitConfiguration != null) {
                 // Policy configured
-                container = new WsitClientConfigurationContainer(wsitConfiguration, securityEnvironment);
+                // FIXME
+                container = new WsitClientConfigurationContainer(wsitConfiguration.toURI().toURL(), securityEnvironment);
             } else {
                 // No policy
                 container = new WsitClientConfigurationContainer(securityEnvironment);

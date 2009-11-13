@@ -35,11 +35,10 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.codegen;
+package org.fabric3.binding.ws.metro.generator.java.codegen;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.CodeSource;
 import java.security.SecureClassLoader;
 import javax.jws.Oneway;
 import javax.jws.WebMethod;
@@ -50,8 +49,11 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
+
+import org.fabric3.binding.ws.metro.util.ClassDefiner;
+
 
 /**
  * Default implementation of InterfaceGenerator that uses ASM to generate a subclass of the original type with JAX-WS annotations.
@@ -61,34 +63,47 @@ import org.osoa.sca.annotations.Service;
 @Service(InterfaceGenerator.class)
 public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
     private static final String SUFFIX = "F3Subtype";
-    private Method method;
 
-    @Init
-    public void init() throws NoSuchMethodException {
-        method = SecureClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, Integer.TYPE, Integer.TYPE, CodeSource.class);
-        method.setAccessible(true);
+    private ClassDefiner definer;
+
+    public InterfaceGeneratorImpl(@Reference ClassDefiner definer) {
+        this.definer = definer;
     }
 
-    public Class<?> generateAnnotatedInterface(Class interfaze, String targetNamespace, String wsdlLocation, String serviceName, String portName)
+    public boolean doGeneration(Class<?> clazz) {
+        if (!clazz.isAnnotationPresent(WebService.class)) {
+            // @WebService is required by Metro
+            return true;
+        }
+        for (Method method : clazz.getMethods()) {
+            if (method.isAnnotationPresent(OneWay.class) || method.isAnnotationPresent(org.osoa.sca.annotations.OneWay.class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public GeneratedInterface generate(Class interfaze, String targetNamespace, String wsdlLocation, String serviceName, String portName)
             throws InterfaceGenerationException {
         if (!(interfaze.getClassLoader() instanceof SecureClassLoader)) {
             throw new InterfaceGenerationException("Classloader for " + interfaze.getName() + " must be a SecureClassLoader");
         }
         SecureClassLoader loader = (SecureClassLoader) interfaze.getClassLoader();
-
         String name = interfaze.getName();
-        String generatedName = name + SUFFIX;
         String internalName = name.replace('.', '/');
         String generatedInternalName = internalName + SUFFIX;
-        try {
-            // check if the class was already generated
-            return loader.loadClass(generatedName);
-        } catch (ClassNotFoundException e) {
-            // ignore
-        }
         ClassWriter cw = new ClassWriter(0);
         byte[] bytes = generate(cw, generatedInternalName, interfaze, targetNamespace, wsdlLocation, serviceName, portName);
-        return defineClass(generatedName, bytes, loader);
+        String generatedName = name + SUFFIX;
+
+        try {
+            Class<?> clazz = definer.defineClass(generatedName, bytes, loader);
+            return new GeneratedInterface(clazz, bytes);
+        } catch (IllegalAccessException e) {
+            throw new InterfaceGenerationException(e);
+        } catch (InvocationTargetException e) {
+            throw new InterfaceGenerationException(e);
+        }
     }
 
     private byte[] generate(ClassWriter cw,
@@ -104,7 +119,7 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
         if (!clazz.isAnnotationPresent(WebService.class)) {
             // add @WebService if it is not present
             AnnotationVisitor av = cw.visitAnnotation(getSignature(WebService.class), true);
-            // Set the port type name attribate to the original class name. This corresponds to Java-to-WSDL mappings as defined in 
+            // Set the port type name attribate to the original class name. This corresponds to Java-to-WSDL mappings as defined in
             // the JAX-WS specification (section 3.11)
             av.visit("name", clazz.getSimpleName());
             if (targetNamespace != null) {
@@ -189,15 +204,5 @@ public class InterfaceGeneratorImpl implements InterfaceGenerator, Opcodes {
         }
     }
 
-    private Class<?> defineClass(String name, byte[] bytes, SecureClassLoader loader) throws InterfaceGenerationException {
-        // Hack to load the class in the original interface's classloader
-        try {
-            return (Class<?>) method.invoke(loader, name, bytes, 0, bytes.length, getClass().getProtectionDomain().getCodeSource());
-        } catch (IllegalAccessException e) {
-            throw new InterfaceGenerationException(e);
-        } catch (InvocationTargetException e) {
-            throw new InterfaceGenerationException(e);
-        }
-    }
 
 }

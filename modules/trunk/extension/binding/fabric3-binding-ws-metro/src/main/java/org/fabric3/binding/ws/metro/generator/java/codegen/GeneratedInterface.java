@@ -35,40 +35,37 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.policy;
-
-import java.io.File;
-import java.util.List;
+package org.fabric3.binding.ws.metro.generator.java.codegen;
 
 /**
- * Contains handles to artifacts created when generating WSDLs.
+ * Represents a generated endpoint interface.
  *
  * @version $Rev$ $Date$
  */
-public class GeneratedArtifacts {
-    private File wsdl;
-    private List<File> schemas;
+public class GeneratedInterface {
+    private byte[] bytes;
+    private Class<?> generatedClass;
 
-    public GeneratedArtifacts(File wsdl, List<File> schemas) {
-        this.wsdl = wsdl;
-        this.schemas = schemas;
+    public GeneratedInterface(Class<?> generatedClass, byte[] bytes) {
+        this.generatedClass = generatedClass;
+        this.bytes = bytes;
     }
 
     /**
-     * Returns a handle to the generated WSDL file.
+     * Returns the class bytes.
      *
-     * @return a handle to the generated WSDL file
+     * @return the class bytes
      */
-    public File getWsdl() {
-        return wsdl;
+    public byte[] getBytes() {
+        return bytes;
     }
 
     /**
-     * Returns a list of handles to generated schema files (which will be imported in the generated WSDL).
+     * Returns the loaded class.
      *
-     * @return a list of handles to generated schema files or null if no schemas were generated
+     * @return the loaded class
      */
-    public List<File> getSchemas() {
-        return schemas;
+    public Class<?> getGeneratedClass() {
+        return generatedClass;
     }
 }

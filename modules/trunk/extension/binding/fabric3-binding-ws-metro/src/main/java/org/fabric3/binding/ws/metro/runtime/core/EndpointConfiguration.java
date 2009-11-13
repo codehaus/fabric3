@@ -37,7 +37,6 @@
 */
 package org.fabric3.binding.ws.metro.runtime.core;
 
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
@@ -59,8 +58,8 @@ public class EndpointConfiguration {
     private Invoker invoker;
     private WebServiceFeature[] features;
     private BindingID bindingId;
-    private File generatedWsdl;
-    private List<File> generatedSchemas;
+    private URL generatedWsdl;
+    private List<URL> generatedSchemas;
     private URL wsdlLocation;
 
     /**
@@ -85,8 +84,8 @@ public class EndpointConfiguration {
                                  Invoker invoker,
                                  WebServiceFeature[] features,
                                  BindingID bindingId,
-                                 File generatedWsdl,
-                                 List<File> generatedSchemas) {
+                                 URL generatedWsdl,
+                                 List<URL> generatedSchemas) {
         this.seiClass = seiClass;
         this.serviceName = serviceName;
         this.portName = portName;
@@ -127,11 +126,11 @@ public class EndpointConfiguration {
         return bindingId;
     }
 
-    public File getGeneratedWsdl() {
+    public URL getGeneratedWsdl() {
         return generatedWsdl;
     }
 
-    public List<File> getGeneratedSchemas() {
+    public List<URL> getGeneratedSchemas() {
         return generatedSchemas;
     }
 

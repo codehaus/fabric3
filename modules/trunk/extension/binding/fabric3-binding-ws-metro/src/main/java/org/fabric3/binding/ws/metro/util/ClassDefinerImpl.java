@@ -35,51 +35,35 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.policy;
+package org.fabric3.binding.ws.metro.util;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.namespace.QName;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.CodeSource;
+import java.security.SecureClassLoader;
 
-import com.sun.xml.ws.api.BindingID;
-import com.sun.xml.ws.api.WSBinding;
-import com.sun.xml.ws.binding.BindingImpl;
-import com.sun.xml.ws.model.AbstractSEIModelImpl;
-import com.sun.xml.ws.model.RuntimeModeler;
-import com.sun.xml.ws.wsdl.writer.WSDLGenerator;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.host.runtime.HostInfo;
+import org.osoa.sca.annotations.Init;
 
 /**
- * default implementation of WsdlGenerator.
- *
  * @version $Rev$ $Date$
  */
-public class WsdlGeneratorImpl implements WsdlGenerator {
-    private File tempDir;
+public class ClassDefinerImpl implements ClassDefiner {
+    private Method method;
 
-    public WsdlGeneratorImpl(@Reference HostInfo info) {
-        tempDir = new File(info.getTempDir(), "wsdl");
-        tempDir.mkdir();
-        tempDir.deleteOnExit();
+    @Init
+    public void init() throws NoSuchMethodException {
+        method = SecureClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, Integer.TYPE, Integer.TYPE, CodeSource.class);
+        method.setAccessible(true);
     }
 
-
-    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, BindingID bindingId, boolean client) throws WsdlGenerationException {
-        RuntimeModeler modeler = new RuntimeModeler(seiClass, serviceQName, bindingId);
-        AbstractSEIModelImpl model = modeler.buildRuntimeModel();
-        String packageName = seiClass.getPackage().getName();
-        WsdlFileResolver wsdlResolver = new WsdlFileResolver(packageName, tempDir, client);
-        WSBinding binding = BindingImpl.create(bindingId);
-        WSDLGenerator generator = new WSDLGenerator(model, wsdlResolver, binding, null, seiClass);
-
-        // generate the WSDL and schemas
-        generator.doGeneration();
-
-        // resolve the generated XSD files
-        List<File> schemas = new ArrayList<File>(wsdlResolver.getSchemas());
-        return new GeneratedArtifacts(wsdlResolver.getConcreteWsdl(), schemas);
+    public Class<?> defineClass(String name, byte[] bytes, SecureClassLoader loader) throws IllegalAccessException, InvocationTargetException {
+        try {
+            // check if the class was already generated
+            return loader.loadClass(name);
+        } catch (ClassNotFoundException e) {
+            // ignore
+        }
+        return (Class<?>) method.invoke(loader, name, bytes, 0, bytes.length, getClass().getProtectionDomain().getCodeSource());
     }
+
 }

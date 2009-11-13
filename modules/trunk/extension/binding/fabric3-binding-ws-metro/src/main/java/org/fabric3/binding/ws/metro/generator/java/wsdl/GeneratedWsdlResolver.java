@@ -38,8 +38,8 @@
 package org.fabric3.binding.ws.metro.generator.java.wsdl;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.Holder;
@@ -54,14 +54,13 @@ import com.sun.xml.ws.wsdl.writer.WSDLResolver;
 public class GeneratedWsdlResolver implements WSDLResolver {
     private String wsdlName;
     private StringWriter generatedWsdl;
-    private List<StringWriter> generatedSchemas;
+    private Map<String, StringWriter> generatedSchemas;
 
     /**
      * Constructor.
-     *
      */
     public GeneratedWsdlResolver() {
-        generatedSchemas = new ArrayList<StringWriter>();
+        generatedSchemas = new HashMap<String, StringWriter>();
         generatedWsdl = new StringWriter();
     }
 
@@ -80,7 +79,7 @@ public class GeneratedWsdlResolver implements WSDLResolver {
             return null;
         }
         StringWriter writer = new StringWriter();
-        generatedSchemas.add(writer);
+        generatedSchemas.put(filename.value, writer);
         return toResult(filename.value, writer);
     }
 
@@ -88,10 +87,10 @@ public class GeneratedWsdlResolver implements WSDLResolver {
         return generatedWsdl.toString();
     }
 
-    public List<String> getGeneratedSchemas() {
-        List<String> ret = new ArrayList<String>();
-        for (StringWriter writer : generatedSchemas) {
-            ret.add(writer.toString());
+    public Map<String, String> getGeneratedSchemas() {
+        Map<String, String> ret = new HashMap<String, String>();
+        for (Map.Entry<String, StringWriter> entry : generatedSchemas.entrySet()) {
+            ret.put(entry.getKey(), entry.getValue().toString());
         }
         return ret;
     }

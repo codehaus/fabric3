@@ -56,7 +56,8 @@ public class JavaWsdlGeneratorImplTestCase extends TestCase {
     private JavaWsdlGenerator generator = new JavaWsdlGeneratorImpl();
 
     public void testWsdlGeneration() throws Exception {
-        GeneratedArtifacts artifacts = generator.generate(TestEndpoint.class, new QName("foo", "bar"), BindingID.SOAP11_HTTP, false);
+        QName name = new QName("foo", "bar");
+        GeneratedArtifacts artifacts = generator.generate(TestEndpoint.class, name, "http://foo.com/service", BindingID.SOAP11_HTTP);
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = builder.parse(new ByteArrayInputStream(artifacts.getWsdl().getBytes()));
         Element root = document.getDocumentElement();

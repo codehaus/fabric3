@@ -35,28 +35,13 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.policy;
+package org.fabric3.binding.ws.metro.generator.policy;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 
@@ -69,40 +54,13 @@ import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
     private static final String WS_POLICY_NS = "http://www.w3.org/ns/ws-policy";
     private static final String WS_SECURITY_UTILITY_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
-    private static final DocumentBuilderFactory DOCUMENT_FACTORY;
-    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
 
-    static {
-        DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
-        DOCUMENT_FACTORY.setNamespaceAware(true);
+    public void attach(Document wsdl, List<Element> endpointPolicies, List<PolicyExpressionMapping> mappings) throws PolicyAttachmentException {
+        attachEndpointPolicies(wsdl, endpointPolicies);
+        attachOperationPolicies(wsdl, mappings);
     }
 
-    public void attach(File wsdl, List<Element> endpointPolicies, List<PolicyExpressionMapping> mappings) throws PolicyAttachmentException {
-        try {
-            DocumentBuilder builder = DOCUMENT_FACTORY.newDocumentBuilder();
-            Document document = builder.parse(new BufferedInputStream(new FileInputStream(wsdl)));
-
-            attachEndpointPolicies(document, endpointPolicies, wsdl);
-            attachOperationPolicies(document, mappings, wsdl);
-
-            // Write the DOM representing the abstract WSDL back to the file
-            Source source = new DOMSource(document);
-            Result result = new StreamResult(wsdl);
-            Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
-            transformer.transform(source, result);
-        } catch (SAXException e) {
-            throw new PolicyAttachmentException(e);
-        } catch (ParserConfigurationException e) {
-            throw new PolicyAttachmentException(e);
-        } catch (TransformerException e) {
-            throw new PolicyAttachmentException(e);
-        } catch (IOException e) {
-            throw new PolicyAttachmentException(e);
-        }
-
-    }
-
-    private void attachEndpointPolicies(Document document, List<Element> endpointPolicies, File wsdl) throws PolicyAttachmentException {
+    private void attachEndpointPolicies(Document document, List<Element> endpointPolicies) throws PolicyAttachmentException {
         Element root = document.getDocumentElement();
         for (Element policy : endpointPolicies) {
             Node clone = policy.cloneNode(true);
@@ -112,13 +70,13 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
             // calculate the policy id to use in the PolicyReference element
             Node item = clone.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
             if (item == null) {
-                throw new PolicyAttachmentException("Missing id in policy expression:" + wsdl.getName());
+                throw new PolicyAttachmentException("Missing id in policy expression");
             }
             String id = "#" + item.getNodeValue();
             // add the policy id to the wsdl binding
             Node bindingNode = findChildNode(root, "binding");
             if (bindingNode == null) {
-                throw new PolicyAttachmentException("Binding element missing: " + wsdl.getName());
+                throw new PolicyAttachmentException("Binding element missing");
             }
 
             // attach the reference to the binding node
@@ -128,7 +86,7 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
         }
     }
 
-    private void attachOperationPolicies(Document document, List<PolicyExpressionMapping> mappings, File wsdl) throws PolicyAttachmentException {
+    private void attachOperationPolicies(Document document, List<PolicyExpressionMapping> mappings) throws PolicyAttachmentException {
         Element root = document.getDocumentElement();
         for (PolicyExpressionMapping mapping : mappings) {
             Element policy = mapping.getPolicyExpression();
@@ -140,14 +98,14 @@ public class WsdlPolicyAttacherImpl implements WsdlPolicyAttacher {
             // calculate the policy id to use in the PolicyReference element
             Node item = clone.getAttributes().getNamedItemNS(WS_SECURITY_UTILITY_NS, "Id");
             if (item == null) {
-                throw new PolicyAttachmentException("Missing id in policy expression:" + wsdl.getName());
+                throw new PolicyAttachmentException("Missing id in policy expression");
             }
             String id = "#" + item.getNodeValue();
 
             // add the policy id to the wsdl binding
             Node portTypeNode = findChildNode(root, "portType");
             if (portTypeNode == null) {
-                throw new PolicyAttachmentException("Port type element missing: " + wsdl.getName());
+                throw new PolicyAttachmentException("Port type element missing");
             }
 
             addPolicyReferenceToOperation(portTypeNode, operationNames, id);

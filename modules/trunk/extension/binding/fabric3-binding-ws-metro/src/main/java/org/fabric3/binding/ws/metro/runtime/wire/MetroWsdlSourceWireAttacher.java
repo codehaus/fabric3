@@ -38,7 +38,6 @@
 package org.fabric3.binding.ws.metro.runtime.wire;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
@@ -57,8 +56,8 @@ import org.fabric3.binding.ws.metro.runtime.core.EndpointConfiguration;
 import org.fabric3.binding.ws.metro.runtime.core.EndpointException;
 import org.fabric3.binding.ws.metro.runtime.core.EndpointService;
 import org.fabric3.binding.ws.metro.runtime.core.F3Provider;
-import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.binding.ws.metro.util.BindingIdResolver;
 import org.fabric3.spi.artifact.ArtifactCache;
 import org.fabric3.spi.artifact.CacheException;
 import org.fabric3.spi.builder.WiringException;
@@ -94,29 +93,18 @@ public class MetroWsdlSourceWireAttacher extends AbstractMetroSourceWireAttacher
             URI servicePath = endpointDefinition.getServicePath();
             List<InvocationChain> invocationChains = wire.getInvocationChains();
             List<QName> requestedIntents = source.getIntents();
-            BindingID bindingId;
+
+            BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents);
-
-            File generatedWsdl = null;
-            List<File> generatedSchemas = null;
-
-            ClassLoader old = Thread.currentThread().getContextClassLoader();
-            try {
-                Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-                bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
-                if (!source.getPolicies().isEmpty() || !source.getMappings().isEmpty()) {
-                    // TODO merge policy with WSDL
-                }
-            } finally {
-                Thread.currentThread().setContextClassLoader(old);
-            }
-
-            DocumentInvoker invoker = new DocumentInvoker(invocationChains);
 
             // FIXME remove need to decode
             String path = URLDecoder.decode(servicePath.toASCIIString(), "UTF-8");
+
             String wsdl = source.getWsdl();
             URL wsdlLocation = cache.cache(servicePath, new ByteArrayInputStream(wsdl.getBytes()));
+            List<URL> generatedSchemas = null;
+
+            DocumentInvoker invoker = new DocumentInvoker(invocationChains);
             EndpointConfiguration configuration = new EndpointConfiguration(F3Provider.class,
                                                                             serviceName,
                                                                             portName,
@@ -125,7 +113,7 @@ public class MetroWsdlSourceWireAttacher extends AbstractMetroSourceWireAttacher
                                                                             invoker,
                                                                             features,
                                                                             bindingId,
-                                                                            generatedWsdl,
+                                                                            null,
                                                                             generatedSchemas);
             endpointService.registerService(configuration);
         } catch (UnsupportedEncodingException e) {

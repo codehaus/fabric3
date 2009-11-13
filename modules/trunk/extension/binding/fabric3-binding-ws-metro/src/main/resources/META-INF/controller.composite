@@ -31,6 +31,18 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.WsdlSynthesizerImpl"/>
     </component>
 
+    <component name="JavaInterfaceGenerator">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.java.codegen.InterfaceGeneratorImpl"/>
+    </component>
+
+    <component name="JavaWsdlGenerator">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.java.wsdl.JavaWsdlGeneratorImpl"/>
+    </component>
+
+    <component name="WsdlPolicyAttacher">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.policy.WsdlPolicyAttacherImpl"/>
+    </component>
+
     <component name="MetroBindingGenerator" f3-core:key="org.fabric3.binding.ws.model.WsBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.MetroBindingGenerator"/>
     </component>

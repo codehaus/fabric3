@@ -39,9 +39,8 @@ package org.fabric3.binding.ws.metro.provision;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import javax.xml.namespace.QName;
-
-import org.w3c.dom.Element;
 
 /**
  * Reference-side wire target information defined by a Java interface.
@@ -51,6 +50,8 @@ import org.w3c.dom.Element;
 public class MetroJavaTargetDefinition extends MetroTargetDefinition {
     private static final long serialVersionUID = 5332578680612891881L;
 
+    private byte[] generatedInterface;
+    private Map<String, String> schemas;
     private URL wsdlLocation;
     private String interfaze;
 
@@ -58,25 +59,46 @@ public class MetroJavaTargetDefinition extends MetroTargetDefinition {
      * Constructor.
      *
      * @param endpointDefinition      endpoint metadata
+     * @param interfaze               the service contract (SEI) name
+     * @param generatedInterface      the generated SEI bytes or null if generation is not needed
+     * @param wsdl                    the generated WSDL or null if the WSDL can be derived from the SEI without the need to merge policy
+     * @param schemas                 the generated schemas or null
      * @param wsdlLocation            optional URL to the WSDL location
-     * @param interfaze               the service contract name
      * @param intents                 intents configured at the endpoint level that are provided natively by the Metro
-     * @param policies                policy expressions to be attached to the endpoint
-     * @param mappings                mappings of policy expressions to the operations they are attached to. Used to generate client WSDL.
      * @param securityConfiguration   the security configuration or null if security is not configured
      * @param connectionConfiguration the HTTP configuration or null if defaults should be used
      */
     public MetroJavaTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
-                                     URL wsdlLocation,
                                      String interfaze,
+                                     byte[] generatedInterface,
+                                     String wsdl,
+                                     Map<String, String> schemas,
+                                     URL wsdlLocation,
                                      List<QName> intents,
-                                     List<Element> policies,
-                                     List<PolicyExpressionMapping> mappings,
                                      SecurityConfiguration securityConfiguration,
                                      ConnectionConfiguration connectionConfiguration) {
-        super(endpointDefinition, intents, policies, mappings, securityConfiguration, connectionConfiguration);
+        super(endpointDefinition, wsdl, intents, securityConfiguration, connectionConfiguration);
+        this.generatedInterface = generatedInterface;
+        this.schemas = schemas;
         this.wsdlLocation = wsdlLocation;
         this.interfaze = interfaze;
+    }
+
+    /**
+     * Returns the service contract name.
+     *
+     * @return the service contract name
+     */
+    public String getInterface() {
+        return interfaze;
+    }
+
+    public byte[] getGeneratedInterface() {
+        return generatedInterface;
+    }
+
+    public Map<String, String> getSchemas() {
+        return schemas;
     }
 
     /**
@@ -88,14 +110,5 @@ public class MetroJavaTargetDefinition extends MetroTargetDefinition {
         return wsdlLocation;
     }
     
-    /**
-     * Returns the service contract name.
-     *
-     * @return the service contract name
-     */
-    public String getInterface() {
-        return interfaze;
-    }
-
 
 }

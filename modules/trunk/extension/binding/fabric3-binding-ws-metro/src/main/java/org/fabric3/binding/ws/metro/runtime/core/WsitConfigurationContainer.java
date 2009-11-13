@@ -37,7 +37,6 @@
 */
 package org.fabric3.binding.ws.metro.runtime.core;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -51,23 +50,18 @@ import com.sun.xml.ws.api.server.Container;
  */
 public class WsitConfigurationContainer extends Container {
     private Container delegate;
-    private File wsitConfiguration;
-    private String configName;
+    private URL wsitConfiguration;
 
-    public WsitConfigurationContainer(Container delegate, File wsitConfiguration) {
+    public WsitConfigurationContainer(Container delegate, URL wsitConfiguration) {
         this.delegate = delegate;
         this.wsitConfiguration = wsitConfiguration;
-        // calculate the configuration file name for the endpoint
-        configName = "wsit-" + wsitConfiguration.getName().substring(0, wsitConfiguration.getName().length() - 5) + ".xml";
     }
 
 
     private final ResourceLoader loader = new ResourceLoader() {
         public URL getResource(String resource) throws MalformedURLException {
-            if (resource.equals(configName)) {
-                // if the Metro endpoint configuration file is requested, return the generated WSDL
-                String name = wsitConfiguration.getName().substring(0, wsitConfiguration.getName().length() - 5) + "Service.wsdl";
-                return new File(wsitConfiguration.getParent(), name).toURI().toURL();
+            if (resource.startsWith("wsit-")) {
+                return wsitConfiguration;
             }
             return delegate.getSPI(ResourceLoader.class).getResource(resource);
         }

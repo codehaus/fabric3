@@ -14,6 +14,18 @@ Public License. See the accompanying license file for details.
            name="MetroBinding"
            autowire="true">
 
+    <component name="BindingIDResolver">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.util.DefaultBindingIdResolver"/>
+    </component>
+
+    <component name="ClassDefiner">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.util.ClassDefinerImpl"/>
+    </component>
+
+    <component name="ClassLoaderUpdater">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.util.ClassLoaderUpdaterImpl"/>
+    </component>
+
     <component name="MetroBinding">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.MetroBinding"/>
         <property name="logLevel" source="$systemConfig//web.services/metro/@logging"/>

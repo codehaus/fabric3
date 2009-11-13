@@ -41,8 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Element;
-
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.physical.PhysicalDataTypes;
 
@@ -66,19 +64,15 @@ public class MetroWsdlTargetDefinition extends MetroTargetDefinition {
      * @param endpointDefinition      endpoint metadata
      * @param wsdl                    the serialized wsdl
      * @param intents                 intents configured at the endpoint level that are provided natively by the Metro
-     * @param policies                policy expressions to be attached to the endpoint
-     * @param mappings                mappings of policy expressions to the operations they are attached to. Used to generate client WSDL.
      * @param securityConfiguration   the security configuration or null if security is not configured
      * @param connectionConfiguration the HTTP configuration or null if defaults should be used
      */
     public MetroWsdlTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
                                      String wsdl,
                                      List<QName> intents,
-                                     List<Element> policies,
-                                     List<PolicyExpressionMapping> mappings,
                                      SecurityConfiguration securityConfiguration,
                                      ConnectionConfiguration connectionConfiguration) {
-        super(endpointDefinition, intents, policies, mappings, securityConfiguration, connectionConfiguration);
+        super(endpointDefinition, wsdl, intents, securityConfiguration, connectionConfiguration);
         this.wsdl = wsdl;
     }
 

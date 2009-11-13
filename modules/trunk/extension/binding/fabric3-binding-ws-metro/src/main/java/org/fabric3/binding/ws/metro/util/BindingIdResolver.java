@@ -34,24 +34,28 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
-*/
-package org.fabric3.binding.ws.metro.runtime.policy;
+ */
+package org.fabric3.binding.ws.metro.util;
 
-import org.fabric3.host.Fabric3Exception;
+import java.util.List;
+import javax.xml.namespace.QName;
+
+import com.sun.xml.ws.api.BindingID;
 
 /**
- * Thrown when an error is encountered attaching a WS-Policy expression in a WSDL document.
+ * Interface for resolving binding id.
  *
  * @version $Rev$ $Date$
+ * FIXME Move this to generator.policy
  */
-public class PolicyAttachmentException extends Fabric3Exception {
-    private static final long serialVersionUID = 8261880730766747485L;
+public interface BindingIdResolver {
 
-    public PolicyAttachmentException(Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Resolves bindings based on the requested intents and policy sets.
+     *
+     * @param requestedIntents Intents requested on the bindings.
+     * @return Resolved binding Id.
+     */
+    BindingID resolveBindingId(List<QName> requestedIntents);
 
-    public PolicyAttachmentException(String message) {
-        super(message);
-    }
 }

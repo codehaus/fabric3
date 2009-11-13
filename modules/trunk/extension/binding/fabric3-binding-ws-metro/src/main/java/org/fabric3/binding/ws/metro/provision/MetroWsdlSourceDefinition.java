@@ -37,13 +37,9 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Element;
-
-import org.fabric3.model.type.contract.DataType;
 import org.fabric3.spi.model.physical.PhysicalDataTypes;
 
 /**
@@ -54,38 +50,17 @@ import org.fabric3.spi.model.physical.PhysicalDataTypes;
 public class MetroWsdlSourceDefinition extends MetroSourceDefinition {
     private static final long serialVersionUID = -1905843346636208650L;
 
-    private String wsdl;
-    private static List<DataType<?>> PHYSICAL_DATA_TYPES = new ArrayList<DataType<?>>();
-
-    static {
-        PHYSICAL_DATA_TYPES.add(PhysicalDataTypes.DOM);
-    }
-
     /**
      * Constructor.
      *
      * @param endpointDefinition endpoint metadta
      * @param wsdl               the WSDL document as a string
      * @param intents            intents configured at the endpoint level that are provided natively by the Metro
-     * @param policies           policy expressions to be attached to the endpoint
-     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to generate endpoint WSDL.
      */
-    public MetroWsdlSourceDefinition(ServiceEndpointDefinition endpointDefinition,
-                                     String wsdl,
-                                     List<QName> intents,
-                                     List<Element> policies,
-                                     List<PolicyExpressionMapping> mappings) {
-        super(endpointDefinition, intents, policies, mappings);
-        this.wsdl = wsdl;
+    public MetroWsdlSourceDefinition(ServiceEndpointDefinition endpointDefinition, String wsdl, List<QName> intents) {
+        super(endpointDefinition, wsdl, intents);
+        physicalDataTypes.clear();
         physicalDataTypes.add(PhysicalDataTypes.DOM);
     }
 
-    public String getWsdl() {
-        return wsdl;
-    }
-
-    @Override
-    public List<DataType<?>> getPhysicalDataTypes() {
-        return PHYSICAL_DATA_TYPES;
-    }
 }

@@ -31,20 +31,12 @@ Public License. See the accompanying license file for details.
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroWsdlTargetWireAttacher"/>
     </component>
 
-    <component name="WsdlGenerator">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.WsdlGeneratorImpl"/>
-    </component>
-
-    <component name="WsdlPolicyAttacher">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacherImpl"/>
-    </component>
-
     <component name="FeatureResolver">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultFeatureResolver"/>
     </component>
 
-    <component name="BindingIDResolver">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultBindingIdResolver"/>
+    <component name="WireAttacherHelper">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.WireAttacherHelperImpl"/>
     </component>
 
     <component name="F3SecurityEnvironment">
@@ -58,10 +50,6 @@ Public License. See the accompanying license file for details.
 
     <component name="CertificateValidator">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.security.CertificateValidatorImpl"/>
-    </component>
-
-    <component name="InterfaceGenerator">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGeneratorImpl"/>
     </component>
 
     <component name="EndpointService">

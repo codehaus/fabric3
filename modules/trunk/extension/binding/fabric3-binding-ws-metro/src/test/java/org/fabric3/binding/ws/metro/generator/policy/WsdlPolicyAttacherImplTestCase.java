@@ -34,41 +34,52 @@
  * You should have received a copy of the
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
- */
-package org.fabric3.binding.ws.metro.runtime.policy;
+*/
+package org.fabric3.binding.ws.metro.generator.policy;
 
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-import com.sun.xml.ws.api.BindingID;
-import com.sun.xml.ws.developer.JAXWSProperties;
+import junit.framework.TestCase;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 
 /**
- * Default implementation of the binding Id resolver.
- *
  * @version $Rev$ $Date$
  */
-public class DefaultBindingIdResolver implements BindingIdResolver {
+public class WsdlPolicyAttacherImplTestCase extends TestCase {
 
-    /**
-     * Resolves bindings based on the requested intents and policy sets.
-     *
-     * @param requestedIntents Intents requested on the bindings.
-     * @return Resolved binding Id.
-     */
-    public BindingID resolveBindingId(List<QName> requestedIntents) {
+    public void testAttach() throws Exception {
+        DocumentBuilderFactory DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
+        DOCUMENT_FACTORY.setNamespaceAware(true);
+        DocumentBuilder builder = DOCUMENT_FACTORY.newDocumentBuilder();
+        ByteArrayInputStream bas = new ByteArrayInputStream(TestPolicy.POLICY.getBytes());
 
-        BindingID bindingID = BindingID.SOAP11_HTTP;
-        if (requestedIntents.contains(MayProvideIntents.SOAP1_2)) {
-            bindingID = BindingID.SOAP12_HTTP;
-        } else if (requestedIntents.contains(MayProvideIntents.X_SOAP1_2)) {
-            bindingID = BindingID.X_SOAP12_HTTP;
-        } else if (requestedIntents.contains(MayProvideIntents.REST)) {
-            bindingID = BindingID.parse(JAXWSProperties.REST_BINDING);
+        Document policyDocument = builder.parse(bas);
+        WsdlPolicyAttacherImpl attacher = new WsdlPolicyAttacherImpl();
+
+        PolicyExpressionMapping mapping = new PolicyExpressionMapping("id", policyDocument.getDocumentElement());
+        mapping.addOperationName("sayHello");
+        List<PolicyExpressionMapping> mappings = new ArrayList<PolicyExpressionMapping>();
+        mappings.add(mapping);
+
+        ByteArrayInputStream wsdlStream = new ByteArrayInputStream(TestWsdl.WSDL.getBytes());
+        Document wsdl = builder.parse(wsdlStream);
+        attacher.attach(wsdl, Collections.<Element>emptyList(), mappings);
+        Element element = wsdl.getDocumentElement();
+        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+            if (element.getChildNodes().item(i).getNodeName().equals("Policy")) {
+                return;
+            }
         }
-
-        return bindingID;
-
+        fail("Policy node not found");
     }
+
 
 }

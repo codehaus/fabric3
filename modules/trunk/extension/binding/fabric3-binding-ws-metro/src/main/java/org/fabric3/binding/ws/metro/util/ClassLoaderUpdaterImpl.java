@@ -35,23 +35,23 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.codegen;
+package org.fabric3.binding.ws.metro.util;
 
-import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
- * Denotes an error generating an annotated interface.
- *
  * @version $Rev$ $Date$
  */
-public class InterfaceGenerationException extends WiringException {
-    private static final long serialVersionUID = -921047598001767778L;
+public class ClassLoaderUpdaterImpl implements ClassLoaderUpdater {
 
-    public InterfaceGenerationException(String message) {
-        super(message);
-    }
-
-    public InterfaceGenerationException(Throwable cause) {
-        super(cause);
+    public void updateClassLoader(Class<?> seiClass) {
+        ClassLoader seiClassLoader = seiClass.getClassLoader();
+        ClassLoader extensionClassLoader = getClass().getClassLoader();
+        if (seiClassLoader instanceof MultiParentClassLoader) {
+            MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
+            if (!multiParentClassLoader.getParents().contains(extensionClassLoader)) {
+                multiParentClassLoader.addParent(extensionClassLoader);
+            }
+        }
     }
 }

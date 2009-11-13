@@ -35,30 +35,23 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.policy;
+package org.fabric3.binding.ws.metro.generator.java.codegen;
 
-import javax.xml.namespace.QName;
-
-import com.sun.xml.ws.api.BindingID;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Generates temporary WSDL documents from an SEI or implementation class. The returned generated abstract WSDL is used to attach policy expressions
- * with the resulting document passed to the Metro infrastructure when an endpoint is provisioned. Since generation and policy attachment are
- * idempotent, WSDL documents are only persisted temporarily and will be marked for deletion on JVM exit.
+ * Denotes an error generating an annotated interface.
  *
  * @version $Rev$ $Date$
  */
-public interface WsdlGenerator {
+public class InterfaceGenerationException extends GenerationException {
+    private static final long serialVersionUID = -921047598001767778L;
 
-    /**
-     * Generates the WSDL.
-     *
-     * @param seiClass     the SEI or implementaiton class
-     * @param serviceQName the service qualified name
-     * @param bindingId    the SOAP version to use
-     * @param client       true if client WSDL is being generated  @return the handles to the generated WSDL and schemas.
-     * @return a handle to the generated WSDLs and XSDs
-     * @throws WsdlGenerationException if an error occurs during generation
-     */
-    GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, BindingID bindingId, boolean client) throws WsdlGenerationException;
+    public InterfaceGenerationException(String message) {
+        super(message);
+    }
+
+    public InterfaceGenerationException(Throwable cause) {
+        super(cause);
+    }
 }

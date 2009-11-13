@@ -37,7 +37,6 @@
 */
 package org.fabric3.binding.ws.metro.runtime.core;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -88,7 +87,7 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
     private QName portTypeName;
     private Class<?> seiClass;
     private WebServiceFeature[] features;
-    private File wsitConfiguration;
+    private URL wsitConfiguration;
     private WorkScheduler scheduler;
     private SecurityEnvironment securityEnvironment;
     private XMLInputFactory xmlInputFactory;
@@ -109,7 +108,7 @@ public class MetroProxyObjectFactory implements ObjectFactory<Object> {
      */
     public MetroProxyObjectFactory(ReferenceEndpointDefinition endpointDefinition,
                                    URL wsdlLocation,
-                                   File wsitConfiguration,
+                                   URL wsitConfiguration,
                                    Class<?> seiClass,
                                    WebServiceFeature[] features,
                                    WorkScheduler scheduler,

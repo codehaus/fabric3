@@ -37,43 +37,26 @@
 */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
-import java.lang.reflect.Method;
-import javax.jws.WebService;
+import java.security.SecureClassLoader;
 
-import org.oasisopen.sca.annotation.OneWay;
+import org.fabric3.spi.builder.WiringException;
 
 /**
  * Utility methods for wire attachers.
  *
  * @version $Rev$ $Date$
  */
-public class WireAttacherHelper {
-    private WireAttacherHelper() {
-    }
+public interface WireAttacherHelper {
 
     /**
-     * Determines if a service interface or class needs to be enhanced with JAX-WS annotations. Enhancement via bytecode generation will need to be
-     * done if:
-     * <pre>
-     * <ul>
-     * <li> The class does not contain a <code>WebService</code> annotation
-     * <li> The class contains a method marked with the <code>org.oasisopen.sca.annotation.OneWay</code> annotation
-     * </ul>
-     * </pre>
+     * Loads an SEI class using either the provided byte array or, if null, the interface name.
      *
-     * @param clazz the class to check
-     * @return true if the class needs to be enhanced
+     * @param interfaze   the interface name
+     * @param classBytes  the byte array. May be null.
+     * @param classLoader the classloader to load the class with
+     * @return the loaded class
+     * @throws WiringException if the class cannot be loaded
      */
-    public static boolean doGeneration(Class<?> clazz) {
-        if (!clazz.isAnnotationPresent(WebService.class)) {
-            // @WebService is required by Metro
-            return true;
-        }
-        for (Method method : clazz.getMethods()) {
-            if (method.isAnnotationPresent(OneWay.class) || method.isAnnotationPresent(org.osoa.sca.annotations.OneWay.class)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    Class<?> loadSEI(String interfaze, byte[] classBytes, SecureClassLoader classLoader) throws WiringException;
+
 }

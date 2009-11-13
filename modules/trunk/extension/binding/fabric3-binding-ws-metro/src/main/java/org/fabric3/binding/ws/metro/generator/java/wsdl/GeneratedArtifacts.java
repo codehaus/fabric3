@@ -37,7 +37,7 @@
 */
 package org.fabric3.binding.ws.metro.generator.java.wsdl;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * Contains generated WSDL and Schema documents. The WSDL document contains both abstract and concrete elements. Schemas are generated separately and
@@ -47,9 +47,9 @@ import java.util.List;
  */
 public class GeneratedArtifacts {
     private String wsdl;
-    private List<String> schemas;
+    private  Map<String, String> schemas;
 
-    public GeneratedArtifacts(String wsdl, List<String> schemas) {
+    public GeneratedArtifacts(String wsdl,  Map<String, String> schemas) {
         this.wsdl = wsdl;
         this.schemas = schemas;
     }
@@ -58,7 +58,7 @@ public class GeneratedArtifacts {
         return wsdl;
     }
 
-    public List<String> getSchemas() {
+    public Map<String, String> getSchemas() {
         return schemas;
     }
 }

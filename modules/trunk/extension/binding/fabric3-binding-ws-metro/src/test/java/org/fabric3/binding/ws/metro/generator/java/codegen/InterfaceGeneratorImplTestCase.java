@@ -35,21 +35,54 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.policy;
+package org.fabric3.binding.ws.metro.generator.java.codegen;
+
+import javax.jws.WebService;
+
+import junit.framework.TestCase;
+import org.oasisopen.sca.annotation.OneWay;
+
+import org.fabric3.binding.ws.metro.util.ClassDefinerImpl;
 
 /**
- * Thrown when an error is encountered generating a WSDL from an SEI or implementation class.
- *
  * @version $Rev$ $Date$
  */
-public class WsdlGenerationException extends Exception {
-    private static final long serialVersionUID = 8535292703636164039L;
+public class InterfaceGeneratorImplTestCase extends TestCase {
+    private InterfaceGenerator generator;
 
-    public WsdlGenerationException(String message) {
-        super(message);
+    public void testWebMethodNoGeneration() throws Exception {
+        assertFalse(generator.doGeneration(WebServiceAnnotatedClass.class));
     }
 
-    public WsdlGenerationException(Throwable cause) {
-        super(cause);
+    public void testGeneration() throws Exception {
+        assertTrue(generator.doGeneration(NoAnnotatedClass.class));
     }
+
+    public void testOneWayGeneration() throws Exception {
+        assertTrue(generator.doGeneration(OneWayAnnotatedClass.class));
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        generator = new InterfaceGeneratorImpl(new ClassDefinerImpl());
+
+    }
+
+    @WebService
+    public static class WebServiceAnnotatedClass {
+
+    }
+
+    public static class OneWayAnnotatedClass {
+        @OneWay
+        public void oneWay() {
+
+        }
+    }
+
+    public static class NoAnnotatedClass {
+
+    }
+
 }

@@ -40,8 +40,6 @@ package org.fabric3.binding.ws.metro.provision;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Element;
-
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 
 /**
@@ -54,31 +52,27 @@ public abstract class MetroTargetDefinition extends PhysicalTargetDefinition {
 
     private ReferenceEndpointDefinition endpointDefinition;
     private List<QName> intents;
-    private List<PolicyExpressionMapping> mappings;
     private SecurityConfiguration securityConfiguration;
     private ConnectionConfiguration connectionConfiguration;
-    private List<Element> policies;
+    private String wsdl;
 
     /**
      * Constructor.
      *
      * @param endpointDefinition      endpoint metadata
+     * @param wsdl                    the endpoint WSDL or null if the WSDL can be derived from the SEI without the need to merge policy
      * @param intents                 intents configured at the endpoint level that are provided natively by the Metro
-     * @param policies                policy expressions to be attached to the endpoint
-     * @param mappings                mappings of policy expressions to the operations they are attached to. Used to generate client WSDL.
      * @param securityConfiguration   the security configuration or null if security is not configured
      * @param connectionConfiguration the HTTP configuration or null if defaults should be used
      */
     public MetroTargetDefinition(ReferenceEndpointDefinition endpointDefinition,
+                                 String wsdl,
                                  List<QName> intents,
-                                 List<Element> policies,
-                                 List<PolicyExpressionMapping> mappings,
                                  SecurityConfiguration securityConfiguration,
                                  ConnectionConfiguration connectionConfiguration) {
         this.endpointDefinition = endpointDefinition;
+        this.wsdl = wsdl;
         this.intents = intents;
-        this.policies = policies;
-        this.mappings = mappings;
         this.securityConfiguration = securityConfiguration;
         this.connectionConfiguration = connectionConfiguration;
     }
@@ -92,6 +86,10 @@ public abstract class MetroTargetDefinition extends PhysicalTargetDefinition {
         return endpointDefinition;
     }
 
+    public String getWsdl() {
+        return wsdl;
+    }
+
     /**
      * Returns the configured endpoint intents provided by the Metro.
      *
@@ -99,24 +97,6 @@ public abstract class MetroTargetDefinition extends PhysicalTargetDefinition {
      */
     public List<QName> getIntents() {
         return intents;
-    }
-
-    /**
-     * Returns the policy expressions to be attached to the endpoint
-     *
-     * @return the policy expressions
-     */
-    public List<Element> getPolicies() {
-        return policies;
-    }
-
-    /**
-     * Returns the mappings from policy expression to operations.
-     *
-     * @return the mappings from policy expression to operations
-     */
-    public List<PolicyExpressionMapping> getMappings() {
-        return mappings;
     }
 
     /**

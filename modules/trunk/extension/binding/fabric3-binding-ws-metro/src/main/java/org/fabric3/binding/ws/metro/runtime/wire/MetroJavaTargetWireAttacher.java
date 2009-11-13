@@ -37,37 +37,34 @@
  */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.SecureClassLoader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.ws.WebServiceFeature;
 
-import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.wss.SecurityEnvironment;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.MetroJavaTargetDefinition;
-import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
-import org.fabric3.binding.ws.metro.runtime.codegen.InterfaceGenerator;
-import org.fabric3.binding.ws.metro.runtime.core.MetroProxyObjectFactory;
 import org.fabric3.binding.ws.metro.runtime.core.MetroJavaTargetInterceptor;
-import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
+import org.fabric3.binding.ws.metro.runtime.core.MetroProxyObjectFactory;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
-import org.fabric3.binding.ws.metro.runtime.policy.GeneratedArtifacts;
-import org.fabric3.binding.ws.metro.runtime.policy.PolicyAttachmentException;
-import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerationException;
-import org.fabric3.binding.ws.metro.runtime.policy.WsdlGenerator;
-import org.fabric3.binding.ws.metro.runtime.policy.WsdlPolicyAttacher;
+import org.fabric3.binding.ws.metro.util.ClassLoaderUpdater;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.artifact.ArtifactCache;
+import org.fabric3.spi.artifact.CacheException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
@@ -84,31 +81,26 @@ import org.fabric3.spi.xml.XMLFactory;
 public class MetroJavaTargetWireAttacher implements TargetWireAttacher<MetroJavaTargetDefinition> {
 
     private ClassLoaderRegistry registry;
-    private BindingIdResolver bindingIdResolver;
     private FeatureResolver resolver;
-    private InterfaceGenerator interfaceGenerator;
-    private WsdlGenerator wsdlGenerator;
-    private WsdlPolicyAttacher policyAttacher;
+    private WireAttacherHelper wireAttacherHelper;
+    private ArtifactCache artifactCache;
     private SecurityEnvironment securityEnvironment;
     private WorkScheduler scheduler;
     private XMLInputFactory xmlInputFactory;
 
 
     public MetroJavaTargetWireAttacher(@Reference ClassLoaderRegistry registry,
-                                   @Reference BindingIdResolver bindingIdResolver,
-                                   @Reference FeatureResolver resolver,
-                                   @Reference InterfaceGenerator interfaceGenerator,
-                                   @Reference WsdlGenerator wsdlGenerator,
-                                   @Reference WsdlPolicyAttacher policyAttacher,
-                                   @Reference SecurityEnvironment securityEnvironment,
-                                   @Reference WorkScheduler scheduler,
-                                   @Reference XMLFactory xmlFactory) {
+                                       @Reference FeatureResolver resolver,
+                                       @Reference WireAttacherHelper wireAttacherHelper,
+                                       @Reference ClassLoaderUpdater classLoaderUpdater,
+                                       @Reference ArtifactCache artifactCache,
+                                       @Reference SecurityEnvironment securityEnvironment,
+                                       @Reference WorkScheduler scheduler,
+                                       @Reference XMLFactory xmlFactory) {
         this.registry = registry;
-        this.bindingIdResolver = bindingIdResolver;
         this.resolver = resolver;
-        this.interfaceGenerator = interfaceGenerator;
-        this.wsdlGenerator = wsdlGenerator;
-        this.policyAttacher = policyAttacher;
+        this.wireAttacherHelper = wireAttacherHelper;
+        this.artifactCache = artifactCache;
         this.securityEnvironment = securityEnvironment;
         this.scheduler = scheduler;
         this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
@@ -118,63 +110,55 @@ public class MetroJavaTargetWireAttacher implements TargetWireAttacher<MetroJava
 
         try {
             ReferenceEndpointDefinition endpointDefinition = target.getEndpointDefinition();
-            QName serviceName = endpointDefinition.getServiceName();
-            String interfaze = target.getInterface();
             URI classLoaderId = source.getClassLoaderId();
             List<QName> requestedIntents = target.getIntents();
 
             ClassLoader classLoader = registry.getClassLoader(classLoaderId);
-            WebServiceFeature[] features = resolver.getFeatures(requestedIntents);
 
-            Class<?> seiClass = classLoader.loadClass(interfaze);
-            if (WireAttacherHelper.doGeneration(seiClass)) {
-                // if the service interface is not annotated, generate an implementing class that is
-                seiClass = interfaceGenerator.generateAnnotatedInterface(seiClass, null, null, null, null);
+            String interfaze = target.getInterface();
+            byte[] bytes = target.getGeneratedInterface();
+
+            if (!(classLoader instanceof SecureClassLoader)) {
+                throw new WiringException("Classloader for " + interfaze + " must be a SecureClassLoader");
             }
+            Class<?> seiClass = wireAttacherHelper.loadSEI(interfaze, bytes, (SecureClassLoader) classLoader);
 
-            URL wsdlLocation = target.getWsdlLocation();
+            ClassLoader old = Thread.currentThread().getContextClassLoader();
 
-            File generatedWsdl = null;
-            BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
-            if (!target.getPolicies().isEmpty() || !target.getMappings().isEmpty()) {
-                // if policy is configured for the endpoint, generate a WSDL with the policy attachments
-                GeneratedArtifacts artifacts = wsdlGenerator.generate(seiClass, serviceName, bindingId, true);
-                generatedWsdl = artifacts.getWsdl();
-                List<Element> policyExpressions = target.getPolicies();
-                List<PolicyExpressionMapping> mappings = target.getMappings();
-                policyAttacher.attach(generatedWsdl, policyExpressions, mappings);
-            }
+            try {
+                // SAAJ classes are needed from the TCCL
+                Thread.currentThread().setContextClassLoader(classLoader);
 
-            ObjectFactory<?> proxyFactory = new MetroProxyObjectFactory(endpointDefinition,
-                                                                        wsdlLocation,
-                                                                        generatedWsdl,
-                                                                        seiClass,
-                                                                        features,
-                                                                        scheduler,
-                                                                        securityEnvironment,
-                                                                        xmlInputFactory);
-
-            Method[] methods = seiClass.getDeclaredMethods();
-            SecurityConfiguration securityConfiguration = target.getSecurityConfiguration();
-            ConnectionConfiguration connectionConfiguration = target.getConnectionConfiguration();
-            for (InvocationChain chain : wire.getInvocationChains()) {
-                Method method = null;
-                for (Method meth : methods) {
-                    if (chain.getPhysicalOperation().getName().equals(meth.getName())) {
-                        method = meth;
-                        break;
-                    }
+                // cache WSDL and Schemas
+                URL wsdlLocation = target.getWsdlLocation();
+                URL generatedWsdl = null;
+                List<URL> generatedSchemas;
+                URI servicePath = target.getEndpointDefinition().getUrl().toURI();
+                String wsdl = target.getWsdl();
+                if (wsdl != null) {
+                    wsdlLocation = artifactCache.cache(servicePath, new ByteArrayInputStream(wsdl.getBytes()));
+                    generatedWsdl = wsdlLocation;
+                    generatedSchemas = cacheSchemas(servicePath, target);
                 }
-                boolean oneWay = chain.getPhysicalOperation().isOneWay();
-                MetroJavaTargetInterceptor targetInterceptor =
-                        new MetroJavaTargetInterceptor(proxyFactory, method, oneWay, securityConfiguration, connectionConfiguration);
-                chain.addInterceptor(targetInterceptor);
+
+                WebServiceFeature[] features = resolver.getFeatures(requestedIntents);
+
+                ObjectFactory<?> proxyFactory = new MetroProxyObjectFactory(endpointDefinition,
+                                                                            wsdlLocation,
+                                                                            generatedWsdl,
+                                                                            seiClass,
+                                                                            features,
+                                                                            scheduler,
+                                                                            securityEnvironment,
+                                                                            xmlInputFactory);
+
+                attacheInterceptors(seiClass, target, wire, proxyFactory);
+            } finally {
+                Thread.currentThread().setContextClassLoader(old);
             }
-        } catch (ClassNotFoundException e) {
+        } catch (CacheException e) {
             throw new WiringException(e);
-        } catch (WsdlGenerationException e) {
-            throw new WiringException(e);
-        } catch (PolicyAttachmentException e) {
+        } catch (URISyntaxException e) {
             throw new WiringException(e);
         }
 
@@ -186,6 +170,36 @@ public class MetroJavaTargetWireAttacher implements TargetWireAttacher<MetroJava
 
     public void detach(PhysicalSourceDefinition source, MetroJavaTargetDefinition target) throws WiringException {
         // no-op
+    }
+
+    private List<URL> cacheSchemas(URI servicePath, MetroJavaTargetDefinition target) throws CacheException {
+        List<URL> schemas = new ArrayList<URL>();
+        for (Map.Entry<String, String> entry : target.getSchemas().entrySet()) {
+            URI uri = URI.create(servicePath + "/" + entry.getKey());
+            ByteArrayInputStream bas = new ByteArrayInputStream(entry.getValue().getBytes());
+            URL url = artifactCache.cache(uri, bas);
+            schemas.add(url);
+        }
+        return schemas;
+    }
+
+    private void attacheInterceptors(Class<?> seiClass, MetroJavaTargetDefinition target, Wire wire, ObjectFactory<?> proxyFactory) {
+        Method[] methods = seiClass.getMethods();
+        SecurityConfiguration securityConfiguration = target.getSecurityConfiguration();
+        ConnectionConfiguration connectionConfiguration = target.getConnectionConfiguration();
+        for (InvocationChain chain : wire.getInvocationChains()) {
+            Method method = null;
+            for (Method meth : methods) {
+                if (chain.getPhysicalOperation().getName().equals(meth.getName())) {
+                    method = meth;
+                    break;
+                }
+            }
+            boolean oneWay = chain.getPhysicalOperation().isOneWay();
+            MetroJavaTargetInterceptor targetInterceptor =
+                    new MetroJavaTargetInterceptor(proxyFactory, method, oneWay, securityConfiguration, connectionConfiguration);
+            chain.addInterceptor(targetInterceptor);
+        }
     }
 
 }

@@ -40,8 +40,6 @@ package org.fabric3.binding.ws.metro.provision;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Element;
-
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
@@ -51,10 +49,8 @@ import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
  */
 public abstract class MetroSourceDefinition extends PhysicalSourceDefinition {
     private static final long serialVersionUID = -7874049193479847748L;
-
     private List<QName> intents;
-    private List<Element> policies;
-    private List<PolicyExpressionMapping> mappings;
+    private String wsdl;
     private ServiceEndpointDefinition endpointDefinition;
 
     /**
@@ -62,17 +58,12 @@ public abstract class MetroSourceDefinition extends PhysicalSourceDefinition {
      *
      * @param endpointDefinition endpoint metadta
      * @param intents            intents configured at the endpoint level that are provided natively by the Metro
-     * @param policies           policy expressions to be attached to the endpoint
-     * @param mappings           mappings of policy expressions to the operations they are attached to. Used to generate endpoint WSDL.
+     * @param wsdl               the WSDL. May be null, in which case the WSDL will be introspected when the endpoint is provisioned.
      */
-    public MetroSourceDefinition(ServiceEndpointDefinition endpointDefinition,
-                                 List<QName> intents,
-                                 List<Element> policies,
-                                 List<PolicyExpressionMapping> mappings) {
+    public MetroSourceDefinition(ServiceEndpointDefinition endpointDefinition, String wsdl, List<QName> intents) {
         this.endpointDefinition = endpointDefinition;
+        this.wsdl = wsdl;
         this.intents = intents;
-        this.policies = policies;
-        this.mappings = mappings;
     }
 
     /**
@@ -93,21 +84,9 @@ public abstract class MetroSourceDefinition extends PhysicalSourceDefinition {
         return intents;
     }
 
-    /**
-     * Returns the policy expressions to be attached to the endpoint
-     *
-     * @return the policy expressions
-     */
-    public List<Element> getPolicies() {
-        return policies;
+    public String getWsdl() {
+        return wsdl;
     }
 
-    /**
-     * Returns the mappings from policy expression to operations.
-     *
-     * @return the mappings from policy expression to operations
-     */
-    public List<PolicyExpressionMapping> getMappings() {
-        return mappings;
-    }
+
 }

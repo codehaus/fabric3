@@ -35,32 +35,28 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.runtime.policy;
+package org.fabric3.binding.ws.metro.util;
 
-import java.io.File;
-import java.util.List;
-
-import org.w3c.dom.Element;
-
-import org.fabric3.binding.ws.metro.provision.PolicyExpressionMapping;
+import java.lang.reflect.InvocationTargetException;
+import java.security.SecureClassLoader;
 
 /**
- * Inlines WS-Policy expressions in WSDL document. Specifically, a PolicyReference element is added to PortType operation definitions to which the
- * policies apply.
+ * Defines a class using a classloader.
  *
  * @version $Rev$ $Date$
  */
-public interface WsdlPolicyAttacher {
+public interface ClassDefiner {
 
     /**
-     * Attaches endpoint and operation policy expressions to a WSDL document. Endpoint policies will be attached to the binding while operation
-     * policies will be attached to the port type operation element.
+     * Define the class.
      *
-     * @param wsdl             the WSDL document
-     * @param endpointPolicies the endpoint policies
-     * @param mappings         a mapping of policy expressions to operations. Operation overloading is not supported.
-     * @throws PolicyAttachmentException if an attachment error is encountered
+     * @param name   the class name
+     * @param bytes  the class bytes
+     * @param loader the classloader to use
+     * @return the loaded class
+     * @throws IllegalAccessException    if there is an error defining the class
+     * @throws InvocationTargetException if there is an error defining the class
      */
-    void attach(File wsdl, List<Element> endpointPolicies, List<PolicyExpressionMapping> mappings) throws PolicyAttachmentException;
+    Class<?> defineClass(String name, byte[] bytes, SecureClassLoader loader) throws IllegalAccessException, InvocationTargetException;
 
 }

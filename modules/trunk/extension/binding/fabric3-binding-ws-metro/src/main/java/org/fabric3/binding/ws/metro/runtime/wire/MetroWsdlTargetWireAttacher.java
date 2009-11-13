@@ -54,7 +54,7 @@ import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.SecurityConfiguration;
 import org.fabric3.binding.ws.metro.runtime.core.MetroDispatchObjectFactory;
 import org.fabric3.binding.ws.metro.runtime.core.MetroDispatchTargetInterceptor;
-import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
+import org.fabric3.binding.ws.metro.util.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.ObjectFactory;
@@ -106,10 +106,6 @@ public class MetroWsdlTargetWireAttacher implements TargetWireAttacher<MetroWsdl
 
         File generatedWsdl = null;  // TODO support policy
         BindingID bindingId = bindingIdResolver.resolveBindingId(requestedIntents);
-        if (!target.getPolicies().isEmpty() || !target.getMappings().isEmpty()) {
-            // if policy is configured for the endpoint, generate a WSDL with the policy attachments
-            // TODO policy generation
-        }
 
         MetroDispatchObjectFactory proxyFactory = new MetroDispatchObjectFactory(endpointDefinition,
                                                                                  wsdlLocation,

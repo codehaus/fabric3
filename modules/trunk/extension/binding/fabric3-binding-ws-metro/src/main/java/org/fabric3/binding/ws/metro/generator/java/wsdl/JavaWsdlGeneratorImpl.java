@@ -37,7 +37,7 @@
 */
 package org.fabric3.binding.ws.metro.generator.java.wsdl;
 
-import java.util.List;
+import java.util.Map;
 import javax.xml.namespace.QName;
 
 import com.sun.xml.ws.api.BindingID;
@@ -54,18 +54,18 @@ import com.sun.xml.ws.wsdl.writer.WSDLGenerator;
  */
 public class JavaWsdlGeneratorImpl implements JavaWsdlGenerator {
 
-    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, BindingID bindingId, boolean client) throws WsdlGenerationException {
+    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, String endpointAddress, BindingID bindingId) throws WsdlGenerationException {
         RuntimeModeler modeler = new RuntimeModeler(seiClass, serviceQName, bindingId);
         AbstractSEIModelImpl model = modeler.buildRuntimeModel();
         GeneratedWsdlResolver wsdlResolver = new GeneratedWsdlResolver();
         WSBinding binding = BindingImpl.create(bindingId);
         WSDLGenerator generator = new WSDLGenerator(model, wsdlResolver, binding, null, seiClass);
-
+        generator.setEndpointAddress(endpointAddress);
         // generate the WSDL and schemas
         generator.doGeneration();
 
         String wsdl = wsdlResolver.getGeneratedWsdl();
-        List<String> schemas = wsdlResolver.getGeneratedSchemas();
+        Map<String, String> schemas = wsdlResolver.getGeneratedSchemas();
         return new GeneratedArtifacts(wsdl, schemas);
     }
 }

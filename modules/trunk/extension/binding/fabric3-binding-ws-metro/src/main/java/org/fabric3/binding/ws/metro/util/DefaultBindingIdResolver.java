@@ -35,19 +35,22 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.binding.ws.metro.runtime.policy;
+package org.fabric3.binding.ws.metro.util;
 
 import java.util.List;
 import javax.xml.namespace.QName;
 
 import com.sun.xml.ws.api.BindingID;
+import com.sun.xml.ws.developer.JAXWSProperties;
+
+import org.fabric3.binding.ws.metro.runtime.policy.MayProvideIntents;
 
 /**
- * Interface for resolving binding id.
+ * Default implementation of the binding Id resolver.
  *
  * @version $Rev$ $Date$
  */
-public interface BindingIdResolver {
+public class DefaultBindingIdResolver implements BindingIdResolver {
 
     /**
      * Resolves bindings based on the requested intents and policy sets.
@@ -55,6 +58,19 @@ public interface BindingIdResolver {
      * @param requestedIntents Intents requested on the bindings.
      * @return Resolved binding Id.
      */
-    BindingID resolveBindingId(List<QName> requestedIntents);
+    public BindingID resolveBindingId(List<QName> requestedIntents) {
+
+        BindingID bindingID = BindingID.SOAP11_HTTP;
+        if (requestedIntents.contains(MayProvideIntents.SOAP1_2)) {
+            bindingID = BindingID.SOAP12_HTTP;
+        } else if (requestedIntents.contains(MayProvideIntents.X_SOAP1_2)) {
+            bindingID = BindingID.X_SOAP12_HTTP;
+        } else if (requestedIntents.contains(MayProvideIntents.REST)) {
+            bindingID = BindingID.parse(JAXWSProperties.REST_BINDING);
+        }
+
+        return bindingID;
+
+    }
 
 }

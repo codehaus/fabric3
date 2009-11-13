@@ -43,8 +43,6 @@
  */
 package org.fabric3.binding.ws.metro.runtime.core;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,17 +151,17 @@ public class MetroServlet extends WSServlet {
             WSBinding binding = BindingImpl.create(bindingId, features);
             Container endpointContainer = container;
             List<SDDocumentSource> metadata = null;
-            File generatedWsdl = configuration.getGeneratedWsdl();
+            URL generatedWsdl = configuration.getGeneratedWsdl();
             if (generatedWsdl != null) {
                 // create a container wrapper used by Metro to resolve the WSIT configuration
                 endpointContainer = new WsitConfigurationContainer(container, generatedWsdl);
                 // Compile the list of imported schemas so they can be resolved using ?xsd GET requests. Metro will re-write the WSDL import
                 // so clients can dereference the imports when they obtain the WSDL.
                 metadata = new ArrayList<SDDocumentSource>();
-                List<File> schemas = configuration.getGeneratedSchemas();
+                List<URL> schemas = configuration.getGeneratedSchemas();
                 if (schemas != null) {
-                    for (File schema : schemas) {
-                        metadata.add(SDDocumentSource.create(schema.toURI().toURL()));
+                    for (URL schema : schemas) {
+                        metadata.add(SDDocumentSource.create(schema));
                     }
                 }
             }
@@ -189,9 +187,6 @@ public class MetroServlet extends WSServlet {
             String mexPath = servicePath + MEX_SUFFIX;
             ServletAdapter mexAdapter = servletAdapterFactory.createAdapter(mexPath, mexPath, mexEndpoint);
             delegate.registerServletAdapter(mexAdapter, F3Provider.class.getClassLoader());
-        } catch (MalformedURLException e) {
-            // this should not happen
-            throw new AssertionError(e);
         } finally {
             Thread.currentThread().setContextClassLoader(old);
         }

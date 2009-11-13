@@ -37,7 +37,6 @@
 */
 package org.fabric3.binding.ws.metro.runtime.core;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -58,9 +57,9 @@ public class WsitClientConfigurationContainer extends Container {
     private SecurityEnvironment securityEnvironment;
 
 
-    public WsitClientConfigurationContainer(File wsitConfiguration, SecurityEnvironment securityEnvironment) throws MalformedURLException {
+    public WsitClientConfigurationContainer(URL wsitConfiguration, SecurityEnvironment securityEnvironment) throws MalformedURLException {
         this.securityEnvironment = securityEnvironment;
-        this.wsitConfiguration = wsitConfiguration.toURI().toURL();
+        this.wsitConfiguration = wsitConfiguration;
     }
 
     public WsitClientConfigurationContainer(SecurityEnvironment securityEnvironment) throws MalformedURLException {

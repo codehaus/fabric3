@@ -37,42 +37,46 @@
 */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
-import javax.jws.WebService;
+import java.lang.reflect.InvocationTargetException;
+import java.security.SecureClassLoader;
 
-import junit.framework.TestCase;
-import org.oasisopen.sca.annotation.OneWay;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.binding.ws.metro.util.ClassDefiner;
+import org.fabric3.binding.ws.metro.util.ClassLoaderUpdater;
+import org.fabric3.spi.builder.WiringException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class WireAttacherHelperTestCase extends TestCase {
+public class WireAttacherHelperImpl implements WireAttacherHelper {
+    private ClassDefiner classDefiner;
+    private ClassLoaderUpdater classLoaderUpdater;
 
-    public void testWebMethodNoGeneration() throws Exception {
-        assertFalse(WireAttacherHelper.doGeneration(WebServiceAnnotatedClass.class));
+    public WireAttacherHelperImpl(@Reference ClassDefiner classDefiner, @Reference ClassLoaderUpdater classLoaderUpdater) {
+        this.classDefiner = classDefiner;
+        this.classLoaderUpdater = classLoaderUpdater;
     }
 
-    public void testGeneration() throws Exception {
-        assertTrue(WireAttacherHelper.doGeneration(NoAnnotatedClass.class));
-    }
+    public Class<?> loadSEI(String interfaze, byte[] classBytes, SecureClassLoader classLoader) throws WiringException {
+        try {
+            Class<?> seiClass;
+            if (classBytes != null) {
+                seiClass = classDefiner.defineClass(interfaze, classBytes, (SecureClassLoader) classLoader);
+            } else {
+                // the service interface is not generated
+                seiClass = classLoader.loadClass(interfaze);
+            }
 
-    public void testOneWayGeneration() throws Exception {
-        assertTrue(WireAttacherHelper.doGeneration(OneWayAnnotatedClass.class));
-    }
-
-    @WebService
-    public static class WebServiceAnnotatedClass {
-
-    }
-
-    public static class OneWayAnnotatedClass {
-        @OneWay
-        public void oneWay() {
-
+            classLoaderUpdater.updateClassLoader(seiClass);
+            return seiClass;
+        } catch (ClassNotFoundException e) {
+            throw new WiringException(e);
+        } catch (IllegalAccessException e) {
+            throw new WiringException(e);
+        } catch (InvocationTargetException e) {
+            throw new WiringException(e);
         }
-    }
-
-    public static class NoAnnotatedClass {
-
     }
 
 }

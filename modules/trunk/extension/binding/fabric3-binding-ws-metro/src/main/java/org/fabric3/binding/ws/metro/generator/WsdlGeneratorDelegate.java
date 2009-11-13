@@ -149,7 +149,7 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
 
         // Note operation level provided intents are not currently supported. Intents are mapped to JAX-WS features, which are per endpoint.
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
-        return new MetroWsdlSourceDefinition(endpointDefinition, serializedWsdl, intentNames, policyExpressions, mappings);
+        return new MetroWsdlSourceDefinition(endpointDefinition, serializedWsdl, intentNames);
     }
 
 
@@ -229,8 +229,6 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
         return new MetroWsdlTargetDefinition(endpointDefinition,
                                              serializedWsdl,
                                              intentNames,
-                                             policyExpressions,
-                                             mappings,
                                              securityConfiguration,
                                              connectionConfiguration);
     }
