@@ -48,7 +48,7 @@ import com.sun.xml.ws.model.RuntimeModeler;
 import com.sun.xml.ws.wsdl.writer.WSDLGenerator;
 
 /**
- * Default implementation of JavaWsdlGenerator.
+ * Default implementation of JavaWsdlGenerator that uses the Metro WSDL modeler to generate a WSDL from a Java class.
  *
  * @version $Rev$ $Date$
  */
