@@ -52,14 +52,22 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLWriter;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.metro.generator.GenerationHelper;
 import org.fabric3.binding.ws.metro.generator.MetroGeneratorDelegate;
 import org.fabric3.binding.ws.metro.generator.PolicyExpressionMapping;
 import org.fabric3.binding.ws.metro.generator.WsdlElement;
+import org.fabric3.binding.ws.metro.generator.policy.WsdlPolicyAttacher;
 import org.fabric3.binding.ws.metro.generator.resolver.EndpointResolver;
 import org.fabric3.binding.ws.metro.generator.resolver.WsdlResolver;
 import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
@@ -89,14 +97,19 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
     private EndpointResolver endpointResolver;
     private WsdlSynthesizer wsdlSynthesizer;
     private WSDLFactory wsdlFactory;
+    private WsdlPolicyAttacher policyAttacher;
+    private TransformerFactory transformerFactory;
 
     public WsdlGeneratorDelegate(@Reference WsdlResolver wsdlResolver,
                                  @Reference EndpointResolver endpointResolver,
-                                 @Reference WsdlSynthesizer wsdlSynthesizer) throws WSDLException {
+                                 @Reference WsdlSynthesizer wsdlSynthesizer,
+                                 @Reference WsdlPolicyAttacher policyAttacher) throws WSDLException {
         this.wsdlResolver = wsdlResolver;
         this.endpointResolver = endpointResolver;
         this.wsdlSynthesizer = wsdlSynthesizer;
+        this.policyAttacher = policyAttacher;
         wsdlFactory = WSDLFactory.newInstance();
+        transformerFactory = TransformerFactory.newInstance();
     }
 
     public MetroSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding, WsdlServiceContract contract, EffectivePolicy policy)
@@ -135,8 +148,6 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
             endpointDefinition = endpointResolver.resolveServiceEndpoint(wsdlElement, wsdl, targetUri);
         }
 
-        // TODO look to move policy generation here
-
         // handle endpoint-level intents provided by Metro
         List<QName> intentNames = new ArrayList<QName>();
         Set<Intent> endpointIntents = policy.getEndpointIntents();
@@ -150,13 +161,27 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
             policyExpressions.add(policySet.getExpression());
         }
 
-        String serializedWsdl = serializeToString(wsdl);
+        String serializedWsdl;
 
         // Note operation level provided intents are not currently supported. Intents are mapped to JAX-WS features, which are per endpoint.
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
+
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            // SAAJ classes need to be present on TCCL
+            if (!policyExpressions.isEmpty() || !mappings.isEmpty()) {
+                // if policy is configured for the endpoint, generate a WSDL with the policy attachments
+                serializedWsdl = mergePolicy(wsdl, policyExpressions, mappings);
+            } else {
+                serializedWsdl = serializeToString(wsdl);
+            }
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+
         return new MetroWsdlSourceDefinition(endpointDefinition, serializedWsdl, intentNames);
     }
-
 
     public MetroTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                     WsdlServiceContract contract,
@@ -223,13 +248,26 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
         // map operation-level policies
         List<PolicyExpressionMapping> mappings = GenerationHelper.createMappings(policy);
 
+        String serializedWsdl;
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            // SAAJ classes need to be present on TCCL
+            if (!policyExpressions.isEmpty() || !mappings.isEmpty()) {
+                // if policy is configured for the endpoint, generate a WSDL with the policy attachments
+                serializedWsdl = mergePolicy(wsdl, policyExpressions, mappings);
+            } else {
+                serializedWsdl = serializeToString(wsdl);
+            }
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+
         // obtain security information
         SecurityConfiguration securityConfiguration = GenerationHelper.createSecurityConfiguration(definition);
 
         // obtain connection information
         ConnectionConfiguration connectionConfiguration = GenerationHelper.createConnectionConfiguration(definition);
-
-        String serializedWsdl = serializeToString(wsdl);
 
         return new MetroWsdlTargetDefinition(endpointDefinition,
                                              serializedWsdl,
@@ -276,5 +314,31 @@ public class WsdlGeneratorDelegate implements MetroGeneratorDelegate<WsdlService
         }
     }
 
+    /**
+     * Merges policy sets into the given WSDL document.
+     *
+     * @param wsdl              the WSDL
+     * @param policyExpressions the policy set expressions
+     * @param mappings          policy set to operation mappings
+     * @return the merged WSDL
+     * @throws GenerationException if the merge is unsuccessful
+     */
+    private String mergePolicy(Definition wsdl, List<Element> policyExpressions, List<PolicyExpressionMapping> mappings) throws GenerationException {
+        try {
+            Document wsdlDocument = wsdlFactory.newWSDLWriter().getDocument(wsdl);
+            policyAttacher.attach(wsdlDocument, policyExpressions, mappings);
+            // Write the DOM representing the abstract WSDL back to the file
+            Source source = new DOMSource(wsdlDocument);
+            StringWriter writer = new StringWriter();
+            StreamResult result = new StreamResult(writer);
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(source, result);
+            return writer.toString();
+        } catch (TransformerException e) {
+            throw new GenerationException(e);
+        } catch (WSDLException e) {
+            throw new GenerationException(e);
+        }
+    }    
 
 }
