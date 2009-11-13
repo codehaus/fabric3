@@ -35,47 +35,27 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.resolver;
 
-import java.net.URI;
-import java.net.URL;
-import javax.wsdl.Definition;
-import javax.xml.namespace.QName;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Resolves parsed WSDLs against an external location or those visible to a contribution installed in the domain.
+ * Denotes an error resolving a parsed WSDL document.
  *
  * @version $Rev$ $Date$
  */
-public interface WsdlResolver {
+public class WsdlResolutionException extends GenerationException {
+    private static final long serialVersionUID = 4470077633149855238L;
 
-    /**
-     * Resolve the WSDL against the external location.
-     *
-     * @param wsdlLocation the location of the WSDL docuemnt
-     * @return the parsed WSDL
-     * @throws WsdlResolutionException if a resolution error occurs
-     */
-    Definition parseWsdl(URL wsdlLocation) throws WsdlResolutionException;
+    public WsdlResolutionException(String message) {
+        super(message);
+    }
 
-    /**
-     * Resolve the WSDL against the WSDLs installed in the domain for the given contribution.
-     *
-     * @param contributionUri the contribution URI
-     * @param wsdlName        the WSDL name
-     * @return the parsed WSDL
-     * @throws WsdlResolutionException if a resolution error occurs
-     */
-    Definition resolveWsdl(URI contributionUri, QName wsdlName) throws WsdlResolutionException;
+    public WsdlResolutionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    /**
-     * Resolve the WSDL against the WSDLs installed in the domain for the given contribution by port name.
-     *
-     * @param contributionUri the contribution URI
-     * @param portName        the WSDL port name
-     * @return the parsed WSDL
-     * @throws WsdlResolutionException if a resolution error occurs
-     */
-    Definition resolveWsdlByPortName(URI contributionUri, QName portName) throws WsdlResolutionException;
-
+    public WsdlResolutionException(Throwable cause) {
+        super(cause);
+    }
 }

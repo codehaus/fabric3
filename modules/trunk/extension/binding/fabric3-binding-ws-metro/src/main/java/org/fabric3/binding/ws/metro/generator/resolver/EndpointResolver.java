@@ -35,11 +35,12 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.resolver;
 
 import java.net.URI;
 import javax.wsdl.Definition;
 
+import org.fabric3.binding.ws.metro.generator.WsdlElement;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 

@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.java;
 
 import java.net.URI;
 import java.net.URL;
@@ -102,8 +102,8 @@ public class EndpointSynthesizerImpl implements EndpointSynthesizer {
         String className = serviceClass.getSimpleName();
         String namespace = deriveNamespace(packageName);
         QName serviceQName = new QName(namespace, className + "Service");
-        QName portQName =  new QName(namespace, className + "Port");
-        QName portTypeQName =  new QName(namespace, className);
+        QName portQName = new QName(namespace, className + "Port");
+        QName portTypeQName = new QName(namespace, className);
         return new ReferenceEndpointDefinition(serviceQName, true, portQName, portTypeQName, url);
     }
 

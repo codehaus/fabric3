@@ -35,31 +35,27 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.wsdl;
 
-import junit.framework.TestCase;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
+ * Denotes an error synthesizing concrete WSDL information.
+ *
  * @version $Rev$ $Date$
  */
-public class EndpointSynthesizerImplTestCase extends TestCase {
+public class WsdlSynthesisException extends GenerationException {
+    private static final long serialVersionUID = 8316335349870169903L;
 
-    public void testPackageDerivation() throws Exception {
-        EndpointSynthesizerImpl synthesizer = new EndpointSynthesizerImpl();
-        String namespace = synthesizer.deriveNamespace("org.foo.com");
-        assertEquals("http://com.foo.org/", namespace);
+    public WsdlSynthesisException(String message) {
+        super(message);
     }
 
-    public void testSinglePackageDerivation() throws Exception {
-        EndpointSynthesizerImpl synthesizer = new EndpointSynthesizerImpl();
-        String namespace = synthesizer.deriveNamespace("foo");
-        assertEquals("http://foo/", namespace);
+    public WsdlSynthesisException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void testNoPackageDerivation() throws Exception {
-        EndpointSynthesizerImpl synthesizer = new EndpointSynthesizerImpl();
-        String namespace = synthesizer.deriveNamespace("");
-        assertEquals("http:///", namespace);
+    public WsdlSynthesisException(Throwable cause) {
+        super(cause);
     }
-
 }

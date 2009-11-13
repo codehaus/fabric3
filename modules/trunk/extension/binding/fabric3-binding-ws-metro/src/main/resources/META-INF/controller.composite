@@ -16,19 +16,19 @@ Public License. See the accompanying license file for details.
            autowire="true">
 
     <component name="WsdlResolver">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.WsdlResolverImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.resolver.WsdlResolverImpl"/>
     </component>
 
     <component name="EndpointResolver">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.EndpointResolverImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.resolver.EndpointResolverImpl"/>
     </component>
 
     <component name="EndpointSynthesizer">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.EndpointSynthesizerImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.java.EndpointSynthesizerImpl"/>
     </component>
 
     <component name="WsdlSynthesizer">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.WsdlSynthesizerImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.wsdl.WsdlSynthesizerImpl"/>
     </component>
 
     <component name="JavaInterfaceGenerator">
@@ -48,7 +48,7 @@ Public License. See the accompanying license file for details.
     </component>
 
     <component name="WsdlGeneratorDelegate" f3-core:key="org.fabric3.wsdl.model.WsdlServiceContract">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.WsdlGeneratorDelegate"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.generator.wsdl.WsdlGeneratorDelegate"/>
     </component>
 
     <component name="JavaGeneratorDelegate" f3-core:key="org.fabric3.spi.model.type.java.JavaServiceContract">

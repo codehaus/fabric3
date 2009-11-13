@@ -47,9 +47,9 @@ import java.util.Map;
  */
 public class GeneratedArtifacts {
     private String wsdl;
-    private  Map<String, String> schemas;
+    private Map<String, String> schemas;
 
-    public GeneratedArtifacts(String wsdl,  Map<String, String> schemas) {
+    public GeneratedArtifacts(String wsdl, Map<String, String> schemas) {
         this.wsdl = wsdl;
         this.schemas = schemas;
     }

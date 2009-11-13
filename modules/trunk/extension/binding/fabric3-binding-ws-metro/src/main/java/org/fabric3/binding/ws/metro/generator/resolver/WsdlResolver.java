@@ -35,40 +35,47 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.resolver;
 
 import java.net.URI;
 import java.net.URL;
-
-import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
-import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
-import org.fabric3.spi.model.type.java.JavaServiceContract;
+import javax.wsdl.Definition;
+import javax.xml.namespace.QName;
 
 /**
- * Synthesizes endpoint information from a Java service contract.
+ * Resolves parsed WSDLs against an external location or those visible to a contribution installed in the domain.
  *
  * @version $Rev$ $Date$
  */
-public interface EndpointSynthesizer {
+public interface WsdlResolver {
 
     /**
-     * Synthesize reference endpoint information.
+     * Resolve the WSDL against the external location.
      *
-     * @param contract     the service contract
-     * @param serviceClass the service endpoint implementation
-     * @param url          the target endpoint URL
-     * @return the     endpoint information
+     * @param wsdlLocation the location of the WSDL docuemnt
+     * @return the parsed WSDL
+     * @throws WsdlResolutionException if a resolution error occurs
      */
-    ReferenceEndpointDefinition synthesizeReferenceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URL url);
+    Definition parseWsdl(URL wsdlLocation) throws WsdlResolutionException;
 
     /**
-     * Synthesize service endpoint information.
+     * Resolve the WSDL against the WSDLs installed in the domain for the given contribution.
      *
-     * @param contract     the service contract
-     * @param serviceClass the service endpoint implementation
-     * @param servicePath  the relative service path
-     * @return the     endpoint information
+     * @param contributionUri the contribution URI
+     * @param wsdlName        the WSDL name
+     * @return the parsed WSDL
+     * @throws WsdlResolutionException if a resolution error occurs
      */
-    ServiceEndpointDefinition synthesizeServiceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URI servicePath);
+    Definition resolveWsdl(URI contributionUri, QName wsdlName) throws WsdlResolutionException;
+
+    /**
+     * Resolve the WSDL against the WSDLs installed in the domain for the given contribution by port name.
+     *
+     * @param contributionUri the contribution URI
+     * @param portName        the WSDL port name
+     * @return the parsed WSDL
+     * @throws WsdlResolutionException if a resolution error occurs
+     */
+    Definition resolveWsdlByPortName(URI contributionUri, QName portName) throws WsdlResolutionException;
 
 }

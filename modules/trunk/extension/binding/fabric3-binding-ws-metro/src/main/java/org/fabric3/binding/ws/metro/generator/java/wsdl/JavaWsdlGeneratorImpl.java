@@ -54,7 +54,8 @@ import com.sun.xml.ws.wsdl.writer.WSDLGenerator;
  */
 public class JavaWsdlGeneratorImpl implements JavaWsdlGenerator {
 
-    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, String endpointAddress, BindingID bindingId) throws WsdlGenerationException {
+    public GeneratedArtifacts generate(Class<?> seiClass, QName serviceQName, String endpointAddress, BindingID bindingId)
+            throws WsdlGenerationException {
         RuntimeModeler modeler = new RuntimeModeler(seiClass, serviceQName, bindingId);
         AbstractSEIModelImpl model = modeler.buildRuntimeModel();
         GeneratedWsdlResolver wsdlResolver = new GeneratedWsdlResolver();

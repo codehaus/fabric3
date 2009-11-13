@@ -35,27 +35,40 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.java;
 
-import org.fabric3.spi.generator.GenerationException;
+import java.net.URI;
+import java.net.URL;
+
+import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
+import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
+import org.fabric3.spi.model.type.java.JavaServiceContract;
 
 /**
- * Denotes an error resolving endpoint information from a WSDL document.
+ * Synthesizes endpoint information from a Java service contract.
  *
  * @version $Rev$ $Date$
  */
-public class EndpointResolutionException extends GenerationException {
-    private static final long serialVersionUID = 6481333003446910943L;
+public interface EndpointSynthesizer {
 
-    public EndpointResolutionException(String message) {
-        super(message);
-    }
+    /**
+     * Synthesize reference endpoint information.
+     *
+     * @param contract     the service contract
+     * @param serviceClass the service endpoint implementation
+     * @param url          the target endpoint URL
+     * @return the     endpoint information
+     */
+    ReferenceEndpointDefinition synthesizeReferenceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URL url);
 
-    public EndpointResolutionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    /**
+     * Synthesize service endpoint information.
+     *
+     * @param contract     the service contract
+     * @param serviceClass the service endpoint implementation
+     * @param servicePath  the relative service path
+     * @return the     endpoint information
+     */
+    ServiceEndpointDefinition synthesizeServiceEndpoint(JavaServiceContract contract, Class<?> serviceClass, URI servicePath);
 
-    public EndpointResolutionException(Throwable cause) {
-        super(cause);
-    }
 }

@@ -35,27 +35,27 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.resolver;
 
 import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Denotes an error synthesizing concrete WSDL information.
+ * Denotes an error resolving endpoint information from a WSDL document.
  *
  * @version $Rev$ $Date$
  */
-public class WsdlSynthesisException extends GenerationException {
-    private static final long serialVersionUID = 8316335349870169903L;
+public class EndpointResolutionException extends GenerationException {
+    private static final long serialVersionUID = 6481333003446910943L;
 
-    public WsdlSynthesisException(String message) {
+    public EndpointResolutionException(String message) {
         super(message);
     }
 
-    public WsdlSynthesisException(String message, Throwable cause) {
+    public EndpointResolutionException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public WsdlSynthesisException(Throwable cause) {
+    public EndpointResolutionException(Throwable cause) {
         super(cause);
     }
 }

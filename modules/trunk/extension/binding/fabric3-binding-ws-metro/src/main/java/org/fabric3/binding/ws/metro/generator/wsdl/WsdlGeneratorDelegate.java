@@ -36,7 +36,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.wsdl;
 
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -56,6 +56,11 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
+import org.fabric3.binding.ws.metro.generator.resolver.EndpointResolver;
+import org.fabric3.binding.ws.metro.generator.GenerationHelper;
+import org.fabric3.binding.ws.metro.generator.MetroGeneratorDelegate;
+import org.fabric3.binding.ws.metro.generator.WsdlElement;
+import org.fabric3.binding.ws.metro.generator.resolver.WsdlResolver;
 import org.fabric3.binding.ws.metro.provision.ConnectionConfiguration;
 import org.fabric3.binding.ws.metro.provision.MetroSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroTargetDefinition;

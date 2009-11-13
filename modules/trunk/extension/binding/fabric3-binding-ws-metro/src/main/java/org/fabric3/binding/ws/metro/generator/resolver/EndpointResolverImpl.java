@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ws.metro.generator;
+package org.fabric3.binding.ws.metro.generator.resolver;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -47,6 +47,7 @@ import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.xml.namespace.QName;
 
+import org.fabric3.binding.ws.metro.generator.WsdlElement;
 import org.fabric3.binding.ws.metro.provision.ReferenceEndpointDefinition;
 import org.fabric3.binding.ws.metro.provision.ServiceEndpointDefinition;
 
@@ -65,7 +66,7 @@ public class EndpointResolverImpl implements EndpointResolver {
 
     public ServiceEndpointDefinition resolveServiceEndpoint(WsdlElement wsdlElement, Definition wsdl, URI uri) throws EndpointResolutionException {
         QName serviceName = wsdlElement.getServiceName();
-        QName portName =  wsdlElement.getPortName();
+        QName portName = wsdlElement.getPortName();
         Port port = resolvePort(serviceName, portName, wsdl);
         URI servicePath;
         if (uri == null) {
@@ -79,7 +80,7 @@ public class EndpointResolverImpl implements EndpointResolver {
 
     public ReferenceEndpointDefinition resolveReferenceEndpoint(WsdlElement wsdlElement, Definition wsdl) throws EndpointResolutionException {
         QName serviceName = wsdlElement.getServiceName();
-        QName portName =  wsdlElement.getPortName();
+        QName portName = wsdlElement.getPortName();
         Port port = resolvePort(serviceName, portName, wsdl);
         URL url = getAddress(port);
         QName portTypeName = port.getBinding().getPortType().getQName();
