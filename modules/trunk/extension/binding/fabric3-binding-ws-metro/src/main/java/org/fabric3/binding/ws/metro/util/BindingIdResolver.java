@@ -46,7 +46,7 @@ import com.sun.xml.ws.api.BindingID;
  * Interface for resolving binding id.
  *
  * @version $Rev$ $Date$
- * FIXME Move this to generator.policy
+ *
  */
 public interface BindingIdResolver {
 
