@@ -73,6 +73,7 @@
             <!-- profile without Metro and JMS -->
             <id>bamboo</id>
             <modules>
+                <module>test-binding-harness</module>
                 <module>test-function</module>
                 <module>test-policy</module>
                 <module>test-jpa-hibernate</module>
@@ -83,9 +84,9 @@
                 <module>test-timer-implementation</module>
                 <module>test-mock</module>
                 <module>test-binding-ftp</module>
-                <module>test-binding-tcp</module>
                 <module>test-runtime-jetty</module>
                 <module>test-runtime-tomcat</module>
+                <module>test-binding-net</module> 
                 <module>test-implementation-wsdl</module>
                 <module>test-wsdl</module> 
             </modules>
