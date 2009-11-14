@@ -38,6 +38,7 @@
 package org.fabric3.federation.shoal;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -59,6 +60,7 @@ import org.fabric3.spi.event.Fabric3EventListener;
 import org.fabric3.spi.event.JoinDomain;
 import org.fabric3.spi.event.RuntimeStop;
 import org.fabric3.spi.topology.RuntimeService;
+import org.fabric3.util.io.FileHelper;
 
 /**
  * Base implementation of the FederationService based on Shoal.
@@ -83,7 +85,7 @@ public abstract class AbstractFederationService implements RuntimeService, Feder
 
     protected EventService eventService;
     protected FederationServiceMonitor monitor;
-
+    protected File outputDir;
     protected GroupManagementService domainGMS;
 
     protected Map<String, FederationCallback> callbacks = new HashMap<String, FederationCallback>();
@@ -155,17 +157,22 @@ public abstract class AbstractFederationService implements RuntimeService, Feder
         this.eventService = eventService;
         this.monitor = monitor;
         domainName = info.getDomain().getAuthority();
-        File outputDir = new File(info.getTempDir(), "shoal");
+        outputDir = new File(info.getTempDir(), "shoal");
         // set output to the tmp dir
         System.setProperty("JXTA_HOME", outputDir.getPath());
     }
 
     @Init
-    public void init() {
+    public void init() throws IOException {
+        // clean the output directory
+        FileHelper.cleanDirectory(outputDir);
+
         if (runtimeName == null) {
             runtimeName = "Fabric3Runtime-" + UUID.randomUUID().toString();
         }
+
         initializeLogger();
+
         // setup runtime notifications
         eventService.subscribe(JoinDomain.class, new JoinDomainEventListener());
         eventService.subscribe(RuntimeStop.class, new RuntimeStopEventListener());

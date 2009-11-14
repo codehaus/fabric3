@@ -41,6 +41,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.federation.command.ZoneSyncCommand;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
@@ -57,10 +58,14 @@ import org.fabric3.spi.executor.ExecutionException;
 public class ZoneSyncCommandExecutor implements CommandExecutor<ZoneSyncCommand> {
     private Domain domain;
     private CommandExecutorRegistry executorRegistry;
+    private ZoneSyncCommandExecutorMonitor monitor;
 
-    public ZoneSyncCommandExecutor(@Reference(name = "domain") Domain domain, @Reference CommandExecutorRegistry executorRegistry) {
+    public ZoneSyncCommandExecutor(@Reference(name = "domain") Domain domain,
+                                   @Reference CommandExecutorRegistry executorRegistry,
+                                   @Monitor ZoneSyncCommandExecutorMonitor monitor) {
         this.domain = domain;
         this.executorRegistry = executorRegistry;
+        this.monitor = monitor;
     }
 
     @Init
@@ -70,6 +75,7 @@ public class ZoneSyncCommandExecutor implements CommandExecutor<ZoneSyncCommand>
 
     public void execute(ZoneSyncCommand command) throws ExecutionException {
         try {
+            monitor.receivedSyncRequest(command.getRuntimeId());
             domain.regenerate(command.getZoneId(), command.getRuntimeId());
         } catch (DeploymentException e) {
             throw new ExecutionException(e);

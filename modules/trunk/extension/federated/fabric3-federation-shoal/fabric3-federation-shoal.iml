@@ -70,24 +70,25 @@
     <orderEntry type="module-library">
       <library name="com.sun.shoal:shoal-gms:1.1_09292008">
         <CLASSES>
-          <root url="jar://$M2_REPO$/com/sun/shoal/shoal-gms/1.1_09292008/shoal-gms-1.1_09292008.jar!/" />
+          <root url="jar://$M2_REPO$/com/sun/shoal/shoal-gms/1.1_08182009/shoal-gms-1.1_08182009.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$MODULE_DIR$/../../../../../../../third.party/shoal/shoal/gms/src/java" />
+          <root url="file://$SOURCES$/shoal/shoal-1.1FCS/src/java" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library name="com.sun.shoal:shoal-jxta:1.1_09292008">
         <CLASSES>
-          <root url="jar://$M2_REPO$/com/sun/shoal/shoal-jxta/1.1_09292008/shoal-jxta-1.1_09292008.jar!/" />
+          <root url="jar://$M2_REPO$/com/sun/shoal/shoal-jxta/1.1_08182009/shoal-jxta-1.1_08182009.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-deployment" />
+    <orderEntry type="module" module-name="fabric3-util" />
   </component>
 </module>
 

@@ -72,7 +72,7 @@ public class ParticipantFederationServiceImpl extends AbstractFederationService 
     private ClassLoaderRegistry classLoaderRegistry;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param eventService        the runtime event service
      * @param info                the host runtime information
@@ -147,7 +147,7 @@ public class ParticipantFederationServiceImpl extends AbstractFederationService 
         // join the domain group after the zone group has joined
         if (zoneGMS.getGroupHandle().isGroupLeader()) {
             domainGMS = (GroupManagementService) GMSFactory.startGMSModule(zoneName, domainName, CORE, properties);
-            monitor.joined(domainName, zoneName);
+            monitor.joinedControllerGroup(domainName, zoneName);
             initializeCallbacks(domainGMS);
             domainGMS.join();
             domainGMS.reportJoinedAndReadyState(domainName);

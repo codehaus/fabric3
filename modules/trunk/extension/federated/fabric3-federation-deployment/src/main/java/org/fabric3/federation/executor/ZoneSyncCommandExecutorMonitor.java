@@ -35,22 +35,21 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.federation.shoal;
+package org.fabric3.federation.executor;
 
 import org.fabric3.api.annotation.logging.Info;
-import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface DomainSynchronizerMonitor {
+public interface ZoneSyncCommandExecutorMonitor {
 
+    /**
+     * Callback when a sync command is received from a runtime.
+     *
+     * @param id the runtime id.
+     */
     @Info
-    void synchronizingWithController();
+    void receivedSyncRequest(String id);
 
-    @Info
-    void synchronizingWithZoneManager();
-
-    @Severe
-    void error(Throwable e);
 }

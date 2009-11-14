@@ -45,9 +45,6 @@ import org.fabric3.api.annotation.logging.Info;
 public interface DomainManagerMonitor {
 
     @Info
-    void enabled(String domainName);
-
-    @Info
     void joined(String name);
 
     @Info

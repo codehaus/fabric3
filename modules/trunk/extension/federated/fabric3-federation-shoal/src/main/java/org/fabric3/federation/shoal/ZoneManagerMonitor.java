@@ -45,9 +45,6 @@ import org.fabric3.api.annotation.logging.Info;
 public interface ZoneManagerMonitor {
 
     @Info
-    void enabled(String zoneName);
-
-    @Info
     void receivedSyncRequest(String runtimeName);
 
     @Info

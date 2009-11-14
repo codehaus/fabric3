@@ -109,7 +109,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         this.monitor = monitor;
     }
 
-    public boolean isZoneManager() {
+    public boolean isZoneManager() {        
         return federationService.getZoneGMS().getGroupHandle().isGroupLeader();
     }
 
@@ -126,7 +126,6 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     @Init
     public void init() {
         federationService.registerCallback(FederationConstants.ZONE_MANAGER, this);
-        monitor.enabled(federationService.getZoneName());
     }
 
     public List<RuntimeInstance> getRuntimes() {

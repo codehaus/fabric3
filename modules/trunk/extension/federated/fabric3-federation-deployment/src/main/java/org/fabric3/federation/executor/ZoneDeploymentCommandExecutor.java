@@ -58,10 +58,10 @@ import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.RuntimeService;
@@ -124,6 +124,7 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
         if (correlationId.equals(runtimeName)) {
             if ((domainSynchronized && command.isSynchronization())) {
                 // the zone is already synchronized, ignore as this may be a duplicate
+                eventService.publish(new RuntimeSynchronized());
                 return;
             }
             routeLocally(command);
@@ -147,7 +148,7 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
                 }
             }
             if (!routed) {
-                throw new NoTargetRuntimeException("Runtime " + runtimeName + " not found for deployment command: " + id);
+                throw new NoTargetRuntimeException("Runtime " + correlationId + " not found for deployment command: " + id);
             }
         }
 

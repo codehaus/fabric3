@@ -58,7 +58,6 @@ import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.event.Fabric3Event;
 import org.fabric3.spi.event.Fabric3EventListener;
 import org.fabric3.spi.event.RuntimeStart;
-import org.fabric3.spi.topology.RuntimeService;
 import org.fabric3.spi.topology.ZoneManager;
 
 /**
@@ -73,19 +72,16 @@ public class DomainSynchronizer implements Runnable, Fabric3EventListener {
     private ParticipantFederationService federationService;
     private ZoneManager zoneManager;
     private EventService eventService;
-    private RuntimeService runtimeService;
     private DomainSynchronizerMonitor monitor;
     private ScheduledExecutorService executor;
 
     public DomainSynchronizer(@Reference ParticipantFederationService federationService,
                               @Reference ZoneManager zoneManager,
                               @Reference EventService eventService,
-                              @Reference RuntimeService runtimeService,
                               @Monitor DomainSynchronizerMonitor monitor) {
         this.federationService = federationService;
         this.zoneManager = zoneManager;
         this.eventService = eventService;
-        this.runtimeService = runtimeService;
         this.monitor = monitor;
     }
 
@@ -102,7 +98,6 @@ public class DomainSynchronizer implements Runnable, Fabric3EventListener {
     }
 
     public void run() {
-        monitor.synchronizing();
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         MultiClassLoaderObjectOutputStream stream;
         try {
@@ -110,12 +105,14 @@ public class DomainSynchronizer implements Runnable, Fabric3EventListener {
             String name = federationService.getRuntimeName();
             String zoneName = federationService.getZoneName();
             if (zoneManager.isZoneManager()) {
+                monitor.synchronizingWithController();
                 ZoneSyncCommand command = new ZoneSyncCommand(zoneName, name);
                 stream.writeObject(command);
                 stream.close();
                 // XCV FIXME avoid sending to all runtimes in the zone
                 federationService.getDomainGMS().getGroupHandle().sendMessage(FederationConstants.DOMAIN_MANAGER, bas.toByteArray());
             } else {
+                monitor.synchronizingWithZoneManager();
                 PaticipantSyncCommand command = new PaticipantSyncCommand(name);
                 stream.writeObject(command);
                 stream.close();
@@ -131,6 +128,9 @@ public class DomainSynchronizer implements Runnable, Fabric3EventListener {
 
     public void onEvent(Fabric3Event event) {
         if (event instanceof RuntimeSynchronized) {
+            if (executor.isShutdown()) {
+                return;
+            }
             executor.shutdownNow();
         } else if (event instanceof RuntimeStart) {
             executor.scheduleWithFixedDelay(this, 3000, 3000, TimeUnit.MILLISECONDS);

@@ -70,6 +70,15 @@ public interface FederationServiceMonitor {
     void exited(String groupName);
 
     /**
+     * Callback invoked when the runtime joins the controller group as a zone manager.
+     *
+     * @param groupName   the group name.
+     * @param runtimeName the runtime name
+     */
+    @Info
+    void joinedControllerGroup(String groupName, String runtimeName);
+
+    /**
      * Logged when an exception occurs.
      *
      * @param description the error description

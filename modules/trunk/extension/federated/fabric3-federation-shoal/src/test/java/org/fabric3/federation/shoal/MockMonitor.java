@@ -20,6 +20,10 @@ public class MockMonitor implements FederationServiceMonitor {
         System.out.println("Exited domain " + name);
     }
 
+    public void joinedControllerGroup(String groupName, String runtimeName) {
+
+    }
+
     @Severe
     public void onException(String description, String domainName, Throwable throwable) {
         throwable.printStackTrace();
@@ -72,5 +76,9 @@ public class MockMonitor implements FederationServiceMonitor {
     @Severe
     public void onSevere(String message) {
         System.out.println(message);
+    }
+
+    public void joinedControllerGroup() {
+
     }
 }

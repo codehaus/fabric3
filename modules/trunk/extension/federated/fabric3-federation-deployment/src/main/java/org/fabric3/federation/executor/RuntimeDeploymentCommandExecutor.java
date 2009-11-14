@@ -55,10 +55,10 @@ import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.event.EventService;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.event.EventService;
 
 /**
  * A CommandExecutor that processes deployment commands on a participant node.
@@ -97,6 +97,7 @@ public class RuntimeDeploymentCommandExecutor implements CommandExecutor<Runtime
             // When a participant boots, it periodiclly issues synchronization requests to the zone manager until the first deployment command is
             // received. Since communications are asynchronous, it is possible multiple requests may be issued if a response is not received during
             // the elapsed time period. If this happens, only the first deployment command should be processed.
+            eventService.publish(new RuntimeSynchronized());
             return;
         }
         String id = command.getId();
