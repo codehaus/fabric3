@@ -57,6 +57,7 @@ public final class BootExports {
 
         // Fabric3 classes
         bootMap.put("org.fabric3.spi.*", Names.VERSION);
+        bootMap.put("org.fabric3.util.*", Names.VERSION);
         bootMap.put("org.fabric3.host.*", Names.VERSION);
         bootMap.put("org.fabric3.management.*", Names.VERSION);
         bootMap.put("org.fabric3.model.*", Names.VERSION);
