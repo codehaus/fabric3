@@ -58,6 +58,19 @@
             </plugins>
         </pluginManagement>
     </build>
+    <repositories>
+        <repository>
+            <id>repository.codehaus.org</id>
+            <name>Fabric3 Releases</name>
+            <url>http://repository.codehaus.org/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk</connection>
