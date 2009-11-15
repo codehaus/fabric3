@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric</artifactId>
-    <version>8</version>
+    <version>9-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Fabric Modules Parent</name>
     <description>Parent POM defining settings for fabric modules.</description>
@@ -138,9 +138,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/fabric-8</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/fabric-8</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/fabric-8</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/fabric-7</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/fabric-7</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/fabric-7</url>
     </scm>
 
     <profiles>
