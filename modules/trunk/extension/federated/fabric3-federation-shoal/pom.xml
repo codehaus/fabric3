@@ -47,12 +47,12 @@ Public License. See the accompanying license file for details.
         <dependency>
             <groupId>com.sun.shoal</groupId>
             <artifactId>shoal-jxta</artifactId>
-            <version>1.1_12142008</version>
+            <version>1.1_08182009</version>
         </dependency>
         <dependency>
             <groupId>com.sun.shoal</groupId>
             <artifactId>shoal-gms</artifactId>
-            <version>1.1_12142008</version>
+            <version>1.1_08182009</version>
         </dependency>
 
         <dependency>
