@@ -50,12 +50,6 @@ import org.fabric3.api.annotation.logging.Severe;
 public interface MetroBindingMonitor {
 
     @Info
-    void extensionStarted();
-
-    @Info
-    void extensionStopped();
-
-    @Info
     void endpointProvisioned(String path);
 
     @Info

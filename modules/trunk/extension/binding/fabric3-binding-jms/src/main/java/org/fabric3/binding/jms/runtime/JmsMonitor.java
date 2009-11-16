@@ -44,9 +44,6 @@
 package org.fabric3.binding.jms.runtime;
 
 
-import java.net.URI;
-
-import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
 
 /**
@@ -63,18 +60,6 @@ public interface JmsMonitor {
      */
     @Severe
     void jmsListenerError(Throwable e);
-
-    /**
-     * Callback indicating the extension has been started.
-     */
-    @Info
-    void start();
-
-    /**
-     * Callback indicating the extension has been stopped.
-     */
-    @Info
-    void stop();
 
 
 }

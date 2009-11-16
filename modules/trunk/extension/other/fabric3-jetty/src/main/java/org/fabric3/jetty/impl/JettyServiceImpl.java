@@ -227,7 +227,6 @@ public class JettyServiceImpl implements JettyService {
             initializeRootContextHandler();
             server.setStopAtShutdown(true);
             server.setSendServerVersion(sendServerVersion);
-            monitor.extensionStarted();
             monitor.startHttpListener(selectedHttp);
             if (enableHttps) {
                 monitor.startHttpsListener(selectedHttps);
@@ -248,7 +247,6 @@ public class JettyServiceImpl implements JettyService {
         }
         server.stop();
         state = STOPPED;
-        monitor.extensionStopped();
     }
 
     public int getHttpPort() {

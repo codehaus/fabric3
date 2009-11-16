@@ -55,18 +55,6 @@ import org.fabric3.api.annotation.logging.Warning;
  */
 public interface TransportMonitor {
 
-    /**
-     * Called after the service is initialized
-     */
-    @Info
-    void extensionStarted();
-
-    /**
-     * Called after the service is stopped
-     */
-    @Info
-    void extensionStopped();
-
     @Info
     void startHttpListener(int port);
 

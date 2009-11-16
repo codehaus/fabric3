@@ -93,7 +93,6 @@ public class F3FtpHost implements FtpHost {
         acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(workScheduler));
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(codecFactory));
         acceptor.setHandler(ftpHandler);
-        monitor.extensionStarted();
         acceptor.bind(socketAddress);
         monitor.startFtpListener(commandPort);
     }
@@ -105,7 +104,6 @@ public class F3FtpHost implements FtpHost {
     public void stop() {
         acceptor.unbind();
         acceptor.dispose();
-        monitor.extensionStopped();
     }
 
     /**

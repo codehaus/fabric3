@@ -46,9 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -85,16 +83,6 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsSourceDefiniti
         this.servletHost = servletHost;
         this.classLoaderRegistry = registry;
         this.monitor = monitor;
-    }
-
-    @Init
-    public void init() {
-        monitor.extensionStarted();
-    }
-
-    @Destroy
-    public void destroy() {
-        monitor.extensionStopped();
     }
 
     public void attach(RsSourceDefinition sourceDefinition, PhysicalTargetDefinition targetDefinition, Wire wire)

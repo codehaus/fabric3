@@ -62,15 +62,4 @@ public interface RsWireAttacherMonitor {
     @Info
     void removedEndpoint(URI address);
 
-    /**
-     * Callback indicating the extension has been initialized.
-     */
-    @Info
-    void extensionStarted();
-
-    /**
-     * Callback indicating the extension has been stopped.
-     */
-    @Info
-    void extensionStopped();
 }

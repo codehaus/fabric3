@@ -45,25 +45,21 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.Constants;
 import org.fabric3.host.contribution.InstallException;
+import org.fabric3.spi.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.contenttype.ContentTypeResolver;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.archive.Action;
 import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.spi.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.contenttype.ContentTypeResolver;
 
 /**
  * Introspects a WAR contribution, delegating to ResourceProcessors for handling leaf-level children.
@@ -72,28 +68,10 @@ import org.fabric3.spi.contenttype.ContentTypeResolver;
 public class WarContributionHandler implements ArchiveContributionHandler {
     private final Loader loader;
     private final ContentTypeResolver contentTypeResolver;
-    private WarContributionMonitor monitor;
-    private ProcessorRegistry registry;
 
-    public WarContributionHandler(@Reference ProcessorRegistry processorRegistry,
-                                  @Reference Loader loader,
-                                  @Reference ContentTypeResolver contentTypeResolver,
-                                  @Monitor WarContributionMonitor monitor) {
-
-        this.registry = processorRegistry;
+    public WarContributionHandler(@Reference Loader loader, @Reference ContentTypeResolver contentTypeResolver) {
         this.loader = loader;
         this.contentTypeResolver = contentTypeResolver;
-        this.monitor = monitor;
-    }
-
-    @Init
-    public void init() {
-        monitor.extensionStarted();
-    }
-
-    @Destroy
-    public void destroy() {
-        monitor.extensionStopped();
     }
 
     public String getContentType() {

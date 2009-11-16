@@ -48,12 +48,6 @@ import org.fabric3.api.annotation.logging.Severe;
 public interface NetBindingMonitor {
 
     @Info
-    void extensionStarted();
-
-    @Info
-    void extensionStopped();
-
-    @Info
     void startHttpListener(int port);
 
     @Info

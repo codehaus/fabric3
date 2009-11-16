@@ -13,7 +13,8 @@ Public License. See the accompanying license file for details.
               xmlns:ns="urn:fabric3.org:web"
               xmlns:f3-core="urn:fabric3.org:core"
               xmlns:web="urn:fabric3.org:web"
-              f3-core:extension="true">
+              f3-core:extension="true"
+              f3-core:description="WAR contribution extension">
     <import.java package="org.fabric3.spi.*" version="1.3"/>
     <deployable composite="web:WarContributionExtension"/>
 </contribution>

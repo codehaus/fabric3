@@ -40,12 +40,10 @@ package org.fabric3.binding.ws.metro;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.VoidService;
 
 /**
@@ -55,12 +53,7 @@ import org.fabric3.spi.VoidService;
  */
 @EagerInit
 public class MetroBinding implements VoidService {
-    private MetroBindingMonitor monitor;
     private Level logLevel = Level.WARNING;
-
-    public MetroBinding(@Monitor MetroBindingMonitor monitor) {
-        this.monitor = monitor;
-    }
 
     @Property(required = false)
     public void setLogLevel(String logLevel) {
@@ -71,14 +64,9 @@ public class MetroBinding implements VoidService {
     public void init() {
         // turn down Metro logging
         Logger.getLogger("javax.enterprise.resource.webservices").setLevel(logLevel);
-        monitor.extensionStarted();
         // turn monitoring off as management is handled by the Fabric3 JMX infrastructure
         System.setProperty("com.sun.xml.ws.monitoring.endpoint", "false");
     }
 
 
-    @Destroy
-    public void destroy() {
-        monitor.extensionStopped();
-    }
 }
