@@ -53,6 +53,7 @@ import org.fabric3.host.contribution.Deployable;
 @SuppressWarnings({"SerializableHasSerializationMethods"})
 public class ContributionManifest implements Serializable {
     private static final long serialVersionUID = -4968254313720890686L;
+    private String description;
     private boolean extension;
     private List<Export> exports = new ArrayList<Export>();
     private List<Import> imports = new ArrayList<Import>();
@@ -61,6 +62,24 @@ public class ContributionManifest implements Serializable {
     private List<Deployable> deployables = new ArrayList<Deployable>();
     private List<String> extensionPoints = new ArrayList<String>();
     private List<String> extend = new ArrayList<String>();
+
+    /**
+     * Returns the contribution description.
+     *
+     * @return the contribution description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the contribution description
+     *
+     * @param description the contribution description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /**
      * Rturns true if the contribution is an extension.

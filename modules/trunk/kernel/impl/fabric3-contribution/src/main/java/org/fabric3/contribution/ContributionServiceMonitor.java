@@ -59,4 +59,9 @@ public interface ContributionServiceMonitor {
     @Info
     void contributionWarnings(String message);
 
+    @Info
+    void installed(String description);
+
+    @Info
+    void uninstalled(String description);
 }

@@ -362,6 +362,10 @@ public class ContributionServiceImpl implements ContributionService {
         for (ContributionServiceListener listener : listeners) {
             listener.onUninstall(contribution);
         }
+        String description = contribution.getManifest().getDescription();
+        if (description != null) {
+            monitor.uninstalled(description);
+        }
     }
 
     public void uninstall(List<URI> uris) throws UninstallException, ContributionNotFoundException {
@@ -502,7 +506,12 @@ public class ContributionServiceImpl implements ContributionService {
         }
         List<URI> uris = new ArrayList<URI>(contributions.size());
         for (Contribution contribution : contributions) {
-            uris.add(contribution.getUri());
+            URI uri = contribution.getUri();
+            uris.add(uri);
+            String description = contribution.getManifest().getDescription();
+            if (description != null) {
+                monitor.installed(description);
+            }
         }
         return uris;
     }
