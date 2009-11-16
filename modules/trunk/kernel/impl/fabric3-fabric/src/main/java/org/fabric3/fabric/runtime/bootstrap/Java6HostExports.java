@@ -233,6 +233,11 @@ public final class Java6HostExports {
         hostMap.put("javax.annotation", "1.0.0");
         hostMap.put("javax.annotation.security", "1.0.0");
 
+        // sca packages
+        hostMap.put("org.oasisopen.sca.annotation", "1.1");
+        hostMap.put("org.osoa.sca.annotations", "1.0");
+
+
         HOST_EXPORTS = Collections.unmodifiableMap(hostMap);
 
     }
