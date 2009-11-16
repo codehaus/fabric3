@@ -20,60 +20,50 @@
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Standalone Runtime Integration Tests Setup</name>
     <description>Fabric3 Standalone Runtime Integration Tests Setup</description>
-    <build>
+      <build>
         <plugins>
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>RELEASE</version>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-assembly-plugin</artifactId>
+                <version>${fabric3.version}</version>
                 <executions>
                     <execution>
-                        <id>unpack</id>
-                        <phase>pre-integration-test</phase>
+                        <id>fabric3-assembly</id>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>fabric3-assembly</goal>
                         </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.codehaus.fabric3</groupId>
-                                    <artifactId>runtime-standalone</artifactId>
-                                    <classifier>bin</classifier>
-                                    <type>zip</type>
-                                    <version>${fabric3.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/assembly</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
                     </execution>
-                    <!--                   <execution>
-                        <id>copy</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>junit</groupId>
-                                    <artifactId>junit</artifactId>
-                                    <version>3.8.2</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>ant</groupId>
-                                    <artifactId>ant-junit</artifactId>
-                                    <version>1.6.5</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>-->
                 </executions>
+                <configuration>
+                    <runtimeVersion>${fabric3.version}</runtimeVersion>
+                    <profiles>
+                        <!-- JPA support -->
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-jpa</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                        <!-- Web Services support -->
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-ws</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                        <!-- Web App support -->
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-web</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                        <!-- JMS support -->
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-jms</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                    </profiles>
+                </configuration>
             </plugin>
-
         </plugins>
     </build>
 

@@ -62,7 +62,7 @@ public class StandaloneVMTestCase {
     private static final File RUNTIME_DIR = new File(".." + File.separator
             + "test-standalone-setup" + File.separator
             + "target" + File.separator
-            + "assembly" + File.separator + "bin");
+            + "image" + File.separator + "bin");
 
     private static final File APP_DIR = new File(".." + File.separator
             + "test-standalone-app" + File.separator
