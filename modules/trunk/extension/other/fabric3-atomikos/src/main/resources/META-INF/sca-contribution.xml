@@ -13,7 +13,8 @@ Public License. See the accompanying license file for details.
               xmlns:transaction="urn:fabric3.org:transaction"
               xmlns:f3-core="urn:fabric3.org:core"
               f3-core:capabilities="transaction"
-              f3-core:extension="true">
+              f3-core:extension="true"
+              f3-core:description="Atomikos JTA extension">
     <import.java package="javax.transaction" version="1.1.0"/>
     <import.java package="javax.transaction.xa" version="1.1.0"/>
 

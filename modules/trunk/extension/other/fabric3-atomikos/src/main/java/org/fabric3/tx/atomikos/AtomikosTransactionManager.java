@@ -80,15 +80,13 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
 
     private EventService eventService;
     private HostInfo info;
-    private TransactionMonitor monitor;
     private TransactionManagerImp tm;
     private UserTransactionService uts;
     private Properties properties = new Properties();
 
-    public AtomikosTransactionManager(@Reference EventService eventService, @Reference HostInfo info, @Monitor TransactionMonitor monitor) {
+    public AtomikosTransactionManager(@Reference EventService eventService, @Reference HostInfo info) {
         this.eventService = eventService;
         this.info = info;
-        this.monitor = monitor;
     }
 
     @Init
@@ -110,7 +108,6 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
 //        PrintStreamConsole console = new PrintStreamConsole(System.out);
 //        console.setLevel(Console.DEBUG);
 //        Configuration.addConsole(console);
-        monitor.extensionStarted();
     }
 
     @Destroy
@@ -137,7 +134,6 @@ public class AtomikosTransactionManager implements TransactionManager, Fabric3Ev
                 uts = new UserTransactionServiceImp(properties);
                 uts.init(properties);
                 tm = (TransactionManagerImp) TransactionManagerImp.getTransactionManager();
-                monitor.recoveryCompleted();
             }
         }
     }
