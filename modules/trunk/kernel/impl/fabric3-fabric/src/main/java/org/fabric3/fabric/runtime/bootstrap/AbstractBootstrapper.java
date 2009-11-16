@@ -195,12 +195,6 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
             // load the system composite
             Composite composite = loadSystemComposite(BOOT_CONTRIBUTION, bootClassLoader, systemImplementationProcessor, monitorFactory);
 
-            // load user configuration
-            Document userConfig = loadUserConfig();
-            if (userConfig != null) {
-                domain.setPropertyValue("userConfig", userConfig);
-            }
-
             // load system configuration
             Document systemConfig = loadSystemConfig();
             if (systemConfig != null) {
@@ -233,15 +227,6 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
                                                      ClassLoader bootClassLoader,
                                                      ImplementationProcessor<SystemImplementation> processor,
                                                      MonitorFactory monitorFactory) throws InitializationException;
-
-    /**
-     * Subclasses return a Document representing the domain-level user configuration property or null if none is defined. This property may be
-     * referenced entirely or in part via XPath by end-user components in the application domain to supply configuration values.
-     *
-     * @return a Document representing the domain-level user configuration property or null if none is defined
-     * @throws InitializationException if an error occurs loading the configuration file
-     */
-    protected abstract Document loadUserConfig() throws InitializationException;
 
     /**
      * Subclasses return a Document representing the domain-level runtime configuration property or null if none is defined. This property may be

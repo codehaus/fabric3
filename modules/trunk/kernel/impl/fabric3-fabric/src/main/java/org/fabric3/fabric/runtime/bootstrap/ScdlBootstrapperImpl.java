@@ -43,7 +43,6 @@
  */
 package org.fabric3.fabric.runtime.bootstrap;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -138,23 +137,6 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
             throw new InitializationException(e);
         }
     }
-
-    protected Document loadUserConfig() throws InitializationException {
-        // Get the user config location
-        File configFile = new File(USER_CONFIG);
-        if (!configFile.exists()) {
-            // none found, create a default one
-            return createDefaultConfigProperty();
-        }
-        try {
-            return documentLoader.load(configFile);
-        } catch (IOException e) {
-            throw new InitializationException(e);
-        } catch (SAXException e) {
-            throw new InitializationException(e);
-        }
-    }
-
 
     protected Document loadSystemConfig() throws InitializationException {
         if (systemConfigDocument != null) {
