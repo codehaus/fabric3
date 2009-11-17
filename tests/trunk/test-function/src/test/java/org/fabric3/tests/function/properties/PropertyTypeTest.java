@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -135,12 +137,9 @@ public class PropertyTypeTest extends TestCase {
         assertEquals(new URL("file://./root"), service.getUrlValue());
     }
 
-    public void testDate() {
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.clear();
-//        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        calendar.set(2007, Calendar.OCTOBER, 31, 0, 0, 0);
-        assertEquals(calendar.getTime(), service.getDateValue());
+    public void testDate() throws ParseException {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyy-MM-d'T'HH:mm:ss'Z'");
+        assertEquals(dateFormatter.parse("2007-10-31T01:00:00Z"), service.getDateValue());
     }
 
     public void testCalendar() {
