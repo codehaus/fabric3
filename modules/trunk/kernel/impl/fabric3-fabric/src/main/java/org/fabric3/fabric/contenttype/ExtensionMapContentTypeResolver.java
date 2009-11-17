@@ -107,4 +107,12 @@ public class ExtensionMapContentTypeResolver implements ContentTypeResolver {
 
     }
 
+    public void register(String fileExtension, String contentType) {
+        extensionMap.put(fileExtension,contentType);
+    }
+
+    public void unregister(String fileExtension) {
+        extensionMap.remove(fileExtension);
+    }
+
 }

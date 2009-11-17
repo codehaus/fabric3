@@ -55,4 +55,18 @@ public interface ContentTypeResolver {
      */
     String getContentType(URL contentUrl) throws ContentTypeResolutionException;
 
+
+    /**
+     * Register a new file extension to content type mapping
+     * @param fileExtension
+     * @param contentType
+     */
+    void register(String fileExtension, String contentType);
+
+    /**
+     * unregister an existing file extension
+     * @param fileExtension
+     */
+    void unregister(String fileExtension);
+
 }
