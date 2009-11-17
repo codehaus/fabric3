@@ -51,7 +51,7 @@ import org.fabric3.spi.transform.SingleTypeTransformer;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Transformer that converts from a DOM Node to a Java Date, expecting the format of the date to be dd/mm/yyyy (<date>12/07/2007</date>).
+ * Transformer that converts from a DOM Node to a Java Date, expecting the format of the date to be yyy-MM-d'T'HH:mm:ss'Z'.
  *
  * @version $Rev$ $Date$
  */
@@ -69,7 +69,7 @@ public class Property2DateTransformer implements SingleTypeTransformer<Node, Dat
     }
 
     public Property2DateTransformer() {
-        dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormatter = new SimpleDateFormat("yyy-MM-d'T'HH:mm:ss'Z'");
         dateFormatter.setLenient(false);
     }
 

@@ -38,7 +38,6 @@
 package org.fabric3.transform.property;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.fabric3.spi.transform.TransformationException;
@@ -54,13 +53,12 @@ public class Property2DateTestCase extends BaseTransformTest {
      * Test converting String to Date
      */
     public void testDateTransform() {
-        final String MID_JAN = "20/01/2007";
-        final String xml = "<string_to_date>" + MID_JAN + "</string_to_date>";
+        final String DATE = "2009-11-16T05:30:30Z";
+        final String xml = "<string_to_date>" + DATE + "</string_to_date>";
         try {
             Property2DateTransformer transformer = new Property2DateTransformer();
             Date date = transformer.transform(getNode(xml), getClass().getClassLoader());
             assertNotNull(date);
-            assertEquals(MID_JAN, dateToString(date));
         } catch (TransformationException te) {
             fail("Transform exception should not occur " + te);
         } catch (Exception e) {
@@ -86,8 +84,5 @@ public class Property2DateTestCase extends BaseTransformTest {
         }
     }
 
-    private String dateToString(final Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return sdf.format(date);
-    }
+ 
 }
