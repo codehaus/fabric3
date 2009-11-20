@@ -7,8 +7,6 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903">
-    <!--<import.java package="org.oasisopen.sca"/>-->
-    <!--<import.java package="org.oasisopen.sca.annotation"/>-->
-    <!--<import.java package="org.fabric3.api"/>-->
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:f3-tests="org.codehaus.fabric3.tests">
+    <deployable composite="f3-tests:ApplicationComposite"/>
 </contribution>

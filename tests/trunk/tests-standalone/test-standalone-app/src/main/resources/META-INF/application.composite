@@ -7,7 +7,7 @@
 
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-           targetNamespace="org.codehaus.fabric3"
+           targetNamespace="org.codehaus.fabric3.tests"
            name="ApplicationComposite">
 
     <component name="TestClientService">

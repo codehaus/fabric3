@@ -37,11 +37,18 @@
 */
 package org.fabric3.tests.standalone.application;
 
+import org.oasisopen.sca.annotation.Scope;
+
 /**
  * @version $Rev$ $Date$
  */
-public class TestComponent implements TestService {
+@Scope("COMPOSITE")
+public class TestComponent implements TestService, TestServiceMBean {
     public String invoke(String msg) {
         return msg;
+    }
+
+    public String invoke() {
+        return "test";
     }
 }

@@ -20,7 +20,13 @@
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Standalone Application</name>
     <description>Fabric3 Standalone Application</description>
+
     <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+            <version>${fabric3.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
