@@ -44,12 +44,12 @@ import org.fabric3.api.annotation.Resource;
 /**
  * @version $Rev$ $Date$
  */
-public class LazyInitializationITest extends TestCase {
+public class ResourceTest extends TestCase {
 
-    @Resource(mappedName = "LazyResource")
-    protected LazyResource resource;
+    @Resource
+    protected TestResource resource;
 
-    public void testLazilyInitializedResource() {
+    public void testResource() {
         assertEquals("Hello", resource.echo("Hello"));
     }
 }

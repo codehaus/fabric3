@@ -7,10 +7,12 @@
 
 -->
 <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200903"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
            name="UserResourceComposite">
 
-    <component name="LazyResourceITest">
-        <f3:junit class="org.fabric3.resource.itest.LazyInitializationITest"/>
+    <component name="ResourceTest">
+        <f3-impl:junit class="org.fabric3.resource.itest.ResourceTest"/>
     </component>
 </composite>
