@@ -15,5 +15,5 @@ Public License. See the accompanying license file for details.
               f3-core:extension="true">
     <import.java package="org.fabric3.spi.*" version="1.3"/>
     <export.java package="org.fabric3.scanner.spi" version="1.3"/>
-    <deployable composite="other:ContributionScannerExtension"/>
+    <deployable composite="other:ContributionScannerExtension" modes="controller vm"/>
 </contribution>
