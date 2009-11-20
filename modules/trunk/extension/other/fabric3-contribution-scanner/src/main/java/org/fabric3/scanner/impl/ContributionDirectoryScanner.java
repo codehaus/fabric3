@@ -61,6 +61,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
@@ -113,18 +114,20 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
 
     private long delay = 2000;
     private ScheduledExecutorService executor;
+    private HostInfo hostInfo;
 
     public ContributionDirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
                                         @Reference ContributionService contributionService,
                                         @Reference(name = "assembly") Domain domain,
                                         @Reference EventService eventService,
-                                        @Reference HostInfo info,
+                                        @Reference HostInfo hostInfo,
                                         @Monitor ScannerMonitor monitor) {
         this.registry = registry;
         this.contributionService = contributionService;
         this.domain = domain;
         this.eventService = eventService;
-        path = new File(info.getBaseDir(), "deploy");
+        this.hostInfo = hostInfo;
+        path = new File(hostInfo.getBaseDir(), "deploy");
         this.monitor = monitor;
     }
 
@@ -152,7 +155,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     }
 
     public void onEvent(Fabric3Event event) {
-        if (event instanceof DomainRecover) {
+        if (event instanceof DomainRecover && hostInfo.getRuntimeMode() == RuntimeMode.CONTROLLER) {
             // process existing files in recovery mode
             File[] files = path.listFiles();
             recover(files);
