@@ -35,11 +35,19 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.resource.itest;
+package org.fabric3.resource.itest.impl;
+
+import org.fabric3.resource.itest.TestResource;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface LazyResource {
-    String echo(String message);
+public class TestResourceImpl implements TestResource {
+
+    public TestResourceImpl() {
+    }
+
+    public String echo(String message) {
+        return message;
+    }
 }

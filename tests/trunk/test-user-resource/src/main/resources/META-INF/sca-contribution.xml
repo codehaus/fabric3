@@ -7,6 +7,7 @@
 
     $Rev$ $Date$
 -->
-<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="urn:fabric3:org.fabric3.test">
-    <deployable composite="ns:UserResourceComposite"/>
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns="org.codehaus.fabric3">
+    <export.java package="org.fabric3.resource.itest"/>
+    <deployable composite="ns:TestResourceComposite"/>
 </contribution>

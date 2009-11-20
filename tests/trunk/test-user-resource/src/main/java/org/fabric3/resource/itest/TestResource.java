@@ -40,12 +40,6 @@ package org.fabric3.resource.itest;
 /**
  * @version $Rev$ $Date$
  */
-public class LazyResourceImpl implements LazyResource {
-
-    public LazyResourceImpl() {
-    }
-
-    public String echo(String message) {
-        return message;
-    }
+public interface TestResource {
+    String echo(String message);
 }

@@ -20,13 +20,5 @@
     <description>Fabric3 Test User Resource Extension.</description>
     <packaging>jar</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>${sca.api.version}</version>
-        </dependency>
-    </dependencies>
-
 
 </project>
