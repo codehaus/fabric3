@@ -165,8 +165,9 @@ public abstract class AbstractFederationService implements RuntimeService, Feder
     @Init
     public void init() throws IOException {
         // clean the output directory
-        FileHelper.cleanDirectory(outputDir);
-
+        if (outputDir.exists()) {
+            FileHelper.cleanDirectory(outputDir);
+        }
         if (runtimeName == null) {
             runtimeName = "Fabric3Runtime-" + UUID.randomUUID().toString();
         }
