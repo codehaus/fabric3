@@ -49,6 +49,8 @@ import org.fabric3.host.Fabric3RuntimeException;
  * @version $Rev$ $Date$
  */
 public class DuplicateClassLoaderException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = 903132089422311319L;
+
     /**
      * Constructor specifying message and the ID of the duplicate classloader.
      *
