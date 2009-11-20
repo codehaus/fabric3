@@ -71,6 +71,11 @@ import org.fabric3.host.work.PausableWork;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
+ * A container for a JMS MessageListener that is capable of adapting to varying workloads by dispatching messages from a destination to the listener
+ * on different managed threads. Workload management is performed by sizing up or down the number of managed threads reserved for message processing.
+ * <p/>
+ * Note this implmentation supports dispatching messages as port of a JTA transaction or non-transactionally.
+ *
  * @version $Rev$ $Date$
  */
 public class AdaptiveMessageContainer {
@@ -82,7 +87,7 @@ public class AdaptiveMessageContainer {
     private int maxReceivers = 1;
     private int idleLimit = 1;
     private int transactionTimeout = DEFAULT_TRX_TIMEOUT;
-    private int receiveTimeout = transactionTimeout /2;
+    private int receiveTimeout = transactionTimeout / 2;
     private int maxMessagesToProcess = -1;
     private long recoveryInterval = 5000;   // default 5 seconds
     private boolean durable = false;
@@ -1132,7 +1137,7 @@ public class AdaptiveMessageContainer {
                         throw e;
                     }
                     return true;
-                } else {  
+                } else {
                     idle = true;
                     return false;
                 }
