@@ -41,6 +41,7 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.host.Names;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.resource.model.SystemSourcedTargetDefinition;
 import org.fabric3.spi.generator.GenerationException;
@@ -50,23 +51,15 @@ import org.fabric3.spi.model.instance.LogicalResource;
 /**
  * @version $Rev$ $Date$
  */
-@SuppressWarnings("unchecked")
 @EagerInit
 public class SystemSourcedResourceGenerator implements ResourceGenerator<SystemSourcedResource> {
 
-    private static final String SYSTEM_URI = "fabric3://runtime/";
-
-    public SystemSourcedTargetDefinition generateWireTarget(LogicalResource<SystemSourcedResource> logicalResource)
-            throws GenerationException {
+    public SystemSourcedTargetDefinition generateWireTarget(LogicalResource<SystemSourcedResource> logicalResource) throws GenerationException {
 
         SystemSourcedResource resourceDefinition = logicalResource.getResourceDefinition();
         String mappedName = resourceDefinition.getMappedName();
 
-        if (mappedName == null) {
-            throw new MappedNameNotFoundException();
-        }
-
-        URI targetUri = URI.create(SYSTEM_URI + mappedName);
+        URI targetUri = URI.create(Names.RUNTIME_NAME + "/" + mappedName);
 
         SystemSourcedTargetDefinition wtd = new SystemSourcedTargetDefinition();
         wtd.setOptimizable(true);

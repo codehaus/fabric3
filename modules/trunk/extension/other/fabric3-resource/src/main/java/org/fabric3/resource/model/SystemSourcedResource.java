@@ -44,6 +44,7 @@ import org.fabric3.model.type.contract.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class SystemSourcedResource extends ResourceDefinition {
+    private static final long serialVersionUID = 8542386357450347005L;
     private String mappedName;
 
     public SystemSourcedResource(String name, boolean optional, String mappedName, ServiceContract serviceContract) {

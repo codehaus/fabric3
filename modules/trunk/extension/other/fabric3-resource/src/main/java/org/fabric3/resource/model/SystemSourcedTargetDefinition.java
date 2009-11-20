@@ -43,5 +43,5 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
  * @version $Rev$ $Date$
  */
 public class SystemSourcedTargetDefinition extends PhysicalTargetDefinition {
-
+    private static final long serialVersionUID = 6025755392533002246L;
 }

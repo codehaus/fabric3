@@ -78,7 +78,13 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
         TypeMapping typeMapping = context.getTypeMapping(implClass);
         Class<?> type = helper.getBaseType(genericType, typeMapping);
         FieldInjectionSite site = new FieldInjectionSite(field);
-        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context);
+        boolean optional = annotation.optional();
+        String mappedName = annotation.mappedName();
+        if (mappedName.length() == 0) {
+            // default to the field type simple name
+            mappedName = type.getSimpleName();
+        }
+        ResourceDefinition definition = createResource(name, type, optional, mappedName, context);
         implementation.getComponentType().add(definition, site);
     }
 
@@ -88,11 +94,17 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
         TypeMapping typeMapping = context.getTypeMapping(implClass);
         Class<?> type = helper.getBaseType(genericType, typeMapping);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context);
+        boolean optional = annotation.optional();
+        String mappedName = annotation.mappedName();
+        if (mappedName.length() == 0) {
+            // default to the field type simple name
+            mappedName = type.getSimpleName();
+        }
+        ResourceDefinition definition = createResource(name, type, optional, mappedName, context);
         implementation.getComponentType().add(definition, site);
     }
 
-    SystemSourcedResource createResource(String name, Class<?> type, boolean optional, String mappedName, IntrospectionContext context) {
+    private SystemSourcedResource createResource(String name, Class<?> type, boolean optional, String mappedName, IntrospectionContext context) {
         ServiceContract serviceContract = contractProcessor.introspect(type, context);
         return new SystemSourcedResource(name, optional, mappedName, serviceContract);
     }
