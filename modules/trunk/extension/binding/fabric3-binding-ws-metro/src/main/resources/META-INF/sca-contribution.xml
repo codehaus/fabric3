@@ -28,6 +28,7 @@ Public License. See the accompanying license file for details.
     <deployable composite="f3-binding:MetroBinding"/>
     <f3-core:extends name="jaxws"/>
     <f3-core:provides name="jaxb"/>
+
 </contribution>
 
 

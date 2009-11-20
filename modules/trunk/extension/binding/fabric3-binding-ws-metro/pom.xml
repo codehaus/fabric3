@@ -54,8 +54,22 @@ Public License. See the accompanying license file for details.
 
         <dependency>
             <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
+            <artifactId>jaxb-api-osgi</artifactId>
             <version>${jaxb.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <version>2.2-promoted-b50</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.istack</groupId>
+            <artifactId>istack-commons-runtime</artifactId>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -75,15 +89,34 @@ Public License. See the accompanying license file for details.
 
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
-            <artifactId>webservices-rt</artifactId>
+            <artifactId>webservices-osgi</artifactId>
             <version>${web.services.version}</version>
             <exclusions>
                 <exclusion>
                     <!-- included in host dependencies -->
                     <groupId>javax.xml</groupId>
-                    <artifactId>webservices-api</artifactId>
+                    <artifactId>webservices-api-osgi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- included in the JAXB extension -->
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-osgi</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <!-- referenced by Metro-->
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal-api-only</artifactId>
+            <version>3.0.0-b023</version>
+        </dependency>
+
+        <dependency>
+            <!-- referenced by Metro-->
+            <groupId>com.sun.xml.fastinfoset</groupId>
+            <artifactId>FastInfoset</artifactId>
+            <version>1.2.7</version>
         </dependency>
 
         <dependency>

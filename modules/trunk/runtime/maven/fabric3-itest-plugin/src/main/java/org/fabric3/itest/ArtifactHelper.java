@@ -198,8 +198,8 @@ public class ArtifactHelper {
         // add JAXB API dependency
         Dependency jaxbAPI = new Dependency();
         jaxbAPI.setGroupId("javax.xml.bind");
-        jaxbAPI.setArtifactId("jaxb-api");
-        jaxbAPI.setVersion("2.1");
+        jaxbAPI.setArtifactId("jaxb-api-osgi");
+        jaxbAPI.setVersion("2.2-promoted-b50");
         hostArtifacts.addAll(resolveArtifacts(jaxbAPI, true));
 
         // ad web services API
