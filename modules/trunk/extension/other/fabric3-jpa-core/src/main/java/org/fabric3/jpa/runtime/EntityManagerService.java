@@ -40,7 +40,7 @@ package org.fabric3.jpa.runtime;
 import javax.persistence.EntityManager;
 import javax.transaction.Transaction;
 
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 
 /**
  * Responsible for returning an EntityManager with a persitence context tied to an execution context.

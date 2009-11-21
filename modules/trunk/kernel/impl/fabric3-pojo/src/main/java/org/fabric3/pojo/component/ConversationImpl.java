@@ -37,7 +37,7 @@
 */
 package org.fabric3.pojo.component;
 
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;

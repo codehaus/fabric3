@@ -51,7 +51,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.component.ConversationExpirationCallback;
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 

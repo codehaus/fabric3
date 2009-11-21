@@ -48,7 +48,7 @@ import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;

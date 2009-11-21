@@ -69,7 +69,7 @@ import org.fabric3.spi.binding.format.EncoderException;
 import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.binding.format.ParameterEncoder;
 import org.fabric3.spi.binding.format.ResponseEncodeCallback;
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;

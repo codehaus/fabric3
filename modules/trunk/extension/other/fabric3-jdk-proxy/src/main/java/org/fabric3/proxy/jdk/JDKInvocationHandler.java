@@ -55,7 +55,7 @@ import org.oasisopen.sca.ServiceUnavailableException;
 
 import org.fabric3.pojo.component.ConversationImpl;
 import org.fabric3.spi.component.ConversationExpirationCallback;
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;

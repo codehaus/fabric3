@@ -48,7 +48,7 @@ import javax.transaction.TransactionManager;
 
 import org.oasisopen.sca.ServiceRuntimeException;
 
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.WorkContextTunnel;
 

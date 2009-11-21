@@ -51,6 +51,7 @@ import org.fabric3.model.type.component.Scope;
 import org.fabric3.spi.Lifecycle;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.F3Conversation;
 
 
 /**

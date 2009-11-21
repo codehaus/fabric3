@@ -63,7 +63,7 @@ import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.MessageHelper;
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.MessageImpl;

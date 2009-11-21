@@ -39,8 +39,6 @@ package org.fabric3.spi.invocation;
 
 import java.io.Serializable;
 
-import org.fabric3.spi.component.F3Conversation;
-
 /**
  * Encapsulates information for a specific invocation that is made as part of a request entering the domain. Requests may have multiple associated
  * invocations as component implementations may invoke services on other components as a request is processed.

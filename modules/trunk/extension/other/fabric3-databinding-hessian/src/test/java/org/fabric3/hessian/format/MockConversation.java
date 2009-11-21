@@ -37,7 +37,7 @@
 */
 package org.fabric3.hessian.format;
 
-import org.fabric3.spi.component.F3Conversation;
+import org.fabric3.spi.invocation.F3Conversation;
 
 public class MockConversation implements F3Conversation {
     private static final long serialVersionUID = 3868053094430618625L;
