@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.net.runtime;
+package org.fabric3.binding.net.runtime.impl;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;
@@ -59,6 +59,8 @@ import org.fabric3.binding.net.runtime.http.HttpRequestHandler;
 import org.fabric3.binding.net.runtime.http.HttpServerPipelineFactory;
 import org.fabric3.binding.net.runtime.tcp.TcpPipelineFactory;
 import org.fabric3.binding.net.runtime.tcp.TcpRequestHandler;
+import org.fabric3.binding.net.runtime.TransportService;
+import org.fabric3.binding.net.runtime.WireHolder;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.binding.format.MessageEncoder;
 import org.fabric3.spi.builder.WiringException;
