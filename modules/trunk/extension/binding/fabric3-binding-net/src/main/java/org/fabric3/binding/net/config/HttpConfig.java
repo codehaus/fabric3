@@ -40,8 +40,6 @@ package org.fabric3.binding.net.config;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.binding.net.model.ProxySetting;
-
 /**
  * Configuration for HTTP communications.
  *

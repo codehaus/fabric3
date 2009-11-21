@@ -35,22 +35,21 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.net.model;
+package org.fabric3.binding.net.config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.fabric3.model.type.ModelObject;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ProxySetting extends ModelObject {
+public class ProxySetting implements Serializable {
+    private static final long serialVersionUID = -8415356160654625831L;
     public enum Type {
         HTTP, HTTPS
     }
 
-    private static final long serialVersionUID = -8415356160654625831L;
     private String host;
     private String nonProxyhost;
     private int port;
