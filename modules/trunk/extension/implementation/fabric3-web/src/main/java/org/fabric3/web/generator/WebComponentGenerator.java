@@ -69,7 +69,7 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.model.type.java.Injectable;
 import org.fabric3.spi.model.type.java.InjectionSite;
 import org.fabric3.spi.policy.EffectivePolicy;
-import org.fabric3.web.introspection.WebComponentType;
+import org.fabric3.web.model.WebComponentType;
 import org.fabric3.web.model.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
 import org.fabric3.web.provision.WebComponentSourceDefinition;
