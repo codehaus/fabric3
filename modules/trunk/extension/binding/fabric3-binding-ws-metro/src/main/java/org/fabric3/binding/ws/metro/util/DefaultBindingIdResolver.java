@@ -43,8 +43,6 @@ import javax.xml.namespace.QName;
 import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.developer.JAXWSProperties;
 
-import org.fabric3.binding.ws.metro.runtime.policy.MayProvideIntents;
-
 /**
  * Default implementation of the binding Id resolver.
  *

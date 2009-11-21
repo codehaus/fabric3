@@ -51,6 +51,8 @@ import com.sun.xml.ws.developer.BindingTypeFeature;
 import com.sun.xml.ws.developer.JAXWSProperties;
 import com.sun.xml.ws.rx.rm.ReliableMessagingFeature;
 
+import org.fabric3.binding.ws.metro.util.MayProvideIntents;
+
 /**
  * Default implementation of FeatureResolver.
  *
