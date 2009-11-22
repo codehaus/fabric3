@@ -70,9 +70,9 @@ import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.synthesize.InvalidServiceContractException;
-import org.fabric3.system.model.SystemImplementation;
-import org.fabric3.system.singleton.SingletonComponent;
-import org.fabric3.system.singleton.SingletonImplementation;
+import org.fabric3.implementation.system.model.SystemImplementation;
+import org.fabric3.implementation.system.singleton.SingletonComponent;
+import org.fabric3.implementation.system.singleton.SingletonImplementation;
 
 /**
  * Implementation that synthesizes a singleton component from an existing object instance.

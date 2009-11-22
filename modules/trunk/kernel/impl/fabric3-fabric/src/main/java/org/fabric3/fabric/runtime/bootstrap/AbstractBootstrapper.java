@@ -92,7 +92,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.system.model.SystemImplementation;
+import org.fabric3.implementation.system.model.SystemImplementation;
 
 /**
  * The base Bootstrapper implementation.
