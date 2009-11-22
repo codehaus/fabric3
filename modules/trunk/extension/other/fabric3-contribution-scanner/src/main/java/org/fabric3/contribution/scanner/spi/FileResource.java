@@ -35,28 +35,68 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.spi;
+package org.fabric3.contribution.scanner.spi;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
- * Tracks changes to a file system resource.
+ * Represents a file that is to be contributed to a domain
  *
  * @version $Rev$ $Date$
  */
-public interface FileSystemResource {
+public class FileResource extends AbstractResource {
+    private File file;
 
-    String getName();
+    public FileResource(File file) {
+        this.file = file;
+    }
 
-    URL getLocation();
+    public String getName() {
+        return file.getName();
+    }
 
-    boolean isChanged() throws IOException;
+    public URL getLocation() {
+        try {
+            return file.toURI().normalize().toURL();
+        } catch (MalformedURLException e) {
+            throw new AssertionError(e);
+        }
+    }
 
-    byte[] getChecksum();
+    public long getTimestamp() {
+        return file.lastModified();
+    }
 
-    long getTimestamp();
+    public void reset() throws IOException {
+        checksumValue = checksum();
+    }
 
-    public void reset() throws IOException;
+    protected byte[] checksum() throws IOException {
+        BufferedInputStream is = null;
+        try {
+            MessageDigest checksum = MessageDigest.getInstance("MD5");
+            is = new BufferedInputStream(new FileInputStream(file));
+            byte[] bytes = new byte[1024];
+            int len;
 
+            while ((len = is.read(bytes)) >= 0) {
+                checksum.update(bytes, 0, len);
+            }
+            return checksum.digest();
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError(e);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+
+    }
 }

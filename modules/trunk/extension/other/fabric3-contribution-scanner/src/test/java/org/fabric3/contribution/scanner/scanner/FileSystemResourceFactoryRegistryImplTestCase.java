@@ -35,36 +35,30 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.scanner.resource;
+package org.fabric3.contribution.scanner.scanner;
 
 import java.io.File;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.scanner.impl.DirectoryResource;
-import org.fabric3.scanner.spi.FileSystemResource;
+import org.fabric3.contribution.scanner.impl.FileSystemResourceFactoryRegistryImpl;
+import org.fabric3.contribution.scanner.spi.FileSystemResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactory;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DirectoryResourceTestCase extends TestCase {
+public class FileSystemResourceFactoryRegistryImplTestCase extends TestCase {
 
-    /**
-     * Tests tracking changes. Simulates an underlying file remaining unchanged for the first check and changing for the second.
-     */
-    public void testChanges() throws Exception {
-        DirectoryResource resource = new DirectoryResource(new File("test"));
-        FileSystemResource fileSystemResource = EasyMock.createMock(FileSystemResource.class);
-        fileSystemResource.reset();
-        EasyMock.expect(fileSystemResource.getChecksum()).andReturn("test".getBytes());
-        EasyMock.expect(fileSystemResource.getChecksum()).andReturn("test".getBytes());
-        EasyMock.expect(fileSystemResource.getChecksum()).andReturn("test2".getBytes());
-        EasyMock.replay(fileSystemResource);
-        resource.addResource(fileSystemResource);
-        resource.reset();
-        assertFalse(resource.isChanged());
-        assertTrue(resource.isChanged());
-        EasyMock.verify(fileSystemResource);
+    public void testDispatch() {
+        FileSystemResourceFactoryRegistryImpl registry = new FileSystemResourceFactoryRegistryImpl();
+        FileSystemResourceFactory factory = EasyMock.createMock(FileSystemResourceFactory.class);
+        FileSystemResource resource = EasyMock.createMock(FileSystemResource.class);
+        EasyMock.expect(factory.createResource(EasyMock.isA(File.class))).andReturn(resource);
+        EasyMock.replay(factory);
+        registry.register(factory);
+        assertNotNull(registry.createResource(new File("")));
+        EasyMock.verify(factory);
     }
 }

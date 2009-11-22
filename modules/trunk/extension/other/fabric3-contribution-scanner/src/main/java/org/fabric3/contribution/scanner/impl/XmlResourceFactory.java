@@ -35,30 +35,34 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.scanner;
+package org.fabric3.contribution.scanner.impl;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scanner.impl.FileSystemResourceFactoryRegistryImpl;
-import org.fabric3.scanner.spi.FileSystemResource;
-import org.fabric3.scanner.spi.FileSystemResourceFactory;
+import org.fabric3.contribution.scanner.spi.FileResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactory;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactoryRegistry;
 
 /**
+ * Creates a FileResource for XML-based contributions
+ *
  * @version $Rev$ $Date$
  */
-public class FileSystemResourceFactoryRegistryImplTestCase extends TestCase {
+@EagerInit
+public class XmlResourceFactory implements FileSystemResourceFactory {
 
-    public void testDispatch() {
-        FileSystemResourceFactoryRegistryImpl registry = new FileSystemResourceFactoryRegistryImpl();
-        FileSystemResourceFactory factory = EasyMock.createMock(FileSystemResourceFactory.class);
-        FileSystemResource resource = EasyMock.createMock(FileSystemResource.class);
-        EasyMock.expect(factory.createResource(EasyMock.isA(File.class))).andReturn(resource);
-        EasyMock.replay(factory);
-        registry.register(factory);
-        assertNotNull(registry.createResource(new File("")));
-        EasyMock.verify(factory);
+    public XmlResourceFactory(@Reference FileSystemResourceFactoryRegistry registry) {
+        registry.register(this);
+    }
+
+    public FileSystemResource createResource(File file) {
+        if (!file.getName().toLowerCase().endsWith(".xml")) {
+            return null;
+        }
+        return new FileResource(file);
     }
 }

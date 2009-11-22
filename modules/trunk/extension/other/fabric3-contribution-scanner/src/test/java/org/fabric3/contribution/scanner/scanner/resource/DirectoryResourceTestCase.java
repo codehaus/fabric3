@@ -35,81 +35,36 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.impl;
+package org.fabric3.contribution.scanner.scanner.resource;
 
-import org.fabric3.api.annotation.logging.Info;
-import org.fabric3.api.annotation.logging.Severe;
+import java.io.File;
+
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import org.fabric3.contribution.scanner.impl.DirectoryResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResource;
 
 /**
- * Monitoring interface for the DirectoryScanner
- *
  * @version $Rev$ $Date$
  */
-public interface ScannerMonitor {
+public class DirectoryResourceTestCase extends TestCase {
 
     /**
-     * Called when a contribution is deployed.
-     *
-     * @param name the name of the contribution
+     * Tests tracking changes. Simulates an underlying file remaining unchanged for the first check and changing for the second.
      */
-    @Info
-    void deployed(String name);
-
-    /**
-     * Called when a contribution is removed
-     *
-     * @param name the name of the contribution
-     */
-    @Info
-    void removed(String name);
-
-    /**
-     * Called when a contribution is updated
-     *
-     * @param name the name of the contribution
-     */
-    @Info
-    void updated(String name);
-
-    /**
-     * Called when a file type is not recognized and ignored.
-     *
-     * @param name the file name
-     */
-    @Info
-    void ignored(String name);
-
-    /**
-     * Called when a general error is encountered processing a contribution
-     *
-     * @param e the error
-     */
-    @Severe
-    void error(Throwable e);
-
-    /**
-     * Called when an error is encountered removing a contribution
-     *
-     * @param filename the file being removed
-     * @param e        the error
-     */
-    @Severe
-    void removalError(String filename, Throwable e);
-
-    /**
-     * Called when errors are encountered processing contributions
-     *
-     * @param description a description of the errors
-     */
-    @Severe
-    void contributionErrors(String description);
-
-    /**
-     * Called when errors are encountered during deployments
-     *
-     * @param description a description of the errors
-     */
-    @Severe
-    void deploymentErrors(String description);
-
+    public void testChanges() throws Exception {
+        DirectoryResource resource = new DirectoryResource(new File("test"));
+        FileSystemResource fileSystemResource = EasyMock.createMock(FileSystemResource.class);
+        fileSystemResource.reset();
+        EasyMock.expect(fileSystemResource.getChecksum()).andReturn("test".getBytes());
+        EasyMock.expect(fileSystemResource.getChecksum()).andReturn("test".getBytes());
+        EasyMock.expect(fileSystemResource.getChecksum()).andReturn("test2".getBytes());
+        EasyMock.replay(fileSystemResource);
+        resource.addResource(fileSystemResource);
+        resource.reset();
+        assertFalse(resource.isChanged());
+        assertTrue(resource.isChanged());
+        EasyMock.verify(fileSystemResource);
+    }
 }

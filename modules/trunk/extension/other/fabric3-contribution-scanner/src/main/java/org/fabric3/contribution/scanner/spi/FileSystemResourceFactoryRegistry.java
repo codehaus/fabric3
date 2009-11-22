@@ -35,26 +35,29 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.spi;
+package org.fabric3.contribution.scanner.spi;
+
+import java.io.File;
 
 /**
- * Provides metadata for a FileSystemResource that has been sent to a DirectoryScannerDestination
+ * A registry for FileSystemResourceFactory instances
  *
  * @version $Rev$ $Date$
  */
-public interface ResourceMetaData {
+public interface FileSystemResourceFactoryRegistry {
 
     /**
-     * Returns the last-updated artifact checksum.
+     * Registers the factory
      *
-     * @return the last-updated artifact checksum
+     * @param factory the factory to register
      */
-    byte[] getChecksum();
+    void register(FileSystemResourceFactory factory);
 
     /**
-     * Returns the last-updated artifact timestamp.
+     * Creates a FileSystemResource for the given file by dispatching to a registered factory.
      *
-     * @return the last-updated artifact timestamp
+     * @param file the file to create the FileSystemResource for
+     * @return the FileSystemResource
      */
-    long getTimestamp();
+    FileSystemResource createResource(File file);
 }

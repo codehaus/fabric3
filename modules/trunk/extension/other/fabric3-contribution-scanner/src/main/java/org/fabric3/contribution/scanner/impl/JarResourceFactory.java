@@ -35,23 +35,59 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.spi;
+package org.fabric3.contribution.scanner.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.contribution.scanner.spi.FileResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactory;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactoryRegistry;
 
 /**
- * Implementations create DeploymentResources for a given file
+ * Creates a FileResource for SCA contribution jars
  *
  * @version $Rev$ $Date$
  */
-public interface FileSystemResourceFactory {
+@EagerInit
+public class JarResourceFactory implements FileSystemResourceFactory {
 
-    /**
-     * Creates a deployment resource for the given file
-     *
-     * @param file the file to create the resource for
-     * @return the deployment resource
-     */
-    FileSystemResource createResource(File file);
+    public JarResourceFactory(@Reference FileSystemResourceFactoryRegistry registry) {
+        registry.register(this);
+    }
 
+    public FileSystemResource createResource(File file) {
+        if (!file.getName().endsWith(".jar") && !file.getName().endsWith(".zip")) {
+            return null;
+        }
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(file.getCanonicalPath());
+            JarEntry entry = jarFile.getJarEntry("META-INF/sca-contribution.xml");
+            if (entry == null) {
+                return null;
+            }
+        } catch (FileNotFoundException e) {
+            // no sca-contribution, ignore
+            return null;
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        } finally {
+            try {
+                if (jarFile != null) {
+                    jarFile.close();
+                }
+            } catch (IOException e) {
+                // ignore
+            }
+        }
+        return new FileResource(file);
+    }
 }

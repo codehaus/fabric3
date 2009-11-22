@@ -35,34 +35,81 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.impl;
+package org.fabric3.contribution.scanner.impl;
 
-import java.io.File;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.scanner.spi.FileResource;
-import org.fabric3.scanner.spi.FileSystemResource;
-import org.fabric3.scanner.spi.FileSystemResourceFactory;
-import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * Creates a FileResource for XML-based contributions
+ * Monitoring interface for the DirectoryScanner
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
-public class XmlResourceFactory implements FileSystemResourceFactory {
+public interface ScannerMonitor {
 
-    public XmlResourceFactory(@Reference FileSystemResourceFactoryRegistry registry) {
-        registry.register(this);
-    }
+    /**
+     * Called when a contribution is deployed.
+     *
+     * @param name the name of the contribution
+     */
+    @Info
+    void deployed(String name);
 
-    public FileSystemResource createResource(File file) {
-        if (!file.getName().toLowerCase().endsWith(".xml")) {
-            return null;
-        }
-        return new FileResource(file);
-    }
+    /**
+     * Called when a contribution is removed
+     *
+     * @param name the name of the contribution
+     */
+    @Info
+    void removed(String name);
+
+    /**
+     * Called when a contribution is updated
+     *
+     * @param name the name of the contribution
+     */
+    @Info
+    void updated(String name);
+
+    /**
+     * Called when a file type is not recognized and ignored.
+     *
+     * @param name the file name
+     */
+    @Info
+    void ignored(String name);
+
+    /**
+     * Called when a general error is encountered processing a contribution
+     *
+     * @param e the error
+     */
+    @Severe
+    void error(Throwable e);
+
+    /**
+     * Called when an error is encountered removing a contribution
+     *
+     * @param filename the file being removed
+     * @param e        the error
+     */
+    @Severe
+    void removalError(String filename, Throwable e);
+
+    /**
+     * Called when errors are encountered processing contributions
+     *
+     * @param description a description of the errors
+     */
+    @Severe
+    void contributionErrors(String description);
+
+    /**
+     * Called when errors are encountered during deployments
+     *
+     * @param description a description of the errors
+     */
+    @Severe
+    void deploymentErrors(String description);
+
 }

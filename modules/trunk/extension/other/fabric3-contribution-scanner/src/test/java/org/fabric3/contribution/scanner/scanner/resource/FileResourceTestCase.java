@@ -35,40 +35,56 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.spi;
+package org.fabric3.contribution.scanner.scanner.resource;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import junit.framework.TestCase;
+
+import org.fabric3.contribution.scanner.spi.FileResource;
+
 /**
- * Base file system resource implementation
- *
  * @version $Rev$ $Date$
  */
-public abstract class AbstractResource implements FileSystemResource {
-    protected byte[] checksumValue;
+public class FileResourceTestCase extends TestCase {
+    private File file;
 
-    public boolean isChanged() throws IOException {
-        byte[] newValue = checksum();
-        if (checksumValue == null || checksumValue.length != newValue.length) {
-            checksumValue = newValue;
-            return true;
+    public void testChanged() throws Exception {
+        FileResource resource = new FileResource(file);
+        resource.reset();
+        assertFalse(resource.isChanged());
+        writeFile("testtest");
+        assertTrue(resource.isChanged());
+        writeFile("testtest");
+        assertFalse(resource.isChanged());
+    }
+
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        writeFile("test");
+    }
+
+
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        if (file.exists()) {
+            file.delete();
         }
-        for (int i = 0; i < newValue.length; i++) {
-            if (newValue[i] != checksumValue[i]) {
-                checksumValue = newValue;
-                return true;
+    }
+
+    private void writeFile(String contents) throws IOException {
+        FileOutputStream stream = null;
+        try {
+            file = new File("fileresourcetest.txt");
+            stream = new FileOutputStream(file);
+            stream.write(contents.getBytes());
+        } finally {
+            if (stream != null) {
+                stream.close();
             }
         }
-        return false;
     }
-
-    public byte[] getChecksum() {
-        return checksumValue;
-    }
-
-    public void reset() throws IOException {
-        checksumValue = checksum();
-    }
-
-    protected abstract byte[] checksum() throws IOException;
 }

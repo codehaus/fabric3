@@ -35,59 +35,58 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.impl;
+package org.fabric3.contribution.scanner.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scanner.spi.FileResource;
-import org.fabric3.scanner.spi.FileSystemResource;
-import org.fabric3.scanner.spi.FileSystemResourceFactory;
-import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
+import org.fabric3.contribution.scanner.spi.FileResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactory;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactoryRegistry;
 
 /**
- * Creates a FileResource for SCA contribution jars
+ * Creates a FileResource for exploded SCA contribution jars
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JarResourceFactory implements FileSystemResourceFactory {
+public class ExplodedJarResourceFactory implements FileSystemResourceFactory {
 
-    public JarResourceFactory(@Reference FileSystemResourceFactoryRegistry registry) {
+    public ExplodedJarResourceFactory(@Reference FileSystemResourceFactoryRegistry registry) {
         registry.register(this);
     }
 
     public FileSystemResource createResource(File file) {
-        if (!file.getName().endsWith(".jar") && !file.getName().endsWith(".zip")) {
+        if (!file.isDirectory()) {
             return null;
         }
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(file.getCanonicalPath());
-            JarEntry entry = jarFile.getJarEntry("META-INF/sca-contribution.xml");
-            if (entry == null) {
-                return null;
-            }
-        } catch (FileNotFoundException e) {
-            // no sca-contribution, ignore
+        File manifest = new File(file, "/META-INF/sca-contribution.xml");
+        if (!manifest.exists()) {
+            // not a contribution archive, ignore
             return null;
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        } finally {
-            try {
-                if (jarFile != null) {
-                    jarFile.close();
+        }
+        DirectoryResource directoryResource = new DirectoryResource(file);
+        // monitor everything in META-INF
+        File metaInf = new File(file, "/META-INF");
+        monitorResource(directoryResource, metaInf);
+        return directoryResource;
+    }
+
+    private void monitorResource(DirectoryResource directoryResource, File file) {
+        if (file.isDirectory()) {
+            for (File entry : file.listFiles()) {
+                if (entry.isFile()) {
+                    directoryResource.addResource(new FileResource(entry));
+                } else {
+                    monitorResource(directoryResource, entry);
                 }
-            } catch (IOException e) {
-                // ignore
             }
+        } else {
+            directoryResource.addResource(new FileResource(file));
         }
-        return new FileResource(file);
+
     }
 }

@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.impl;
+package org.fabric3.contribution.scanner.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,8 +73,8 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.scanner.spi.FileSystemResource;
-import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
+import org.fabric3.contribution.scanner.spi.FileSystemResource;
+import org.fabric3.contribution.scanner.spi.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.VoidService;
 import org.fabric3.spi.event.DomainRecover;
 import org.fabric3.spi.event.EventService;

@@ -35,35 +35,28 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.scanner.impl;
+package org.fabric3.contribution.scanner.spi;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.fabric3.scanner.spi.FileSystemResource;
-import org.fabric3.scanner.spi.FileSystemResourceFactory;
-import org.fabric3.scanner.spi.FileSystemResourceFactoryRegistry;
+import java.io.IOException;
+import java.net.URL;
 
 /**
- * Default implementation of the FileSystemResourceFactoryRegistry.
+ * Tracks changes to a file system resource.
  *
  * @version $Rev$ $Date$
  */
-public class FileSystemResourceFactoryRegistryImpl implements FileSystemResourceFactoryRegistry {
-    private List<FileSystemResourceFactory> factories = new ArrayList<FileSystemResourceFactory>();
+public interface FileSystemResource {
 
-    public void register(FileSystemResourceFactory factory) {
-        factories.add(factory);
-    }
+    String getName();
 
-    public FileSystemResource createResource(File file) {
-        for (FileSystemResourceFactory factory : factories) {
-            FileSystemResource resource = factory.createResource(file);
-            if (resource != null) {
-                return resource;
-            }
-        }
-        return null;
-    }
+    URL getLocation();
+
+    boolean isChanged() throws IOException;
+
+    byte[] getChecksum();
+
+    long getTimestamp();
+
+    public void reset() throws IOException;
+
 }
