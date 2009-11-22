@@ -50,8 +50,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Constants;
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.spi.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.contenttype.ContentTypeResolver;
+import org.fabric3.spi.contribution.ContentTypeResolutionException;
+import org.fabric3.spi.contribution.ContentTypeResolver;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.archive.Action;

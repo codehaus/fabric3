@@ -56,13 +56,13 @@ import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ContributionProcessor;
 import org.fabric3.spi.contribution.ProcessorRegistry;
 import org.fabric3.spi.contribution.Resource;
+import org.fabric3.spi.contribution.ContentTypeResolver;
 import org.fabric3.spi.contribution.archive.Action;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.spi.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.contenttype.ContentTypeResolver;
+import org.fabric3.spi.contribution.ContentTypeResolutionException;
 import org.fabric3.util.io.FileHelper;
 
 /**

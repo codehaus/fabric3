@@ -35,37 +35,34 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.contenttype;
+package org.fabric3.contribution;
 
-import org.fabric3.host.Fabric3Exception;
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import org.fabric3.spi.contribution.ContentTypeResolver;
 
 /**
- * Denotes an error resolving the content type for a resource.
- *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class ContentTypeResolutionException extends Fabric3Exception {
-    private static final long serialVersionUID = 7983355008884153907L;
+public class ExtensionMapContentTypeResolverTestCase extends TestCase {
+    private ContentTypeResolver resolver;
 
-    /**
-     * Constructor.
-     *
-     * @param message    the error message
-     * @param identifier an error identifier
-     */
-    public ContentTypeResolutionException(String message, String identifier) {
-        super(message, identifier);
+    public void testKnownContentType() throws Exception {
+        URL url = getClass().getResource("test.txt");
+
+        assertEquals("text/plain", resolver.getContentType(url));
     }
 
-    /**
-     * Constructor.
-     *
-     * @param message    the error message
-     * @param identifier an error identifier
-     * @param cause      an exception thrown during resolution
-     */
-    public ContentTypeResolutionException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
+    public void testGetContentType() throws Exception {
+        URL url = getClass().getResource("test.composite");
+
+        assertEquals("text/vnd.fabric3.composite+xml", resolver.getContentType(url));
     }
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        resolver = new ExtensionMapContentTypeResolver();
+    }
 }

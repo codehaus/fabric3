@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.spi.contenttype;
+package org.fabric3.spi.contribution;
 
 import java.net.URL;
 
@@ -57,15 +57,17 @@ public interface ContentTypeResolver {
 
 
     /**
-     * Register a new file extension to content type mapping
-     * @param fileExtension
-     * @param contentType
+     * Register a new file extension to content type mapping.
+     *
+     * @param fileExtension the file extension
+     * @param contentType   the content type
      */
     void register(String fileExtension, String contentType);
 
     /**
-     * unregister an existing file extension
-     * @param fileExtension
+     * unregister an existing file extension.
+     *
+     * @param fileExtension the file extension
      */
     void unregister(String fileExtension);
 

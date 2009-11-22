@@ -56,6 +56,8 @@ import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.ContributionManifest;
 import org.fabric3.spi.contribution.ProcessorRegistry;
+import org.fabric3.spi.contribution.ContentTypeResolver;
+import org.fabric3.spi.contribution.ContentTypeResolutionException;
 import org.fabric3.spi.contribution.archive.Action;
 import org.fabric3.spi.contribution.archive.ArchiveContributionHandler;
 import org.fabric3.spi.contribution.manifest.JarManifestHandler;
@@ -63,8 +65,6 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.spi.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.contenttype.ContentTypeResolver;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.

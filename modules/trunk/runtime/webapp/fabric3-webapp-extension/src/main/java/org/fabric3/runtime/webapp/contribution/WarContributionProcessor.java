@@ -61,8 +61,8 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.spi.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.contenttype.ContentTypeResolver;
+import org.fabric3.spi.contribution.ContentTypeResolutionException;
+import org.fabric3.spi.contribution.ContentTypeResolver;
 
 /**
  * Processes a WAR contribution in an embedded runtime.

@@ -28,18 +28,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.event.EventServiceImpl"/>
     </component>
 
-    <component name="ContentTypeResolver">
-        <f3-impl:implementation.system class="org.fabric3.fabric.contenttype.ExtensionMapContentTypeResolver"/>
-        <property name="extensionMap">
-            <xml>application/xml</xml>
-            <composite>text/vnd.fabric3.composite+xml</composite>
-            <zip>application/zip</zip>
-            <jar>application/zip</jar>
-            <definitions>text/vnd.fabric3.definitions+xml</definitions>
-            <wsdl>text/wsdl+xml</wsdl>
-        </property>
-    </component>
-
     <component name="ExpressionExpander">
         <f3-impl:implementation.system class="org.fabric3.fabric.expression.ExpressionExpanderImpl"/>
     </component>

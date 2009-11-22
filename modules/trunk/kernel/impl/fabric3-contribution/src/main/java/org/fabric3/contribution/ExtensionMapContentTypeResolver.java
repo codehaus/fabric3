@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.fabric.contenttype;
+package org.fabric3.contribution;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,8 +46,8 @@ import javax.activation.FileTypeMap;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.spi.contenttype.ContentTypeResolutionException;
-import org.fabric3.spi.contenttype.ContentTypeResolver;
+import org.fabric3.spi.contribution.ContentTypeResolutionException;
+import org.fabric3.spi.contribution.ContentTypeResolver;
 
 /**
  * Content type resolver that is implemented using a configured map.
