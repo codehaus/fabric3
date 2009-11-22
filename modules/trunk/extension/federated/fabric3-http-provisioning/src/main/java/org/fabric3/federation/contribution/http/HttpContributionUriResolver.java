@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.provisioning.http;
+package org.fabric3.federation.contribution.http;
 
 import java.io.IOException;
 import java.io.InputStream;

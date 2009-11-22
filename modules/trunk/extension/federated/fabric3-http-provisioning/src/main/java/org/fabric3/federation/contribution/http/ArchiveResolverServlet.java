@@ -35,57 +35,59 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.provisioning.http;
+package org.fabric3.federation.contribution.http;
 
-import java.net.InetAddress;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
+import java.net.URL;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.spi.contribution.ContributionUriEncoder;
+import org.fabric3.spi.contribution.Contribution;
 import org.fabric3.spi.contribution.MetaDataStore;
-import org.fabric3.spi.host.ServletHost;
 
 /**
- * Encodes a contribution URI so it can be dereferenced in a domain via HTTP. The encoding maps from the contribution URI to an HTTP-based URI.
+ * Returns the contents of a contribution associated with the encoded servlet path. The servlet path corresponds to the contribution URI.
  *
  * @version $Rev$ $Date$
  */
-public class HTTPContributionUriEncoder implements ContributionUriEncoder {
-    private ServletHost host;
+public class ArchiveResolverServlet extends HttpServlet {
+    private static final long serialVersionUID = -5822568715938454572L;
     private MetaDataStore store;
-    private String address;
-    private String mappingPath = HttpProvisionConstants.REPOSITORY;
 
-    public HTTPContributionUriEncoder(@Reference ServletHost host, @Reference MetaDataStore store) {
-        this.host = host;
+    public ArchiveResolverServlet(MetaDataStore store) {
         this.store = store;
     }
 
-    @Property
-    public void setMappingPath(String path) {
-        mappingPath = path;
-    }
-
-    @Property
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    @Init
-    public void init() throws UnknownHostException {
-        if (address == null) {
-            address = InetAddress.getLocalHost().getHostAddress();
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String info = req.getPathInfo().substring(1);    // path info always begins with '/'
+        try {
+            URI uri = new URI(info);
+            Contribution contribution = store.find(uri);
+            if (contribution == null) {
+                throw new ServletException("Contribution not found: " + info + ". Request URL was: " + info);
+            }
+            URL url = contribution.getLocation();
+            copy(url.openStream(), resp.getOutputStream());
+        } catch (URISyntaxException e) {
+            throw new ServletException("Invalid URI: " + info, e);
         }
-        host.registerMapping("/" + mappingPath + "/*", new ArchiveResolverServlet(store));
     }
 
-    public URI encode(URI uri) throws URISyntaxException {
-        String path = "/" + mappingPath + "/" + uri.getPath();
-        return new URI("http", null, address, host.getHttpPort(), path, null, null);
+
+    public static int copy(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[4096];
+        int count = 0;
+        int n;
+        while (-1 != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+            count += n;
+        }
+        return count;
     }
 }
