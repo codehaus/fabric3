@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.introspection;
+package org.fabric3.implementation.timer.introspection;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -54,10 +54,10 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.timer.component.model.TimerImplementation;
-import org.fabric3.timer.component.provision.TriggerData;
-import static org.fabric3.timer.component.provision.TriggerData.UNSPECIFIED;
-import org.fabric3.timer.component.provision.TriggerType;
+import org.fabric3.implementation.timer.model.TimerImplementation;
+import org.fabric3.implementation.timer.provision.TriggerData;
+import static org.fabric3.implementation.timer.provision.TriggerData.UNSPECIFIED;
+import org.fabric3.implementation.timer.provision.TriggerType;
 
 /**
  * Loads <implementation.timer> entries in a composite.

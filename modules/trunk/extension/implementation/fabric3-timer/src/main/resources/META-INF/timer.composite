@@ -17,16 +17,16 @@ Public License. See the accompanying license file for details.
            autowire="true">
 
     <component name="TimerImplementationLoader" f3-core:key="f3-impl:implementation.timer">
-        <f3-impl:implementation.system class="org.fabric3.timer.component.introspection.TimerImplementationLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.implementation.timer.introspection.TimerImplementationLoader"/>
     </component>
 
-    <component name="TimerComponentGenerator" f3-core:key="org.fabric3.timer.component.model.TimerImplementation">
-        <f3-impl:implementation.system class="org.fabric3.timer.component.generator.TimerComponentGenerator"/>
+    <component name="TimerComponentGenerator" f3-core:key="org.fabric3.implementation.timer.model.TimerImplementation">
+        <f3-impl:implementation.system class="org.fabric3.implementation.timer.generator.TimerComponentGenerator"/>
     </component>
 
 
-    <component name="TimerComponentBuilder" f3-core:key="org.fabric3.timer.component.provision.TimerComponentDefinition">
-        <f3-impl:implementation.system class="org.fabric3.timer.component.runtime.TimerComponentBuilder"/>
+    <component name="TimerComponentBuilder" f3-core:key="org.fabric3.implementation.timer.provision.TimerComponentDefinition">
+        <f3-impl:implementation.system class="org.fabric3.implementation.timer.runtime.TimerComponentBuilder"/>
     </component>
 
 </composite>

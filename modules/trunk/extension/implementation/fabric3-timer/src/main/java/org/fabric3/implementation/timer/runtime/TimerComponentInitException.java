@@ -35,33 +35,17 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.model;
+package org.fabric3.implementation.timer.runtime;
 
-import javax.xml.namespace.QName;
-
-import org.fabric3.host.Namespaces;
-import org.fabric3.implementation.java.model.JavaImplementation;
-import org.fabric3.timer.component.provision.TriggerData;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * Represents a timer component implementation type.
- *
- * @version $$Rev$$ $$Date$$
+ * @version $Rev: 7148 $ $Date: 2009-06-15 02:18:27 +0200 (Mon, 15 Jun 2009) $
  */
-public class TimerImplementation extends JavaImplementation {
-    public static final QName IMPLEMENTATION_TIMER = new QName(Namespaces.IMPLEMENTATION, "implementation.timer");
-    private static final long serialVersionUID = -911919528396189874L;
-    private TriggerData triggerData;
+public class TimerComponentInitException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = -2271902394308088059L;
 
-    public QName getType() {
-        return IMPLEMENTATION_TIMER;
-    }
-
-    public TriggerData getTriggerData() {
-        return triggerData;
-    }
-
-    public void setTriggerData(TriggerData triggerData) {
-        this.triggerData = triggerData;
+    public TimerComponentInitException(Throwable cause) {
+        super(cause);
     }
 }

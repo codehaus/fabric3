@@ -35,17 +35,37 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.runtime;
+package org.fabric3.implementation.timer.introspection;
 
-import org.fabric3.host.Fabric3RuntimeException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 7148 $ $Date: 2009-06-15 02:18:27 +0200 (Mon, 15 Jun 2009) $
  */
-public class TimerComponentInitException extends Fabric3RuntimeException {
-    private static final long serialVersionUID = -2271902394308088059L;
+public class InvalidTimerExpression extends XmlValidationFailure {
+    private Throwable cause;
 
-    public TimerComponentInitException(Throwable cause) {
-        super(cause);
+    public InvalidTimerExpression(String message, XMLStreamReader reader) {
+        super(message, reader);
+    }
+
+    public InvalidTimerExpression(String message, XMLStreamReader reader, Throwable cause) {
+        super(message, reader);
+        this.cause = cause;
+    }
+
+    public Throwable getCause() {
+        return cause;
+    }
+
+    public String getMessage() {
+        if (cause != null) {
+            return super.getMessage() + ". The original error was: \n" + cause.toString();
+        } else {
+            return super.getMessage();
+        }
     }
 }
+

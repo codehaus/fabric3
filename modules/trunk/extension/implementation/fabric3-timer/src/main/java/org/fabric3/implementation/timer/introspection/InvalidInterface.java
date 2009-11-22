@@ -35,14 +35,22 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.provision;
+package org.fabric3.implementation.timer.introspection;
+
+import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.implementation.timer.model.TimerImplementation;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 7148 $ $Date: 2009-06-15 02:18:27 +0200 (Mon, 15 Jun 2009) $
  */
-public enum TriggerType {
-    ONCE,
-    FIXED_RATE,
-    INTERVAL,
-    CRON
+public class InvalidInterface extends ValidationFailure {
+    private TimerImplementation implementation;
+
+    public InvalidInterface(TimerImplementation implementation) {
+        this.implementation = implementation;
+    }
+
+    public String getMessage() {
+        return "Component must implement java.lang.Runnable: " + implementation.getImplementationClass();
+    }
 }

@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.generator;
+package org.fabric3.implementation.timer.generator;
 
 import javax.xml.namespace.QName;
 
@@ -57,14 +57,14 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 import org.fabric3.spi.policy.EffectivePolicy;
-import org.fabric3.timer.component.model.TimerImplementation;
-import org.fabric3.timer.component.provision.TimerComponentDefinition;
-import org.fabric3.timer.component.provision.TriggerData;
+import org.fabric3.implementation.timer.model.TimerImplementation;
+import org.fabric3.implementation.timer.provision.TimerComponentDefinition;
+import org.fabric3.implementation.timer.provision.TriggerData;
 
 /**
  * Generates physical metadata for a Timer component deployment.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7881 $ $Date: 2009-11-22 10:32:23 +0100 (Sun, 22 Nov 2009) $
  */
 @EagerInit
 public class TimerComponentGenerator implements ComponentGenerator<LogicalComponent<TimerImplementation>> {

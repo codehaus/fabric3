@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.provision;
+package org.fabric3.implementation.timer.provision;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Encapsulates data for a timer trigger.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7148 $ $Date: 2009-06-15 02:18:27 +0200 (Mon, 15 Jun 2009) $
  */
 public class TriggerData implements Serializable {
     private static final long serialVersionUID = 5814910790533612455L;

@@ -35,22 +35,32 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.introspection;
+package org.fabric3.implementation.timer.provision;
 
-import org.fabric3.host.contribution.ValidationFailure;
-import org.fabric3.timer.component.model.TimerImplementation;
+import org.fabric3.implementation.java.provision.JavaComponentDefinition;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 7881 $ $Date: 2009-11-22 10:32:23 +0100 (Sun, 22 Nov 2009) $
  */
-public class InvalidInterface extends ValidationFailure {
-    private TimerImplementation implementation;
+public class TimerComponentDefinition extends JavaComponentDefinition {
+    private static final long serialVersionUID = -4795264376334780345L;
+    public static final long UNSPECIFIED = -1;
+    private boolean transactional;
+    private TriggerData triggerData;
 
-    public InvalidInterface(TimerImplementation implementation) {
-        this.implementation = implementation;
+    public boolean isTransactional() {
+        return transactional;
     }
 
-    public String getMessage() {
-        return "Component must implement java.lang.Runnable: " + implementation.getImplementationClass();
+    public void setTransactional(boolean transactional) {
+        this.transactional = transactional;
+    }
+
+    public TriggerData getTriggerData() {
+        return triggerData;
+    }
+
+    public void setTriggerData(TriggerData triggerData) {
+        this.triggerData = triggerData;
     }
 }

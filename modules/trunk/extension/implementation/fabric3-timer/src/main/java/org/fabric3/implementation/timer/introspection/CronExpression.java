@@ -1,4 +1,4 @@
-package org.fabric3.timer.component.introspection;
+package org.fabric3.implementation.timer.introspection;
 
 import java.io.Serializable;
 import java.text.ParseException;

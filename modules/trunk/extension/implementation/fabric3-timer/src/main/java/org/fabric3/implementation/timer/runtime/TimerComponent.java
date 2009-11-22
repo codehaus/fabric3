@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.runtime;
+package org.fabric3.implementation.timer.runtime;
 
 import java.net.URI;
 import java.text.ParseException;
@@ -45,13 +45,13 @@ import javax.xml.namespace.QName;
 import org.fabric3.implementation.java.runtime.JavaComponent;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.timer.component.provision.TriggerData;
+import org.fabric3.implementation.timer.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
 
 /**
  * A timer component implementation.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7881 $ $Date: 2009-11-22 10:32:23 +0100 (Sun, 22 Nov 2009) $
  */
 public class TimerComponent<T> extends JavaComponent<T> {
     private TriggerData data;

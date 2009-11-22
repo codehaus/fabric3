@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.runtime;
+package org.fabric3.implementation.timer.runtime;
 
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceLifecycleException;
@@ -49,7 +49,7 @@ import org.fabric3.spi.wire.InvocationRuntimeException;
 /**
  * Implementation registered with the runtime TimerService to receive notifications and invoke a component instance when a trigger has fired.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 7148 $ $Date: 2009-06-15 02:18:27 +0200 (Mon, 15 Jun 2009) $
  */
 public class TimerComponentInvoker<T> implements Runnable {
     private TimerComponent<T> component;

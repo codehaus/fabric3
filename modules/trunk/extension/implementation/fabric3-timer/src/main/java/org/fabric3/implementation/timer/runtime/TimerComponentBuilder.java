@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.timer.component.runtime;
+package org.fabric3.implementation.timer.runtime;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
@@ -54,12 +54,12 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
 import org.fabric3.spi.transform.TransformerRegistry;
-import org.fabric3.timer.component.provision.TimerComponentDefinition;
-import org.fabric3.timer.component.provision.TriggerData;
+import org.fabric3.implementation.timer.provision.TimerComponentDefinition;
+import org.fabric3.implementation.timer.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 7712 $ $Date: 2009-09-29 00:57:34 +0200 (Tue, 29 Sep 2009) $
  */
 @EagerInit
 public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerComponentDefinition, TimerComponent<?>> {
