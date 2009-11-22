@@ -56,8 +56,8 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.fabric3.fabric.documentloader.DocumentLoader;
-import org.fabric3.fabric.documentloader.DocumentLoaderImpl;
+import org.fabric3.fabric.xml.DocumentLoader;
+import org.fabric3.fabric.xml.DocumentLoaderImpl;
 import org.fabric3.fabric.xml.XMLFactoryImpl;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationFailure;

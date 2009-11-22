@@ -51,8 +51,8 @@ import javax.management.MBeanServer;
 import org.w3c.dom.Document;
 
 import org.fabric3.contribution.manifest.ContributionExport;
-import org.fabric3.fabric.documentloader.DocumentLoader;
-import org.fabric3.fabric.documentloader.DocumentLoaderImpl;
+import org.fabric3.fabric.xml.DocumentLoader;
+import org.fabric3.fabric.xml.DocumentLoaderImpl;
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.runtime.FabricNames;

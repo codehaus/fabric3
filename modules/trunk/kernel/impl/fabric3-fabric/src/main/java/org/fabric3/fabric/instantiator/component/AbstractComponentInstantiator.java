@@ -57,7 +57,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import org.fabric3.fabric.documentloader.DocumentLoader;
+import org.fabric3.fabric.xml.DocumentLoader;
 import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.model.type.component.AbstractComponentType;

@@ -65,7 +65,7 @@
     </component>
 
     <component name="DocumentLoader">
-        <f3-impl:implementation.system class="org.fabric3.fabric.documentloader.DocumentLoaderImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.xml.DocumentLoaderImpl"/>
     </component>
 
     <component name="Collector">

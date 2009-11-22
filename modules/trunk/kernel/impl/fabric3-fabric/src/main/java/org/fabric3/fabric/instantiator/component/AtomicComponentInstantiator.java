@@ -43,7 +43,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.documentloader.DocumentLoader;
+import org.fabric3.fabric.xml.DocumentLoader;
 import org.fabric3.fabric.instantiator.InstantiationContext;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.BindingDefinition;
