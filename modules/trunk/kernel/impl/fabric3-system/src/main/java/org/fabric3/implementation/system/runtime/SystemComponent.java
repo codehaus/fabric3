@@ -46,8 +46,8 @@ package org.fabric3.implementation.system.runtime;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.fabric3.pojo.component.PojoComponent;
-import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
+import org.fabric3.implementation.pojo.component.PojoComponent;
+import org.fabric3.implementation.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 
 /**

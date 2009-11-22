@@ -18,12 +18,12 @@
            name="PojoComposite"
            autowire="true">
 
-    <component name="ReflectiveInstanceFactoryBuilder" f3-core:key="org.fabric3.pojo.provision.InstanceFactoryDefinition">
-        <f3-impl:implementation.system class="org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder"/>
+    <component name="ReflectiveInstanceFactoryBuilder" f3-core:key="org.fabric3.implementation.pojo.provision.InstanceFactoryDefinition">
+        <f3-impl:implementation.system class="org.fabric3.implementation.pojo.reflection.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
     <component name="GenerationHelperImpl">
-        <f3-impl:implementation.system class="org.fabric3.pojo.generator.GenerationHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.implementation.pojo.generator.GenerationHelperImpl"/>
     </component>
 
 </composite>

@@ -37,7 +37,7 @@
 */
 package org.fabric3.implementation.java.provision;
 
-import org.fabric3.pojo.provision.PojoSourceDefinition;
+import org.fabric3.implementation.pojo.provision.PojoSourceDefinition;
 
 /**
  * Models a Java physical wire source definition.

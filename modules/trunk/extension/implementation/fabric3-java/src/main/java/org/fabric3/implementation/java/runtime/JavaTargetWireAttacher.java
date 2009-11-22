@@ -44,8 +44,8 @@ import java.util.List;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.implementation.java.provision.JavaTargetDefinition;
-import org.fabric3.pojo.component.InvokerInterceptor;
-import org.fabric3.pojo.provision.PojoSourceDefinition;
+import org.fabric3.implementation.pojo.component.InvokerInterceptor;
+import org.fabric3.implementation.pojo.provision.PojoSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;

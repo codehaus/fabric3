@@ -37,7 +37,7 @@
 */
 package org.fabric3.implementation.java.provision;
 
-import org.fabric3.pojo.provision.PojoComponentDefinition;
+import org.fabric3.implementation.pojo.provision.PojoComponentDefinition;
 
 /**
  * Represents the physical component definition for a Java implementation.

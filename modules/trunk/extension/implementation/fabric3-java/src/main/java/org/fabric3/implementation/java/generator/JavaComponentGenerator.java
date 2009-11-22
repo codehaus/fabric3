@@ -45,7 +45,7 @@ import org.fabric3.implementation.java.provision.JavaComponentDefinition;
 import org.fabric3.implementation.java.provision.JavaSourceDefinition;
 import org.fabric3.implementation.java.provision.JavaTargetDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
-import org.fabric3.pojo.generator.GenerationHelper;
+import org.fabric3.implementation.pojo.generator.GenerationHelper;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;

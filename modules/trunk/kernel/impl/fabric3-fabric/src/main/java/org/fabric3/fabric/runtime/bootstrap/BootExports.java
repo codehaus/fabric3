@@ -61,7 +61,7 @@ public final class BootExports {
         bootMap.put("org.fabric3.host.*", Names.VERSION);
         bootMap.put("org.fabric3.management.*", Names.VERSION);
         bootMap.put("org.fabric3.model.*", Names.VERSION);
-        bootMap.put("org.fabric3.pojo.*", Names.VERSION);
+        bootMap.put("org.fabric3.implementation.pojo.*", Names.VERSION);
         BOOT_EXPORTS = Collections.unmodifiableMap(bootMap);
     }
 

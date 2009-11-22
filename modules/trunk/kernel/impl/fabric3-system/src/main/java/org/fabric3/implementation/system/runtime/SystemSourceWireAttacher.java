@@ -49,8 +49,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.implementation.system.provision.SystemSourceDefinition;
-import org.fabric3.pojo.builder.PojoSourceWireAttacher;
-import org.fabric3.pojo.builder.ProxyService;
+import org.fabric3.implementation.pojo.builder.PojoSourceWireAttacher;
+import org.fabric3.implementation.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;

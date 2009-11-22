@@ -43,7 +43,7 @@
  */
 package org.fabric3.implementation.system.provision;
 
-import org.fabric3.pojo.provision.PojoComponentDefinition;
+import org.fabric3.implementation.pojo.provision.PojoComponentDefinition;
 
 /**
  * @version $Rev$ $Date$

@@ -44,10 +44,10 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.model.type.component.Scope;
-import org.fabric3.pojo.builder.PojoComponentBuilder;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
-import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
-import org.fabric3.pojo.provision.InstanceFactoryDefinition;
+import org.fabric3.implementation.pojo.builder.PojoComponentBuilder;
+import org.fabric3.implementation.pojo.instancefactory.InstanceFactoryBuilder;
+import org.fabric3.implementation.pojo.instancefactory.InstanceFactoryProvider;
+import org.fabric3.implementation.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;

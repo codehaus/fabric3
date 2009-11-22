@@ -51,7 +51,7 @@ import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
 import static org.fabric3.container.web.spi.WebApplicationActivator.CONTEXT_ATTRIBUTE;
 import static org.fabric3.container.web.spi.WebApplicationActivator.OASIS_CONTEXT_ATTRIBUTE;
-import org.fabric3.pojo.builder.ProxyService;
+import org.fabric3.implementation.pojo.builder.ProxyService;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.Injector;
 import org.fabric3.spi.ObjectCreationException;

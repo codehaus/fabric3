@@ -46,7 +46,7 @@ package org.fabric3.proxy.jdk;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.fabric3.pojo.builder.ProxyService;
+import org.fabric3.implementation.pojo.builder.ProxyService;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.model.physical.InteractionType;
