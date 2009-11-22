@@ -35,13 +35,13 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.introspection;
+package org.fabric3.implementation.java.introspection;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
-import org.fabric3.java.model.JavaImplementation;
+import org.fabric3.implementation.java.model.JavaImplementation;
 import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;

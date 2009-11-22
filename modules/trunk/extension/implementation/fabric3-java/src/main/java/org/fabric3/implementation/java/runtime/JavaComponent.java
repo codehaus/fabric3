@@ -35,15 +35,43 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.introspection;
+package org.fabric3.implementation.java.runtime;
 
-import org.fabric3.java.model.JavaImplementation;
-import org.fabric3.spi.introspection.java.ImplementationProcessor;
+import java.net.URI;
+import javax.xml.namespace.QName;
+
+import org.fabric3.pojo.component.PojoComponent;
+import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
+import org.fabric3.spi.component.ScopeContainer;
 
 /**
- * Strongly typed ImplementationProcessor for Java implementations.
+ * The runtime instantiation of a Java component implementation.
  *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
+ * @param <T> the implementation class for the defined component
  */
-public interface JavaImplementationProcessor extends ImplementationProcessor<JavaImplementation> {
+public class JavaComponent<T> extends PojoComponent<T> {
+
+    /**
+     * Constructor for a Java Component.
+     *
+     * @param componentId             the component's uri
+     * @param instanceFactoryProvider the provider for the instance factory
+     * @param scopeContainer          the container for the component's implementation scope
+     * @param deployable              the deployable composite this component is deployed with
+     * @param eager                   true if the component should be eagerly initialized
+     * @param maxIdleTime             the time after which idle instances of this component can be expired
+     * @param maxAge                  the time after which instances of this component can be expired
+     */
+    public JavaComponent(URI componentId,
+                         InstanceFactoryProvider<T> instanceFactoryProvider,
+                         ScopeContainer scopeContainer,
+                         QName deployable,
+                         boolean eager,
+                         long maxIdleTime,
+                         long maxAge) {
+        super(componentId, instanceFactoryProvider, scopeContainer, deployable, eager, maxIdleTime, maxAge);
+    }
+
+
 }

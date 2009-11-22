@@ -35,12 +35,12 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.generator;
+package org.fabric3.implementation.java.generator;
 
-import org.fabric3.java.model.JavaImplementation;
-import org.fabric3.java.provision.JavaComponentDefinition;
-import org.fabric3.java.provision.JavaSourceDefinition;
-import org.fabric3.java.provision.JavaTargetDefinition;
+import org.fabric3.implementation.java.model.JavaImplementation;
+import org.fabric3.implementation.java.provision.JavaComponentDefinition;
+import org.fabric3.implementation.java.provision.JavaSourceDefinition;
+import org.fabric3.implementation.java.provision.JavaTargetDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;

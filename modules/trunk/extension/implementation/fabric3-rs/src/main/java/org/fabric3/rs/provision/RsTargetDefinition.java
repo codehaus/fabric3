@@ -37,7 +37,7 @@
 */
 package org.fabric3.rs.provision;
 
-import org.fabric3.java.provision.JavaTargetDefinition;
+import org.fabric3.implementation.java.provision.JavaTargetDefinition;
 
 /**
  * @version $Rev$ $Date$

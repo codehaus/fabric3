@@ -35,15 +35,35 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.provision;
+package org.fabric3.implementation.java.introspection;
 
-import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
- * Models a Java physical wire target definition.
- *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class JavaTargetDefinition extends PhysicalTargetDefinition {
-    private static final long serialVersionUID = 3947087633254650441L;
+public class ImplementationArtifactNotFound extends ValidationFailure {
+    private String artifact;
+    private String clazz;
+
+    public ImplementationArtifactNotFound(String clazz) {
+        super();
+        this.clazz = clazz;
+    }
+
+    public ImplementationArtifactNotFound(String clazz, String artifact) {
+        super();
+        this.clazz = clazz;
+        this.artifact = artifact.replace("/", ".");
+    }
+
+    public String getMessage() {
+        if (artifact == null || artifact.equals(clazz)) {
+            return "Implementation class not found: " + clazz + ". Check that the class is contained in the contribution archive, " +
+                    "included as a library, or imported in the SCA contribution manifest.";
+        } else {
+            return "Class " + artifact + " referenced in component implementation " + clazz + " not found. Check that the class is " +
+                    "contained in the contribution archive, included as a library, or imported in the SCA contribution manifest.";
+        }
+    }
 }

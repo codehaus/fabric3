@@ -42,7 +42,7 @@ import java.text.ParseException;
 import java.util.concurrent.ScheduledFuture;
 import javax.xml.namespace.QName;
 
-import org.fabric3.java.runtime.JavaComponent;
+import org.fabric3.implementation.java.runtime.JavaComponent;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.timer.component.provision.TriggerData;

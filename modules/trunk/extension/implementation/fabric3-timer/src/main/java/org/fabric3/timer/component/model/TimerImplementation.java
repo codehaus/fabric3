@@ -40,7 +40,7 @@ package org.fabric3.timer.component.model;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.Namespaces;
-import org.fabric3.java.model.JavaImplementation;
+import org.fabric3.implementation.java.model.JavaImplementation;
 import org.fabric3.timer.component.provision.TriggerData;
 
 /**

@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.runtime;
+package org.fabric3.implementation.java.runtime;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
@@ -43,7 +43,7 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.provision.JavaComponentDefinition;
+import org.fabric3.implementation.java.provision.JavaComponentDefinition;
 import org.fabric3.model.type.component.Scope;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;

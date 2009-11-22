@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.generator;
+package org.fabric3.implementation.java.generator;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
@@ -43,10 +43,10 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.Namespaces;
-import org.fabric3.java.model.JavaImplementation;
-import org.fabric3.java.provision.JavaComponentDefinition;
-import org.fabric3.java.provision.JavaSourceDefinition;
-import org.fabric3.java.provision.JavaTargetDefinition;
+import org.fabric3.implementation.java.model.JavaImplementation;
+import org.fabric3.implementation.java.provision.JavaComponentDefinition;
+import org.fabric3.implementation.java.provision.JavaSourceDefinition;
+import org.fabric3.implementation.java.provision.JavaTargetDefinition;
 import org.fabric3.model.type.component.AbstractComponentType;
 import org.fabric3.model.type.component.CallbackDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;

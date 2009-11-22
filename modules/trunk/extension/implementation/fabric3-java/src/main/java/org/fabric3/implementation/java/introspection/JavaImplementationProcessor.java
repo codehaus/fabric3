@@ -35,15 +35,15 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.provision;
+package org.fabric3.implementation.java.introspection;
 
-import org.fabric3.pojo.provision.PojoComponentDefinition;
+import org.fabric3.implementation.java.model.JavaImplementation;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 
 /**
- * Represents the physical component definition for a Java implementation.
+ * Strongly typed ImplementationProcessor for Java implementations.
  *
  * @version $Rev$ $Date$
  */
-public class JavaComponentDefinition extends PojoComponentDefinition {
-    private static final long serialVersionUID = -4767928352571015483L;
+public interface JavaImplementationProcessor extends ImplementationProcessor<JavaImplementation> {
 }

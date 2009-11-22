@@ -35,15 +35,15 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.provision;
+package org.fabric3.implementation.java.provision;
 
-import org.fabric3.pojo.provision.PojoSourceDefinition;
+import org.fabric3.pojo.provision.PojoComponentDefinition;
 
 /**
- * Models a Java physical wire source definition.
+ * Represents the physical component definition for a Java implementation.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class JavaSourceDefinition extends PojoSourceDefinition {
-    private static final long serialVersionUID = 456975756059767773L;
+public class JavaComponentDefinition extends PojoComponentDefinition {
+    private static final long serialVersionUID = -4767928352571015483L;
 }

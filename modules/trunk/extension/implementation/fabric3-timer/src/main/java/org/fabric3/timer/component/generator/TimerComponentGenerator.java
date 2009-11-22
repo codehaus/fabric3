@@ -43,9 +43,9 @@ import org.oasisopen.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.generator.JavaGenerationHelper;
-import org.fabric3.java.model.JavaImplementation;
-import org.fabric3.java.provision.JavaSourceDefinition;
+import org.fabric3.implementation.java.generator.JavaGenerationHelper;
+import org.fabric3.implementation.java.model.JavaImplementation;
+import org.fabric3.implementation.java.provision.JavaSourceDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;

@@ -35,43 +35,37 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.runtime;
+package org.fabric3.implementation.java.model;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.fabric3.pojo.component.PojoComponent;
-import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
-import org.fabric3.spi.component.ScopeContainer;
+import org.oasisopen.sca.Constants;
+
+import org.fabric3.model.type.component.Implementation;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 
 /**
- * The runtime instantiation of a Java component implementation.
+ * Represents a Java component implementation type.
  *
- * @version $Revision$ $Date$
- * @param <T> the implementation class for the defined component
+ * @version $$Rev$$ $$Date$$
  */
-public class JavaComponent<T> extends PojoComponent<T> {
+public class JavaImplementation extends Implementation<InjectingComponentType> {
+    public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
+    private static final long serialVersionUID = 8922589166061811190L;
+    private String implementationClass;
 
-    /**
-     * Constructor for a Java Component.
-     *
-     * @param componentId             the component's uri
-     * @param instanceFactoryProvider the provider for the instance factory
-     * @param scopeContainer          the container for the component's implementation scope
-     * @param deployable              the deployable composite this component is deployed with
-     * @param eager                   true if the component should be eagerly initialized
-     * @param maxIdleTime             the time after which idle instances of this component can be expired
-     * @param maxAge                  the time after which instances of this component can be expired
-     */
-    public JavaComponent(URI componentId,
-                         InstanceFactoryProvider<T> instanceFactoryProvider,
-                         ScopeContainer scopeContainer,
-                         QName deployable,
-                         boolean eager,
-                         long maxIdleTime,
-                         long maxAge) {
-        super(componentId, instanceFactoryProvider, scopeContainer, deployable, eager, maxIdleTime, maxAge);
+    public JavaImplementation() {
     }
 
+    public QName getType() {
+        return IMPLEMENTATION_JAVA;
+    }
 
+    public String getImplementationClass() {
+        return implementationClass;
+    }
+
+    public void setImplementationClass(String implementationClass) {
+        this.implementationClass = implementationClass;
+    }
 }

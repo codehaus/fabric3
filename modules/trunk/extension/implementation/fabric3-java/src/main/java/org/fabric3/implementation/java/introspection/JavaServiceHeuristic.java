@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.introspection;
+package org.fabric3.implementation.java.introspection;
 
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
@@ -44,7 +44,7 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Management;
-import org.fabric3.java.model.JavaImplementation;
+import org.fabric3.implementation.java.model.JavaImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.introspection.IntrospectionContext;

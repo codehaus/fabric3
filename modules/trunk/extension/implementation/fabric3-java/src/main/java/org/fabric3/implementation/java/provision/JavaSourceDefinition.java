@@ -35,37 +35,15 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.model;
+package org.fabric3.implementation.java.provision;
 
-import javax.xml.namespace.QName;
-
-import org.oasisopen.sca.Constants;
-
-import org.fabric3.model.type.component.Implementation;
-import org.fabric3.spi.model.type.java.InjectingComponentType;
+import org.fabric3.pojo.provision.PojoSourceDefinition;
 
 /**
- * Represents a Java component implementation type.
+ * Models a Java physical wire source definition.
  *
- * @version $$Rev$$ $$Date$$
+ * @version $Revision$ $Date$
  */
-public class JavaImplementation extends Implementation<InjectingComponentType> {
-    public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
-    private static final long serialVersionUID = 8922589166061811190L;
-    private String implementationClass;
-
-    public JavaImplementation() {
-    }
-
-    public QName getType() {
-        return IMPLEMENTATION_JAVA;
-    }
-
-    public String getImplementationClass() {
-        return implementationClass;
-    }
-
-    public void setImplementationClass(String implementationClass) {
-        this.implementationClass = implementationClass;
-    }
+public class JavaSourceDefinition extends PojoSourceDefinition {
+    private static final long serialVersionUID = 456975756059767773L;
 }

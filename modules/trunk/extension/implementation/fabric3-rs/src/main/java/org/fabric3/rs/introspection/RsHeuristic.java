@@ -39,7 +39,7 @@ package org.fabric3.rs.introspection;
 
 import java.net.URI;
 
-import org.fabric3.java.model.JavaImplementation;
+import org.fabric3.implementation.java.model.JavaImplementation;
 import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**

@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.java.runtime;
+package org.fabric3.implementation.java.runtime;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -43,7 +43,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.provision.JavaTargetDefinition;
+import org.fabric3.implementation.java.provision.JavaTargetDefinition;
 import org.fabric3.pojo.component.InvokerInterceptor;
 import org.fabric3.pojo.provision.PojoSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
@@ -89,7 +89,7 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaTargetDefi
 
         // attach the invoker interceptor to forward invocation chains
         for (InvocationChain chain : wire.getInvocationChains()) {
-            PhysicalOperationDefinition operation = chain.getPhysicalOperation();                                                             
+            PhysicalOperationDefinition operation = chain.getPhysicalOperation();
             List<String> params = operation.getTargetParameterTypes();
             Class<?>[] paramTypes = new Class<?>[params.size()];
             assert loader != null;

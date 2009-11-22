@@ -37,7 +37,7 @@
 */
 package org.fabric3.timer.component.provision;
 
-import org.fabric3.java.provision.JavaComponentDefinition;
+import org.fabric3.implementation.java.provision.JavaComponentDefinition;
 
 /**
  * @version $Rev$ $Date$
