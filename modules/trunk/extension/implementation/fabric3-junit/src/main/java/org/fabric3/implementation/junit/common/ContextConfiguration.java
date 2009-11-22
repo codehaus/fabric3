@@ -35,52 +35,34 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.junit.runtime;
+package org.fabric3.implementation.junit.common;
 
-import org.oasisopen.sca.ServiceUnavailableException;
-
-import org.fabric3.api.SecuritySubject;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.security.AuthenticationException;
-import org.fabric3.spi.security.AuthenticationService;
-import org.fabric3.spi.security.UsernamePasswordToken;
-import org.fabric3.spi.wire.Interceptor;
+import java.io.Serializable;
 
 /**
- * Sets a security subject for the current testcase invocation using configuration specified in the JUnit component definition.
+ * Encapsulates context configuration that is established by the test runtime prior to a test invocation. For example, user authentication
+ * information.
  *
  * @version $Rev$ $Date$
  */
-public class AuthenticatingInterceptor implements Interceptor {
-    private Interceptor next;
+public class ContextConfiguration implements Serializable {
+    private static final long serialVersionUID = -6959156524179030733L;
     private String username;
     private String password;
-    private AuthenticationService authenticationService;
 
-    public AuthenticatingInterceptor(String username, String password, AuthenticationService authenticationService, Interceptor next) {
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
-        this.authenticationService = authenticationService;
-        this.next = next;
     }
-
-    public void setNext(Interceptor next) {
-        this.next = next;
-    }
-
-    public Interceptor getNext() {
-        return next;
-    }
-
-    public Message invoke(Message msg) {
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        try {
-            SecuritySubject subject = authenticationService.authenticate(token);
-            msg.getWorkContext().setSubject(subject);
-        } catch (AuthenticationException e) {
-            throw new ServiceUnavailableException("Error authenticating", e);
-        }
-        return next.invoke(msg);
-    }
-
 }

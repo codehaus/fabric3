@@ -35,12 +35,12 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.junit.introspection;
+package org.fabric3.implementation.junit.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.implementation.java.introspection.ImplementationArtifactNotFound;
-import org.fabric3.junit.model.JUnitImplementation;
+import org.fabric3.implementation.junit.model.JUnitImplementation;
 import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;

@@ -35,40 +35,30 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.junit.provision;
+package org.fabric3.implementation.junit.model;
 
-import org.fabric3.junit.common.ContextConfiguration;
-import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
+import javax.xml.namespace.QName;
+
+import org.fabric3.host.Namespaces;
+import org.fabric3.implementation.junit.common.ContextConfiguration;
+import org.fabric3.model.type.component.BindingDefinition;
 
 /**
- * PhysicalWireSourceDefinition for the JUnit implementation type.
- *
  * @version $Rev$ $Date$
  */
-public class JUnitSourceDefinition extends PhysicalSourceDefinition {
-    private static final long serialVersionUID = 750231487385651182L;
-
-    private String testName;
+public class JUnitBindingDefinition extends BindingDefinition {
+    private static final long serialVersionUID = -1306543849900003084L;
+    private static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.junit");
     private ContextConfiguration configuration;
 
     /**
      * Constructor.
      *
-     * @param testName      the test name to execute
-     * @param configuration the context configuration or null if a context is not configured
+     * @param configuration the context configuration or null if not set
      */
-    public JUnitSourceDefinition(String testName, ContextConfiguration configuration) {
-        this.testName = testName;
+    public JUnitBindingDefinition(ContextConfiguration configuration) {
+        super(null, BINDING_QNAME);
         this.configuration = configuration;
-    }
-
-    /**
-     * Returns the test name.
-     *
-     * @return the test name
-     */
-    public String getTestName() {
-        return testName;
     }
 
     /**
@@ -80,5 +70,13 @@ public class JUnitSourceDefinition extends PhysicalSourceDefinition {
         return configuration;
     }
 
-}
+    /**
+     * Sets the context configuration that must be established prior to an invocation or null if a context is not configured.
+     *
+     * @param configuration the configuration
+     */
+    public void setConfiguration(ContextConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
+}

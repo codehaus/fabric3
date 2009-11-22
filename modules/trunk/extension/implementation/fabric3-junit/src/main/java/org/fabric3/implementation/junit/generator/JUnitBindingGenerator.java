@@ -35,15 +35,15 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.junit.generator;
+package org.fabric3.implementation.junit.generator;
 
 import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.junit.common.ContextConfiguration;
-import org.fabric3.junit.model.JUnitBindingDefinition;
-import org.fabric3.junit.provision.JUnitSourceDefinition;
+import org.fabric3.implementation.junit.common.ContextConfiguration;
+import org.fabric3.implementation.junit.model.JUnitBindingDefinition;
+import org.fabric3.implementation.junit.provision.JUnitSourceDefinition;
 import org.fabric3.model.type.component.ComponentDefinition;
 import org.fabric3.model.type.contract.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;

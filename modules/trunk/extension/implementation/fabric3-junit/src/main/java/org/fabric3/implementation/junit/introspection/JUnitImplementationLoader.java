@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.junit.introspection;
+package org.fabric3.implementation.junit.introspection;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -45,9 +45,9 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.junit.common.ContextConfiguration;
-import org.fabric3.junit.model.JUnitBindingDefinition;
-import org.fabric3.junit.model.JUnitImplementation;
+import org.fabric3.implementation.junit.common.ContextConfiguration;
+import org.fabric3.implementation.junit.model.JUnitBindingDefinition;
+import org.fabric3.implementation.junit.model.JUnitImplementation;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.TypeLoader;

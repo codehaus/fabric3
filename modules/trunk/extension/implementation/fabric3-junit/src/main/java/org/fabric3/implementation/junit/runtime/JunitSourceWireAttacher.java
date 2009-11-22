@@ -35,13 +35,13 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.junit.runtime;
+package org.fabric3.implementation.junit.runtime;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.junit.common.ContextConfiguration;
-import org.fabric3.junit.provision.JUnitSourceDefinition;
+import org.fabric3.implementation.junit.common.ContextConfiguration;
+import org.fabric3.implementation.junit.provision.JUnitSourceDefinition;
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;

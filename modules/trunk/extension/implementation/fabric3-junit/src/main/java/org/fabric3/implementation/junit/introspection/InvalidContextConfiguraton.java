@@ -35,34 +35,20 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.junit.common;
+package org.fabric3.implementation.junit.introspection;
 
-import java.io.Serializable;
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**
- * Encapsulates context configuration that is established by the test runtime prior to a test invocation. For example, user authentication
- * information.
+ * Thrown when attempting to load an invalid context configuration for a JUnit implementation.
  *
  * @version $Rev$ $Date$
  */
-public class ContextConfiguration implements Serializable {
-    private static final long serialVersionUID = -6959156524179030733L;
-    private String username;
-    private String password;
+public class InvalidContextConfiguraton extends XmlValidationFailure {
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public InvalidContextConfiguraton(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }
