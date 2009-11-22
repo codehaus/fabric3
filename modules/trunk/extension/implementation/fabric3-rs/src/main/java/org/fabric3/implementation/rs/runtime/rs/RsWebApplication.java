@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.rs.runtime.rs;
+package org.fabric3.implementation.rs.runtime.rs;
 
 import java.io.IOException;
 import java.util.Enumeration;

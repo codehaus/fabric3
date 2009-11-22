@@ -35,29 +35,32 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.rs.introspection;
+package org.fabric3.implementation.rs.provision;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.ext.Provider;
-
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.implementation.java.provision.JavaSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class InvalidRsClass extends ValidationFailure {
-    private Class<?> implClass;
+public class RsSourceDefinition extends JavaSourceDefinition {
+    private static final long serialVersionUID = 2180952036516977449L;
 
-    public InvalidRsClass(Class<?> implClass) {
-        super();
-        this.implClass = implClass;
+    private boolean isResource;
+    private boolean isProvider;
+
+    public boolean isProvider() {
+        return isProvider;
     }
 
-    @Override
-    public String getMessage() {
-        return String.format("Implementation class %s is not annotated with REST annotation %s or %s ",
-                             implClass.getName(),
-                             Path.class.getName(),
-                             Provider.class.getName());
+    public void setIsProvider(boolean value) {
+        this.isProvider = value;
+    }
+
+    public boolean isResource() {
+        return isResource;
+    }
+
+    public void setIsResource(boolean value) {
+        this.isResource = value;
     }
 }

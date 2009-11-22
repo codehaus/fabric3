@@ -35,17 +35,12 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.rs.introspection;
+package org.fabric3.implementation.rs.provision;
 
-import java.net.URI;
-
-import org.fabric3.implementation.java.model.JavaImplementation;
-import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.implementation.java.provision.JavaTargetDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface RsHeuristic {
-
-    public void applyHeuristics(JavaImplementation impl, URI webAppUri, IntrospectionContext context);
+public class RsTargetDefinition extends JavaTargetDefinition {
 }

@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.rs.introspection;
+package org.fabric3.implementation.rs.introspection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -51,16 +51,16 @@ import javax.ws.rs.ext.Provider;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.implementation.java.model.JavaImplementation;
+import org.fabric3.implementation.rs.model.RsBindingDefinition;
 import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.contract.DataType;
 import org.fabric3.model.type.contract.Operation;
 import static org.fabric3.model.type.contract.Operation.NO_CONVERSATION;
 import org.fabric3.model.type.contract.ServiceContract;
-import org.fabric3.spi.model.type.java.InjectingComponentType;
-import org.fabric3.rs.model.RsBindingDefinition;
 import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.java.IntrospectionHelper;
+import org.fabric3.spi.model.type.java.InjectingComponentType;
 import org.fabric3.spi.model.type.java.JavaClass;
 
 /**

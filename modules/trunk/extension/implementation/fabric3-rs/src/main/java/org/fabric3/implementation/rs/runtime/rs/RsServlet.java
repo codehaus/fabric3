@@ -35,47 +35,32 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.rs.runtime.rs;
+package org.fabric3.implementation.rs.runtime.rs;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.sun.jersey.spi.service.ComponentProvider;
+import com.sun.jersey.api.core.ResourceConfig;
+import com.sun.jersey.spi.container.WebApplication;
+import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Fabric3ComponentProvider implements ComponentProvider {
+public class RsServlet extends ServletContainer {
 
-    ConcurrentHashMap<Class<?>, Object> instances = new ConcurrentHashMap<Class<?>, Object>();
+    Fabric3ComponentProvider componentProvider;
 
-    public Object getInstance(Scope scope, Class c) throws InstantiationException, IllegalAccessException {
-        return instances.get(c);
+    public RsServlet(Fabric3ComponentProvider componentProvider) {
+        this.componentProvider = componentProvider;
     }
 
-    public Object getInstance(Scope scope, Constructor constructor, Object[] parameters) throws InstantiationException,
-            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        return null;
-    }
+    @Override
+    protected void initiate(ResourceConfig rc, WebApplication wa) {
+        if (rc instanceof Fabric3ResourceConfig) {
+            Fabric3ResourceConfig f3rc = (Fabric3ResourceConfig) rc;
+            f3rc.setProvider(componentProvider);
+            wa.initiate(rc, componentProvider);
+        } else {
+            wa.initiate(rc);
+        }
 
-    public void addServiceHandler(Class<?> resource, Object instance) {
-        instances.put(resource, instance);
-    }
-
-    public Set<Class<?>> getClasses() {
-        return instances.keySet();
-    }
-
-    public <T> T getInjectableInstance(T instance) {
-        return instance;
-    }
-
-    public void inject(Object instance) {
-    }
-
-    public <T> T getInstance(com.sun.jersey.spi.service.ComponentContext context, ComponentProvider.Scope scope, Class<T> clazz) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

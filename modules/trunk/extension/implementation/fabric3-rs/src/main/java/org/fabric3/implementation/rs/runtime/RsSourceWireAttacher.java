@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.rs.runtime;
+package org.fabric3.implementation.rs.runtime;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -50,8 +50,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.rs.provision.RsSourceDefinition;
-import org.fabric3.rs.runtime.rs.RsWebApplication;
+import org.fabric3.implementation.rs.provision.RsSourceDefinition;
+import org.fabric3.implementation.rs.runtime.rs.RsWebApplication;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;

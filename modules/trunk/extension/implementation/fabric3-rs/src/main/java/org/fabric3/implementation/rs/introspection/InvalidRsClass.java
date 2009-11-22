@@ -35,12 +35,29 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.rs.provision;
+package org.fabric3.implementation.rs.introspection;
 
-import org.fabric3.implementation.java.provision.JavaTargetDefinition;
+import javax.ws.rs.Path;
+import javax.ws.rs.ext.Provider;
+
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class RsTargetDefinition extends JavaTargetDefinition {
+public class InvalidRsClass extends ValidationFailure {
+    private Class<?> implClass;
+
+    public InvalidRsClass(Class<?> implClass) {
+        super();
+        this.implClass = implClass;
+    }
+
+    @Override
+    public String getMessage() {
+        return String.format("Implementation class %s is not annotated with REST annotation %s or %s ",
+                             implClass.getName(),
+                             Path.class.getName(),
+                             Provider.class.getName());
+    }
 }

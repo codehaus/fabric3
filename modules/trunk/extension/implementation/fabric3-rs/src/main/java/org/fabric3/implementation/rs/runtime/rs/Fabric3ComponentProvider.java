@@ -35,32 +35,47 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.rs.provision;
+package org.fabric3.implementation.rs.runtime.rs;
 
-import org.fabric3.implementation.java.provision.JavaSourceDefinition;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.sun.jersey.spi.service.ComponentProvider;
 
 /**
  * @version $Rev$ $Date$
  */
-public class RsSourceDefinition extends JavaSourceDefinition {
-    private static final long serialVersionUID = 2180952036516977449L;
+public class Fabric3ComponentProvider implements ComponentProvider {
 
-    private boolean isResource;
-    private boolean isProvider;
+    ConcurrentHashMap<Class<?>, Object> instances = new ConcurrentHashMap<Class<?>, Object>();
 
-    public boolean isProvider() {
-        return isProvider;
+    public Object getInstance(Scope scope, Class c) throws InstantiationException, IllegalAccessException {
+        return instances.get(c);
     }
 
-    public void setIsProvider(boolean value) {
-        this.isProvider = value;
+    public Object getInstance(Scope scope, Constructor constructor, Object[] parameters) throws InstantiationException,
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        return null;
     }
 
-    public boolean isResource() {
-        return isResource;
+    public void addServiceHandler(Class<?> resource, Object instance) {
+        instances.put(resource, instance);
     }
 
-    public void setIsResource(boolean value) {
-        this.isResource = value;
+    public Set<Class<?>> getClasses() {
+        return instances.keySet();
+    }
+
+    public <T> T getInjectableInstance(T instance) {
+        return instance;
+    }
+
+    public void inject(Object instance) {
+    }
+
+    public <T> T getInstance(com.sun.jersey.spi.service.ComponentContext context, ComponentProvider.Scope scope, Class<T> clazz) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

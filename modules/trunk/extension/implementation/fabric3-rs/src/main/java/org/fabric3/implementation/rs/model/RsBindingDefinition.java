@@ -35,26 +35,40 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fabric3.rs.runtime.rs;
+package org.fabric3.implementation.rs.model;
 
-import java.util.Set;
+import java.net.URI;
+import javax.xml.namespace.QName;
 
-import com.sun.jersey.api.core.DefaultResourceConfig;
+import org.fabric3.host.Namespaces;
+import org.fabric3.model.type.component.BindingDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Fabric3ResourceConfig extends DefaultResourceConfig {
+public class RsBindingDefinition extends BindingDefinition {
 
-    Fabric3ComponentProvider provider;
+    public static final QName BINDING_RS = new QName(Namespaces.IMPLEMENTATION, "binding.rs");
+    private boolean isResource;
+    private boolean isProvider;
 
-    public void setProvider(Fabric3ComponentProvider provider) {
-        this.provider = provider;
+    public RsBindingDefinition(URI targetUri) {
+        super(targetUri, BINDING_RS);
     }
 
-    @Override
-    public Set<Class<?>> getClasses() {
-        return provider.getClasses();
+    public boolean isProvider() {
+        return isProvider;
     }
 
+    public void setIsProvider(boolean value) {
+        this.isProvider = value;
+    }
+
+    public boolean isResource() {
+        return isResource;
+    }
+
+    public void setIsResource(boolean value) {
+        this.isResource = value;
+    }
 }
