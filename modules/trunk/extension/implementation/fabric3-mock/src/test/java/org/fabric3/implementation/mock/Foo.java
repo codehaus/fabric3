@@ -35,26 +35,11 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
-
-import java.util.List;
-
-import org.fabric3.spi.introspection.IntrospectionContext;
+package org.fabric3.implementation.mock;
 
 /**
- * Component type loader for the mock component type.
- *
  * @version $Rev$ $Date$
  */
-public interface MockComponentTypeLoader {
-
-    /**
-     * Loads the mock component type.
-     *
-     * @param interfaces           Interfaces that need to be mocked.
-     * @param introspectionContext Loader context.
-     * @return Mock component type.
-     */
-    MockComponentType load(List<String> interfaces, IntrospectionContext introspectionContext);
+public interface Foo {
 
 }

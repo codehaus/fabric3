@@ -35,79 +35,51 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
+package org.fabric3.implementation.mock;
 
-import java.net.URI;
-import java.util.Map;
-import javax.xml.namespace.QName;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.osoa.sca.ComponentContext;
+import org.easymock.IMocksControl;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.model.type.component.PropertyValue;
-import org.fabric3.spi.AbstractLifecycle;
-import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.component.ComponentBuilder;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MockComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
+@EagerInit
+public class MockComponentBuilder<T> implements ComponentBuilder<MockComponentDefinition, MockComponent<T>> {
+    private ClassLoaderRegistry classLoaderRegistry;
+    private IMocksControl control;
 
-    private final URI componentId;
-    private final ObjectFactory<T> objectFactory;
-    private URI classLoaderId;
-
-    public MockComponent(URI componentId, ObjectFactory<T> objectFactory) {
-        this.componentId = componentId;
-        this.objectFactory = objectFactory;
+    public MockComponentBuilder(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference IMocksControl control) {
+        this.classLoaderRegistry = classLoaderRegistry;
+        this.control = control;
     }
 
-    public URI getUri() {
-        return componentId;
-    }
+    public MockComponent<T> build(MockComponentDefinition componentDefinition) throws BuilderException {
 
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
+        List<String> interfaces = componentDefinition.getInterfaces();
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(componentDefinition.getClassLoaderId());
 
-    public void setClassLoaderId(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
-    }
+        List<Class<?>> mockedInterfaces = new LinkedList<Class<?>>();
+        for (String interfaze : interfaces) {
+            try {
+                mockedInterfaces.add(classLoader.loadClass(interfaze));
+            } catch (ClassNotFoundException ex) {
+                throw new AssertionError(ex);
+            }
+        }
 
-    @SuppressWarnings("unchecked")
-    public ObjectFactory<T> createObjectFactory() {
-        return objectFactory;
-    }
+        ObjectFactory<T> objectFactory = new MockObjectFactory<T>(mockedInterfaces, classLoader, control);
 
-    public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
-        return null;
-    }
+        return new MockComponent<T>(componentDefinition.getComponentUri(), objectFactory);
 
-    public QName getDeployable() {
-        return null;
-    }
-
-    public int getInitLevel() {
-        return 0;
-    }
-
-    public long getMaxAge() {
-        return 0;
-    }
-
-    public long getMaxIdleTime() {
-        return 0;
-    }
-
-    public boolean isEagerInit() {
-        return false;
-    }
-
-    public ComponentContext getComponentContext() {
-        return null;
     }
 
 }

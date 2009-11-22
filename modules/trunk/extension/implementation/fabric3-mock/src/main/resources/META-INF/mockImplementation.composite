@@ -17,39 +17,32 @@ Public License. See the accompanying license file for details.
            name="MockImplementationExtension"
            autowire="true">
 
-    <!-- Implementation loader -->
     <component name="ImplementationMockLoader" f3-core:key="f3-impl:implementation.mock">
-        <f3-impl:implementation.system class="org.fabric3.mock.ImplementationMockLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.implementation.mock.ImplementationMockLoader"/>
     </component>
 
-    <!-- Component type loader -->
     <component name="MockComponentTypeLoader">
-        <f3-impl:implementation.system class="org.fabric3.mock.MockComponentTypeLoaderImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.implementation.mock.MockComponentTypeLoaderImpl"/>
     </component>
 
-    <!-- Generator -->
-    <component name="MockComponentGenerator" f3-core:key="org.fabric3.mock.ImplementationMock">
-        <f3-impl:implementation.system class="org.fabric3.mock.MockComponentGenerator"/>
+    <component name="MockComponentGenerator" f3-core:key="org.fabric3.implementation.mock.ImplementationMock">
+        <f3-impl:implementation.system class="org.fabric3.implementation.mock.MockComponentGenerator"/>
     </component>
 
-    <!-- Builder -->
-    <component name="MockComponentBuilder" f3-core:key="org.fabric3.mock.MockComponentDefinition">
-        <f3-impl:implementation.system class="org.fabric3.mock.MockComponentBuilder"/>
+    <component name="MockComponentBuilder" f3-core:key="org.fabric3.implementation.mock.MockComponentDefinition">
+        <f3-impl:implementation.system class="org.fabric3.implementation.mock.MockComponentBuilder"/>
     </component>
 
-    <!-- Target Wire attacher -->
-    <component name="MockTargetWireAttacher" f3-core:key="org.fabric3.mock.MockTargetDefinition">
-        <f3-impl:implementation.system class="org.fabric3.mock.MockTargetWireAttacher"/>
+    <component name="MockTargetWireAttacher" f3-core:key="org.fabric3.implementation.mock.MockTargetDefinition">
+        <f3-impl:implementation.system class="org.fabric3.implementation.mock.MockTargetWireAttacher"/>
     </component>
 
-    <!-- Source Wire attacher -->
-    <component name="MockSourceWireAttacher" f3-core:key="org.fabric3.mock.MockSourceDefinition">
-        <f3-impl:implementation.system class="org.fabric3.mock.MockSourceWireAttacher"/>
+    <component name="MockSourceWireAttacher" f3-core:key="org.fabric3.implementation.mock.MockSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.implementation.mock.MockSourceWireAttacher"/>
     </component>
 
-    <!-- IMock control -->
     <component name="IMocksControlProxy">
-        <f3-impl:implementation.system class="org.fabric3.mock.IMocksControlProxy"/>
+        <f3-impl:implementation.system class="org.fabric3.implementation.mock.IMocksControlProxy"/>
     </component>
 
 </composite>

@@ -35,49 +35,17 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
+package org.fabric3.implementation.mock;
 
-import java.io.InputStream;
-import java.util.List;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamReader;
-
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
-
-import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.model.type.component.AbstractComponentType;
+import org.fabric3.model.type.component.Property;
+import org.fabric3.model.type.component.ReferenceDefinition;
+import org.fabric3.model.type.component.ResourceDefinition;
+import org.fabric3.model.type.component.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ImplementationMockLoaderTestCase extends TestCase {
-
-    public void testLoad() throws Exception {
-
-        MockComponentTypeLoader componentTypeLoader = EasyMock.createMock(MockComponentTypeLoader.class);
-        IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
-
-        ImplementationMockLoader loader = new ImplementationMockLoader(componentTypeLoader);
-
-        InputStream stream = getClass().getClassLoader().getResourceAsStream("META-INF/mock.composite");
-        XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
-
-        while (reader.hasNext()) {
-            if (reader.next() == XMLStreamConstants.START_ELEMENT && ImplementationMock.IMPLEMENTATION_MOCK.equals(reader.getName())) {
-                break;
-            }
-        }
-
-        ImplementationMock implementationMock = loader.load(reader, context);
-        assertNotNull(implementationMock);
-
-        List<String> interfaces = implementationMock.getMockedInterfaces();
-        assertEquals(3, interfaces.size());
-        assertEquals(Foo.class.getName(), interfaces.get(0));
-        assertEquals(Bar.class.getName(), interfaces.get(1));
-        assertEquals(Baz.class.getName(), interfaces.get(2));
-
-    }
+public class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 
 }

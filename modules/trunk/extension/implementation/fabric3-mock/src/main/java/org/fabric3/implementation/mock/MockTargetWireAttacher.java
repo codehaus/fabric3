@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
+package org.fabric3.implementation.mock;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -74,8 +74,8 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockTargetDefi
     }
 
     public void attach(PhysicalSourceDefinition sourceDefinition,
-                               MockTargetDefinition wireTargetDefinition,
-                               Wire wire) throws WireAttachException {
+                       MockTargetDefinition wireTargetDefinition,
+                       Wire wire) throws WireAttachException {
 
         Class<?> mockedInterface = loadInterface(wireTargetDefinition);
         Object mock = createMock(mockedInterface);

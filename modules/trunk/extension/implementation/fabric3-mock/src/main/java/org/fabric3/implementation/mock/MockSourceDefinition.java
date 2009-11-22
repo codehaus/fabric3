@@ -35,36 +35,13 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
+package org.fabric3.implementation.mock;
 
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
-import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.model.physical.PhysicalSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MockSourceWireAttacher implements SourceWireAttacher<MockSourceDefinition> {
-
-    public void attachObjectFactory(MockSourceDefinition arg0, ObjectFactory<?> arg1, PhysicalTargetDefinition definition)
-            throws WiringException {
-        // Empty implementation; we don't want to attach anything to the mock
-    }
-
-    public void attach(MockSourceDefinition arg0, PhysicalTargetDefinition arg1, Wire arg2)
-            throws WiringException {
-        // Empty implementation; we don't want to attach anything to the mock
-    }
-
-    public void detach(MockSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
-        throw new AssertionError();
-    }
-
-
-    public void detachObjectFactory(MockSourceDefinition source, PhysicalTargetDefinition target) throws WiringException {
-        throw new AssertionError();
-    }
+public class MockSourceDefinition extends PhysicalSourceDefinition {
 
 }

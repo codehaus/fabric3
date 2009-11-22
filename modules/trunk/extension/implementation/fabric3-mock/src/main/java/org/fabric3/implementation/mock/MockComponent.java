@@ -35,11 +35,77 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
+package org.fabric3.implementation.mock;
+
+import java.net.URI;
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.ComponentContext;
+
+import org.fabric3.spi.AbstractLifecycle;
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.InstanceWrapper;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface Foo {
+public class MockComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
+
+    private final URI componentId;
+    private final ObjectFactory<T> objectFactory;
+    private URI classLoaderId;
+
+    public MockComponent(URI componentId, ObjectFactory<T> objectFactory) {
+        this.componentId = componentId;
+        this.objectFactory = objectFactory;
+    }
+
+    public URI getUri() {
+        return componentId;
+    }
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
+    @SuppressWarnings("unchecked")
+    public ObjectFactory<T> createObjectFactory() {
+        return objectFactory;
+    }
+
+    public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
+        return null;
+    }
+
+    public QName getDeployable() {
+        return null;
+    }
+
+    public int getInitLevel() {
+        return 0;
+    }
+
+    public long getMaxAge() {
+        return 0;
+    }
+
+    public long getMaxIdleTime() {
+        return 0;
+    }
+
+    public boolean isEagerInit() {
+        return false;
+    }
+
+    public ComponentContext getComponentContext() {
+        return null;
+    }
 
 }

@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
+package org.fabric3.implementation.mock;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
         MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(processor);
 
         List<String> mockedInterfaces = new LinkedList<String>();
-        mockedInterfaces.add("org.fabric3.mock.Foo");
+        mockedInterfaces.add(Foo.class.getName());
 
         MockComponentType componentType = componentTypeLoader.load(mockedInterfaces, context);
 
@@ -87,7 +87,7 @@ public class MockComponentTypeLoaderImplTestCase extends TestCase {
 
         ServiceDefinition service = services.get("Foo");
         assertNotNull(service);
-        assertEquals("org.fabric3.mock.Foo", service.getServiceContract().getQualifiedInterfaceName());
+        assertEquals(Foo.class.getName(), service.getServiceContract().getQualifiedInterfaceName());
 
 
     }

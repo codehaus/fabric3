@@ -32,9 +32,9 @@
 
     <component name="testMock">
         <f3-impl:implementation.mock>
-            org.fabric3.mock.Foo
-            org.fabric3.mock.Bar
-            org.fabric3.mock.Baz
+            org.fabric3.implementation.mock.Foo
+            org.fabric3.implementation.mock.Bar
+            org.fabric3.implementation.mock.Baz
         </f3-impl:implementation.mock>
     </component>
 

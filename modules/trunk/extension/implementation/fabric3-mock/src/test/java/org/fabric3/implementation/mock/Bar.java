@@ -35,51 +35,11 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import org.easymock.IMocksControl;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.component.ComponentBuilder;
-import org.fabric3.spi.classloader.ClassLoaderRegistry;
+package org.fabric3.implementation.mock;
 
 /**
  * @version $Rev$ $Date$
  */
-@EagerInit
-public class MockComponentBuilder<T> implements ComponentBuilder<MockComponentDefinition, MockComponent<T>> {
-    private ClassLoaderRegistry classLoaderRegistry;
-    private IMocksControl control;
-
-    public MockComponentBuilder(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference IMocksControl control) {
-        this.classLoaderRegistry = classLoaderRegistry;
-        this.control = control;
-    }
-
-    public MockComponent<T> build(MockComponentDefinition componentDefinition) throws BuilderException {
-
-        List<String> interfaces = componentDefinition.getInterfaces();
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(componentDefinition.getClassLoaderId());
-
-        List<Class<?>> mockedInterfaces = new LinkedList<Class<?>>();
-        for (String interfaze : interfaces) {
-            try {
-                mockedInterfaces.add(classLoader.loadClass(interfaze));
-            } catch (ClassNotFoundException ex) {
-                throw new AssertionError(ex);
-            }
-        }
-
-        ObjectFactory<T> objectFactory = new MockObjectFactory<T>(mockedInterfaces, classLoader, control);
-
-        return new MockComponent<T>(componentDefinition.getComponentUri(), objectFactory);
-
-    }
+public interface Bar {
 
 }

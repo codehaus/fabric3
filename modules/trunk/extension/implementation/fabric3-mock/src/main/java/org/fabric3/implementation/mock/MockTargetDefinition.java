@@ -35,17 +35,22 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.mock;
+package org.fabric3.implementation.mock;
 
-import org.fabric3.model.type.component.AbstractComponentType;
-import org.fabric3.model.type.component.Property;
-import org.fabric3.model.type.component.ReferenceDefinition;
-import org.fabric3.model.type.component.ResourceDefinition;
-import org.fabric3.model.type.component.ServiceDefinition;
+import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
+public class MockTargetDefinition extends PhysicalTargetDefinition {
+    private String mockedInterface;
+
+    public String getMockedInterface() {
+        return mockedInterface;
+    }
+
+    public void setMockedInterface(String mockedInterface) {
+        this.mockedInterface = mockedInterface;
+    }
 
 }
