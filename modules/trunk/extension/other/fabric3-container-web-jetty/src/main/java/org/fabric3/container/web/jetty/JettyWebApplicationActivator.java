@@ -56,7 +56,7 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
 import org.fabric3.container.web.spi.InjectingSessionListener;
-import org.fabric3.jetty.JettyService;
+import org.fabric3.transport.jetty.JettyService;
 import org.fabric3.spi.Injector;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;

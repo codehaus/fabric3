@@ -41,33 +41,45 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.jetty;
+package org.fabric3.transport.jetty.impl;
 
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.Server;
-
-import org.fabric3.spi.host.ServletHost;
+import org.fabric3.api.annotation.logging.Fine;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.api.annotation.logging.Warning;
 
 /**
- * Implementations provide a Jetty transport service to the runtime
+ * The monitoring interfaces used by the Jetty system service
  *
  * @version $$Rev$$ $$Date$$
  */
-public interface JettyService extends ServletHost {
+public interface TransportMonitor {
+
+    @Info
+    void startHttpListener(int port);
+
+    @Info
+    void startHttpsListener(int port);
 
     /**
-     * Returns the active Jetty server
+     * Captures Jetty warnings
      *
-     * @return the active Jetty server
+     * @param msg  the warning message
+     * @param args arguments
      */
-    Server getServer();
+    @Warning
+    void warn(String msg, Object... args);
+
+    @Severe
+    void exception(String msg, Throwable args);
 
     /**
-     * Registers a handler with the Jetty service.
+     * Captures Jetty debug events
      *
-     * @param handler the handler to register
+     * @param msg  the debug message
+     * @param args arguments
      */
-    void registerHandler(Handler handler);
-
+    @Fine
+    void debug(String msg, Object... args);
 
 }

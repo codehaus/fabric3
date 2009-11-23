@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.jetty.impl;
+package org.fabric3.transport.jetty.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;

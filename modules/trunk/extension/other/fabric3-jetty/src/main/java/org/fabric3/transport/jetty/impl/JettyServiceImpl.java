@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.jetty.impl;
+package org.fabric3.transport.jetty.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +79,7 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.jetty.JettyService;
+import org.fabric3.transport.jetty.JettyService;
 
 /**
  * Implements an HTTP transport service using Jetty.

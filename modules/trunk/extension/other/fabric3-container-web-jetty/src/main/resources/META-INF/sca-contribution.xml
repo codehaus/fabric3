@@ -16,7 +16,7 @@ Public License. See the accompanying license file for details.
     <import.java package="org.fabric3.spi.*" version="1.3"/>
     <import.java package="org.fabric3.implementation.pojo.*" version="1.3"/>
     <import.java package="org.fabric3.container.web.spi" version="1.3"/>
-    <import.java package="org.fabric3.jetty" version="1.3"/>
+    <import.java package="org.fabric3.transport.jetty" version="1.3"/>
     <!-- Jetty, Jasper and EL classes must be visible for as this extension accesses Jetty classes and for JSP compilation -->
     <import.java package="org.mortbay.jetty.web" version="6.1.5"/>
     <import.java package="org.mortbay.component" version="6.1.5"/>

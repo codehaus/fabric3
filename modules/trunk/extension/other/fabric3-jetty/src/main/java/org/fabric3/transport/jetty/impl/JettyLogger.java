@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.jetty.impl;
+package org.fabric3.transport.jetty.impl;
 
 import org.mortbay.log.Logger;
 

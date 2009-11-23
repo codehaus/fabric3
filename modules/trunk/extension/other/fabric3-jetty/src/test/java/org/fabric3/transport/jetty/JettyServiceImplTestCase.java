@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.jetty;
+package org.fabric3.transport.jetty;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,8 +65,8 @@ import org.easymock.IAnswer;
 
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.jetty.impl.JettyServiceImpl;
-import org.fabric3.jetty.impl.TransportMonitor;
+import org.fabric3.transport.jetty.impl.JettyServiceImpl;
+import org.fabric3.transport.jetty.impl.TransportMonitor;
 
 /**
  * @version $Rev$ $Date$
