@@ -40,19 +40,9 @@ package org.fabric3.admin.interpreter.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.Settings;
-import org.fabric3.admin.interpreter.parser.AuthCommandParser;
-import org.fabric3.admin.interpreter.parser.DeployCommandParser;
-import org.fabric3.admin.interpreter.parser.InstallCommandParser;
-import org.fabric3.admin.interpreter.parser.ListCommandParser;
-import org.fabric3.admin.interpreter.parser.ProfileCommandParser;
-import org.fabric3.admin.interpreter.parser.ProvisionCommandParser;
-import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
-import org.fabric3.admin.interpreter.parser.StatCommandParser;
-import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
-import org.fabric3.admin.interpreter.parser.UseCommandParser;
-import org.fabric3.admin.api.DomainController;
 
 /**
  * @version $Rev$ $Date$
