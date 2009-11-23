@@ -35,13 +35,63 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transport.activemq.factory;
+package org.fabric3.binding.activemq.factory;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- * Defines ActiveMQ connection factory types.
+ * Represents a parsed connection factory configuration from the runtime system configuration.
  *
  * @version $Rev$ $Date$
  */
-public enum ConnectionFactoryType {
-    LOCAL, XA, POOLED
+public class ConnectionFactoryConfiguration {
+    private ConnectionFactoryType type = ConnectionFactoryType.LOCAL;
+    private String name;
+    private URI brokerUri;
+    private Properties factoryProperties = new Properties();
+    private Map<String, String> poolProperties = new HashMap<String, String>();
+
+    public ConnectionFactoryType getType() {
+        return type;
+    }
+
+    public void setType(ConnectionFactoryType type) {
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public URI getBrokerUri() {
+        return brokerUri;
+    }
+
+    public void setBrokerUri(URI brokerUri) {
+        this.brokerUri = brokerUri;
+    }
+
+    public void setFactoryProperty(String name, String value) {
+        factoryProperties.put(name, value);
+    }
+
+    public Properties getFactoryProperties() {
+        return factoryProperties;
+    }
+
+    public void setPoolProperty(String name, String value) {
+        poolProperties.put(name, value);
+    }
+
+    public Map<String, String> getPoolProperties() {
+        return poolProperties;
+    }
+
 }

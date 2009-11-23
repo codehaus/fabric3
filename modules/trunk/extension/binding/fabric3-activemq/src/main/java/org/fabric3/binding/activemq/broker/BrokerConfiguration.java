@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transport.activemq.broker;
+package org.fabric3.binding.activemq.broker;
 
 import java.net.URI;
 import java.util.List;

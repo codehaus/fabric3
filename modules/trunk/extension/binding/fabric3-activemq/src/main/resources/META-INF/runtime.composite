@@ -23,13 +23,13 @@
            autowire="true">
 
     <component name="ActiveMQBrokerEngine">
-        <f3-impl:implementation.system class="org.fabric3.transport.activemq.broker.BrokerEngine"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.activemq.broker.BrokerEngine"/>
         <property name="brokerConfig" source="$systemConfig//jms/activemq"/>
         <property name="logLevel" source="$systemConfig//jms/activemq/@logging"/>
     </component>
 
     <component name="ConnectionFactoryParser">
-        <f3-impl:implementation.system class="org.fabric3.transport.activemq.factory.ConnectionFactoryParser"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.activemq.factory.ConnectionFactoryParser"/>
         <property name="connectionFactories" source="$systemConfig//jms/connection.factories"/>
     </component>
 

@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transport.activemq.factory;
+package org.fabric3.binding.activemq.factory;
 
 import java.net.URI;
 import java.net.URISyntaxException;

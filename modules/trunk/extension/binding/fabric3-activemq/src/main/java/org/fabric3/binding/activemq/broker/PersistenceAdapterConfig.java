@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transport.activemq.broker;
+package org.fabric3.binding.activemq.broker;
 
 /**
  * Encapsulates persistence adapter configuration for a broker.

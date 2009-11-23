@@ -35,63 +35,23 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transport.activemq.factory;
+package org.fabric3.binding.activemq.factory;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Represents a parsed connection factory configuration from the runtime system configuration.
+ * Denotes an invalid connection factory configuration specified in the runtime system configuration.
  *
  * @version $Rev$ $Date$
  */
-public class ConnectionFactoryConfiguration {
-    private ConnectionFactoryType type = ConnectionFactoryType.LOCAL;
-    private String name;
-    private URI brokerUri;
-    private Properties factoryProperties = new Properties();
-    private Map<String, String> poolProperties = new HashMap<String, String>();
+public class InvalidConfigurationException extends Fabric3Exception {
+    private static final long serialVersionUID = 3851093533071664532L;
 
-    public ConnectionFactoryType getType() {
-        return type;
+    public InvalidConfigurationException(String message) {
+        super(message);
     }
 
-    public void setType(ConnectionFactoryType type) {
-        this.type = type;
+    public InvalidConfigurationException(String message, Throwable cause) {
+        super(message, cause);
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public URI getBrokerUri() {
-        return brokerUri;
-    }
-
-    public void setBrokerUri(URI brokerUri) {
-        this.brokerUri = brokerUri;
-    }
-
-    public void setFactoryProperty(String name, String value) {
-        factoryProperties.put(name, value);
-    }
-
-    public Properties getFactoryProperties() {
-        return factoryProperties;
-    }
-
-    public void setPoolProperty(String name, String value) {
-        poolProperties.put(name, value);
-    }
-
-    public Map<String, String> getPoolProperties() {
-        return poolProperties;
-    }
-
 }

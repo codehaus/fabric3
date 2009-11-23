@@ -35,23 +35,13 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.transport.activemq.factory;
-
-import org.fabric3.host.Fabric3Exception;
+package org.fabric3.binding.activemq.factory;
 
 /**
- * Denotes an invalid connection factory configuration specified in the runtime system configuration.
+ * Defines ActiveMQ connection factory types.
  *
  * @version $Rev$ $Date$
  */
-public class InvalidConfigurationException extends Fabric3Exception {
-    private static final long serialVersionUID = 3851093533071664532L;
-
-    public InvalidConfigurationException(String message) {
-        super(message);
-    }
-
-    public InvalidConfigurationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+public enum ConnectionFactoryType {
+    LOCAL, XA, POOLED
 }
