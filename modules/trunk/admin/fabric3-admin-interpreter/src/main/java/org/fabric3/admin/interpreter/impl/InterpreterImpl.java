@@ -35,25 +35,22 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.admin.interpreter;
+package org.fabric3.admin.interpreter.impl;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.interpreter.parser.AuthCommandParser;
-import org.fabric3.admin.interpreter.parser.DeployCommandParser;
-import org.fabric3.admin.interpreter.parser.InstallCommandParser;
-import org.fabric3.admin.interpreter.parser.ListCommandParser;
-import org.fabric3.admin.interpreter.parser.ProfileCommandParser;
-import org.fabric3.admin.interpreter.parser.ProvisionCommandParser;
-import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
-import org.fabric3.admin.interpreter.parser.StatCommandParser;
-import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
-import org.fabric3.admin.interpreter.parser.UseCommandParser;
+import org.fabric3.admin.interpreter.parser.ParserFactory;
+import org.fabric3.admin.interpreter.Interpreter;
+import org.fabric3.admin.interpreter.Settings;
+import org.fabric3.admin.interpreter.CommandParser;
+import org.fabric3.admin.interpreter.TransientSettings;
+import org.fabric3.admin.interpreter.InterpreterException;
+import org.fabric3.admin.interpreter.Command;
+import org.fabric3.admin.interpreter.CommandException;
 
 /**
  * Default interpreter implementation. This implementation constructs a parse tree from an instruction as defined by the domain adminsitration
@@ -90,7 +87,7 @@ public class InterpreterImpl implements Interpreter {
     public InterpreterImpl(DomainController controller, Settings settings) {
         this.controller = controller;
         this.settings = settings;
-        createParsers();
+        parsers = ParserFactory.createParsers(controller, settings);
         setDefaultAddress();
     }
 
@@ -148,41 +145,6 @@ public class InterpreterImpl implements Interpreter {
             out.println("ERORR: An error was encountered");
             e.printStackTrace(out);
         }
-    }
-
-    /**
-     * Initializes the command parsers
-     */
-    private void createParsers() {
-        parsers = new HashMap<String, CommandParser>();
-        AuthCommandParser authenticateParser = new AuthCommandParser(controller);
-        parsers.put("au", authenticateParser);
-        parsers.put("authenticate", authenticateParser);
-        InstallCommandParser installParser = new InstallCommandParser(controller);
-        parsers.put("install", installParser);
-        parsers.put("ins", installParser);
-        StatCommandParser statusParser = new StatCommandParser(controller);
-        parsers.put("status", statusParser);
-        parsers.put("st", statusParser);
-        DeployCommandParser deployParser = new DeployCommandParser(controller);
-        parsers.put("deploy", deployParser);
-        parsers.put("de", deployParser);
-        UndeployCommandParser undeployParser = new UndeployCommandParser(controller);
-        parsers.put("undeploy", undeployParser);
-        parsers.put("ude", undeployParser);
-        RemoveCommandParser removeParser = new RemoveCommandParser(controller);
-        parsers.put("uninstall", removeParser);
-        parsers.put("uin", removeParser);
-        parsers.put("use", new UseCommandParser(controller, settings));
-        ProvisionCommandParser provisionParser = new ProvisionCommandParser(controller);
-        parsers.put("pr", provisionParser);
-        parsers.put("provision", provisionParser);
-        ListCommandParser listCommandParser = new ListCommandParser(controller);
-        parsers.put("ls", listCommandParser);
-        parsers.put("list", listCommandParser);
-        ProfileCommandParser profileCommandParser = new ProfileCommandParser(controller);
-        parsers.put("profile", profileCommandParser);
-        parsers.put("pf", profileCommandParser);
     }
 
     /**

@@ -48,6 +48,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.admin.api.DomainController;
+import org.fabric3.admin.interpreter.impl.InterpreterImpl;
 
 /**
  * @version $Rev$ $Date$

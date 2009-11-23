@@ -46,7 +46,7 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.impl.DomainControllerImpl;
 import org.fabric3.admin.interpreter.Interpreter;
 import org.fabric3.admin.interpreter.InterpreterException;
-import org.fabric3.admin.interpreter.InterpreterImpl;
+import org.fabric3.admin.interpreter.impl.InterpreterImpl;
 
 /**
  * Main entry point for the domain administation command line tool.
