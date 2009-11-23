@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.activemq.factory;
+package org.fabric3.transport.activemq.factory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

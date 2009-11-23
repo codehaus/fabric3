@@ -35,63 +35,32 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.activemq.factory;
+package org.fabric3.transport.activemq.broker;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
- * Represents a parsed connection factory configuration from the runtime system configuration.
+ * Encapsulates transport connector adapter configuration for a broker.
  *
  * @version $Rev$ $Date$
  */
-public class ConnectionFactoryConfiguration {
-    private ConnectionFactoryType type = ConnectionFactoryType.LOCAL;
-    private String name;
-    private URI brokerUri;
-    private Properties factoryProperties = new Properties();
-    private Map<String, String> poolProperties = new HashMap<String, String>();
+public class TransportConnectorConfig {
+    private URI uri;
+    private URI discoveryUri;
 
-    public ConnectionFactoryType getType() {
-        return type;
+    public URI getUri() {
+        return uri;
     }
 
-    public void setType(ConnectionFactoryType type) {
-        this.type = type;
+    public void setUri(URI uri) {
+        this.uri = uri;
     }
 
-    public String getName() {
-        return name;
+    public URI getDiscoveryUri() {
+        return discoveryUri;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDiscoveryUri(URI discoveryUri) {
+        this.discoveryUri = discoveryUri;
     }
-
-    public URI getBrokerUri() {
-        return brokerUri;
-    }
-
-    public void setBrokerUri(URI brokerUri) {
-        this.brokerUri = brokerUri;
-    }
-
-    public void setFactoryProperty(String name, String value) {
-        factoryProperties.put(name, value);
-    }
-
-    public Properties getFactoryProperties() {
-        return factoryProperties;
-    }
-
-    public void setPoolProperty(String name, String value) {
-        poolProperties.put(name, value);
-    }
-
-    public Map<String, String> getPoolProperties() {
-        return poolProperties;
-    }
-
 }

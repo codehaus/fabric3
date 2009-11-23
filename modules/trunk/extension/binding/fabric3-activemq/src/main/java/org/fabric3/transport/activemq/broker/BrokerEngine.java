@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.activemq.broker;
+package org.fabric3.transport.activemq.broker;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +55,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.activemq.factory.InvalidConfigurationException;
+import org.fabric3.transport.activemq.factory.InvalidConfigurationException;
 import org.fabric3.host.runtime.HostInfo;
 
 /**

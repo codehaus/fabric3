@@ -35,23 +35,52 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.activemq.factory;
+package org.fabric3.transport.activemq.broker;
 
-import org.fabric3.host.Fabric3Exception;
+import java.net.URI;
+import java.util.List;
 
 /**
- * Denotes an invalid connection factory configuration specified in the runtime system configuration.
+ * Encapsulates configuration information for an ActiveMQ broker.
  *
  * @version $Rev$ $Date$
  */
-public class InvalidConfigurationException extends Fabric3Exception {
-    private static final long serialVersionUID = 3851093533071664532L;
+public class BrokerConfiguration {
+    private String name;
+    private List<URI> networkConnectorUris;
+    private List<TransportConnectorConfig> transportConnectorConfigs;
+    private PersistenceAdapterConfig persistenceAdapter;
 
-    public InvalidConfigurationException(String message) {
-        super(message);
+    public String getName() {
+        return name;
     }
 
-    public InvalidConfigurationException(String message, Throwable cause) {
-        super(message, cause);
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public List<URI> getNetworkConnectorUris() {
+        return networkConnectorUris;
+    }
+
+    public void setNetworkConnectorUris(List<URI> networkConnectorUris) {
+        this.networkConnectorUris = networkConnectorUris;
+    }
+
+    public List<TransportConnectorConfig> getTransportConnectorConfigs() {
+        return transportConnectorConfigs;
+    }
+
+    public void setTransportConnectorConfigs(List<TransportConnectorConfig> transportConnectorConfigs) {
+        this.transportConnectorConfigs = transportConnectorConfigs;
+    }
+
+    public PersistenceAdapterConfig getPersistenceAdapter() {
+        return persistenceAdapter;
+    }
+
+    public void setPersistenceAdapter(PersistenceAdapterConfig adaptor) {
+        this.persistenceAdapter = adaptor;
+    }
+
 }

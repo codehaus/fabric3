@@ -35,32 +35,13 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.activemq.broker;
-
-import java.net.URI;
+package org.fabric3.transport.activemq.factory;
 
 /**
- * Encapsulates transport connector adapter configuration for a broker.
+ * Defines ActiveMQ connection factory types.
  *
  * @version $Rev$ $Date$
  */
-public class TransportConnectorConfig {
-    private URI uri;
-    private URI discoveryUri;
-
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-
-    public URI getDiscoveryUri() {
-        return discoveryUri;
-    }
-
-    public void setDiscoveryUri(URI discoveryUri) {
-        this.discoveryUri = discoveryUri;
-    }
+public enum ConnectionFactoryType {
+    LOCAL, XA, POOLED
 }

@@ -35,7 +35,7 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.activemq.broker;
+package org.fabric3.transport.activemq.broker;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,7 +46,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.activemq.factory.InvalidConfigurationException;
+import org.fabric3.transport.activemq.factory.InvalidConfigurationException;
 
 /**
  * Parses broker configuration from the runtime system configuration.
