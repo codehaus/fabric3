@@ -140,11 +140,4 @@
             </plugin>
         </plugins>
     </reporting>
-    <distributionManagement>
-        <site>
-            <id>dav.codehaus.org</id>
-            <name>Fabric3 Website</name>
-            <url>dav:https://dav.codehaus.org/fabric3/fabric3-itest-plugin</url>
-        </site>
-    </distributionManagement>
 </project>
