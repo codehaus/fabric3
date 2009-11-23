@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.proxy.jdk;
+package org.fabric3.implementation.proxy.jdk;
 
 import org.fabric3.model.type.contract.Operation;
 import org.fabric3.implementation.pojo.builder.ProxyCreationException;

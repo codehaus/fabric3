@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.proxy.jdk;
+package org.fabric3.implementation.proxy.jdk;
 
 import java.lang.reflect.Method;
 import java.util.Collections;

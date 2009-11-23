@@ -18,7 +18,7 @@
            autowire="true">
 
     <component name="ProxyService">
-        <f3-impl:implementation.system class="org.fabric3.proxy.jdk.JDKProxyService"/>
+        <f3-impl:implementation.system class="org.fabric3.implementation.proxy.jdk.JDKProxyService"/>
     </component>
 
 
