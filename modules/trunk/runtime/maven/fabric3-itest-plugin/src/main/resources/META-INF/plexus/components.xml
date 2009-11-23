@@ -13,8 +13,8 @@
 <component-set>
     <components>
         <component>
-            <role>org.fabric3.itest.ArtifactHelper</role>
-            <implementation>org.fabric3.itest.ArtifactHelper</implementation>
+            <role>org.fabric3.maven.itest.ArtifactHelper</role>
+            <implementation>org.fabric3.maven.itest.ArtifactHelper</implementation>
             <requirements>
                 <requirement>
                     <role>org.apache.maven.artifact.factory.ArtifactFactory</role>
@@ -28,11 +28,11 @@
             </requirements>
         </component>
         <component>
-            <role>org.fabric3.itest.ExtensionHelper</role>
-            <implementation>org.fabric3.itest.ExtensionHelper</implementation>
+            <role>org.fabric3.maven.itest.ExtensionHelper</role>
+            <implementation>org.fabric3.maven.itest.ExtensionHelper</implementation>
             <requirements>
                 <requirement>
-                    <role>org.fabric3.itest.ArtifactHelper</role>
+                    <role>org.fabric3.maven.itest.ArtifactHelper</role>
                 </requirement>
             </requirements>
         </component>

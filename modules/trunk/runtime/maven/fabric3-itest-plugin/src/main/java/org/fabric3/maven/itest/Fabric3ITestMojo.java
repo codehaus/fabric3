@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.itest;
+package org.fabric3.maven.itest;
 
 import java.io.File;
 import java.io.IOException;
@@ -237,14 +237,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public ArtifactRepository localRepository;
 
     /**
-     * @parameter expression="${component.org.fabric3.itest.ArtifactHelper}"
+     * @parameter expression="${component.org.fabric3.maven.itest.ArtifactHelper}"
      * @required
      * @readonly
      */
     public ArtifactHelper artifactHelper;
 
     /**
-     * @parameter expression="${component.org.fabric3.itest.ExtensionHelper}"
+     * @parameter expression="${component.org.fabric3.maven.itest.ExtensionHelper}"
      * @required
      * @readonly
      */

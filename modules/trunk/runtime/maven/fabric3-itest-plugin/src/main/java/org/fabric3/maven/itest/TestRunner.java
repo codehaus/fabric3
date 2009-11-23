@@ -41,7 +41,7 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.itest;
+package org.fabric3.maven.itest;
 
 import java.io.File;
 import java.util.ArrayList;

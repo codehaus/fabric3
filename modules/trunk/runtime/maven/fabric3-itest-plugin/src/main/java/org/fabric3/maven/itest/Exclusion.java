@@ -41,73 +41,15 @@
  * licensed under the Apache 2.0 license.
  *
  */
-package org.fabric3.itest;
-
-import java.util.List;
+package org.fabric3.maven.itest;
 
 /**
- * Local subclass of Maven's dependency as Plexus looks for elements in the same package.
- *
  * @version $Rev$ $Date$
  */
-public class Dependency extends org.apache.maven.model.Dependency {
+public class Exclusion extends org.apache.maven.model.Exclusion {
 
     /**
-     * Serial version UID.
-     */
-    private static final long serialVersionUID = 2603000897594439278L;
-
-    /**
-     * No-argument constructor.
-     */
-    public Dependency() {
-    }
-
-    /**
-     * Sets the group id, artifact id, version and exclusions.
      *
-     * @param groupId    Group Id.
-     * @param artifactId ARtifact Id.
-     * @param version    Version.
-     * @param exclusions List of exclusions.
      */
-    public Dependency(String groupId, String artifactId, String version, List<Exclusion> exclusions) {
-        setGroupId(groupId);
-        setVersion(version);
-        setArtifactId(artifactId);
-        setExclusions(exclusions);
-    }
-
-    /**
-     * Implements equals based onartifactId, groupId and version.
-     */
-    @Override
-    public boolean equals(Object obj) {
-
-        if (!(obj instanceof Dependency)) {
-            return false;
-        }
-
-        Dependency other = (Dependency) obj;
-        return getArtifactId().equals(other.getArtifactId()) &&
-                getGroupId().equalsIgnoreCase(other.getGroupId()) &&
-                getVersion().equals(other.getVersion());
-
-    }
-
-    /**
-     * Implements hashCode based onartifactId, groupId and version.
-     */
-    @Override
-    public int hashCode() {
-
-        int hash = 7;
-        hash += 31 * getArtifactId().hashCode();
-        hash += 31 * getGroupId().hashCode();
-        hash += 31 * getVersion().hashCode();
-
-        return hash;
-
-    }
-
+    private static final long serialVersionUID = -8603965798437869917L;
 }
