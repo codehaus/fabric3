@@ -20,27 +20,27 @@ Copyright (C) 2009 Metaform Systems
            autowire="true">
 
     <component name="MavenRepository">
-        <f3-impl:implementation.system class="org.fabric3.maven.archive.MavenRepository"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.maven.archive.MavenRepository"/>
     </component>
 
     <component name="ModuleContributionProcessor">
-        <f3-impl:implementation.system class="org.fabric3.maven.contribution.ModuleContributionProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.maven.contribution.ModuleContributionProcessor"/>
     </component>
 
     <component name="ModuleClasspathProcessor">
-        <f3-impl:implementation.system class="org.fabric3.maven.contribution.ModuleClasspathProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.maven.contribution.ModuleClasspathProcessor"/>
     </component>
 
     <component name="CompositeQNameService">
-        <f3-impl:implementation.system class="org.fabric3.maven.contribution.CompositeQNameServiceImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.maven.contribution.CompositeQNameServiceImpl"/>
     </component>
 
     <component name="TestSuiteFactory">
-        <f3-impl:implementation.system class="org.fabric3.maven.test.TestSuiteFactoryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.maven.test.TestSuiteFactoryImpl"/>
     </component>
 
     <component name="TestWireHolder">
-        <f3-impl:implementation.system class="org.fabric3.maven.test.WireHolderImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.maven.test.WireHolderImpl"/>
     </component>
 
 
