@@ -18,7 +18,7 @@ Public License. See the accompanying license file for details.
            xmlns:f3-binding="urn:org.fabric3:binding">
 
     <component name="JsonParameterEncoderFactory" f3-core:key="json">
-        <f3-impl:implementation.system class="org.fabric3.json.format.JsonParameterEncoderFactory"/>
+        <f3-impl:implementation.system class="org.fabric3.databinding.json.format.JsonParameterEncoderFactory"/>
     </component>
 
     <component name="JsonUnwrappedMessageFormatter" f3-core:key="json">

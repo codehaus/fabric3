@@ -16,7 +16,7 @@ Public License. See the accompanying license file for details.
            name="JAXBExtension">
 
     <component name="JaxbContributionServiceListener">
-        <f3-impl:implementation.system class="org.fabric3.jaxb.JaxbContributionServiceListener"/>
+        <f3-impl:implementation.system class="org.fabric3.databinding.jaxb.JaxbContributionServiceListener"/>
     </component>
 
 </composite>

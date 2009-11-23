@@ -17,7 +17,7 @@ Public License. See the accompanying license file for details.
            xmlns:f3-binding="urn:org.fabric3:binding">
 
     <component name="HessianParameterEncoderFactory" f3-core:key="hessian">
-        <f3-impl:implementation.system class="org.fabric3.hessian.format.HessianParameterEncoderFactory"/>
+        <f3-impl:implementation.system class="org.fabric3.databinding.hessian.format.HessianParameterEncoderFactory"/>
     </component>
 
     <component name="HessianUnwrappedMessageFormatter" f3-core:key="hessian">
