@@ -43,5 +43,5 @@ import org.fabric3.spi.model.physical.PhysicalTargetDefinition;
  * @version $Rev$ $Date$
  */
 public class JpaTargetDefinition extends PhysicalTargetDefinition {
-
+    private static final long serialVersionUID = -6030989829889803286L;
 }
