@@ -16,7 +16,7 @@ Public License. See the accompanying license file for details.
            name="AtomikosJmsExtension"
            autowire="true">
     <component name="AtomikosConnectionFactoryManager">
-        <f3-impl:implementation.system class="org.fabric3.jms.atomikos.connection.AtomikosConnectionFactoryManager"/>
+        <f3-impl:implementation.system class="org.fabric3.tx.atomikos.jms.connection.AtomikosConnectionFactoryManager"/>
     </component>
 
 </composite>

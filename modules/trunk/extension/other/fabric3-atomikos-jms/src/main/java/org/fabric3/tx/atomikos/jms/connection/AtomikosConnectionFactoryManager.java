@@ -36,7 +36,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.fabric3.jms.atomikos.connection;
+package org.fabric3.tx.atomikos.jms.connection;
 
 import java.util.HashMap;
 import java.util.Map;

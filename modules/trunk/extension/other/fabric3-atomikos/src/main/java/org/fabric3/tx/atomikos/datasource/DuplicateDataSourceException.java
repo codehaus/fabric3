@@ -35,21 +35,17 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.datasource.atomikos;
+package org.fabric3.tx.atomikos.datasource;
 
 import org.fabric3.spi.resource.DataSourceCreationException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DataSourceParseException extends DataSourceCreationException {
-    private static final long serialVersionUID = 880082576976360535L;
+public class DuplicateDataSourceException extends DataSourceCreationException {
+    private static final long serialVersionUID = -6914379734685084710L;
 
-    public DataSourceParseException(String message) {
+    public DuplicateDataSourceException(String message) {
         super(message);
-    }
-
-    public DataSourceParseException(Throwable cause) {
-        super(cause);
     }
 }

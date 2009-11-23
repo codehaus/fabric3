@@ -36,7 +36,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.fabric3.datasource.atomikos;
+package org.fabric3.tx.atomikos.datasource;
 
 import java.util.Collections;
 import java.util.HashMap;

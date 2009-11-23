@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.tx.atomikos;
+package org.fabric3.tx.atomikos.tm;
 
 import java.io.File;
 import java.io.IOException;
