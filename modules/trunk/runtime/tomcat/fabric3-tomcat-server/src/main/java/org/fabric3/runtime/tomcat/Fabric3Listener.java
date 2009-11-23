@@ -223,16 +223,6 @@ public class Fabric3Listener implements LifecycleListener {
         return monitorFactory;
     }
 
-    public interface ServerMonitor {
-        @Severe
-        void runError(Exception e);
 
-        @Info
-        void started(String mode);
-
-        @Info
-        void stopped();
-
-    }
 
 }

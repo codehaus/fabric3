@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.tomcat.servlet;
+package org.fabric3.runtime.tomcat.servlet;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;

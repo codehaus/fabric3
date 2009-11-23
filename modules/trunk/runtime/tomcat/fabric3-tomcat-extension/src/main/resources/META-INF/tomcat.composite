@@ -20,11 +20,11 @@ Copyright (C) 2009 Metaform Systems
            autowire="true">
 
     <component name="TomcatServletHost">
-        <f3-impl:implementation.system class="org.fabric3.tomcat.servlet.TomcatServletHost"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.tomcat.servlet.TomcatServletHost"/>
     </component>
 
     <component name="TomcatWebApplicationActivator">
-        <f3-impl:implementation.system class="org.fabric3.tomcat.activator.TomcatWebApplicationActivator"/>
+        <f3-impl:implementation.system class="org.fabric3.runtime.tomcat.activator.TomcatWebApplicationActivator"/>
     </component>
 
 </composite>

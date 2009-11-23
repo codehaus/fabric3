@@ -35,17 +35,80 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.tomcat.servlet;
+package org.fabric3.runtime.tomcat.activator;
 
-import org.fabric3.host.Fabric3Exception;
+import java.beans.PropertyChangeListener;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Loader;
 
 /**
+ * Used to override the Tomcat WebappClassLoader with the Fabric3 web contribution classloader.
+ *
  * @version $Rev$ $Date$
  */
-public class ServletHostException extends Fabric3Exception {
-    private static final long serialVersionUID = 1890774001376972406L;
+public class Fabric3Loader implements Loader {
+    private Container container;
+    private boolean delegate;
+    private ClassLoader classloader;
 
-    public ServletHostException(String message) {
-        super(message);
+    public Fabric3Loader(ClassLoader classloader) {
+        this.classloader = classloader;
+    }
+
+    public void backgroundProcess() {
+
+    }
+
+    public ClassLoader getClassLoader() {
+        return classloader;
+    }
+
+    public Container getContainer() {
+        return container;
+    }
+
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    public boolean getDelegate() {
+        return delegate;
+    }
+
+    public void setDelegate(boolean delegate) {
+        this.delegate = delegate;
+    }
+
+    public String getInfo() {
+        return null;
+    }
+
+    public boolean getReloadable() {
+        return false;
+    }
+
+    public void setReloadable(boolean reloadable) {
+
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+
+    }
+
+    public void addRepository(String repository) {
+
+    }
+
+    public String[] findRepositories() {
+        return new String[0];
+    }
+
+    public boolean modified() {
+        return false;
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+
     }
 }

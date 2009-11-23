@@ -35,7 +35,7 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.tomcat.activator;
+package org.fabric3.runtime.tomcat.activator;
 
 import java.net.URI;
 import java.net.URL;
@@ -65,7 +65,7 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.contribution.ContributionUriResolver;
-import org.fabric3.tomcat.servlet.ServletHostException;
+import org.fabric3.runtime.tomcat.servlet.ServletHostException;
 
 /**
  * Activates a web component in the host Tomcat runtime.

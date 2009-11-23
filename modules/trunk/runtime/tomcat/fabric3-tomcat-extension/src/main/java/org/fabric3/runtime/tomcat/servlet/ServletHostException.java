@@ -35,58 +35,17 @@
  * GNU General Public License along with Fabric3.
  * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.tomcat.activator;
+package org.fabric3.runtime.tomcat.servlet;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-import javax.naming.NamingException;
-
-import org.apache.AnnotationProcessor;
-
-import org.fabric3.spi.Injector;
-import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Injects a servlet instance with reference proxies, properties, resources, and SCA APIs.
- * <p/>
- * Note this replaces standard Tomcat injection support for JSR-250 Commons Annotations, including <code>@Resource</code> and
- * <code>@PostConstruct</code>.
- *
  * @version $Rev$ $Date$
  */
-public class Fabric3AnnotationProcessor implements AnnotationProcessor {
-    private Map<String, List<Injector<?>>> injectorMappings;
+public class ServletHostException extends Fabric3Exception {
+    private static final long serialVersionUID = 1890774001376972406L;
 
-    /**
-     * Constructor.
-     *
-     * @param injectorMappings mapping of servlet class name to injectors.
-     */
-    public Fabric3AnnotationProcessor(Map<String, List<Injector<?>>> injectorMappings) {
-        this.injectorMappings = injectorMappings;
+    public ServletHostException(String message) {
+        super(message);
     }
-
-    @SuppressWarnings({"unchecked"})
-    public void processAnnotations(Object instance) throws IllegalAccessException, InvocationTargetException, NamingException {
-        List<Injector<?>> injectors = injectorMappings.get(instance.getClass().getName());
-        if (injectors != null) {
-            for (Injector injector : injectors) {
-                try {
-                    injector.inject(instance);
-                } catch (ObjectCreationException e) {
-                    throw new InvocationTargetException(e);
-                }
-            }
-        }
-    }
-
-    public void postConstruct(Object instance) throws IllegalAccessException, InvocationTargetException {
-
-    }
-
-    public void preDestroy(Object instance) throws IllegalAccessException, InvocationTargetException {
-
-    }
-
 }
