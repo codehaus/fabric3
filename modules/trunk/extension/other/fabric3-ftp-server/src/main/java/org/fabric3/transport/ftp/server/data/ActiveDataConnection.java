@@ -35,54 +35,62 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ftp.runtime;
+package org.fabric3.transport.ftp.server.data;
 
+import java.io.IOException;
 import java.io.InputStream;
-
-import org.fabric3.transport.ftp.api.FtpConstants;
-import org.fabric3.transport.ftp.api.FtpLet;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Wire;
+import java.io.OutputStream;
 
 /**
- * Handles incoming FTP puts from the protocol stack.
+ * Active data connection.
  *
  * @version $Rev$ $Date$
  */
-public class BindingFtpLet implements FtpLet {
-    private String servicePath;
-    private Wire wire;
-    private Interceptor interceptor;
-    private BindingMonitor monitor;
+public class ActiveDataConnection implements DataConnection {
 
-    public BindingFtpLet(String servicePath, Wire wire, BindingMonitor monitor) {
-        this.servicePath = servicePath;
-        this.wire = wire;
-        this.monitor = monitor;
+    /**
+     * Initializes a data connection.
+     *
+     * @throws IOException If unable to open connection.
+     */
+    public void initialize() throws IOException {
+        throw new UnsupportedOperationException();
     }
 
-    public boolean onUpload(String fileName, String contentType, InputStream uploadData) throws Exception {
-        Object[] args = new Object[]{fileName, uploadData};
-        WorkContext workContext = new WorkContext();
-        // set the header value for the request context
-        workContext.setHeader(FtpConstants.HEADER_CONTENT_TYPE, contentType);
-        Message input = new MessageImpl(args, false, workContext);
-        Message msg = getInterceptor().invoke(input);
-        if (msg.isFault()) {
-            monitor.fileProcessingError(servicePath, (Throwable) msg.getBody());
-            return false;
-        }
-        return true;
+    /**
+     * Closes the data connection.
+     */
+    public void close() {
+        throw new UnsupportedOperationException();
     }
 
-    private Interceptor getInterceptor() {
-        // lazy load the interceptor as it may not have been added when the instance was created in the wire attacher
-        if (interceptor == null) {
-            interceptor = wire.getInvocationChains().iterator().next().getHeadInterceptor();
-        }
-        return interceptor;
+    /**
+     * Get an input stream to the data connection.
+     *
+     * @return Input stream to the data cnnection.
+     * @throws IOException If unable to get input stream.
+     */
+    public InputStream getInputStream() throws IOException {
+        throw new UnsupportedOperationException();
     }
+
+    /**
+     * Get an output stream to the data connection.
+     *
+     * @return Output stream to the data connection.
+     * @throws IOException If unable to get output stream.
+     */
+    public OutputStream getOutputStream() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Opens the data connection.
+     *
+     * @throws IOException If unable to open connection.
+     */
+    public void open() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
 }

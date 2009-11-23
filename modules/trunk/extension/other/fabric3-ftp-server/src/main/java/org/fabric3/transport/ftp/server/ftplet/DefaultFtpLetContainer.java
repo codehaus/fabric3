@@ -35,54 +35,38 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ftp.runtime;
+package org.fabric3.transport.ftp.server.ftplet;
 
-import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.transport.ftp.api.FtpConstants;
 import org.fabric3.transport.ftp.api.FtpLet;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Wire;
+import org.fabric3.transport.ftp.spi.FtpLetContainer;
 
 /**
- * Handles incoming FTP puts from the protocol stack.
+ * Default implementation of the FtpLet container.
  *
  * @version $Rev$ $Date$
  */
-public class BindingFtpLet implements FtpLet {
-    private String servicePath;
-    private Wire wire;
-    private Interceptor interceptor;
-    private BindingMonitor monitor;
+public class DefaultFtpLetContainer implements FtpLetContainer {
 
-    public BindingFtpLet(String servicePath, Wire wire, BindingMonitor monitor) {
-        this.servicePath = servicePath;
-        this.wire = wire;
-        this.monitor = monitor;
-    }
+    private Map<String, FtpLet> ftpLets = new ConcurrentHashMap<String, FtpLet>();
 
-    public boolean onUpload(String fileName, String contentType, InputStream uploadData) throws Exception {
-        Object[] args = new Object[]{fileName, uploadData};
-        WorkContext workContext = new WorkContext();
-        // set the header value for the request context
-        workContext.setHeader(FtpConstants.HEADER_CONTENT_TYPE, contentType);
-        Message input = new MessageImpl(args, false, workContext);
-        Message msg = getInterceptor().invoke(input);
-        if (msg.isFault()) {
-            monitor.fileProcessingError(servicePath, (Throwable) msg.getBody());
-            return false;
+    public FtpLet getFtpLet(String fileName) {
+        for (Map.Entry<String, FtpLet> entry : ftpLets.entrySet()) {
+            if (fileName.startsWith(entry.getKey())) {
+                return entry.getValue();
+            }
         }
-        return true;
+        return null;
     }
 
-    private Interceptor getInterceptor() {
-        // lazy load the interceptor as it may not have been added when the instance was created in the wire attacher
-        if (interceptor == null) {
-            interceptor = wire.getInvocationChains().iterator().next().getHeadInterceptor();
-        }
-        return interceptor;
+    public void registerFtpLet(String path, FtpLet ftpLet) {
+        ftpLets.put(path, ftpLet);
     }
+
+    public boolean isRegistered(String path) {
+        return ftpLets.containsKey(path);
+    }
+
 }

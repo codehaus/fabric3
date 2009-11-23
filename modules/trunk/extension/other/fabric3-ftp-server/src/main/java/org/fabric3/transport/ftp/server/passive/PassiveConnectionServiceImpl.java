@@ -35,54 +35,75 @@
 * GNU General Public License along with Fabric3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-package org.fabric3.binding.ftp.runtime;
+package org.fabric3.transport.ftp.server.passive;
 
-import java.io.InputStream;
+import java.util.Stack;
 
-import org.fabric3.transport.ftp.api.FtpConstants;
-import org.fabric3.transport.ftp.api.FtpLet;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 
 /**
- * Handles incoming FTP puts from the protocol stack.
- *
  * @version $Rev$ $Date$
  */
-public class BindingFtpLet implements FtpLet {
-    private String servicePath;
-    private Wire wire;
-    private Interceptor interceptor;
-    private BindingMonitor monitor;
+@EagerInit
+public class PassiveConnectionServiceImpl implements PassiveConnectionService {
 
-    public BindingFtpLet(String servicePath, Wire wire, BindingMonitor monitor) {
-        this.servicePath = servicePath;
-        this.wire = wire;
-        this.monitor = monitor;
+    private int minPort = 6000;
+    private int maxPort = 7000;
+    private Stack<Integer> ports = new Stack<Integer>();
+
+    /**
+     * Sets the minimum passive port.
+     *
+     * @param minPort Minimum passive port.
+     */
+    @Property
+    public void setMinPort(int minPort) {
+        this.minPort = minPort;
     }
 
-    public boolean onUpload(String fileName, String contentType, InputStream uploadData) throws Exception {
-        Object[] args = new Object[]{fileName, uploadData};
-        WorkContext workContext = new WorkContext();
-        // set the header value for the request context
-        workContext.setHeader(FtpConstants.HEADER_CONTENT_TYPE, contentType);
-        Message input = new MessageImpl(args, false, workContext);
-        Message msg = getInterceptor().invoke(input);
-        if (msg.isFault()) {
-            monitor.fileProcessingError(servicePath, (Throwable) msg.getBody());
-            return false;
+    /**
+     * Sets the maximum passive port.
+     *
+     * @param maxPort Maximum passive port.
+     */
+    @Property
+    public void setMaxPort(int maxPort) {
+        this.maxPort = maxPort;
+    }
+
+    /**
+     * Initializes the port.
+     */
+    @Init
+    public void init() {
+        for (int i = minPort; i <= maxPort; i++) {
+            ports.push(i);
         }
-        return true;
     }
 
-    private Interceptor getInterceptor() {
-        // lazy load the interceptor as it may not have been added when the instance was created in the wire attacher
-        if (interceptor == null) {
-            interceptor = wire.getInvocationChains().iterator().next().getHeadInterceptor();
+    /**
+     * Acquires the next available pasive port.
+     *
+     * @return Next available passive port.
+     * @throws InterruptedException
+     */
+    public synchronized int acquire() throws InterruptedException {
+        while (ports.empty()) {
+            wait();
         }
-        return interceptor;
+        return ports.pop();
     }
+
+    /**
+     * Release a passive port.
+     *
+     * @param port Port to be released.
+     */
+    public synchronized void release(int port) {
+        ports.push(port);
+        notifyAll();
+    }
+
 }
