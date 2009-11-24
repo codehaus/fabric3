@@ -330,9 +330,12 @@ public class MetaDataStoreImpl implements MetaDataStore {
         }
         for (ContributionWire<?, ?> wire : contribution.getWires()) {
             Contribution imported = cache.get(wire.getExportContributionUri());
-            if (!extensions.contains(imported)
+            if (imported.getManifest().isExtension()
+                    && !extensions.contains(imported)
                     && !imported.getUri().equals(Names.HOST_CONTRIBUTION)
                     && !imported.getUri().equals(Names.BOOT_CONTRIBUTION)) {
+                // only add to the list of extensions if the imported contribution is an extension, is not already present,
+                // and is not the host or boot classloaders.
                 extensions.add(imported);
             }
             // recurse for the imported contribution
@@ -344,7 +347,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                 extensions.add(provider);
             }
             // TODO figure out how to recurse up providers without introducing a cycle
-//            resolveCapabilities(provider, extensions);
+            //  resolveCapabilities(provider, extensions);
         }
         return extensions;
     }
