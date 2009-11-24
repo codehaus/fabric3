@@ -70,7 +70,14 @@
                             <version>${fabric3.version}</version>
                         </profile>
                     </profiles>
-                </configuration>
+                    <!-- overlay configuration -->
+                    <configurationFiles>
+                        <copy>
+                            <source>config/systemConfig.xml</source>
+                            <destination>config/controller</destination>
+                        </copy>
+                     </configurationFiles> 
+                  </configuration>
             </plugin>
         </plugins>
     </build>
