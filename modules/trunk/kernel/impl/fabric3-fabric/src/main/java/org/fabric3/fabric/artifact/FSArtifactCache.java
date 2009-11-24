@@ -81,7 +81,8 @@ public class FSArtifactCache implements ArtifactCache {
             throw new CacheRuntimeException("Entry for URI already exists: " + uri);
         }
         try {
-            File file = File.createTempFile("fabric3-", null, tempDir);
+            String suffix = getSuffix(uri);
+            File file = File.createTempFile("fabric3-", suffix, tempDir);
             FileHelper.write(stream, file);
             URL url = file.toURI().toURL();
             Entry entry = new Entry(url, file);
@@ -94,7 +95,7 @@ public class FSArtifactCache implements ArtifactCache {
             try {
                 stream.close();
             } catch (IOException e) {
-                throw new CacheException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -135,6 +136,23 @@ public class FSArtifactCache implements ArtifactCache {
             return 0;
         }
         return entry.getCounter().get();
+    }
+
+    /**
+     * Calculates the temporary file name suffix based on the presence of a '.' in the URI path. Suffixes are used to preserve file MIME types, which
+     * are often calculated from the file extension.
+     *
+     * @param uri the uri
+     * @return the suffix or null if the URI does not contain a trailing "." in the URI path.
+     */
+    private String getSuffix(URI uri) {
+        String suffix = null;
+        String strUri = uri.toString();
+        int pos = strUri.lastIndexOf(".");
+        if (pos >= 0) {
+            suffix = strUri.substring(pos);
+        }
+        return suffix;
     }
 
     private class Entry {
