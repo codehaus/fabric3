@@ -18,6 +18,8 @@
  */
 package loanapp.appraisal;
 
+import org.oasisopen.sca.annotation.OneWay;
+
 /**
  * Interface for receiving appraisal callbacks.
  *
@@ -30,6 +32,7 @@ public interface AppraisalCallback {
      *
      * @param schedule information pertaining to when the appraisal is scheduled
      */
+    @OneWay
     void schedule(AppraisalSchedule schedule);
 
     /**
@@ -37,6 +40,7 @@ public interface AppraisalCallback {
      *
      * @param result the appraisal result
      */
+    @OneWay
     void appraisalCompleted(AppraisalResult result);
 
 }
