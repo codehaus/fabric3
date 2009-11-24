@@ -54,6 +54,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.binding.activemq.ActiveMQConstants;
 import org.fabric3.binding.jms.spi.runtime.factory.ConnectionFactoryManager;
 import org.fabric3.binding.jms.spi.runtime.factory.FactoryRegistrationException;
 
@@ -93,7 +94,8 @@ public class ConnectionFactoryParser {
                     configuration.setName(name);
                     String urlString = reader.getAttributeValue(null, "broker.url");
                     if (urlString == null) {
-                        invalidConfiguration("Broker URL not configured", reader, null);
+                        // connect to default broker
+                        urlString = "vm://" + ActiveMQConstants.DEFAULT_BROKER;
                     }
                     try {
                         URI uri = new URI(urlString);

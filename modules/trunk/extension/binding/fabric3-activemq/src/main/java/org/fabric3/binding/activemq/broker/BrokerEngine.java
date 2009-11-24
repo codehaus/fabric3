@@ -55,6 +55,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.binding.activemq.ActiveMQConstants;
 import org.fabric3.binding.activemq.factory.InvalidConfigurationException;
 import org.fabric3.host.runtime.HostInfo;
 
@@ -65,7 +66,7 @@ import org.fabric3.host.runtime.HostInfo;
  */
 @EagerInit
 public class BrokerEngine {
-    private String brokerName = "DefaultBroker";
+    private String brokerName = ActiveMQConstants.DEFAULT_BROKER;
     private BrokerService broker;
     private File tempDir;
     private int selectedPort = 61616;
