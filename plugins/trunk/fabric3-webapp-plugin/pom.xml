@@ -85,8 +85,8 @@
     </reporting>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.7</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.7</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.7</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk/fabric3-webapp-plugin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk/fabric3-webapp-plugin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/plugins/trunk/fabric3-webapp-plugin</url>
     </scm>
 </project>
