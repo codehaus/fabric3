@@ -78,7 +78,7 @@
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk/fabric3-assembly-plugin</connection>
-        <developerConnection>scm:svn:http2://svn.codehaus.org/fabric3/plugins/trunk/fabric3-assembly-plugin</developerConnection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk/fabric3-assembly-plugin</developerConnection>
         <url>http://svn.codehaus.org/browse/fabric3/plugins/trunk/fabric3-assembly-plugin</url>
     </scm>
 </project>
