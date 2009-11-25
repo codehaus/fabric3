@@ -13,7 +13,7 @@ Public License. See the accompanying license file for details.
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-interface-parent-pom</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.3</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-interface-wsdl</artifactId>
@@ -81,9 +81,9 @@ Public License. See the accompanying license file for details.
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/interface/fabric3-interface-wsdl</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/interface/fabric3-interface-wsdl</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/interface/fabric3-interface-wsdl</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.3/extension/interface/fabric3-interface-wsdl</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.3/extension/interface/fabric3-interface-wsdl</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-1.3/extension/interface/fabric3-interface-wsdl</url>
     </scm>
 
 </project>
