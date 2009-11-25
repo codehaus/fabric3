@@ -1,0 +1,5 @@
+fabric3-assembly-plugin/
+fabric3-contribution-plugin/
+fabric3-webapp-plugin/
+pom.xml
+test.txt
