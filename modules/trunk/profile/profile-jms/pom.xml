@@ -20,20 +20,6 @@ Public License. See the accompanying license file for details.
     <name>Fabric3 JMS Extension Pofile</name>
     <description>Assembly distribution for Fabric3 JMS Extensions.</description>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>apache.snapshots</id>
-            <name>Apache Snapshots</name>
-            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
 
         <dependency>
@@ -98,20 +84,6 @@ Public License. See the accompanying license file for details.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <descriptors>
-                        <descriptor>assembly.xml</descriptor>
-                    </descriptors>
-                </configuration>
             </plugin>
         </plugins>
     </build>

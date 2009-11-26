@@ -14,7 +14,6 @@ Public License. See the accompanying license file for details.
     
     <formats>
         <format>zip</format>
-        <format>tar.gz</format>
     </formats>
 
     <!-- include assembly files -->

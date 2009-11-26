@@ -11,10 +11,9 @@
 
     <id>bin</id>
     <includeBaseDirectory>false</includeBaseDirectory>
-    
+
     <formats>
         <format>zip</format>
-        <format>tar.gz</format>
     </formats>
 
     <!-- include assembly files -->
@@ -23,7 +22,7 @@
             <directory>src/main</directory>
             <outputDirectory>/</outputDirectory>
         </fileSet>
-    </fileSets>        
+    </fileSets>
     <dependencySets>
 
 
@@ -36,11 +35,11 @@
                 <include>org.codehaus.fabric3:fabric3-binding-ws-metro</include>
                 <include>org.codehaus.fabric3:fabric3-binding-ws-policy</include>
                 <include>org.objectweb.asm:com.springsource.org.objectweb.asm</include>
-             </includes>
+            </includes>
             <outputDirectory>/repository</outputDirectory>
         </dependencySet>
 
     </dependencySets>
-    
+
 </assembly>
 
