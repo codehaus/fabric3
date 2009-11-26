@@ -21,11 +21,6 @@ Public License. See the accompanying license file for details.
 
     <dependencies>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-admin-api</artifactId>
             <version>${project.version}</version>
