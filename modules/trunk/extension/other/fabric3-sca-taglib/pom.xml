@@ -39,9 +39,4 @@ Public License. See the accompanying license file for details.
         </dependency>
     </dependencies>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-sca-taglib</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-sca-taglib</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-sca-taglib</url>
-    </scm>
 </project>

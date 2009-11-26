@@ -23,10 +23,4 @@
     <name>Fabric3 Web Services Policy Definitions</name>
     <description>Fabric3 Web Services Default Policy Definitions.</description>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ws-policy</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ws-policy</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-ws-policy</url>
-    </scm>
-
 </project>

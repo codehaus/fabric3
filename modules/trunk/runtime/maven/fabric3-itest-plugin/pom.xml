@@ -21,11 +21,6 @@
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Integration Test Maven Plugin</name>
     <description>Fabric3 Integration Test Maven Plugin.</description>
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</url>
-    </scm>
     <build>
         <plugins>
             <plugin>

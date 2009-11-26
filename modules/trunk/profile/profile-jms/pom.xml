@@ -116,10 +116,4 @@ Public License. See the accompanying license file for details.
         </plugins>
     </build>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/profile/profile-jms</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/profile/profile-jms</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/profile/profile-jms</url>
-    </scm>
-
 </project>

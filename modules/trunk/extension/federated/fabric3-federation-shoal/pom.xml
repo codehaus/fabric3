@@ -84,10 +84,4 @@ Public License. See the accompanying license file for details.
         </plugins>
     </build>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/federated/fabric3-federation-shoal</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/federated/fabric3-federation-shoal</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/federated/fabric3-federation-shoal</url>
-
-    </scm>
 </project>

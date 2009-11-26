@@ -83,10 +83,4 @@ Public License. See the accompanying license file for details.
     </dependencies>
 
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/wenapp/fabric3-webapp-extension</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-extension</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-extension</url>
-    </scm>
-
 </project>

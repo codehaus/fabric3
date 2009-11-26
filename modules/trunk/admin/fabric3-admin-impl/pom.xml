@@ -48,10 +48,4 @@ Public License. See the accompanying license file for details.
         </dependency>
     </dependencies>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/adminfabric3-admin-impl</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/admin/fabric3-admin-impl</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/admin/fabric3-admin-impl</url>
-    </scm>
-
 </project>

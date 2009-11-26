@@ -62,10 +62,4 @@
         </plugins>
     </build>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/tomcat/fabric3-tomcat-extension</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/tomcat/fabric3-tomcat-extension</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/tomcat/fabric3-tomcat-extension</url>
-    </scm>
-
 </project>

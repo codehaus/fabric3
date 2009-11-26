@@ -26,10 +26,4 @@
     <name>Fabric3 SCA Intents</name>
     <description>Contains standard SCA intent definitions.</description>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-sca-intents</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-sca-intents</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-sca-intents</url>
-    </scm>
-
 </project>

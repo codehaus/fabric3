@@ -75,10 +75,4 @@ Public License. See the accompanying license file for details.
         </plugins>
     </build>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/profile/proile-jpa</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/profile/proile-jpa</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/profile/proile-jpa</url>
-    </scm>
-
 </project>

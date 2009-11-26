@@ -101,10 +101,4 @@
         </plugins>
     </build>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/profile/profile-timer</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/profile/profile-timer</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/profile/profile-timer</url>
-    </scm>
-
 </project>

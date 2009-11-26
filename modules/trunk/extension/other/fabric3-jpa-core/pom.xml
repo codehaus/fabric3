@@ -94,10 +94,4 @@ Public License. See the accompanying license file for details.
 
     </dependencies>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-jpa-core</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-jpa-core</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-jpa-core</url>
-    </scm>
-
 </project>

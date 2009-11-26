@@ -124,10 +124,4 @@ $Rev: 7291 $ $Date: 2009-07-06 12:00:22 +0200 (Mon, 06 Jul 2009) $
         </plugins>
     </build>
 
-    <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-atomikos-jms</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-atomikos-jms</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-atomikos-jms</url>
-    </scm>
-
 </project>
