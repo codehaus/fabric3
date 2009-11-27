@@ -84,8 +84,6 @@ import org.fabric3.implementation.system.model.SystemImplementation;
  */
 public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBootstrapper {
 
-    private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
-
     private final DocumentLoader documentLoader;
 
     private URL scdlLocation;
