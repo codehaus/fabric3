@@ -193,6 +193,10 @@ public class WsdlResourceProcessor implements ResourceProcessor {
     private XmlSchemaCollection parseSchema(Definition definition) {
         XmlSchemaCollection collection = new XmlSchemaCollection();
         Types types = definition.getTypes();
+        if (types == null) {
+            // types not defined
+            return collection;
+        }
         for (Object obj : types.getExtensibilityElements()) {
             if (obj instanceof Schema) {
                 Schema schema = (Schema) obj;
