@@ -60,7 +60,7 @@ public @interface Service {
      *
      * @return a list of interfaces that should be exposed as services
      */
-    public abstract Class<?>[] interfaces() default {};
+    public abstract Class<?>[] names() default {};
 
     /**
      * Shortcut allowing a single interface to be exposed.
