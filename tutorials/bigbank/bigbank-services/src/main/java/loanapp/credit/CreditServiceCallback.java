@@ -19,12 +19,14 @@
 package loanapp.credit;
 
 import org.oasisopen.sca.annotation.OneWay;
-
+import org.oasisopen.sca.annotation.Remotable;
+                 
 /**
  * Interface to receive callbacks for credit score requests
  *
  * @version $Revision$ $Date$
  */
+@Remotable
 public interface CreditServiceCallback {
 
     /**

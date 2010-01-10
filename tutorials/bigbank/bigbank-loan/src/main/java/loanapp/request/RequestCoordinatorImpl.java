@@ -54,7 +54,7 @@ import java.util.List;
  *
  * @version $Revision$ $Date$
  */
-@Service(interfaces = {RequestCoordinator.class,
+@Service(names = {RequestCoordinator.class,
         CreditServiceCallback.class,
         RiskAssessmentCallback.class,
         PricingServiceCallback.class})

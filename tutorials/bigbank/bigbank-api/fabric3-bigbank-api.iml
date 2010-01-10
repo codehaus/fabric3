@@ -16,11 +16,11 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.5/sca-api-r1.0-0.5.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/1.1/sca-api-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.5/sca-api-r1.0-0.5-sources.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/1.1/sca-api-1.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

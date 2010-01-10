@@ -47,7 +47,7 @@ import java.util.List;
  *
  * @version $Revision$ $Date$
  */
-@Service(interfaces = {AcceptanceCoordinator.class, AppraisalCallback.class})
+@Service(names = {AcceptanceCoordinator.class, AppraisalCallback.class})
 public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, AppraisalCallback {
     private AppraisalService appraisalService;
     private NotificationService notificationService;

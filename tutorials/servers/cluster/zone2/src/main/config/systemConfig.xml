@@ -23,7 +23,9 @@
     </jms>
     <federation>
         <transport>
-            <http>localhost:8181</http>
+           <value>
+              <entry><key>http</key><value>localhost:8181</value></entry>
+           </value>
         </transport>
         <zoneName>zone2</zoneName>
         <runtimeName>runtime2</runtimeName>

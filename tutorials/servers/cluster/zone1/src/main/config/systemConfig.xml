@@ -24,7 +24,9 @@
        <password>bigbank</password> -->
     <federation>
         <transport>
-            <http>localhost:8181</http>
+           <value>
+              <entry><key>http</key><value>localhost:8181</value></entry>
+           </value>
         </transport>
         <zoneName>zone1</zoneName>
         <runtimeName>runtime1</runtimeName>

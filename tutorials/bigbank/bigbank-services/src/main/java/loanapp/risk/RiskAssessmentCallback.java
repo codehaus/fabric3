@@ -20,12 +20,14 @@ package loanapp.risk;
 
 import loanapp.risk.RiskResponse;
 import org.oasisopen.sca.annotation.OneWay;
+import org.oasisopen.sca.annotation.Remotable;
 
 /**
  * Interface to receive risk assessment callbacks.
  *
  * @version $Revision$ $Date$
  */
+@Remotable
 public interface RiskAssessmentCallback {
 
     /**

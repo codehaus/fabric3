@@ -17,12 +17,14 @@
 package loanapp.pricing;
 
 import org.oasisopen.sca.annotation.OneWay;
+import org.oasisopen.sca.annotation.Remotable;
 
 /**
  * Callback for receiving pricing responses.
  *
  * @version $Revision$ $Date$
  */
+@Remotable
 public interface PricingServiceCallback {
 
     /**
