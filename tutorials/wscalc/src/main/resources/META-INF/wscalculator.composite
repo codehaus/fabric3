@@ -3,12 +3,12 @@
            name="WsCalculatorComposite"
            targetNamespace="org.codehaus.fabric3">
 
-    <service name="Calculator" promote="CalculatorService">
-        <binding.ws uri="/calculator"/>
-    </service>
-    
     <component name="CalculatorService">
         <implementation.java class="org.fabric3.tutorials.ws.calculator.CalculatorServiceImpl"/>
+    	<service name="CalculatorService">
+           <binding.ws uri="/calculator"/>
+	</service>
+    
         <reference name="addService" target="AddService"/>
         <reference name="subtractService" target="SubtractService"/>
         <reference name="multiplyService" target="MultiplyService"/>
