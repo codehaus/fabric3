@@ -297,9 +297,5 @@
     <mapping directory="$PROJECT_DIR$" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
-  <UsedPathMacros>
-    <macro name="IDEA_HOME" />
-    <macro name="M2_REPO" />
-  </UsedPathMacros>
 </project>
 
