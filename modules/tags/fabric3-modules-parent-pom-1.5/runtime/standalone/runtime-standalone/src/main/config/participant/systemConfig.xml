@@ -1,0 +1,13 @@
+<config>
+    <web.server>
+        <http port="8181-8281"/>
+    </web.server>
+    <federation>
+        <transport>
+            <value>
+                <entry><key>http</key><value>localhost:8181</value></entry>
+                <entry><key>binding.net.http</key><value>localhost:8282</value></entry>
+            </value>
+        </transport>
+    </federation>
+</config>
