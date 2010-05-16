@@ -609,6 +609,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-provisioning/fabric3-federation-provisioning.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-provisioning/fabric3-federation-provisioning.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-server/fabric3-ftp-server.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-server/fabric3-ftp-server.iml" group="other/ftp" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-spi/fabric3-ftp-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-spi/fabric3-ftp-spi.iml" group="other/ftp" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-hibernate-library/fabric3-hibernate-library.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-hibernate-library/fabric3-hibernate-library.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/fabric3-host-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/fabric3-host-api.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/interface/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/interface/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" group="idls" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-introspection-java/fabric3-introspection-java.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-introspection-java/fabric3-introspection-java.iml" group="kernel/impl" />
@@ -642,6 +643,8 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-impl/fabric3-security-impl.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-impl/fabric3-security-impl.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" group="kernel/api" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" group="implementations" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring-library/fabric3-spring-library.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring-library/fabric3-spring-library.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-admin/fabric3-standalone-admin.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-admin/fabric3-standalone-admin.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" group="runtimes/standalone" />
@@ -675,6 +678,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-jpa/profile-jpa.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-jpa/profile-jpa.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-net/profile-net.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-net/profile-net.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-rs/profile-rs.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-rs/profile-rs.iml" group="profiles" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-spring/profile-spring.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-spring/profile-spring.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-timer/profile-timer.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-timer/profile-timer.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-web/profile-web.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-web/profile-web.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-ws/profile-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-ws/profile-ws.iml" group="profiles" />
@@ -687,7 +691,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-clover/test-clover.iml" filepath="$PROJECT_DIR$/tests/trunk/test-clover/test-clover.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" filepath="$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-implementation-wsdl/test-implementation-wsdl.iml" filepath="$PROJECT_DIR$/tests/trunk/test-implementation-wsdl/test-implementation-wsdl.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" group="tests" />
@@ -697,6 +701,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" filepath="$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-spring/test-spring.iml" filepath="$PROJECT_DIR$/tests/trunk/test-spring/test-spring.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-standalone/test-standalone-app/test-standalone-app.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-standalone/test-standalone-app/test-standalone-app.iml" group="tests/tests-standalone" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-standalone-cluster/test-standalone-cluster-integration-tests/test-standalone-cluster-integration-tests.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-standalone-cluster/test-standalone-cluster-integration-tests/test-standalone-cluster-integration-tests.iml" group="tests/tests-standalone-cluster" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-standalone-cluster/test-standalone-cluster-setup/test-standalone-cluster-setup.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-standalone-cluster/test-standalone-cluster-setup/test-standalone-cluster-setup.iml" group="tests/tests-standalone-cluster" />
