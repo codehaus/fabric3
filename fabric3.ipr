@@ -696,6 +696,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-implementation-wsdl/test-implementation-wsdl.iml" filepath="$PROJECT_DIR$/tests/trunk/test-implementation-wsdl/test-implementation-wsdl.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-mock/test-mock.iml" filepath="$PROJECT_DIR$/tests/trunk/test-mock/test-mock.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-performance-app/test-performance-app.iml" filepath="$PROJECT_DIR$/tests/trunk/test-performance-app/test-performance-app.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" filepath="$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" group="tests" />
@@ -863,17 +864,6 @@
     </option>
   </component>
   <component name="libraryTable">
-    <library name="Maven: org.codehaus.fabric3.spec:sca-api-r1.0:0.5">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.5/sca-api-r1.0-0.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.5/sca-api-r1.0-0.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.5/sca-api-r1.0-0.5-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: javax.jms:com.springsource.javax.jms:1.1.0">
       <CLASSES>
         <root url="jar://$M2_REPO$/javax/jms/com.springsource.javax.jms/1.1.0/com.springsource.javax.jms-1.1.0.jar!/" />
@@ -960,17 +950,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.slf4j:slf4j-jdk14:1.5.6">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-jdk14/1.5.6/slf4j-jdk14-1.5.6.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-jdk14/1.5.6/slf4j-jdk14-1.5.6-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-jdk14/1.5.6/slf4j-jdk14-1.5.6-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:slf4j-api:1.5.6">
@@ -1125,17 +1104,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.apache.ws.commons.schema:XmlSchema:1.3.1">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.3.1/XmlSchema-1.3.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.3.1/XmlSchema-1.3.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.3.1/XmlSchema-1.3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: javax.activation:activation:1.1">
@@ -1620,17 +1588,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.5.0/slf4j-api-1.5.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.slf4j:slf4j-jdk14:1.5.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-jdk14/1.5.0/slf4j-jdk14-1.5.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-jdk14/1.5.0/slf4j-jdk14-1.5.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-jdk14/1.5.0/slf4j-jdk14-1.5.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.apache.maven:maven-plugin-api:2.0.4">
@@ -2425,39 +2382,6 @@
         <root url="jar://$M2_REPO$/com/sun/xml/bind/jaxb-osgi/2.2-promoted-b50/jaxb-osgi-2.2-promoted-b50-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-introspection-xml:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-xml/1.4-SNAPSHOT/fabric3-introspection-xml-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-xml/1.4-SNAPSHOT/fabric3-introspection-xml-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-xml/1.4-SNAPSHOT/fabric3-introspection-xml-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-introspection-java:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-java/1.4-SNAPSHOT/fabric3-introspection-java-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-java/1.4-SNAPSHOT/fabric3-introspection-java-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-java/1.4-SNAPSHOT/fabric3-introspection-java-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-security-impl:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-security-impl/1.4-SNAPSHOT/fabric3-security-impl-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-security-impl/1.4-SNAPSHOT/fabric3-security-impl-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-security-impl/1.4-SNAPSHOT/fabric3-security-impl-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: javax.xml:webservices-api-osgi:2.0-b24">
       <CLASSES>
         <root url="jar://$M2_REPO$/javax/xml/webservices-api-osgi/2.0-b24/webservices-api-osgi-2.0-b24.jar!/" />
@@ -2481,94 +2405,6 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner/pom-sources.jar!/" />
         <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner/1.4-SNAPSHOT/fabric3-contribution-scanner-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-http-provisioning:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-http-provisioning/1.4-SNAPSHOT/fabric3-http-provisioning-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-http-provisioning/1.4-SNAPSHOT/fabric3-http-provisioning-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-http-provisioning/1.4-SNAPSHOT/fabric3-http-provisioning-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-federation-deployment:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.4-SNAPSHOT/fabric3-federation-deployment-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.4-SNAPSHOT/fabric3-federation-deployment-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.4-SNAPSHOT/fabric3-federation-deployment-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-federation-allocation:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.4-SNAPSHOT/fabric3-federation-allocation-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.4-SNAPSHOT/fabric3-federation-allocation-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.4-SNAPSHOT/fabric3-federation-allocation-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-federation-shoal:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-shoal/1.4-SNAPSHOT/fabric3-federation-shoal-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-shoal/1.4-SNAPSHOT/fabric3-federation-shoal-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-shoal/1.4-SNAPSHOT/fabric3-federation-shoal-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.sun.shoal:shoal-jxta:1.1_08182009">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/com/sun/shoal/shoal-jxta/1.1_08182009/shoal-jxta-1.1_08182009.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/com/sun/shoal/shoal-jxta/1.1_08182009/shoal-jxta-1.1_08182009-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/com/sun/shoal/shoal-jxta/1.1_08182009/shoal-jxta-1.1_08182009-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.sun.shoal:shoal-gms:1.1_08182009">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/com/sun/shoal/shoal-gms/1.1_08182009/shoal-gms-1.1_08182009.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/com/sun/shoal/shoal-gms/1.1_08182009/shoal-gms-1.1_08182009-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/com/sun/shoal/shoal-gms/1.1_08182009/shoal-gms-1.1_08182009-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-sca-intents:1.4-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-sca-intents/1.4-SNAPSHOT/fabric3-sca-intents-1.4-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-sca-intents/1.4-SNAPSHOT/fabric3-sca-intents-1.4-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-sca-intents/1.4-SNAPSHOT/fabric3-sca-intents-1.4-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3.spec:sca-api:${sca.api.version}">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/${sca.api.version}/sca-api-${sca.api.version}.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/${sca.api.version}/sca-api-${sca.api.version}-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/${sca.api.version}/sca-api-${sca.api.version}-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.sun.istack:istack-commons-runtime:1.0">
@@ -2646,6 +2482,182 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/com/sun/xml/fastinfoset/FastInfoset/1.2.7/FastInfoset-1.2.7-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3.spec:sca-api:1.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/1.1/sca-api-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/1.1/sca-api-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api/1.1/sca-api-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: ch.qos.logback:logback-classic:0.9.20">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/ch/qos/logback/logback-classic/0.9.20/logback-classic-0.9.20.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/ch/qos/logback/logback-classic/0.9.20/logback-classic-0.9.20-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/ch/qos/logback/logback-classic/0.9.20/logback-classic-0.9.20-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: ch.qos.logback:logback-core:0.9.20">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/ch/qos/logback/logback-core/0.9.20/logback-core-0.9.20.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/ch/qos/logback/logback-core/0.9.20/logback-core-0.9.20-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/ch/qos/logback/logback-core/0.9.20/logback-core-0.9.20-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.slf4j:slf4j-api:1.5.11">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.5.11/slf4j-api-1.5.11.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.5.11/slf4j-api-1.5.11-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.5.11/slf4j-api-1.5.11-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.ws.commons.schema:XmlSchema:1.4.2">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.4.2/XmlSchema-1.4.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.4.2/XmlSchema-1.4.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.4.2/XmlSchema-1.4.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-introspection-xml:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-xml/1.6-SNAPSHOT/fabric3-introspection-xml-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-xml/1.6-SNAPSHOT/fabric3-introspection-xml-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-xml/1.6-SNAPSHOT/fabric3-introspection-xml-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-introspection-java:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-java/1.6-SNAPSHOT/fabric3-introspection-java-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-java/1.6-SNAPSHOT/fabric3-introspection-java-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-java/1.6-SNAPSHOT/fabric3-introspection-java-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-hibernate-library:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-hibernate-library/1.6-SNAPSHOT/fabric3-hibernate-library-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-hibernate-library/1.6-SNAPSHOT/fabric3-hibernate-library-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-hibernate-library/1.6-SNAPSHOT/fabric3-hibernate-library-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-security-impl:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-security-impl/1.6-SNAPSHOT/fabric3-security-impl-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-security-impl/1.6-SNAPSHOT/fabric3-security-impl-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-security-impl/1.6-SNAPSHOT/fabric3-security-impl-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-federation-provisioning:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-provisioning/1.6-SNAPSHOT/fabric3-federation-provisioning-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-provisioning/1.6-SNAPSHOT/fabric3-federation-provisioning-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-provisioning/1.6-SNAPSHOT/fabric3-federation-provisioning-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-recovery:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-recovery/1.6-SNAPSHOT/fabric3-recovery-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-recovery/1.6-SNAPSHOT/fabric3-recovery-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-recovery/1.6-SNAPSHOT/fabric3-recovery-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-federation-deployment:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.6-SNAPSHOT/fabric3-federation-deployment-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.6-SNAPSHOT/fabric3-federation-deployment-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.6-SNAPSHOT/fabric3-federation-deployment-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-federation-allocation:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.6-SNAPSHOT/fabric3-federation-allocation-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.6-SNAPSHOT/fabric3-federation-allocation-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.6-SNAPSHOT/fabric3-federation-allocation-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-federation-jgroups:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-jgroups/1.6-SNAPSHOT/fabric3-federation-jgroups-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-jgroups/1.6-SNAPSHOT/fabric3-federation-jgroups-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-jgroups/1.6-SNAPSHOT/fabric3-federation-jgroups-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jgroups:jgroups:2.8.0.GA">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/jgroups/jgroups/2.8.0.GA/jgroups-2.8.0.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/jgroups/jgroups/2.8.0.GA/jgroups-2.8.0.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/jgroups/jgroups/2.8.0.GA/jgroups-2.8.0.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-sca-intents:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-sca-intents/1.6-SNAPSHOT/fabric3-sca-intents-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-sca-intents/1.6-SNAPSHOT/fabric3-sca-intents-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-sca-intents/1.6-SNAPSHOT/fabric3-sca-intents-1.6-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
