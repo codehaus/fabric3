@@ -474,6 +474,7 @@
         <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos/pom.xml" />
         <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos-jms/pom.xml" />
         <option value="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-rs/pom.xml" />
+        <option value="$PROJECT_DIR$/tests/trunk/test-binding-rs/pom.xml" />
       </list>
     </option>
   </component>
@@ -889,6 +890,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-rs/test-binding-rs.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-rs/test-binding-rs.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-datasource/test-datasource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-datasource/test-datasource.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" filepath="$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" group="tests" />
@@ -898,7 +900,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-performance-app/test-performance-app.iml" filepath="$PROJECT_DIR$/tests/trunk/test-performance-app/test-performance-app.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" filepath="$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-spring/test-spring.iml" filepath="$PROJECT_DIR$/tests/trunk/test-spring/test-spring.iml" group="tests" />
@@ -3220,17 +3221,6 @@
         <root url="jar://$M2_REPO$/com/sun/jersey/jersey-core/1.3/jersey-core-1.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.sun.jersey:jersey-client:1.3">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.codehaus.jackson:jackson-core-asl:1.5.5">
       <CLASSES>
         <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-core-asl/1.5.5/jackson-core-asl-1.5.5.jar!/" />
@@ -3416,6 +3406,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/asm/asm/1.5.3/asm-1.5.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.sun.jersey:jersey-client:1.3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
