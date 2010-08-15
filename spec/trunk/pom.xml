@@ -26,7 +26,7 @@
     <artifactId>sca-api</artifactId>
     <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>SCA API Version 1.0</name>
+    <name>SCA API Version 1.1</name>
     <description>Service Component Architecture V1.1 Java API and Annotations</description>
 
     <build>
