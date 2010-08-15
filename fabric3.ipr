@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project relativePaths="true" version="4">
+<project version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
   </component>
@@ -20,15 +20,16 @@
         <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
         <option name="IMPORT_LAYOUT_TABLE">
           <value>
-            <package name="java" withSubpackages="true" />
-            <package name="javax" withSubpackages="true" />
+            <package name="java" withSubpackages="true" static="false" />
+            <package name="javax" withSubpackages="true" static="false" />
             <emptyLine />
-            <package name="" withSubpackages="true" />
+            <package name="" withSubpackages="true" static="false" />
             <emptyLine />
-            <package name="org.fabric3" withSubpackages="true" />
+            <package name="org.fabric3" withSubpackages="true" static="false" />
+            <emptyLine />
+            <package name="" withSubpackages="true" static="true" />
           </value>
         </option>
-        <option name="OPTIMIZE_IMPORTS_ON_THE_FLY" value="true" />
         <option name="RIGHT_MARGIN" value="150" />
         <option name="CALL_PARAMETERS_WRAP" value="5" />
         <option name="METHOD_PARAMETERS_WRAP" value="5" />
@@ -40,7 +41,7 @@
         <option name="XML_TEXT_WRAP" value="0" />
         <option name="PARAMETER_ANNOTATION_WRAP" value="1" />
         <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
-        <ADDITIONAL_INDENT_OPTIONS fileType="">
+        <ADDITIONAL_INDENT_OPTIONS fileType="java">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
           <option name="TAB_SIZE" value="4" />
@@ -49,7 +50,7 @@
           <option name="LABEL_INDENT_SIZE" value="0" />
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="java">
+        <ADDITIONAL_INDENT_OPTIONS fileType="jsp">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
           <option name="TAB_SIZE" value="4" />
@@ -85,13 +86,21 @@
           <option name="LABEL_INDENT_SIZE" value="0" />
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
+        <ADDITIONAL_INDENT_OPTIONS fileType="yml">
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <option name="DEPLOY_AFTER_MAKE" value="0" />
     <excludeFromCompile>
       <file url="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/src/test/resources/META-INF/persistence.xml" />
       <file url="file://$PROJECT_DIR$/tests/trunk/test-jpa-core/src/main/resources/META-INF/persistence.xml" />
@@ -145,6 +154,7 @@
       <entry name="?*.composite" />
       <entry name="?*.wsdl" />
     </wildcardResourcePatterns>
+    <annotationProcessing enabled="false" useClasspath="true" />
   </component>
   <component name="CopyrightManager" default="">
     <module2copyright />
@@ -153,11 +163,8 @@
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
   <component name="EclipseCompilerSettings">
-    <option name="DEBUGGING_INFO" value="true" />
     <option name="GENERATE_NO_WARNINGS" value="true" />
     <option name="DEPRECATION" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-    <option name="MAXIMUM_HEAP_SIZE" value="128" />
   </component>
   <component name="EclipseEmbeddedCompilerSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -194,83 +201,110 @@
           <module name="test-runtime-jetty" />
         </modules>
       </facet-type>
+      <facet-type id="Spring">
+        <modules>
+          <module name="fabric3-spring" />
+          <module name="test-spring" />
+        </modules>
+      </facet-type>
     </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="6E8A5D1E59F05F813B711D2202A678D9" />
   <component name="InspectionProjectProfileManager">
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
-    <scopes />
     <profiles>
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
-        <inspection_tool class="UnnecessaryContinue" level="WARNING" enabled="false" />
-        <inspection_tool class="RedundantArrayCreation" level="WARNING" enabled="false" />
-        <inspection_tool class="ExternalizableWithSerializationMethods" level="WARNING" enabled="true" />
-        <inspection_tool class="ReadObjectInitialization" level="WARNING" enabled="true" />
-        <inspection_tool class="NonSerializableWithSerializationMethods" level="WARNING" enabled="true" />
-        <inspection_tool class="NonSerializableWithSerialVersionUIDField" level="WARNING" enabled="true" />
-        <inspection_tool class="ReadObjectAndWriteObjectPrivate" level="WARNING" enabled="true" />
-        <inspection_tool class="ReadResolveAndWriteReplaceProtected" level="WARNING" enabled="true" />
-        <inspection_tool class="SerializableWithUnconstructableAncestor" level="WARNING" enabled="true" />
-        <inspection_tool class="SerializableHasSerializationMethods" level="WARNING" enabled="true">
+        <inspection_tool class="AbstractBeanReferencesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AutowiredDependenciesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="DuplicatedBeanNamesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="ExternalizableWithSerializationMethods" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="InjectionValueTypeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="NonSerializableWithSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="NonSerializableWithSerializationMethods" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="ReadObjectAndWriteObjectPrivate" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="ReadObjectInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="ReadResolveAndWriteReplaceProtected" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="RedundantArrayCreation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantThrowsDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SerialPersistentFieldsWithWrongSignature" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SerialVersionUIDNotStaticFinal" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="superClassString" value="java.awt.Component" />
         </inspection_tool>
-        <inspection_tool class="SerializableHasSerialVersionUIDField" level="WARNING" enabled="true">
+        <inspection_tool class="SerializableInnerClassHasSerialVersionUIDField" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="superClassString" value="java.awt.Component" />
         </inspection_tool>
-        <inspection_tool class="SerializableInnerClassHasSerialVersionUIDField" level="WARNING" enabled="true">
+        <inspection_tool class="SerializableInnerClassWithNonSerializableOuterClass" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="superClassString" value="java.awt.Component" />
         </inspection_tool>
-        <inspection_tool class="SerializableInnerClassWithNonSerializableOuterClass" level="WARNING" enabled="true">
-          <option name="superClassString" value="java.awt.Component" />
-        </inspection_tool>
-        <inspection_tool class="SerialPersistentFieldsWithWrongSignature" level="WARNING" enabled="true" />
-        <inspection_tool class="SerialVersionUIDNotStaticFinal" level="WARNING" enabled="true" />
-        <inspection_tool class="TransientFieldInNonSerializableClass" level="WARNING" enabled="true" />
-        <inspection_tool class="AbstractBeanReferencesInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="AutowiredDependenciesInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="SpringJavaAutowiringInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanConstructorArgInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="DuplicatedBeanNamesInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringOsgiElementsInconsistencyInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringInjectionValueConsistencyInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="InjectionValueTypeInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanLookupMethodInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringReplacedMethodsInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringRequiredAnnotationInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringRequiredPropertyInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringOsgiServiceCommonInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanAutowiringInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanDepedencyCheckInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringFactoryMethodInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanInstantiationInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringBeanNameConventionInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="SpringFacetInspection" level="WARNING" enabled="false">
+        <inspection_tool class="SerializableWithUnconstructableAncestor" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SpringBeanAutowiringInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringBeanConstructorArgInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringBeanDepedencyCheckInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringBeanInstantiationInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringBeanLookupMethodInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringBeanNameConventionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SpringFacetInspection" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="checkTestFiles" value="false" />
         </inspection_tool>
-        <inspection_tool class="SpringInjectionValueStyleInspection" level="WARNING" enabled="false" />
+        <inspection_tool class="SpringFactoryMethodInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringInjectionValueConsistencyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringInjectionValueStyleInspection" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="SpringJamErrorInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="SpringModelInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="SpringScopesInspection" level="ERROR" enabled="false" />
-        <inspection_tool class="UnparsedCustomBeanInspection" level="WARNING" enabled="false" />
-        <inspection_tool class="UtilSchemaInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringJavaAutowiringInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringOsgiElementsInconsistencyInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringOsgiServiceCommonInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringReplacedMethodsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringRequiredAnnotationInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringRequiredPropertyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SpringScopesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="TransientFieldInNonSerializableClass" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UNUSED_SYMBOL" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="LOCAL_VARIABLE" value="true" />
+          <option name="FIELD" value="true" />
+          <option name="METHOD" value="true" />
+          <option name="CLASS" value="true" />
+          <option name="PARAMETER" value="true" />
+          <option name="REPORT_PARAMETER_FOR_PUBLIC_METHODS" value="true" />
+          <option name="INJECTION_ANNOS">
+            <value>
+              <list size="11">
+                <item index="0" class="java.lang.String" itemvalue="Reference" />
+                <item index="1" class="java.lang.String" itemvalue="org.fabric3.api.annotation.management.ManagementOperation" />
+                <item index="2" class="java.lang.String" itemvalue="org.fabric3.api.annotation.monitor.Monitor" />
+                <item index="3" class="java.lang.String" itemvalue="org.oasisopen.sca.annotation.Destroy" />
+                <item index="4" class="java.lang.String" itemvalue="org.oasisopen.sca.annotation.Init" />
+                <item index="5" class="java.lang.String" itemvalue="org.oasisopen.sca.annotation.Property" />
+                <item index="6" class="java.lang.String" itemvalue="org.osoa.sca.annotations.Constructor" />
+                <item index="7" class="java.lang.String" itemvalue="org.osoa.sca.annotations.Destroy" />
+                <item index="8" class="java.lang.String" itemvalue="org.osoa.sca.annotations.Init" />
+                <item index="9" class="java.lang.String" itemvalue="org.osoa.sca.annotations.Property" />
+                <item index="10" class="java.lang.String" itemvalue="org.osoa.sca.annotations.Reference" />
+              </list>
+            </value>
+          </option>
+        </inspection_tool>
+        <inspection_tool class="UnnecessaryContinue" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnparsedCustomBeanInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnusedLibrary" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UtilSchemaInspection" enabled="false" level="ERROR" enabled_by_default="false" />
       </profile>
     </profiles>
-    <list size="4">
+    <option name="PROJECT_PROFILE" value="Project Default" />
+    <option name="USE_PROJECT_PROFILE" value="true" />
+    <version value="1.0" />
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="SERVER PROBLEM" />
       <item index="1" class="java.lang.String" itemvalue="INFO" />
-      <item index="2" class="java.lang.String" itemvalue="WARNING" />
-      <item index="3" class="java.lang.String" itemvalue="ERROR" />
+      <item index="2" class="java.lang.String" itemvalue="TYPO" />
+      <item index="3" class="java.lang.String" itemvalue="WARNING" />
+      <item index="4" class="java.lang.String" itemvalue="ERROR" />
     </list>
   </component>
   <component name="JavacSettings">
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="false" />
-    <option name="DEPRECATION" value="true" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.5" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -288,14 +322,6 @@
     <option name="HEAP_SIZE" />
     <option name="LOCALE" />
     <option name="OPEN_IN_BROWSER" value="true" />
-  </component>
-  <component name="JikesSettings">
-    <option name="JIKES_PATH" value="" />
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="DEPRECATION" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="false" />
-    <option name="IS_EMACS_ERRORS_MODE" value="true" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
   </component>
   <component name="LogConsolePreferences">
     <option name="FILTER_ERRORS" value="false" />
@@ -433,6 +459,21 @@
         <option value="$PROJECT_DIR$/tests/trunk/test-timer-quartz/pom.xml" />
         <option value="$PROJECT_DIR$/tests/trunk/test-user-resource/pom.xml" />
         <option value="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-policy/pom.xml" />
+        <option value="$PROJECT_DIR$/tests/trunk/tests-cluster-apps/domain-scope/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-service/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-datasource/pom.xml" />
+        <option value="$PROJECT_DIR$/tests/trunk/test-datasource/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-allocation/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-deployment/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-api/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-spring-library/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security-spring/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/spring/fabric3-spring-security-library/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/spring/fabric3-spring-security/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/spring/fabric3-spring-spi/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos-jms/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-rs/pom.xml" />
       </list>
     </option>
   </component>
@@ -560,7 +601,160 @@
   <component name="ProjectDetails">
     <option name="projectName" value="fabric3" />
   </component>
-  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectDictionaryState">
+    <dictionary name="jim">
+      <words>
+        <w>accessor</w>
+        <w>annot</w>
+        <w>appenders</w>
+        <w>args</w>
+        <w>async</w>
+        <w>atomikos</w>
+        <w>attacher</w>
+        <w>attachers</w>
+        <w>attr</w>
+        <w>auth</w>
+        <w>autowire</w>
+        <w>bindable</w>
+        <w>bootstrapper</w>
+        <w>callables</w>
+        <w>callframe</w>
+        <w>callframes</w>
+        <w>cglib</w>
+        <w>classloader</w>
+        <w>classloaders</w>
+        <w>classloading</w>
+        <w>cmds</w>
+        <w>cnfe</w>
+        <w>codehaus</w>
+        <w>compensatable</w>
+        <w>configurator</w>
+        <w>ctor</w>
+        <w>cylces</w>
+        <w>datasource</w>
+        <w>datasources</w>
+        <w>datatypes</w>
+        <w>deallocate</w>
+        <w>defragmented</w>
+        <w>deployable</w>
+        <w>deployables</w>
+        <w>deployer</w>
+        <w>desc</w>
+        <w>deserialization</w>
+        <w>deserialize</w>
+        <w>deserialized</w>
+        <w>deserializes</w>
+        <w>deserializing</w>
+        <w>enqueue</w>
+        <w>fixme</w>
+        <w>formatter</w>
+        <w>formatters</w>
+        <w>hibernate's</w>
+        <w>https</w>
+        <w>iface</w>
+        <w>implementation&lt;?&gt;</w>
+        <w>imprt</w>
+        <w>inconvertible</w>
+        <w>infos</w>
+        <w>initializers</w>
+        <w>injectable</w>
+        <w>injectables</w>
+        <w>injector&lt;?&gt;</w>
+        <w>instantiator</w>
+        <w>instantiators</w>
+        <w>interfaze</w>
+        <w>introspector</w>
+        <w>introspectors</w>
+        <w>iter</w>
+        <w>jaas</w>
+        <w>javassist</w>
+        <w>javasssist</w>
+        <w>javax</w>
+        <w>jaxb</w>
+        <w>jaxen</w>
+        <w>jdbc</w>
+        <w>jndi</w>
+        <w>keystore</w>
+        <w>ldap</w>
+        <w>lifecycle</w>
+        <w>logback</w>
+        <w>mbean</w>
+        <w>metadata</w>
+        <w>metaform</w>
+        <w>metamodel</w>
+        <w>monitorable</w>
+        <w>mortbay</w>
+        <w>multi</w>
+        <w>namespaces</w>
+        <w>ncdfe</w>
+        <w>nonpersistent</w>
+        <w>oneway</w>
+        <w>online</w>
+        <w>optimizable</w>
+        <w>osoa</w>
+        <w>overriden</w>
+        <w>param</w>
+        <w>parameterized</w>
+        <w>params</w>
+        <w>pausable</w>
+        <w>plaintext</w>
+        <w>pojo</w>
+        <w>populator</w>
+        <w>provisioner</w>
+        <w>qname</w>
+        <w>qualifiable</w>
+        <w>recurse</w>
+        <w>recurses</w>
+        <w>referenceable</w>
+        <w>reinject</w>
+        <w>reinjectable</w>
+        <w>reinjectables</w>
+        <w>reinjected</w>
+        <w>reinjection</w>
+        <w>reinjects</w>
+        <w>remotable</w>
+        <w>replayer</w>
+        <w>reprovisioned</w>
+        <w>rethrow</w>
+        <w>runtime's</w>
+        <w>runtimes</w>
+        <w>scdl</w>
+        <w>schemas</w>
+        <w>scope&lt;?&gt;</w>
+        <w>serializers</w>
+        <w>servlets</w>
+        <w>sink's</w>
+        <w>stacktrace</w>
+        <w>stringified</w>
+        <w>subgraph</w>
+        <w>subpath</w>
+        <w>tccl</w>
+        <w>throwable</w>
+        <w>timestamp</w>
+        <w>traverser</w>
+        <w>undeploy</w>
+        <w>undeployed</w>
+        <w>undeploying</w>
+        <w>undeployment</w>
+        <w>undeploys</w>
+        <w>uninstall</w>
+        <w>uninstalled</w>
+        <w>uninstalling</w>
+        <w>uninstalls</w>
+        <w>unregister</w>
+        <w>unregisters</w>
+        <w>unsubscribe</w>
+        <w>updateable</w>
+        <w>username</w>
+        <w>vals</w>
+        <w>vertice</w>
+        <w>webapp</w>
+        <w>weblogic</w>
+        <w>wsdl</w>
+        <w>xmlns</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectKey">
     <option name="state" value="https://svn.codehaus.org/fabric3/fabric3.ipr" />
   </component>
@@ -569,13 +763,13 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-cluster-apps/test-binding-sca/binding-sca-app-api/binding-sca-app-api.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-cluster-apps/test-binding-sca/binding-sca-app-api/binding-sca-app-api.iml" group="tests/tests-cluster-apps/binding-sca" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-cluster-apps/test-binding-sca/binding-sca-app1/binding-sca-app1.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-cluster-apps/test-binding-sca/binding-sca-app1/binding-sca-app1.iml" group="tests/tests-cluster-apps/binding-sca" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-cluster-apps/test-binding-sca/binding-sca-app2/binding-sca-app2.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-cluster-apps/test-binding-sca/binding-sca-app2/binding-sca-app2.iml" group="tests/tests-cluster-apps/binding-sca" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-cluster-apps/domain-scope/domain-scope.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-cluster-apps/domain-scope/domain-scope.iml" group="tests/tests-cluster-apps" />
       <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" group="poms" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-activemq/fabric3-activemq.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-activemq/fabric3-activemq.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-api/fabric3-admin-api.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-api/fabric3-admin-api.iml" group="admin" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-cli/fabric3-admin-cli.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-cli/fabric3-admin-cli.iml" group="admin" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-impl/fabric3-admin-impl.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-impl/fabric3-admin-impl.iml" group="admin" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-interpreter/fabric3-admin-interpreter.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-interpreter/fabric3-admin-interpreter.iml" group="admin" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-allocation/fabric3-allocation.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-allocation/fabric3-allocation.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-ant-api/fabric3-ant-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-ant-api/fabric3-ant-api.iml" group="runtimes/ant" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-ant-extension/fabric3-ant-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-ant-extension/fabric3-ant-extension.iml" group="runtimes/ant" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-ant-host/fabric3-ant-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-ant-host/fabric3-ant-host.iml" group="runtimes/ant" />
@@ -583,11 +777,11 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/trunk/fabric3-assembly-plugin/fabric3-assembly-plugin.iml" filepath="$PROJECT_DIR$/plugins/trunk/fabric3-assembly-plugin/fabric3-assembly-plugin.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async/fabric3-async.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async/fabric3-async.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos/fabric3-atomikos.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos/fabric3-atomikos.iml" group="other/tx" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos-install/fabric3-atomikos-install.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos-install/fabric3-atomikos-install.iml" group="other/tx" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos-jms/fabric3-atomikos-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-atomikos-jms/fabric3-atomikos-jms.iml" group="other/tx" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ftp/fabric3-binding-ftp.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ftp/fabric3-binding-ftp.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-jms/fabric3-binding-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-jms/fabric3-binding-jms.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-net/fabric3-binding-net.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-net/fabric3-binding-net.iml" group="bindings" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-rs/fabric3-binding-rs.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-rs/fabric3-binding-rs.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" group="bindings" />
@@ -603,8 +797,10 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-databinding-hessian/fabric3-databinding-hessian.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-databinding-hessian/fabric3-databinding-hessian.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-databinding-jaxb/fabric3-databinding-jaxb.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-databinding-jaxb/fabric3-databinding-jaxb.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-databinding-json/fabric3-databinding-json.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-databinding-json/fabric3-databinding-json.iml" group="other" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-deployment/fabric3-deployment.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-deployment/fabric3-deployment.iml" group="federated" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-datasource/fabric3-datasource.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-datasource/fabric3-datasource.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" group="kernel/impl" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-allocation/fabric3-federation-allocation.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-allocation/fabric3-federation-allocation.iml" group="federated" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-deployment/fabric3-federation-deployment.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-deployment/fabric3-federation-deployment.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-jgroups/fabric3-federation-jgroups.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-jgroups/fabric3-federation-jgroups.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-provisioning/fabric3-federation-provisioning.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/federated/fabric3-federation-provisioning/fabric3-federation-provisioning.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-server/fabric3-ftp-server.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-server/fabric3-ftp-server.iml" group="other/ftp" />
@@ -621,6 +817,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx-agent/fabric3-jmx-agent.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx-agent/fabric3-jmx-agent.iml" group="kernel/impl" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-api/fabric3-jpa-api.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-api/fabric3-jpa-api.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-junit/fabric3-junit.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-junit/fabric3-junit.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/fabric3-management-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/fabric3-management-api.iml" group="kernel/api" />
@@ -634,7 +831,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-recovery/fabric3-recovery.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-recovery/fabric3-recovery.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" group="other" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-rs/fabric3-rs.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-rs/fabric3-rs.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-runtime-ant/fabric3-runtime-ant.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/ant/fabric3-runtime-ant/fabric3-runtime-ant.iml" group="runtimes/ant" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/tomcat/fabric3-runtime-tomcat/fabric3-runtime-tomcat.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/tomcat/fabric3-runtime-tomcat/fabric3-runtime-tomcat.iml" group="runtimes/tomcat" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/weblogic/fabric3-runtime-weblogic/fabric3-runtime-weblogic.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/weblogic/fabric3-runtime-weblogic/fabric3-runtime-weblogic.iml" group="runtimes/weblogic" />
@@ -645,6 +841,8 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring-library/fabric3-spring-library.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring-library/fabric3-spring-library.iml" group="implementations" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/spring/fabric3-spring-security/fabric3-spring-security.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/spring/fabric3-spring-security/fabric3-spring-security.iml" group="other/spring" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/spring/fabric3-spring-spi/fabric3-spring-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/spring/fabric3-spring-spi/fabric3-spring-spi.iml" group="other/spring" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-admin/fabric3-standalone-admin.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-admin/fabric3-standalone-admin.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" group="runtimes/standalone" />
@@ -652,7 +850,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-test-spi/fabric3-test-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-test-spi/fabric3-test-spi.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-thread-pool/fabric3-thread-pool.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-thread-pool/fabric3-thread-pool.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer/fabric3-timer.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer/fabric3-timer.iml" group="implementations" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-quartz/fabric3-timer-quartz.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-quartz/fabric3-timer-quartz.iml" group="other/timer" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-service/fabric3-timer-service.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-service/fabric3-timer-service.iml" group="other/timer" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-spi/fabric3-timer-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-spi/fabric3-timer-spi.iml" group="other/timer" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/tomcat/fabric3-tomcat-extension/fabric3-tomcat-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/tomcat/fabric3-tomcat-extension/fabric3-tomcat-extension.iml" group="runtimes/tomcat" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/tomcat/fabric3-tomcat-server/fabric3-tomcat-server.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/tomcat/fabric3-tomcat-server/fabric3-tomcat-server.iml" group="runtimes/tomcat" />
@@ -691,6 +889,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-datasource/test-datasource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-datasource/test-datasource.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" filepath="$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-implementation-wsdl/test-implementation-wsdl.iml" filepath="$PROJECT_DIR$/tests/trunk/test-implementation-wsdl/test-implementation-wsdl.iml" group="tests" />
@@ -709,7 +908,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-standalone/test-standalone-setup/test-standalone-setup.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-standalone/test-standalone-setup/test-standalone-setup.iml" group="tests/tests-standalone" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/tests-standalone/test-standalone-vm/test-standalone-vm.iml" filepath="$PROJECT_DIR$/tests/trunk/tests-standalone/test-standalone-vm/test-standalone-vm.iml" group="tests/tests-standalone" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-timer-implementation/test-timer-implementation.iml" filepath="$PROJECT_DIR$/tests/trunk/test-timer-implementation/test-timer-implementation.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-timer-quartz/test-timer-quartz.iml" filepath="$PROJECT_DIR$/tests/trunk/test-timer-quartz/test-timer-quartz.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-user-resource/test-user-resource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-user-resource/test-user-resource.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-wsdl/test-wsdl.iml" filepath="$PROJECT_DIR$/tests/trunk/test-wsdl/test-wsdl.iml" group="tests" />
     </modules>
@@ -722,13 +920,6 @@
       </value>
     </option>
   </component>
-  <component name="RmicSettings">
-    <option name="IS_EANABLED" value="false" />
-    <option name="DEBUGGING_INFO" value="true" />
-    <option name="GENERATE_NO_WARNINGS" value="false" />
-    <option name="GENERATE_IIOP_STUBS" value="false" />
-    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-  </component>
   <component name="SvnBranchConfigurationManager">
     <option name="myConfigurationMap">
       <map>
@@ -739,21 +930,18 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="https://svn.codehaus.org/fabric3/modules/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="https://svn.codehaus.org/fabric3/modules/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
         <entry key="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner">
           <value>
             <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://svn.codehaus.org/fabric3/modules/tags" />
@@ -766,6 +954,15 @@
         <entry key="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty">
           <value>
             <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://svn.codehaus.org/fabric3/modules/tags" />
@@ -778,6 +975,15 @@
         <entry key="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric">
           <value>
             <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://svn.codehaus.org/fabric3/modules/tags" />
@@ -790,18 +996,15 @@
         <entry key="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="https://svn.codehaus.org/fabric3/modules/tags" />
-                </list>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
               </option>
-              <option name="trunkUrl" value="https://svn.codehaus.org/fabric3/modules/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-controller">
-          <value>
-            <SvnBranchConfiguration>
               <option name="branchUrls">
                 <list>
                   <option value="https://svn.codehaus.org/fabric3/modules/tags" />
@@ -814,6 +1017,15 @@
         <entry key="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host">
           <value>
             <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://svn.codehaus.org/fabric3/modules/tags" />
@@ -826,6 +1038,15 @@
         <entry key="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-admin">
           <value>
             <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://svn.codehaus.org/fabric3/modules/tags" />
@@ -838,6 +1059,15 @@
         <entry key="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server">
           <value>
             <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://svn.codehaus.org/fabric3/modules/tags" />
@@ -875,39 +1105,6 @@
         <root url="jar://$M2_REPO$/javax/jms/com.springsource.javax.jms/1.1.0/com.springsource.javax.jms-1.1.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.apache.activemq:activemq-core:5.2.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/5.2.0/activemq-core-5.2.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/5.2.0/activemq-core-5.2.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/5.2.0/activemq-core-5.2.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.apache.activemq:activeio-core:3.1.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activeio-core/3.1.0/activeio-core-3.1.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activeio-core/3.1.0/activeio-core-3.1.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activeio-core/3.1.0/activeio-core-3.1.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: backport-util-concurrent:backport-util-concurrent:2.1">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.0_spec:1.0">
       <CLASSES>
         <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-j2ee-management_1.0_spec/1.0/geronimo-j2ee-management_1.0_spec-1.0.jar!/" />
@@ -919,17 +1116,6 @@
         <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-j2ee-management_1.0_spec/1.0/geronimo-j2ee-management_1.0_spec-1.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.apache.activemq:activemq-pool:5.2.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: commons-logging:commons-logging-api:1.1">
       <CLASSES>
         <root url="jar://$M2_REPO$/commons-logging/commons-logging-api/1.1/commons-logging-api-1.1.jar!/" />
@@ -939,17 +1125,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/commons-logging/commons-logging-api/1.1/commons-logging-api-1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: commons-pool:commons-pool:1.4">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:slf4j-api:1.5.6">
@@ -1137,72 +1312,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/javax/security/auth/message/jmac/1.0-rev-1/jmac-1.0-rev-1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.mortbay.jetty:jetty:6.1.5">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jetty/6.1.5/jetty-6.1.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jetty/6.1.5/jetty-6.1.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jetty/6.1.5/jetty-6.1.5-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.mortbay.jetty:jetty-util:6.1.5">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jetty-util/6.1.5/jetty-util-6.1.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jetty-util/6.1.5/jetty-util-6.1.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jetty-util/6.1.5/jetty-util-6.1.5-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.mortbay.jetty:servlet-api-2.5:6.1.5">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/servlet-api-2.5/6.1.5/servlet-api-2.5-6.1.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/servlet-api-2.5/6.1.5/servlet-api-2.5-6.1.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/servlet-api-2.5/6.1.5/servlet-api-2.5-6.1.5-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.mortbay.jetty:jsp-2.1:6.1.3">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jsp-2.1/6.1.3/jsp-2.1-6.1.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jsp-2.1/6.1.3/jsp-2.1-6.1.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/mortbay/jetty/jsp-2.1/6.1.3/jsp-2.1-6.1.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jdt:core:3.1.1">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jdt/core/3.1.1/core-3.1.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jdt/core/3.1.1/core-3.1.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jdt/core/3.1.1/core-3.1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: ant:ant:1.6.5">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/ant/ant/1.6.5/ant-1.6.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/ant/ant/1.6.5/ant-1.6.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/ant/ant/1.6.5/ant-1.6.5-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.apache.maven:maven-plugin-api:2.0.7">
@@ -1535,28 +1644,6 @@
         <root url="jar://$M2_REPO$/com/caucho/hessian/3.1.5/hessian-3.1.5-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.codehaus.jackson:jackson-core-asl:0.9.9-4">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-core-asl/0.9.9-4/jackson-core-asl-0.9.9-4.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-core-asl/0.9.9-4/jackson-core-asl-0.9.9-4-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-core-asl/0.9.9-4/jackson-core-asl-0.9.9-4-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.jackson:jackson-mapper-asl:0.9.9-4">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-mapper-asl/0.9.9-4/jackson-mapper-asl-0.9.9-4.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-mapper-asl/0.9.9-4/jackson-mapper-asl-0.9.9-4-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-mapper-asl/0.9.9-4/jackson-mapper-asl-0.9.9-4-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: stax:stax-api:1.0.1">
       <CLASSES>
         <root url="jar://$M2_REPO$/stax/stax-api/1.0.1/stax-api-1.0.1.jar!/" />
@@ -1755,72 +1842,6 @@
         <root url="jar://$M2_REPO$/org/apache/maven/surefire/surefire-api/2.0/surefire-api-2.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: javax.persistence:com.springsource.javax.persistence:1.0.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/javax/persistence/com.springsource.javax.persistence/1.0.0/com.springsource.javax.persistence-1.0.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/javax/persistence/com.springsource.javax.persistence/1.0.0/com.springsource.javax.persistence-1.0.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/javax/persistence/com.springsource.javax.persistence/1.0.0/com.springsource.javax.persistence-1.0.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hibernate:hibernate-entitymanager:3.4.0.GA">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-entitymanager/3.4.0.GA/hibernate-entitymanager-3.4.0.GA.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-entitymanager/3.4.0.GA/hibernate-entitymanager-3.4.0.GA-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-entitymanager/3.4.0.GA/hibernate-entitymanager-3.4.0.GA-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hibernate:ejb3-persistence:1.0.2.GA">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/hibernate/ejb3-persistence/1.0.2.GA/ejb3-persistence-1.0.2.GA.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/hibernate/ejb3-persistence/1.0.2.GA/ejb3-persistence-1.0.2.GA-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/hibernate/ejb3-persistence/1.0.2.GA/ejb3-persistence-1.0.2.GA-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hibernate:hibernate-commons-annotations:3.1.0.GA">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-commons-annotations/3.1.0.GA/hibernate-commons-annotations-3.1.0.GA.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-commons-annotations/3.1.0.GA/hibernate-commons-annotations-3.1.0.GA-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-commons-annotations/3.1.0.GA/hibernate-commons-annotations-3.1.0.GA-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hibernate:hibernate-annotations:3.4.0.GA">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-annotations/3.4.0.GA/hibernate-annotations-3.4.0.GA.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-annotations/3.4.0.GA/hibernate-annotations-3.4.0.GA-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-annotations/3.4.0.GA/hibernate-annotations-3.4.0.GA-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hibernate:hibernate-core:3.3.0.SP1">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-core/3.3.0.SP1/hibernate-core-3.3.0.SP1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-core/3.3.0.SP1/hibernate-core-3.3.0.SP1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate-core/3.3.0.SP1/hibernate-core-3.3.0.SP1-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: antlr:antlr:2.7.6">
       <CLASSES>
         <root url="jar://$M2_REPO$/antlr/antlr/2.7.6/antlr-2.7.6.jar!/" />
@@ -1863,17 +1884,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: javassist:javassist:3.4.GA">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/javassist/javassist/3.4.GA/javassist-3.4.GA.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/javassist/javassist/3.4.GA/javassist-3.4.GA-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/javassist/javassist/3.4.GA/javassist-3.4.GA-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: concurrent:concurrent:1.3.4">
@@ -2074,39 +2084,6 @@
         <root url="jar://$M2_REPO$/javax/annotation/com.springsource.javax.annotation/1.0.0/com.springsource.javax.annotation-1.0.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.sun.jersey:jersey-server:1.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-server/1.0/jersey-server-1.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-server/1.0/jersey-server-1.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-server/1.0/jersey-server-1.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.sun.jersey:jersey-core:1.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-core/1.0/jersey-core-1.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-core/1.0/jersey-core-1.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-core/1.0/jersey-core-1.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: javax.ws.rs:com.springsource.javax.ws.rs:1.0.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/javax/ws/rs/com.springsource.javax.ws.rs/1.0.0/com.springsource.javax.ws.rs-1.0.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/javax/ws/rs/com.springsource.javax.ws.rs/1.0.0/com.springsource.javax.ws.rs-1.0.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/javax/ws/rs/com.springsource.javax.ws.rs/1.0.0/com.springsource.javax.ws.rs-1.0.0-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: javax.servlet:servlet-api:2.5">
       <CLASSES>
         <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
@@ -2118,28 +2095,6 @@
         <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: cglib:cglib:2.1_3">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/cglib/cglib/2.1_3/cglib-2.1_3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/cglib/cglib/2.1_3/cglib-2.1_3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: asm:asm:1.5.3">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/asm/asm/1.5.3/asm-1.5.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/asm/asm/1.5.3/asm-1.5.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/asm/asm/1.5.3/asm-1.5.3-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: javax.servlet:jsp-api:2.0">
       <CLASSES>
         <root url="jar://$M2_REPO$/javax/servlet/jsp-api/2.0/jsp-api-2.0.jar!/" />
@@ -2149,39 +2104,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/javax/servlet/jsp-api/2.0/jsp-api-2.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: opensymphony:quartz:1.6.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/opensymphony/quartz/1.6.0/quartz-1.6.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/opensymphony/quartz/1.6.0/quartz-1.6.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/opensymphony/quartz/1.6.0/quartz-1.6.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: commons-logging:commons-logging:1.1.1">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: commons-collections:commons-collections:3.2">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.2/commons-collections-3.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.2/commons-collections-3.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.2/commons-collections-3.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.apache.maven:maven-plugin-api:2.0">
@@ -2237,116 +2159,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/org/codehaus/fabric3/tests/test-binding-harness/0.1-SNAPSHOT/test-binding-harness-0.1-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.slf4j:slf4j-api:1.4.2">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.4.2/slf4j-api-1.4.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.4.2/slf4j-api-1.4.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.4.2/slf4j-api-1.4.2-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.sun.jersey:jersey-client:1.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.0/jersey-client-1.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.0/jersey-client-1.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.0/jersey-client-1.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: javax.ws.rs:jsr311-api:1.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/javax/ws/rs/jsr311-api/1.0/jsr311-api-1.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/javax/ws/rs/jsr311-api/1.0/jsr311-api-1.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/javax/ws/rs/jsr311-api/1.0/jsr311-api-1.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: javax.persistence:persistence-api:1.0">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hibernate:hibernate:3.2.4.ga">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate/3.2.4.ga/hibernate-3.2.4.ga.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate/3.2.4.ga/hibernate-3.2.4.ga-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/hibernate/hibernate/3.2.4.ga/hibernate-3.2.4.ga-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: net.sf.ehcache:ehcache:1.2.3">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/net/sf/ehcache/ehcache/1.2.3/ehcache-1.2.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/net/sf/ehcache/ehcache/1.2.3/ehcache-1.2.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/net/sf/ehcache/ehcache/1.2.3/ehcache-1.2.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: commons-logging:commons-logging:1.0.4">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: commons-collections:commons-collections:2.1.1">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/commons-collections/commons-collections/2.1.1/commons-collections-2.1.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/commons-collections/commons-collections/2.1.1/commons-collections-2.1.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/commons-collections/commons-collections/2.1.1/commons-collections-2.1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: asm:asm-attrs:1.5.3">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/asm/asm-attrs/1.5.3/asm-attrs-1.5.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/asm/asm-attrs/1.5.3/asm-attrs-1.5.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/asm/asm-attrs/1.5.3/asm-attrs-1.5.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.h2database:h2:1.0.71">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/com/h2database/h2/1.0.71/h2-1.0.71.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/com/h2database/h2/1.0.71/h2-1.0.71-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/com/h2database/h2/1.0.71/h2-1.0.71-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:4.5">
@@ -2605,28 +2417,6 @@
         <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-recovery/1.6-SNAPSHOT/fabric3-recovery-1.6-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-federation-deployment:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.6-SNAPSHOT/fabric3-federation-deployment-1.6-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.6-SNAPSHOT/fabric3-federation-deployment-1.6-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-deployment/1.6-SNAPSHOT/fabric3-federation-deployment-1.6-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-federation-allocation:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.6-SNAPSHOT/fabric3-federation-allocation-1.6-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.6-SNAPSHOT/fabric3-federation-allocation-1.6-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-allocation/1.6-SNAPSHOT/fabric3-federation-allocation-1.6-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.codehaus.fabric3:fabric3-federation-jgroups:1.6-SNAPSHOT">
       <CLASSES>
         <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-jgroups/1.6-SNAPSHOT/fabric3-federation-jgroups-1.6-SNAPSHOT.jar!/" />
@@ -2660,10 +2450,974 @@
         <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-sca-intents/1.6-SNAPSHOT/fabric3-sca-intents-1.6-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: org.hibernate:hibernate-commons-annotations:3.2.0.Final">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/hibernate/javax/persistence/hibernate-jpa-2.0-api/1.0.0.Final/hibernate-jpa-2.0-api-1.0.0.Final.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/hibernate/javax/persistence/hibernate-jpa-2.0-api/1.0.0.Final/hibernate-jpa-2.0-api-1.0.0.Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/hibernate/javax/persistence/hibernate-jpa-2.0-api/1.0.0.Final/hibernate-jpa-2.0-api-1.0.0.Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: cglib:cglib:2.2">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/cglib/cglib/2.2/cglib-2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/cglib/cglib/2.2/cglib-2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/cglib/cglib/2.2/cglib-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: asm:asm:3.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/asm/asm/3.1/asm-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/asm/asm/3.1/asm-3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/asm/asm/3.1/asm-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javassist:javassist:3.9.0.GA">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/javassist/javassist/3.9.0.GA/javassist-3.9.0.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/javassist/javassist/3.9.0.GA/javassist-3.9.0.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/javassist/javassist/3.9.0.GA/javassist-3.9.0.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.slf4j:slf4j-api:1.5.8">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hibernate:hibernate-core:3.5.3-Final">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-core/3.5.3-Final/hibernate-core-3.5.3-Final.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-core/3.5.3-Final/hibernate-core-3.5.3-Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-core/3.5.3-Final/hibernate-core-3.5.3-Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.activemq:activemq-core:5.2.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/5.2.0/activemq-core-5.2.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/5.2.0/activemq-core-5.2.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/5.2.0/activemq-core-5.2.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.activemq:activeio-core:3.1.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activeio-core/3.1.0/activeio-core-3.1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activeio-core/3.1.0/activeio-core-3.1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activeio-core/3.1.0/activeio-core-3.1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: backport-util-concurrent:backport-util-concurrent:2.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.activemq:activemq-pool:5.2.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/apache/activemq/activemq-pool/5.2.0/activemq-pool-5.2.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-pool:commons-pool:1.4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-webapp:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/7.1.4.v20100610/jetty-webapp-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/7.1.4.v20100610/jetty-webapp-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/7.1.4.v20100610/jetty-webapp-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-xml:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/7.1.4.v20100610/jetty-xml-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/7.1.4.v20100610/jetty-xml-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/7.1.4.v20100610/jetty-xml-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-util:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/7.1.4.v20100610/jetty-util-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/7.1.4.v20100610/jetty-util-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/7.1.4.v20100610/jetty-util-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-servlet:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/7.1.4.v20100610/jetty-servlet-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/7.1.4.v20100610/jetty-servlet-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/7.1.4.v20100610/jetty-servlet-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-security:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/7.1.4.v20100610/jetty-security-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/7.1.4.v20100610/jetty-security-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/7.1.4.v20100610/jetty-security-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-server:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/7.1.4.v20100610/jetty-server-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/7.1.4.v20100610/jetty-server-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/7.1.4.v20100610/jetty-server-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-continuation:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/7.1.4.v20100610/jetty-continuation-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/7.1.4.v20100610/jetty-continuation-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/7.1.4.v20100610/jetty-continuation-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-http:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/7.1.4.v20100610/jetty-http-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/7.1.4.v20100610/jetty-http-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/7.1.4.v20100610/jetty-http-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-io:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/7.1.4.v20100610/jetty-io-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/7.1.4.v20100610/jetty-io-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/7.1.4.v20100610/jetty-io-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-servlets:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/7.1.4.v20100610/jetty-servlets-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/7.1.4.v20100610/jetty-servlets-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/7.1.4.v20100610/jetty-servlets-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-client:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/7.1.4.v20100610/jetty-client-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/7.1.4.v20100610/jetty-client-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/7.1.4.v20100610/jetty-client-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-jmx:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/7.1.4.v20100610/jetty-jmx-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/7.1.4.v20100610/jetty-jmx-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/7.1.4.v20100610/jetty-jmx-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-jsp-2.1:7.1.4.v20100610">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jsp-2.1/7.1.4.v20100610/jetty-jsp-2.1-7.1.4.v20100610.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jsp-2.1/7.1.4.v20100610/jetty-jsp-2.1-7.1.4.v20100610-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jsp-2.1/7.1.4.v20100610/jetty-jsp-2.1-7.1.4.v20100610-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.mortbay.jetty:jsp-2.1-glassfish:2.1.v20091210">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/mortbay/jetty/jsp-2.1-glassfish/2.1.v20091210/jsp-2.1-glassfish-2.1.v20091210.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/mortbay/jetty/jsp-2.1-glassfish/2.1.v20091210/jsp-2.1-glassfish-2.1.v20091210-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/mortbay/jetty/jsp-2.1-glassfish/2.1.v20091210/jsp-2.1-glassfish-2.1.v20091210-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jdt.core.compiler:ecj:3.5.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jdt/core/compiler/ecj/3.5.1/ecj-3.5.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hibernate:hibernate-entitymanager:3.5.3-Final">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-entitymanager/3.5.3-Final/hibernate-entitymanager-3.5.3-Final.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-entitymanager/3.5.3-Final/hibernate-entitymanager-3.5.3-Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-entitymanager/3.5.3-Final/hibernate-entitymanager-3.5.3-Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hibernate:hibernate-annotations:3.5.3-Final">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-annotations/3.5.3-Final/hibernate-annotations-3.5.3-Final.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-annotations/3.5.3-Final/hibernate-annotations-3.5.3-Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-annotations/3.5.3-Final/hibernate-annotations-3.5.3-Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.hibernate:hibernate-jmx:3.5.3-Final">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-jmx/3.5.3-Final/hibernate-jmx-3.5.3-Final.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-jmx/3.5.3-Final/hibernate-jmx-3.5.3-Final-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/hibernate/hibernate-jmx/3.5.3-Final/hibernate-jmx-3.5.3-Final-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.security:spring-security-core:3.0.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-core/3.0.3.RELEASE/spring-security-core-3.0.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-core/3.0.3.RELEASE/spring-security-core-3.0.3.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-core/3.0.3.RELEASE/spring-security-core-3.0.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: aopalliance:aopalliance:1.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/aopalliance/aopalliance/1.0/aopalliance-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/aopalliance/aopalliance/1.0/aopalliance-1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-beans:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-beans/3.0.2.RELEASE/spring-beans-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-beans/3.0.2.RELEASE/spring-beans-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-beans/3.0.2.RELEASE/spring-beans-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-spring-library:1.6-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spring-library/1.6-SNAPSHOT/fabric3-spring-library-1.6-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spring-library/1.6-SNAPSHOT/fabric3-spring-library-1.6-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spring-library/1.6-SNAPSHOT/fabric3-spring-library-1.6-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-orm:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-orm/3.0.2.RELEASE/spring-orm-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-orm/3.0.2.RELEASE/spring-orm-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-orm/3.0.2.RELEASE/spring-orm-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-oxm:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-oxm/3.0.2.RELEASE/spring-oxm-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-oxm/3.0.2.RELEASE/spring-oxm-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-oxm/3.0.2.RELEASE/spring-oxm-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-webmvc:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-webmvc/3.0.2.RELEASE/spring-webmvc-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-webmvc/3.0.2.RELEASE/spring-webmvc-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-webmvc/3.0.2.RELEASE/spring-webmvc-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-webmvc-portlet:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-webmvc-portlet/3.0.2.RELEASE/spring-webmvc-portlet-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-webmvc-portlet/3.0.2.RELEASE/spring-webmvc-portlet-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-webmvc-portlet/3.0.2.RELEASE/spring-webmvc-portlet-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-core:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-core/3.0.2.RELEASE/spring-core-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-core/3.0.2.RELEASE/spring-core-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-core/3.0.2.RELEASE/spring-core-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-asm:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-asm/3.0.2.RELEASE/spring-asm-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-asm/3.0.2.RELEASE/spring-asm-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-asm/3.0.2.RELEASE/spring-asm-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-expression:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-expression/3.0.2.RELEASE/spring-expression-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-expression/3.0.2.RELEASE/spring-expression-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-expression/3.0.2.RELEASE/spring-expression-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-aop:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-aop/3.0.2.RELEASE/spring-aop-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-aop/3.0.2.RELEASE/spring-aop-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-aop/3.0.2.RELEASE/spring-aop-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-context:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-context/3.0.2.RELEASE/spring-context-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-context/3.0.2.RELEASE/spring-context-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-context/3.0.2.RELEASE/spring-context-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.security:spring-security-acl:3.0.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-acl/3.0.3.RELEASE/spring-security-acl-3.0.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-acl/3.0.3.RELEASE/spring-security-acl-3.0.3.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-acl/3.0.3.RELEASE/spring-security-acl-3.0.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.security:spring-security-cas-client:3.0.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-cas-client/3.0.3.RELEASE/spring-security-cas-client-3.0.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-cas-client/3.0.3.RELEASE/spring-security-cas-client-3.0.3.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-cas-client/3.0.3.RELEASE/spring-security-cas-client-3.0.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.security:spring-security-web:3.0.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-web/3.0.3.RELEASE/spring-security-web-3.0.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-web/3.0.3.RELEASE/spring-security-web-3.0.3.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-web/3.0.3.RELEASE/spring-security-web-3.0.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jasig.cas:cas-client-core:3.1.10">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/jasig/cas/cas-client-core/3.1.10/cas-client-core-3.1.10.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/jasig/cas/cas-client-core/3.1.10/cas-client-core-3.1.10-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/jasig/cas/cas-client-core/3.1.10/cas-client-core-3.1.10-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.security:spring-security-config:3.0.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-config/3.0.3.RELEASE/spring-security-config-3.0.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-config/3.0.3.RELEASE/spring-security-config-3.0.3.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-config/3.0.3.RELEASE/spring-security-config-3.0.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.security:spring-security-ldap:3.0.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-ldap/3.0.3.RELEASE/spring-security-ldap-3.0.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-ldap/3.0.3.RELEASE/spring-security-ldap-3.0.3.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-ldap/3.0.3.RELEASE/spring-security-ldap-3.0.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.ldap:spring-ldap-core:1.3.0.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/ldap/spring-ldap-core/1.3.0.RELEASE/spring-ldap-core-1.3.0.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/ldap/spring-ldap-core/1.3.0.RELEASE/spring-ldap-core-1.3.0.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/ldap/spring-ldap-core/1.3.0.RELEASE/spring-ldap-core-1.3.0.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-lang:commons-lang:2.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework.security:spring-security-openid:3.0.3.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-openid/3.0.3.RELEASE/spring-security-openid-3.0.3.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-openid/3.0.3.RELEASE/spring-security-openid-3.0.3.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/security/spring-security-openid/3.0.3.RELEASE/spring-security-openid-3.0.3.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.openid4java:openid4java:0.9.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java/0.9.5/openid4java-0.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java/0.9.5/openid4java-0.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java/0.9.5/openid4java-0.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.openid4java:openid4java-consumer:0.9.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-consumer/0.9.5/openid4java-consumer-0.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-consumer/0.9.5/openid4java-consumer-0.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-consumer/0.9.5/openid4java-consumer-0.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.openid4java:openid4java-nodeps:0.9.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-nodeps/0.9.5/openid4java-nodeps-0.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-nodeps/0.9.5/openid4java-nodeps-0.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-nodeps/0.9.5/openid4java-nodeps-0.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-httpclient:commons-httpclient:3.0.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-codec:commons-codec:1.2">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: net.sourceforge.nekohtml:nekohtml:1.9.7">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/net/sourceforge/nekohtml/nekohtml/1.9.7/nekohtml-1.9.7.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/net/sourceforge/nekohtml/nekohtml/1.9.7/nekohtml-1.9.7-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/net/sourceforge/nekohtml/nekohtml/1.9.7/nekohtml-1.9.7-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.openid4java:openid4java-server:0.9.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server/0.9.5/openid4java-server-0.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server/0.9.5/openid4java-server-0.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server/0.9.5/openid4java-server-0.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.openid4java:openid4java-server-JdbcServerAssociationStore:0.9.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server-JdbcServerAssociationStore/0.9.5/openid4java-server-JdbcServerAssociationStore-0.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server-JdbcServerAssociationStore/0.9.5/openid4java-server-JdbcServerAssociationStore-0.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server-JdbcServerAssociationStore/0.9.5/openid4java-server-JdbcServerAssociationStore-0.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.openid4java:openid4java-consumer-SampleConsumer:0.9.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-consumer-SampleConsumer/0.9.5/openid4java-consumer-SampleConsumer-0.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-consumer-SampleConsumer/0.9.5/openid4java-consumer-SampleConsumer-0.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-consumer-SampleConsumer/0.9.5/openid4java-consumer-SampleConsumer-0.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.openid4java:openid4java-server-SampleServer:0.9.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server-SampleServer/0.9.5/openid4java-server-SampleServer-0.9.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server-SampleServer/0.9.5/openid4java-server-SampleServer-0.9.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/openid4java/openid4java-server-SampleServer/0.9.5/openid4java-server-SampleServer-0.9.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: commons-logging:commons-logging:1.1.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-context-support:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-context-support/3.0.2.RELEASE/spring-context-support-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-context-support/3.0.2.RELEASE/spring-context-support-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-context-support/3.0.2.RELEASE/spring-context-support-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-tx:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-tx/3.0.2.RELEASE/spring-tx-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-tx/3.0.2.RELEASE/spring-tx-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-tx/3.0.2.RELEASE/spring-tx-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-jdbc:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-jdbc/3.0.2.RELEASE/spring-jdbc-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-jdbc/3.0.2.RELEASE/spring-jdbc-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-jdbc/3.0.2.RELEASE/spring-jdbc-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.springframework:spring-web:3.0.2.RELEASE">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-web/3.0.2.RELEASE/spring-web-3.0.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/springframework/spring-web/3.0.2.RELEASE/spring-web-3.0.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/springframework/spring-web/3.0.2.RELEASE/spring-web-3.0.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.h2database:h2:1.2.140">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/h2database/h2/1.2.140/h2-1.2.140.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/h2database/h2/1.2.140/h2-1.2.140-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/h2database/h2/1.2.140/h2-1.2.140-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.ws.rs:jsr311-api:1.1.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.sun.jersey:jersey-core:1.3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-core/1.3/jersey-core-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-core/1.3/jersey-core-1.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-core/1.3/jersey-core-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.sun.jersey:jersey-client:1.3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.jackson:jackson-core-asl:1.5.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-core-asl/1.5.5/jackson-core-asl-1.5.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-core-asl/1.5.5/jackson-core-asl-1.5.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-core-asl/1.5.5/jackson-core-asl-1.5.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.5.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-mapper-asl/1.5.5/jackson-mapper-asl-1.5.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-mapper-asl/1.5.5/jackson-mapper-asl-1.5.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-mapper-asl/1.5.5/jackson-mapper-asl-1.5.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.jackson:jackson-jaxrs:1.5.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-jaxrs/1.5.5/jackson-jaxrs-1.5.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-jaxrs/1.5.5/jackson-jaxrs-1.5.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-jaxrs/1.5.5/jackson-jaxrs-1.5.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.jackson:jackson-xc:1.5.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-xc/1.5.5/jackson-xc-1.5.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-xc/1.5.5/jackson-xc-1.5.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/jackson/jackson-xc/1.5.5/jackson-xc-1.5.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: cglib:cglib-nodep:2.2">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.2/cglib-nodep-2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.2/cglib-nodep-2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.2/cglib-nodep-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.atomikos:transactions-api:3.6.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-api/3.6.5/transactions-api-3.6.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-api/3.6.5/transactions-api-3.6.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-api/3.6.5/transactions-api-3.6.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.atomikos:atomikos-util:3.6.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/atomikos/atomikos-util/3.6.5/atomikos-util-3.6.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/atomikos/atomikos-util/3.6.5/atomikos-util-3.6.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/atomikos/atomikos-util/3.6.5/atomikos-util-3.6.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.atomikos:transactions:3.6.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions/3.6.5/transactions-3.6.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions/3.6.5/transactions-3.6.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions/3.6.5/transactions-3.6.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.atomikos:transactions-jdbc:3.6.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jdbc/3.6.5/transactions-jdbc-3.6.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jdbc/3.6.5/transactions-jdbc-3.6.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jdbc/3.6.5/transactions-jdbc-3.6.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.atomikos:transactions-jta:3.6.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jta/3.6.5/transactions-jta-3.6.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jta/3.6.5/transactions-jta-3.6.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jta/3.6.5/transactions-jta-3.6.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.atomikos:transactions-jms:3.6.5">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jms/3.6.5/transactions-jms-3.6.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jms/3.6.5/transactions-jms-3.6.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/atomikos/transactions-jms/3.6.5/transactions-jms-3.6.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.slf4j:slf4j-api:1.4.3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.4.3/slf4j-api-1.4.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.4.3/slf4j-api-1.4.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/slf4j/slf4j-api/1.4.3/slf4j-api-1.4.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.transaction:transaction-api:1.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/javax/transaction/transaction-api/1.1/transaction-api-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/javax/transaction/transaction-api/1.1/transaction-api-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/javax/transaction/transaction-api/1.1/transaction-api-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:1.0.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.0.1B_spec/1.0.1/geronimo-jta_1.0.1B_spec-1.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.sun.jersey:jersey-server:1.3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-server/1.3/jersey-server-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-server/1.3/jersey-server-1.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/com/sun/jersey/jersey-server/1.3/jersey-server-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: cglib:cglib:2.1_3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/cglib/cglib/2.1_3/cglib-2.1_3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/cglib/cglib/2.1_3/cglib-2.1_3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: asm:asm:1.5.3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/asm/asm/1.5.3/asm-1.5.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/asm/asm/1.5.3/asm-1.5.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/asm/asm/1.5.3/asm-1.5.3-sources.jar!/" />
+      </SOURCES>
+    </library>
   </component>
-  <UsedPathMacros>
-    <macro name="M2_REPO" />
-    <macro name="SOURCES" />
-  </UsedPathMacros>
 </project>
 
