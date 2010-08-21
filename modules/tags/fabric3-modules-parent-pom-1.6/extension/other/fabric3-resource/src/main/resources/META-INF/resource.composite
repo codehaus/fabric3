@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (C) 2009 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="urn:fabric3.org:other"
+           name="ResourceExtension"
+           autowire="true">
+
+    <component name="ResourceProcessor" f3-core:key="org.fabric3.api.annotation.Resource">
+        <f3-impl:implementation.system class="org.fabric3.resource.introspection.ResourceProcessor"/>
+    </component>
+
+    <component name="JSR250ResourceProcessor" f3-core:key="javax.annotation.Resource">
+        <f3-impl:implementation.system class="org.fabric3.resource.introspection.JSR250ResourceProcessor"/>
+    </component>
+
+    <component name="SystemSourcedResourceWireGenerator" f3-core:key="org.fabric3.resource.model.SystemSourcedResourceReference">
+        <f3-impl:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceReferenceGenerator"/>
+    </component>
+
+    <component name="SystemSourcedResourceWireAttacher" f3-core:key="org.fabric3.resource.provision.SystemSourcedTargetDefinition">
+        <f3-impl:implementation.system class="org.fabric3.resource.runtime.SystemSourcedResourceWireAttacher"/>
+    </component>
+
+
+</composite>

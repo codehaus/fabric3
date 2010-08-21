@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (C) 2009 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="urn:fabric3.org:jpa"
+           name="HibernateControllerExtension"
+           autowire="true">
+
+    <component name="HibernateContributionListener">
+        <f3-impl:implementation.system class="org.fabric3.jpa.contribution.HibernateContributionListener"/>
+    </component>
+
+    <component name="PersistenceUnitProcessor" f3-core:key="javax.persistence.PersistenceUnit">
+        <f3-impl:implementation.system class="org.fabric3.jpa.introspection.PersistenceUnitProcessor"/>
+    </component>
+
+    <component name="PersistenceContextProcessor" f3-core:key="javax.persistence.PersistenceContext">
+        <f3-impl:implementation.system class="org.fabric3.jpa.introspection.PersistenceContextProcessor"/>
+    </component>
+
+    <component name="SessionResourceGenerator" f3-core:key="org.fabric3.jpa.model.HibernateSessionResourceReference">
+        <f3-impl:implementation.system class="org.fabric3.jpa.generator.SessionResourceReferenceGenerator"/>
+    </component>
+
+    <component name="PersistenceUnitResourceWireGenerator" f3-core:key="org.fabric3.jpa.model.PersistenceUnitResourceReference">
+        <f3-impl:implementation.system class="org.fabric3.jpa.generator.PersistenceUnitResourceReferenceGenerator"/>
+    </component>
+
+    <component name="PersistenceContextResourceWireGenerator" f3-core:key="org.fabric3.jpa.model.PersistenceContextResourceReference">
+        <f3-impl:implementation.system class="org.fabric3.jpa.generator.PersistenceContextResourceReferenceGenerator"/>
+    </component>
+
+</composite>
