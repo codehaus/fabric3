@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           name="SellComposite"
+           targetNamespace="urn:fabric3.org:samples">
+
+    <component name="SellTimer">
+        <f3-impl:implementation.timer class="org.fabric3.samples.eventing.SellTimer" intervalClass="org.fabric3.samples.eventing.TimerInterval"/>
+        <producer name="sellChannel" target="SellChannel"/>
+    </component>
+
+</composite>
