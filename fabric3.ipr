@@ -50,6 +50,15 @@
           <option name="LABEL_INDENT_SIZE" value="0" />
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
+        <ADDITIONAL_INDENT_OPTIONS fileType="js">
+          <option name="INDENT_SIZE" value="4" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="jsp">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
@@ -507,6 +516,13 @@
         <option value="$PROJECT_DIR$/modules/trunk/extension/core/fabric3-conversation-propagation/pom.xml" />
         <option value="$PROJECT_DIR$/modules/trunk/extension/core/fabric3-contribution-scanner/pom.xml" />
         <option value="$PROJECT_DIR$/modules/trunk/extension/core/fabric3-async/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-pubsub/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-pubsub/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-web/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache-spi/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache-infinispan/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos-library/pom.xml" />
       </list>
     </option>
   </component>
@@ -638,6 +654,7 @@
     <dictionary name="jim">
       <words>
         <w>accessor</w>
+        <w>addr</w>
         <w>annot</w>
         <w>appenders</w>
         <w>args</w>
@@ -650,6 +667,7 @@
         <w>autowire</w>
         <w>bindable</w>
         <w>bootstrapper</w>
+        <w>bytecode</w>
         <w>callables</w>
         <w>callframe</w>
         <w>callframes</w>
@@ -660,18 +678,22 @@
         <w>cmds</w>
         <w>cnfe</w>
         <w>codehaus</w>
+        <w>commonj</w>
         <w>compensatable</w>
         <w>configurator</w>
         <w>ctor</w>
         <w>cylces</w>
+        <w>databinding</w>
         <w>datasource</w>
         <w>datasources</w>
         <w>datatypes</w>
         <w>deallocate</w>
         <w>defragmented</w>
+        <w>delimeter</w>
         <w>deployable</w>
         <w>deployables</w>
         <w>deployer</w>
+        <w>deregister</w>
         <w>desc</w>
         <w>deserialization</w>
         <w>deserialize</w>
@@ -688,6 +710,7 @@
         <w>implementation&lt;?&gt;</w>
         <w>imprt</w>
         <w>inconvertible</w>
+        <w>infinispan</w>
         <w>infos</w>
         <w>initializers</w>
         <w>injectable</w>
@@ -706,11 +729,13 @@
         <w>jaxb</w>
         <w>jaxen</w>
         <w>jdbc</w>
+        <w>jgroups</w>
         <w>jndi</w>
         <w>keystore</w>
         <w>ldap</w>
         <w>lifecycle</w>
         <w>logback</w>
+        <w>login</w>
         <w>mbean</w>
         <w>metadata</w>
         <w>metaform</w>
@@ -720,7 +745,9 @@
         <w>multi</w>
         <w>namespaces</w>
         <w>ncdfe</w>
+        <w>newheaders</w>
         <w>nonpersistent</w>
+        <w>onelevel</w>
         <w>oneway</w>
         <w>online</w>
         <w>optimizable</w>
@@ -734,6 +761,7 @@
         <w>pojo</w>
         <w>populator</w>
         <w>provisioner</w>
+        <w>pubsub</w>
         <w>qname</w>
         <w>qualifiable</w>
         <w>recurse</w>
@@ -762,6 +790,7 @@
         <w>subgraph</w>
         <w>subpath</w>
         <w>tccl</w>
+        <w>tful</w>
         <w>throwable</w>
         <w>timestamp</w>
         <w>traverser</w>
@@ -770,6 +799,7 @@
         <w>undeploying</w>
         <w>undeployment</w>
         <w>undeploys</w>
+        <w>unidirecitonal</w>
         <w>uninstall</w>
         <w>uninstalled</w>
         <w>uninstalling</w>
@@ -777,12 +807,16 @@
         <w>unregister</w>
         <w>unregisters</w>
         <w>unsubscribe</w>
+        <w>unsubscribed</w>
         <w>updateable</w>
         <w>username</w>
+        <w>uuid</w>
         <w>vals</w>
         <w>vertice</w>
         <w>webapp</w>
         <w>weblogic</w>
+        <w>websocket</w>
+        <w>workmanager</w>
         <w>wsdl</w>
         <w>xmlns</w>
       </words>
@@ -811,14 +845,18 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/core/fabric3-async/fabric3-async.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/core/fabric3-async/fabric3-async.iml" group="extension/core" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos/fabric3-atomikos.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos/fabric3-atomikos.iml" group="extension/other/tx" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos-jms/fabric3-atomikos-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos-jms/fabric3-atomikos-jms.iml" group="extension/other/tx" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos-library/fabric3-atomikos-library.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos-library/fabric3-atomikos-library.iml" group="extension/other/tx" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ftp/fabric3-binding-ftp.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ftp/fabric3-binding-ftp.iml" group="extension/binding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-jms/fabric3-binding-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-jms/fabric3-binding-jms.iml" group="extension/binding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-net/fabric3-binding-net.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-net/fabric3-binding-net.iml" group="extension/binding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-rs/fabric3-binding-rs.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-rs/fabric3-binding-rs.iml" group="extension/binding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" group="extension/binding" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-web/fabric3-binding-web.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-web/fabric3-binding-web.iml" group="extension/binding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" group="extension/binding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" group="extension/binding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-policy/fabric3-binding-ws-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-policy/fabric3-binding-ws-policy.iml" group="extension/binding" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache/fabric3-cache.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache/fabric3-cache.iml" group="extension/other/cache" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache-infinispan/fabric3-cache-infinispan.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache-infinispan/fabric3-cache-infinispan.iml" group="extension/other/cache" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/web/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/web/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" group="extension/other/web" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/web/fabric3-container-web-spi/fabric3-container-web-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/web/fabric3-container-web-spi/fabric3-container-web-spi.iml" group="extension/other/web" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-contribution/fabric3-contribution.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-contribution/fabric3-contribution.iml" group="kernel/impl" />
@@ -945,7 +983,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-wsdl/test-wsdl.iml" filepath="$PROJECT_DIR$/tests/trunk/test-wsdl/test-wsdl.iml" group="tests" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK" />
   <component name="ResourceManagerContainer">
     <option name="myResourceBundles">
       <value>
@@ -960,48 +998,6 @@
           <value>
             <SvnBranchConfiguration>
               <option name="trunkUrl" value="https://svn.codehaus.org/fabric3" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
-              <option name="branchUrls">
-                <list>
-                  <option value="https://svn.codehaus.org/fabric3/modules/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="https://svn.codehaus.org/fabric3/modules/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
-              <option name="branchUrls">
-                <list>
-                  <option value="https://svn.codehaus.org/fabric3/modules/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="https://svn.codehaus.org/fabric3/modules/trunk" />
             </SvnBranchConfiguration>
           </value>
         </entry>
@@ -2095,17 +2091,6 @@
         <root url="jar://$M2_REPO$/javax/annotation/com.springsource.javax.annotation/1.0.0/com.springsource.javax.annotation-1.0.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: javax.servlet:servlet-api:2.5">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.5/servlet-api-2.5-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: javax.servlet:jsp-api:2.0">
       <CLASSES>
         <root url="jar://$M2_REPO$/javax/servlet/jsp-api/2.0/jsp-api-2.0.jar!/" />
@@ -2448,138 +2433,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/commons-pool/commons-pool/1.4/commons-pool-1.4-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-webapp:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/7.1.4.v20100610/jetty-webapp-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/7.1.4.v20100610/jetty-webapp-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/7.1.4.v20100610/jetty-webapp-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-xml:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/7.1.4.v20100610/jetty-xml-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/7.1.4.v20100610/jetty-xml-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/7.1.4.v20100610/jetty-xml-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-util:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/7.1.4.v20100610/jetty-util-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/7.1.4.v20100610/jetty-util-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/7.1.4.v20100610/jetty-util-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-servlet:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/7.1.4.v20100610/jetty-servlet-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/7.1.4.v20100610/jetty-servlet-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/7.1.4.v20100610/jetty-servlet-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-security:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/7.1.4.v20100610/jetty-security-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/7.1.4.v20100610/jetty-security-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/7.1.4.v20100610/jetty-security-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-server:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/7.1.4.v20100610/jetty-server-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/7.1.4.v20100610/jetty-server-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/7.1.4.v20100610/jetty-server-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-continuation:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/7.1.4.v20100610/jetty-continuation-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/7.1.4.v20100610/jetty-continuation-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/7.1.4.v20100610/jetty-continuation-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-http:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/7.1.4.v20100610/jetty-http-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/7.1.4.v20100610/jetty-http-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/7.1.4.v20100610/jetty-http-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-io:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/7.1.4.v20100610/jetty-io-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/7.1.4.v20100610/jetty-io-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/7.1.4.v20100610/jetty-io-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-servlets:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/7.1.4.v20100610/jetty-servlets-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/7.1.4.v20100610/jetty-servlets-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/7.1.4.v20100610/jetty-servlets-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-client:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/7.1.4.v20100610/jetty-client-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/7.1.4.v20100610/jetty-client-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/7.1.4.v20100610/jetty-client-7.1.4.v20100610-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.eclipse.jetty:jetty-jmx:7.1.4.v20100610">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/7.1.4.v20100610/jetty-jmx-7.1.4.v20100610.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/7.1.4.v20100610/jetty-jmx-7.1.4.v20100610-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/7.1.4.v20100610/jetty-jmx-7.1.4.v20100610-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.eclipse.jetty:jetty-jsp-2.1:7.1.4.v20100610">
@@ -3143,50 +2996,6 @@
         <root url="jar://$M2_REPO$/com/sun/jersey/jersey-client/1.3/jersey-client-1.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-api:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-model:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-model/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-model/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-model/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-management-api:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-host-api:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.codehaus.fabric3:fabric3-introspection-java:1.7-SNAPSHOT">
       <CLASSES>
         <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-introspection-java/1.7-SNAPSHOT/fabric3-introspection-java-1.7-SNAPSHOT.jar!/" />
@@ -3229,83 +3038,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-federation-jgroups/1.7-SNAPSHOT/fabric3-federation-jgroups-1.7-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-spi:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-container-web-spi:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-pojo:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-java:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-java/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-java/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-java/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-timer-spi:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-spi/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-spi/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-spi/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.codehaus.fabric3:fabric3-test-spi:1.6-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-test-spi/pom.xml!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-test-spi/pom-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-test-spi/pom-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: jgroups:jgroups:2.8.0.GA">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/jgroups/jgroups/2.8.0.GA/jgroups-2.8.0.GA.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$M2_REPO$/jgroups/jgroups/2.8.0.GA/jgroups-2.8.0.GA-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$M2_REPO$/jgroups/jgroups/2.8.0.GA/jgroups-2.8.0.GA-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hibernate:hibernate-entitymanager:3.5.3-Final">
@@ -3504,6 +3236,314 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/com/atomikos/transactions-jdbc/3.6.5/transactions-jdbc-3.6.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-webapp:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/8.0.0.M1/jetty-webapp-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/8.0.0.M1/jetty-webapp-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-webapp/8.0.0.M1/jetty-webapp-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-xml:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/8.0.0.M1/jetty-xml-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/8.0.0.M1/jetty-xml-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-xml/8.0.0.M1/jetty-xml-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-util:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/8.0.0.M1/jetty-util-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/8.0.0.M1/jetty-util-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-util/8.0.0.M1/jetty-util-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-servlet:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/8.0.0.M1/jetty-servlet-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/8.0.0.M1/jetty-servlet-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlet/8.0.0.M1/jetty-servlet-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-security:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/8.0.0.M1/jetty-security-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/8.0.0.M1/jetty-security-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-security/8.0.0.M1/jetty-security-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-server:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/8.0.0.M1/jetty-server-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/8.0.0.M1/jetty-server-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-server/8.0.0.M1/jetty-server-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.mortbay.jetty:servlet-api:3.0.20100224">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/mortbay/jetty/servlet-api/3.0.20100224/servlet-api-3.0.20100224.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/mortbay/jetty/servlet-api/3.0.20100224/servlet-api-3.0.20100224-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/mortbay/jetty/servlet-api/3.0.20100224/servlet-api-3.0.20100224-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-continuation:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/8.0.0.M1/jetty-continuation-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/8.0.0.M1/jetty-continuation-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-continuation/8.0.0.M1/jetty-continuation-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-http:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/8.0.0.M1/jetty-http-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/8.0.0.M1/jetty-http-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-http/8.0.0.M1/jetty-http-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-io:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/8.0.0.M1/jetty-io-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/8.0.0.M1/jetty-io-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-io/8.0.0.M1/jetty-io-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-servlets:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/8.0.0.M1/jetty-servlets-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/8.0.0.M1/jetty-servlets-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-servlets/8.0.0.M1/jetty-servlets-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-client:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/8.0.0.M1/jetty-client-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/8.0.0.M1/jetty-client-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-client/8.0.0.M1/jetty-client-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-jmx:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/8.0.0.M1/jetty-jmx-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/8.0.0.M1/jetty-jmx-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-jmx/8.0.0.M1/jetty-jmx-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.eclipse.jetty:jetty-websocket:8.0.0.M1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-websocket/8.0.0.M1/jetty-websocket-8.0.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-websocket/8.0.0.M1/jetty-websocket-8.0.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/eclipse/jetty/jetty-websocket/8.0.0.M1/jetty-websocket-8.0.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.atmosphere:atmosphere-jersey:0.6.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-jersey/0.6.1/atmosphere-jersey-0.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-jersey/0.6.1/atmosphere-jersey-0.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-jersey/0.6.1/atmosphere-jersey-0.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.atmosphere:atmosphere-annotations:0.6.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-annotations/0.6.1/atmosphere-annotations-0.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-annotations/0.6.1/atmosphere-annotations-0.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-annotations/0.6.1/atmosphere-annotations-0.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.atmosphere:atmosphere-runtime:0.6.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-runtime/0.6.1/atmosphere-runtime-0.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-runtime/0.6.1/atmosphere-runtime-0.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-runtime/0.6.1/atmosphere-runtime-0.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.atmosphere:atmosphere-compat-jbossweb:0.6.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-jbossweb/0.6.1/atmosphere-compat-jbossweb-0.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-jbossweb/0.6.1/atmosphere-compat-jbossweb-0.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-jbossweb/0.6.1/atmosphere-compat-jbossweb-0.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.atmosphere:atmosphere-compat-tomcat:0.6.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-tomcat/0.6.1/atmosphere-compat-tomcat-0.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-tomcat/0.6.1/atmosphere-compat-tomcat-0.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-tomcat/0.6.1/atmosphere-compat-tomcat-0.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.atmosphere:atmosphere-compat-weblogic:0.6.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-weblogic/0.6.1/atmosphere-compat-weblogic-0.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-weblogic/0.6.1/atmosphere-compat-weblogic-0.6.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/atmosphere/atmosphere-compat-weblogic/0.6.1/atmosphere-compat-weblogic-0.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jgroups:jgroups:2.10.0.GA">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/jgroups/jgroups/2.10.0.GA/jgroups-2.10.0.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/jgroups/jgroups/2.10.0.GA/jgroups-2.10.0.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/jgroups/jgroups/2.10.0.GA/jgroups-2.10.0.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.infinispan:infinispan-core:4.1.0.FINAL">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/infinispan/infinispan-core/4.1.0.FINAL/infinispan-core-4.1.0.FINAL.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/infinispan/infinispan-core/4.1.0.FINAL/infinispan-core-4.1.0.FINAL-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/infinispan/infinispan-core/4.1.0.FINAL/infinispan-core-4.1.0.FINAL-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jboss.marshalling:river:1.2.3.GA">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/jboss/marshalling/river/1.2.3.GA/river-1.2.3.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/jboss/marshalling/river/1.2.3.GA/river-1.2.3.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/jboss/marshalling/river/1.2.3.GA/river-1.2.3.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jboss.marshalling:marshalling-api:1.2.3.GA">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/jboss/marshalling/marshalling-api/1.2.3.GA/marshalling-api-1.2.3.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/jboss/marshalling/marshalling-api/1.2.3.GA/marshalling-api-1.2.3.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/jboss/marshalling/marshalling-api/1.2.3.GA/marshalling-api-1.2.3.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jboss:jboss-common-core:2.2.14.GA">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/jboss/jboss-common-core/2.2.14.GA/jboss-common-core-2.2.14.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/jboss/jboss-common-core/2.2.14.GA/jboss-common-core-2.2.14.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/jboss/jboss-common-core/2.2.14.GA/jboss-common-core-2.2.14.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.jboss.logging:jboss-logging-spi:2.0.5.GA">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/jboss/logging/jboss-logging-spi/2.0.5.GA/jboss-logging-spi-2.0.5.GA.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/jboss/logging/jboss-logging-spi/2.0.5.GA/jboss-logging-spi-2.0.5.GA-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/jboss/logging/jboss-logging-spi/2.0.5.GA/jboss-logging-spi-2.0.5.GA-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.rhq.helpers:rhq-pluginAnnotations:1.4.0.B01">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/rhq/helpers/rhq-pluginAnnotations/1.4.0.B01/rhq-pluginAnnotations-1.4.0.B01.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/rhq/helpers/rhq-pluginAnnotations/1.4.0.B01/rhq-pluginAnnotations-1.4.0.B01-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/rhq/helpers/rhq-pluginAnnotations/1.4.0.B01/rhq-pluginAnnotations-1.4.0.B01-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: i18nlog:i18nlog:1.0.9">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/i18nlog/i18nlog/1.0.9/i18nlog-1.0.9.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/i18nlog/i18nlog/1.0.9/i18nlog-1.0.9-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/i18nlog/i18nlog/1.0.9/i18nlog-1.0.9-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
