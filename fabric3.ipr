@@ -523,6 +523,8 @@
         <option value="$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache-infinispan/pom.xml" />
         <option value="$PROJECT_DIR$/modules/trunk/extension/other/cache/fabric3-cache/pom.xml" />
         <option value="$PROJECT_DIR$/modules/trunk/extension/other/tx/fabric3-atomikos-library/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/trunk/profile/profile-infinispan/pom.xml" />
+        <option value="$PROJECT_DIR$/tests/trunk/test-cache-infinispan/pom.xml" />
       </list>
     </option>
   </component>
@@ -943,6 +945,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-xquery/fabric3-xquery.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-xquery/fabric3-xquery.iml" group="extension/other" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" group="poms" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-ftp/profile-ftp.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-ftp/profile-ftp.iml" group="profiles" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-infinispan/profile-infinispan.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-infinispan/profile-infinispan.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-jms/profile-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-jms/profile-jms.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-jpa/profile-jpa.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-jpa/profile-jpa.iml" group="profiles" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/profile/profile-net/profile-net.iml" filepath="$PROJECT_DIR$/modules/trunk/profile/profile-net/profile-net.iml" group="profiles" />
@@ -961,6 +964,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-net/test-binding-net.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-rs/test-binding-rs.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-rs/test-binding-rs.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-cache-infinispan/test-cache-infinispan.iml" filepath="$PROJECT_DIR$/tests/trunk/test-cache-infinispan/test-cache-infinispan.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-datasource/test-datasource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-datasource/test-datasource.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" filepath="$PROJECT_DIR$/tests/trunk/test-eventing/test-eventing.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" group="tests" />
@@ -3544,6 +3548,28 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$M2_REPO$/i18nlog/i18nlog/1.0.9/i18nlog-1.0.9-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.resource:com.springsource.javax.resource:1.5.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/javax/resource/com.springsource.javax.resource/1.5.0/com.springsource.javax.resource-1.5.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/javax/resource/com.springsource.javax.resource/1.5.0/com.springsource.javax.resource-1.5.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/javax/resource/com.springsource.javax.resource/1.5.0/com.springsource.javax.resource-1.5.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.codehaus.fabric3:fabric3-jgroups:1.7-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jgroups/1.7-SNAPSHOT/fabric3-jgroups-1.7-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jgroups/1.7-SNAPSHOT/fabric3-jgroups-1.7-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jgroups/1.7-SNAPSHOT/fabric3-jgroups-1.7-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
