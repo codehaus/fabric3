@@ -78,7 +78,7 @@ public class IvyDependencyManagerImpl implements IvyDependencyManager {
 	private String[] artifactTypes = new String[] { "jar" };
 	
 	@Property(required=false)
-	private int updatePolicy = IvyConstants.UPDATE_POLICY_FORCED;
+	protected int updatePolicy = IvyConstants.UPDATE_POLICY_FORCED;
 	
 	public IvyDependencyManagerImpl() {
 
