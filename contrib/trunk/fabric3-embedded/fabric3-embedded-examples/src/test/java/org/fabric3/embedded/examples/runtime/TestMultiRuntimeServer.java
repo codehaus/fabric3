@@ -22,7 +22,7 @@ public class TestMultiRuntimeServer {
 
         server.start();
 
-        server.installComposite("embedded:/composite1/testComposite.composite");
+        server.installComposite("embedded.composite:/composite1/testComposite.composite");
     }
 
 }

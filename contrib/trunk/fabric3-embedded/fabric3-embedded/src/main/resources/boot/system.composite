@@ -50,14 +50,14 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.artifact.FSArtifactCache"/>
     </component>
 
-    <component name="EmbeddedFileModuleContributionProcessor">
+    <component name="EmbeddedWarModuleContributionProcessor">
         <f3-impl:implementation.system
-                class="org.fabric3.runtime.embedded.contribution.EmbeddedFileModuleContributionProcessor"/>
+                class="org.fabric3.runtime.embedded.contribution.EmbeddedWarModuleContributionProcessor"/>
     </component>
 
-    <component name="EmbeddedClasspathModuleContributionProcessor">
+    <component name="EmbeddedCompositeModuleContributionProcessor">
         <f3-impl:implementation.system
-                class="org.fabric3.runtime.embedded.contribution.EmbeddedClasspathModuleContributionProcessor"/>
+                class="org.fabric3.runtime.embedded.contribution.EmbeddedCompositeModuleContributionProcessor"/>
     </component>
 
     <component name="SyntheticDirectoryContributionProcessor">
@@ -65,14 +65,14 @@
                 class="org.fabric3.contribution.archive.SyntheticDirectoryContributionProcessor"/>
     </component>
 
-    <component name="EmbeddedFileModuleClasspathProcessor">
+    <component name="EmbeddedWarModuleClasspathProcessor">
         <f3-impl:implementation.system
-                class="org.fabric3.runtime.embedded.contribution.EmbeddedFileModuleClasspathProcessor"/>
+                class="org.fabric3.runtime.embedded.contribution.EmbeddedWarModuleClasspathProcessor"/>
     </component>
 
-    <component name="EmbeddedClasspathModuleClasspathProcessor">
+    <component name="EmbeddedCompositeModuleClasspathProcessor">
         <f3-impl:implementation.system
-                class="org.fabric3.runtime.embedded.contribution.EmbeddedClasspathModuleClasspathProcessor"/>
+                class="org.fabric3.runtime.embedded.contribution.EmbeddedCompositeModuleClasspathProcessor"/>
     </component>
 
     <component name="SyntheticDirectoryClasspathProcessor">

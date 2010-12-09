@@ -30,16 +30,16 @@ public class EmbeddedCompositeImpl implements EmbeddedComposite {
             throw new MalformedURLException(String.format("Composite path have to start with keyword '%1$s' followed by absolute package and composite name. E.g.: %1$s:/org.example/database.composite", EMBEDDED));
         }
 
-        if (compositePath.startsWith(EMBEDDED_CLASSPATH)) {
-            classPathComposite(compositePath.replaceFirst(EMBEDDED_CLASSPATH, ""));
-        } else if (compositePath.startsWith(EMBEDDED_FILE)) {
-            fileSystemComposite(compositePath.replaceFirst(EMBEDDED_FILE, ""));
+        if (compositePath.startsWith(EMBEDDED_COMPOSITE)) {
+            embeddedComposite(compositePath.replaceFirst(EMBEDDED_COMPOSITE, ""));
+        } else if (compositePath.startsWith(EMBEDDED_WAR)) {
+            embeddedWar(compositePath.replaceFirst(EMBEDDED_WAR, ""));
         } else {
             throw new MalformedURLException(String.format("Unknown embedded composite type %1$s.", compositePath));
         }
     }
 
-    private void classPathComposite(final String classPathLocation) throws MalformedURLException, URISyntaxException {
+    private void embeddedComposite(final String classPathLocation) throws MalformedURLException, URISyntaxException {
         File compositeFile = new File(FileSystem.fileAtClassPath(classPathLocation).toURI());
 
         if (!FileSystem.isAbsolute(classPathLocation) || !FileSystem.exists(compositeFile)) {
@@ -60,7 +60,7 @@ public class EmbeddedCompositeImpl implements EmbeddedComposite {
         this.contentType = CONTENT_TYPE_CLASSPATH;
     }
 
-    private void fileSystemComposite(final String fileSystemLocation) {
+    private void embeddedWar(final String fileSystemLocation) {
         if (!FileSystem.isAbsolute(fileSystemLocation) || !FileSystem.exists(fileSystemLocation)) {
             throw new EmbeddedFabric3SetupException(String.format("Composite file path '%1$s' have to be absolute or doesn't exists.", fileSystemLocation));
         }
@@ -68,7 +68,7 @@ public class EmbeddedCompositeImpl implements EmbeddedComposite {
         File compositeFile = new File(fileSystemLocation);
 
         try {
-            this.url = compositeFile.getParentFile().toURI().toURL();
+            this.url = compositeFile.getParentFile().getParentFile().toURI().toURL();
         } catch (MalformedURLException e) {
             throw new EmbeddedFabric3SetupException(String.format("Cannot get parent folder for '%1$s'.", fileSystemLocation));
         }

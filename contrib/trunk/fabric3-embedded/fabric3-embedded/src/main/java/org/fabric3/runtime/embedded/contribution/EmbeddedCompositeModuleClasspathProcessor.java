@@ -57,10 +57,10 @@ import java.util.List;
  * @version $Rev: 7899 $ $Date: 2009-11-23 10:44:11 +0100 (Mon, 23 Nov 2009) $
  */
 @EagerInit
-public class EmbeddedFileModuleClasspathProcessor implements ClasspathProcessor {
+public class EmbeddedCompositeModuleClasspathProcessor implements ClasspathProcessor {
     private ClasspathProcessorRegistry registry;
 
-    public EmbeddedFileModuleClasspathProcessor(@Reference ClasspathProcessorRegistry registry) {
+    public EmbeddedCompositeModuleClasspathProcessor(@Reference ClasspathProcessorRegistry registry) {
         this.registry = registry;
     }
 
@@ -70,13 +70,13 @@ public class EmbeddedFileModuleClasspathProcessor implements ClasspathProcessor 
     }
 
     public boolean canProcess(URL url) {
-        if (EmbeddedComposite.EMBEDDED_FILE.equals(url.getProtocol())) {
+        if (EmbeddedComposite.EMBEDDED_COMPOSITE.equals(url.getProtocol())) {
             // assume exploded directories are maven modules
             return true;
         }
         try {
             URLConnection conn = url.openConnection();
-            return EmbeddedComposite.CONTENT_TYPE_FILE.equals(conn.getContentType());
+            return EmbeddedComposite.CONTENT_TYPE_CLASSPATH.equals(conn.getContentType());
         } catch (IOException e) {
             return false;
         }

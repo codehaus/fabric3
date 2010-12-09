@@ -42,14 +42,7 @@ import org.fabric3.host.stream.Source;
 import org.fabric3.host.stream.UrlSource;
 import org.fabric3.host.util.FileHelper;
 import org.fabric3.runtime.embedded.EmbeddedCompositeImpl;
-import org.fabric3.spi.contribution.ContentTypeResolutionException;
-import org.fabric3.spi.contribution.ContentTypeResolver;
-import org.fabric3.spi.contribution.Contribution;
-import org.fabric3.spi.contribution.ContributionManifest;
-import org.fabric3.spi.contribution.ContributionProcessor;
-import org.fabric3.spi.contribution.ProcessorRegistry;
-import org.fabric3.spi.contribution.Resource;
-import org.fabric3.spi.contribution.ResourceState;
+import org.fabric3.spi.contribution.*;
 import org.fabric3.spi.contribution.archive.Action;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
@@ -67,22 +60,22 @@ import java.net.URI;
 import java.net.URL;
 
 @EagerInit
-public class EmbeddedClasspathModuleContributionProcessor implements ContributionProcessor {
+public class EmbeddedWarModuleContributionProcessor implements ContributionProcessor {
 
     private ProcessorRegistry registry;
     private ContentTypeResolver contentTypeResolver;
     private Loader loader;
 
-    public EmbeddedClasspathModuleContributionProcessor(@Reference ProcessorRegistry registry,
-                                                        @Reference ContentTypeResolver contentTypeResolver,
-                                                        @Reference Loader loader) {
+    public EmbeddedWarModuleContributionProcessor(@Reference ProcessorRegistry registry,
+                                                  @Reference ContentTypeResolver contentTypeResolver,
+                                                  @Reference Loader loader) {
         this.registry = registry;
         this.contentTypeResolver = contentTypeResolver;
         this.loader = loader;
     }
 
     public boolean canProcess(Contribution contribution) {
-        return EmbeddedCompositeImpl.CONTENT_TYPE_CLASSPATH.equals(contribution.getContentType());
+        return EmbeddedCompositeImpl.CONTENT_TYPE_FILE.equals(contribution.getContentType());
     }
 
     @Init
@@ -109,7 +102,7 @@ public class EmbeddedClasspathModuleContributionProcessor implements Contributio
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
-            URL manifestUrl = new URL(sourceUrl.toExternalForm() + "/META-INF/sca-contribution.xml");
+            URL manifestUrl = new URL(sourceUrl.toExternalForm() + "/WEB-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
             IntrospectionContext childContext = new DefaultIntrospectionContext(uri, cl);
