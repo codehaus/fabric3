@@ -1,0 +1,21 @@
+Done
+=============
+- cross IDE support (not specific code)
+- maven support
+- selecting profiles
+- single runtime
+- multi runtime
+- reusing maven dependency location
+- posibility to specify own systemConfig file
+- no profiles when none specified
+- profile which include all profiles
+- reduce fabric3 dependency usage (just standalone, jms, ...)
+- make one place where these dependency can be reused (will replace existing reusage of maven dependency location)
+- support for installing/deploying composites from classpath
+
+Planed
+==============
+- gradle support
+- add junit4 support (to start/stop fabric3 server within test)
+- undeploy/uninstall composites
+- redeploy composites
