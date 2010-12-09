@@ -51,6 +51,7 @@
     <modules>
         <module>fabric3-embedded-api</module>
         <module>fabric3-embedded</module>
+        <module>fabric3-embedded-examples</module>
     </modules>
 
     <properties>

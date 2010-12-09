@@ -1,4 +1,4 @@
-package org.fabric3.runtime.component;
+package org.fabric3.embedded.examples.components.component1;
 
 import org.fabric3.api.annotation.scope.Scopes;
 import org.oasisopen.sca.annotation.EagerInit;
