@@ -45,21 +45,10 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.runtime.embedded.api.EmbeddedComposite;
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
-import org.fabric3.runtime.embedded.api.service.EmbeddedLoggerService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedProfileService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedRuntimeService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedSetupService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedSharedFoldersService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedUpdatePolicyService;
+import org.fabric3.runtime.embedded.api.service.*;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3SetupException;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
-import org.fabric3.runtime.embedded.service.EmbeddedLoggerServiceImpl;
-import org.fabric3.runtime.embedded.service.EmbeddedProfileServiceImpl;
-import org.fabric3.runtime.embedded.service.EmbeddedRuntimeServiceImpl;
-import org.fabric3.runtime.embedded.service.EmbeddedSetupServiceImpl;
-import org.fabric3.runtime.embedded.service.EmbeddedSharedFoldersServiceImpl;
-import org.fabric3.runtime.embedded.service.EmbeddedUpdatePolicyServiceImpl;
-import org.fabric3.runtime.embedded.service.MavenDependencyResolver;
+import org.fabric3.runtime.embedded.service.*;
 import org.fabric3.runtime.embedded.util.FileSystem;
 
 import java.io.IOException;
@@ -132,6 +121,7 @@ public class EmbeddedServerImpl implements EmbeddedServer {
             ThreadGroup tGroup = mRuntimeService.getRuntimesGroup();
 
             final CountDownLatch latch = new CountDownLatch(mRuntimeService.getRuntimes().size());
+            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
             // start all available runtimes
             for (final EmbeddedRuntime runtime : mRuntimeService.getRuntimes()) {
@@ -139,6 +129,8 @@ public class EmbeddedServerImpl implements EmbeddedServer {
                     @Override
                     public void run() {
                         try {
+                            setContextClassLoader(loader);
+
                             runtime.startRuntime();
                             latch.countDown();
                         } catch (IOException e) {
@@ -168,7 +160,7 @@ public class EmbeddedServerImpl implements EmbeddedServer {
         }
 
         try {
-            Thread.sleep(TimeUnit.SECONDS.toMillis(4));
+            Thread.sleep(TimeUnit.SECONDS.toMillis(3));
         } catch (InterruptedException e) {
             mLoggerService.log("Cannot wait for server stopping.", e);
         }

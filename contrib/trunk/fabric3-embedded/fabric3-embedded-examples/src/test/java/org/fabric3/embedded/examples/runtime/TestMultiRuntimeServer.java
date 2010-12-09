@@ -17,8 +17,8 @@ public class TestMultiRuntimeServer {
     public static void main(String[] args) throws InterruptedException, MalformedURLException, EmbeddedFabric3StartupException, ContributionException, DeploymentException, URISyntaxException {
         //TODO make multi runtime working
         EmbeddedServer server = EmbeddedServerFactory.multiRuntime("/tmp/fabric3_embedded_multi");
-        EmbeddedServerFactory.addControllerRuntime(server, "controller");
-        EmbeddedServerFactory.addParticipantRuntime(server, "runtime1");
+        EmbeddedServerFactory.addControllerRuntime(server, "controller", "/runtime/controller.xml");
+        EmbeddedServerFactory.addParticipantRuntime(server, "runtime1", "/runtime/runtime1.xml");
 
         server.start();
 
