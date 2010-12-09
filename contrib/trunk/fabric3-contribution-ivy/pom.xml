@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>fabric3-extension-core-parent-pom</artifactId>
+        <groupId>org.codehaus.fabric3</groupId>
+        <version>1.7-SNAPSHOT</version>
+    </parent>
+    <groupId>org.codehaus.fabric3</groupId>
+    <artifactId>fabric3-contribution-ivy</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Fabric3 Ivy Contribution Extension</name>
+    <description>Support for ivy resolved deployments</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.ivy</groupId>
+            <artifactId>ivy</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+            <version>1.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>1.7-SNAPSHOT</version>
+        </dependency>        
+    </dependencies>
+</project>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+              xmlns:ns="urn:fabric3.org:ivy"
+              xmlns:f3-core="urn:fabric3.org:core"
+              xmlns:ivy="urn:fabric3.org:ivy"
+              f3-core:extension="true"
+              f3-core:description="Ivy extension">
+    <import.java package="org.fabric3.spi.*" version="1.7"/>
+    <deployable composite="ivy:IvyContributionExtension"/>
+</contribution>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:f3-impl="urn:fabric3.org:implementation" autowire="true" name="IvyContributionExtension" targetNamespace="urn:fabric3.org:ivy">
+    <component name="IvyProcessor">
+        <f3-impl:implementation.system class="org.fabric3.contribution.ivy.processor.IvyFileProcessor"/>
+    </component>
+    
+    <component name="IvyDependencyManager">
+        <f3-impl:implementation.system class="org.fabric3.contribution.ivy.IvyDependencyManagerImpl"/>
+        <property name="config" source="$systemConfig//contribution.ivy/ivy-settings">
+        </property>
+    </component>
+</composite>
