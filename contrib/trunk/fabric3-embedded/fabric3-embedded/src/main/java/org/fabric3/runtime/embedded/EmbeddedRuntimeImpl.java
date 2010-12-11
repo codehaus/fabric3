@@ -2,29 +2,11 @@ package org.fabric3.runtime.embedded;
 
 import org.fabric3.host.Names;
 import org.fabric3.host.RuntimeMode;
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.contribution.ContributionService;
-import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.FileContributionSource;
-import org.fabric3.host.contribution.SyntheticContributionSource;
+import org.fabric3.host.contribution.*;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.monitor.MonitorEventDispatcherFactory;
-import org.fabric3.host.runtime.BootConfiguration;
-import org.fabric3.host.runtime.BootstrapFactory;
-import org.fabric3.host.runtime.BootstrapHelper;
-import org.fabric3.host.runtime.BootstrapService;
-import org.fabric3.host.runtime.ComponentRegistration;
-import org.fabric3.host.runtime.Fabric3Runtime;
-import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.MaskingClassLoader;
-import org.fabric3.host.runtime.ParseException;
-import org.fabric3.host.runtime.RuntimeConfiguration;
-import org.fabric3.host.runtime.RuntimeCoordinator;
-import org.fabric3.host.runtime.ScanException;
-import org.fabric3.host.runtime.ScanResult;
-import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.host.runtime.*;
 import org.fabric3.host.util.FileHelper;
 import org.fabric3.runtime.embedded.api.EmbeddedComposite;
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
@@ -46,11 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Michal Capo
@@ -92,6 +70,9 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         // setup name
         if (null == mName) {
             mName = "vm";
+        }
+        if (RuntimeMode.CONTROLLER == mRuntimeType) {
+            mName = ":controller:";
         }
 
         // setup runtime type
