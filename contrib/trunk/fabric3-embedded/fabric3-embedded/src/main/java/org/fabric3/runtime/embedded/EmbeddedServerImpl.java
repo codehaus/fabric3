@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -119,18 +120,26 @@ public class EmbeddedServerImpl implements EmbeddedServer {
 
         try {
             ThreadGroup tGroup = mRuntimeService.getRuntimesGroup();
+            List<EmbeddedRuntime> runtimes = mRuntimeService.getRuntimes();
 
-            final CountDownLatch latch = new CountDownLatch(mRuntimeService.getRuntimes().size());
-            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            if (0 == runtimes.size()) {
+                throw new EmbeddedFabric3StartupException("Please specify at least one runtime. Cannot start empty server.");
+            }
 
-            // start all available runtimes
-            for (final EmbeddedRuntime runtime : mRuntimeService.getRuntimes()) {
+            final CountDownLatch latch = new CountDownLatch(runtimes.size());
+
+            // start main runtime
+            mRuntimeService.getDeploymentRuntime().startRuntime();
+            latch.countDown();
+
+            // start all not started runtimes (if any)
+            for (int i = 1; i < runtimes.size(); i++) {
+                final EmbeddedRuntime runtime = runtimes.get(i);
+
                 new Thread(tGroup, runtime.getName()) {
                     @Override
                     public void run() {
                         try {
-                            setContextClassLoader(loader);
-
                             runtime.startRuntime();
                             latch.countDown();
                         } catch (IOException e) {
@@ -150,13 +159,22 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     }
 
     public void stop() {
+        final CountDownLatch latch = new CountDownLatch(mRuntimeService.getRuntimes().size());
+
         // loop over all available runtimes and shut them down
         for (EmbeddedRuntime runtime : mRuntimeService.getRuntimes()) {
             try {
                 runtime.stopRuntime();
+                latch.countDown();
             } catch (ShutdownException e) {
                 mLoggerService.log("Exception on runtime shutdown.", e);
             }
+        }
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            mLoggerService.log("Cannot stop server.", e);
         }
 
         try {
@@ -166,7 +184,8 @@ public class EmbeddedServerImpl implements EmbeddedServer {
         }
 
         if (0 != mRuntimeService.getRuntimesGroup().activeCount()) {
-            mRuntimeService.getRuntimesGroup().interrupt();
+            // force kill
+            mRuntimeService.getRuntimesGroup().stop();
         }
 
         // if asked delete server folder

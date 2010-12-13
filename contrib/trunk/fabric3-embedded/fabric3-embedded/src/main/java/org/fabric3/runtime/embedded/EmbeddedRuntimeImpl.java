@@ -17,6 +17,7 @@ import org.fabric3.runtime.embedded.api.service.EmbeddedSharedFoldersService;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3SetupException;
 import org.fabric3.runtime.embedded.factory.EmbeddedMonitorEventDispatcherFactory;
 import org.fabric3.runtime.embedded.service.EmbeddedMonitorEventDispatcher;
+import org.fabric3.runtime.embedded.util.EmbeddedBootstrapHelper;
 import org.fabric3.runtime.embedded.util.FileSystem;
 import org.w3c.dom.Document;
 
@@ -71,9 +72,6 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         if (null == mName) {
             mName = "vm";
         }
-        if (RuntimeMode.CONTROLLER == mRuntimeType) {
-            mName = ":controller:";
-        }
 
         // setup runtime type
         if (null == mRuntimeType) {
@@ -125,23 +123,27 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
 
     private void createRuntimeCoordinator(final EmbeddedSharedFoldersService sharedFoldersService, final EmbeddedProfileService profileService, final RuntimeMode runtimeMode) throws ParseException, IOException, URISyntaxException, ScanException {
         // create the classloaders for booting the runtime
-        ClassLoader systemClassLoader = getClass().getClassLoader();
+        ClassLoader systemClassLoader = new MaskingClassLoader(ClassLoader.getSystemClassLoader(), "org.slf4j", "ch.qos.logback");
+        ClassLoader libClassLoader = EmbeddedBootstrapHelper.createClassLoader(systemClassLoader, sharedFoldersService.getLibFolder());
 
         // mask hidden JDK and system classpath packages
-        ClassLoader maskingClassLoader = new MaskingClassLoader(systemClassLoader, HiddenPackages.getPackages());
+        ClassLoader maskingClassLoader = new MaskingClassLoader(libClassLoader, HiddenPackages.getPackages());
         ClassLoader hostLoader = BootstrapHelper.createClassLoader(maskingClassLoader, sharedFoldersService.getHostFolder());
-        ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, sharedFoldersService.getBootFolder());
+        ClassLoader bootLoader = EmbeddedBootstrapHelper.createClassLoader(hostLoader, sharedFoldersService.getBootFolder(), sharedFoldersService.getLibFolder());
 
         BootstrapService bootstrapService = BootstrapFactory.getService(bootLoader);
 
         // load the system configuration
         Document systemConfig = bootstrapService.loadSystemConfig(mConfigFolder);
 
-        URI domainName = bootstrapService.parseDomainName(systemConfig);
         List<File> deployDirs = bootstrapService.parseDeployDirectories(systemConfig);
 
+        URI domainName = bootstrapService.parseDomainName(systemConfig);
+        String zoneName = bootstrapService.parseZoneName(systemConfig);
+        String runtimeName = bootstrapService.getRuntimeName(domainName, zoneName, mName, runtimeMode);
+
         // create the HostInfo and runtime
-        HostInfo hostInfo = BootstrapHelper.createHostInfo(mName, runtimeMode, domainName, mRuntimeFolder, mConfigFolder, sharedFoldersService.getExtensionsFolder(), deployDirs);
+        HostInfo hostInfo = BootstrapHelper.createHostInfo(runtimeName, runtimeMode, domainName, mRuntimeFolder, mConfigFolder, sharedFoldersService.getExtensionsFolder(), deployDirs);
         // clear out the tmp directory
         FileHelper.cleanDirectory(hostInfo.getTempDir());
 
@@ -154,7 +156,6 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         mRuntime = bootstrapService.createDefaultRuntime(runtimeConfig);
 
         Map<String, String> exportedPackages = new HashMap<String, String>();
-//        exportedPackages.put("org.fabric3.runtime.ant.api", Names.VERSION);
 
         URL systemComposite = getClass().getResource("/boot/system.composite").toURI().toURL();
 

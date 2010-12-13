@@ -22,22 +22,24 @@
     <federation logging="severe">
         <runtimeName>Controller</runtimeName>
     </federation>
-    <application.monitor>
-        <configuration>
-            <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
-                <encoder>
-                    <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
-                </encoder>
-            </appender>
-        </configuration>
-    </application.monitor>
-    <runtime.monitor>
-        <configuration>
-            <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
-                <encoder>
-                    <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
-                </encoder>
-            </appender>
-        </configuration>
-    </runtime.monitor>
+    <!--
+        <application.monitor>
+            <configuration>
+                <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
+                    <encoder>
+                        <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
+                    </encoder>
+                </appender>
+            </configuration>
+        </application.monitor>
+        <runtime.monitor>
+            <configuration>
+                <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
+                    <encoder>
+                        <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
+                    </encoder>
+                </appender>
+            </configuration>
+        </runtime.monitor>
+    -->
 </config>

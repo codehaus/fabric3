@@ -308,7 +308,7 @@ public final class EmbeddedServerFactory {
 
     public static void addControllerRuntime(final EmbeddedServer server) throws EmbeddedFabric3StartupException {
         try {
-            addRuntime(server, null, RuntimeMode.CONTROLLER);
+            addRuntime(server, "controller", RuntimeMode.CONTROLLER);
         } catch (Exception e) {
             throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
         }
@@ -316,7 +316,7 @@ public final class EmbeddedServerFactory {
 
     public static void addControllerRuntime(final EmbeddedServer server, final String systemConfigPath) throws EmbeddedFabric3StartupException {
         try {
-            addRuntime(server, null, systemConfigPath, RuntimeMode.CONTROLLER);
+            addRuntime(server, "controller", systemConfigPath, RuntimeMode.CONTROLLER);
         } catch (Exception e) {
             throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
         }
