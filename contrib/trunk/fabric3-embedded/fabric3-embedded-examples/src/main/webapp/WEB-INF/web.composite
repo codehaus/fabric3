@@ -10,7 +10,7 @@
     </component>
 
     <component name="PutSomethingToSystemOut2">
-        <implementation.java class="org.fabric3.embedded.examples.components.component1.PutSomethingToSystemOut"/>
+        <implementation.java class="org.fabric3.embedded.examples.components.component1.WebComposite"/>
     </component>
 
 </composite>
