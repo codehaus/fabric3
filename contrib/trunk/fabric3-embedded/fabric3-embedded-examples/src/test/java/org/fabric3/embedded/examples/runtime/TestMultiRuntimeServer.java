@@ -1,14 +1,10 @@
 package org.fabric3.embedded.examples.runtime;
 
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
-import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
 import org.fabric3.runtime.embedded.factory.EmbeddedServerFactory;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Properties;
 
 /**
@@ -16,8 +12,7 @@ import java.util.Properties;
  */
 public class TestMultiRuntimeServer {
 
-    public static void main(String[] args) throws InterruptedException, IOException, EmbeddedFabric3StartupException, ContributionException, DeploymentException, URISyntaxException {
-        //TODO make multi runtime working
+    public static void main(String[] args) throws IOException {
         EmbeddedServer server = EmbeddedServerFactory.multiRuntime("/tmp/fabric3_embedded_multi", EmbeddedProfile.WEB);
         EmbeddedServerFactory.addControllerRuntime(server, "/runtime/controller.xml");
         EmbeddedServerFactory.addParticipantRuntime(server, "runtime1", "/runtime/runtime1.xml");

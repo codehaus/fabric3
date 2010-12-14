@@ -3,7 +3,7 @@ package org.fabric3.runtime.embedded.exception;
 /**
  * @author Michal Capo
  */
-public class EmbeddedFabric3StartupException extends Exception {
+public class EmbeddedFabric3StartupException extends RuntimeException {
 
     public EmbeddedFabric3StartupException() {
     }

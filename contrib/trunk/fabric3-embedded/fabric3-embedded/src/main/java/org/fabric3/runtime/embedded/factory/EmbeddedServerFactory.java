@@ -144,7 +144,7 @@ public final class EmbeddedServerFactory {
      *
      */
 
-    public static EmbeddedServer singleRuntime() throws EmbeddedFabric3StartupException {
+    public static EmbeddedServer singleRuntime() {
         return new InlineServer() {
             @Override
             public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -157,7 +157,7 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
-    public static EmbeddedServer singleRuntime(final String atPath) throws EmbeddedFabric3StartupException {
+    public static EmbeddedServer singleRuntime(final String atPath) {
         return new InlineServer() {
             @Override
             public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -171,7 +171,7 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
-    public static EmbeddedServer singleRuntimeWithConfig(final String configSystemPath) throws EmbeddedFabric3StartupException {
+    public static EmbeddedServer singleRuntimeWithConfig(final String configSystemPath) {
         return new InlineServer() {
             @Override
             public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -184,7 +184,7 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
-    public static EmbeddedServer singleRuntime(final EmbeddedProfile... profiles) throws EmbeddedFabric3StartupException {
+    public static EmbeddedServer singleRuntime(final EmbeddedProfile... profiles) {
         return new InlineServer() {
             @Override
             public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -198,7 +198,7 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
-    public static EmbeddedServer singleRuntime(final String atPath, final EmbeddedProfile... profiles) throws EmbeddedFabric3StartupException {
+    public static EmbeddedServer singleRuntime(final String atPath, final EmbeddedProfile... profiles) {
         return new InlineServer() {
             @Override
             public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -213,7 +213,7 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
-    public static EmbeddedServer singleRuntime(final String atPath, final String systemConfigPath) throws EmbeddedFabric3StartupException {
+    public static EmbeddedServer singleRuntime(final String atPath, final String systemConfigPath) {
         return new InlineServer() {
             @Override
             public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -227,7 +227,7 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
-    public static EmbeddedServer singleRuntime(final String atPath, final String systemConfigPath, final EmbeddedProfile... profiles) throws EmbeddedFabric3StartupException {
+    public static EmbeddedServer singleRuntime(final String atPath, final String systemConfigPath, final EmbeddedProfile... profiles) {
         return new InlineServer() {
             @Override
             public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -314,7 +314,7 @@ public final class EmbeddedServerFactory {
         }
     }
 
-    public static void addControllerRuntime(final EmbeddedServer server, final String systemConfigPath) throws EmbeddedFabric3StartupException {
+    public static void addControllerRuntime(final EmbeddedServer server, final String systemConfigPath) {
         try {
             addRuntime(server, "controller", systemConfigPath, RuntimeMode.CONTROLLER);
         } catch (Exception e) {
@@ -322,7 +322,7 @@ public final class EmbeddedServerFactory {
         }
     }
 
-    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName) throws EmbeddedFabric3StartupException {
+    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName) {
         try {
             addRuntime(server, runtimeName, RuntimeMode.PARTICIPANT);
         } catch (Exception e) {
@@ -330,7 +330,7 @@ public final class EmbeddedServerFactory {
         }
     }
 
-    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath) throws EmbeddedFabric3StartupException {
+    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath) {
         try {
             addRuntime(server, runtimeName, systemConfigPath, RuntimeMode.PARTICIPANT);
         } catch (Exception e) {

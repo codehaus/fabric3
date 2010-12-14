@@ -1,16 +1,6 @@
 package org.fabric3.runtime.embedded.api;
 
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.runtime.embedded.api.service.EmbeddedLoggerService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedProfileService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedRuntimeService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedSetupService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedSharedFoldersService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedUpdatePolicyService;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import org.fabric3.runtime.embedded.api.service.*;
 
 /**
  * @author Michal Capo
@@ -35,9 +25,9 @@ public interface EmbeddedServer {
 
     void stop();
 
-    void installComposite(String path) throws ContributionException, DeploymentException, MalformedURLException, URISyntaxException;
+    void installComposite(String path);
 
-    void installComposite(EmbeddedComposite composite) throws ContributionException, DeploymentException;
+    void installComposite(EmbeddedComposite composite);
 
 /*
     void installComposites(List<EmbeddedComposite> composites);

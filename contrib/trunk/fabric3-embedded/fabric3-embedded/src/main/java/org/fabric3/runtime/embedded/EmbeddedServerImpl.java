@@ -195,11 +195,23 @@ public class EmbeddedServerImpl implements EmbeddedServer {
         }
     }
 
-    public void installComposite(String path) throws ContributionException, DeploymentException, MalformedURLException, URISyntaxException {
-        installComposite(new EmbeddedCompositeImpl(path));
+    public void installComposite(String path) {
+        try {
+            installComposite(new EmbeddedCompositeImpl(path));
+        } catch (MalformedURLException e) {
+            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
+        } catch (URISyntaxException e) {
+            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
+        }
     }
 
-    public void installComposite(EmbeddedComposite composite) throws ContributionException, DeploymentException {
-        mRuntimeService.getDeploymentRuntime().installComposite(composite);
+    public void installComposite(EmbeddedComposite composite) {
+        try {
+            mRuntimeService.getDeploymentRuntime().installComposite(composite);
+        } catch (ContributionException e) {
+            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
+        } catch (DeploymentException e) {
+            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
+        }
     }
 }
