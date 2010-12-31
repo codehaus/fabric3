@@ -42,13 +42,17 @@ Public License. See the accompanying license file for details.
         <url>http://jira.codehaus.org/browse/FABRICTHREE</url>
     </issueManagement>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <build>
         <extensions>
             <!-- WebDAV extension to support deployment to Codehaus repositories -->
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-webdav</artifactId>
-                <version>RELEASE</version>
+                <version>1.0-beta-1</version>
             </extension>
         </extensions>
     </build>
