@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright (c) 2009-2011 Metaform Systems
+
+ Fabric3 is licensed under modified terms of the GNU General
+ Public License. See the accompanying license file for details.
+ ________________________________________________
+ Portions originally based on Apache Tuscany 2007
+ licensed under the Apache 2.0 license.
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3="urn:fabric3.org"
+           targetNamespace="urn:fabric3.org"
+           name="BuilderComposite"
+           autowire="true">
+
+    <component name="Connector">
+        <f3:implementation.system class="org.fabric3.fabric.builder.ConnectorImpl"/>
+    </component>
+
+    <component name="ChannelConnector">
+        <f3:implementation.system class="org.fabric3.fabric.builder.ChannelConnectorImpl"/>
+    </component>
+
+    <component name="ClassLoaderBuilder">
+        <f3:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
+    </component>
+
+    <component name="ClassLoaderTracker">
+        <f3:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderTrackerImpl"/>
+    </component>
+
+    <component name="ClassLoaderWireBuilder">
+        <f3:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderWireBuilderImpl"/>
+    </component>
+
+    <component name="TransformerInterceptorFactory">
+        <f3:implementation.system class="org.fabric3.fabric.builder.transform.TransformerInterceptorFactoryImpl"/>
+    </component>
+
+    <component name="ChannelSourceAttacher" f3:key="org.fabric3.fabric.model.physical.ChannelSourceDefinition">
+        <f3:implementation.system class="org.fabric3.fabric.builder.channel.ChannelSourceAttacher"/>
+    </component>
+
+    <component name="ChannelTargetAttacher" f3:key="org.fabric3.fabric.model.physical.ChannelTargetDefinition">
+        <f3:implementation.system class="org.fabric3.fabric.builder.channel.ChannelTargetAttacher"/>
+    </component>
+
+    <component name="TypeEventFilterBuilder" f3:key="org.fabric3.fabric.model.physical.TypeEventFilterDefinition">
+        <f3:implementation.system class="org.fabric3.fabric.builder.channel.TypeEventFilterBuilder"/>
+    </component>
+
+</composite>

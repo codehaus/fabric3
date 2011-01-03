@@ -1,0 +1,268 @@
+/*
+* Fabric3
+* Copyright (c) 2009-2011 Metaform Systems
+*
+* Fabric3 is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as
+* published by the Free Software Foundation, either version 3 of
+* the License, or (at your option) any later version, with the
+* following exception:
+*
+* Linking this software statically or dynamically with other
+* modules is making a combined work based on this software.
+* Thus, the terms and conditions of the GNU General Public
+* License cover the whole combination.
+*
+* As a special exception, the copyright holders of this software
+* give you permission to link this software with independent
+* modules to produce an executable, regardless of the license
+* terms of these independent modules, and to copy and distribute
+* the resulting executable under terms of your choice, provided
+* that you also meet, for each linked independent module, the
+* terms and conditions of the license of that module. An
+* independent module is a module which is not derived from or
+* based on this software. If you modify this software, you may
+* extend this exception to your version of the software, but
+* you are not obligated to do so. If you do not wish to do so,
+* delete this exception statement from your version.
+*
+* Fabric3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty
+* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the
+* GNU General Public License along with Fabric3.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
+package org.fabric3.contribution;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.spi.contribution.Capability;
+import org.fabric3.spi.contribution.Contribution;
+import org.fabric3.spi.contribution.ContributionManifest;
+import org.fabric3.spi.contribution.ContributionState;
+import org.fabric3.spi.contribution.ContributionWire;
+import org.fabric3.spi.contribution.Export;
+import org.fabric3.spi.contribution.Import;
+import org.fabric3.spi.contribution.MetaDataStore;
+import org.fabric3.util.graph.Cycle;
+import org.fabric3.util.graph.CycleDetector;
+import org.fabric3.util.graph.CycleDetectorImpl;
+import org.fabric3.util.graph.DirectedGraph;
+import org.fabric3.util.graph.DirectedGraphImpl;
+import org.fabric3.util.graph.Edge;
+import org.fabric3.util.graph.EdgeImpl;
+import org.fabric3.util.graph.GraphException;
+import org.fabric3.util.graph.TopologicalSorter;
+import org.fabric3.util.graph.TopologicalSorterImpl;
+import org.fabric3.util.graph.Vertex;
+import org.fabric3.util.graph.VertexImpl;
+
+/**
+ * Default implementation of the DependencyService
+ *
+ * @version $Rev$ $Date$
+ */
+public class DependencyServiceImpl implements DependencyService {
+    private CycleDetector<Contribution> detector;
+    private TopologicalSorter<Contribution> sorter;
+    private MetaDataStore store;
+
+
+    public DependencyServiceImpl(@Reference MetaDataStore store) {
+        this.store = store;
+        detector = new CycleDetectorImpl<Contribution>();
+        sorter = new TopologicalSorterImpl<Contribution>();
+    }
+
+    public List<Contribution> order(List<Contribution> contributions) throws DependencyException {
+        // create a DAG
+        DirectedGraph<Contribution> dag = new DirectedGraphImpl<Contribution>();
+        // add the contributions as vertices
+        for (Contribution contribution : contributions) {
+            dag.add(new VertexImpl<Contribution>(contribution));
+        }
+        // add edges based on imports
+        for (Vertex<Contribution> source : dag.getVertices()) {
+            Contribution contribution = source.getEntity();
+            ContributionManifest manifest = contribution.getManifest();
+            URI uri = contribution.getUri();
+            for (Import imprt : manifest.getImports()) {
+                // See if the import is already stored
+                // note that extension imports do not need to be checked since we assume extensions are installed prior
+                List<Vertex<Contribution>> sinks = findTargetVertices(dag, uri, imprt);
+                if (sinks.isEmpty()) {
+                    List<Contribution> resolvedContributions = store.resolve(uri, imprt);
+                    for (Contribution resolved : resolvedContributions) {
+                        if (resolved != null && ContributionState.INSTALLED != resolved.getState()) {
+                            throw new DependencyException("Contribution " + contribution.getUri() + " imports "
+                                    + resolved.getUri() + " which is not installed");
+                        }
+                    }
+                    if (resolvedContributions.isEmpty()) {
+                        throw new UnresolvableImportException("Unable to resolve import " + imprt + " in " + uri, imprt);
+                    }
+
+                } else {
+                    for (Vertex<Contribution> sink : sinks) {
+                        Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
+                        dag.add(edge);
+                    }
+                }
+            }
+
+            for (Capability capability : manifest.getRequiredCapabilities()) {
+                // See if a previously installed contribution supplies the capability
+                List<Vertex<Contribution>> sinks = findCapabilityVertices(capability, uri, dag);
+                if (sinks.isEmpty()) {
+                    Set<Contribution> resolvedContributions = store.resolveCapability(capability.getName());
+                    for (Contribution resolved : resolvedContributions) {
+                        if (resolved != null && ContributionState.INSTALLED != resolved.getState()) {
+                            throw new DependencyException("Contribution " + contribution.getUri() + " requires a capability provided by "
+                                    + resolved.getUri() + " which is not installed");
+                        }
+                    }
+                    if (resolvedContributions.isEmpty()) {
+                        throw new UnresolvableCapabilityException("Unable to resolve capability " + capability + " required by " + uri);
+                    }
+
+                } else {
+                    for (Vertex<Contribution> sink : sinks) {
+                        Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
+                        dag.add(edge);
+                    }
+                }
+            }
+
+        }
+        // detect cycles
+        List<Cycle<Contribution>> cycles = detector.findCycles(dag);
+        if (!cycles.isEmpty()) {
+            // cycles were detected
+            throw new CyclicDependencyException(cycles);
+        }
+        try {
+            List<Vertex<Contribution>> vertices = sorter.reverseSort(dag);
+            List<Contribution> ordered = new ArrayList<Contribution>(vertices.size());
+            for (Vertex<Contribution> vertex : vertices) {
+                ordered.add(vertex.getEntity());
+            }
+            return ordered;
+        } catch (GraphException e) {
+            throw new DependencyException(e);
+        }
+    }
+
+    public List<Contribution> orderForUninstall(List<Contribution> contributions) {
+        // create a DAG
+        DirectedGraph<Contribution> dag = new DirectedGraphImpl<Contribution>();
+        // add the contributions as vertices
+        for (Contribution contribution : contributions) {
+            dag.add(new VertexImpl<Contribution>(contribution));
+        }
+        // add edges based on imports
+        for (Vertex<Contribution> source : dag.getVertices()) {
+            Contribution contribution = source.getEntity();
+            URI uri = contribution.getUri();
+            for (ContributionWire<?, ?> wire : contribution.getWires()) {
+                for (Contribution entry : contributions) {
+                    if (entry.getUri().equals(wire.getExportContributionUri())) {
+                        Import imprt = wire.getImport();
+                        List<Vertex<Contribution>> sinks = findTargetVertices(dag, uri, imprt);
+                        if (sinks.isEmpty()) {
+                            // this should not happen
+                            throw new AssertionError("Unable to resolve import " + imprt + " in " + uri);
+                        }
+                        for (Vertex<Contribution> sink : sinks) {
+                            Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
+                            dag.add(edge);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        // detect cycles
+        List<Cycle<Contribution>> cycles = detector.findCycles(dag);
+        if (!cycles.isEmpty()) {
+            // this is a programming error
+            throw new AssertionError("Cylces detected");
+        }
+        try {
+            List<Vertex<Contribution>> vertices = sorter.sort(dag);
+            List<Contribution> ordered = new ArrayList<Contribution>(vertices.size());
+            for (Vertex<Contribution> vertex : vertices) {
+                ordered.add(vertex.getEntity());
+            }
+            return ordered;
+        } catch (GraphException e) {
+            // this is a programming error
+            throw new AssertionError(e);
+        }
+    }
+
+    /**
+     * Finds vertices in the graph with a matching export.
+     *
+     * @param dag             the graph to resolve against
+     * @param contributionUri the importing contribution URI
+     * @param imprt           the import to resolve
+     * @return the matching Vertex or null
+     */
+    private List<Vertex<Contribution>> findTargetVertices(DirectedGraph<Contribution> dag, URI contributionUri, Import imprt) {
+        List<Vertex<Contribution>> vertices = new ArrayList<Vertex<Contribution>>();
+        for (Vertex<Contribution> vertex : dag.getVertices()) {
+            Contribution contribution = vertex.getEntity();
+            ContributionManifest manifest = contribution.getManifest();
+            URI location = imprt.getLocation();
+            for (Export export : manifest.getExports()) {
+                // also compare the contribution URI to avoid resolving to a contribution that imports and exports the same namespace
+                if (Export.EXACT_MATCH == export.match(imprt) && !contributionUri.equals(contribution.getUri())) {
+                    if (location != null) {
+                        // explicit location specified
+                        if (location.equals(contribution.getUri())) {
+                            vertices.add(vertex);
+                            return vertices; // done since explicit locations must resolve to one contribution
+                        }
+                    } else {
+                        vertices.add(vertex);
+                        if (!imprt.isMultiplicity()) {
+                            return vertices;
+                        }
+                        // multiplicity, check other vertices
+                        break;
+                    }
+                }
+            }
+        }
+        return vertices;
+    }
+
+    /**
+     * Finds vertices in the graph providing the given capability.
+     *
+     * @param capability      the capability
+     * @param contributionUri the current contribution URI; used to avoid creating a cycle
+     * @param dag             the graph
+     * @return the vertices
+     */
+    private List<Vertex<Contribution>> findCapabilityVertices(Capability capability, URI contributionUri, DirectedGraph<Contribution> dag) {
+        List<Vertex<Contribution>> vertices = new ArrayList<Vertex<Contribution>>();
+        for (Vertex<Contribution> vertex : dag.getVertices()) {
+            Contribution contribution = vertex.getEntity();
+            if (contribution.getManifest().getProvidedCapabilities().contains(capability) && !contributionUri.equals(contribution.getUri())) {
+                vertices.add(vertex);
+                break;
+            }
+        }
+        return vertices;
+    }
+
+}
