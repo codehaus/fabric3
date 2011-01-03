@@ -1,0 +1,182 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>parent</artifactId>
+        <version>4</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.codehaus.fabric3</groupId>
+    <artifactId>fabric</artifactId>
+    <version>12</version>
+    <packaging>pom</packaging>
+    <name>Fabric3 Fabric Modules Parent</name>
+    <description>Parent POM defining settings for fabric modules.</description>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>3.8.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>2.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymockclassextension</artifactId>
+                <version>2.2</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/1</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>com.springsource.repository.bundles.release</id>
+            <name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+            <url>http://repository.springsource.com/maven/bundles/release</url>
+        </repository>
+        <repository>
+            <id>com.springsource.repository.bundles.external</id>
+            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+            <url>http://repository.springsource.com/maven/bundles/external</url>
+        </repository>
+        <repository>
+            <id>jboss-releases</id>
+            <name>JBoss Public Maven Releases Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.5</source>
+                        <target>1.5</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*TestCase.java</include>
+                        </includes>
+                        <reportFormat>brief</reportFormat>
+                        <useFile>false</useFile>
+                        <forkMode>once</forkMode>
+                        <argLine>-ea</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.1.2</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.7</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <quiet>true</quiet>
+                        <links>
+                            <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+                        </links>
+                        <header>${project.name}</header>
+                        <bottom><![CDATA[Copyright &copy; {inceptionYear}-{currentYear} Metaform Systems.]]></bottom>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.1</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/fabric-12</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/fabric-12</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/fabric-12</url>
+    </scm>
+
+    <profiles>
+        <profile>
+            <id>bamboo</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <uniqueVersion>true</uniqueVersion>
+                    <id>fabric3-codehaus-ci</id>
+                    <name>Snapshot repository available from Codehaus' Bamboo server</name>
+                    <url>file:///opt/ci.repository.codehaus.org/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>release-profile</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
