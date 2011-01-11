@@ -19,3 +19,4 @@ Planed
 - add junit4 support (to start/stop fabric3 server within test)
 - undeploy/uninstall composites
 - redeploy composites
+- don't use maven for resolving runtime (standalone, profiles) dependencies -> create download mechanism
