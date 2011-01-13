@@ -15,8 +15,13 @@ Done
 
 Planed
 ==============
-- gradle support
-- add junit4 support (to start/stop fabric3 server within test)
+- support for addding extensions on runtimes
+- add feature to run junit tests agains embedded server
+
 - undeploy/uninstall composites
 - redeploy composites
+
+- add support for pointing fabric3 to existing server instance (and take extensions from)
+
+- gradle support
 - don't use maven for resolving runtime (standalone, profiles) dependencies -> create download mechanism
