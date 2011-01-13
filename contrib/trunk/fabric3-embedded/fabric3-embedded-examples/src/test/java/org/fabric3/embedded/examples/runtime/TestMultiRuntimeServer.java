@@ -20,8 +20,8 @@ public class TestMultiRuntimeServer {
 
         server.start();
 
-        server.installComposite("embedded.composite:/composite1/testComposite.composite");
-        server.installComposite("embedded.war:" + projectPath() + "/src/main/webapp/WEB-INF/web.composite");
+        server.installComposite("/composite1/");
+        server.installComposite(projectPath() + "/src/main/webapp/");
     }
 
     private static String projectPath() throws IOException {

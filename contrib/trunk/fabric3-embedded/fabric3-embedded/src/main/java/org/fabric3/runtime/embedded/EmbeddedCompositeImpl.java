@@ -25,32 +25,31 @@ public class EmbeddedCompositeImpl implements EmbeddedComposite {
     private String contentType;
 
     public EmbeddedCompositeImpl(final String compositePath) throws MalformedURLException, URISyntaxException {
-        if (!compositePath.startsWith(PREFIX)) {
-            throw new MalformedURLException(String.format("Composite path have to start with keyword '%1$s' followed by absolute package and composite name. E.g.: %1$s:/org.example/database.composite", PREFIX));
+        if (compositePath.endsWith(".composite")) {
+            throw new MalformedURLException(String.format("Don't specify composite file in embedded composite. Give parent folder instead."));
+        }
+        if(compositePath.endsWith("WEB-INF/") || compositePath.endsWith("WEB-INF")) {
+            throw new MalformedURLException("IF you want add a war folder, you have to specify WEB-INF parent folder.");
         }
 
-        embeddedComposite(compositePath.replaceFirst(PREFIX, ""));
-    }
-
-    private void embeddedComposite(final String classPathLocation) throws MalformedURLException, URISyntaxException {
-        File compositeFile = new File(classPathLocation);
+        File compositeFile = new File(compositePath);
 
         if (!compositeFile.exists()) {
             // if file doesn't exists try to find it on classpath
-            compositeFile = new File(FileSystem.fileAtClassPath(classPathLocation).toURI());
+            compositeFile = new File(FileSystem.fileAtClassPath(compositePath).toURI());
         }
 
-        if (!FileSystem.isAbsolute(classPathLocation) || !FileSystem.exists(compositeFile)) {
-            throw new EmbeddedFabric3SetupException(String.format("Composite file path '%1$s' have to be absolute or doesn't exists.", classPathLocation));
+        if (!FileSystem.isAbsolute(compositePath) || !FileSystem.exists(compositeFile)) {
+            throw new EmbeddedFabric3SetupException(String.format("Composite file path '%1$s' have to be absolute or doesn't exists.", compositePath));
         }
 
         try {
             this.url = compositeFile.toURI().toURL();
         } catch (MalformedURLException e) {
-            throw new EmbeddedFabric3SetupException(String.format("Cannot get parent folder for '%1$s'.", classPathLocation));
+            throw new EmbeddedFabric3SetupException(String.format("Cannot get parent folder for '%1$s'.", compositePath));
         }
 
-        String[] name = classPathLocation.split("/");
+        String[] name = compositePath.split("/");
         // TODO search for existing composite name
         this.uri = URI.create(name[name.length - 1] + new Random().nextInt());
         this.timestamp = System.currentTimeMillis();

@@ -91,35 +91,36 @@ public class EmbeddedArchiveContributionHandler implements ArchiveContributionHa
     protected void iterateArtifactsRecursive(Contribution contribution, Action action, File dir, File root) throws InstallException {
         File[] files = dir.listFiles();
         ContributionManifest manifest = contribution.getManifest();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                iterateArtifactsRecursive(contribution, action, file, root);
-            } else {
-                try {
-                    if (file.getName().equals("sca-contribution.xml")) {
-                        // don't index the manifest
-                        continue;
+        if (null != files) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    iterateArtifactsRecursive(contribution, action, file, root);
+                } else {
+                    try {
+                        if (file.getName().equals("sca-contribution.xml")) {
+                            // don't index the manifest
+                            continue;
+                        }
+                        URL entryUrl = file.toURI().toURL();
+                        String contentType = contentTypeResolver.getContentType(entryUrl);
+                        // skip entry if we don't recognize the content type
+                        if (contentType == null) {
+                            continue;
+                        }
+                        if (exclude(manifest, file, root)) {
+                            continue;
+                        }
+                        action.process(contribution, contentType, entryUrl);
+                    } catch (MalformedURLException e) {
+                        throw new InstallException(e);
+                    } catch (IOException e) {
+                        throw new InstallException(e);
+                    } catch (ContentTypeResolutionException e) {
+                        throw new InstallException(e);
                     }
-                    URL entryUrl = file.toURI().toURL();
-                    String contentType = contentTypeResolver.getContentType(entryUrl);
-                    // skip entry if we don't recognize the content type
-                    if (contentType == null) {
-                        continue;
-                    }
-                    if (exclude(manifest, file, root)) {
-                        continue;
-                    }
-                    action.process(contribution, contentType, entryUrl);
-                } catch (MalformedURLException e) {
-                    throw new InstallException(e);
-                } catch (IOException e) {
-                    throw new InstallException(e);
-                } catch (ContentTypeResolutionException e) {
-                    throw new InstallException(e);
                 }
             }
         }
-
     }
 
     private boolean exclude(ContributionManifest manifest, File file, File root) {
