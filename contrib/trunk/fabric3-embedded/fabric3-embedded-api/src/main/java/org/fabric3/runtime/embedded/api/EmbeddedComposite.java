@@ -7,11 +7,8 @@ import org.fabric3.host.contribution.ContributionSource;
  */
 public interface EmbeddedComposite extends ContributionSource {
 
-    public static final String CONTENT_TYPE_CLASSPATH = "application/vnd.fabric3.embedded-classpath";
-    public static final String CONTENT_TYPE_FILE = "application/vnd.fabric3.embedded-file";
+    public static final String CONTENT_TYPE = "application/vnd.fabric3.embedded";
 
-    public static final String EMBEDDED = "embedded.";
-    public static final String EMBEDDED_COMPOSITE = "embedded.composite:";
-    public static final String EMBEDDED_WAR = "embedded.war:";
+    public static final String PREFIX = "embedded:";
 
 }
