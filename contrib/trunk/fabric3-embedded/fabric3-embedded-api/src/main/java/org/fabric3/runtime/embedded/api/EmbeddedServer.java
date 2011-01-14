@@ -47,7 +47,11 @@ public interface EmbeddedServer {
     void redeployAll();
 */
 
+    /**
+     * Execute all tests on Controller runtime. This can be used only for Single mode.
+     */
     void executeTests();
 
     void executeTestsOnRuntime(String runtimeName);
+
 }

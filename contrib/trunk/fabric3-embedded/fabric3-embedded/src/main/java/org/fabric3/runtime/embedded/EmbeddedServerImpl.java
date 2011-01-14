@@ -51,6 +51,7 @@ import org.fabric3.runtime.embedded.exception.EmbeddedFabric3SetupException;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
 import org.fabric3.runtime.embedded.service.*;
 import org.fabric3.runtime.embedded.util.FileSystem;
+import org.fabric3.runtime.embedded.util.IncreasableCountDownLatch;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -68,6 +69,8 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     private EmbeddedProfileService mProfileService;
     private EmbeddedSetupService mSetupService;
     private EmbeddedRuntimeService mRuntimeService;
+
+    private IncreasableCountDownLatch mCompositesLatch = new IncreasableCountDownLatch(0);
 
     public EmbeddedServerImpl() throws IOException, ScanException, EmbeddedFabric3StartupException {
         mLoggerService = new EmbeddedLoggerServiceImpl();
@@ -207,8 +210,9 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     }
 
     public void installComposite(EmbeddedComposite composite) {
+        mCompositesLatch.increase();
         try {
-            mRuntimeService.getController().installComposite(composite);
+            mRuntimeService.getController().installComposite(mCompositesLatch, composite);
         } catch (ContributionException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
         } catch (DeploymentException e) {
@@ -225,6 +229,8 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     }
 
     private void runTestsOnRuntime(EmbeddedRuntime runtime) {
+        mCompositesLatch.await();
+
         mLoggerService.log("Starting tests ...");
         runtime.getComponent(TestRunner.class, TestRunner.TEST_RUNNER_URI).executeTests();
     }

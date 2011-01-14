@@ -5,6 +5,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.runtime.embedded.util.IncreasableCountDownLatch;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public interface EmbeddedRuntime {
 
     void stopRuntime() throws ShutdownException;
 
-    void installComposite(EmbeddedComposite composite) throws ContributionException, DeploymentException;
+    void installComposite(IncreasableCountDownLatch latch, EmbeddedComposite composite) throws ContributionException, DeploymentException;
 
     <T> T getComponent(Class<T> pClass, URI pURI);
 }

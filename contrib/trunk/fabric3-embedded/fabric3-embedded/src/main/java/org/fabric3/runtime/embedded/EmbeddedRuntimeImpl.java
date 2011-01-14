@@ -19,6 +19,7 @@ import org.fabric3.runtime.embedded.factory.EmbeddedMonitorEventDispatcherFactor
 import org.fabric3.runtime.embedded.service.EmbeddedMonitorEventDispatcher;
 import org.fabric3.runtime.embedded.util.EmbeddedBootstrapHelper;
 import org.fabric3.runtime.embedded.util.FileSystem;
+import org.fabric3.runtime.embedded.util.IncreasableCountDownLatch;
 import org.w3c.dom.Document;
 
 import javax.management.MBeanServer;
@@ -227,7 +228,7 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         pResult.getExtensionContributions().addAll(sources.values());
     }
 
-    public void installComposite(final EmbeddedComposite composite) throws ContributionException, DeploymentException {
+    public void installComposite(final IncreasableCountDownLatch latch, final EmbeddedComposite composite) throws ContributionException, DeploymentException {
         // contribute the Maven project to the application domain
         ContributionService contributionService = mRuntime.getComponent(ContributionService.class, Names.CONTRIBUTION_SERVICE_URI);
         Domain domain = mRuntime.getComponent(Domain.class, Names.APPLICATION_DOMAIN_URI);
@@ -235,6 +236,8 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         contributionService.install(uri);
         // activate the deployable composite in the domain
         domain.include(Arrays.asList(uri));
+
+        latch.countDown();
     }
 
     public void startRuntime() throws IOException, InitializationException {
