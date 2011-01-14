@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plan xmlns="urn:fabric3.org"
       xmlns:myApp="urn:test"
-      name="CompositePlan">
+      name="TestPlan">
 
     <mappings>
-        <mapping deployable="myApp:composite1" zone="zone2"/>
+        <mapping deployable="myApp:compositeTest" zone="zone2"/>
     </mappings>
 </plan>

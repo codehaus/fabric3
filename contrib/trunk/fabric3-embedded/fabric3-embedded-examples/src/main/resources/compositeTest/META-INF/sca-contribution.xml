@@ -2,6 +2,6 @@
 <contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
               xmlns:myApp="urn:test">
 
-    <deployable composite="myApp:composite1"/>
+    <deployable composite="myApp:compositeTest"/>
 
 </contribution>

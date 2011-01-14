@@ -161,6 +161,7 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
 
         ScanResult result = bootstrapService.scanRepository(hostInfo);
         appendExtensions(profileService, result);
+        appendJunitAsExtension(sharedFoldersService, result);
 
         BootConfiguration configuration = new BootConfiguration();
 
@@ -207,6 +208,22 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
 
         // add extensions to scan result
         result.getExtensionContributions().addAll(sources.values());
+    }
+
+    private void appendJunitAsExtension(EmbeddedSharedFoldersService pSharedFoldersService, ScanResult pResult) throws ScanException {
+        Map<URI, ContributionSource> sources = new HashMap<URI, ContributionSource>();
+
+        for (File f : FileSystem.filesIn(pSharedFoldersService.getJUnitFolder())) {
+            try {
+                URI uri = URI.create(f.getName());
+                ContributionSource source = new FileContributionSource(uri, f.toURI().toURL(), -1, true);
+                sources.put(source.getUri(), source);
+            } catch (MalformedURLException e) {
+                throw new ScanException("Error loading junit as extension:" + f.getName(), e);
+            }
+        }
+
+        pResult.getExtensionContributions().addAll(sources.values());
     }
 
     public void installComposite(final EmbeddedComposite composite) throws ContributionException, DeploymentException {

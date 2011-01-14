@@ -21,6 +21,7 @@ public class TestMultiRuntimeServer {
         server.start();
 
         server.installComposite("/composite1/");
+        server.installComposite("/compositeTest/");
         server.installComposite(projectPath() + "/src/main/webapp/");
     }
 
@@ -30,6 +31,5 @@ public class TestMultiRuntimeServer {
 
         return properties.getProperty("projectPath");
     }
-
 
 }

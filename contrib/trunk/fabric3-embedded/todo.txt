@@ -15,8 +15,8 @@ Done
 
 Planed
 ==============
-- support for addding extensions on runtimes
 - add feature to run junit tests agains embedded server
+- support for addding extensions on runtimes
 
 - undeploy/uninstall composites
 - redeploy composites

@@ -35,6 +35,7 @@ public class EmbeddedSharedFoldersServiceImpl implements EmbeddedSharedFoldersSe
     private static File mNetFolder;
     private static File mTimerFolder;
     private static File mWebFolder;
+    private static File mJUnitFolder;
 
     private MavenDependencyResolver mMavenResolver;
     private EmbeddedUpdatePolicyService mUpdatePolicyService;
@@ -66,6 +67,7 @@ public class EmbeddedSharedFoldersServiceImpl implements EmbeddedSharedFoldersSe
         mNetFolder = FileSystem.folder(mSharedFolder, "profile-net");
         mTimerFolder = FileSystem.folder(mSharedFolder, "profile-timer");
         mWebFolder = FileSystem.folder(mSharedFolder, "profile-web");
+        mJUnitFolder = FileSystem.folder(mSharedFolder, "profile-junit");
 
         boolean update = false;
 
@@ -83,7 +85,7 @@ public class EmbeddedSharedFoldersServiceImpl implements EmbeddedSharedFoldersSe
                 throw new EmbeddedFabric3SetupException(MessageFormat.format("Cannot create shared folder: {0}", mSharedFolder.getAbsolutePath()));
             }
 
-            FileSystem.createFolders(mBootFolder, mExtensionsFolder, mHostFolder, mLibFolder, mJmsFolder, mJpaFolder, mNetFolder, mTimerFolder, mWebFolder);
+            FileSystem.createFolders(mBootFolder, mExtensionsFolder, mHostFolder, mLibFolder, mJmsFolder, mJpaFolder, mNetFolder, mTimerFolder, mWebFolder, mJUnitFolder);
 
             Zip.unzip(mMavenResolver.findFile("org.codehaus.fabric3:runtime-standalone:" + EmbeddedVersion.FABRIC3 + ":bin@zip"), mSharedFolder);
             FileSystem.delete(mSharedFolder, "bin", "legal", "runtimes");
@@ -102,6 +104,9 @@ public class EmbeddedSharedFoldersServiceImpl implements EmbeddedSharedFoldersSe
 
             Zip.unzipInSameFolder(mMavenResolver.findFile("org.codehaus.fabric3:profile-web:" + EmbeddedVersion.FABRIC3 + ":bin@zip"), mWebFolder);
             FileSystem.delete(mWebFolder, "LICENSE.txt", "NOTICE.txt");
+
+            FileSystem.copy(mMavenResolver.findFile("org.codehaus.fabric3:fabric3-junit:" + EmbeddedVersion.FABRIC3 + "@jar"), new File(mJUnitFolder, "fabric3-junit.jar"));
+            FileSystem.copy(mMavenResolver.findFile("org.codehaus.fabric3:fabric3-test-spi:" + EmbeddedVersion.FABRIC3 + "@jar"), new File(mJUnitFolder, "fabric3-test-spi.jar"));
         }
 
         // check if needed folders exists
@@ -148,5 +153,9 @@ public class EmbeddedSharedFoldersServiceImpl implements EmbeddedSharedFoldersSe
 
     public File getProfileWebFolder() {
         return mWebFolder;
+    }
+
+    public File getJUnitFolder() {
+        return mJUnitFolder;
     }
 }

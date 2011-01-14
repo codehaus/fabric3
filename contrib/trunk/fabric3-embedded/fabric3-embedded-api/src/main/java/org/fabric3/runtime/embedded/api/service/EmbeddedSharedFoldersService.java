@@ -30,4 +30,6 @@ public interface EmbeddedSharedFoldersService {
     File getProfileTimerFolder();
 
     File getProfileWebFolder();
+
+    File getJUnitFolder();
 }
