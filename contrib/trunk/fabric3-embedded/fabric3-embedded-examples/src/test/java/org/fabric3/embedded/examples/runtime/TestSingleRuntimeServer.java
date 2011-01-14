@@ -16,9 +16,15 @@ public class TestSingleRuntimeServer {
         EmbeddedServer server = EmbeddedServerFactory.singleRuntime("/tmp/fabric3_embedded", "/runtime/system.xml", EmbeddedProfile.WEB);
         server.start();
 
+        // composite
         server.installComposite("/composite1/");
-        server.installComposite("/compositeTest/");
         server.installComposite(projectPath() + "/src/main/webapp/");
+
+        // test composite
+        server.installComposite("/compositeTest/");
+
+        // start all tests
+        server.executeTests();
     }
 
     private static String projectPath() throws IOException {

@@ -156,6 +156,7 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         mRuntime = bootstrapService.createDefaultRuntime(runtimeConfig);
 
         Map<String, String> exportedPackages = new HashMap<String, String>();
+        exportedPackages.put("org.fabric3.runtime.ant.api", Names.VERSION);
 
         URL systemComposite = getClass().getResource("/boot/system.composite").toURI().toURL();
 
@@ -246,6 +247,10 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         } else {
             mLogService.log(String.format("Runtime %1$s is not running, so it cannot be stopped.", mName));
         }
+    }
+
+    public <T> T getComponent(Class<T> pClass, URI pURI) {
+        return mRuntime.getComponent(pClass, pURI);
     }
 
     public String getName() {

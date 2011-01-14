@@ -107,6 +107,8 @@ public class EmbeddedSharedFoldersServiceImpl implements EmbeddedSharedFoldersSe
 
             FileSystem.copy(mMavenResolver.findFile("org.codehaus.fabric3:fabric3-junit:" + EmbeddedVersion.FABRIC3 + "@jar"), new File(mJUnitFolder, "fabric3-junit.jar"));
             FileSystem.copy(mMavenResolver.findFile("org.codehaus.fabric3:fabric3-test-spi:" + EmbeddedVersion.FABRIC3 + "@jar"), new File(mJUnitFolder, "fabric3-test-spi.jar"));
+            FileSystem.copy(mMavenResolver.findFile("org.codehaus.fabric3:fabric3-ant-api:" + EmbeddedVersion.FABRIC3 + "@jar"), new File(mJUnitFolder, "fabric3-ant-api.jar"));
+            FileSystem.copy(mMavenResolver.findFile("org.codehaus.fabric3:fabric3-ant-extension:" + EmbeddedVersion.FABRIC3 + "@jar"), new File(mJUnitFolder, "fabric3-ant-extension.jar"));
         }
 
         // check if needed folders exists

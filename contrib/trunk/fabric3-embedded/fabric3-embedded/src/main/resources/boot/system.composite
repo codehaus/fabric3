@@ -66,8 +66,4 @@
         <f3:implementation.system class="org.fabric3.runtime.embedded.contribution.EmbeddedArchiveContributionHandler"/>
     </component>
 
-    <component name="TestWireHolder">
-        <f3:implementation.system class="org.fabric3.runtime.embedded.test.TestWireHolder"/>
-    </component>
-
 </composite>

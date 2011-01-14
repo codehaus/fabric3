@@ -8,6 +8,7 @@ import org.fabric3.host.runtime.ShutdownException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -28,4 +29,6 @@ public interface EmbeddedRuntime {
     void stopRuntime() throws ShutdownException;
 
     void installComposite(EmbeddedComposite composite) throws ContributionException, DeploymentException;
+
+    <T> T getComponent(Class<T> pClass, URI pURI);
 }

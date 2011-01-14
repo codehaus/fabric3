@@ -8,7 +8,6 @@ import junit.framework.TestCase;
 public class Test1 extends TestCase {
 
     public void test1() {
-        System.out.println("lkasjdlfjasljkdflkajskldfjlasj dfkljasl;dkjfl;aksjdfl;jals;djflkajdlfjas;dlkfjl;asjdfoiaw");
         throw new IllegalStateException();
     }
 

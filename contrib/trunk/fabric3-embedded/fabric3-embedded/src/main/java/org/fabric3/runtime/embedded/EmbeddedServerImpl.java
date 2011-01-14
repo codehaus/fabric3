@@ -42,6 +42,7 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScanException;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.runtime.ant.api.TestRunner;
 import org.fabric3.runtime.embedded.api.EmbeddedComposite;
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
@@ -213,5 +214,10 @@ public class EmbeddedServerImpl implements EmbeddedServer {
         } catch (DeploymentException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
         }
+    }
+
+    public void executeTests() {
+        TestRunner runner = mRuntimeService.getDeploymentRuntime().getComponent(TestRunner.class, TestRunner.TEST_RUNNER_URI);
+        runner.executeTests();
     }
 }

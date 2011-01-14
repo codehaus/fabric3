@@ -47,4 +47,5 @@ public interface EmbeddedServer {
     void redeployAll();
 */
 
+    void executeTests();
 }
