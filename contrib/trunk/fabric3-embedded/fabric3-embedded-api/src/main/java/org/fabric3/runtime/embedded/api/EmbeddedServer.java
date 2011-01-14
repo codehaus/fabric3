@@ -48,4 +48,6 @@ public interface EmbeddedServer {
 */
 
     void executeTests();
+
+    void executeTestsOnRuntime(String runtimeName);
 }

@@ -56,7 +56,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -121,35 +121,35 @@ public class EmbeddedServerImpl implements EmbeddedServer {
 
         try {
             ThreadGroup tGroup = mRuntimeService.getRuntimesGroup();
-            List<EmbeddedRuntime> runtimes = mRuntimeService.getRuntimes();
 
-            if (0 == runtimes.size()) {
+            if (0 == mRuntimeService.getRuntimesCount()) {
                 throw new EmbeddedFabric3StartupException("Please specify at least one runtime. Cannot start empty server.");
             }
 
-            final CountDownLatch latch = new CountDownLatch(runtimes.size());
+            final CountDownLatch latch = new CountDownLatch(mRuntimeService.getRuntimesCount());
 
-            // start main runtime
-            mRuntimeService.getDeploymentRuntime().startRuntime();
+            // start controller/VM
+            mRuntimeService.getController().startRuntime();
             latch.countDown();
 
-            // start all not started runtimes (if any)
-            for (int i = 1; i < runtimes.size(); i++) {
-                final EmbeddedRuntime runtime = runtimes.get(i);
-
-                new Thread(tGroup, runtime.getName()) {
-                    @Override
-                    public void run() {
-                        try {
-                            runtime.startRuntime();
-                            latch.countDown();
-                        } catch (IOException e) {
-                            mLoggerService.log(String.format("Cannot start runtime %1$s", runtime.getName()), e);
-                        } catch (InitializationException e) {
-                            mLoggerService.log(String.format("Cannot start runtime %1$s", runtime.getName()), e);
+            // start participants
+            Collection<EmbeddedRuntime> participants = mRuntimeService.getParticipants();
+            if (null != participants && 0 != participants.size()) {
+                for (final EmbeddedRuntime runtime : participants) {
+                    new Thread(tGroup, runtime.getName()) {
+                        @Override
+                        public void run() {
+                            try {
+                                runtime.startRuntime();
+                                latch.countDown();
+                            } catch (IOException e) {
+                                mLoggerService.log(String.format("Cannot start runtime %1$s", runtime.getName()), e);
+                            } catch (InitializationException e) {
+                                mLoggerService.log(String.format("Cannot start runtime %1$s", runtime.getName()), e);
+                            }
                         }
-                    }
-                }.start();
+                    }.start();
+                }
             }
 
             latch.await();
@@ -160,10 +160,10 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     }
 
     public void stop() {
-        final CountDownLatch latch = new CountDownLatch(mRuntimeService.getRuntimes().size());
+        final CountDownLatch latch = new CountDownLatch(mRuntimeService.getAllRuntimes().size());
 
         // loop over all available runtimes and shut them down
-        for (EmbeddedRuntime runtime : mRuntimeService.getRuntimes()) {
+        for (EmbeddedRuntime runtime : mRuntimeService.getAllRuntimes()) {
             try {
                 runtime.stopRuntime();
                 latch.countDown();
@@ -208,7 +208,7 @@ public class EmbeddedServerImpl implements EmbeddedServer {
 
     public void installComposite(EmbeddedComposite composite) {
         try {
-            mRuntimeService.getDeploymentRuntime().installComposite(composite);
+            mRuntimeService.getController().installComposite(composite);
         } catch (ContributionException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
         } catch (DeploymentException e) {
@@ -217,7 +217,15 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     }
 
     public void executeTests() {
-        TestRunner runner = mRuntimeService.getDeploymentRuntime().getComponent(TestRunner.class, TestRunner.TEST_RUNNER_URI);
-        runner.executeTests();
+        runTestsOnRuntime(mRuntimeService.getController());
+    }
+
+    public void executeTestsOnRuntime(String runtimeName) {
+        runTestsOnRuntime(mRuntimeService.getRuntimeByName(runtimeName));
+    }
+
+    private void runTestsOnRuntime(EmbeddedRuntime runtime) {
+        mLoggerService.log("Starting tests ...");
+        runtime.getComponent(TestRunner.class, TestRunner.TEST_RUNNER_URI).executeTests();
     }
 }

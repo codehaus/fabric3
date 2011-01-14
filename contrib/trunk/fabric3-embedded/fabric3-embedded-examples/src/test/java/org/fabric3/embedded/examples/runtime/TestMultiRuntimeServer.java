@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 public class TestMultiRuntimeServer {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         EmbeddedServer server = EmbeddedServerFactory.multiRuntime("/tmp/fabric3_embedded_multi", EmbeddedProfile.WEB);
         EmbeddedServerFactory.addControllerRuntime(server, "/runtime/controller.xml");
         EmbeddedServerFactory.addParticipantRuntime(server, "runtime1", "/runtime/runtime1.xml");
@@ -28,7 +28,8 @@ public class TestMultiRuntimeServer {
         server.installComposite("/compositeTest/");
 
         // start all tests
-        server.executeTests();    }
+        server.executeTestsOnRuntime("runtime1");
+    }
 
     private static String projectPath() throws IOException {
         Properties properties = new Properties();

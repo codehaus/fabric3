@@ -2,7 +2,7 @@ package org.fabric3.runtime.embedded.api.service;
 
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Michal Capo
@@ -15,8 +15,14 @@ public interface EmbeddedRuntimeService {
 
     void addRuntime(EmbeddedRuntime runtime);
 
-    EmbeddedRuntime getDeploymentRuntime();
+    EmbeddedRuntime getController();
 
-    List<EmbeddedRuntime> getRuntimes();
+    Collection<EmbeddedRuntime> getParticipants();
+
+    Collection<EmbeddedRuntime> getAllRuntimes();
+
+    int getRuntimesCount();
+
+    EmbeddedRuntime getRuntimeByName(String name);
 
 }

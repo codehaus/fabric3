@@ -4,6 +4,6 @@
       name="TestPlan">
 
     <mappings>
-        <mapping deployable="myApp:compositeTest" zone="zone2"/>
+        <mapping deployable="myApp:compositeTest" zone="zone1"/>
     </mappings>
 </plan>
