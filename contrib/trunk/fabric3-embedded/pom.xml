@@ -36,7 +36,7 @@
         <repository>
             <id>releases</id>
             <name>artifactory.sors.local-releases</name>
-            <url>https://artifactory.sors`.local/openOEMS-releases</url>
+            <url>https://artifactory.sors.local/openOEMS-releases</url>
             <uniqueVersion>false</uniqueVersion>
         </repository>
         <snapshotRepository>

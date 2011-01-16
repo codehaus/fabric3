@@ -21,6 +21,5 @@ Done
 Planed
 ==============
 - add support for pointing fabric3 to existing server instance (and take extensions from)
-
 - gradle support
 - don't use maven for resolving runtime (standalone, profiles) dependencies -> create download mechanism
