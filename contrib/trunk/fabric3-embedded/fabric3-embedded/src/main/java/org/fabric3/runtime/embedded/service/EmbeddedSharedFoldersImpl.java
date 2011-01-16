@@ -126,11 +126,11 @@ public class EmbeddedSharedFoldersImpl implements EmbeddedSharedFolders {
                 try {
                     if (temp.getName().endsWith("zip")) {
                         // if it's a zip just unpack it
-                        Zip.unzipInSameFolder(mMavenResolver.findFile("org.codehaus.fabric3:profile-web:" + EmbeddedVersion.FABRIC3 + ":bin@zip"), profileFolder);
+                        Zip.unzipInSameFolder(temp, profileFolder);
                         FileSystem.delete(profileFolder, "LICENSE.txt", "NOTICE.txt");
                     } else if (temp.getName().endsWith("jar")) {
                         // if it's a jar copy it
-                        FileSystem.copy(mMavenResolver.findFile("org.codehaus.fabric3:fabric3-junit:" + EmbeddedVersion.FABRIC3 + "@jar"), new File(profileFolder, temp.getName()));
+                        FileSystem.copy(temp, new File(profileFolder, temp.getName()));
                     } else {
                         // no other archives supported
                         throw new EmbeddedFabric3StartupException(MessageFormat.format("Cannot proceed archive ''{0}''. Only JAR and ZIP archives are supported.", temp.getName()));
