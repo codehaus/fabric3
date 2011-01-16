@@ -102,10 +102,10 @@ public final class EmbeddedServerFactory {
         ));
     }
 
-    private static void addRuntime(final EmbeddedServer server, final String runtimeName, RuntimeMode runtimeType) throws IOException, ScanException, URISyntaxException, ParseException {
+    private static void addRuntime(final EmbeddedServer server, final String runtimeName, RuntimeMode runtimeType, EmbeddedProfile... profiles) throws IOException, ScanException, URISyntaxException, ParseException {
         InlineServer inlineServer = currentServers.get(server);
 
-        inlineServer.runtimeManager.addRuntime(new EmbeddedRuntimeImpl(
+        EmbeddedRuntimeImpl runtime = new EmbeddedRuntimeImpl(
                 runtimeName,
                 null,
                 runtimeType,
@@ -113,7 +113,11 @@ public final class EmbeddedServerFactory {
                 inlineServer.setup,
                 inlineServer.logger,
                 inlineServer.sharedFolder
-        ));
+        );
+        for (EmbeddedProfile profile : profiles) {
+            runtime.addProfile(profile);
+        }
+        inlineServer.runtimeManager.addRuntime(runtime);
     }
 
     private static void addRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath) throws IOException, ScanException, URISyntaxException, ParseException {
@@ -130,10 +134,10 @@ public final class EmbeddedServerFactory {
         ));
     }
 
-    private static void addRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath, RuntimeMode runtimeType) throws IOException, ScanException, URISyntaxException, ParseException {
+    private static void addRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath, RuntimeMode runtimeType, EmbeddedProfile... profiles) throws IOException, ScanException, URISyntaxException, ParseException {
         InlineServer inlineServer = currentServers.get(server);
 
-        inlineServer.runtimeManager.addRuntime(new EmbeddedRuntimeImpl(
+        EmbeddedRuntimeImpl runtime = new EmbeddedRuntimeImpl(
                 runtimeName,
                 systemConfigPath,
                 runtimeType,
@@ -141,7 +145,11 @@ public final class EmbeddedServerFactory {
                 inlineServer.setup,
                 inlineServer.logger,
                 inlineServer.sharedFolder
-        ));
+        );
+        for (EmbeddedProfile profile : profiles) {
+            runtime.addProfile(profile);
+        }
+        inlineServer.runtimeManager.addRuntime(runtime);
     }
 
     private static void validateServerPath(String atPath) {
@@ -350,9 +358,9 @@ public final class EmbeddedServerFactory {
         }
     }
 
-    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath) {
+    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName, final EmbeddedProfile... profiles) {
         try {
-            addRuntime(server, runtimeName, systemConfigPath, RuntimeMode.PARTICIPANT);
+            addRuntime(server, runtimeName, RuntimeMode.PARTICIPANT, profiles);
         } catch (Exception e) {
             throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
         }
@@ -360,7 +368,7 @@ public final class EmbeddedServerFactory {
 
     public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath, final EmbeddedProfile... profiles) {
         try {
-            addRuntime(server, runtimeName, systemConfigPath, RuntimeMode.PARTICIPANT);
+            addRuntime(server, runtimeName, systemConfigPath, RuntimeMode.PARTICIPANT, profiles);
         } catch (Exception e) {
             throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
         }
