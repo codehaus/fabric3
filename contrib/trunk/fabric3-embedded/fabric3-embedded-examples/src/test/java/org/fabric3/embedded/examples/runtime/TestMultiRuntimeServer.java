@@ -21,11 +21,11 @@ public class TestMultiRuntimeServer {
         server.start();
 
         // composite
-        server.installComposite("/composite1/");
-        server.installComposite(projectPath() + "/src/main/webapp/");
+        server.deployComposite("/composite1/");
+        server.deployComposite(projectPath() + "/src/main/webapp/");
 
         // test composite
-        server.installComposite("/compositeTest/");
+        server.deployComposite("/compositeTest/");
 
         // start all tests
         server.executeTestsOnRuntime("runtime1");

@@ -53,7 +53,56 @@ public interface EmbeddedServer {
      *
      * @param compositePath of composite to be installed. Can be absolute or classpath relative
      */
-    void installComposite(String compositePath);
+    void deployComposite(String compositePath);
+
+    /**
+     * Install more composites at one time.
+     *
+     * @param compositesPaths comma separate composites classpath
+     */
+    void deployComposites(String... compositesPaths);
+
+    /**
+     * Get list of installed composites.
+     *
+     * @return installed composites classpath
+     */
+    String[] getDeployedComposites();
+
+    /**
+     * Uninstall composite.
+     *
+     * @param compositePath classpath of composite to be removed
+     */
+    void undeployComposite(String compositePath);
+
+    /**
+     * Uninstall given composites.
+     *
+     * @param paths classpath of composites to be removed
+     */
+    void undeployComposites(String... paths);
+
+    void undeployAll();
+
+    /**
+     * Redeploy given composite.
+     *
+     * @param compositePath to be redeployed
+     */
+    void redeployComposite(String compositePath);
+
+    /**
+     * Redeploy given composites.
+     *
+     * @param paths of composites to be redeployed
+     */
+    void redeployComposites(String... paths);
+
+    /**
+     * Redeploy all installed composites.
+     */
+    void redeployAll();
 
     /**
      * Execute all tests on VM runtime.

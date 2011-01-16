@@ -15,12 +15,11 @@ Done
 - add feature to run junit tests agains embedded server
 - support for addding extensions on runtimes
 - add support to define custom extensions
-
-Planed
-==============
 - undeploy/uninstall composites
 - redeploy composites
 
+Planed
+==============
 - add support for pointing fabric3 to existing server instance (and take extensions from)
 
 - gradle support

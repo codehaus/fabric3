@@ -62,8 +62,9 @@ public interface EmbeddedRuntimeManager {
      * Install composite specified by composites classpath path or his absolute path.
      *
      * @param path of composite you want to install
+     * @return instance of Embedded composite which was installed
      */
-    void installComposite(String path);
+    EmbeddedComposite installComposite(String path);
 
     /**
      * Install composite via his implementation.
@@ -72,23 +73,12 @@ public interface EmbeddedRuntimeManager {
      */
     void installComposite(EmbeddedComposite composite);
 
-/*
-    void installComposites(List<EmbeddedComposite> composites);
-
-    List<EmbeddedComposite> getInstalledComposites();
-
+    /**
+     * Uninstall composites.
+     *
+     * @param composite to be removed
+     */
     void uninstallComposite(EmbeddedComposite composite);
-
-    void uninstallComposites(List<EmbeddedComposite> composites);
-
-    void uninstallAll();
-
-    void redeployComposite(EmbeddedComposite composite);
-
-    void redeployComposites(List<EmbeddedComposite> composites);
-
-    void redeployAll();
-*/
 
     /**
      * Execute all tests on Controller runtime. This can be used only for Single mode.

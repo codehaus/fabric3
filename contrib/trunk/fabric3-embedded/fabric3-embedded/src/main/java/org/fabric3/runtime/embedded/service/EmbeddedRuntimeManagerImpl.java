@@ -1,10 +1,7 @@
 package org.fabric3.runtime.embedded.service;
 
 import org.fabric3.host.Names;
-import org.fabric3.host.contribution.ContributionNotFoundException;
-import org.fabric3.host.contribution.ContributionService;
-import org.fabric3.host.contribution.InstallException;
-import org.fabric3.host.contribution.StoreException;
+import org.fabric3.host.contribution.*;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.InitializationException;
@@ -203,9 +200,12 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
         }
     }
 
-    public void installComposite(String path) {
+    public EmbeddedComposite installComposite(String path) {
         try {
-            installComposite(new EmbeddedCompositeImpl(path));
+            EmbeddedCompositeImpl composite = new EmbeddedCompositeImpl(path);
+            installComposite(composite);
+
+            return composite;
         } catch (MalformedURLException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
         } catch (URISyntaxException e) {
@@ -236,6 +236,28 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
         }
 
         mCompositesLatch.countDown();
+    }
+
+    public void uninstallComposite(EmbeddedComposite composite) {
+        try {
+            ContributionService contributionService = getController().getComponent(ContributionService.class, Names.CONTRIBUTION_SERVICE_URI);
+            Domain domain = getController().getComponent(Domain.class, Names.APPLICATION_DOMAIN_URI);
+
+            if (contributionService.exists(composite.getUri())) {
+                domain.undeploy(composite.getUri(), false);
+                contributionService.uninstall(composite.getUri());
+                contributionService.remove(composite.getUri());
+            }
+        } catch (ContributionNotFoundException e) {
+            throw new EmbeddedFabric3StartupException("Cannot uninstall composite", e);
+        } catch (DeploymentException e) {
+            throw new EmbeddedFabric3StartupException("Cannot uninstall composite", e);
+        } catch (UninstallException e) {
+            throw new EmbeddedFabric3StartupException("Cannot uninstall composite", e);
+        } catch (RemoveException e) {
+            throw new EmbeddedFabric3StartupException("Cannot uninstall composite", e);
+        }
+
     }
 
     public void executeTests() {

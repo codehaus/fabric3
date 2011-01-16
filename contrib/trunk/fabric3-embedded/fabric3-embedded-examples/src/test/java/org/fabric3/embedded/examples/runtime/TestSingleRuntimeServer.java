@@ -12,16 +12,16 @@ import java.util.Properties;
  */
 public class TestSingleRuntimeServer {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         EmbeddedServer server = EmbeddedServerFactory.singleRuntime("/tmp/fabric3_embedded", "/runtime/system.xml", Profile.WEB);
         server.start();
 
         // composite
-        server.installComposite("/composite1/");
-        server.installComposite(projectPath() + "/src/main/webapp/");
+        server.deployComposite("/composite1/");
+        server.deployComposite(projectPath() + "/src/main/webapp/");
 
         // test composite
-        server.installComposite("/compositeTest/");
+        server.deployComposite("/compositeTest/");
 
         // start all tests
         server.executeTests();

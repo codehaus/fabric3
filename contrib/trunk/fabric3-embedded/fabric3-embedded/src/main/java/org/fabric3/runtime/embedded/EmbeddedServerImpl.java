@@ -38,16 +38,20 @@
 package org.fabric3.runtime.embedded;
 
 import org.fabric3.host.RuntimeMode;
+import org.fabric3.runtime.embedded.api.EmbeddedComposite;
 import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
 import org.fabric3.runtime.embedded.api.service.EmbeddedLogger;
 import org.fabric3.runtime.embedded.api.service.EmbeddedRuntimeManager;
 import org.fabric3.runtime.embedded.api.service.EmbeddedSetup;
+import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
 import org.fabric3.runtime.embedded.util.FileSystem;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -67,6 +71,11 @@ public class EmbeddedServerImpl implements EmbeddedServer {
      * Servers setup.
      */
     private EmbeddedSetup mSetup;
+
+    /**
+     * List of installed composites.
+     */
+    private Map<String, EmbeddedComposite> mInstalledComposites = new HashMap<String, EmbeddedComposite>();
 
     /**
      * Servers profiles.
@@ -123,8 +132,55 @@ public class EmbeddedServerImpl implements EmbeddedServer {
         mRuntimeManager.stopRuntimes();
     }
 
-    public void installComposite(String compositePath) {
-        mRuntimeManager.installComposite(compositePath);
+    public void deployComposite(String compositePath) {
+        EmbeddedComposite composite = mRuntimeManager.installComposite(compositePath);
+        mInstalledComposites.put(compositePath, composite);
+    }
+
+    public void deployComposites(String... compositesPaths) {
+        for (String path : compositesPaths) {
+            deployComposite(path);
+        }
+    }
+
+    public void undeployComposite(String compositePath) {
+        EmbeddedComposite composite = mInstalledComposites.get(compositePath);
+        if (null == composite) {
+            throw new EmbeddedFabric3StartupException(MessageFormat.format("Path ''{0}'' is not bound to any installed composite.", compositePath));
+        }
+
+        mRuntimeManager.uninstallComposite(composite);
+    }
+
+    public void undeployComposites(String... paths) {
+        for (String path : paths) {
+            undeployComposite(path);
+        }
+    }
+
+    public String[] getDeployedComposites() {
+        return mInstalledComposites.keySet().toArray(new String[mInstalledComposites.size()]);
+    }
+
+    public void undeployAll() {
+        for (EmbeddedComposite composite : mInstalledComposites.values()) {
+            mRuntimeManager.uninstallComposite(composite);
+        }
+    }
+
+    public void redeployComposite(String compositePath) {
+        undeployComposite(compositePath);
+        deployComposite(compositePath);
+    }
+
+    public void redeployComposites(String... paths) {
+        for (String path : paths) {
+            deployComposite(path);
+        }
+    }
+
+    public void redeployAll() {
+        redeployComposites(mInstalledComposites.keySet().toArray(new String[1]));
     }
 
     public void executeTests() {
