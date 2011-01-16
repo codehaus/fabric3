@@ -332,17 +332,17 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
-    public static void addControllerRuntime(final EmbeddedServer server) throws EmbeddedFabric3StartupException {
+    public static void addControllerRuntime(final EmbeddedServer server, final EmbeddedProfile... profiles) throws EmbeddedFabric3StartupException {
         try {
-            addRuntime(server, "controller", RuntimeMode.CONTROLLER);
+            addRuntime(server, "controller", RuntimeMode.CONTROLLER, profiles);
         } catch (Exception e) {
             throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
         }
     }
 
-    public static void addControllerRuntime(final EmbeddedServer server, final String systemConfigPath) {
+    public static void addControllerRuntime(final EmbeddedServer server, final String systemConfigPath, final EmbeddedProfile... profiles) {
         try {
-            addRuntime(server, "controller", systemConfigPath, RuntimeMode.CONTROLLER);
+            addRuntime(server, "controller", systemConfigPath, RuntimeMode.CONTROLLER, profiles);
         } catch (Exception e) {
             throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
         }
