@@ -1,5 +1,6 @@
 package org.fabric3.runtime.embedded.service;
 
+import org.fabric3.runtime.embedded.api.service.EmbeddedDependencyResolver;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
 
 import java.io.File;
@@ -8,7 +9,7 @@ import java.text.MessageFormat;
 /**
  * @author Michal Capo
  */
-public class MavenDependencyResolver {
+public class MavenDependencyResolver implements EmbeddedDependencyResolver {
 
     private static String userHomeFolder = System.getProperty("user.home");
 

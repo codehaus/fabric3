@@ -1,6 +1,6 @@
 package org.fabric3.embedded.examples.runtime;
 
-import org.fabric3.runtime.embedded.api.EmbeddedProfile;
+import org.fabric3.runtime.embedded.Profile;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
 import org.fabric3.runtime.embedded.factory.EmbeddedServerFactory;
 
@@ -13,7 +13,7 @@ import java.util.Properties;
 public class TestSingleRuntimeServer {
 
     public static void main(String[] args) throws IOException {
-        EmbeddedServer server = EmbeddedServerFactory.singleRuntime("/tmp/fabric3_embedded", "/runtime/system.xml", EmbeddedProfile.WEB);
+        EmbeddedServer server = EmbeddedServerFactory.singleRuntime("/tmp/fabric3_embedded", "/runtime/system.xml", Profile.WEB);
         server.start();
 
         // composite

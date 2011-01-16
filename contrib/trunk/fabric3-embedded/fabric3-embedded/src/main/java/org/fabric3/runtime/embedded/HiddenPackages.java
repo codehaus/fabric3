@@ -38,6 +38,13 @@
 package org.fabric3.runtime.embedded;
 
 public final class HiddenPackages {
+
+    /**
+     * A utility class. No constructor available.
+     */
+    private HiddenPackages() {
+    }
+
     private static final String[] PACKAGES = new String[]{
             "javax.xml.bind.",
             "javax.xml.ws.",
@@ -46,8 +53,5 @@ public final class HiddenPackages {
 
     public static String[] getPackages() {
         return PACKAGES;
-    }
-
-    private HiddenPackages() {
     }
 }

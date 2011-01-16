@@ -1,11 +1,13 @@
 package org.fabric3.runtime.embedded.service;
 
-import org.fabric3.runtime.embedded.api.service.EmbeddedLoggerService;
+import org.fabric3.runtime.embedded.api.service.EmbeddedLogger;
 
 /**
+ * Simple implementation of Logger. Just print log messages to system output stream.
+ *
  * @author Michal Capo
  */
-public class EmbeddedLoggerServiceImpl implements EmbeddedLoggerService {
+public class EmbeddedLoggerImpl implements EmbeddedLogger {
 
     private static String prefix = "Embedded fabric3: ";
 

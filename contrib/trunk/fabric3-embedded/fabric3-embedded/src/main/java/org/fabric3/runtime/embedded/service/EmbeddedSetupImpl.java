@@ -1,8 +1,7 @@
 package org.fabric3.runtime.embedded.service;
 
-import org.fabric3.runtime.embedded.api.service.EmbeddedLoggerService;
-import org.fabric3.runtime.embedded.api.service.EmbeddedSetupService;
-import org.fabric3.runtime.embedded.exception.EmbeddedFabric3SetupException;
+import org.fabric3.runtime.embedded.api.service.EmbeddedLogger;
+import org.fabric3.runtime.embedded.api.service.EmbeddedSetup;
 import org.fabric3.runtime.embedded.util.FileSystem;
 
 import java.io.File;
@@ -10,7 +9,7 @@ import java.io.File;
 /**
  * @author Michal Capo
  */
-public class EmbeddedSetupServiceImpl implements EmbeddedSetupService {
+public class EmbeddedSetupImpl implements EmbeddedSetup {
 
     private String mServerFolder;
 
@@ -19,22 +18,12 @@ public class EmbeddedSetupServiceImpl implements EmbeddedSetupService {
      */
     private boolean mDeleteOnStop = false;
 
-    private EmbeddedLoggerService mLoggerService;
-
-    public EmbeddedSetupServiceImpl(EmbeddedLoggerService loggerService) {
-        mLoggerService = loggerService;
-
-        if (null == mLoggerService) {
-            throw new EmbeddedFabric3SetupException("Logger service cannot be null.");
-        }
-    }
-
-    public void initialize() {
-        mLoggerService.log("starting in folder - " + getServerFolder());
+    public EmbeddedSetupImpl(EmbeddedLogger logger) {
+        logger.log("starting in folder - " + getServerFolder());
 
         if (getServerFolder().exists()) {
             // cleanup existing directory structure
-            mLoggerService.log("cleaning up - " + getServerFolder().getAbsolutePath());
+            logger.log("cleaning up - " + getServerFolder().getAbsolutePath());
 
             for (File file : FileSystem.filesIn(FileSystem.folder(getServerFolder(), "runtimes"))) {
                 FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "tmp")));
@@ -57,13 +46,10 @@ public class EmbeddedSetupServiceImpl implements EmbeddedSetupService {
     }
 
     public File getServerFolder() {
-        String temp;
-
         // if server folder doesn't exists generate one
         if (null == mServerFolder) {
             mServerFolder = FileSystem.temporaryFolder() + File.separator + FileSystem.generateFolderName();
         }
-
 
         return new File(mServerFolder);
     }

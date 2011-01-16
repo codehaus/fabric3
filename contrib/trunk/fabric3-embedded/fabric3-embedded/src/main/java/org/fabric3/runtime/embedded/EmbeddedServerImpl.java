@@ -37,201 +37,68 @@
 */
 package org.fabric3.runtime.embedded;
 
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.ScanException;
-import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.runtime.ant.api.TestRunner;
-import org.fabric3.runtime.embedded.api.EmbeddedComposite;
+import org.fabric3.host.RuntimeMode;
+import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
-import org.fabric3.runtime.embedded.api.service.*;
-import org.fabric3.runtime.embedded.exception.EmbeddedFabric3SetupException;
-import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
-import org.fabric3.runtime.embedded.service.*;
-import org.fabric3.runtime.embedded.util.FileSystem;
-import org.fabric3.runtime.embedded.util.IncreasableCountDownLatch;
+import org.fabric3.runtime.embedded.api.service.EmbeddedRuntimeManager;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EmbeddedServerImpl implements EmbeddedServer {
 
-    private EmbeddedLoggerService mLoggerService;
-    private EmbeddedUpdatePolicyService mUpdatePolicyService;
-    private EmbeddedSharedFoldersService mSharedFoldersService;
-    private EmbeddedProfileService mProfileService;
-    private EmbeddedSetupService mSetupService;
-    private EmbeddedRuntimeService mRuntimeService;
+    /**
+     * Runtimes manager.
+     */
+    private EmbeddedRuntimeManager mRuntimeManager;
 
-    private IncreasableCountDownLatch mCompositesLatch = new IncreasableCountDownLatch(0);
+    /**
+     * Servers profiles.
+     */
+    private Map<String, EmbeddedProfile> mProfiles = new ConcurrentHashMap<String, EmbeddedProfile>();
 
-    public EmbeddedServerImpl() throws IOException, ScanException, EmbeddedFabric3StartupException {
-        mLoggerService = new EmbeddedLoggerServiceImpl();
-        mUpdatePolicyService = new EmbeddedUpdatePolicyServiceImpl();
-        mSetupService = new EmbeddedSetupServiceImpl(mLoggerService);
-        mRuntimeService = new EmbeddedRuntimeServiceImpl();
-        mSharedFoldersService = new EmbeddedSharedFoldersServiceImpl(new MavenDependencyResolver(), mUpdatePolicyService, mLoggerService);
-        mProfileService = new EmbeddedProfileServiceImpl(mSharedFoldersService);
+    public EmbeddedServerImpl(EmbeddedRuntimeManager pRuntimeManager) {
+        mRuntimeManager = pRuntimeManager;
+
+        // add TEST profile to all runtimes
+        mProfiles.put(Profile.TEST.getName(), Profile.TEST);
     }
 
-    public EmbeddedProfileService getProfileService() {
-        return mProfileService;
+    public Collection<EmbeddedProfile> getProfiles() {
+        return mProfiles.values();
     }
 
-    public EmbeddedSharedFoldersService getSharedFoldersService() {
-        return mSharedFoldersService;
+    public void addProfile(EmbeddedProfile profile) {
+        mProfiles.put(profile.getName(), profile);
     }
 
-    public EmbeddedSetupService getSetupService() {
-        return mSetupService;
+    public EmbeddedRuntime getController() {
+        return mRuntimeManager.getController();
     }
 
-    public EmbeddedUpdatePolicyService getUpdatePolicyService() {
-        return mUpdatePolicyService;
-    }
-
-    public EmbeddedRuntimeService getRuntimeService() {
-        return mRuntimeService;
-    }
-
-    public EmbeddedLoggerService getLoggerService() {
-        return mLoggerService;
-    }
-
-    public void initialize() {
-        try {
-            // initialing services
-            mProfileService.initialize();
-            mUpdatePolicyService.initialize();
-            mSetupService.initialize();
-            mRuntimeService.initialize();
-            mProfileService.initialize();
-            mSharedFoldersService.initialize();
-        } catch (Exception e) {
-            throw new EmbeddedFabric3SetupException("Could not initialize embedded server.", e);
-        }
+    public boolean isVMMode() {
+        return 1 == mRuntimeManager.getRuntimesCount() && null != mRuntimeManager.getController() && RuntimeMode.VM == mRuntimeManager.getController().getRuntimeMode();
     }
 
     public void start() {
-        long startTime = System.currentTimeMillis();
-
-        try {
-            ThreadGroup tGroup = mRuntimeService.getRuntimesGroup();
-
-            if (0 == mRuntimeService.getRuntimesCount()) {
-                throw new EmbeddedFabric3StartupException("Please specify at least one runtime. Cannot start empty server.");
-            }
-
-            final CountDownLatch latch = new CountDownLatch(mRuntimeService.getRuntimesCount());
-
-            // start controller/VM
-            mRuntimeService.getController().startRuntime();
-            latch.countDown();
-
-            // start participants
-            Collection<EmbeddedRuntime> participants = mRuntimeService.getParticipants();
-            if (null != participants && 0 != participants.size()) {
-                for (final EmbeddedRuntime runtime : participants) {
-                    new Thread(tGroup, runtime.getName()) {
-                        @Override
-                        public void run() {
-                            try {
-                                runtime.startRuntime();
-                                latch.countDown();
-                            } catch (IOException e) {
-                                mLoggerService.log(String.format("Cannot start runtime %1$s", runtime.getName()), e);
-                            } catch (InitializationException e) {
-                                mLoggerService.log(String.format("Cannot start runtime %1$s", runtime.getName()), e);
-                            }
-                        }
-                    }.start();
-                }
-            }
-
-            latch.await();
-            mLoggerService.log(MessageFormat.format("started in {0} seconds...", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime)));
-        } catch (Exception e) {
-            throw new EmbeddedFabric3SetupException("Could not start embedded server.", e);
-        }
+        mRuntimeManager.startRuntimes();
     }
 
     public void stop() {
-        final CountDownLatch latch = new CountDownLatch(mRuntimeService.getAllRuntimes().size());
-
-        // loop over all available runtimes and shut them down
-        for (EmbeddedRuntime runtime : mRuntimeService.getAllRuntimes()) {
-            try {
-                runtime.stopRuntime();
-                latch.countDown();
-            } catch (ShutdownException e) {
-                mLoggerService.log("Exception on runtime shutdown.", e);
-            }
-        }
-
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            mLoggerService.log("Cannot stop server.", e);
-        }
-
-        try {
-            Thread.sleep(TimeUnit.SECONDS.toMillis(3));
-        } catch (InterruptedException e) {
-            mLoggerService.log("Cannot wait for server stopping.", e);
-        }
-
-        if (0 != mRuntimeService.getRuntimesGroup().activeCount()) {
-            // force kill
-            mRuntimeService.getRuntimesGroup().stop();
-        }
-
-        // if asked delete server folder
-        if (mSetupService.shouldDeleteAtStop()) {
-            FileSystem.delete(mSetupService.getServerFolder());
-            mLoggerService.log("Deleting - " + mSetupService.getServerFolder().getAbsolutePath());
-        }
+        mRuntimeManager.stopRuntimes();
     }
 
-    public void installComposite(String path) {
-        try {
-            installComposite(new EmbeddedCompositeImpl(path));
-        } catch (MalformedURLException e) {
-            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
-        } catch (URISyntaxException e) {
-            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
-        }
-    }
-
-    public void installComposite(EmbeddedComposite composite) {
-        mCompositesLatch.increase();
-        try {
-            mRuntimeService.getController().installComposite(mCompositesLatch, composite);
-        } catch (ContributionException e) {
-            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
-        } catch (DeploymentException e) {
-            throw new EmbeddedFabric3StartupException("Cannot install composite", e);
-        }
+    public void installComposite(String compositePath) {
+        mRuntimeManager.installComposite(compositePath);
     }
 
     public void executeTests() {
-        runTestsOnRuntime(mRuntimeService.getController());
+        mRuntimeManager.executeTests();
     }
 
     public void executeTestsOnRuntime(String runtimeName) {
-        runTestsOnRuntime(mRuntimeService.getRuntimeByName(runtimeName));
-    }
-
-    private void runTestsOnRuntime(EmbeddedRuntime runtime) {
-        mCompositesLatch.await();
-
-        mLoggerService.log("Starting tests ...");
-        runtime.getComponent(TestRunner.class, TestRunner.TEST_RUNNER_URI).executeTests();
+        mRuntimeManager.executeTestsOnRuntime(runtimeName);
     }
 }

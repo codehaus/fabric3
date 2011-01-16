@@ -1,6 +1,6 @@
 package org.fabric3.embedded.examples.runtime;
 
-import org.fabric3.runtime.embedded.api.EmbeddedProfile;
+import org.fabric3.runtime.embedded.Profile;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
 import org.fabric3.runtime.embedded.factory.EmbeddedServerFactory;
 
@@ -13,7 +13,7 @@ import java.util.Properties;
 public class TestMultiRuntimeServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        EmbeddedServer server = EmbeddedServerFactory.multiRuntime("/tmp/fabric3_embedded_multi", EmbeddedProfile.WEB);
+        EmbeddedServer server = EmbeddedServerFactory.multiRuntime("/tmp/fabric3_embedded_multi", Profile.WEB);
         EmbeddedServerFactory.addControllerRuntime(server, "/runtime/controller.xml");
         EmbeddedServerFactory.addParticipantRuntime(server, "runtime1", "/runtime/runtime1.xml");
         EmbeddedServerFactory.addParticipantRuntime(server, "runtime2", "/runtime/runtime2.xml");

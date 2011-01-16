@@ -64,6 +64,14 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>profile-rs</artifactId>
+            <version>${project.version}</version>
+            <classifier>bin</classifier>
+            <type>zip</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-jpa</artifactId>
             <version>${project.version}</version>
             <classifier>bin</classifier>

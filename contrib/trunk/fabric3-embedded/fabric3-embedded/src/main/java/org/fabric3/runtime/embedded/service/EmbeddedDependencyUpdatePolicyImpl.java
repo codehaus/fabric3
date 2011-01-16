@@ -1,12 +1,12 @@
 package org.fabric3.runtime.embedded.service;
 
 import org.fabric3.runtime.embedded.api.EmbeddedUpdatePolicy;
-import org.fabric3.runtime.embedded.api.service.EmbeddedUpdatePolicyService;
+import org.fabric3.runtime.embedded.api.service.EmbeddedDependencyUpdatePolicy;
 
 /**
  * @author Michal Capo
  */
-public class EmbeddedUpdatePolicyServiceImpl implements EmbeddedUpdatePolicyService {
+public class EmbeddedDependencyUpdatePolicyImpl implements EmbeddedDependencyUpdatePolicy {
 
     private EmbeddedUpdatePolicy mUpdatePolicy;
 

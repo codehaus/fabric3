@@ -7,18 +7,24 @@ import org.fabric3.runtime.embedded.EmbeddedRuntimeImpl;
 import org.fabric3.runtime.embedded.EmbeddedServerImpl;
 import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
+import org.fabric3.runtime.embedded.api.service.*;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3SetupException;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
+import org.fabric3.runtime.embedded.service.*;
 import org.fabric3.runtime.embedded.util.FileSystem;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Michal Capo
  */
 public final class EmbeddedServerFactory {
+
+    private static final Map<EmbeddedServer, InlineServer> currentServers = new ConcurrentHashMap<EmbeddedServer, InlineServer>();
 
     /*
      *
@@ -32,16 +38,27 @@ public final class EmbeddedServerFactory {
 
     abstract static class InlineServer {
 
+        protected EmbeddedLogger logger = new EmbeddedLoggerImpl();
+
+        protected EmbeddedSetup setup = new EmbeddedSetupImpl(logger);
+
+        protected EmbeddedRuntimeManager runtimeManager = new EmbeddedRuntimeManagerImpl(logger, setup);
+
+        protected EmbeddedDependencyResolver dependencyResolver = new MavenDependencyResolver();
+
+        protected EmbeddedDependencyUpdatePolicy dependencyUpdatePolicy = new EmbeddedDependencyUpdatePolicyImpl();
+
+        protected EmbeddedSharedFolders sharedFolder = new EmbeddedSharedFoldersImpl(dependencyResolver, dependencyUpdatePolicy, logger);
+
+        protected EmbeddedServer server = new EmbeddedServerImpl(runtimeManager);
+
         public EmbeddedServer get() throws EmbeddedFabric3StartupException {
-            EmbeddedServer server = null;
             try {
-                server = new EmbeddedServerImpl();
-                modifySetup(server);
-                server.initialize();
-                addBehaviour(server);
+                modifySetup(this);
+                addBehaviour(this);
             } catch (Exception e) {
-                if (null != server && null != server.getSetupService()) {
-                    File sFolder = server.getSetupService().getServerFolder();
+                if (null != server && null != setup) {
+                    File sFolder = setup.getServerFolder();
 
                     System.out.println(String.format("Deleting server folder: %1$s", sFolder.getAbsolutePath()));
                     FileSystem.delete(sFolder);
@@ -49,12 +66,14 @@ public final class EmbeddedServerFactory {
                 throw new EmbeddedFabric3StartupException("Cannot create embedded server.", e);
             }
 
+            currentServers.put(server, this);
+
             return server;
         }
 
-        public abstract void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException;
+        public abstract void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException;
 
-        public abstract void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException;
+        public abstract void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException;
 
     }
 
@@ -70,49 +89,59 @@ public final class EmbeddedServerFactory {
      */
 
     private static void addRuntime(final EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-        server.getRuntimeService().addRuntime(new EmbeddedRuntimeImpl(
-                server.getSetupService(),
-                server.getLoggerService(),
-                server.getProfileService(),
-                server.getSharedFoldersService(),
-                null, null, RuntimeMode.VM)
-        );
+        InlineServer inlineServer = currentServers.get(server);
+
+        inlineServer.runtimeManager.addRuntime(new EmbeddedRuntimeImpl(
+                null,
+                null,
+                RuntimeMode.VM,
+                inlineServer.server,
+                inlineServer.setup,
+                inlineServer.logger,
+                inlineServer.sharedFolder
+        ));
     }
 
     private static void addRuntime(final EmbeddedServer server, final String runtimeName, RuntimeMode runtimeType) throws IOException, ScanException, URISyntaxException, ParseException {
-        server.getRuntimeService().addRuntime(new EmbeddedRuntimeImpl(
-                server.getSetupService(),
-                server.getLoggerService(),
-                server.getProfileService(),
-                server.getSharedFoldersService(),
-                runtimeName, null, runtimeType)
-        );
+        InlineServer inlineServer = currentServers.get(server);
+
+        inlineServer.runtimeManager.addRuntime(new EmbeddedRuntimeImpl(
+                runtimeName,
+                null,
+                runtimeType,
+                inlineServer.server,
+                inlineServer.setup,
+                inlineServer.logger,
+                inlineServer.sharedFolder
+        ));
     }
 
     private static void addRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath) throws IOException, ScanException, URISyntaxException, ParseException {
-        server.getRuntimeService().addRuntime(new EmbeddedRuntimeImpl(
-                server.getSetupService(),
-                server.getLoggerService(),
-                server.getProfileService(),
-                server.getSharedFoldersService(),
-                runtimeName, systemConfigPath, RuntimeMode.VM)
-        );
+        InlineServer inlineServer = currentServers.get(server);
+
+        inlineServer.runtimeManager.addRuntime(new EmbeddedRuntimeImpl(
+                runtimeName,
+                systemConfigPath,
+                RuntimeMode.VM,
+                inlineServer.server,
+                inlineServer.setup,
+                inlineServer.logger,
+                inlineServer.sharedFolder
+        ));
     }
 
     private static void addRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath, RuntimeMode runtimeType) throws IOException, ScanException, URISyntaxException, ParseException {
-        server.getRuntimeService().addRuntime(new EmbeddedRuntimeImpl(
-                server.getSetupService(),
-                server.getLoggerService(),
-                server.getProfileService(),
-                server.getSharedFoldersService(),
-                runtimeName, systemConfigPath, runtimeType)
-        );
-    }
+        InlineServer inlineServer = currentServers.get(server);
 
-    private static void addProfiles(final EmbeddedServer server, final EmbeddedProfile... profiles) {
-        for (EmbeddedProfile profile : profiles) {
-            server.getProfileService().addProfile(profile);
-        }
+        inlineServer.runtimeManager.addRuntime(new EmbeddedRuntimeImpl(
+                runtimeName,
+                systemConfigPath,
+                runtimeType,
+                inlineServer.server,
+                inlineServer.setup,
+                inlineServer.logger,
+                inlineServer.sharedFolder
+        ));
     }
 
     private static void validateServerPath(String atPath) {
@@ -128,10 +157,16 @@ public final class EmbeddedServerFactory {
     }
 
 
-    private static void modifyServerPath(final EmbeddedServer server, final String serverPath) {
+    private static void modifyServerPath(final InlineServer server, final String serverPath) {
         validateServerPath(serverPath);
+        server.setup.setServerFolder(serverPath);
+    }
 
-        server.getSetupService().setServerFolder(serverPath);
+
+    private static void addProfiles(InlineServer server, EmbeddedProfile[] profiles) {
+        for (EmbeddedProfile profile : profiles) {
+            server.server.addProfile(profile);
+        }
     }
 
     /*
@@ -147,12 +182,12 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer singleRuntime() {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-                addRuntime(server);
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addRuntime(server.server);
             }
         }.get();
     }
@@ -160,13 +195,13 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer singleRuntime(final String atPath) {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 modifyServerPath(server, atPath);
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-                addRuntime(server);
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addRuntime(server.server);
             }
         }.get();
     }
@@ -174,12 +209,12 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer singleRuntimeWithConfig(final String configSystemPath) {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-                addRuntime(server, null, configSystemPath);
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addRuntime(server.server, null, configSystemPath);
             }
         }.get();
     }
@@ -187,13 +222,13 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer singleRuntime(final EmbeddedProfile... profiles) {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 addProfiles(server, profiles);
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-                addRuntime(server);
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addRuntime(server.server);
             }
         }.get();
     }
@@ -201,14 +236,14 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer singleRuntime(final String atPath, final EmbeddedProfile... profiles) {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 modifyServerPath(server, atPath);
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 addProfiles(server, profiles);
-                addRuntime(server);
+                addRuntime(server.server);
             }
         }.get();
     }
@@ -216,13 +251,13 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer singleRuntime(final String atPath, final String systemConfigPath) {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 modifyServerPath(server, atPath);
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-                addRuntime(server, null, systemConfigPath);
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addRuntime(server.server, null, systemConfigPath);
             }
         }.get();
     }
@@ -230,14 +265,14 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer singleRuntime(final String atPath, final String systemConfigPath, final EmbeddedProfile... profiles) {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 modifyServerPath(server, atPath);
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 addProfiles(server, profiles);
-                addRuntime(server, null, systemConfigPath);
+                addRuntime(server.server, null, systemConfigPath);
             }
         }.get();
     }
@@ -255,16 +290,11 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer multiRuntime() throws EmbeddedFabric3StartupException {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-/*
-                addRuntime(server, "controller", RuntimeMode.CONTROLLER);
-                addRuntime(server, "runtime1", RuntimeMode.PARTICIPANT);
-                addRuntime(server, "runtime2", RuntimeMode.PARTICIPANT);
-*/
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
             }
         }.get();
     }
@@ -272,17 +302,12 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer multiRuntime(final String atPath) throws EmbeddedFabric3StartupException {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 modifyServerPath(server, atPath);
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
-/*
-                addRuntime(server, "controller", RuntimeMode.CONTROLLER);
-                addRuntime(server, "runtime1", RuntimeMode.PARTICIPANT);
-                addRuntime(server, "runtime2", RuntimeMode.PARTICIPANT);
-*/
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
             }
         }.get();
     }
@@ -290,18 +315,13 @@ public final class EmbeddedServerFactory {
     public static EmbeddedServer multiRuntime(final String atPath, final EmbeddedProfile... profiles) throws EmbeddedFabric3StartupException {
         return new InlineServer() {
             @Override
-            public void modifySetup(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 modifyServerPath(server, atPath);
             }
 
             @Override
-            public void addBehaviour(EmbeddedServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
                 addProfiles(server, profiles);
-/*
-                addRuntime(server, "controller", RuntimeMode.CONTROLLER);
-                addRuntime(server, "runtime1", RuntimeMode.PARTICIPANT);
-                addRuntime(server, "runtime2", RuntimeMode.PARTICIPANT);
-*/
             }
         }.get();
     }
@@ -331,6 +351,14 @@ public final class EmbeddedServerFactory {
     }
 
     public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath) {
+        try {
+            addRuntime(server, runtimeName, systemConfigPath, RuntimeMode.PARTICIPANT);
+        } catch (Exception e) {
+            throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
+        }
+    }
+
+    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName, final String systemConfigPath, final EmbeddedProfile... profiles) {
         try {
             addRuntime(server, runtimeName, systemConfigPath, RuntimeMode.PARTICIPANT);
         } catch (Exception e) {

@@ -12,12 +12,12 @@ Done
 - reduce fabric3 dependency usage (just standalone, jms, ...)
 - make one place where these dependency can be reused (will replace existing reusage of maven dependency location)
 - support for installing/deploying composites from classpath
+- add feature to run junit tests agains embedded server
+- support for addding extensions on runtimes
+- add support to define custom extensions
 
 Planed
 ==============
-- add feature to run junit tests agains embedded server
-- support for addding extensions on runtimes
-
 - undeploy/uninstall composites
 - redeploy composites
 
