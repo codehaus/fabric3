@@ -41,8 +41,12 @@ import org.fabric3.host.RuntimeMode;
 import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
+import org.fabric3.runtime.embedded.api.service.EmbeddedLogger;
 import org.fabric3.runtime.embedded.api.service.EmbeddedRuntimeManager;
+import org.fabric3.runtime.embedded.api.service.EmbeddedSetup;
+import org.fabric3.runtime.embedded.util.FileSystem;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,12 +59,24 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     private EmbeddedRuntimeManager mRuntimeManager;
 
     /**
+     * Logger;
+     */
+    private EmbeddedLogger mLogger;
+
+    /**
+     * Servers setup.
+     */
+    private EmbeddedSetup mSetup;
+
+    /**
      * Servers profiles.
      */
     private Map<String, EmbeddedProfile> mProfiles = new ConcurrentHashMap<String, EmbeddedProfile>();
 
-    public EmbeddedServerImpl(EmbeddedRuntimeManager pRuntimeManager) {
+    public EmbeddedServerImpl(EmbeddedRuntimeManager pRuntimeManager, EmbeddedLogger pLogger, EmbeddedSetup pSetup) {
         mRuntimeManager = pRuntimeManager;
+        mLogger = pLogger;
+        mSetup = pSetup;
 
         // add TEST profile to all runtimes
         mProfiles.put(Profile.TEST.getName(), Profile.TEST);
@@ -83,6 +99,23 @@ public class EmbeddedServerImpl implements EmbeddedServer {
     }
 
     public void start() {
+        mLogger.log("starting in folder - " + mSetup.getServerFolder());
+
+        if (mSetup.getServerFolder().exists()) {
+            // cleanup existing directory structure
+            mLogger.log("cleaning up - " + mSetup.getServerFolder().getAbsolutePath());
+
+            for (File file : FileSystem.filesIn(FileSystem.folder(mSetup.getServerFolder(), "runtimes"))) {
+                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "tmp")));
+                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "data")));
+                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "deploy")));
+                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "repository/user")));
+            }
+        } else {
+            // create runtimes folder
+            FileSystem.createFolder(FileSystem.folder(mSetup.getServerFolder(), "runtimes"));
+        }
+
         mRuntimeManager.startRuntimes();
     }
 

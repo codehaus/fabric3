@@ -46,13 +46,6 @@ public interface EmbeddedRuntime {
     File getRuntimeFolder();
 
     /**
-     * Add profile to this runtime.
-     *
-     * @param profile to be added
-     */
-    void addProfile(EmbeddedProfile profile);
-
-    /**
      * Get all profiles specific for this runtime.
      *
      * @return profiles collection, can be empty

@@ -2,6 +2,7 @@ package org.fabric3.runtime.embedded;
 
 import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class EmbeddedProfileImpl implements EmbeddedProfile {
     /**
      * File specified for this profile.
      */
-    protected List<String> files;
+    protected List<String> files = new ArrayList<String>();
 
     /**
      * Create profile with given name.

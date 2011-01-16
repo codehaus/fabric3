@@ -1,6 +1,5 @@
 package org.fabric3.runtime.embedded.service;
 
-import org.fabric3.runtime.embedded.api.service.EmbeddedLogger;
 import org.fabric3.runtime.embedded.api.service.EmbeddedSetup;
 import org.fabric3.runtime.embedded.util.FileSystem;
 
@@ -17,25 +16,6 @@ public class EmbeddedSetupImpl implements EmbeddedSetup {
      * Default flag 'delete on stop' is false.
      */
     private boolean mDeleteOnStop = false;
-
-    public EmbeddedSetupImpl(EmbeddedLogger logger) {
-        logger.log("starting in folder - " + getServerFolder());
-
-        if (getServerFolder().exists()) {
-            // cleanup existing directory structure
-            logger.log("cleaning up - " + getServerFolder().getAbsolutePath());
-
-            for (File file : FileSystem.filesIn(FileSystem.folder(getServerFolder(), "runtimes"))) {
-                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "tmp")));
-                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "data")));
-                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "deploy")));
-                FileSystem.delete(FileSystem.filesIn(FileSystem.folder(file, "repository/user")));
-            }
-        } else {
-            // create runtimes folder
-            FileSystem.createFolder(FileSystem.folder(getServerFolder(), "runtimes"));
-        }
-    }
 
     public void setServerFolder(String serverFolder) {
         mServerFolder = serverFolder;

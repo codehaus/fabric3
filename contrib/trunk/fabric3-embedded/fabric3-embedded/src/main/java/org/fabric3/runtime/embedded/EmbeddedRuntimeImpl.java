@@ -32,7 +32,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Michal Capo
@@ -67,7 +66,7 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
     /**
      * Runtime profiles.
      */
-    private Map<String, EmbeddedProfile> mProfiles = new ConcurrentHashMap<String, EmbeddedProfile>();
+    private Map<String, EmbeddedProfile> mProfiles = new HashMap<String, EmbeddedProfile>();
 
     /**
      * Fabric3 runtime.
@@ -94,6 +93,9 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
      */
     private EmbeddedSharedFolders mSharedFolders;
 
+    /**
+     * Server reference.
+     */
     private EmbeddedServer mServer;
 
     public EmbeddedRuntimeImpl(
@@ -103,7 +105,8 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
             final EmbeddedServer server,
             final EmbeddedSetup setup,
             final EmbeddedLogger logger,
-            final EmbeddedSharedFolders sharedFolders
+            final EmbeddedSharedFolders sharedFolders,
+            final EmbeddedProfile... profiles
     ) {
         mName = name;
         mRuntimeMode = runtimeMode;
@@ -112,6 +115,15 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         mLogger = logger;
         mSharedFolders = sharedFolders;
         mServer = server;
+
+        // add all profiles from server
+        for (EmbeddedProfile serverProfile : mServer.getProfiles()) {
+            mProfiles.put(serverProfile.getName(), serverProfile);
+        }
+        // add runtime specific profiles
+        for (EmbeddedProfile profile : profiles) {
+            mProfiles.put(profile.getName(), profile);
+        }
 
         try {
             initialize(systemConfigPath);
@@ -243,10 +255,6 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
 
         ScanResult result = bootstrapService.scanRepository(hostInfo);
 
-        // add all server profiles
-        for (EmbeddedProfile serverProfile : mServer.getProfiles()) {
-            appendProfile(result, serverProfile);
-        }
         // add runtime profiles
         for (EmbeddedProfile runtimeProfile : getProfiles()) {
             appendProfile(result, runtimeProfile);
@@ -276,23 +284,25 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
 
     private void appendProfile(ScanResult result, EmbeddedProfile profile) throws ScanException {
         Map<URI, ContributionSource> sources = new HashMap<URI, ContributionSource>();
-        File file = mSharedFolders.getProfileFolder(profile);
+        Collection<File> files = FileSystem.filesIn(mSharedFolders.getProfileFolder(profile));
 
-        try {
-            URL location = file.toURI().toURL();
-            ContributionSource source;
-            if (file.isDirectory()) {
-                // create synthetic contributions from directories contained in the repository
-                URI uri = URI.create("f3-" + file.getName());
-                source = new SyntheticContributionSource(uri, location, true);
+        for (File file : files) {
+            try {
+                URL location = file.toURI().toURL();
+                ContributionSource source;
+                if (file.isDirectory()) {
+                    // create synthetic contributions from directories contained in the repository
+                    URI uri = URI.create("f3-" + file.getName());
+                    source = new SyntheticContributionSource(uri, location, true);
 
-            } else {
-                URI uri = URI.create(file.getName());
-                source = new FileContributionSource(uri, location, -1, true);
+                } else {
+                    URI uri = URI.create(file.getName());
+                    source = new FileContributionSource(uri, location, -1, true);
+                }
+                sources.put(source.getUri(), source);
+            } catch (MalformedURLException e) {
+                throw new ScanException("Error loading contribution:" + file.getName(), e);
             }
-            sources.put(source.getUri(), source);
-        } catch (MalformedURLException e) {
-            throw new ScanException("Error loading contribution:" + file.getName(), e);
         }
 
         // add extensions to scan result
@@ -309,10 +319,6 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         } else {
             mLogger.log(String.format("Runtime %1$s is not running, so it cannot be stopped.", mName));
         }
-    }
-
-    public void addProfile(EmbeddedProfile profile) {
-        mProfiles.put(profile.getName(), profile);
     }
 
     public Collection<EmbeddedProfile> getProfiles() {

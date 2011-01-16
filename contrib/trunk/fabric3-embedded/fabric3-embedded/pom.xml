@@ -23,6 +23,9 @@
 
     <dependencies>
 
+        <!--
+            Test profile depdendencies
+        -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ant-api</artifactId>
@@ -46,6 +49,9 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--
+            Standalone server
+        -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>runtime-standalone</artifactId>
@@ -54,17 +60,13 @@
             <type>zip</type>
             <scope>runtime</scope>
         </dependency>
+
+        <!--
+            Profiles
+        -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-jms</artifactId>
-            <version>${project.version}</version>
-            <classifier>bin</classifier>
-            <type>zip</type>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>profile-rs</artifactId>
             <version>${project.version}</version>
             <classifier>bin</classifier>
             <type>zip</type>
@@ -80,7 +82,31 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>profile-net</artifactId>
+            <artifactId>profile-rs</artifactId>
+            <version>${project.version}</version>
+            <classifier>bin</classifier>
+            <type>zip</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>profile-spring</artifactId>
+            <version>${project.version}</version>
+            <classifier>bin</classifier>
+            <type>zip</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>profile-ws</artifactId>
+            <version>${project.version}</version>
+            <classifier>bin</classifier>
+            <type>zip</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>profile-web</artifactId>
             <version>${project.version}</version>
             <classifier>bin</classifier>
             <type>zip</type>
@@ -96,19 +122,33 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>profile-web</artifactId>
+            <artifactId>profile-net</artifactId>
+            <version>${project.version}</version>
+            <classifier>bin</classifier>
+            <type>zip</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>profile-ftp</artifactId>
             <version>${project.version}</version>
             <classifier>bin</classifier>
             <type>zip</type>
             <scope>runtime</scope>
         </dependency>
 
+        <!--
+            Api
+        -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-embedded-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
+        <!--
+            Logger
+        -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

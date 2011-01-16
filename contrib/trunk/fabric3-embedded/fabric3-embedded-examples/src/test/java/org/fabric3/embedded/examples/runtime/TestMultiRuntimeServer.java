@@ -15,7 +15,7 @@ public class TestMultiRuntimeServer {
     public static void main(String[] args) throws IOException, InterruptedException {
         EmbeddedServer server = EmbeddedServerFactory.multiRuntime("/tmp/fabric3_embedded_multi", Profile.WEB);
         EmbeddedServerFactory.addControllerRuntime(server, "/runtime/controller.xml");
-        EmbeddedServerFactory.addParticipantRuntime(server, "runtime1", "/runtime/runtime1.xml");
+        EmbeddedServerFactory.addParticipantRuntime(server, "runtime1", "/runtime/runtime1.xml", Profile.FTP);
         EmbeddedServerFactory.addParticipantRuntime(server, "runtime2", "/runtime/runtime2.xml");
 
         server.start();

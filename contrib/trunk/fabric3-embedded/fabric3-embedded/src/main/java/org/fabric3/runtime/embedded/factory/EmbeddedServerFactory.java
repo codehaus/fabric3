@@ -40,7 +40,7 @@ public final class EmbeddedServerFactory {
 
         protected EmbeddedLogger logger = new EmbeddedLoggerImpl();
 
-        protected EmbeddedSetup setup = new EmbeddedSetupImpl(logger);
+        protected EmbeddedSetup setup = new EmbeddedSetupImpl();
 
         protected EmbeddedRuntimeManager runtimeManager = new EmbeddedRuntimeManagerImpl(logger, setup);
 
@@ -50,7 +50,11 @@ public final class EmbeddedServerFactory {
 
         protected EmbeddedSharedFolders sharedFolder = new EmbeddedSharedFoldersImpl(dependencyResolver, dependencyUpdatePolicy, logger);
 
-        protected EmbeddedServer server = new EmbeddedServerImpl(runtimeManager);
+        protected EmbeddedServer server = new EmbeddedServerImpl(runtimeManager, logger, setup);
+
+        protected InlineServer() {
+            currentServers.put(server, this);
+        }
 
         public EmbeddedServer get() throws EmbeddedFabric3StartupException {
             try {
@@ -65,8 +69,6 @@ public final class EmbeddedServerFactory {
                 }
                 throw new EmbeddedFabric3StartupException("Cannot create embedded server.", e);
             }
-
-            currentServers.put(server, this);
 
             return server;
         }
@@ -112,11 +114,9 @@ public final class EmbeddedServerFactory {
                 inlineServer.server,
                 inlineServer.setup,
                 inlineServer.logger,
-                inlineServer.sharedFolder
+                inlineServer.sharedFolder,
+                profiles
         );
-        for (EmbeddedProfile profile : profiles) {
-            runtime.addProfile(profile);
-        }
         inlineServer.runtimeManager.addRuntime(runtime);
     }
 
@@ -144,11 +144,9 @@ public final class EmbeddedServerFactory {
                 inlineServer.server,
                 inlineServer.setup,
                 inlineServer.logger,
-                inlineServer.sharedFolder
+                inlineServer.sharedFolder,
+                profiles
         );
-        for (EmbeddedProfile profile : profiles) {
-            runtime.addProfile(profile);
-        }
         inlineServer.runtimeManager.addRuntime(runtime);
     }
 
@@ -345,14 +343,6 @@ public final class EmbeddedServerFactory {
     public static void addControllerRuntime(final EmbeddedServer server, final String systemConfigPath) {
         try {
             addRuntime(server, "controller", systemConfigPath, RuntimeMode.CONTROLLER);
-        } catch (Exception e) {
-            throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
-        }
-    }
-
-    public static void addParticipantRuntime(final EmbeddedServer server, final String runtimeName) {
-        try {
-            addRuntime(server, runtimeName, RuntimeMode.PARTICIPANT);
         } catch (Exception e) {
             throw new EmbeddedFabric3StartupException("Cannot add runtime.", e);
         }
