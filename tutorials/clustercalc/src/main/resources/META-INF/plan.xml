@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<plan xmlns="urn:fabric3.org:core"
-      xmlns:ns="org.codehaus.fabric3"
-      name="CalcPlan">
-    <mappings>
-        <mapping deployable="ns:CalculatorComposite" zone="zone1"/>
-        <mapping deployable="ns:ClientComposite" zone="zone2"/>
-    </mappings>
-</plan>
