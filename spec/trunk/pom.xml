@@ -66,7 +66,7 @@
                         <links>
                             <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
                         </links>
-                        <header>${pom.name}</header>
+                        <header>${project.name}</header>
                         <bottom><![CDATA[Copyright &copy; {inceptionYear}-{currentYear} Fabric3 project contributors. All Rights Reserved. <br />Licensed under the terms of the <a href="http://www.opensource.org/licenses/apache2.0.php">Apache License 2.0</a>.]]></bottom>
                     </configuration>
                 </plugin>
