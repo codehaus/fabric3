@@ -1,5 +1,0 @@
-<config>
-    <web.server>
-        <http port="8080"/>
-    </web.server>
-</config>
