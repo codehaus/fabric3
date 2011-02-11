@@ -1,0 +1,59 @@
+<config>
+    <web.server>
+        <http port="8010-8019"/>
+    </web.server>
+    <runtime mode="participant"/>
+    <thread.pool size="500" coreSize="500"/>
+    <federation>
+        <transport>
+            <value>
+                <entry>
+                    <key>http</key>
+                    <value>localhost:8010</value>
+                </entry>
+                <entry>
+                    <key>binding.net.http</key>
+                    <value>localhost:8011</value>
+                </entry>
+            </value>
+        </transport>
+    </federation>
+
+    <!--
+        <jms>
+            <connection.factories>
+                <connection.factory name="xaDefault" type="xa"/>
+                <connection.factory name="default" type="local"/>
+            </connection.factories>
+            <binding.sca factory="default" xa.factory="xaDefault"/>
+        </jms>
+        <federation logging="severe">
+            <transport>
+                <value>
+                    <entry>
+                        <key>http</key>
+                        <value>localhost:8181</value>
+                    </entry>
+                </value>
+            </transport>
+        </federation>
+        <application.monitor>
+            <configuration>
+                <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
+                    <encoder>
+                        <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
+                    </encoder>
+                </appender>
+            </configuration>
+        </application.monitor>
+        <runtime.monitor>
+            <configuration>
+                <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
+                    <encoder>
+                        <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
+                    </encoder>
+                </appender>
+            </configuration>
+        </runtime.monitor>
+    -->
+</config>
