@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contribution xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+              xmlns:myApp="urn:test">
+
+    <deployable composite="myApp:composite1"/>
+
+</contribution>
