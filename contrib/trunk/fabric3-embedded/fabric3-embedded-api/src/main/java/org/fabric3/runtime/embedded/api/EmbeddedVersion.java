@@ -5,6 +5,6 @@ package org.fabric3.runtime.embedded.api;
  */
 public interface EmbeddedVersion {
 
-    String FABRIC3 = "1.7";
+    String FABRIC3 = "1.8-SNAPSHOT";
 
 }

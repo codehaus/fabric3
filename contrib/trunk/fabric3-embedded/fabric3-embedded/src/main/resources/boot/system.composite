@@ -27,9 +27,11 @@
 
     <include name="XMLIntrospectionComposite" scdlResource="META-INF/xmlIntrospection.composite"/>
 
-    <include name="PojoComposite" scdlResource="META-INF/pojoImplementation.composite"/>
-
     <include name="PolicyComposite" scdlResource="META-INF/policy.composite"/>
+
+    <include name="TransformComposite" scdlResource="META-INF/transform.composite"/>
+
+    <include name="PojoComposite" scdlResource="META-INF/pojoImplementation.composite"/>
 
     <include name="SystemImplementationComposite" scdlResource="META-INF/systemImplementation.composite"/>
 
@@ -37,13 +39,7 @@
 
     <include name="MonitorComposite" scdlResource="META-INF/monitor.composite"/>
 
-    <include name="MonitorDispatcherComposite" scdlResource="META-INF/dispatcher.composite"/>
-
     <include name="MonitorConfigurationComposite" scdlResource="META-INF/configuration.composite"/>
-
-    <include name="JMXComposite" scdlResource="META-INF/jmx.composite"/>
-
-    <include name="TransformComposite" scdlResource="META-INF/transform.composite"/>
 
     <component name="FSArtifactCache">
         <f3:implementation.system class="org.fabric3.fabric.artifact.FSArtifactCache"/>

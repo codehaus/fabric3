@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-runtime-embedded</artifactId>
-        <version>1.7</version>
+        <version>1.8-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-embedded</artifactId>
@@ -115,14 +115,6 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>profile-timer</artifactId>
-            <version>${project.version}</version>
-            <classifier>bin</classifier>
-            <type>zip</type>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>profile-net</artifactId>
             <version>${project.version}</version>
             <classifier>bin</classifier>
             <type>zip</type>
