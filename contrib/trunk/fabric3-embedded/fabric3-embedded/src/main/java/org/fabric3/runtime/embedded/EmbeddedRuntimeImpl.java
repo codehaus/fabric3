@@ -290,9 +290,7 @@ public class EmbeddedRuntimeImpl extends AbstractMBean implements EmbeddedRuntim
         ScanResult result = bootstrapService.scanRepository(hostInfo);
 
         // add runtime profiles
-        for (EmbeddedProfile runtimeProfile : getProfiles()) {
-            appendProfile(result, runtimeProfile);
-        }
+        appendProfile(result, getProfiles());
 
         BootConfiguration configuration = new BootConfiguration();
 
@@ -320,26 +318,31 @@ public class EmbeddedRuntimeImpl extends AbstractMBean implements EmbeddedRuntim
         mBeanServer.registerMBean(this, objectName);
     }
 
-    private void appendProfile(ScanResult result, EmbeddedProfile profile) throws ScanException {
+    private void appendProfile(ScanResult result, Collection<EmbeddedProfile> profiles) throws ScanException {
+        // proceed all profiles at once to skip having duplicate dependencies
         Map<URI, ContributionSource> sources = new HashMap<URI, ContributionSource>();
-        Collection<File> files = FileSystem.filesIn(mSharedFolders.getProfileFolder(profile));
+        if (null != profiles) {
+            for (EmbeddedProfile profile : profiles) {
+                Collection<File> files = FileSystem.filesIn(mSharedFolders.getProfileFolder(profile));
 
-        for (File file : files) {
-            try {
-                URL location = file.toURI().toURL();
-                ContributionSource source;
-                if (file.isDirectory()) {
-                    // create synthetic contributions from directories contained in the repository
-                    URI uri = URI.create("f3-" + file.getName());
-                    source = new SyntheticContributionSource(uri, location, true);
+                for (File file : files) {
+                    try {
+                        URL location = file.toURI().toURL();
+                        ContributionSource source;
+                        if (file.isDirectory()) {
+                            // create synthetic contributions from directories contained in the repository
+                            URI uri = URI.create("f3-" + file.getName());
+                            source = new SyntheticContributionSource(uri, location, true);
 
-                } else {
-                    URI uri = URI.create(file.getName());
-                    source = new FileContributionSource(uri, location, -1, true);
+                        } else {
+                            URI uri = URI.create(file.getName());
+                            source = new FileContributionSource(uri, location, -1, true);
+                        }
+                        sources.put(source.getUri(), source);
+                    } catch (MalformedURLException e) {
+                        throw new ScanException("Error loading contribution:" + file.getName(), e);
+                    }
                 }
-                sources.put(source.getUri(), source);
-            } catch (MalformedURLException e) {
-                throw new ScanException("Error loading contribution:" + file.getName(), e);
             }
         }
 
