@@ -180,7 +180,7 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
         }
 
         try {
-            latch.await();
+            latch.await(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             mLogger.log("Cannot stop server.", e);
         }
