@@ -20,6 +20,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.codehaus.fabric3.standalone</groupId>
+            <artifactId>fabric3-standalone-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
             <version>${project.version}</version>

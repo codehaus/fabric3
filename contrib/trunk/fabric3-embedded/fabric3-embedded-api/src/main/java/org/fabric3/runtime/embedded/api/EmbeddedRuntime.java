@@ -2,7 +2,7 @@ package org.fabric3.runtime.embedded.api;
 
 import org.fabric3.host.RuntimeMode;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.runtime.standalone.server.Fabric3ServerMBean;
 
 import java.io.File;
 import java.net.URI;
@@ -15,7 +15,7 @@ import java.util.Collection;
  *
  * @author Michal Capo
  */
-public interface EmbeddedRuntime {
+public interface EmbeddedRuntime extends Fabric3ServerMBean {
 
     /**
      * Get runtime name.
@@ -59,14 +59,6 @@ public interface EmbeddedRuntime {
      *          when cannot start runtime
      */
     void startRuntime() throws InitializationException;
-
-    /**
-     * Stop runtime.
-     *
-     * @throws org.fabric3.host.runtime.ShutdownException
-     *          when cannot stop runtime
-     */
-    void stopRuntime() throws ShutdownException;
 
     /**
      * Get component stored in this runtime.

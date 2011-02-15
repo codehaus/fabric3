@@ -6,8 +6,10 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.contribution.SyntheticContributionSource;
 import org.fabric3.host.monitor.MonitorEventDispatcherFactory;
+import org.fabric3.host.monitor.MonitorProxyService;
 import org.fabric3.host.runtime.*;
 import org.fabric3.host.util.FileHelper;
+import org.fabric3.jmx.management.AbstractMBean;
 import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 import org.fabric3.runtime.embedded.api.EmbeddedRuntime;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
@@ -20,10 +22,10 @@ import org.fabric3.runtime.embedded.factory.EmbeddedMonitorEventDispatcherFactor
 import org.fabric3.runtime.embedded.service.EmbeddedMonitorEventDispatcher;
 import org.fabric3.runtime.embedded.util.EmbeddedBootstrapHelper;
 import org.fabric3.runtime.embedded.util.FileSystem;
+import org.fabric3.runtime.standalone.server.Fabric3Server;
 import org.w3c.dom.Document;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
+import javax.management.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,10 +35,16 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static org.fabric3.host.Names.MONITOR_FACTORY_URI;
+import static org.fabric3.host.Names.RUNTIME_MONITOR_CHANNEL_URI;
+
 /**
  * @author Michal Capo
  */
-public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
+public class EmbeddedRuntimeImpl extends AbstractMBean implements EmbeddedRuntime {
+
+    private static final String DOMAIN = "fabric3";
+    private static final String RUNTIME_MBEAN = "fabric3:SubDomain=runtime, type=component, name=RuntimeMBean";
 
     /**
      * Runtime name.
@@ -98,6 +106,21 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
      */
     private EmbeddedServer mServer;
 
+    /**
+     * A monitor for this server.
+     */
+    private Fabric3Server.ServerMonitor mMonitor;
+
+    /**
+     * Bean server.
+     */
+    private static MBeanServer mBeanServer;
+
+    /**
+     * Runtimes mode.
+     */
+    private RuntimeMode mMode;
+
     public EmbeddedRuntimeImpl(
             final String name,
             final String systemConfigPath,
@@ -108,6 +131,8 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
             final EmbeddedSharedFolders sharedFolders,
             final EmbeddedProfile... profiles
     ) {
+        super(new MBeanInfo(EmbeddedRuntimeImpl.class.toString(), null, null, null, null, null));
+
         mName = name;
         mRuntimeMode = runtimeMode;
 
@@ -136,6 +161,14 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         } catch (URISyntaxException e) {
             throw new EmbeddedFabric3StartupException("Cannot start embedded runtime", e);
         } catch (ScanException e) {
+            throw new EmbeddedFabric3StartupException("Cannot start embedded runtime", e);
+        } catch (MalformedObjectNameException e) {
+            throw new EmbeddedFabric3StartupException("Cannot start embedded runtime", e);
+        } catch (InstanceAlreadyExistsException e) {
+            throw new EmbeddedFabric3StartupException("Cannot start embedded runtime", e);
+        } catch (NotCompliantMBeanException e) {
+            throw new EmbeddedFabric3StartupException("Cannot start embedded runtime", e);
+        } catch (MBeanRegistrationException e) {
             throw new EmbeddedFabric3StartupException("Cannot start embedded runtime", e);
         }
     }
@@ -214,7 +247,7 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         }
     }
 
-    private void createRuntimeCoordinator() throws ParseException, IOException, URISyntaxException, ScanException {
+    private void createRuntimeCoordinator() throws ParseException, IOException, URISyntaxException, ScanException, MalformedObjectNameException, MBeanRegistrationException, InstanceAlreadyExistsException, NotCompliantMBeanException {
         // create the classloaders for booting the runtime
         ClassLoader systemClassLoader = new MaskingClassLoader(ClassLoader.getSystemClassLoader(), "org.slf4j", "ch.qos.logback");
         ClassLoader libClassLoader = EmbeddedBootstrapHelper.createClassLoader(systemClassLoader, mSharedFolders.getLibFolder());
@@ -232,6 +265,7 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         List<File> deployDirs = bootstrapService.parseDeployDirectories(systemConfig);
 
         URI domainName = bootstrapService.parseDomainName(systemConfig);
+        mMode = bootstrapService.parseRuntimeMode(systemConfig);
         String zoneName = bootstrapService.parseZoneName(systemConfig);
         String runtimeName = bootstrapService.getRuntimeName(domainName, zoneName, mName, mRuntimeMode);
 
@@ -240,7 +274,7 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         // clear out the tmp directory
         FileHelper.cleanDirectory(hostInfo.getTempDir());
 
-        MBeanServer mBeanServer = MBeanServerFactory.createMBeanServer("fabric3");
+        mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);
 
         EmbeddedMonitorEventDispatcher runtimeDispatcher = new EmbeddedMonitorEventDispatcher();
         EmbeddedMonitorEventDispatcher appDispatcher = new EmbeddedMonitorEventDispatcher();
@@ -280,6 +314,10 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
         configuration.setExportedPackages(exportedPackages);
 
         mCoordinator = bootstrapService.createCoordinator(configuration);
+
+        // register the runtime with the MBean server
+        ObjectName objectName = new ObjectName(RUNTIME_MBEAN);
+        mBeanServer.registerMBean(this, objectName);
     }
 
     private void appendProfile(ScanResult result, EmbeddedProfile profile) throws ScanException {
@@ -310,12 +348,32 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
     }
 
     public void startRuntime() throws InitializationException {
-        mCoordinator.start();
+        try {
+            mCoordinator.start();
+
+            MonitorProxyService monitorService = mRuntime.getComponent(MonitorProxyService.class, MONITOR_FACTORY_URI);
+            mMonitor = monitorService.createMonitor(Fabric3Server.ServerMonitor.class, RUNTIME_MONITOR_CHANNEL_URI);
+            mMonitor.started(mMode.toString());
+        } catch (Exception e) {
+            shutdown();
+            mLogger.log(String.format("Cannot start runtime: %s", mRuntime.getName()), e);
+        }
+
     }
 
-    public void stopRuntime() throws ShutdownException {
+    private void shutdown() {
+        try {
+            if (mCoordinator != null) {
+                mCoordinator.shutdown();
+            }
+        } catch (ShutdownException ex) {
+            mMonitor.shutdownError(ex);
+        }
+    }
+
+    public void shutdownRuntime() {
         if (null != mCoordinator) {
-            mCoordinator.shutdown();
+            shutdown();
         } else {
             mLogger.log(String.format("Runtime %1$s is not running, so it cannot be stopped.", mName));
         }
@@ -343,5 +401,16 @@ public class EmbeddedRuntimeImpl implements EmbeddedRuntime {
 
     public File getRuntimeFolder() {
         return mRuntimeFolder;
+    }
+
+    public Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException, ReflectionException {
+        return null;
+    }
+
+    public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
+    }
+
+    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
+        return null;
     }
 }

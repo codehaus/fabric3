@@ -5,7 +5,6 @@ import org.fabric3.host.contribution.*;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.runtime.ant.api.TestRunner;
 import org.fabric3.runtime.embedded.EmbeddedCompositeImpl;
 import org.fabric3.runtime.embedded.api.EmbeddedComposite;
@@ -165,18 +164,18 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
         // loop over all participant runtimes and shut them down
         for (EmbeddedRuntime runtime : getParticipants()) {
             try {
-                runtime.stopRuntime();
+                runtime.shutdownRuntime();
                 latch.countDown();
-            } catch (ShutdownException e) {
+            } catch (Exception e) {
                 mLogger.log("Exception on runtime shutdown.", e);
             }
         }
 
         // stop controller
         try {
-            getController().stopRuntime();
+            getController().shutdownRuntime();
             latch.countDown();
-        } catch (ShutdownException e) {
+        } catch (Exception e) {
             mLogger.log("Exception on runtime shutdown.", e);
         }
 

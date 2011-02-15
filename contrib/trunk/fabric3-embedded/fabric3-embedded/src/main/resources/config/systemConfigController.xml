@@ -1,37 +1,6 @@
 <config>
+    <runtime mode="controller" jmx.port="7000-7099"/>
     <web.server>
-        <http port="8000-8009"/>
+        <http port="8000"/>
     </web.server>
-    <runtime mode="controller"/>
-    <thread.pool size="500" coreSize="500"/>
-    <!--
-        <jms>
-            <connection.factories>
-                <connection.factory name="xaDefault" type="xa"/>
-                <connection.factory name="default" type="local"/>
-            </connection.factories>
-            <binding.sca factory="default" xa.factory="xaDefault"/>
-        </jms>
-        <federation logging="severe">
-            <runtimeName>Controller</runtimeName>
-        </federation>
-        <application.monitor>
-            <configuration>
-                <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
-                    <encoder>
-                        <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
-                    </encoder>
-                </appender>
-            </configuration>
-        </application.monitor>
-        <runtime.monitor>
-            <configuration>
-                <appender name="CUSTOM" class="ch.qos.logback.core.ConsoleAppender">
-                    <encoder>
-                        <pattern>[%level %thread %d{YY:MM:DD HH:mm:ss.SSS}] [%logger] %msg%n%ex</pattern>
-                    </encoder>
-                </appender>
-            </configuration>
-        </runtime.monitor>
-    -->
 </config>

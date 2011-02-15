@@ -48,9 +48,9 @@ public class Profile {
     public static final EmbeddedProfile TIMER = createProfile("profile-timer");
 
     /**
-     * Net profile.
+     * Infinispan profle
      */
-    public static final EmbeddedProfile NET = createProfile("profile-net");
+    public static final EmbeddedProfile INFINISPAN = createProfile("profile-infinispan");
 
     /**
      * FTP profile.

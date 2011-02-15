@@ -1,8 +1,8 @@
 <config>
+    <runtime domain="myDomain" mode="participant" monitor.level="INFO" jmx.port="7200-7299"/>
     <web.server>
         <http port="8020-8029"/>
     </web.server>
-    <runtime domain="myDomain" mode="participant" monitor.level="INFO"/>
     <thread.pool size="500" coreSize="500"/>
     <jms>
         <active.mq>
