@@ -1,7 +1,12 @@
 package org.fabric3.runtime.embedded.service;
 
 import org.fabric3.host.Names;
-import org.fabric3.host.contribution.*;
+import org.fabric3.host.contribution.ContributionNotFoundException;
+import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.host.contribution.RemoveException;
+import org.fabric3.host.contribution.StoreException;
+import org.fabric3.host.contribution.UninstallException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.InitializationException;
@@ -189,7 +194,7 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
             mLogger.log("Some of the embedded fabrics thread didn't stop. Will force stop them.");
 
             // force stop
-            mRuntimesGroup.stop();
+            mRuntimesGroup.interrupt();
         }
 
         // if asked delete server folder
