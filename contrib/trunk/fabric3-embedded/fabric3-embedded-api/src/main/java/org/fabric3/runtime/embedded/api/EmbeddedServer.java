@@ -56,6 +56,11 @@ public interface EmbeddedServer {
     void deployComposite(String compositePath);
 
     /**
+     * Make deployed composites available to use. This is useful due to correct dependency resolving.
+     */
+    void activeAllDeployedComposites();
+
+    /**
      * Install more composites at one time.
      *
      * @param compositesPaths comma separate composites classpath

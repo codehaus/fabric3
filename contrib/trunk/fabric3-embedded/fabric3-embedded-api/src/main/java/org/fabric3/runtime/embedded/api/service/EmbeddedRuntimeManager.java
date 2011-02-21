@@ -74,6 +74,11 @@ public interface EmbeddedRuntimeManager {
     void installComposite(EmbeddedComposite composite);
 
     /**
+     * Deploy all installed composites. This is done due to correct dependency resolving.
+     */
+    void deployAllInstalledComposites();
+
+    /**
      * Uninstall composites.
      *
      * @param composite to be removed

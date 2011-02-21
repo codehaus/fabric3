@@ -27,6 +27,9 @@ public class TestMultiRuntimeServer {
         // test composite
         server.deployComposite("/compositeTest/");
 
+        // include in domain/activate all deployed composites
+        server.activeAllDeployedComposites();
+
         // start all tests
         server.executeTestsOnRuntime("runtime1");
     }

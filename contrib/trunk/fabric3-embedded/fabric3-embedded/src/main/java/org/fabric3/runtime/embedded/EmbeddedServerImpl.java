@@ -143,6 +143,10 @@ public class EmbeddedServerImpl implements EmbeddedServer {
         }
     }
 
+    public void activeAllDeployedComposites() {
+        mRuntimeManager.deployAllInstalledComposites();
+    }
+
     public void undeployComposite(String compositePath) {
         EmbeddedComposite composite = mInstalledComposites.get(compositePath);
         if (null == composite) {

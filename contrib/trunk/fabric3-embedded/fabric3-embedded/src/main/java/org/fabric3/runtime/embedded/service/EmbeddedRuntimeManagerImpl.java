@@ -29,7 +29,9 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -67,6 +69,11 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
      * Servers setup.
      */
     private EmbeddedSetup mSetup;
+
+    /**
+     * List of installed, but not deployed composites.
+     */
+    private List<URI> mInstalledComposites = new CopyOnWriteArrayList<URI>();
 
     public EmbeddedRuntimeManagerImpl(EmbeddedLogger pLogger, EmbeddedSetup pSetup) {
         mLogger = pLogger;
@@ -227,19 +234,28 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
             URI uri = contributionService.store(composite);
             contributionService.install(uri);
 
-            // activate the deployable composite in the domain
-            domain.include(Arrays.asList(uri));
+            mInstalledComposites.add(uri);
         } catch (StoreException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
         } catch (InstallException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
         } catch (ContributionNotFoundException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
+        }
+    }
+
+    public void deployAllInstalledComposites() {
+        try {
+            Domain domain = getController().getComponent(Domain.class, Names.APPLICATION_DOMAIN_URI);
+
+            for (URI uri : mInstalledComposites) {
+                // activate the deployable composite in the domain
+                domain.include(Arrays.asList(uri));
+                mCompositesLatch.countDown();
+            }
         } catch (DeploymentException e) {
             throw new EmbeddedFabric3StartupException("Cannot install composite", e);
         }
-
-        mCompositesLatch.countDown();
     }
 
     public void uninstallComposite(EmbeddedComposite composite) {
