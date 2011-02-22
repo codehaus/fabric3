@@ -7,10 +7,21 @@ import org.fabric3.runtime.embedded.EmbeddedRuntimeImpl;
 import org.fabric3.runtime.embedded.EmbeddedServerImpl;
 import org.fabric3.runtime.embedded.api.EmbeddedProfile;
 import org.fabric3.runtime.embedded.api.EmbeddedServer;
-import org.fabric3.runtime.embedded.api.service.*;
+import org.fabric3.runtime.embedded.api.EmbeddedUpdatePolicy;
+import org.fabric3.runtime.embedded.api.service.EmbeddedDependencyResolver;
+import org.fabric3.runtime.embedded.api.service.EmbeddedDependencyUpdatePolicy;
+import org.fabric3.runtime.embedded.api.service.EmbeddedLogger;
+import org.fabric3.runtime.embedded.api.service.EmbeddedRuntimeManager;
+import org.fabric3.runtime.embedded.api.service.EmbeddedSetup;
+import org.fabric3.runtime.embedded.api.service.EmbeddedSharedFolders;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3SetupException;
 import org.fabric3.runtime.embedded.exception.EmbeddedFabric3StartupException;
-import org.fabric3.runtime.embedded.service.*;
+import org.fabric3.runtime.embedded.service.EmbeddedDependencyUpdatePolicyImpl;
+import org.fabric3.runtime.embedded.service.EmbeddedLoggerImpl;
+import org.fabric3.runtime.embedded.service.EmbeddedRuntimeManagerImpl;
+import org.fabric3.runtime.embedded.service.EmbeddedSetupImpl;
+import org.fabric3.runtime.embedded.service.EmbeddedSharedFoldersImpl;
+import org.fabric3.runtime.embedded.service.MavenDependencyResolver;
 import org.fabric3.runtime.embedded.util.FileSystem;
 
 import java.io.File;
@@ -163,6 +174,10 @@ public final class EmbeddedServerFactory {
     }
 
 
+    private static void modifyUpdatePolicy(final InlineServer server, final EmbeddedUpdatePolicy policy) {
+        server.dependencyUpdatePolicy.setUpdatePolicy(policy);
+    }
+
     private static void modifyServerPath(final InlineServer server, final String serverPath) {
         validateServerPath(serverPath);
         server.setup.setServerFolder(serverPath);
@@ -239,10 +254,41 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
+    public static EmbeddedServer singleRuntime(final EmbeddedUpdatePolicy updatePolicy, final EmbeddedProfile... profiles) {
+        return new InlineServer() {
+            @Override
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyUpdatePolicy(server, updatePolicy);
+                addProfiles(server, profiles);
+            }
+
+            @Override
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addRuntime(server.server);
+            }
+        }.get();
+    }
+
     public static EmbeddedServer singleRuntime(final String atPath, final EmbeddedProfile... profiles) {
         return new InlineServer() {
             @Override
             public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyServerPath(server, atPath);
+            }
+
+            @Override
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addProfiles(server, profiles);
+                addRuntime(server.server);
+            }
+        }.get();
+    }
+
+    public static EmbeddedServer singleRuntime(final String atPath, final EmbeddedUpdatePolicy updatePolicy, final EmbeddedProfile... profiles) {
+        return new InlineServer() {
+            @Override
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyUpdatePolicy(server, updatePolicy);
                 modifyServerPath(server, atPath);
             }
 
@@ -283,6 +329,22 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
+    public static EmbeddedServer singleRuntime(final String atPath, final String systemConfigPath, final EmbeddedUpdatePolicy updatePolicy, final EmbeddedProfile... profiles) {
+        return new InlineServer() {
+            @Override
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyUpdatePolicy(server, updatePolicy);
+                modifyServerPath(server, atPath);
+            }
+
+            @Override
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addProfiles(server, profiles);
+                addRuntime(server.server, null, systemConfigPath);
+            }
+        }.get();
+    }
+
     /*
      *
      *
@@ -305,6 +367,19 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
+    public static EmbeddedServer multiRuntime(final EmbeddedUpdatePolicy updatePolicy) throws EmbeddedFabric3StartupException {
+        return new InlineServer() {
+            @Override
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyUpdatePolicy(server, updatePolicy);
+            }
+
+            @Override
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            }
+        }.get();
+    }
+
     public static EmbeddedServer multiRuntime(final String atPath) throws EmbeddedFabric3StartupException {
         return new InlineServer() {
             @Override
@@ -318,10 +393,39 @@ public final class EmbeddedServerFactory {
         }.get();
     }
 
+    public static EmbeddedServer multiRuntime(final String atPath, final EmbeddedUpdatePolicy updatePolicy) throws EmbeddedFabric3StartupException {
+        return new InlineServer() {
+            @Override
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyUpdatePolicy(server, updatePolicy);
+                modifyServerPath(server, atPath);
+            }
+
+            @Override
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+            }
+        }.get();
+    }
+
     public static EmbeddedServer multiRuntime(final String atPath, final EmbeddedProfile... profiles) throws EmbeddedFabric3StartupException {
         return new InlineServer() {
             @Override
             public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyServerPath(server, atPath);
+            }
+
+            @Override
+            public void addBehaviour(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                addProfiles(server, profiles);
+            }
+        }.get();
+    }
+
+    public static EmbeddedServer multiRuntime(final String atPath, final EmbeddedUpdatePolicy updatePolicy, final EmbeddedProfile... profiles) throws EmbeddedFabric3StartupException {
+        return new InlineServer() {
+            @Override
+            public void modifySetup(InlineServer server) throws IOException, ScanException, URISyntaxException, ParseException {
+                modifyUpdatePolicy(server, updatePolicy);
                 modifyServerPath(server, atPath);
             }
 
