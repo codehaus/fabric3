@@ -251,6 +251,8 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
             for (URI uri : mInstalledComposites) {
                 // activate the deployable composite in the domain
                 domain.include(Arrays.asList(uri));
+                mInstalledComposites.remove(uri);
+
                 mCompositesLatch.countDown();
             }
         } catch (DeploymentException e) {
