@@ -48,7 +48,7 @@ public class Profile {
     public static final EmbeddedProfile TIMER = createProfile("profile-timer");
 
     /**
-     * Infinispan profle
+     * Infinispan profile
      */
     public static final EmbeddedProfile INFINISPAN = createProfile("profile-infinispan");
 
@@ -73,11 +73,11 @@ public class Profile {
         }};
     }
 
-    private static String jar(String jarName) {
+    public static String jar(String jarName) {
         return MessageFormat.format("org.codehaus.fabric3:{0}:{1}@jar", jarName, EmbeddedVersion.FABRIC3);
     }
 
-    private static String zip(String zipName) {
+    public static String zip(String zipName) {
         return MessageFormat.format("org.codehaus.fabric3:{0}:{1}:bin@zip", zipName, EmbeddedVersion.FABRIC3);
     }
 

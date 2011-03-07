@@ -230,7 +230,6 @@ public class EmbeddedRuntimeManagerImpl implements EmbeddedRuntimeManager {
 
         try {
             ContributionService contributionService = getController().getComponent(ContributionService.class, Names.CONTRIBUTION_SERVICE_URI);
-            Domain domain = getController().getComponent(Domain.class, Names.APPLICATION_DOMAIN_URI);
             URI uri = contributionService.store(composite);
             contributionService.install(uri);
 
