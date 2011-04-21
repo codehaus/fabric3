@@ -1,6 +1,5 @@
 package org.fabric3.assembly.factory;
 
-import org.apache.commons.lang.StringUtils;
 import org.fabric3.assembly.configuration.AssemblyConfiguration;
 import org.fabric3.assembly.configuration.RuntimeConfiguration;
 import org.fabric3.assembly.configuration.ServerConfiguration;
@@ -9,6 +8,7 @@ import org.fabric3.assembly.exception.NameNotGivenException;
 import org.fabric3.assembly.exception.ServerAlreadyExistsException;
 import org.fabric3.assembly.profile.Profile;
 import org.fabric3.assembly.profile.UpdatePolicy;
+import org.fabric3.assembly.utils.StringUtils;
 import org.fabric3.host.RuntimeMode;
 
 import java.io.File;

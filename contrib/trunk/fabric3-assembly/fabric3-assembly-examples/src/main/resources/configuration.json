@@ -1,0 +1,16 @@
+{
+    server : {
+        name : SERVER_NAME
+        type : [singe,multi]
+        path : PATH
+    }
+    runtime : {
+        server : SERVER_NAME
+        name : NAME
+        type : [controller,participant]
+        sysconfig : PATH
+        profiles : [WEB,JMS,JPA,REST,SPRING,WEB_SERVICE,WEB,TIMER,INFINISPAN,FTP]
+        runTests : [TRUE,FALSE]
+    }
+    composites : [PATH,PATH,...]
+}
