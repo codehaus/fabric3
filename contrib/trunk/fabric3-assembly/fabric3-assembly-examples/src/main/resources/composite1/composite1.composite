@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3="urn:fabric3.org"
+           targetNamespace="urn:test"
+           name="composite1">
+
+    <component name="PutSomethingToSystemOut">
+        <implementation.java class="org.fabric3.embedded.examples.components.component1.PutSomethingToSystemOut"/>
+    </component>
+
+</composite>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
