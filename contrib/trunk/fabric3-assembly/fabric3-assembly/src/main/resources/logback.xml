@@ -1,0 +1,13 @@
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%-18thread] %c{1} [%p] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.sonatype.aether" level="ERROR"/>
+
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

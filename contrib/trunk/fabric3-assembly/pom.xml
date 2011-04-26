@@ -61,22 +61,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <sca.api.version>1.1</sca.api.version>
-        <stax.api.version>1.0</stax.api.version>
-        <woodstox.version>3.2.9</woodstox.version>
-        <jta.version>1.1.0</jta.version>
-        <jackson.version>1.5.5</jackson.version>
-        <jaxb.api.version>2.2-promoted-b50</jaxb.api.version>
-        <web.services.version>2.0-b24</web.services.version>
-        <jax.rs.version>1.1.1</jax.rs.version>
-        <servlet.groupId>org.mortbay.jetty</servlet.groupId>
-        <servlet.artifactId>servlet-api</servlet.artifactId>
-        <servlet.version>3.0.20100224</servlet.version>
-        <jetty.version>8.0.0.M1</jetty.version>
-        <logback.version>0.9.20</logback.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>

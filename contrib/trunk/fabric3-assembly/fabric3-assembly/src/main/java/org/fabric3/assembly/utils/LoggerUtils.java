@@ -1,5 +1,7 @@
 package org.fabric3.assembly.utils;
 
+import java.text.MessageFormat;
+
 /**
  * Simple implementation of Logger. Just print log messages to system output stream.
  *
@@ -16,6 +18,16 @@ public class LoggerUtils {
      */
     public static void log(String message) {
         System.out.println(prefix + message);
+    }
+
+    /**
+     * Write simple message to logger with MessageFormat.format support.
+     *
+     * @param pattern   of message
+     * @param arguments to append into MessageFormat-er
+     */
+    public static void log(String pattern, String... arguments) {
+        System.out.println(prefix + MessageFormat.format(pattern, arguments));
     }
 
     /**

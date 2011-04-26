@@ -36,7 +36,7 @@ public class DependencyResolver {
             try {
                 downloader.downloadDependencies(new DependencyDownloadListener() {
                     public void dependencyDownloading(String dependencyName) {
-                        LoggerUtils.log(MessageFormat.format("trying to download dependency - {0}", dependencyName));
+                        LoggerUtils.log(MessageFormat.format("downloading dependency - {0}", dependencyName));
                     }
 
                     public void dependencyMissing(String dependencyName) {
