@@ -103,7 +103,7 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addRuntime(String pRuntimeName) {
-        return addRuntime(RuntimeMode.VM, (Profile[]) null);
+        return addRuntime(pRuntimeName, (Profile[]) null);
     }
 
     public ConfigurationBuilder addRuntime(RuntimeMode pMode, Profile... pProfiles) {
