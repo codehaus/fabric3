@@ -19,7 +19,7 @@ public class AssemblyConfiguration {
 
     private List<CompositeConfiguration> composites = new ArrayList<CompositeConfiguration>();
 
-    private ServerLookupPath mServerLookupPath = new ServerLookupPath() {
+    private ServerServices mServerServices = new ServerServices() {
         @Override
         public List<ServerConfiguration> getServerConfigurations() {
             return servers;
@@ -58,8 +58,8 @@ public class AssemblyConfiguration {
         return composites;
     }
 
-    public ServerLookupPath getServerLookupPath() {
-        return mServerLookupPath;
+    public ServerServices getServerLookupPath() {
+        return mServerServices;
     }
 
     public void doAssembly() {

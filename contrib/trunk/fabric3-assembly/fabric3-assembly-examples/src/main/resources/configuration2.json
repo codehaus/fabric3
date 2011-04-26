@@ -1,0 +1,28 @@
+{
+    "server" : {
+        "name" : "server1",
+        "path" : "/tmp/fabric3-test1",
+        "profiles": "['web','rest']",
+
+        "runtime1" : {
+            "type" : "['vm','controller','participant']",
+            "sysConfig" : "/tmp/config/runtime1.xml",
+            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+        },
+        "runtime2" : {
+            "type" : "['vm','controller','participant']",
+            "sysConfig" : "/tmp/config/runtime1.xml",
+            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+        }
+    },
+    "composites" : {
+        "composite1" : {
+            "runtime" : "runtime1",
+            "path" : "/tmp/composite1"
+        },
+        "composite2" : {
+            "runtime" : "runtime1",
+            "path" : "/tmp/composite2"
+        }
+    }
+}

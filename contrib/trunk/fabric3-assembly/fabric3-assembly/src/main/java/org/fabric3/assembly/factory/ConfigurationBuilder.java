@@ -72,6 +72,7 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addServer(String pPath, String... pProfiles) {
+
         for (ServerConfiguration serverConfiguration : configuration.getServers()) {
             if (ServerConfiguration.SERVER_DEFAULT_NAME.equals(serverConfiguration.getServerName())) {
                 throw new ServerAlreadyExistsException("You cannot have two 'default' servers. Please specify names to these servers.");

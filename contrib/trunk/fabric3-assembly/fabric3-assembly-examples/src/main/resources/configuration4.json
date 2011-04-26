@@ -1,0 +1,9 @@
+{
+    "server1" : {
+        "path" : "/tmp/fabric3-test1",
+        "profiles": "['web','rest']",
+
+        "vm" : {
+        }
+    }
+}

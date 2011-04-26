@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public abstract class ServerLookupPath {
+public abstract class ServerServices {
 
     public abstract List<ServerConfiguration> getServerConfigurations();
 

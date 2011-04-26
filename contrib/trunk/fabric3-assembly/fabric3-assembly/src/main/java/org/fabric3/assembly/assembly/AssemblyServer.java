@@ -3,12 +3,10 @@ package org.fabric3.assembly.assembly;
 import org.fabric3.assembly.configuration.ServerConfiguration;
 import org.fabric3.assembly.configuration.Version;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.maven.DependencyResolver;
 import org.fabric3.assembly.profile.UpdatePolicy;
-import org.fabric3.assembly.utils.FileUtils;
-import org.fabric3.assembly.utils.FileUtils2;
-import org.fabric3.assembly.utils.LoggerUtils;
-import org.fabric3.assembly.utils.ZipUtils;
+import org.fabric3.assembly.utils.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +19,9 @@ public class AssemblyServer extends AssemblyProfiles {
     private DependencyResolver dependencyResolver = new DependencyResolver();
 
     public void doAssembly(ServerConfiguration pServerConfiguration, UpdatePolicy pPolicy) {
-        File serverPath = pServerConfiguration.getServerPath();
+        validate(pServerConfiguration);
 
+        File serverPath = pServerConfiguration.getServerPath();
         LoggerUtils.log("server in folder - " + serverPath);
 
         if (FileUtils2.recreateFolderIfNeeded(serverPath, pPolicy)) {
@@ -49,6 +48,16 @@ public class AssemblyServer extends AssemblyProfiles {
                 FileUtils.delete(FileUtils.filesIn(FileUtils.folder(file, "deploy")));
                 FileUtils.delete(FileUtils.filesIn(FileUtils.folder(file, "repository/user")));
             }
+        }
+    }
+
+    private void validate(ServerConfiguration serverConfiguration) {
+        if (StringUtils.isBlank(serverConfiguration.getServerName())) {
+            throw new ValidationException("Server's name cannot be null.");
+        }
+
+        if (null == serverConfiguration.getServerPath()) {
+            throw new ValidationException("Server's build path cannot be null.");
         }
     }
 
