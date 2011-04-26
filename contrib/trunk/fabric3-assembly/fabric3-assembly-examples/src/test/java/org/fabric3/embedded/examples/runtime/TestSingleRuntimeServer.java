@@ -15,9 +15,10 @@ public class TestSingleRuntimeServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         AssemblyConfiguration configuration = ConfigurationBuilder.getBuilder()
-                .addServer("/tmp/fabric3_test_single", "sever1")
+                .addServer("/tmp/fabric3_test_single", "server1", Profiles.WEB)
                 .addServer("/tmp/fabric3_test_single2")
                 .addRuntime(Profiles.WEB)
+                .addRuntime("server1", "vm")
                 .setUpdatePolicy(UpdatePolicy.ALWAYS)
                 .createConfiguration();
 

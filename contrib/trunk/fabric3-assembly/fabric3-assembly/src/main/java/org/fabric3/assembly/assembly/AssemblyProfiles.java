@@ -1,9 +1,7 @@
 package org.fabric3.assembly.assembly;
 
-import org.fabric3.assembly.exception.ProfileNotFoundException;
 import org.fabric3.assembly.maven.DependencyResolver;
 import org.fabric3.assembly.profile.Profile;
-import org.fabric3.assembly.profile.Profiles;
 import org.fabric3.assembly.utils.FileUtils;
 import org.fabric3.assembly.utils.FileUtils2;
 import org.fabric3.assembly.utils.LoggerUtils;
@@ -21,11 +19,10 @@ public abstract class AssemblyProfiles {
 
     protected DependencyResolver dependencyResolver = new DependencyResolver();
 
-    protected void processProfiles(List<String> pProfiles, File pDestinationFolder) {
-        for (String profile : pProfiles) {
+    protected void processProfiles(List<Profile> pProfiles, File pDestinationFolder) {
+        for (Profile profile : pProfiles) {
             try {
-                Profile p = Profiles.getProfileByName(profile);
-                for (String file : p.getFiles()) {
+                for (String file : profile.getFiles()) {
                     File f = dependencyResolver.findFile(file);
                     switch (FileUtils2.fileExtension(f)) {
                         case JAR:
@@ -39,8 +36,6 @@ public abstract class AssemblyProfiles {
                             break;
                     }
                 }
-            } catch (ProfileNotFoundException e) {
-                LoggerUtils.logWarn(MessageFormat.format("Profile {0} not found.", e.getMessage()));
             } catch (IOException e) {
                 LoggerUtils.log("Cannot unzip extension.", e);
             }

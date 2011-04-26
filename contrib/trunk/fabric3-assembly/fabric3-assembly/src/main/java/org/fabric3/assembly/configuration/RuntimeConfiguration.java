@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.profile.Profile;
 import org.fabric3.host.RuntimeMode;
 
 import java.io.File;
@@ -22,9 +23,9 @@ public class RuntimeConfiguration {
 
     private File systemConfig;
 
-    private List<String> profiles = new ArrayList<String>();
+    private List<Profile> profiles = new ArrayList<Profile>();
 
-    public RuntimeConfiguration(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, File pSystemConfig, String... pProfiles) {
+    public RuntimeConfiguration(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, File pSystemConfig, Profile... pProfiles) {
         if (null == pServerName) {
             serverName = ServerConfiguration.SERVER_DEFAULT_NAME;
         } else {
@@ -74,11 +75,11 @@ public class RuntimeConfiguration {
         systemConfig = new File(pSystemConfig);
     }
 
-    public List<String> getProfiles() {
+    public List<Profile> getProfiles() {
         return profiles;
     }
 
-    public void setProfiles(String... pProfiles) {
+    public void setProfiles(Profile... pProfiles) {
         profiles.addAll(Arrays.asList(pProfiles));
     }
 }

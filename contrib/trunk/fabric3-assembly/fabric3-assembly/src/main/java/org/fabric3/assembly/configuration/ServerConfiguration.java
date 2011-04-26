@@ -1,5 +1,7 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.profile.Profile;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +18,9 @@ public class ServerConfiguration {
 
     private File serverPath;
 
-    private List<String> profiles = new ArrayList<String>();
+    private List<Profile> profiles = new ArrayList<Profile>();
 
-    public ServerConfiguration(String pServerName, File pServerPath, String... pProfiles) {
+    public ServerConfiguration(String pServerName, File pServerPath, Profile... pProfiles) {
         if (null == pServerName) {
             serverName = SERVER_DEFAULT_NAME;
         } else {
@@ -46,11 +48,11 @@ public class ServerConfiguration {
         serverPath = new File(pServerPath);
     }
 
-    public List<String> getProfiles() {
+    public List<Profile> getProfiles() {
         return profiles;
     }
 
-    public void setProfiles(String... pProfiles) {
+    public void setProfiles(Profile... pProfiles) {
         profiles = Arrays.asList(pProfiles);
     }
 }

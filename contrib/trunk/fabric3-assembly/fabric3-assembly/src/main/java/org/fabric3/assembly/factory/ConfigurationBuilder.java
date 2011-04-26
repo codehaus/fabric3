@@ -64,27 +64,19 @@ public class ConfigurationBuilder {
     *
     */
 
-    public ConfigurationBuilder addServer(String pPath, String pName) {
-        return addServer(pPath, pName, (String[]) null);
-    }
-
-    public ConfigurationBuilder addServer(String pPath, String pName, Profile... pProfiles) {
-        return addServer(pName, pPath, convertProfiles(pProfiles));
-    }
-
     public ConfigurationBuilder addServer(String pPath) {
-        return addServer(pPath, (String[]) null);
+        return addServer(pPath, ServerConfiguration.SERVER_DEFAULT_NAME);
+    }
+
+    public ConfigurationBuilder addServer(String pPath, String pName) {
+        return addServer(pPath, pName, (Profile[]) null);
     }
 
     public ConfigurationBuilder addServer(String pPath, Profile... pProfiles) {
-        return addServer(pPath, convertProfiles(pProfiles));
+        return addServer(pPath, ServerConfiguration.SERVER_DEFAULT_NAME, pProfiles);
     }
 
-    public ConfigurationBuilder addServer(String pPath, String... pProfiles) {
-        return addServer(null, pPath, pProfiles);
-    }
-
-    public ConfigurationBuilder addServer(String pPath, String pName, String... pProfiles) {
+    public ConfigurationBuilder addServer(String pPath, String pName, Profile... pProfiles) {
         if (StringUtils.isBlank(pName)) {
             throw new NameNotGivenException("You didn't specified any server name.");
         }
@@ -106,43 +98,35 @@ public class ConfigurationBuilder {
     *
     */
 
-    public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
-        return addRuntime(pRuntimeName, pMode, pConfigFile, convertProfiles(pProfiles));
-    }
-
-    public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile, String... pProfiles) {
-        return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, pRuntimeName, pMode, pConfigFile, pProfiles);
-    }
-
-    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
-        return addRuntime(pServerName, pRuntimeName, pMode, pConfigFile, convertProfiles(pProfiles));
-    }
-
-    public ConfigurationBuilder addRuntime(String... pProfiles) {
-        return addRuntime(RuntimeMode.VM, null, pProfiles);
-    }
-
     public ConfigurationBuilder addRuntime(Profile... pProfiles) {
         return addRuntime(RuntimeMode.VM, null, pProfiles);
     }
 
-    public ConfigurationBuilder addRuntime(RuntimeMode pMode, String... pProfiles) {
-        return addRuntime(pMode, null, pProfiles);
+    public ConfigurationBuilder addRuntime(String pRuntimeName) {
+        return addRuntime(RuntimeMode.VM, (Profile[]) null);
     }
 
     public ConfigurationBuilder addRuntime(RuntimeMode pMode, Profile... pProfiles) {
         return addRuntime(pMode, null, pProfiles);
     }
 
+    public ConfigurationBuilder addRuntime(String pServerName, Profile... pProfiles) {
+        return addRuntime(pServerName, RuntimeConfiguration.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, pProfiles);
+    }
+
+    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName) {
+        return addRuntime(pServerName, pRuntimeName, RuntimeMode.VM, null);
+    }
+
     public ConfigurationBuilder addRuntime(RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
-        return addRuntime(pMode, pConfigFile, convertProfiles(pProfiles));
+        return addRuntime(RuntimeConfiguration.RUNTIME_DEFAULT_NAME, pMode, pConfigFile, pProfiles);
     }
 
-    public ConfigurationBuilder addRuntime(RuntimeMode pMode, String pConfigFile, String... pProfiles) {
-        return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, RuntimeConfiguration.RUNTIME_DEFAULT_NAME, pMode, pConfigFile, pProfiles);
+    public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
+        return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, pRuntimeName, pMode, pConfigFile, pProfiles);
     }
 
-    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, String pConfigFile, String... pProfiles) {
+    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
         if (StringUtils.isBlank(pRuntimeName)) {
             throw new NameNotGivenException("Runtime name doesn't exists. Please provide one.");
         }
@@ -170,15 +154,6 @@ public class ConfigurationBuilder {
         return this;
     }
 
-    private String[] convertProfiles(Profile... pProfiles) {
-        List<String> temp = new ArrayList<String>();
-        for (Profile profile : pProfiles) {
-            temp.add(profile.getName());
-        }
-
-        return temp.toArray(new String[temp.size()]);
-    }
-
     /*
     *
     *
@@ -196,5 +171,4 @@ public class ConfigurationBuilder {
         configuration.setUpdatePolicy(UpdatePolicy.valueOf(pPolicy).name());
         return this;
     }
-
 }
