@@ -31,7 +31,7 @@ public class RuntimeConfiguration {
         } else {
             serverName = pServerName;
         }
-        if (null == runtimeName) {
+        if (null == pRuntimeName) {
             runtimeName = RuntimeConfiguration.RUNTIME_DEFAULT_NAME;
         } else {
             runtimeName = pRuntimeName;

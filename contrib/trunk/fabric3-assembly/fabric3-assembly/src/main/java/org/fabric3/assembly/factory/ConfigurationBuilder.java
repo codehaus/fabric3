@@ -115,15 +115,23 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName) {
-        return addRuntime(pServerName, pRuntimeName, RuntimeMode.VM, null);
+        return addRuntime(pServerName, pRuntimeName, RuntimeMode.VM, (Profile[]) null);
     }
 
     public ConfigurationBuilder addRuntime(RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
         return addRuntime(RuntimeConfiguration.RUNTIME_DEFAULT_NAME, pMode, pConfigFile, pProfiles);
     }
 
+    public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
+        return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, pProfiles);
+    }
+
     public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
         return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, pRuntimeName, pMode, pConfigFile, pProfiles);
+    }
+
+    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
+        return addRuntime(pServerName, pRuntimeName, pMode, null, pProfiles);
     }
 
     public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
@@ -141,12 +149,12 @@ public class ConfigurationBuilder {
                 throw new AssemblyException(MessageFormat.format("Server ''{0}'' already contains ''{1}'' runtime.", pServerName, pRuntimeName));
             }
 
-            if (RuntimeMode.VM == runtime.getRuntimeMode()) {
+            if (RuntimeMode.VM == runtime.getRuntimeMode() && RuntimeMode.VM == pMode) {
                 throw new AssemblyException("Server already contains VM runtime. You cannot add next VM runtime to this server.");
             }
 
-            if (RuntimeMode.CONTROLLER == runtime.getRuntimeMode()) {
-                throw new AssemblyException("Server already contains CONTROLLER runtime. You cannot add next controller runtime to this server.");
+            if (RuntimeMode.CONTROLLER == runtime.getRuntimeMode() && RuntimeMode.CONTROLLER == pMode) {
+                throw new AssemblyException(MessageFormat.format("Server ''{0}'' already contains CONTROLLER runtime. You cannot add next controller runtime to this server.", pServerName));
             }
         }
 

@@ -1,5 +1,11 @@
 package org.fabric3.embedded.examples.runtime;
 
+import org.fabric3.assembly.configuration.AssemblyConfiguration;
+import org.fabric3.assembly.factory.ConfigurationBuilder;
+import org.fabric3.assembly.profile.Profiles;
+import org.fabric3.assembly.profile.UpdatePolicy;
+import org.fabric3.host.RuntimeMode;
+
 import java.io.IOException;
 import java.util.Properties;
 
@@ -9,27 +15,15 @@ import java.util.Properties;
 public class TestMultiRuntimeServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-/*
-        EmbeddedServer server = EmbeddedServerFactory.multiRuntime("/tmp/fabric3_embedded_multi", EmbeddedUpdatePolicy.ALWAYS);
-        EmbeddedServerFactory.addControllerRuntime(server, "/runtime/controller.xml", Profiles.WEB);
-        EmbeddedServerFactory.addParticipantRuntime(server, "runtime1", "/runtime/runtime1.xml", Profiles.WEB);
-        EmbeddedServerFactory.addParticipantRuntime(server, "runtime2", "/runtime/runtime2.xml");
+        AssemblyConfiguration configuration = ConfigurationBuilder.getBuilder()
+                .addServer("/tmp/fabric3_test_multi", "server1", Profiles.WEB)
+                .addRuntime("server1", "controller", RuntimeMode.CONTROLLER, Profiles.WEB, Profiles.WEB_SERVICE)
+                .addRuntime("server1", "par1", RuntimeMode.PARTICIPANT, Profiles.WEB)
+                .addRuntime("server1", "par2", RuntimeMode.PARTICIPANT, Profiles.WEB_SERVICE)
+                .setUpdatePolicy(UpdatePolicy.ALWAYS)
+                .createConfiguration();
 
-        server.start();
-
-        // composite
-        server.deployComposite("/composite1/");
-        server.deployComposite(projectPath() + "/src/main/webapp/");
-
-        // test composite
-        server.deployComposite("/compositeTest/");
-
-        // include in domain/activate all deployed composites
-        server.activeAllDeployedComposites();
-
-        // start all tests
-        server.executeTestsOnRuntime("runtime1");
-*/
+        configuration.doAssembly();
     }
 
     private static String projectPath() throws IOException {
