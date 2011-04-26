@@ -19,7 +19,7 @@ public class Assembly {
         }
 
         for (RuntimeConfiguration runtime : pConfiguration.getRuntimes()) {
-            runtimeAssembly.doAssembly(runtime, pConfiguration.getUpdatePolicy(), pConfiguration.getServerLookupPath());
+            runtimeAssembly.doAssembly(runtime, pConfiguration.getUpdatePolicy(), pConfiguration.getConfigurationServices());
         }
     }
 

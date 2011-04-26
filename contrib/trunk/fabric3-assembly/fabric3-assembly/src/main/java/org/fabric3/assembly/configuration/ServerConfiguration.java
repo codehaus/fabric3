@@ -18,12 +18,12 @@ public class ServerConfiguration {
 
     private List<String> profiles = new ArrayList<String>();
 
-    public ServerConfiguration(File pServerPath, String... pProfiles) {
-        this(SERVER_DEFAULT_NAME, pServerPath, pProfiles);
-    }
-
     public ServerConfiguration(String pServerName, File pServerPath, String... pProfiles) {
-        serverName = pServerName;
+        if (null == pServerName) {
+            serverName = SERVER_DEFAULT_NAME;
+        } else {
+            serverName = pServerName;
+        }
         serverPath = pServerPath;
         if (null != pProfiles) {
             profiles.addAll(Arrays.asList(pProfiles));

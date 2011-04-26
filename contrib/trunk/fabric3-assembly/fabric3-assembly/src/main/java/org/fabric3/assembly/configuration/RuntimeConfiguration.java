@@ -24,17 +24,17 @@ public class RuntimeConfiguration {
 
     private List<String> profiles = new ArrayList<String>();
 
-    public RuntimeConfiguration(RuntimeMode pRuntimeMode, File pSystemConfig, String... pProfiles) {
-        this(ServerConfiguration.SERVER_DEFAULT_NAME, RUNTIME_DEFAULT_NAME, pRuntimeMode, pSystemConfig, pProfiles);
-    }
-
     public RuntimeConfiguration(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, File pSystemConfig, String... pProfiles) {
         if (null == pServerName) {
             serverName = ServerConfiguration.SERVER_DEFAULT_NAME;
         } else {
             serverName = pServerName;
         }
-        runtimeName = pRuntimeName;
+        if (null == runtimeName) {
+            runtimeName = RuntimeConfiguration.RUNTIME_DEFAULT_NAME;
+        } else {
+            runtimeName = pRuntimeName;
+        }
         runtimeMode = pRuntimeMode;
         systemConfig = pSystemConfig;
         if (null != pProfiles) {

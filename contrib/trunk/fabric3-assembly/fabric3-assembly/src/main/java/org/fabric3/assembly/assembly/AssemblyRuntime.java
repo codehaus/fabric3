@@ -1,7 +1,7 @@
 package org.fabric3.assembly.assembly;
 
+import org.fabric3.assembly.configuration.ConfigurationServices;
 import org.fabric3.assembly.configuration.RuntimeConfiguration;
-import org.fabric3.assembly.configuration.ServerServices;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.profile.UpdatePolicy;
@@ -20,11 +20,11 @@ import java.text.MessageFormat;
  */
 public class AssemblyRuntime extends AssemblyProfiles {
 
-    public void doAssembly(RuntimeConfiguration pConfiguration, UpdatePolicy pPolicy, ServerServices serverServices) {
+    public void doAssembly(RuntimeConfiguration pConfiguration, UpdatePolicy pPolicy, ConfigurationServices configurationServices) {
         validate(pConfiguration);
 
         // server folder
-        File serverFolder = serverServices.findServerPathByRuntime(pConfiguration);
+        File serverFolder = configurationServices.findServerPathByRuntime(pConfiguration);
         // calculate runtime folder
         File runtimeFolder = FileUtils.folder(serverFolder, "runtimes/" + pConfiguration.getRuntimeName());
 
@@ -91,10 +91,6 @@ public class AssemblyRuntime extends AssemblyProfiles {
 
         if (null == pRuntimeConfiguration.getRuntimeMode()) {
             throw new ValidationException("Runtime mode of " + runtimeName + " is null.");
-        }
-
-        if (null == pRuntimeConfiguration.getSystemConfig() || !pRuntimeConfiguration.getSystemConfig().exists()) {
-            throw new ValidationException(MessageFormat.format("System configuration of runtime {0} doesn''t exists:{1}", runtimeName, pRuntimeConfiguration.getSystemConfig().getAbsolutePath()));
         }
     }
 
