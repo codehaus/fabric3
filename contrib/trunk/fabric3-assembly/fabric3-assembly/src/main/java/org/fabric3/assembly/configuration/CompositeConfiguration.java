@@ -11,12 +11,12 @@ public class CompositeConfiguration {
 
     private File path;
 
-    public CompositeConfiguration(File pPath) {
-        this(ServerConfiguration.SERVER_DEFAULT_NAME, pPath);
-    }
-
     public CompositeConfiguration(String pServerName, File pPath) {
-        serverName = pServerName;
+        if (null == pServerName) {
+            serverName = ServerConfiguration.SERVER_DEFAULT_NAME;
+        } else {
+            serverName = pServerName;
+        }
         path = pPath;
     }
 

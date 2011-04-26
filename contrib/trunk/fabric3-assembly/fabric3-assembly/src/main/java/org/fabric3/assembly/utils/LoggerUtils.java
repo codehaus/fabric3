@@ -26,7 +26,7 @@ public class LoggerUtils {
      * @param pattern   of message
      * @param arguments to append into MessageFormat-er
      */
-    public static void log(String pattern, String... arguments) {
+    public static void log(String pattern, Object... arguments) {
         System.out.println(prefix + MessageFormat.format(pattern, arguments));
     }
 
@@ -41,7 +41,16 @@ public class LoggerUtils {
         e.printStackTrace();
     }
 
+    public static void log(Exception e, String pattern, Object... arguments) {
+        System.out.println(prefix + MessageFormat.format(pattern, arguments));
+        e.printStackTrace();
+    }
+
     public static void logWarn(String message) {
         System.out.println(prefix + "WARNING " + message);
+    }
+
+    public static void logWarn(String pattern, Object... arguments) {
+        System.out.println(prefix + "WARNING " + MessageFormat.format(pattern, arguments));
     }
 }
