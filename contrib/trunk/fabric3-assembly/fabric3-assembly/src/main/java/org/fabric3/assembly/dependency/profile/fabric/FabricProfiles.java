@@ -58,10 +58,10 @@ public class FabricProfiles {
      * Test profile. List of files needed for running tests on fabric server.
      */
     public static final Profile TEST = new Profile("profile-test", "test") {{
-        files.add(FabricDependencyFactory.jar("fabric3-junit"));
-        files.add(FabricDependencyFactory.jar("fabric3-test-spi"));
-        files.add(FabricDependencyFactory.jar("fabric3-ant-api"));
-        files.add(FabricDependencyFactory.jar("fabric3-ant-extension"));
+        mFiles.add(FabricDependencyFactory.jar("fabric3-junit"));
+        mFiles.add(FabricDependencyFactory.jar("fabric3-test-spi"));
+        mFiles.add(FabricDependencyFactory.jar("fabric3-ant-api"));
+        mFiles.add(FabricDependencyFactory.jar("fabric3-ant-extension"));
     }};
 
 }

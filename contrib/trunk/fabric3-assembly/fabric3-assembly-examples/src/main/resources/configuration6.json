@@ -1,0 +1,51 @@
+{
+    "server" : {
+        "name" : "server1",
+        "path" : "/tmp/fabric3-test1",
+        "profiles": "['web','rest']",
+
+        "runtime1" : {
+            "type" : "['vm','controller','participant']",
+            "sysConfig" : "/tmp/config/runtime1.xml",
+            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+        },
+        "runtime2" : {
+            "type" : "['vm','controller','participant']",
+            "sysConfig" : "/tmp/config/runtime1.xml",
+            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+        }
+    },
+
+    "composites" : {
+        "user" : {
+            "runtime" : "runtime1",
+            "files" : "org.fabric3:user:1.0-SNAPSHOT"
+        },
+        "bank-account" : {
+            "runtime" : "runtime1",
+            "files" : "org.fabric3:bAccount:1.0-SNAPSHOT:bin@zip"
+        },
+        "monitoring" : {
+            "runtime" : "runtime1",
+            "path" : "/tmp/monitoring.zip"
+        }
+    },
+
+    "profiles" : {
+        "version" : "1.0",
+        "profile-connector" : {
+            "alternative-name" : "['connector','b-connector','bank-connector']",
+            "files" : "org.fabric3:profile-bank-connector"
+        },
+        "profile-reporting" : {
+            "alternative-name" : "reporting",
+            "files" : "org.fabric3:reporting:bin:zip",
+            "paths" : "/tmp/reporting-adds.jar"
+        },
+        "profile-reporting-old" : {
+            "alternative-name" : "reporting-old",
+            "version" : "0.9.7",
+            "files" : "['org.fabric3:reporting-old','org.fabric3:reporting-old-adds']"
+        }
+    }
+}

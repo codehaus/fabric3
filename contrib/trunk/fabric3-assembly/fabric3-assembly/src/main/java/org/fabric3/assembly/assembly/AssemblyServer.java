@@ -2,8 +2,8 @@ package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.configuration.ConfigurationHelper;
 import org.fabric3.assembly.configuration.ServerConfiguration;
-import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.UpdatePolicy;
+import org.fabric3.assembly.dependency.profile.fabric.FabricDependencyFactory;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.maven.DependencyResolver;
@@ -31,8 +31,7 @@ public class AssemblyServer extends AssemblyProfiles {
 
         if (FileUtils2.recreateFolderIfNeeded(serverPath, pPolicy)) {
             try {
-                //TODO <capo> reuse FabricDependencyFactory
-                ZipUtils.unzip(dependencyResolver.findFile(new Dependency("org.codehaus.fabric3:runtime-standalone:zip:bin:" + pConfigurationHelper.getVersion().toString())), serverPath);
+                ZipUtils.unzip(dependencyResolver.findFile(pConfigurationHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"))), serverPath);
                 FileUtils.delete(serverPath, "runtimes");
 
                 FileUtils.checkExistenceAndContent(FileUtils.folders(serverPath, "boot", "extensions", "host", "lib"));
@@ -40,7 +39,7 @@ public class AssemblyServer extends AssemblyProfiles {
                 // create runtimes folder
                 FileUtils.createFolder(FileUtils.folder(serverPath, "runtimes"));
 
-                processProfiles(pServerConfiguration.getProfiles(), pConfigurationHelper.getVersion(), FileUtils.folder(serverPath, "extensions"));
+                processProfiles(pServerConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"));
             } catch (IOException e) {
                 throw new AssemblyException("Cannot assembly standalone runtime.", e);
             }

@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.ServerNotFoundException;
 import org.fabric3.assembly.utils.Closure;
@@ -28,6 +29,14 @@ public abstract class ConfigurationHelper {
      *
      *
      */
+
+    public Dependency appendVersion(Dependency pDependency) {
+        if (pDependency.isVersionLess()) {
+            pDependency.setVersion(getVersion());
+        }
+
+        return pDependency;
+    }
 
     public File findServerPathByRuntime(RuntimeConfiguration pRuntime) {
         String serverLookupName = pRuntime.getServerName();

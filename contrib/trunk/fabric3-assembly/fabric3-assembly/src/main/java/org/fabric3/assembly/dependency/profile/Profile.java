@@ -1,6 +1,6 @@
 package org.fabric3.assembly.dependency.profile;
 
-import org.fabric3.assembly.dependency.PartialDependency;
+import org.fabric3.assembly.dependency.Dependency;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class Profile {
     /**
      * Dependencies specified for this profile.
      */
-    protected List<PartialDependency> files = new ArrayList<PartialDependency>();
+    protected List<Dependency> mFiles = new ArrayList<Dependency>();
 
     /**
      * Create profile with given name.
@@ -82,8 +82,8 @@ public class Profile {
      *
      * @return list of dependencies used for specific profile
      */
-    public List<PartialDependency> getFiles() {
-        return files;
+    public List<Dependency> getFiles() {
+        return mFiles;
     }
 
     @Override
