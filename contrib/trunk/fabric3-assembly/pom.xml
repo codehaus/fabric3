@@ -20,8 +20,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-runtime-assembly</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <artifactId>fabric3-assembly-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <repositories>

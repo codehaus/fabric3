@@ -1,10 +1,10 @@
 package org.fabric3.assembly.assembly;
 
-import org.fabric3.assembly.configuration.ConfigurationServices;
+import org.fabric3.assembly.configuration.ConfigurationHelper;
 import org.fabric3.assembly.configuration.RuntimeConfiguration;
+import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ValidationException;
-import org.fabric3.assembly.profile.UpdatePolicy;
 import org.fabric3.assembly.utils.FileUtils;
 import org.fabric3.assembly.utils.StringUtils;
 import org.fabric3.assembly.utils.UpdatePolicyUtils;
@@ -20,11 +20,11 @@ import java.text.MessageFormat;
  */
 public class AssemblyRuntime extends AssemblyProfiles {
 
-    public void doAssembly(RuntimeConfiguration pConfiguration, UpdatePolicy pPolicy, ConfigurationServices configurationServices) {
+    public void doAssembly(RuntimeConfiguration pConfiguration, UpdatePolicy pPolicy, ConfigurationHelper pConfigurationHelper) {
         validate(pConfiguration);
 
         // server folder
-        File serverFolder = configurationServices.findServerPathByRuntime(pConfiguration);
+        File serverFolder = pConfigurationHelper.findServerPathByRuntime(pConfiguration);
         // calculate runtime folder
         File runtimeFolder = FileUtils.folder(serverFolder, "runtimes/" + pConfiguration.getRuntimeName());
 
@@ -74,7 +74,7 @@ public class AssemblyRuntime extends AssemblyProfiles {
             }
 
             // process profile files
-            processProfiles(pConfiguration.getProfiles(), extensionFolder);
+            processProfiles(pConfiguration.getProfiles(), pConfigurationHelper.getVersion(), extensionFolder);
         }
     }
 

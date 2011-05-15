@@ -1,6 +1,6 @@
 package org.fabric3.assembly.configuration;
 
-import org.fabric3.assembly.profile.Profile;
+import org.fabric3.assembly.dependency.profile.Profile;
 
 import java.io.File;
 import java.util.ArrayList;

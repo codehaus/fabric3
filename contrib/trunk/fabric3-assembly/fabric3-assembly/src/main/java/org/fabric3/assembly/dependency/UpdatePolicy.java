@@ -1,4 +1,4 @@
-package org.fabric3.assembly.profile;
+package org.fabric3.assembly.dependency;
 
 /**
  * @author Michal Capo

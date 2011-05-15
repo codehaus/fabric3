@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.ServerNotFoundException;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
@@ -12,11 +13,13 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public abstract class ConfigurationServices {
+public abstract class ConfigurationHelper {
 
     public abstract List<ServerConfiguration> getServerConfigurations();
 
     public abstract List<RuntimeConfiguration> getRuntimeConfigurations();
+
+    public abstract Version getVersion();
 
     /*
      *

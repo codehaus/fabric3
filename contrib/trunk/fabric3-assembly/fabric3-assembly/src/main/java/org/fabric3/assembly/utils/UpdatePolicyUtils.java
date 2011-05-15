@@ -1,6 +1,6 @@
 package org.fabric3.assembly.utils;
 
-import org.fabric3.assembly.profile.UpdatePolicy;
+import org.fabric3.assembly.dependency.UpdatePolicy;
 
 import java.io.File;
 

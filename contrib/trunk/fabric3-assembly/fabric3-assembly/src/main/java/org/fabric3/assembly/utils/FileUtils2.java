@@ -1,7 +1,7 @@
 package org.fabric3.assembly.utils;
 
+import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.exception.AssemblyException;
-import org.fabric3.assembly.profile.UpdatePolicy;
 
 import java.io.File;
 import java.text.MessageFormat;

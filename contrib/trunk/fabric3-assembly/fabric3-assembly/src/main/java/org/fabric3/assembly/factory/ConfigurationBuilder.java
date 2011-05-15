@@ -4,12 +4,13 @@ import org.fabric3.assembly.configuration.AssemblyConfiguration;
 import org.fabric3.assembly.configuration.RuntimeConfiguration;
 import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.ServerConfiguration;
+import org.fabric3.assembly.dependency.UpdatePolicy;
+import org.fabric3.assembly.dependency.Version;
+import org.fabric3.assembly.dependency.profile.Profile;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.NameNotGivenException;
 import org.fabric3.assembly.exception.ServerAlreadyExistsException;
 import org.fabric3.assembly.exception.ValidationException;
-import org.fabric3.assembly.profile.Profile;
-import org.fabric3.assembly.profile.UpdatePolicy;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
 import org.fabric3.assembly.utils.StringUtils;
@@ -82,7 +83,7 @@ public class ConfigurationBuilder {
         }
 
         // check for same server name
-        if (!configuration.getConfigurationServices().getServersByName(pName).isEmpty()) {
+        if (!configuration.getConfigurationHelper().getServersByName(pName).isEmpty()) {
             throw new ServerAlreadyExistsException(MessageFormat.format("Server with name ''{0}'' already exists.", pName));
         }
 
@@ -139,7 +140,7 @@ public class ConfigurationBuilder {
             throw new NameNotGivenException("Runtime name doesn't exists. Please provide one.");
         }
 
-        List<RuntimeConfiguration> runtimesByServerName = configuration.getConfigurationServices().getRuntimesByServerName(pServerName);
+        List<RuntimeConfiguration> runtimesByServerName = configuration.getConfigurationHelper().getRuntimesByServerName(pServerName);
         if (RuntimeMode.VM == pMode && !runtimesByServerName.isEmpty()) {
             throw new AssemblyException("You are trying to add VM runtime to server which already has some other runtimes. This won't work.");
         }
@@ -177,6 +178,19 @@ public class ConfigurationBuilder {
 
     public ConfigurationBuilder setUpdatePolicy(String pPolicy) {
         configuration.setUpdatePolicy(UpdatePolicy.valueOf(pPolicy).name());
+        return this;
+    }
+
+    /*
+     *
+     *
+     * Version
+     *
+     *
+     */
+
+    public ConfigurationBuilder setVersion(String pVersion) {
+        configuration.setVersion(new Version(pVersion));
         return this;
     }
 }

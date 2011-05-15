@@ -2,6 +2,8 @@ package org.fabric3.assembly.maven;
 
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.fabric3.assembly.dependency.Dependency;
+import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.utils.LoggerUtils;
 import org.fabric3.assembly.utils.PathUtils;
@@ -21,16 +23,16 @@ public class DependencyResolver {
     private DependencyDownloader downloader = new DependencyDownloader();
 
     /**
-     * Find dependency in dependency manager storage folder. (folder '.m2/repository'). When this dependency doens't
+     * Find dependency in dependency manager storage folder. (folder '.m2/repository'). When this dependency doesn't
      * exists it tries to download them.
      *
      * @param dependency you want to find
      * @return physical file if these dependency was found
      */
-    public File findFile(final String dependency) {
+    public File findFile(final Dependency dependency) {
 
         final File result = new File(PathUtils.MAVEN_FOLDER + convertDependencyToPath(dependency));
-        final AssemblyException missingDependencyException = new AssemblyException(MessageFormat.format("Depedency ''{0}'' wasn''t found at ''{1}''.", dependency, result.getAbsolutePath()));
+        final AssemblyException missingDependencyException = new AssemblyException(MessageFormat.format("Dependency ''{0}'' wasn''t found at ''{1}''.", dependency.toString(), result.getAbsolutePath()));
 
         if (!result.exists()) {
             try {
@@ -43,7 +45,7 @@ public class DependencyResolver {
                         throw missingDependencyException;
 
                     }
-                }, dependency);
+                }, dependency.toString());
             } catch (PlexusContainerException e) {
                 throw new AssemblyException(e);
             } catch (ComponentLookupException e) {
@@ -62,47 +64,20 @@ public class DependencyResolver {
         return result;
     }
 
-    private String convertDependencyToPath(final String dependency) {
-        AssemblyException ex = new AssemblyException(MessageFormat.format("Dependency {0} must match group:artifact:type:classifier:version pattern or just group:artifact:version pattern to resolve a jar dependency.", dependency));
-
-        if (!dependency.matches("\\S.*:\\S.*:\\S.*")) {
-            throw ex;
-        }
-
-        String[] dep = dependency.split(":");
-        String group, artifact, version, classifier = null, type;
-        switch (dep.length) {
-            case 3:
-                group = dep[0];
-                artifact = dep[1];
-                version = dep[2];
-                type = "jar";
-                break;
-            case 5:
-                group = dep[0];
-                artifact = dep[1];
-                type = dep[2];
-                classifier = dep[3];
-                version = dep[4];
-                break;
-            default:
-                throw ex;
-        }
-
-        return group.replaceAll("\\.", File.separator) + File.separator + // group
-                artifact + File.separator + // artifact
-                version + File.separator +  // version
-                artifact + makeSuffix(version, classifier, type); // file
-
+    private String convertDependencyToPath(final Dependency dependency) {
+        return dependency.getGroup().replaceAll("\\.", File.separator) + File.separator + // group
+                dependency.getArtifact() + File.separator + // artifact
+                dependency.getVersion() + File.separator +  // version
+                dependency.getArtifact() + makeSuffix(dependency.getVersion(), dependency.getClassifier(), dependency.getType()); // file
     }
 
-    private String makeSuffix(final String version, final String classifier, final String type) {
+    private String makeSuffix(final Version version, final String classifier, final String type) {
         String temp = "";
         if (null != classifier) {
             temp = "-" + classifier;
         }
 
-        return "-" + version + temp + "." + type;
+        return "-" + version.toString() + temp + "." + type;
     }
 
 }
