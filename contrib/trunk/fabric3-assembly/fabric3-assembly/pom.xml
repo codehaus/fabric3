@@ -93,20 +93,6 @@
         </dependency>
 
         <!--
-            Fabric3
-        -->
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-ant-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-management-jmx</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!--
             Logger
         -->
         <dependency>

@@ -1,7 +1,6 @@
 package org.fabric3.assembly.configuration;
 
 import org.fabric3.assembly.profile.Profile;
-import org.fabric3.host.RuntimeMode;
 
 import java.io.File;
 import java.util.ArrayList;

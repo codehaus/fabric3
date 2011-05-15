@@ -2,6 +2,7 @@ package org.fabric3.assembly.factory;
 
 import org.fabric3.assembly.configuration.AssemblyConfiguration;
 import org.fabric3.assembly.configuration.RuntimeConfiguration;
+import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.ServerConfiguration;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.NameNotGivenException;
@@ -12,7 +13,6 @@ import org.fabric3.assembly.profile.UpdatePolicy;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
 import org.fabric3.assembly.utils.StringUtils;
-import org.fabric3.host.RuntimeMode;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -65,18 +65,18 @@ public class ConfigurationBuilder {
     */
 
     public ConfigurationBuilder addServer(String pPath) {
-        return addServer(pPath, ServerConfiguration.SERVER_DEFAULT_NAME);
-    }
-
-    public ConfigurationBuilder addServer(String pPath, String pName) {
-        return addServer(pPath, pName, (Profile[]) null);
+        return addServer(ServerConfiguration.SERVER_DEFAULT_NAME, pPath);
     }
 
     public ConfigurationBuilder addServer(String pPath, Profile... pProfiles) {
-        return addServer(pPath, ServerConfiguration.SERVER_DEFAULT_NAME, pProfiles);
+        return addServer(ServerConfiguration.SERVER_DEFAULT_NAME, pPath, pProfiles);
     }
 
-    public ConfigurationBuilder addServer(String pPath, String pName, Profile... pProfiles) {
+    public ConfigurationBuilder addServer(String pName, String pPath) {
+        return addServer(pName, pPath, (Profile[]) null);
+    }
+
+    public ConfigurationBuilder addServer(String pName, String pPath, Profile... pProfiles) {
         if (StringUtils.isBlank(pName)) {
             throw new NameNotGivenException("You didn't specified any server name.");
         }
@@ -102,24 +102,16 @@ public class ConfigurationBuilder {
         return addRuntime(RuntimeMode.VM, null, pProfiles);
     }
 
-    public ConfigurationBuilder addRuntime(String pRuntimeName) {
-        return addRuntime(pRuntimeName, (Profile[]) null);
-    }
-
     public ConfigurationBuilder addRuntime(RuntimeMode pMode, Profile... pProfiles) {
         return addRuntime(pMode, null, pProfiles);
     }
 
-    public ConfigurationBuilder addRuntime(String pServerName, Profile... pProfiles) {
-        return addRuntime(pServerName, RuntimeConfiguration.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, pProfiles);
-    }
-
-    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName) {
-        return addRuntime(pServerName, pRuntimeName, RuntimeMode.VM, (Profile[]) null);
-    }
-
     public ConfigurationBuilder addRuntime(RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
         return addRuntime(RuntimeConfiguration.RUNTIME_DEFAULT_NAME, pMode, pConfigFile, pProfiles);
+    }
+
+    public ConfigurationBuilder addRuntime(String pRuntimeName) {
+        return addRuntime(pRuntimeName, (Profile[]) null);
     }
 
     public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
@@ -128,6 +120,14 @@ public class ConfigurationBuilder {
 
     public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
         return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, pRuntimeName, pMode, pConfigFile, pProfiles);
+    }
+
+    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName) {
+        return addRuntime(pServerName, pRuntimeName, RuntimeMode.VM, (Profile[]) null);
+    }
+
+    public ConfigurationBuilder addRuntime(String pServerName, Profile... pProfiles) {
+        return addRuntime(pServerName, RuntimeConfiguration.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, pProfiles);
     }
 
     public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
