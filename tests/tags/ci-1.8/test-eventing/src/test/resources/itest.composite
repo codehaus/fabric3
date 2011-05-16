@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright (c) 2009 Metaform Systems
+
+ Fabric3 integration tests are licensed under the Apache 2.0 license.
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3="urn:fabric3.org"
+           targetNamespace="urn:fabric3.org"
+           name="TestComposite">
+
+    <component name="TestClient">
+        <f3:junit class="org.fabric3.tests.eventing.TestClient"/>
+        <reference name="producer" target="TestProducer"/>
+        <reference name="unTypedProducer" target="TestUnTypedProducer"/>
+        <reference name="consumer" target="TestConsumer"/>
+    </component>
+
+    <component name="TestProducer">
+        <implementation.java class="org.fabric3.tests.binding.harness.eventing.TestProducerImpl"/>
+        <producer name="channel" target="TestChannel"/>
+    </component>
+
+    <component name="TestUnTypedProducer">
+        <implementation.java class="org.fabric3.tests.binding.harness.eventing.TestUnTypedProducerImpl"/>
+        <producer name="channel" target="TestUnTypedChannel"/>
+    </component>
+
+    <component name="TestConsumer">
+        <implementation.java class="org.fabric3.tests.binding.harness.eventing.TestConsumerImpl"/>
+        <consumer name="event" source="TestChannel"/>
+    </component>
+
+    <component name="TestTypedConsumer">
+        <implementation.java class="org.fabric3.tests.binding.harness.eventing.TestTypedConsumer"/>
+        <consumer name="event" source="TestUnTypedChannel"/>
+    </component>
+
+    <component name="TestChannelMonitor">
+        <implementation.monitor/>
+        <consumer name="monitor" source="MonitorChannel"/>
+    </component>
+
+    <channel name="TestChannel"/>
+
+    <channel name="TestUnTypedChannel"/>
+
+    <channel name="MonitorChannel" requires="f3:synchronous"/>
+
+</composite>
