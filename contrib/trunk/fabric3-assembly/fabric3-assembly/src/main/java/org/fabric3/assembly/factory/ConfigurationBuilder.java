@@ -1,12 +1,12 @@
 package org.fabric3.assembly.factory;
 
-import org.fabric3.assembly.configuration.AssemblyConfiguration;
-import org.fabric3.assembly.configuration.RuntimeConfiguration;
+import org.fabric3.assembly.configuration.AssemblyConfig;
+import org.fabric3.assembly.configuration.Profile;
+import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.RuntimeMode;
-import org.fabric3.assembly.configuration.ServerConfiguration;
+import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
-import org.fabric3.assembly.dependency.profile.Profile;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.NameNotGivenException;
 import org.fabric3.assembly.exception.ServerAlreadyExistsException;
@@ -25,27 +25,27 @@ import java.util.List;
  */
 public class ConfigurationBuilder {
 
-    private AssemblyConfiguration configuration = new AssemblyConfiguration();
+    private AssemblyConfig mConfig = new AssemblyConfig();
 
     public static ConfigurationBuilder getBuilder() {
         return new ConfigurationBuilder();
     }
 
-    public AssemblyConfiguration createConfiguration() {
+    public AssemblyConfig createConfiguration() {
         final List<String> serverNames = new ArrayList<String>();
 
         // collect all server names
-        ClosureUtils.each(configuration.getServers(), new Closure<ServerConfiguration>() {
+        ClosureUtils.each(mConfig.getServers(), new Closure<Server>() {
             @Override
-            public void exec(ServerConfiguration pParam) {
+            public void exec(Server pParam) {
                 serverNames.add(pParam.getServerName());
             }
         });
 
         // remove all bound server names
-        ClosureUtils.each(configuration.getRuntimes(), new Closure<RuntimeConfiguration>() {
+        ClosureUtils.each(mConfig.getRuntimes(), new Closure<Runtime>() {
             @Override
-            public void exec(RuntimeConfiguration pParam) {
+            public void exec(Runtime pParam) {
                 serverNames.remove(pParam.getServerName());
             }
         });
@@ -54,7 +54,7 @@ public class ConfigurationBuilder {
             throw new ValidationException("At least one runtime is needed per server. These servers doesn't have any:" + serverNames);
         }
 
-        return configuration;
+        return mConfig;
     }
 
     /*
@@ -66,36 +66,36 @@ public class ConfigurationBuilder {
     */
 
     public ConfigurationBuilder addServer(String pPath) {
-        return addServer(ServerConfiguration.SERVER_DEFAULT_NAME, pPath);
+        return addServer(Server.SERVER_DEFAULT_NAME, pPath);
     }
 
     public ConfigurationBuilder addServer(String pPath, Profile... pProfiles) {
-        return addServer(ServerConfiguration.SERVER_DEFAULT_NAME, pPath, pProfiles);
+        return addServer(Server.SERVER_DEFAULT_NAME, pPath, pProfiles);
     }
 
     public ConfigurationBuilder addServer(String pName, String pPath) {
         return addServer(pName, pPath, (Profile[]) null);
     }
 
-    public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion) {
-        return addServer(pName, pPath, null, (Profile[]) null);
-    }
-
     public ConfigurationBuilder addServer(String pName, String pPath, Profile... pProfiles) {
-        return addServer(pName, pPath, null, pProfiles);
+        return addServer(pName, pPath, null, null, pProfiles);
     }
 
     public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion, Profile... pProfiles) {
+        return addServer(pName, pPath, pVersion, null, pProfiles);
+    }
+
+    public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion, UpdatePolicy pUpdatePolicy, Profile... pProfiles) {
         if (StringUtils.isBlank(pName)) {
             throw new NameNotGivenException("You didn't specified any server name.");
         }
 
         // check for same server name
-        if (!configuration.getConfigurationHelper().getServersByName(pName).isEmpty()) {
+        if (!mConfig.getConfigurationHelper().getServersByName(pName).isEmpty()) {
             throw new ServerAlreadyExistsException(MessageFormat.format("Server with name ''{0}'' already exists.", pName));
         }
 
-        configuration.addServer(new ServerConfiguration(pName, new File(pPath), pVersion, pProfiles));
+        mConfig.addServer(new Server(pName, new File(pPath), pVersion, pUpdatePolicy, pProfiles));
         return this;
     }
 
@@ -116,7 +116,7 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addRuntime(RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
-        return addRuntime(RuntimeConfiguration.RUNTIME_DEFAULT_NAME, pMode, pConfigFile, pProfiles);
+        return addRuntime(Runtime.RUNTIME_DEFAULT_NAME, pMode, pConfigFile, pProfiles);
     }
 
     public ConfigurationBuilder addRuntime(String pRuntimeName) {
@@ -124,11 +124,11 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
-        return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, pProfiles);
+        return addRuntime(Server.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, null, pProfiles);
     }
 
     public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
-        return addRuntime(ServerConfiguration.SERVER_DEFAULT_NAME, pRuntimeName, pMode, pConfigFile, pProfiles);
+        return addRuntime(Server.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, pConfigFile, pProfiles);
     }
 
     public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName) {
@@ -136,24 +136,24 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addRuntime(String pServerName, Profile... pProfiles) {
-        return addRuntime(pServerName, RuntimeConfiguration.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, pProfiles);
+        return addRuntime(pServerName, Runtime.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, null, pProfiles);
     }
 
     public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
-        return addRuntime(pServerName, pRuntimeName, pMode, null, pProfiles);
+        return addRuntime(pServerName, pRuntimeName, pMode, null, null, pProfiles);
     }
 
-    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
+    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, UpdatePolicy pUpdatePolicy, String pConfigFile, Profile... pProfiles) {
         if (StringUtils.isBlank(pRuntimeName)) {
             throw new NameNotGivenException("Runtime name doesn't exists. Please provide one.");
         }
 
-        List<RuntimeConfiguration> runtimesByServerName = configuration.getConfigurationHelper().getRuntimesByServerName(pServerName);
+        List<Runtime> runtimesByServerName = mConfig.getConfigurationHelper().getRuntimesByServerName(pServerName);
         if (RuntimeMode.VM == pMode && !runtimesByServerName.isEmpty()) {
             throw new AssemblyException("You are trying to add VM runtime to server which already has some other runtimes. This won't work.");
         }
 
-        for (RuntimeConfiguration runtime : runtimesByServerName) {
+        for (Runtime runtime : runtimesByServerName) {
             if (pRuntimeName.equals(runtime.getRuntimeName())) {
                 throw new AssemblyException(MessageFormat.format("Server ''{0}'' already contains ''{1}'' runtime.", pServerName, pRuntimeName));
             }
@@ -167,7 +167,7 @@ public class ConfigurationBuilder {
             }
         }
 
-        configuration.addRuntime(new RuntimeConfiguration(pServerName, pRuntimeName, pMode, null == pConfigFile ? null : new File(pConfigFile), pProfiles));
+        mConfig.addRuntime(new Runtime(pServerName, pRuntimeName, pMode, pUpdatePolicy, null == pConfigFile ? null : new File(pConfigFile), pProfiles));
         return this;
     }
 
@@ -180,12 +180,12 @@ public class ConfigurationBuilder {
     */
 
     public ConfigurationBuilder setUpdatePolicy(UpdatePolicy pPolicy) {
-        configuration.setUpdatePolicy(pPolicy.name());
+        mConfig.setUpdatePolicy(pPolicy.name());
         return this;
     }
 
     public ConfigurationBuilder setUpdatePolicy(String pPolicy) {
-        configuration.setUpdatePolicy(UpdatePolicy.valueOf(pPolicy).name());
+        mConfig.setUpdatePolicy(UpdatePolicy.valueOf(pPolicy).name());
         return this;
     }
 
@@ -198,7 +198,7 @@ public class ConfigurationBuilder {
      */
 
     public ConfigurationBuilder setVersion(String pVersion) {
-        configuration.setVersion(new Version(pVersion));
+        mConfig.setVersion(new Version(pVersion));
         return this;
     }
 }

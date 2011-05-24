@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fabric3.assembly.assembly.Assembly;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
@@ -11,37 +12,37 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public class AssemblyConfiguration {
+public class AssemblyConfig {
 
     private Version version;
 
     private UpdatePolicy updatePolicy = UpdatePolicy.DAILY;
 
-    private List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>();
+    private List<Server> mServers = new ArrayList<Server>();
 
-    private List<RuntimeConfiguration> runtimes = new ArrayList<RuntimeConfiguration>();
+    private List<Runtime> mRuntimes = new ArrayList<Runtime>();
 
-    private List<CompositeConfiguration> composites = new ArrayList<CompositeConfiguration>();
+    private List<Composite> mComposites = new ArrayList<Composite>();
 
     private ConfigurationHelper mConfigurationHelper = new ConfigurationHelper() {
         @Override
-        public List<ServerConfiguration> getServerConfigurations() {
-            return servers;
+        public List<Server> getServerConfigurations() {
+            return mServers;
         }
 
         @Override
-        public List<RuntimeConfiguration> getRuntimeConfigurations() {
-            return runtimes;
+        public List<Runtime> getRuntimeConfigurations() {
+            return mRuntimes;
         }
 
         @Override
         public Version getConfigurationVersion() {
-            return AssemblyConfiguration.this.getVersion();
+            return AssemblyConfig.this.getVersion();
         }
 
         @Override
         public UpdatePolicy getConfigurationUpdatePolicy() {
-            return AssemblyConfiguration.this.getUpdatePolicy();
+            return AssemblyConfig.this.getUpdatePolicy();
         }
     };
 
@@ -57,28 +58,28 @@ public class AssemblyConfiguration {
         return updatePolicy;
     }
 
-    public void addServer(ServerConfiguration server) {
-        servers.add(server);
+    public void addServer(Server pServer) {
+        mServers.add(pServer);
     }
 
-    public List<ServerConfiguration> getServers() {
-        return servers;
+    public List<Server> getServers() {
+        return mServers;
     }
 
-    public void addRuntime(RuntimeConfiguration runtime) {
-        runtimes.add(runtime);
+    public void addRuntime(Runtime pRuntime) {
+        mRuntimes.add(pRuntime);
     }
 
-    public List<RuntimeConfiguration> getRuntimes() {
-        return runtimes;
+    public List<Runtime> getRuntimes() {
+        return mRuntimes;
     }
 
-    public void addComposite(CompositeConfiguration composite) {
-        composites.add(composite);
+    public void addComposite(Composite pComposite) {
+        mComposites.add(pComposite);
     }
 
-    public List<CompositeConfiguration> getComposites() {
-        return composites;
+    public List<Composite> getComposites() {
+        return mComposites;
     }
 
     public ConfigurationHelper getConfigurationHelper() {
@@ -97,7 +98,23 @@ public class AssemblyConfiguration {
         this.version = version;
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).
+                append("version", version).
+                append("updatePolicy", updatePolicy).
+                toString();
+    }
+
     public void doAssembly() {
+        //TODO <capo> compute missing versions
+
+        //TODO <capo> compute missing update policy
+
+        //TODO <capo> validate configuration, servers, runtimes, composites and profiles
+        AssemblyConfigValidator.validate(this);
+
+        // do assembly
         new Assembly().doAssembly(this);
     }
 }

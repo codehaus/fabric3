@@ -17,9 +17,9 @@ import java.util.List;
  */
 public abstract class ConfigurationHelper {
 
-    public abstract List<ServerConfiguration> getServerConfigurations();
+    public abstract List<Server> getServerConfigurations();
 
-    public abstract List<RuntimeConfiguration> getRuntimeConfigurations();
+    public abstract List<Runtime> getRuntimeConfigurations();
 
     public abstract Version getConfigurationVersion();
 
@@ -33,21 +33,21 @@ public abstract class ConfigurationHelper {
      *
      */
 
-    public Dependency appendVersion(Dependency pDependency, ServerConfiguration pServerConfiguration) {
+    public Dependency appendVersion(Dependency pDependency, Server pServer) {
         if (pDependency.isVersionLess()) {
-            pDependency.setVersion(computeMissingVersion(pServerConfiguration));
+            pDependency.setVersion(computeMissingVersion(pServer));
         }
 
         return pDependency;
     }
 
-    public ServerConfiguration getServerByRuntime(final RuntimeConfiguration pRuntime) {
+    public Server getServerByRuntime(final Runtime pRuntime) {
         String serverLookupName = pRuntime.getServerName();
         if (null == serverLookupName) {
             throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is not assigned to any server. Please check your configuration.", pRuntime.getRuntimeName()));
         }
 
-        for (ServerConfiguration server : getServerConfigurations()) {
+        for (Server server : getServerConfigurations()) {
             if (serverLookupName.equals(server.getServerName())) {
                 return server;
             }
@@ -56,16 +56,16 @@ public abstract class ConfigurationHelper {
         throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is assigned to {1} server. But no such server found. Is this a typo?", pRuntime.getRuntimeName(), serverLookupName));
     }
 
-    public File findServerPathByRuntime(RuntimeConfiguration pRuntime) {
+    public File findServerPathByRuntime(Runtime pRuntime) {
         return getServerByRuntime(pRuntime).getServerPath();
     }
 
-    public List<RuntimeConfiguration> getRuntimesByServerName(final String pServerName) {
-        final List<RuntimeConfiguration> runtimes = new ArrayList<RuntimeConfiguration>();
+    public List<Runtime> getRuntimesByServerName(final String pServerName) {
+        final List<Runtime> runtimes = new ArrayList<Runtime>();
 
-        ClosureUtils.each(getRuntimeConfigurations(), new Closure<RuntimeConfiguration>() {
+        ClosureUtils.each(getRuntimeConfigurations(), new Closure<Runtime>() {
             @Override
-            public void exec(RuntimeConfiguration pParam) {
+            public void exec(Runtime pParam) {
                 if (pServerName.equals(pParam.getServerName())) {
                     runtimes.add(pParam);
                 }
@@ -75,12 +75,12 @@ public abstract class ConfigurationHelper {
         return runtimes;
     }
 
-    public List<ServerConfiguration> getServersByName(final String pServerName) {
-        final List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>();
+    public List<Server> getServersByName(final String pServerName) {
+        final List<Server> servers = new ArrayList<Server>();
 
-        ClosureUtils.each(getServerConfigurations(), new Closure<ServerConfiguration>() {
+        ClosureUtils.each(getServerConfigurations(), new Closure<Server>() {
             @Override
-            public void exec(ServerConfiguration pParam) {
+            public void exec(Server pParam) {
                 if (pServerName.equals(pParam.getServerName())) {
                     servers.add(pParam);
                 }
@@ -90,19 +90,15 @@ public abstract class ConfigurationHelper {
         return servers;
     }
 
-    public Version computeMissingVersion(RuntimeConfiguration pConfiguration) {
+    public Version computeMissingVersion(Runtime pConfiguration) {
         if (null == pConfiguration) {
             return getConfigurationVersion();
         }
 
-        if (null != pConfiguration.getVersion()) {
-            return pConfiguration.getVersion();
-        }
-
         try {
-            ServerConfiguration serverConfiguration = getServerByRuntime(pConfiguration);
-            if (null != serverConfiguration.getVersion()) {
-                return serverConfiguration.getVersion();
+            Server server = getServerByRuntime(pConfiguration);
+            if (null != server.getVersion()) {
+                return server.getVersion();
             }
         } catch (ServerNotFoundException e) {
             // no-op
@@ -111,7 +107,7 @@ public abstract class ConfigurationHelper {
         return getConfigurationVersion();
     }
 
-    public Version computeMissingVersion(ServerConfiguration pConfiguration) {
+    public Version computeMissingVersion(Server pConfiguration) {
         if (null == pConfiguration) {
             return getConfigurationVersion();
         }
@@ -123,7 +119,7 @@ public abstract class ConfigurationHelper {
         return getConfigurationVersion();
     }
 
-    public UpdatePolicy computeUpdatePolicy(RuntimeConfiguration pConfiguration) {
+    public UpdatePolicy computeUpdatePolicy(Runtime pConfiguration) {
         if (null == pConfiguration) {
             return getConfigurationUpdatePolicy();
         }
@@ -133,9 +129,9 @@ public abstract class ConfigurationHelper {
         }
 
         try {
-            ServerConfiguration serverConfiguration = getServerByRuntime(pConfiguration);
-            if (null != serverConfiguration.getUpdatePolicy()) {
-                return serverConfiguration.getUpdatePolicy();
+            Server server = getServerByRuntime(pConfiguration);
+            if (null != server.getUpdatePolicy()) {
+                return server.getUpdatePolicy();
             }
         } catch (ServerNotFoundException e) {
             // no-op
@@ -144,7 +140,7 @@ public abstract class ConfigurationHelper {
         return getConfigurationUpdatePolicy();
     }
 
-    public UpdatePolicy computeUpdatePolicy(ServerConfiguration pConfiguration) {
+    public UpdatePolicy computeUpdatePolicy(Server pConfiguration) {
         if (null == pConfiguration) {
             return getConfigurationUpdatePolicy();
         }

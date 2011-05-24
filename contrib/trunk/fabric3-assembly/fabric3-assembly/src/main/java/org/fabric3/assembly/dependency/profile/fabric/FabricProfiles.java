@@ -1,6 +1,6 @@
 package org.fabric3.assembly.dependency.profile.fabric;
 
-import org.fabric3.assembly.dependency.profile.Profile;
+import org.fabric3.assembly.configuration.Profile;
 
 /**
  * Contain existing fabric3 profiles.
@@ -57,11 +57,11 @@ public class FabricProfiles {
     /**
      * Test profile. List of files needed for running tests on fabric server.
      */
-    public static final Profile TEST = new Profile("profile-test", "test") {{
-        mFiles.add(FabricDependencyFactory.jar("fabric3-junit"));
-        mFiles.add(FabricDependencyFactory.jar("fabric3-test-spi"));
-        mFiles.add(FabricDependencyFactory.jar("fabric3-ant-api"));
-        mFiles.add(FabricDependencyFactory.jar("fabric3-ant-extension"));
+    public static final Profile TEST = new Profile("profile-test", null, null, "test") {{
+        addDependency(FabricDependencyFactory.jar("fabric3-junit"));
+        addDependency(FabricDependencyFactory.jar("fabric3-test-spi"));
+        addDependency(FabricDependencyFactory.jar("fabric3-ant-api"));
+        addDependency(FabricDependencyFactory.jar("fabric3-ant-extension"));
     }};
 
 }

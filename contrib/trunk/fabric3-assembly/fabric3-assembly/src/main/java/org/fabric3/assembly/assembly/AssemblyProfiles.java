@@ -1,8 +1,8 @@
 package org.fabric3.assembly.assembly;
 
+import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.Version;
-import org.fabric3.assembly.dependency.profile.Profile;
 import org.fabric3.assembly.maven.DependencyResolver;
 import org.fabric3.assembly.utils.FileUtils;
 import org.fabric3.assembly.utils.FileUtils2;
@@ -24,7 +24,7 @@ public abstract class AssemblyProfiles {
     protected void processProfiles(List<Profile> pProfiles, File pDestinationFolder, Version pVersionForVersionlessDependencies) {
         for (Profile profile : pProfiles) {
             try {
-                for (Dependency dependency : profile.getFiles()) {
+                for (Dependency dependency : profile.getDependencies()) {
 
                     // if provided dependency is version less add provided version to it
                     if (null == dependency.getVersion()) {

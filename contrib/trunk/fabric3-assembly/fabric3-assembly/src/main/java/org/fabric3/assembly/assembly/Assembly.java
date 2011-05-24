@@ -1,8 +1,8 @@
 package org.fabric3.assembly.assembly;
 
-import org.fabric3.assembly.configuration.AssemblyConfiguration;
-import org.fabric3.assembly.configuration.RuntimeConfiguration;
-import org.fabric3.assembly.configuration.ServerConfiguration;
+import org.fabric3.assembly.configuration.AssemblyConfig;
+import org.fabric3.assembly.configuration.Runtime;
+import org.fabric3.assembly.configuration.Server;
 
 /**
  * @author Michal Capo
@@ -13,13 +13,13 @@ public class Assembly {
 
     private AssemblyRuntime runtimeAssembly = new AssemblyRuntime();
 
-    public void doAssembly(AssemblyConfiguration pConfiguration) {
-        for (ServerConfiguration server : pConfiguration.getServers()) {
-            serverAssembly.doAssembly(server, pConfiguration.getConfigurationHelper());
+    public void doAssembly(AssemblyConfig pConfig) {
+        for (Server server : pConfig.getServers()) {
+            serverAssembly.doAssembly(server, pConfig.getConfigurationHelper());
         }
 
-        for (RuntimeConfiguration runtime : pConfiguration.getRuntimes()) {
-            runtimeAssembly.doAssembly(runtime, pConfiguration.getConfigurationHelper());
+        for (Runtime runtime : pConfig.getRuntimes()) {
+            runtimeAssembly.doAssembly(runtime, pConfig.getConfigurationHelper());
         }
     }
 

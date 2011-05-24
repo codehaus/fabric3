@@ -1,5 +1,9 @@
 {
+    "version" : "1.8",
+    "update" : "daily",
+
     "server" : {
+        "version" : "1.8",
         "name" : "server1",
         "path" : "/tmp/fabric3-test1",
         "update" : "daily",
@@ -23,11 +27,11 @@
         "user" : {
             "update" : "daily",
             "runtime" : "runtime1",
-            "files" : "org.fabric3:user:1.0-SNAPSHOT"
+            "dependency" : "org.fabric3:user:1.0-SNAPSHOT"
         },
         "bank-account" : {
             "runtime" : "runtime1",
-            "files" : "org.fabric3:bAccount:1.0-SNAPSHOT:bin@zip"
+            "dependency" : "org.fabric3:bAccount:1.0-SNAPSHOT:bin@zip"
         },
         "monitoring" : {
             "runtime" : "runtime1",
@@ -40,19 +44,19 @@
         "update" : "always",
         "profile-connector" : {
             "alternative-name" : "['connector','b-connector','bank-connector']",
-            "files" : "org.fabric3:profile-bank-connector"
+            "dependencies" : "org.fabric3:profile-bank-connector"
         },
         "profile-reporting" : {
             "update" : "daily",
             "version" : "2.0",
             "alternative-name" : "reporting",
-            "files" : "org.fabric3:reporting:bin:zip",
-            "paths" : "/tmp/reporting-adds.jar"
+            "dependencies" : "org.fabric3:reporting:bin@zip",
+            "files" : "/tmp/reporting-adds.jar"
         },
         "profile-reporting-old" : {
             "alternative-name" : "reporting-old",
             "version" : "0.9.7",
-            "files" : "['org.fabric3:reporting-old','org.fabric3:reporting-old-adds']"
+            "dependencies" : "['org.fabric3:reporting-old','org.fabric3:reporting-old-adds']"
         }
     }
 }

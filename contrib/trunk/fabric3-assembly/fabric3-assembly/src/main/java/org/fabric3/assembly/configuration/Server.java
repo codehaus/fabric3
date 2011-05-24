@@ -1,8 +1,8 @@
 package org.fabric3.assembly.configuration;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
-import org.fabric3.assembly.dependency.profile.Profile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public class ServerConfiguration {
+public class Server {
 
     public static final String SERVER_DEFAULT_NAME = "default-server";
 
@@ -26,7 +26,7 @@ public class ServerConfiguration {
 
     private UpdatePolicy updatePolicy;
 
-    public ServerConfiguration(String pServerName, File pServerPath, Version pVersion, Profile... pProfiles) {
+    public Server(String pServerName, File pServerPath, Version pVersion, UpdatePolicy pUpdatePolicy, Profile... pProfiles) {
         if (null == pServerName) {
             serverName = SERVER_DEFAULT_NAME;
         } else {
@@ -34,6 +34,7 @@ public class ServerConfiguration {
         }
         serverPath = pServerPath;
         version = pVersion;
+        updatePolicy = pUpdatePolicy;
         if (null != pProfiles) {
             profiles.addAll(Arrays.asList(pProfiles));
         }
@@ -43,24 +44,12 @@ public class ServerConfiguration {
         return serverName;
     }
 
-    public void setServerName(String pServerName) {
-        serverName = pServerName;
-    }
-
     public File getServerPath() {
         return serverPath;
     }
 
-    public void setServerPath(String pServerPath) {
-        serverPath = new File(pServerPath);
-    }
-
     public List<Profile> getProfiles() {
         return profiles;
-    }
-
-    public void setProfiles(Profile... pProfiles) {
-        profiles = Arrays.asList(pProfiles);
     }
 
     public Version getVersion() {
@@ -71,7 +60,35 @@ public class ServerConfiguration {
         return updatePolicy;
     }
 
-    public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
-        updatePolicy = pUpdatePolicy;
+    public void validate() {
+        ServerValidator.validate(this);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).
+                append("serverName", serverName).
+                append("serverPath", serverPath).
+                append("profiles", profiles).
+                append("version", version).
+                append("updatePolicy", updatePolicy).
+                toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Server server = (Server) o;
+
+        if (serverName != null ? !serverName.equals(server.serverName) : server.serverName != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return serverName != null ? serverName.hashCode() : 0;
     }
 }

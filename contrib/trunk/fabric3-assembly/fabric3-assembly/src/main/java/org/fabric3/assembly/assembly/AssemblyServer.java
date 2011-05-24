@@ -1,15 +1,13 @@
 package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.configuration.ConfigurationHelper;
-import org.fabric3.assembly.configuration.ServerConfiguration;
+import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.profile.fabric.FabricDependencyFactory;
 import org.fabric3.assembly.exception.AssemblyException;
-import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.maven.DependencyResolver;
 import org.fabric3.assembly.utils.FileUtils;
 import org.fabric3.assembly.utils.FileUtils2;
 import org.fabric3.assembly.utils.LoggerUtils;
-import org.fabric3.assembly.utils.StringUtils;
 import org.fabric3.assembly.utils.ZipUtils;
 
 import java.io.File;
@@ -22,15 +20,15 @@ public class AssemblyServer extends AssemblyProfiles {
 
     private DependencyResolver dependencyResolver = new DependencyResolver();
 
-    public void doAssembly(ServerConfiguration pServerConfiguration, ConfigurationHelper pConfigurationHelper) {
-        validate(pServerConfiguration);
+    public void doAssembly(Server pConfiguration, ConfigurationHelper pConfigurationHelper) {
+        pConfiguration.validate();
 
-        File serverPath = pServerConfiguration.getServerPath();
+        File serverPath = pConfiguration.getServerPath();
         LoggerUtils.log("server in folder - " + serverPath);
 
-        if (FileUtils2.recreateFolderIfNeeded(serverPath, pConfigurationHelper.computeUpdatePolicy(pServerConfiguration))) {
+        if (FileUtils2.recreateFolderIfNeeded(serverPath, pConfigurationHelper.computeUpdatePolicy(pConfiguration))) {
             try {
-                ZipUtils.unzip(dependencyResolver.findFile(pConfigurationHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pServerConfiguration)), serverPath);
+                ZipUtils.unzip(dependencyResolver.findFile(pConfigurationHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pConfiguration)), serverPath);
                 FileUtils.delete(serverPath, "runtimes");
 
                 FileUtils.checkExistenceAndContent(FileUtils.folders(serverPath, "boot", "extensions", "host", "lib"));
@@ -38,7 +36,7 @@ public class AssemblyServer extends AssemblyProfiles {
                 // create runtimes folder
                 FileUtils.createFolder(FileUtils.folder(serverPath, "runtimes"));
 
-                processProfiles(pServerConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"), pConfigurationHelper.computeMissingVersion(pServerConfiguration));
+                processProfiles(pConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"), pConfigurationHelper.computeMissingVersion(pConfiguration));
             } catch (IOException e) {
                 throw new AssemblyException("Cannot assembly standalone runtime.", e);
             }
@@ -52,16 +50,6 @@ public class AssemblyServer extends AssemblyProfiles {
                 FileUtils.delete(FileUtils.filesIn(FileUtils.folder(file, "deploy")));
                 FileUtils.delete(FileUtils.filesIn(FileUtils.folder(file, "repository/user")));
             }
-        }
-    }
-
-    private void validate(ServerConfiguration serverConfiguration) {
-        if (StringUtils.isBlank(serverConfiguration.getServerName())) {
-            throw new ValidationException("Server's name cannot be null.");
-        }
-
-        if (null == serverConfiguration.getServerPath()) {
-            throw new ValidationException("Server's build path cannot be null.");
         }
     }
 

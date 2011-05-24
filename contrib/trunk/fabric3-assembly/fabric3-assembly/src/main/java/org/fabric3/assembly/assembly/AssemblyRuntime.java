@@ -1,11 +1,9 @@
 package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.configuration.ConfigurationHelper;
-import org.fabric3.assembly.configuration.RuntimeConfiguration;
+import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.exception.AssemblyException;
-import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.FileUtils;
-import org.fabric3.assembly.utils.StringUtils;
 import org.fabric3.assembly.utils.UpdatePolicyUtils;
 
 import java.io.File;
@@ -19,8 +17,8 @@ import java.text.MessageFormat;
  */
 public class AssemblyRuntime extends AssemblyProfiles {
 
-    public void doAssembly(RuntimeConfiguration pConfiguration, ConfigurationHelper pConfigurationHelper) {
-        validate(pConfiguration);
+    public void doAssembly(Runtime pConfiguration, ConfigurationHelper pConfigurationHelper) {
+        pConfiguration.validate();
 
         // server folder
         File serverFolder = pConfigurationHelper.findServerPathByRuntime(pConfiguration);
@@ -45,7 +43,7 @@ public class AssemblyRuntime extends AssemblyProfiles {
             }
 
             try {
-                pConfiguration.setSystemConfig(new File(FileUtils.fileAtClassPath(configPath).toURI()).getAbsolutePath());
+                pConfiguration.setSystemConfig(new File(FileUtils.fileAtClassPath(configPath).toURI()));
             } catch (URISyntaxException e) {
                 throw new AssemblyException(MessageFormat.format("Cannot find runtime configuration file: {0}", configPath));
             } catch (MalformedURLException e) {
@@ -77,20 +75,5 @@ public class AssemblyRuntime extends AssemblyProfiles {
         }
     }
 
-    private void validate(RuntimeConfiguration pRuntimeConfiguration) {
-        String runtimeName = pRuntimeConfiguration.getRuntimeName();
-
-        if (StringUtils.isBlank(runtimeName)) {
-            throw new ValidationException("Runtime's name cannot be null");
-        }
-
-        if (StringUtils.isBlank(pRuntimeConfiguration.getServerName())) {
-            throw new ValidationException(MessageFormat.format("Server associated with runtime {0} is null.", runtimeName));
-        }
-
-        if (null == pRuntimeConfiguration.getRuntimeMode()) {
-            throw new ValidationException("Runtime mode of " + runtimeName + " is null.");
-        }
-    }
 
 }

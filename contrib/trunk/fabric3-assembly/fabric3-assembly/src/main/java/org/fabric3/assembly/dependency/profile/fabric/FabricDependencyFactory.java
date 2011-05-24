@@ -1,7 +1,7 @@
 package org.fabric3.assembly.dependency.profile.fabric;
 
+import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.dependency.Dependency;
-import org.fabric3.assembly.dependency.profile.Profile;
 
 /**
  * @author Michal Capo
@@ -9,8 +9,8 @@ import org.fabric3.assembly.dependency.profile.Profile;
 public class FabricDependencyFactory {
 
     public static Profile createProfile(final String jarName, final String... alternativeNames) {
-        return new Profile(jarName, alternativeNames) {{
-            mFiles.add(zip(jarName));
+        return new Profile(jarName, null, null, alternativeNames) {{
+            addDependency(zip(jarName));
         }};
     }
 
