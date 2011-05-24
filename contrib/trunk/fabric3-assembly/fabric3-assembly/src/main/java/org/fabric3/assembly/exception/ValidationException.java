@@ -9,7 +9,7 @@ import java.text.MessageFormat;
  */
 public class ValidationException extends RuntimeException {
 
-    public ValidationException(String pMessage, String... pArguments) {
+    public ValidationException(String pMessage, Object... pArguments) {
         super(MessageFormat.format(pMessage, pArguments));
     }
 

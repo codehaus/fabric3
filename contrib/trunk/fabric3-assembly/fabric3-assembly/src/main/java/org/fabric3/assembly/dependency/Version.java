@@ -9,8 +9,8 @@ public class Version {
 
     private String mVersion;
 
-    public Version(String mVersion) {
-        this.mVersion = mVersion;
+    public Version(String pVersion) {
+        this.mVersion = pVersion;
     }
 
     @Override
