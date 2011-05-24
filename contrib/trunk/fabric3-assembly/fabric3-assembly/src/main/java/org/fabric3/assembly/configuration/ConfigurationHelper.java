@@ -1,6 +1,7 @@
 package org.fabric3.assembly.configuration;
 
 import org.fabric3.assembly.dependency.Dependency;
+import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.ServerNotFoundException;
 import org.fabric3.assembly.utils.Closure;
@@ -21,6 +22,8 @@ public abstract class ConfigurationHelper {
     public abstract List<RuntimeConfiguration> getRuntimeConfigurations();
 
     public abstract Version getConfigurationVersion();
+
+    public abstract UpdatePolicy getConfigurationUpdatePolicy();
 
     /*
      *
@@ -118,5 +121,38 @@ public abstract class ConfigurationHelper {
         }
 
         return getConfigurationVersion();
+    }
+
+    public UpdatePolicy computeUpdatePolicy(RuntimeConfiguration pConfiguration) {
+        if (null == pConfiguration) {
+            return getConfigurationUpdatePolicy();
+        }
+
+        if (null != pConfiguration.getUpdatePolicy()) {
+            return pConfiguration.getUpdatePolicy();
+        }
+
+        try {
+            ServerConfiguration serverConfiguration = getServerByRuntime(pConfiguration);
+            if (null != serverConfiguration.getUpdatePolicy()) {
+                return serverConfiguration.getUpdatePolicy();
+            }
+        } catch (ServerNotFoundException e) {
+            // no-op
+        }
+
+        return getConfigurationUpdatePolicy();
+    }
+
+    public UpdatePolicy computeUpdatePolicy(ServerConfiguration pConfiguration) {
+        if (null == pConfiguration) {
+            return getConfigurationUpdatePolicy();
+        }
+
+        if (null != pConfiguration.getUpdatePolicy()) {
+            return pConfiguration.getUpdatePolicy();
+        }
+
+        return getConfigurationUpdatePolicy();
     }
 }

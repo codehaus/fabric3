@@ -2,7 +2,6 @@ package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.configuration.ConfigurationHelper;
 import org.fabric3.assembly.configuration.RuntimeConfiguration;
-import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.FileUtils;
@@ -20,7 +19,7 @@ import java.text.MessageFormat;
  */
 public class AssemblyRuntime extends AssemblyProfiles {
 
-    public void doAssembly(RuntimeConfiguration pConfiguration, UpdatePolicy pPolicy, ConfigurationHelper pConfigurationHelper) {
+    public void doAssembly(RuntimeConfiguration pConfiguration, ConfigurationHelper pConfigurationHelper) {
         validate(pConfiguration);
 
         // server folder
@@ -58,7 +57,7 @@ public class AssemblyRuntime extends AssemblyProfiles {
             }
         }
 
-        if (UpdatePolicyUtils.shouldUpdate(runtimeFolder, pPolicy)) {
+        if (UpdatePolicyUtils.shouldUpdate(runtimeFolder, pConfigurationHelper.computeUpdatePolicy(pConfiguration))) {
             runtimeFolder.delete();
             runtimeFolder.mkdirs();
 

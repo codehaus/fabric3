@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.dependency.profile.Profile;
 
@@ -26,6 +27,8 @@ public class RuntimeConfiguration {
     private List<Profile> profiles = new ArrayList<Profile>();
 
     private Version version;
+
+    private UpdatePolicy updatePolicy;
 
     public RuntimeConfiguration(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, File pSystemConfig, Profile... pProfiles) {
         if (null == pServerName) {
@@ -93,4 +96,11 @@ public class RuntimeConfiguration {
         return version;
     }
 
+    public UpdatePolicy getUpdatePolicy() {
+        return updatePolicy;
+    }
+
+    public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+        updatePolicy = pUpdatePolicy;
+    }
 }

@@ -2,7 +2,6 @@ package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.configuration.ConfigurationHelper;
 import org.fabric3.assembly.configuration.ServerConfiguration;
-import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.profile.fabric.FabricDependencyFactory;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ValidationException;
@@ -23,13 +22,13 @@ public class AssemblyServer extends AssemblyProfiles {
 
     private DependencyResolver dependencyResolver = new DependencyResolver();
 
-    public void doAssembly(ServerConfiguration pServerConfiguration, UpdatePolicy pPolicy, ConfigurationHelper pConfigurationHelper) {
+    public void doAssembly(ServerConfiguration pServerConfiguration, ConfigurationHelper pConfigurationHelper) {
         validate(pServerConfiguration);
 
         File serverPath = pServerConfiguration.getServerPath();
         LoggerUtils.log("server in folder - " + serverPath);
 
-        if (FileUtils2.recreateFolderIfNeeded(serverPath, pPolicy)) {
+        if (FileUtils2.recreateFolderIfNeeded(serverPath, pConfigurationHelper.computeUpdatePolicy(pServerConfiguration))) {
             try {
                 ZipUtils.unzip(dependencyResolver.findFile(pConfigurationHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pServerConfiguration)), serverPath);
                 FileUtils.delete(serverPath, "runtimes");

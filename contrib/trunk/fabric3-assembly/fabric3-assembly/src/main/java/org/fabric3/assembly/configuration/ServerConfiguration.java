@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.dependency.profile.Profile;
 
@@ -22,6 +23,8 @@ public class ServerConfiguration {
     private List<Profile> profiles = new ArrayList<Profile>();
 
     private Version version;
+
+    private UpdatePolicy updatePolicy;
 
     public ServerConfiguration(String pServerName, File pServerPath, Version pVersion, Profile... pProfiles) {
         if (null == pServerName) {
@@ -60,11 +63,15 @@ public class ServerConfiguration {
         profiles = Arrays.asList(pProfiles);
     }
 
-    public void setVersion(Version pVersion) {
-        version = pVersion;
-    }
-
     public Version getVersion() {
         return version;
+    }
+
+    public UpdatePolicy getUpdatePolicy() {
+        return updatePolicy;
+    }
+
+    public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+        updatePolicy = pUpdatePolicy;
     }
 }

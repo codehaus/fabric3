@@ -15,11 +15,11 @@ public class Assembly {
 
     public void doAssembly(AssemblyConfiguration pConfiguration) {
         for (ServerConfiguration server : pConfiguration.getServers()) {
-            serverAssembly.doAssembly(server, pConfiguration.getUpdatePolicy(), pConfiguration.getConfigurationHelper());
+            serverAssembly.doAssembly(server, pConfiguration.getConfigurationHelper());
         }
 
         for (RuntimeConfiguration runtime : pConfiguration.getRuntimes()) {
-            runtimeAssembly.doAssembly(runtime, pConfiguration.getUpdatePolicy(), pConfiguration.getConfigurationHelper());
+            runtimeAssembly.doAssembly(runtime, pConfiguration.getConfigurationHelper());
         }
     }
 

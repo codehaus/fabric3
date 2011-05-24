@@ -2,6 +2,7 @@
     "server" : {
         "name" : "server1",
         "path" : "/tmp/fabric3-test1",
+        "update" : "daily",
         "profiles": "['web','rest']",
 
         "runtime1" : {
@@ -10,6 +11,7 @@
             "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
         },
         "runtime2" : {
+            "update" : "always",
             "type" : "['vm','controller','participant']",
             "sysConfig" : "/tmp/config/runtime1.xml",
             "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
@@ -17,7 +19,9 @@
     },
 
     "composites" : {
+        "update" : "always",
         "user" : {
+            "update" : "daily",
             "runtime" : "runtime1",
             "files" : "org.fabric3:user:1.0-SNAPSHOT"
         },
@@ -33,11 +37,14 @@
 
     "profiles" : {
         "version" : "1.0",
+        "update" : "always",
         "profile-connector" : {
             "alternative-name" : "['connector','b-connector','bank-connector']",
             "files" : "org.fabric3:profile-bank-connector"
         },
         "profile-reporting" : {
+            "update" : "daily",
+            "version" : "2.0",
             "alternative-name" : "reporting",
             "files" : "org.fabric3:reporting:bin:zip",
             "paths" : "/tmp/reporting-adds.jar"

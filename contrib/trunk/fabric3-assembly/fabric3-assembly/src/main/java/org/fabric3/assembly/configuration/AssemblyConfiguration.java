@@ -38,6 +38,11 @@ public class AssemblyConfiguration {
         public Version getConfigurationVersion() {
             return AssemblyConfiguration.this.getVersion();
         }
+
+        @Override
+        public UpdatePolicy getConfigurationUpdatePolicy() {
+            return AssemblyConfiguration.this.getUpdatePolicy();
+        }
     };
 
     public void setUpdatePolicy(String pUpdatePolicy) {
@@ -45,6 +50,10 @@ public class AssemblyConfiguration {
     }
 
     public UpdatePolicy getUpdatePolicy() {
+        if (null == updatePolicy) {
+            updatePolicy = UpdatePolicy.DAILY;
+        }
+
         return updatePolicy;
     }
 
