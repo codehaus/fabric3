@@ -20,11 +20,11 @@ public class RuntimeValidator {
         }
 
         if (StringUtils.isBlank(pRuntime.getServerName())) {
-            throw new ValidationException(MessageFormat.format("Server associated with runtime {0} is null.", runtimeName));
+            throw new ValidationException(MessageFormat.format("Server associated with runtime ''{0}'' is null.", runtimeName));
         }
 
-        if (null == pRuntime.getServerPath() || !pRuntime.getServerPath().exists()) {
-            throw new ValidationException("Servers path is null or doesn't exists, but your runtime {0} is asociated with {1} server.", pRuntime.getRuntimeName(), pRuntime.getServerName());
+        if (null == pRuntime.getServerPath()) {
+            throw new ValidationException("Servers path is null or doesn''t exists, but your runtime ''{0}'' is asociated with ''{1}'' server.", pRuntime.getRuntimeName(), pRuntime.getServerName());
         }
 
         if (null == pRuntime.getRuntimeMode()) {

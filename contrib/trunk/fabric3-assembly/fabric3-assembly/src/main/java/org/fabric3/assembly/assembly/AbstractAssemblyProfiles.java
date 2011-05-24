@@ -24,6 +24,9 @@ public abstract class AbstractAssemblyProfiles {
         for (Profile profile : pProfiles) {
             try {
                 for (Dependency dependency : profile.getDependencies()) {
+                    if (dependency.isVersionLess()) {
+                        dependency.setVersion(profile.getVersion());
+                    }
                     File f = mDependencyResolver.findFile(dependency);
                     switch (FileUtils2.fileExtension(f)) {
                         case JAR:

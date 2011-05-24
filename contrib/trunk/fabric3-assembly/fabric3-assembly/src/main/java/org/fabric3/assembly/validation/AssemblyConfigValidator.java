@@ -82,9 +82,9 @@ public class AssemblyConfigValidator implements IAssemblyStep {
             String serverName = runtime.getServerName();
 
             Map<RuntimeMode, Integer> result = mHelper.getRuntimeModesByServerName(serverName);
-            int countVM = result.get(RuntimeMode.VM);
-            int countController = result.get(RuntimeMode.CONTROLLER);
-            int countParticipant = result.get(RuntimeMode.PARTICIPANT);
+            Integer countVM = null == result.get(RuntimeMode.VM) ? 0 : result.get(RuntimeMode.VM);
+            Integer countController = null == result.get(RuntimeMode.CONTROLLER) ? 0 : result.get(RuntimeMode.CONTROLLER);
+            Integer countParticipant = null == result.get(RuntimeMode.PARTICIPANT) ? 0 : result.get(RuntimeMode.PARTICIPANT);
 
             if (countVM > 1) {
                 throw new ValidationException("Only one VM runtime is allowed per server. Your servers is: {0}", serverName);

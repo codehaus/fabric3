@@ -20,15 +20,15 @@ public class ProfileValidator {
         String configurationName = pConfiguration.getName();
 
         if (StringUtils.isBlank(configurationName)) {
-            throw new AssemblyException("Name of profile configuration cannot be null: {0}", pConfiguration);
+            throw new AssemblyException("Name of profile configuration cannot be null: ''{0}''", pConfiguration);
         }
 
         if (null == pConfiguration.getUpdatePolicy()) {
-            throw new AssemblyException("Update policy not defined for {0}", configurationName);
+            throw new AssemblyException("Update policy is not defined for ''{0}''", configurationName);
         }
 
         if (null == pConfiguration.getVersion()) {
-            throw new AssemblyException("Version not defined for {0}", configurationName);
+            throw new AssemblyException("Version is not defined for ''{0}''", configurationName);
         }
 
         if (pConfiguration.getDependencies().isEmpty() && pConfiguration.getFiles().isEmpty()) {

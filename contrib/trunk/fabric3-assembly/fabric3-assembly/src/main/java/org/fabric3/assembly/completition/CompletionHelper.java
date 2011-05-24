@@ -13,6 +13,7 @@ import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -185,5 +186,9 @@ public class CompletionHelper {
         }
 
         return mConfig.getUpdatePolicy();
+    }
+
+    public File computeServerPath(Runtime pRuntime) {
+        return getServerByRuntime(pRuntime).getServerPath();
     }
 }

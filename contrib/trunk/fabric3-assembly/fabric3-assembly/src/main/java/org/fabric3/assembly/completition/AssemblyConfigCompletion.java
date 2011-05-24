@@ -58,15 +58,38 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
             if (null == server.getVersion()) {
                 server.setVersion(mHelper.computeMissingVersion(server));
             }
+
+            for (Profile profile : server.getProfiles()) {
+                if (null == profile.getVersion()) {
+                    profile.setVersion(server.getVersion());
+                }
+                if (null == profile.getUpdatePolicy()) {
+                    profile.setUpdatePolicy(server.getUpdatePolicy());
+                }
+            }
         }
 
         //
-        // runtimes - set missing update policy
+        // runtimes - set missing update policy and server path
         //
         for (Runtime runtime : mConfig.getRuntimes()) {
             if (null == runtime.getUpdatePolicy()) {
                 runtime.setUpdatePolicy(mHelper.computeMissingUpdatePolicy(runtime));
             }
+            if (null == runtime.getServerPath()) {
+                runtime.setServerPath(mHelper.computeServerPath(runtime));
+            }
+
+            Server server = mHelper.getServerByRuntime(runtime);
+            for (Profile profile : runtime.getProfiles()) {
+                if (null == profile.getVersion()) {
+                    profile.setVersion(server.getVersion());
+                }
+                if (null == profile.getUpdatePolicy()) {
+                    profile.setUpdatePolicy(runtime.getUpdatePolicy());
+                }
+            }
+
         }
 
         //
