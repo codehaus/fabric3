@@ -12,13 +12,15 @@
         "runtime1" : {
             "type" : "['vm','controller','participant']",
             "sysConfig" : "/tmp/config/runtime1.xml",
-            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']",
+            "composites" : "['user', 'bank-account', 'monitoring']"
         },
         "runtime2" : {
             "update" : "always",
             "type" : "['vm','controller','participant']",
             "sysConfig" : "/tmp/config/runtime1.xml",
             "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+
         }
     },
 
@@ -26,15 +28,12 @@
         "update" : "always",
         "user" : {
             "update" : "daily",
-            "runtime" : "runtime1",
             "dependency" : "org.fabric3:user:1.0-SNAPSHOT"
         },
         "bank-account" : {
-            "runtime" : "runtime1",
             "dependency" : "org.fabric3:bAccount:1.0-SNAPSHOT:bin@zip"
         },
         "monitoring" : {
-            "runtime" : "runtime1",
             "path" : "/tmp/monitoring.zip"
         }
     },

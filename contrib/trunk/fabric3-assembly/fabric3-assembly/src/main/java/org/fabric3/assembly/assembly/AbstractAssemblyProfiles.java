@@ -2,7 +2,6 @@ package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.dependency.Dependency;
-import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.maven.DependencyResolver;
 import org.fabric3.assembly.utils.FileUtils;
 import org.fabric3.assembly.utils.FileUtils2;
@@ -21,16 +20,10 @@ public abstract class AbstractAssemblyProfiles {
 
     protected DependencyResolver mDependencyResolver = new DependencyResolver();
 
-    protected void processProfiles(List<Profile> pProfiles, File pDestinationFolder, Version pVersionForVersionlessDependencies) {
+    protected void processProfiles(List<Profile> pProfiles, File pDestinationFolder) {
         for (Profile profile : pProfiles) {
             try {
                 for (Dependency dependency : profile.getDependencies()) {
-
-                    // if provided dependency is version less add provided version to it
-                    if (null == dependency.getVersion()) {
-                        dependency.setVersion(pVersionForVersionlessDependencies);
-                    }
-
                     File f = mDependencyResolver.findFile(dependency);
                     switch (FileUtils2.fileExtension(f)) {
                         case JAR:

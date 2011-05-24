@@ -22,11 +22,11 @@ public class Assembly implements IAssemblyStep {
 
     public void process() {
         for (Server server : mConfig.getServers()) {
-            mServerAssembly.doAssembly(server, mConfig.getCompletionHelper());
+            mServerAssembly.doAssembly(server);
         }
 
         for (Runtime runtime : mConfig.getRuntimes()) {
-            mRuntimeAssembly.doAssembly(runtime, mConfig.getCompletionHelper());
+            mRuntimeAssembly.doAssembly(runtime);
         }
 
 

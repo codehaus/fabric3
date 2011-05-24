@@ -18,10 +18,6 @@ public class CompositeValidator {
             throw new AssemblyException("Name not found for configuration: {0}", pConfiguration);
         }
 
-        if (StringUtils.isBlank(pConfiguration.getRuntimeName())) {
-            throw new AssemblyException("Configuration {0} isn't bound to any runtime.", pConfiguration.getName());
-        }
-
         if (null != pConfiguration.getUpdatePolicy()) {
             throw new AssemblyException("Update policy on configuration {0} is null.", pConfiguration.getName());
         }

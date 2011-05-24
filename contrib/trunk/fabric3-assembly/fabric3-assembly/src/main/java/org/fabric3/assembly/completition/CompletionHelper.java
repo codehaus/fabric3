@@ -1,6 +1,8 @@
 package org.fabric3.assembly.completition;
 
+import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.Runtime;
+import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.UpdatePolicy;
@@ -12,20 +14,20 @@ import org.fabric3.assembly.utils.ClosureUtils;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Michal Capo
  */
-public abstract class CompletionHelper {
+public class CompletionHelper {
 
-    public abstract List<Server> getServerConfigurations();
+    private AssemblyConfig mConfig;
 
-    public abstract List<org.fabric3.assembly.configuration.Runtime> getRuntimeConfigurations();
-
-    public abstract Version getConfigurationVersion();
-
-    public abstract UpdatePolicy getConfigurationUpdatePolicy();
+    public CompletionHelper(AssemblyConfig pConfig) {
+        mConfig = pConfig;
+    }
 
     /*
      *
@@ -49,7 +51,7 @@ public abstract class CompletionHelper {
             throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is not assigned to any server. Please check your configuration.", pRuntime.getRuntimeName()));
         }
 
-        for (Server server : getServerConfigurations()) {
+        for (Server server : mConfig.getServers()) {
             if (serverLookupName.equals(server.getServerName())) {
                 return server;
             }
@@ -65,7 +67,7 @@ public abstract class CompletionHelper {
     public List<Runtime> getRuntimesByServerName(final String pServerName) {
         final List<Runtime> runtimes = new ArrayList<Runtime>();
 
-        ClosureUtils.each(getRuntimeConfigurations(), new Closure<Runtime>() {
+        ClosureUtils.each(mConfig.getRuntimes(), new Closure<Runtime>() {
             @Override
             public void exec(Runtime pParam) {
                 if (pServerName.equals(pParam.getServerName())) {
@@ -77,10 +79,30 @@ public abstract class CompletionHelper {
         return runtimes;
     }
 
+    public Map<RuntimeMode, Integer> getRuntimeModesByServerName(final String pServerName) {
+        final Map<RuntimeMode, Integer> runtimes = new HashMap<RuntimeMode, Integer>();
+
+        ClosureUtils.each(mConfig.getRuntimes(), new Closure<Runtime>() {
+            @Override
+            public void exec(Runtime pParam) {
+                if (pServerName.equals(pParam.getServerName())) {
+                    Integer count = runtimes.get(pParam.getRuntimeMode());
+                    if (null == count) {
+                        count = 0;
+                    }
+                    count++;
+                    runtimes.put(pParam.getRuntimeMode(), count);
+                }
+            }
+        });
+
+        return runtimes;
+    }
+
     public List<Server> getServersByName(final String pServerName) {
         final List<Server> servers = new ArrayList<Server>();
 
-        ClosureUtils.each(getServerConfigurations(), new Closure<Server>() {
+        ClosureUtils.each(mConfig.getServers(), new Closure<Server>() {
             @Override
             public void exec(Server pParam) {
                 if (pServerName.equals(pParam.getServerName())) {
@@ -92,9 +114,24 @@ public abstract class CompletionHelper {
         return servers;
     }
 
+    public List<Runtime> getRuntimesByName(final String pRuntimeName) {
+        final List<Runtime> runtimes = new ArrayList<Runtime>();
+
+        ClosureUtils.each(mConfig.getRuntimes(), new Closure<Runtime>() {
+            @Override
+            public void exec(Runtime pParam) {
+                if (pRuntimeName.equals(pParam.getServerName())) {
+                    runtimes.add(pParam);
+                }
+            }
+        });
+
+        return runtimes;
+    }
+
     public Version computeMissingVersion(Runtime pConfiguration) {
         if (null == pConfiguration) {
-            return getConfigurationVersion();
+            return mConfig.getVersion();
         }
 
         try {
@@ -106,24 +143,24 @@ public abstract class CompletionHelper {
             // no-op
         }
 
-        return getConfigurationVersion();
+        return mConfig.getVersion();
     }
 
     public Version computeMissingVersion(Server pConfiguration) {
         if (null == pConfiguration) {
-            return getConfigurationVersion();
+            return mConfig.getVersion();
         }
 
         if (null != pConfiguration.getVersion()) {
             return pConfiguration.getVersion();
         }
 
-        return getConfigurationVersion();
+        return mConfig.getVersion();
     }
 
     public UpdatePolicy computeUpdatePolicy(Runtime pConfiguration) {
         if (null == pConfiguration) {
-            return getConfigurationUpdatePolicy();
+            return mConfig.getUpdatePolicy();
         }
 
         if (null != pConfiguration.getUpdatePolicy()) {
@@ -139,18 +176,18 @@ public abstract class CompletionHelper {
             // no-op
         }
 
-        return getConfigurationUpdatePolicy();
+        return mConfig.getUpdatePolicy();
     }
 
     public UpdatePolicy computeUpdatePolicy(Server pConfiguration) {
         if (null == pConfiguration) {
-            return getConfigurationUpdatePolicy();
+            return mConfig.getUpdatePolicy();
         }
 
         if (null != pConfiguration.getUpdatePolicy()) {
             return pConfiguration.getUpdatePolicy();
         }
 
-        return getConfigurationUpdatePolicy();
+        return mConfig.getUpdatePolicy();
     }
 }

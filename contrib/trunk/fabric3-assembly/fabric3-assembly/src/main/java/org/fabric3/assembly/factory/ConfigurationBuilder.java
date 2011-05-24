@@ -7,16 +7,11 @@ import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
-import org.fabric3.assembly.exception.AssemblyException;
-import org.fabric3.assembly.exception.NameNotGivenException;
-import org.fabric3.assembly.exception.ServerAlreadyExistsException;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
-import org.fabric3.assembly.utils.StringUtils;
 
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,15 +83,6 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion, UpdatePolicy pUpdatePolicy, Profile... pProfiles) {
-        if (StringUtils.isBlank(pName)) {
-            throw new NameNotGivenException("You didn't specified any server name.");
-        }
-
-        // check for same server name
-        if (!mConfig.getCompletionHelper().getServersByName(pName).isEmpty()) {
-            throw new ServerAlreadyExistsException(MessageFormat.format("Server with name ''{0}'' already exists.", pName));
-        }
-
         mConfig.addServer(new Server(pName, new File(pPath), pVersion, pUpdatePolicy, pProfiles));
         return this;
     }
@@ -146,28 +132,6 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, UpdatePolicy pUpdatePolicy, String pConfigFile, Profile... pProfiles) {
-        if (StringUtils.isBlank(pRuntimeName)) {
-            throw new NameNotGivenException("Runtime name doesn't exists. Please provide one.");
-        }
-
-        List<Runtime> runtimesByServerName = mConfig.getCompletionHelper().getRuntimesByServerName(pServerName);
-        if (RuntimeMode.VM == pMode && !runtimesByServerName.isEmpty()) {
-            throw new AssemblyException("You are trying to add VM runtime to server which already has some other runtimes. This won't work.");
-        }
-
-        for (Runtime runtime : runtimesByServerName) {
-            if (pRuntimeName.equals(runtime.getRuntimeName())) {
-                throw new AssemblyException(MessageFormat.format("Server ''{0}'' already contains ''{1}'' runtime.", pServerName, pRuntimeName));
-            }
-
-            if (RuntimeMode.VM == runtime.getRuntimeMode() && RuntimeMode.VM == pMode) {
-                throw new AssemblyException("Server already contains VM runtime. You cannot add next VM runtime to this server.");
-            }
-
-            if (RuntimeMode.CONTROLLER == runtime.getRuntimeMode() && RuntimeMode.CONTROLLER == pMode) {
-                throw new AssemblyException(MessageFormat.format("Server ''{0}'' already contains CONTROLLER runtime. You cannot add next controller runtime to this server.", pServerName));
-            }
-        }
 
         mConfig.addRuntime(new Runtime(pServerName, pRuntimeName, pMode, pUpdatePolicy, null == pConfigFile ? null : new File(pConfigFile), pProfiles));
         return this;

@@ -1,5 +1,7 @@
 package org.fabric3.assembly.validation;
 
+import org.fabric3.assembly.configuration.Composite;
+import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.StringUtils;
 
@@ -10,7 +12,7 @@ import java.text.MessageFormat;
  */
 public class RuntimeValidator {
 
-    public void validate(org.fabric3.assembly.configuration.Runtime pRuntime) {
+    public void validate(org.fabric3.assembly.configuration.Runtime pRuntime, ProfileValidator pProfileValidator, CompositeValidator pCompositeValidator) {
         String runtimeName = pRuntime.getRuntimeName();
 
         if (StringUtils.isBlank(runtimeName)) {
@@ -21,9 +23,28 @@ public class RuntimeValidator {
             throw new ValidationException(MessageFormat.format("Server associated with runtime {0} is null.", runtimeName));
         }
 
-        if (null == pRuntime.getRuntimeMode()) {
-            throw new ValidationException("Runtime mode of " + runtimeName + " is null.");
+        if (null == pRuntime.getServerPath() || !pRuntime.getServerPath().exists()) {
+            throw new ValidationException("Servers path is null or doesn't exists, but your runtime {0} is asociated with {1} server.", pRuntime.getRuntimeName(), pRuntime.getServerName());
         }
+
+        if (null == pRuntime.getRuntimeMode()) {
+            throw new ValidationException("Runtime mode of ''{0}'' runtime is null.", runtimeName);
+        }
+
+        if (null == pRuntime.getUpdatePolicy()) {
+            throw new ValidationException("Update policy of ''{0}'' runtime is null.", runtimeName);
+        }
+
+        for (Profile profile : pRuntime.getProfiles()) {
+            pProfileValidator.validate(profile);
+        }
+        ValidationHelper.validateSameProfileName(runtimeName, pRuntime.getProfiles());
+
+        for (Composite composite : pRuntime.getComposites()) {
+            pCompositeValidator.validate(composite);
+        }
+        ValidationHelper.validateSameCompositeName(runtimeName, pRuntime.getComposites());
+
     }
 
 }

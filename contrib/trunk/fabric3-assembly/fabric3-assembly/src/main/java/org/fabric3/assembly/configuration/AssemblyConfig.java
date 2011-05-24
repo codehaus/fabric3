@@ -2,7 +2,6 @@ package org.fabric3.assembly.configuration;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fabric3.assembly.IAssemblyStep;
-import org.fabric3.assembly.completition.CompletionHelper;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
@@ -27,28 +26,6 @@ public class AssemblyConfig implements IAssemblyStep {
     private CompositeConfig mComposites = new CompositeConfig();
 
     private ProfileConfig mProfiles = new ProfileConfig();
-
-    private CompletionHelper mCompletionHelper = new CompletionHelper() {
-        @Override
-        public List<Server> getServerConfigurations() {
-            return mServers;
-        }
-
-        @Override
-        public List<Runtime> getRuntimeConfigurations() {
-            return mRuntimes;
-        }
-
-        @Override
-        public Version getConfigurationVersion() {
-            return AssemblyConfig.this.getVersion();
-        }
-
-        @Override
-        public UpdatePolicy getConfigurationUpdatePolicy() {
-            return AssemblyConfig.this.getUpdatePolicy();
-        }
-    };
 
     public void setUpdatePolicy(String pUpdatePolicy) {
         mUpdatePolicy = UpdatePolicy.valueOf(pUpdatePolicy);
@@ -92,10 +69,6 @@ public class AssemblyConfig implements IAssemblyStep {
 
     public List<Profile> getProfiles() {
         return mProfiles.getProfiles();
-    }
-
-    public CompletionHelper getCompletionHelper() {
-        return mCompletionHelper;
     }
 
     public Version getVersion() {

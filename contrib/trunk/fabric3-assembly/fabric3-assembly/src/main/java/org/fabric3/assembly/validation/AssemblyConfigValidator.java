@@ -2,12 +2,18 @@ package org.fabric3.assembly.validation;
 
 import org.fabric3.assembly.IAssemblyStep;
 import org.fabric3.assembly.assembly.Assembly;
+import org.fabric3.assembly.completition.CompletionHelper;
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.Composite;
 import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.configuration.Runtime;
+import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.Server;
+import org.fabric3.assembly.exception.ServerAlreadyExistsException;
 import org.fabric3.assembly.exception.ValidationException;
+
+import java.text.MessageFormat;
+import java.util.Map;
 
 /**
  * @author Michal Capo
@@ -24,8 +30,11 @@ public class AssemblyConfigValidator implements IAssemblyStep {
 
     private AssemblyConfig mConfig;
 
+    private CompletionHelper mHelper;
+
     public AssemblyConfigValidator(AssemblyConfig pConfig) {
         mConfig = pConfig;
+        mHelper = new CompletionHelper(pConfig);
     }
 
     public void process() {
@@ -33,23 +42,68 @@ public class AssemblyConfigValidator implements IAssemblyStep {
             throw new ValidationException("Configuration version is not defined. You need to specify it.");
         }
 
-        for (Server server : mConfig.getServers()) {
-            mServerValidator.validate(server);
-        }
-
-        for (Runtime runtime : mConfig.getRuntimes()) {
-            mRuntimeValidator.validate(runtime);
-        }
-
+        //
+        // validate composites
+        //
         for (Composite composite : mConfig.getComposites()) {
             mCompositeValidator.validate(composite);
         }
 
+        //
+        // validate profiles
+        //
         for (Profile profile : mConfig.getProfiles()) {
             mProfileValidator.validate(profile);
         }
 
+        //
+        // validate servers
+        //
+        for (Server server : mConfig.getServers()) {
+            mServerValidator.validate(server, mProfileValidator);
+        }
+        for (Server server : mConfig.getServers()) {
+            // check for same server name
+            if (1 < mHelper.getServersByName(server.getServerName()).size()) {
+                throw new ServerAlreadyExistsException(MessageFormat.format("You defined servers with the same name ''{0}''.", server.getServerName()));
+            }
+        }
+
+        //
+        // validate runtimes
+        //
+        for (Runtime runtime : mConfig.getRuntimes()) {
+            mRuntimeValidator.validate(runtime, mProfileValidator, mCompositeValidator);
+        }
+        for (Runtime runtime : mConfig.getRuntimes()) {
+            String serverName = runtime.getServerName();
+
+            Map<RuntimeMode, Integer> result = mHelper.getRuntimeModesByServerName(serverName);
+            int countVM = result.get(RuntimeMode.VM);
+            int countController = result.get(RuntimeMode.CONTROLLER);
+            int countParticipant = result.get(RuntimeMode.PARTICIPANT);
+
+            if (countVM > 1) {
+                throw new ValidationException("Only one VM runtime is allowed per server. Your servers is: {0}", serverName);
+            }
+            if (countController > 1) {
+                throw new ValidationException("Only one CONTROLLER runtime is allowed per server. Your servers is: {0}", serverName);
+            }
+
+            if (countVM != 0 && (countController != 0 || countParticipant != 0)) {
+                throw new ValidationException("You are trying to add VM runtime to ''{0}'' server which already has some other runtimes. This won't work.", serverName);
+            }
+
+            if (countVM == 0 && countController == 0 && countParticipant == 0) {
+                throw new ValidationException("Your server ''{0}'' doesn't contain any runtime.", serverName);
+            }
+
+            ValidationHelper.validateSameRuntimeName(serverName, mHelper.getRuntimesByServerName(serverName));
+        }
+
+        //
         // do assembly
+        //
         new Assembly(mConfig).process();
     }
 

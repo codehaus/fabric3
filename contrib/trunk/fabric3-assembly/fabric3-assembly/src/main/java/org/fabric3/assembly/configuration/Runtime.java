@@ -17,6 +17,8 @@ public class Runtime {
 
     private String mServerName;
 
+    private File mServerPath;
+
     private String mRuntimeName;
 
     private RuntimeMode mRuntimeMode;
@@ -24,6 +26,8 @@ public class Runtime {
     private File mSystemConfig;
 
     private List<Profile> mProfiles = new ArrayList<Profile>();
+
+    private List<Composite> mComposites = new ArrayList<Composite>();
 
     private UpdatePolicy mUpdatePolicy;
 
@@ -44,6 +48,22 @@ public class Runtime {
         if (null != pProfiles) {
             mProfiles = Arrays.asList(pProfiles);
         }
+    }
+
+    public void addComposite(Composite pComposite) {
+        mComposites.add(pComposite);
+    }
+
+    public List<Composite> getComposites() {
+        return mComposites;
+    }
+
+    public File getServerPath() {
+        return mServerPath;
+    }
+
+    public void setServerPath(File pServerPath) {
+        mServerPath = pServerPath;
     }
 
     public void setSystemConfig(File pSystemConfig) {

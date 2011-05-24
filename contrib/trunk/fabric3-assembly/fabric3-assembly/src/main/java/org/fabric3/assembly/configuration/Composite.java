@@ -12,42 +12,26 @@ public class Composite {
 
     private String mName;
 
-    private String mRuntimeName;
-
     private File mPath;
 
     private String mDependency;
 
     private UpdatePolicy mUpdatePolicy;
 
-    public Composite(String pName, String pRuntimeName, String pDependency, UpdatePolicy pUpdatePolicy) {
+    public Composite(String pName, String pDependency, UpdatePolicy pUpdatePolicy) {
         mName = pName;
-        if (null == pRuntimeName) {
-            mRuntimeName = Runtime.RUNTIME_DEFAULT_NAME;
-        } else {
-            mRuntimeName = pRuntimeName;
-        }
         mDependency = pDependency;
         mUpdatePolicy = pUpdatePolicy;
     }
 
-    public Composite(String pName, String pRuntimeName, File pPath, UpdatePolicy pUpdatePolicy) {
+    public Composite(String pName, File pPath, UpdatePolicy pUpdatePolicy) {
         mName = pName;
-        if (null == pRuntimeName) {
-            mRuntimeName = Runtime.RUNTIME_DEFAULT_NAME;
-        } else {
-            mRuntimeName = pRuntimeName;
-        }
         mPath = pPath;
         mUpdatePolicy = pUpdatePolicy;
     }
 
     public String getName() {
         return mName;
-    }
-
-    public String getRuntimeName() {
-        return mRuntimeName;
     }
 
     public File getPath() {
@@ -66,7 +50,6 @@ public class Composite {
     public String toString() {
         return new ToStringBuilder(this).
                 append("name", mName).
-                append("runtimeName", mRuntimeName).
                 append("path", mPath).
                 append("dependency", mDependency).
                 append("updatePolicy", mUpdatePolicy).

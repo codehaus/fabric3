@@ -2,7 +2,10 @@ package org.fabric3.assembly.validation;
 
 import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.StringUtils;
+
+import java.io.File;
 
 /**
  * @author Michal Capo
@@ -30,6 +33,12 @@ public class ProfileValidator {
 
         if (pConfiguration.getDependencies().isEmpty() && pConfiguration.getFiles().isEmpty()) {
             throw new AssemblyException("You need to define at lest one 'file' or 'path' for ''{0}'' profile.", configurationName);
+        }
+
+        for (File file : pConfiguration.getFiles()) {
+            if (!file.exists()) {
+                throw new ValidationException("File ''{0}'' doesn't exists. Your profile definition ''{1}'' is broken.", file.getAbsoluteFile(), configurationName);
+            }
         }
     }
 
