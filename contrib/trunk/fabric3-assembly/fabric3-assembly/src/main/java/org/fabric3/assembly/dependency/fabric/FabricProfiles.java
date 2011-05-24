@@ -1,4 +1,4 @@
-package org.fabric3.assembly.dependency.profile.fabric;
+package org.fabric3.assembly.dependency.fabric;
 
 import org.fabric3.assembly.configuration.Profile;
 
@@ -45,7 +45,7 @@ public class FabricProfiles {
     public static final Profile TIMER = FabricDependencyFactory.createProfile("profile-timer", "timer");
 
     /**
-     * Infinispan profile
+     * Infinispan profile.
      */
     public static final Profile INFINISPAN = FabricDependencyFactory.createProfile("profile-infinispan", "infinispan");
 
@@ -57,11 +57,13 @@ public class FabricProfiles {
     /**
      * Test profile. List of files needed for running tests on fabric server.
      */
-    public static final Profile TEST = new Profile("profile-test", null, null, "test") {{
-        addDependency(FabricDependencyFactory.jar("fabric3-junit"));
-        addDependency(FabricDependencyFactory.jar("fabric3-test-spi"));
-        addDependency(FabricDependencyFactory.jar("fabric3-ant-api"));
-        addDependency(FabricDependencyFactory.jar("fabric3-ant-extension"));
-    }};
+    public static final Profile TEST = new Profile("profile-test", null, null, "test") {
+        {
+            addDependency(FabricDependencyFactory.jar("fabric3-junit"));
+            addDependency(FabricDependencyFactory.jar("fabric3-test-spi"));
+            addDependency(FabricDependencyFactory.jar("fabric3-ant-api"));
+            addDependency(FabricDependencyFactory.jar("fabric3-ant-extension"));
+        }
+    };
 
 }

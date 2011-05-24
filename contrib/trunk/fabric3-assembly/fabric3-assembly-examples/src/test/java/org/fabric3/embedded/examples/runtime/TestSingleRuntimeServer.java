@@ -2,7 +2,7 @@ package org.fabric3.embedded.examples.runtime;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.dependency.UpdatePolicy;
-import org.fabric3.assembly.dependency.profile.fabric.FabricProfiles;
+import org.fabric3.assembly.dependency.fabric.FabricProfiles;
 import org.fabric3.assembly.factory.ConfigurationBuilder;
 
 import java.io.IOException;

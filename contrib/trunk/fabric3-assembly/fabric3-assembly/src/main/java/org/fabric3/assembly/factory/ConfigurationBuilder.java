@@ -93,7 +93,7 @@ public class ConfigurationBuilder {
         }
 
         // check for same server name
-        if (!mConfig.getConfigurationHelper().getServersByName(pName).isEmpty()) {
+        if (!mConfig.getCompletitionHelper().getServersByName(pName).isEmpty()) {
             throw new ServerAlreadyExistsException(MessageFormat.format("Server with name ''{0}'' already exists.", pName));
         }
 
@@ -150,7 +150,7 @@ public class ConfigurationBuilder {
             throw new NameNotGivenException("Runtime name doesn't exists. Please provide one.");
         }
 
-        List<Runtime> runtimesByServerName = mConfig.getConfigurationHelper().getRuntimesByServerName(pServerName);
+        List<Runtime> runtimesByServerName = mConfig.getCompletitionHelper().getRuntimesByServerName(pServerName);
         if (RuntimeMode.VM == pMode && !runtimesByServerName.isEmpty()) {
             throw new AssemblyException("You are trying to add VM runtime to server which already has some other runtimes. This won't work.");
         }

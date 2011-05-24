@@ -1,5 +1,7 @@
-package org.fabric3.assembly.configuration;
+package org.fabric3.assembly.completition;
 
+import org.fabric3.assembly.configuration.Runtime;
+import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
@@ -15,11 +17,11 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public abstract class ConfigurationHelper {
+public abstract class CompletitionHelper {
 
     public abstract List<Server> getServerConfigurations();
 
-    public abstract List<Runtime> getRuntimeConfigurations();
+    public abstract List<org.fabric3.assembly.configuration.Runtime> getRuntimeConfigurations();
 
     public abstract Version getConfigurationVersion();
 

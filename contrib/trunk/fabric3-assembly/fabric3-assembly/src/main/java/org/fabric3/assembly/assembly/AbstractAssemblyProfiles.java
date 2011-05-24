@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public abstract class AssemblyProfiles {
+public abstract class AbstractAssemblyProfiles {
 
-    protected DependencyResolver dependencyResolver = new DependencyResolver();
+    protected DependencyResolver mDependencyResolver = new DependencyResolver();
 
     protected void processProfiles(List<Profile> pProfiles, File pDestinationFolder, Version pVersionForVersionlessDependencies) {
         for (Profile profile : pProfiles) {
@@ -31,7 +31,7 @@ public abstract class AssemblyProfiles {
                         dependency.setVersion(pVersionForVersionlessDependencies);
                     }
 
-                    File f = dependencyResolver.findFile(dependency);
+                    File f = mDependencyResolver.findFile(dependency);
                     switch (FileUtils2.fileExtension(f)) {
                         case JAR:
                             FileUtils.copy(f, FileUtils.file(pDestinationFolder, f.getName()));

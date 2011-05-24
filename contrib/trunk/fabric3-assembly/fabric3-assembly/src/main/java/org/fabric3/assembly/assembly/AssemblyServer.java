@@ -1,10 +1,9 @@
 package org.fabric3.assembly.assembly;
 
-import org.fabric3.assembly.configuration.ConfigurationHelper;
+import org.fabric3.assembly.completition.CompletitionHelper;
 import org.fabric3.assembly.configuration.Server;
-import org.fabric3.assembly.dependency.profile.fabric.FabricDependencyFactory;
+import org.fabric3.assembly.dependency.fabric.FabricDependencyFactory;
 import org.fabric3.assembly.exception.AssemblyException;
-import org.fabric3.assembly.maven.DependencyResolver;
 import org.fabric3.assembly.utils.FileUtils;
 import org.fabric3.assembly.utils.FileUtils2;
 import org.fabric3.assembly.utils.LoggerUtils;
@@ -16,17 +15,15 @@ import java.io.IOException;
 /**
  * @author Michal Capo
  */
-public class AssemblyServer extends AssemblyProfiles {
+public class AssemblyServer extends AbstractAssemblyProfiles {
 
-    private DependencyResolver dependencyResolver = new DependencyResolver();
-
-    public void doAssembly(Server pConfiguration, ConfigurationHelper pConfigurationHelper) {
+    public void doAssembly(Server pConfiguration, CompletitionHelper pCompletitionHelper) {
         File serverPath = pConfiguration.getServerPath();
         LoggerUtils.log("server in folder - " + serverPath);
 
-        if (FileUtils2.recreateFolderIfNeeded(serverPath, pConfigurationHelper.computeUpdatePolicy(pConfiguration))) {
+        if (FileUtils2.recreateFolderIfNeeded(serverPath, pCompletitionHelper.computeUpdatePolicy(pConfiguration))) {
             try {
-                ZipUtils.unzip(dependencyResolver.findFile(pConfigurationHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pConfiguration)), serverPath);
+                ZipUtils.unzip(mDependencyResolver.findFile(pCompletitionHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pConfiguration)), serverPath);
                 FileUtils.delete(serverPath, "runtimes");
 
                 FileUtils.checkExistenceAndContent(FileUtils.folders(serverPath, "boot", "extensions", "host", "lib"));
@@ -34,7 +31,7 @@ public class AssemblyServer extends AssemblyProfiles {
                 // create runtimes folder
                 FileUtils.createFolder(FileUtils.folder(serverPath, "runtimes"));
 
-                processProfiles(pConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"), pConfigurationHelper.computeMissingVersion(pConfiguration));
+                processProfiles(pConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"), pCompletitionHelper.computeMissingVersion(pConfiguration));
             } catch (IOException e) {
                 throw new AssemblyException("Cannot assembly standalone runtime.", e);
             }
