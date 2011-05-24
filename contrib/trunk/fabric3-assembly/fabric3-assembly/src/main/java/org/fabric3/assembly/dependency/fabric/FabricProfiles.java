@@ -2,6 +2,9 @@ package org.fabric3.assembly.dependency.fabric;
 
 import org.fabric3.assembly.configuration.Profile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Contain existing fabric3 profiles.
  *
@@ -65,5 +68,22 @@ public class FabricProfiles {
             addDependency(FabricDependencyFactory.jar("fabric3-ant-extension"));
         }
     };
+
+    public static List<Profile> all() {
+        List<Profile> result = new ArrayList<Profile>();
+
+        result.add(JMS);
+        result.add(JPA);
+        result.add(REST);
+        result.add(SPRING);
+        result.add(WEB_SERVICE);
+        result.add(WEB);
+        result.add(TIMER);
+        result.add(INFINISPAN);
+        result.add(FTP);
+        result.add(TEST);
+
+        return result;
+    }
 
 }

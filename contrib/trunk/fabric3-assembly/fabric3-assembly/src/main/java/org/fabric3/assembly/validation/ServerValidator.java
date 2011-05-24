@@ -28,7 +28,7 @@ public class ServerValidator {
         for (Profile profile : pServer.getProfiles()) {
             pProfileValidator.validate(profile);
         }
-
         ValidationHelper.validateSameProfileName(serverName, pServer.getProfiles());
+
     }
 }

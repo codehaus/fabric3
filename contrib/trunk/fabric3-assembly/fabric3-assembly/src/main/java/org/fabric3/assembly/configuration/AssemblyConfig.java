@@ -63,12 +63,20 @@ public class AssemblyConfig implements IAssemblyStep {
         return mComposites.getComposites();
     }
 
+    public CompositeConfig getCompositeConfig() {
+        return mComposites;
+    }
+
     public void addProfile(Profile pProfile) {
         mProfiles.addProfile(pProfile);
     }
 
     public List<Profile> getProfiles() {
         return mProfiles.getProfiles();
+    }
+
+    public ProfileConfig getProfileConfig() {
+        return mProfiles;
     }
 
     public Version getVersion() {

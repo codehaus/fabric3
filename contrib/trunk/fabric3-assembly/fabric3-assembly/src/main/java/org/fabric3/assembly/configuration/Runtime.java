@@ -31,6 +31,7 @@ public class Runtime {
 
     private UpdatePolicy mUpdatePolicy;
 
+    //TODO <capo> add constructor without update policy
     public Runtime(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, UpdatePolicy pUpdatePolicy, File pSystemConfig, Profile... pProfiles) {
         if (null == pServerName) {
             mServerName = Server.SERVER_DEFAULT_NAME;
@@ -88,6 +89,10 @@ public class Runtime {
 
     public List<Profile> getProfiles() {
         return mProfiles;
+    }
+
+    public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+        mUpdatePolicy = pUpdatePolicy;
     }
 
     public UpdatePolicy getUpdatePolicy() {

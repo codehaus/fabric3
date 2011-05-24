@@ -1,17 +1,18 @@
 package org.fabric3.assembly.completition;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
+import org.fabric3.assembly.configuration.Composite;
+import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.Server;
-import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.ServerNotFoundException;
+import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
 
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,14 +38,6 @@ public class CompletionHelper {
      *
      */
 
-    public Dependency appendVersion(Dependency pDependency, Server pServer) {
-        if (pDependency.isVersionLess()) {
-            pDependency.setVersion(computeMissingVersion(pServer));
-        }
-
-        return pDependency;
-    }
-
     public Server getServerByRuntime(final Runtime pRuntime) {
         String serverLookupName = pRuntime.getServerName();
         if (null == serverLookupName) {
@@ -58,10 +51,6 @@ public class CompletionHelper {
         }
 
         throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is assigned to {1} server. But no such server found. Is this a typo?", pRuntime.getRuntimeName(), serverLookupName));
-    }
-
-    public File findServerPathByRuntime(Runtime pRuntime) {
-        return getServerByRuntime(pRuntime).getServerPath();
     }
 
     public List<Runtime> getRuntimesByServerName(final String pServerName) {
@@ -129,63 +118,70 @@ public class CompletionHelper {
         return runtimes;
     }
 
-    public Version computeMissingVersion(Runtime pConfiguration) {
-        if (null == pConfiguration) {
-            return mConfig.getVersion();
+    public Version computeMissingVersion(Profile pProfile) {
+        if (null != pProfile.getVersion()) {
+            throw new ValidationException("Profile ''{0}'' already has a version.", pProfile.getName());
         }
 
-        try {
-            Server server = getServerByRuntime(pConfiguration);
-            if (null != server.getVersion()) {
-                return server.getVersion();
-            }
-        } catch (ServerNotFoundException e) {
-            // no-op
+        if (null != mConfig.getProfileConfig().getVersion()) {
+            return mConfig.getProfileConfig().getVersion();
         }
 
         return mConfig.getVersion();
     }
 
-    public Version computeMissingVersion(Server pConfiguration) {
-        if (null == pConfiguration) {
-            return mConfig.getVersion();
-        }
-
-        if (null != pConfiguration.getVersion()) {
-            return pConfiguration.getVersion();
+    public Version computeMissingVersion(Server pServer) {
+        if (null != pServer.getVersion()) {
+            throw new ValidationException("Server ''{0}'' already has a version.", pServer.getServerName());
         }
 
         return mConfig.getVersion();
     }
 
-    public UpdatePolicy computeUpdatePolicy(Runtime pConfiguration) {
-        if (null == pConfiguration) {
-            return mConfig.getUpdatePolicy();
+    public UpdatePolicy computeMissingUpdatePolicy(Composite pComposite) {
+        if (null != pComposite.getUpdatePolicy()) {
+            throw new ValidationException("Composite ''{0}'' already has a update policy.", pComposite.getName());
         }
 
-        if (null != pConfiguration.getUpdatePolicy()) {
-            return pConfiguration.getUpdatePolicy();
-        }
-
-        try {
-            Server server = getServerByRuntime(pConfiguration);
-            if (null != server.getUpdatePolicy()) {
-                return server.getUpdatePolicy();
-            }
-        } catch (ServerNotFoundException e) {
-            // no-op
+        if (null != mConfig.getCompositeConfig().getUpdatePolicy()) {
+            return mConfig.getCompositeConfig().getUpdatePolicy();
         }
 
         return mConfig.getUpdatePolicy();
     }
 
-    public UpdatePolicy computeUpdatePolicy(Server pConfiguration) {
-        if (null == pConfiguration) {
-            return mConfig.getUpdatePolicy();
+    public UpdatePolicy computeMissingUpdatePolicy(Profile pProfile) {
+        if (null != pProfile.getUpdatePolicy()) {
+            throw new ValidationException("Profile ''{0}'' already has a update policy.", pProfile.getName());
         }
 
-        if (null != pConfiguration.getUpdatePolicy()) {
-            return pConfiguration.getUpdatePolicy();
+        if (null != mConfig.getProfileConfig().getUpdatePolicy()) {
+            return mConfig.getProfileConfig().getUpdatePolicy();
+        }
+
+        return mConfig.getUpdatePolicy();
+    }
+
+    public UpdatePolicy computeMissingUpdatePolicy(Server pServer) {
+        if (null != pServer.getUpdatePolicy()) {
+            throw new ValidationException("Server ''{0}'' already has a update policy.", pServer.getServerName());
+        }
+
+        return mConfig.getUpdatePolicy();
+    }
+
+    public UpdatePolicy computeMissingUpdatePolicy(Runtime pRuntime) {
+        if (null != pRuntime.getUpdatePolicy()) {
+            throw new ValidationException("Runtime ''{0}'' already has a update policy.", pRuntime.getRuntimeName());
+        }
+
+        try {
+            Server server = getServerByRuntime(pRuntime);
+            if (null != server.getUpdatePolicy()) {
+                return server.getUpdatePolicy();
+            }
+        } catch (ServerNotFoundException e) {
+            // no-op
         }
 
         return mConfig.getUpdatePolicy();

@@ -9,6 +9,7 @@ import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.Server;
+import org.fabric3.assembly.dependency.fabric.FabricProfiles;
 import org.fabric3.assembly.exception.ServerAlreadyExistsException;
 import org.fabric3.assembly.exception.ValidationException;
 
@@ -65,8 +66,10 @@ public class AssemblyConfigValidator implements IAssemblyStep {
         for (Server server : mConfig.getServers()) {
             // check for same server name
             if (1 < mHelper.getServersByName(server.getServerName()).size()) {
-                throw new ServerAlreadyExistsException(MessageFormat.format("You defined servers with the same name ''{0}''.", server.getServerName()));
+                throw new ServerAlreadyExistsException(MessageFormat.format("You defined two servers with the same name: ''{0}''.", server.getServerName()));
             }
+
+            ValidationHelper.validateProfileExistence(server, mConfig.getProfiles(), FabricProfiles.all());
         }
 
         //
@@ -91,7 +94,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
             }
 
             if (countVM != 0 && (countController != 0 || countParticipant != 0)) {
-                throw new ValidationException("You are trying to add VM runtime to ''{0}'' server which already has some other runtimes. This won't work.", serverName);
+                throw new ValidationException("You are trying to add VM runtime to ''{0}'' server which already has some other runtimes. This won''t work.", serverName);
             }
 
             if (countVM == 0 && countController == 0 && countParticipant == 0) {
@@ -99,6 +102,11 @@ public class AssemblyConfigValidator implements IAssemblyStep {
             }
 
             ValidationHelper.validateSameRuntimeName(serverName, mHelper.getRuntimesByServerName(serverName));
+
+            // check if specified composites are available/exists
+            ValidationHelper.validateCompositeExistence(runtime, mConfig.getComposites());
+            // check if specified profiles are available/exists
+            ValidationHelper.validateProfileExistence(runtime, mConfig.getProfiles(), FabricProfiles.all());
         }
 
         //

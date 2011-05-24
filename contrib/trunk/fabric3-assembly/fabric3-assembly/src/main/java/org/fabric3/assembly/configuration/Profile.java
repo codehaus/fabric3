@@ -29,6 +29,7 @@ public class Profile {
 
     private List<File> mFiles = new ArrayList<File>();
 
+    //TODO <capo> add constructor withou update policy and version
     public Profile(String pName, UpdatePolicy pUpdatePolicy, Version pVersion, String... pAlternativeNames) {
         mName = pName;
         mUpdatePolicy = pUpdatePolicy;
@@ -71,8 +72,16 @@ public class Profile {
         return mAlternativeNames;
     }
 
+    public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+        mUpdatePolicy = pUpdatePolicy;
+    }
+
     public UpdatePolicy getUpdatePolicy() {
         return mUpdatePolicy;
+    }
+
+    public void setVersion(Version pVersion) {
+        mVersion = pVersion;
     }
 
     public Version getVersion() {

@@ -18,6 +18,7 @@ public class Composite {
 
     private UpdatePolicy mUpdatePolicy;
 
+    //TODO <capo> add constructor without update policy
     public Composite(String pName, String pDependency, UpdatePolicy pUpdatePolicy) {
         mName = pName;
         mDependency = pDependency;
@@ -36,6 +37,10 @@ public class Composite {
 
     public File getPath() {
         return mPath;
+    }
+
+    public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+        mUpdatePolicy = pUpdatePolicy;
     }
 
     public UpdatePolicy getUpdatePolicy() {
