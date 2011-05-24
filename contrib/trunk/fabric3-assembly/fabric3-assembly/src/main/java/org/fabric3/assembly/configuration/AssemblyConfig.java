@@ -2,10 +2,10 @@ package org.fabric3.assembly.configuration;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fabric3.assembly.IAssemblyStep;
+import org.fabric3.assembly.completition.AssemblyConfigCompletion;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
-import org.fabric3.assembly.validation.AssemblyConfigValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +92,6 @@ public class AssemblyConfig implements IAssemblyStep {
     }
 
     public void process() {
-        new AssemblyConfigValidator(this).process();
+        new AssemblyConfigCompletion(this).process();
     }
 }
