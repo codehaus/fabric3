@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public abstract class CompletitionHelper {
+public abstract class CompletionHelper {
 
     public abstract List<Server> getServerConfigurations();
 

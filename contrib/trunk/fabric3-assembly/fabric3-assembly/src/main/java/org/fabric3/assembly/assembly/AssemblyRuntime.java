@@ -1,6 +1,6 @@
 package org.fabric3.assembly.assembly;
 
-import org.fabric3.assembly.completition.CompletitionHelper;
+import org.fabric3.assembly.completition.CompletionHelper;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.utils.FileUtils;
@@ -17,9 +17,9 @@ import java.text.MessageFormat;
  */
 public class AssemblyRuntime extends AbstractAssemblyProfiles {
 
-    public void doAssembly(Runtime pConfiguration, CompletitionHelper pCompletitionHelper) {
+    public void doAssembly(Runtime pConfiguration, CompletionHelper pCompletionHelper) {
         // server folder
-        File serverFolder = pCompletitionHelper.findServerPathByRuntime(pConfiguration);
+        File serverFolder = pCompletionHelper.findServerPathByRuntime(pConfiguration);
         // calculate runtime folder
         File runtimeFolder = FileUtils.folder(serverFolder, "runtimes/" + pConfiguration.getRuntimeName());
 
@@ -53,7 +53,7 @@ public class AssemblyRuntime extends AbstractAssemblyProfiles {
             }
         }
 
-        if (UpdatePolicyUtils.shouldUpdate(runtimeFolder, pCompletitionHelper.computeUpdatePolicy(pConfiguration))) {
+        if (UpdatePolicyUtils.shouldUpdate(runtimeFolder, pCompletionHelper.computeUpdatePolicy(pConfiguration))) {
             runtimeFolder.delete();
             runtimeFolder.mkdirs();
 
@@ -69,7 +69,7 @@ public class AssemblyRuntime extends AbstractAssemblyProfiles {
             }
 
             // process profile files
-            processProfiles(pConfiguration.getProfiles(), extensionFolder, pCompletitionHelper.computeMissingVersion(pConfiguration));
+            processProfiles(pConfiguration.getProfiles(), extensionFolder, pCompletionHelper.computeMissingVersion(pConfiguration));
         }
     }
 

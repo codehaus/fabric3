@@ -1,6 +1,6 @@
 package org.fabric3.assembly.assembly;
 
-import org.fabric3.assembly.completition.CompletitionHelper;
+import org.fabric3.assembly.completition.CompletionHelper;
 import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.fabric.FabricDependencyFactory;
 import org.fabric3.assembly.exception.AssemblyException;
@@ -17,13 +17,13 @@ import java.io.IOException;
  */
 public class AssemblyServer extends AbstractAssemblyProfiles {
 
-    public void doAssembly(Server pConfiguration, CompletitionHelper pCompletitionHelper) {
+    public void doAssembly(Server pConfiguration, CompletionHelper pCompletionHelper) {
         File serverPath = pConfiguration.getServerPath();
         LoggerUtils.log("server in folder - " + serverPath);
 
-        if (FileUtils2.recreateFolderIfNeeded(serverPath, pCompletitionHelper.computeUpdatePolicy(pConfiguration))) {
+        if (FileUtils2.recreateFolderIfNeeded(serverPath, pCompletionHelper.computeUpdatePolicy(pConfiguration))) {
             try {
-                ZipUtils.unzip(mDependencyResolver.findFile(pCompletitionHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pConfiguration)), serverPath);
+                ZipUtils.unzip(mDependencyResolver.findFile(pCompletionHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pConfiguration)), serverPath);
                 FileUtils.delete(serverPath, "runtimes");
 
                 FileUtils.checkExistenceAndContent(FileUtils.folders(serverPath, "boot", "extensions", "host", "lib"));
@@ -31,7 +31,7 @@ public class AssemblyServer extends AbstractAssemblyProfiles {
                 // create runtimes folder
                 FileUtils.createFolder(FileUtils.folder(serverPath, "runtimes"));
 
-                processProfiles(pConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"), pCompletitionHelper.computeMissingVersion(pConfiguration));
+                processProfiles(pConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"), pCompletionHelper.computeMissingVersion(pConfiguration));
             } catch (IOException e) {
                 throw new AssemblyException("Cannot assembly standalone runtime.", e);
             }

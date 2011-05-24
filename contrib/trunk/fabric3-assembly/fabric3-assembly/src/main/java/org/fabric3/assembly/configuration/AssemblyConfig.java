@@ -2,7 +2,7 @@ package org.fabric3.assembly.configuration;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fabric3.assembly.IAssemblyStep;
-import org.fabric3.assembly.completition.CompletitionHelper;
+import org.fabric3.assembly.completition.CompletionHelper;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
@@ -28,7 +28,7 @@ public class AssemblyConfig implements IAssemblyStep {
 
     private ProfileConfig mProfiles = new ProfileConfig();
 
-    private CompletitionHelper mCompletitionHelper = new CompletitionHelper() {
+    private CompletionHelper mCompletionHelper = new CompletionHelper() {
         @Override
         public List<Server> getServerConfigurations() {
             return mServers;
@@ -94,8 +94,8 @@ public class AssemblyConfig implements IAssemblyStep {
         return mProfiles.getProfiles();
     }
 
-    public CompletitionHelper getCompletitionHelper() {
-        return mCompletitionHelper;
+    public CompletionHelper getCompletionHelper() {
+        return mCompletionHelper;
     }
 
     public Version getVersion() {
