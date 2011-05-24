@@ -20,7 +20,7 @@ public abstract class ConfigurationHelper {
 
     public abstract List<RuntimeConfiguration> getRuntimeConfigurations();
 
-    public abstract Version getVersion();
+    public abstract Version getConfigurationVersion();
 
     /*
      *
@@ -32,22 +32,29 @@ public abstract class ConfigurationHelper {
 
     public Dependency appendVersion(Dependency pDependency) {
         if (pDependency.isVersionLess()) {
-            pDependency.setVersion(getVersion());
+            pDependency.setVersion(getConfigurationVersion());
         }
 
         return pDependency;
     }
 
-    public File findServerPathByRuntime(RuntimeConfiguration pRuntime) {
+    public ServerConfiguration getServerByRuntime(final RuntimeConfiguration pRuntime) {
         String serverLookupName = pRuntime.getServerName();
+        if (null == serverLookupName) {
+            throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is not assigned to any server. Please check your configuration.", pRuntime.getRuntimeName()));
+        }
 
         for (ServerConfiguration server : getServerConfigurations()) {
             if (serverLookupName.equals(server.getServerName())) {
-                return server.getServerPath();
+                return server;
             }
         }
 
-        throw new ServerNotFoundException(MessageFormat.format("You specified that runtime ''{0}'' should be added to ''{1}'' server. But such server doesn''t exists.", pRuntime.getRuntimeName(), serverLookupName));
+        throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is assigned to {1} server. But no such server found. Is this a typo?", pRuntime.getRuntimeName(), serverLookupName));
+    }
+
+    public File findServerPathByRuntime(RuntimeConfiguration pRuntime) {
+        return getServerByRuntime(pRuntime).getServerPath();
     }
 
     public List<RuntimeConfiguration> getRuntimesByServerName(final String pServerName) {
@@ -80,4 +87,36 @@ public abstract class ConfigurationHelper {
         return servers;
     }
 
+    public Version computeMissingVersion(RuntimeConfiguration pConfiguration) {
+        if (null == pConfiguration) {
+            return getConfigurationVersion();
+        }
+
+        if (null != pConfiguration.getVersion()) {
+            return pConfiguration.getVersion();
+        }
+
+        try {
+            ServerConfiguration serverConfiguration = getServerByRuntime(pConfiguration);
+            if (null != serverConfiguration.getVersion()) {
+                return serverConfiguration.getVersion();
+            }
+        } catch (ServerNotFoundException e) {
+            // no-op
+        }
+
+        return getConfigurationVersion();
+    }
+
+    public Version computeMissingVersion(ServerConfiguration pConfiguration) {
+        if (null == pConfiguration) {
+            return getConfigurationVersion();
+        }
+
+        if (null != pConfiguration.getVersion()) {
+            return pConfiguration.getVersion();
+        }
+
+        return getConfigurationVersion();
+    }
 }

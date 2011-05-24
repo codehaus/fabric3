@@ -69,14 +69,14 @@ public abstract class MavenDownloader {
         node.accept(nlg);
     }
 
-    public void downloadDependencies(DependencyDownloadListener pNotifier, String... dependencies) throws PlexusContainerException, ComponentLookupException, ArtifactDescriptorException, ArtifactResolutionException {
+    public void downloadDependencies(DependencyDownloadListener pNotifier, org.fabric3.assembly.dependency.Dependency... dependencies) throws PlexusContainerException, ComponentLookupException, ArtifactDescriptorException, ArtifactResolutionException {
         // setup
         RepositorySystem repoSystem = newRepositorySystem();
         RepositorySystemSession session = newSession(repoSystem);
 
-        for (String dependency : dependencies) {
+        for (org.fabric3.assembly.dependency.Dependency dependency : dependencies) {
             ArtifactRequest artifactRequest = new ArtifactRequest();
-            DefaultArtifact artifact = new DefaultArtifact(dependency);
+            DefaultArtifact artifact = new DefaultArtifact(dependency.getGroup(), dependency.getArtifact(), dependency.getClassifier(), dependency.getType(), dependency.getVersion().toString());
             artifactRequest.setArtifact(artifact);
             for (Map.Entry<String, String> repository : getRemoteMavenUrl().entrySet()) {
                 artifactRequest.addRepository(new RemoteRepository(repository.getKey(), "default", repository.getValue()));

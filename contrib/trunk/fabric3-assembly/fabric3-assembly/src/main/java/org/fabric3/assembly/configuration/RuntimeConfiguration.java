@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.dependency.profile.Profile;
 
 import java.io.File;
@@ -23,6 +24,8 @@ public class RuntimeConfiguration {
     private File systemConfig;
 
     private List<Profile> profiles = new ArrayList<Profile>();
+
+    private Version version;
 
     public RuntimeConfiguration(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, File pSystemConfig, Profile... pProfiles) {
         if (null == pServerName) {
@@ -81,4 +84,13 @@ public class RuntimeConfiguration {
     public void setProfiles(Profile... pProfiles) {
         profiles.addAll(Arrays.asList(pProfiles));
     }
+
+    public void setVersion(Version pVersion) {
+        version = pVersion;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
 }

@@ -15,11 +15,11 @@ public class FabricDependencyFactory {
     }
 
     public static Dependency jar(String jarName) {
-        return new Dependency("org.codehause.fabric3", jarName);
+        return new Dependency("org.codehaus.fabric3", jarName);
     }
 
     public static Dependency zip(String zipName) {
-        return new Dependency("org.codehause.fabric3", zipName, "bin", "zip");
+        return new Dependency("org.codehaus.fabric3", zipName, "bin", "zip");
     }
 
 }

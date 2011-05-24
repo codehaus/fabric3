@@ -5,6 +5,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.exception.DependenyDownloadException;
 import org.fabric3.assembly.utils.LoggerUtils;
 import org.fabric3.assembly.utils.PathUtils;
 import org.sonatype.aether.resolution.ArtifactDescriptorException;
@@ -37,23 +38,23 @@ public class DependencyResolver {
         if (!result.exists()) {
             try {
                 downloader.downloadDependencies(new DependencyDownloadListener() {
-                    public void dependencyDownloading(String dependencyName) {
-                        LoggerUtils.log(MessageFormat.format("downloading dependency - {0}", dependencyName));
-                    }
+                            public void dependencyDownloading(String dependencyName) {
+                                LoggerUtils.log(MessageFormat.format("downloading dependency - {0}", dependencyName));
+                            }
 
-                    public void dependencyMissing(String dependencyName) {
-                        throw missingDependencyException;
+                            public void dependencyMissing(String dependencyName) {
+                                throw missingDependencyException;
 
-                    }
-                }, dependency.toString());
+                            }
+                        }, dependency);
             } catch (PlexusContainerException e) {
-                throw new AssemblyException(e);
+                throw new DependenyDownloadException(e);
             } catch (ComponentLookupException e) {
-                throw new AssemblyException(e);
+                throw new DependenyDownloadException(e);
             } catch (ArtifactDescriptorException e) {
-                throw new AssemblyException(e);
+                throw new DependenyDownloadException(e);
             } catch (ArtifactResolutionException e) {
-                throw new AssemblyException(e);
+                throw new DependenyDownloadException(e);
             }
         }
 

@@ -15,6 +15,7 @@ public class TestSingleRuntimeServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         AssemblyConfiguration configuration = ConfigurationBuilder.getBuilder()
+                .setVersion("1.8")
                 .addServer("/tmp/fabric3_test_single")
                 .addRuntime(FabricProfiles.WEB)
                 .setUpdatePolicy(UpdatePolicy.ALWAYS)

@@ -39,7 +39,7 @@ public class AssemblyServer extends AssemblyProfiles {
                 // create runtimes folder
                 FileUtils.createFolder(FileUtils.folder(serverPath, "runtimes"));
 
-                processProfiles(pServerConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"));
+                processProfiles(pServerConfiguration.getProfiles(), FileUtils.folder(serverPath, "extensions"), pConfigurationHelper.computeMissingVersion(pServerConfiguration));
             } catch (IOException e) {
                 throw new AssemblyException("Cannot assembly standalone runtime.", e);
             }

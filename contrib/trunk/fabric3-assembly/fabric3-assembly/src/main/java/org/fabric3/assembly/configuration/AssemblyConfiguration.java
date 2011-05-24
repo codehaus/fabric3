@@ -35,7 +35,7 @@ public class AssemblyConfiguration {
         }
 
         @Override
-        public Version getVersion() {
+        public Version getConfigurationVersion() {
             return AssemblyConfiguration.this.getVersion();
         }
     };
@@ -78,7 +78,7 @@ public class AssemblyConfiguration {
 
     public Version getVersion() {
         if (null == version) {
-            throw new AssemblyException("No version is specified, please do so.");
+            throw new AssemblyException("No version is specified in your configuration, please do so.");
         }
 
         return version;

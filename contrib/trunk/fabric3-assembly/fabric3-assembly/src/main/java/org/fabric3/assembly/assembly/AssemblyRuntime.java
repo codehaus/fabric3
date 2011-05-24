@@ -74,7 +74,7 @@ public class AssemblyRuntime extends AssemblyProfiles {
             }
 
             // process profile files
-            processProfiles(pConfiguration.getProfiles(), extensionFolder);
+            processProfiles(pConfiguration.getProfiles(), extensionFolder, pConfigurationHelper.computeMissingVersion(pConfiguration));
         }
     }
 

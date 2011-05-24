@@ -1,5 +1,6 @@
 package org.fabric3.assembly.configuration;
 
+import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.dependency.profile.Profile;
 
 import java.io.File;
@@ -19,6 +20,8 @@ public class ServerConfiguration {
     private File serverPath;
 
     private List<Profile> profiles = new ArrayList<Profile>();
+
+    private Version version;
 
     public ServerConfiguration(String pServerName, File pServerPath, Profile... pProfiles) {
         if (null == pServerName) {
@@ -54,5 +57,13 @@ public class ServerConfiguration {
 
     public void setProfiles(Profile... pProfiles) {
         profiles = Arrays.asList(pProfiles);
+    }
+
+    public void setVersion(Version pVersion) {
+        version = pVersion;
+    }
+
+    public Version getVersion() {
+        return version;
     }
 }
