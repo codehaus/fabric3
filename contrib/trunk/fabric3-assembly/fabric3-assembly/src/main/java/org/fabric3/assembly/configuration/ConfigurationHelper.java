@@ -30,9 +30,9 @@ public abstract class ConfigurationHelper {
      *
      */
 
-    public Dependency appendVersion(Dependency pDependency) {
+    public Dependency appendVersion(Dependency pDependency, ServerConfiguration pServerConfiguration) {
         if (pDependency.isVersionLess()) {
-            pDependency.setVersion(getConfigurationVersion());
+            pDependency.setVersion(computeMissingVersion(pServerConfiguration));
         }
 
         return pDependency;

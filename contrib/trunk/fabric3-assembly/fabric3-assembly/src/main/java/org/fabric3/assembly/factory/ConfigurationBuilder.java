@@ -77,7 +77,15 @@ public class ConfigurationBuilder {
         return addServer(pName, pPath, (Profile[]) null);
     }
 
+    public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion) {
+        return addServer(pName, pPath, null, (Profile[]) null);
+    }
+
     public ConfigurationBuilder addServer(String pName, String pPath, Profile... pProfiles) {
+        return addServer(pName, pPath, null, pProfiles);
+    }
+
+    public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion, Profile... pProfiles) {
         if (StringUtils.isBlank(pName)) {
             throw new NameNotGivenException("You didn't specified any server name.");
         }
@@ -87,7 +95,7 @@ public class ConfigurationBuilder {
             throw new ServerAlreadyExistsException(MessageFormat.format("Server with name ''{0}'' already exists.", pName));
         }
 
-        configuration.addServer(new ServerConfiguration(pName, new File(pPath), pProfiles));
+        configuration.addServer(new ServerConfiguration(pName, new File(pPath), pVersion, pProfiles));
         return this;
     }
 

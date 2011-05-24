@@ -31,7 +31,7 @@ public class AssemblyServer extends AssemblyProfiles {
 
         if (FileUtils2.recreateFolderIfNeeded(serverPath, pPolicy)) {
             try {
-                ZipUtils.unzip(dependencyResolver.findFile(pConfigurationHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"))), serverPath);
+                ZipUtils.unzip(dependencyResolver.findFile(pConfigurationHelper.appendVersion(FabricDependencyFactory.zip("runtime-standalone"), pServerConfiguration)), serverPath);
                 FileUtils.delete(serverPath, "runtimes");
 
                 FileUtils.checkExistenceAndContent(FileUtils.folders(serverPath, "boot", "extensions", "host", "lib"));

@@ -23,13 +23,14 @@ public class ServerConfiguration {
 
     private Version version;
 
-    public ServerConfiguration(String pServerName, File pServerPath, Profile... pProfiles) {
+    public ServerConfiguration(String pServerName, File pServerPath, Version pVersion, Profile... pProfiles) {
         if (null == pServerName) {
             serverName = SERVER_DEFAULT_NAME;
         } else {
             serverName = pServerName;
         }
         serverPath = pServerPath;
+        version = pVersion;
         if (null != pProfiles) {
             profiles.addAll(Arrays.asList(pProfiles));
         }
