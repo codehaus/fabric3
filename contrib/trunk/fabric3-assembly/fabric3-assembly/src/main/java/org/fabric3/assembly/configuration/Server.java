@@ -26,7 +26,6 @@ public class Server {
 
     private UpdatePolicy mUpdatePolicy;
 
-    //TODO <capo> add version less constructor
     public Server(String pServerName, File pServerPath, Version pVersion, UpdatePolicy pUpdatePolicy, Profile... pProfiles) {
         if (null == pServerName) {
             this.mServerName = SERVER_DEFAULT_NAME;
