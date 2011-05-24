@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class AssemblyConfig {
 
-    private Version version;
+    private Version mVersion;
 
-    private UpdatePolicy updatePolicy = UpdatePolicy.DAILY;
+    private UpdatePolicy mUpdatePolicy = UpdatePolicy.DAILY;
 
     private List<Server> mServers = new ArrayList<Server>();
 
@@ -47,15 +47,15 @@ public class AssemblyConfig {
     };
 
     public void setUpdatePolicy(String pUpdatePolicy) {
-        updatePolicy = UpdatePolicy.valueOf(pUpdatePolicy);
+        mUpdatePolicy = UpdatePolicy.valueOf(pUpdatePolicy);
     }
 
     public UpdatePolicy getUpdatePolicy() {
-        if (null == updatePolicy) {
-            updatePolicy = UpdatePolicy.DAILY;
+        if (null == mUpdatePolicy) {
+            mUpdatePolicy = UpdatePolicy.DAILY;
         }
 
-        return updatePolicy;
+        return mUpdatePolicy;
     }
 
     public void addServer(Server pServer) {
@@ -87,22 +87,22 @@ public class AssemblyConfig {
     }
 
     public Version getVersion() {
-        if (null == version) {
-            throw new AssemblyException("No version is specified in your configuration, please do so.");
+        if (null == mVersion) {
+            throw new AssemblyException("No mVersion is specified in your configuration, please do so.");
         }
 
-        return version;
+        return mVersion;
     }
 
-    public void setVersion(Version version) {
-        this.version = version;
+    public void setVersion(Version pVersion) {
+        this.mVersion = pVersion;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).
-                append("version", version).
-                append("updatePolicy", updatePolicy).
+                append("version", mVersion).
+                append("updatePolicy", mUpdatePolicy).
                 toString();
     }
 

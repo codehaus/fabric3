@@ -25,6 +25,8 @@ import java.util.List;
  */
 public class ConfigurationBuilder {
 
+    //TODO <capo> change builder to fluent builder
+
     private AssemblyConfig mConfig = new AssemblyConfig();
 
     public static ConfigurationBuilder getBuilder() {
