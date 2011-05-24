@@ -21,7 +21,7 @@ public class TestSingleRuntimeServer {
                 .setUpdatePolicy(UpdatePolicy.ALWAYS)
                 .createConfiguration();
 
-        config.doAssembly();
+        config.process();
     }
 
     private static String projectPath() throws IOException {
