@@ -1,4 +1,4 @@
-package org.fabric3.assembly.configuration;
+package org.fabric3.assembly.validation;
 
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.StringUtils;
@@ -10,7 +10,7 @@ import java.text.MessageFormat;
  */
 public class RuntimeValidator {
 
-    public static void validate(Runtime pRuntime) {
+    public void validate(org.fabric3.assembly.configuration.Runtime pRuntime) {
         String runtimeName = pRuntime.getRuntimeName();
 
         if (StringUtils.isBlank(runtimeName)) {

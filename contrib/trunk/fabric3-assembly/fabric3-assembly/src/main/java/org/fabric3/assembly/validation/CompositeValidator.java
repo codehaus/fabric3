@@ -1,5 +1,6 @@
-package org.fabric3.assembly.configuration;
+package org.fabric3.assembly.validation;
 
+import org.fabric3.assembly.configuration.Composite;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.utils.StringUtils;
 
@@ -8,7 +9,7 @@ import org.fabric3.assembly.utils.StringUtils;
  */
 public class CompositeValidator {
 
-    public static void validate(Composite pConfiguration) {
+    public void validate(Composite pConfiguration) {
         if (null == pConfiguration) {
             throw new AssemblyException("Cannot validate 'null' composite configuration");
         }

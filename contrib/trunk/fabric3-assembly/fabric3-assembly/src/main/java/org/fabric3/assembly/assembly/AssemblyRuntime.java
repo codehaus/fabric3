@@ -18,8 +18,6 @@ import java.text.MessageFormat;
 public class AssemblyRuntime extends AssemblyProfiles {
 
     public void doAssembly(Runtime pConfiguration, ConfigurationHelper pConfigurationHelper) {
-        pConfiguration.validate();
-
         // server folder
         File serverFolder = pConfigurationHelper.findServerPathByRuntime(pConfiguration);
         // calculate runtime folder

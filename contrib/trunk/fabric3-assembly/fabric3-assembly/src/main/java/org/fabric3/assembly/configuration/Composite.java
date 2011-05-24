@@ -10,70 +10,66 @@ import java.io.File;
  */
 public class Composite {
 
-    private String name;
+    private String mName;
 
-    private String runtimeName;
+    private String mRuntimeName;
 
-    private File path;
+    private File mPath;
 
-    private String dependency;
+    private String mDependency;
 
-    private UpdatePolicy updatePolicy;
+    private UpdatePolicy mUpdatePolicy;
 
     public Composite(String pName, String pRuntimeName, String pDependency, UpdatePolicy pUpdatePolicy) {
-        name = pName;
+        mName = pName;
         if (null == pRuntimeName) {
-            runtimeName = Runtime.RUNTIME_DEFAULT_NAME;
+            mRuntimeName = Runtime.RUNTIME_DEFAULT_NAME;
         } else {
-            runtimeName = pRuntimeName;
+            mRuntimeName = pRuntimeName;
         }
-        dependency = pDependency;
-        updatePolicy = pUpdatePolicy;
+        mDependency = pDependency;
+        mUpdatePolicy = pUpdatePolicy;
     }
 
     public Composite(String pName, String pRuntimeName, File pPath, UpdatePolicy pUpdatePolicy) {
-        name = pName;
+        mName = pName;
         if (null == pRuntimeName) {
-            runtimeName = Runtime.RUNTIME_DEFAULT_NAME;
+            mRuntimeName = Runtime.RUNTIME_DEFAULT_NAME;
         } else {
-            runtimeName = pRuntimeName;
+            mRuntimeName = pRuntimeName;
         }
-        path = pPath;
-        updatePolicy = pUpdatePolicy;
+        mPath = pPath;
+        mUpdatePolicy = pUpdatePolicy;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public String getRuntimeName() {
-        return runtimeName;
+        return mRuntimeName;
     }
 
     public File getPath() {
-        return path;
+        return mPath;
     }
 
     public UpdatePolicy getUpdatePolicy() {
-        return updatePolicy;
+        return mUpdatePolicy;
     }
 
     public String getDependency() {
-        return dependency;
-    }
-
-    public void validate() {
-        CompositeValidator.validate(this);
+        return mDependency;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).
-                append("name", name).
-                append("runtimeName", runtimeName).
-                append("path", path).
-                append("dependency", dependency).
-                append("updatePolicy", updatePolicy).
+                append("name", mName).
+                append("runtimeName", mRuntimeName).
+                append("path", mPath).
+                append("dependency", mDependency).
+                append("updatePolicy", mUpdatePolicy).
                 toString();
     }
 
@@ -84,13 +80,13 @@ public class Composite {
 
         Composite composite = (Composite) o;
 
-        if (name != null ? !name.equals(composite.name) : composite.name != null) return false;
+        if (mName != null ? !mName.equals(composite.mName) : composite.mName != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return mName != null ? mName.hashCode() : 0;
     }
 }

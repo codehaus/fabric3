@@ -1,5 +1,7 @@
 package org.fabric3.assembly.exception;
 
+import java.text.MessageFormat;
+
 /**
  * On validation process.
  *
@@ -7,8 +9,8 @@ package org.fabric3.assembly.exception;
  */
 public class ValidationException extends RuntimeException {
 
-    public ValidationException(String message) {
-        super(message);
+    public ValidationException(String pMessage, String... pArguments) {
+        super(MessageFormat.format(pMessage, pArguments));
     }
 
 }

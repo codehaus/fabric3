@@ -1,5 +1,6 @@
-package org.fabric3.assembly.configuration;
+package org.fabric3.assembly.validation;
 
+import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.utils.StringUtils;
 
@@ -8,7 +9,7 @@ import org.fabric3.assembly.utils.StringUtils;
  */
 public class ProfileValidator {
 
-    public static void validate(Profile pConfiguration) {
+    public void validate(Profile pConfiguration) {
         if (null == pConfiguration) {
             throw new AssemblyException("Profile configuration is 'null' and cannot perform validation on.");
         }

@@ -15,78 +15,74 @@ public class Runtime {
 
     public static final String RUNTIME_DEFAULT_NAME = "vm";
 
-    private String serverName;
+    private String mServerName;
 
-    private String runtimeName;
+    private String mRuntimeName;
 
-    private RuntimeMode runtimeMode;
+    private RuntimeMode mRuntimeMode;
 
-    private File systemConfig;
+    private File mSystemConfig;
 
-    private List<Profile> profiles = new ArrayList<Profile>();
+    private List<Profile> mProfiles = new ArrayList<Profile>();
 
-    private UpdatePolicy updatePolicy;
+    private UpdatePolicy mUpdatePolicy;
 
     public Runtime(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, UpdatePolicy pUpdatePolicy, File pSystemConfig, Profile... pProfiles) {
         if (null == pServerName) {
-            serverName = Server.SERVER_DEFAULT_NAME;
+            mServerName = Server.SERVER_DEFAULT_NAME;
         } else {
-            serverName = pServerName;
+            mServerName = pServerName;
         }
         if (null == pRuntimeName) {
-            runtimeName = Runtime.RUNTIME_DEFAULT_NAME;
+            mRuntimeName = Runtime.RUNTIME_DEFAULT_NAME;
         } else {
-            runtimeName = pRuntimeName;
+            mRuntimeName = pRuntimeName;
         }
-        runtimeMode = pRuntimeMode;
-        systemConfig = pSystemConfig;
-        updatePolicy = pUpdatePolicy;
+        mRuntimeMode = pRuntimeMode;
+        mSystemConfig = pSystemConfig;
+        mUpdatePolicy = pUpdatePolicy;
         if (null != pProfiles) {
-            profiles = Arrays.asList(pProfiles);
+            mProfiles = Arrays.asList(pProfiles);
         }
     }
 
     public void setSystemConfig(File pSystemConfig) {
-        systemConfig = pSystemConfig;
+        mSystemConfig = pSystemConfig;
     }
 
     public String getServerName() {
-        return serverName;
+        return mServerName;
     }
 
     public String getRuntimeName() {
-        return runtimeName;
+        return mRuntimeName;
     }
 
     public RuntimeMode getRuntimeMode() {
-        return runtimeMode;
+        return mRuntimeMode;
     }
 
     public File getSystemConfig() {
-        return systemConfig;
+        return mSystemConfig;
     }
 
     public List<Profile> getProfiles() {
-        return profiles;
+        return mProfiles;
     }
 
     public UpdatePolicy getUpdatePolicy() {
-        return updatePolicy;
-    }
-
-    public void validate() {
-        RuntimeValidator.validate(this);
+        return mUpdatePolicy;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).
-                append("serverName", serverName).
-                append("runtimeName", runtimeName).
-                append("runtimeMode", runtimeMode).
-                append("systemConfig", systemConfig).
-                append("profiles", profiles).
-                append("updatePolicy", updatePolicy).
+                append("serverName", mServerName).
+                append("runtimeName", mRuntimeName).
+                append("runtimeMode", mRuntimeMode).
+                append("systemConfig", mSystemConfig).
+                append("profiles", mProfiles).
+                append("updatePolicy", mUpdatePolicy).
                 toString();
     }
 
@@ -97,13 +93,14 @@ public class Runtime {
 
         Runtime runtime = (Runtime) o;
 
-        if (runtimeName != null ? !runtimeName.equals(runtime.runtimeName) : runtime.runtimeName != null) return false;
+        if (mRuntimeName != null ? !mRuntimeName.equals(runtime.mRuntimeName) : runtime.mRuntimeName != null)
+            return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return runtimeName != null ? runtimeName.hashCode() : 0;
+        return mRuntimeName != null ? mRuntimeName.hashCode() : 0;
     }
 }

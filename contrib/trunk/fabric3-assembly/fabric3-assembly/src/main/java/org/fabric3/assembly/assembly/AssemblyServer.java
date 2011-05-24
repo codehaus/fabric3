@@ -21,8 +21,6 @@ public class AssemblyServer extends AssemblyProfiles {
     private DependencyResolver dependencyResolver = new DependencyResolver();
 
     public void doAssembly(Server pConfiguration, ConfigurationHelper pConfigurationHelper) {
-        pConfiguration.validate();
-
         File serverPath = pConfiguration.getServerPath();
         LoggerUtils.log("server in folder - " + serverPath);
 

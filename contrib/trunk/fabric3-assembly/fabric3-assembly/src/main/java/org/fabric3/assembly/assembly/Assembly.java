@@ -1,5 +1,6 @@
 package org.fabric3.assembly.assembly;
 
+import org.fabric3.assembly.IAssemblyStep;
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.Server;
@@ -7,19 +8,25 @@ import org.fabric3.assembly.configuration.Server;
 /**
  * @author Michal Capo
  */
-public class Assembly {
+public class Assembly implements IAssemblyStep {
 
-    private AssemblyServer serverAssembly = new AssemblyServer();
+    private AssemblyServer mServerAssembly = new AssemblyServer();
 
-    private AssemblyRuntime runtimeAssembly = new AssemblyRuntime();
+    private AssemblyRuntime mRuntimeAssembly = new AssemblyRuntime();
 
-    public void doAssembly(AssemblyConfig pConfig) {
-        for (Server server : pConfig.getServers()) {
-            serverAssembly.doAssembly(server, pConfig.getConfigurationHelper());
+    private AssemblyConfig mConfig;
+
+    public Assembly(AssemblyConfig pConfig) {
+        mConfig = pConfig;
+    }
+
+    public void process() {
+        for (Server server : mConfig.getServers()) {
+            mServerAssembly.doAssembly(server, mConfig.getConfigurationHelper());
         }
 
-        for (Runtime runtime : pConfig.getRuntimes()) {
-            runtimeAssembly.doAssembly(runtime, pConfig.getConfigurationHelper());
+        for (Runtime runtime : mConfig.getRuntimes()) {
+            mRuntimeAssembly.doAssembly(runtime, mConfig.getConfigurationHelper());
         }
     }
 

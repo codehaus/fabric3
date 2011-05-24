@@ -1,10 +1,11 @@
 package org.fabric3.assembly.configuration;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.fabric3.assembly.assembly.Assembly;
+import org.fabric3.assembly.IAssemblyStep;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.validation.AssemblyConfigValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public class AssemblyConfig {
+public class AssemblyConfig implements IAssemblyStep {
 
     private Version mVersion;
 
@@ -22,7 +23,9 @@ public class AssemblyConfig {
 
     private List<Runtime> mRuntimes = new ArrayList<Runtime>();
 
-    private List<Composite> mComposites = new ArrayList<Composite>();
+    private CompositeConfig mComposites = new CompositeConfig();
+
+    private ProfileConfig mProfiles = new ProfileConfig();
 
     private ConfigurationHelper mConfigurationHelper = new ConfigurationHelper() {
         @Override
@@ -75,11 +78,19 @@ public class AssemblyConfig {
     }
 
     public void addComposite(Composite pComposite) {
-        mComposites.add(pComposite);
+        mComposites.addComposite(pComposite);
     }
 
     public List<Composite> getComposites() {
-        return mComposites;
+        return mComposites.getComposites();
+    }
+
+    public void addProfile(Profile pProfile) {
+        mProfiles.addProfile(pProfile);
+    }
+
+    public List<Profile> getProfiles() {
+        return mProfiles.getProfiles();
     }
 
     public ConfigurationHelper getConfigurationHelper() {
@@ -106,15 +117,7 @@ public class AssemblyConfig {
                 toString();
     }
 
-    public void doAssembly() {
-        //TODO <capo> compute missing versions
-
-        //TODO <capo> compute missing update policy
-
-        //TODO <capo> validate configuration, servers, runtimes, composites and profiles
-        AssemblyConfigValidator.validate(this);
-
-        // do assembly
-        new Assembly().doAssembly(this);
+    public void process() {
+        new AssemblyConfigValidator(this).process();
     }
 }

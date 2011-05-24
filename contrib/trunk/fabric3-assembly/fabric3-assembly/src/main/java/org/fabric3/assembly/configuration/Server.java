@@ -16,62 +16,58 @@ public class Server {
 
     public static final String SERVER_DEFAULT_NAME = "default-server";
 
-    private String serverName;
+    private String mServerName;
 
-    private File serverPath;
+    private File mServerPath;
 
-    private List<Profile> profiles = new ArrayList<Profile>();
+    private List<Profile> mProfiles = new ArrayList<Profile>();
 
-    private Version version;
+    private Version mVersion;
 
-    private UpdatePolicy updatePolicy;
+    private UpdatePolicy mUpdatePolicy;
 
     public Server(String pServerName, File pServerPath, Version pVersion, UpdatePolicy pUpdatePolicy, Profile... pProfiles) {
         if (null == pServerName) {
-            serverName = SERVER_DEFAULT_NAME;
+            this.mServerName = SERVER_DEFAULT_NAME;
         } else {
-            serverName = pServerName;
+            this.mServerName = pServerName;
         }
-        serverPath = pServerPath;
-        version = pVersion;
-        updatePolicy = pUpdatePolicy;
+        mServerPath = pServerPath;
+        mVersion = pVersion;
+        mUpdatePolicy = pUpdatePolicy;
         if (null != pProfiles) {
-            profiles.addAll(Arrays.asList(pProfiles));
+            mProfiles.addAll(Arrays.asList(pProfiles));
         }
     }
 
     public String getServerName() {
-        return serverName;
+        return mServerName;
     }
 
     public File getServerPath() {
-        return serverPath;
+        return mServerPath;
     }
 
     public List<Profile> getProfiles() {
-        return profiles;
+        return mProfiles;
     }
 
     public Version getVersion() {
-        return version;
+        return mVersion;
     }
 
     public UpdatePolicy getUpdatePolicy() {
-        return updatePolicy;
-    }
-
-    public void validate() {
-        ServerValidator.validate(this);
+        return mUpdatePolicy;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).
-                append("serverName", serverName).
-                append("serverPath", serverPath).
-                append("profiles", profiles).
-                append("version", version).
-                append("updatePolicy", updatePolicy).
+                append("serverName", mServerName).
+                append("serverPath", mServerPath).
+                append("profiles", mProfiles).
+                append("version", mVersion).
+                append("updatePolicy", mUpdatePolicy).
                 toString();
     }
 
@@ -82,13 +78,13 @@ public class Server {
 
         Server server = (Server) o;
 
-        if (serverName != null ? !serverName.equals(server.serverName) : server.serverName != null) return false;
+        if (mServerName != null ? !mServerName.equals(server.mServerName) : server.mServerName != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return serverName != null ? serverName.hashCode() : 0;
+        return mServerName != null ? mServerName.hashCode() : 0;
     }
 }

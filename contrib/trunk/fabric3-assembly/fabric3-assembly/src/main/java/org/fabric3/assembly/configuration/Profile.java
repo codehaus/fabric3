@@ -17,89 +17,85 @@ import java.util.List;
  */
 public class Profile {
 
-    private String name;
+    private String mName;
 
-    private List<String> alternativeNames = new ArrayList<String>();
+    private List<String> mAlternativeNames = new ArrayList<String>();
 
-    private UpdatePolicy updatePolicy;
+    private UpdatePolicy mUpdatePolicy;
 
-    private Version version;
+    private Version mVersion;
 
-    private List<Dependency> dependencies = new ArrayList<Dependency>();
+    private List<Dependency> mDependencies = new ArrayList<Dependency>();
 
-    private List<File> files = new ArrayList<File>();
+    private List<File> mFiles = new ArrayList<File>();
 
     public Profile(String pName, UpdatePolicy pUpdatePolicy, Version pVersion, String... pAlternativeNames) {
-        name = pName;
-        updatePolicy = pUpdatePolicy;
-        version = pVersion;
+        mName = pName;
+        mUpdatePolicy = pUpdatePolicy;
+        mVersion = pVersion;
         if (null == pAlternativeNames) {
-            alternativeNames = Arrays.asList(pAlternativeNames);
+            mAlternativeNames = Arrays.asList(pAlternativeNames);
         }
     }
 
     public void addDependency(Dependency pDependency) {
         if (null != pDependency) {
-            dependencies.add(pDependency);
+            mDependencies.add(pDependency);
         }
     }
 
     public void addDependency(String pDependency) {
         if (!StringUtils.isBlank(pDependency)) {
-            dependencies.add(DependencyUtils.parseDependency(pDependency));
+            mDependencies.add(DependencyUtils.parseDependency(pDependency));
         }
     }
 
     public void addPath(String pPath) {
         File temp;
         if (!StringUtils.isBlank(pPath) && (temp = new File(pPath)).exists()) {
-            files.add(temp);
+            mFiles.add(temp);
         }
     }
 
     public void addPath(File pFile) {
         if (null != pFile) {
-            files.add(pFile);
+            mFiles.add(pFile);
         }
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public List<String> getAlternativeNames() {
-        return alternativeNames;
+        return mAlternativeNames;
     }
 
     public UpdatePolicy getUpdatePolicy() {
-        return updatePolicy;
+        return mUpdatePolicy;
     }
 
     public Version getVersion() {
-        return version;
+        return mVersion;
     }
 
     public List<Dependency> getDependencies() {
-        return dependencies;
+        return mDependencies;
     }
 
     public List<File> getFiles() {
-        return files;
-    }
-
-    public void validate() {
-        ProfileValidator.validate(this);
+        return mFiles;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).
-                append("name", name).
-                append("alternativeNames", alternativeNames).
-                append("updatePolicy", updatePolicy).
-                append("version", version).
-                append("dependencies", dependencies).
-                append("files", files).
+                append("name", mName).
+                append("alternativeNames", mAlternativeNames).
+                append("updatePolicy", mUpdatePolicy).
+                append("version", mVersion).
+                append("dependencies", mDependencies).
+                append("files", mFiles).
                 toString();
     }
 
@@ -110,16 +106,16 @@ public class Profile {
 
         Profile that = (Profile) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+        if (mName != null ? !mName.equals(that.mName) : that.mName != null) return false;
+        if (mVersion != null ? !mVersion.equals(that.mVersion) : that.mVersion != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (version != null ? version.hashCode() : 0);
+        int result = mName != null ? mName.hashCode() : 0;
+        result = 31 * result + (mVersion != null ? mVersion.hashCode() : 0);
         return result;
     }
 }
