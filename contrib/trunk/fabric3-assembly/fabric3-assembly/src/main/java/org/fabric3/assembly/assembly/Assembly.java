@@ -29,7 +29,7 @@ public class Assembly implements IAssemblyStep {
             mRuntimeAssembly.doAssembly(runtime);
         }
 
-
+        //TODO <capo> add composite assembly
     }
 
 }

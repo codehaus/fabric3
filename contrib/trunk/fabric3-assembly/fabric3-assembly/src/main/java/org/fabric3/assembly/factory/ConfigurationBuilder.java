@@ -1,6 +1,7 @@
 package org.fabric3.assembly.factory;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
+import org.fabric3.assembly.configuration.Composite;
 import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.RuntimeMode;
@@ -287,5 +288,50 @@ public class ConfigurationBuilder {
         }
     }
 
+    /*
+     *
+     *
+     * Composites
+     *
+     *
+     */
+
+    public ConfigurationBuilder setCompositesUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+        mConfig.getCompositeConfig().setUpdatePolicy(pUpdatePolicy);
+        return this;
+    }
+
+    public ConfigurationBuilder setCompositesUpdatePolicy(String pUpdatePolicy) {
+        mConfig.getCompositeConfig().setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy));
+        return this;
+    }
+
+    public CompositeBuilder addComposite(String pName, String pDependency) {
+        return new CompositeBuilder(mConfig, new Composite(pName, pDependency, null));
+    }
+
+    public CompositeBuilder addComposite(String pName, File pFile) {
+        return new CompositeBuilder(mConfig, new Composite(pName, pFile, null));
+    }
+
+    public static class CompositeBuilder extends ConfigurationBuilder {
+
+        private Composite mComposite;
+
+        public CompositeBuilder(AssemblyConfig pConfig, Composite pComposite) {
+            super(pConfig);
+            mComposite = pComposite;
+        }
+
+        public CompositeBuilder withUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+            mComposite.setUpdatePolicy(pUpdatePolicy);
+            return this;
+        }
+
+        public CompositeBuilder withUpdatePolicy(String pUpdatePolicy) {
+            mComposite.setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy));
+            return this;
+        }
+    }
 
 }

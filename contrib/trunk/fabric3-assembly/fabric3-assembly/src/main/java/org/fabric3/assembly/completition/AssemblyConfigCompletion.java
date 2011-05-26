@@ -97,7 +97,6 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
                     profile.setUpdatePolicy(runtime.getUpdatePolicy());
                 }
             }
-
         }
 
         //
