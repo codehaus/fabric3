@@ -3,6 +3,7 @@ package org.fabric3.embedded.examples.runtime;
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.factory.ConfigurationBuilder;
+import org.fabric3.assembly.runner.AssemblyRunner;
 
 import java.io.IOException;
 
@@ -19,13 +20,13 @@ public class TestSingleRuntimeServer {
 
                 .addProfile("test2").dependency("org.codehaus.fabric3:fabric3-junit:1.8").dependency("org.codehaus.fabric3:fabric3-jaxb:1.8")
 
-                .addServer("/tmp/fabric3_test_single")
-                .addRuntime().withProfiles("web", "rest", "test2")
+                .addServer("server1", "/tmp/fabric3_test_single")
+                .addRuntime().withProfiles("web").toServer("server1")
 
                 .createConfiguration();
+        // config.process();
 
-
-        config.process();
+        new AssemblyRunner(config).startServer("server1");
     }
 
 }

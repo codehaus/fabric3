@@ -4,6 +4,7 @@ import org.fabric3.assembly.IAssemblyStep;
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.Server;
+import org.fabric3.assembly.utils.LoggerUtils;
 
 /**
  * @author Michal Capo
@@ -30,6 +31,8 @@ public class Assembly implements IAssemblyStep {
         }
 
         //TODO <capo> add composite assembly
+
+        LoggerUtils.log("assembling done at ''{0,time}''", System.currentTimeMillis());
     }
 
 }

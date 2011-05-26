@@ -198,6 +198,11 @@ public class ConfigurationBuilder {
             mConfig.addRuntime(pRuntime);
         }
 
+        public RuntimeBuilder toServer(String pServerName) {
+            mRuntime.setServerName(pServerName);
+            return this;
+        }
+
         public RuntimeBuilder withProfiles(String... pProfiles) {
             mRuntime.addProfileNames(pProfiles);
             return this;

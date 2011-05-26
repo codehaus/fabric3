@@ -19,7 +19,7 @@ public class AssemblyServer extends AbstractAssemblyProfiles {
 
     public void doAssembly(Server pConfiguration) {
         File serverPath = pConfiguration.getServerPath();
-        LoggerUtils.log("server in folder - " + serverPath);
+        LoggerUtils.log("assembling server ''{0}'' in folder ''{1}'' ", pConfiguration.getServerName(), serverPath);
 
         if (FileUtils2.recreateFolderIfNeeded(serverPath, pConfiguration.getUpdatePolicy())) {
             try {

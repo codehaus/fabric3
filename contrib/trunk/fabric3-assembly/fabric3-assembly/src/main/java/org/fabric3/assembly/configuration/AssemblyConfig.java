@@ -6,6 +6,7 @@ import org.fabric3.assembly.completition.AssemblyConfigCompletion;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.utils.LoggerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,12 @@ public class AssemblyConfig implements IAssemblyStep {
     private CompositeConfig mComposites = new CompositeConfig();
 
     private ProfileConfig mProfiles = new ProfileConfig();
+
+    private boolean mAlreadyProcessed = false;
+
+    public boolean isAlreadyProcessed() {
+        return mAlreadyProcessed;
+    }
 
     public void setUpdatePolicy(String pUpdatePolicy) {
         mUpdatePolicy = UpdatePolicy.valueOf(pUpdatePolicy);
@@ -100,6 +107,9 @@ public class AssemblyConfig implements IAssemblyStep {
     }
 
     public void process() {
+        LoggerUtils.log("assembling started at ''{0,time}''", System.currentTimeMillis());
+
+        mAlreadyProcessed = true;
         new AssemblyConfigCompletion(this).process();
     }
 }

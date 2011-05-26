@@ -12,6 +12,7 @@ import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.fabric.FabricProfiles;
 import org.fabric3.assembly.exception.ServerAlreadyExistsException;
 import org.fabric3.assembly.exception.ValidationException;
+import org.fabric3.assembly.utils.LoggerUtils;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -39,6 +40,8 @@ public class AssemblyConfigValidator implements IAssemblyStep {
     }
 
     public void process() {
+        LoggerUtils.log("validating configuration");
+
         if (null == mConfig.getVersion()) {
             throw new ValidationException("Configuration version is not defined. You need to specify it.");
         }

@@ -94,6 +94,10 @@ public class Runtime {
         mSystemConfig = pSystemConfig;
     }
 
+    public void setServerName(String pServerName) {
+        mServerName = pServerName;
+    }
+
     public String getServerName() {
         return mServerName;
     }
