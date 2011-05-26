@@ -42,12 +42,20 @@ public class Server {
         }
     }
 
+    public void setServerName(String pServerName) {
+        mServerName = pServerName;
+    }
+
     public String getServerName() {
         return mServerName;
     }
 
     public File getServerPath() {
         return mServerPath;
+    }
+
+    public void setServerPath(File pServerPath) {
+        mServerPath = pServerPath;
     }
 
     public void addProfile(Profile pProfile) {

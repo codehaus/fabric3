@@ -50,14 +50,14 @@ public class Profile {
         }
     }
 
-    public void addPath(String pPath) {
+    public void addFile(String pPath) {
         File temp;
         if (!StringUtils.isBlank(pPath) && (temp = new File(pPath)).exists()) {
             mFiles.add(temp);
         }
     }
 
-    public void addPath(File pFile) {
+    public void addFile(File pFile) {
         if (null != pFile) {
             mFiles.add(pFile);
         }
@@ -65,6 +65,12 @@ public class Profile {
 
     public String getName() {
         return mName;
+    }
+
+    public void addAlternativeNames(String... pAlternativeNames) {
+        if (null != pAlternativeNames) {
+            mAlternativeNames.addAll(Arrays.asList(pAlternativeNames));
+        }
     }
 
     public List<String> getAlternativeNames() {
@@ -131,5 +137,19 @@ public class Profile {
         int result = mName != null ? mName.hashCode() : 0;
         result = 31 * result + (mVersion != null ? mVersion.hashCode() : 0);
         return result;
+    }
+
+    public void addDependencies(String[] pDependencies) {
+        if (null != pDependencies) {
+            for (String dependency : pDependencies) {
+                addDependency(dependency);
+            }
+        }
+    }
+
+    public void addFiles(File[] pFiles) {
+        if (null != pFiles) {
+            mFiles.addAll(Arrays.asList(pFiles));
+        }
     }
 }

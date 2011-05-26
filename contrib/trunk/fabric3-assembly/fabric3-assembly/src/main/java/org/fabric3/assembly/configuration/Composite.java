@@ -34,6 +34,10 @@ public class Composite {
         return mName;
     }
 
+    public void setPath(File pPath) {
+        mPath = pPath;
+    }
+
     public File getPath() {
         return mPath;
     }
@@ -44,6 +48,10 @@ public class Composite {
 
     public UpdatePolicy getUpdatePolicy() {
         return mUpdatePolicy;
+    }
+
+    public void setDependency(String pDependency) {
+        mDependency = pDependency;
     }
 
     public String getDependency() {

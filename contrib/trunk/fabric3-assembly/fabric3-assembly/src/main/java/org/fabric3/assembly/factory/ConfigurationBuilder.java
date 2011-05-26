@@ -66,6 +66,10 @@ public class ConfigurationBuilder {
     *
     */
 
+    public ServerBuilder addServer() {
+        return addServer(Server.SERVER_DEFAULT_NAME, null);
+    }
+
     public ServerBuilder addServer(String pPath) {
         return addServer(Server.SERVER_DEFAULT_NAME, pPath);
     }
@@ -91,6 +95,41 @@ public class ConfigurationBuilder {
             mServer = pServer;
 
             mConfig.addServer(pServer);
+        }
+
+        public ServerBuilder withName(String pName) {
+            mServer.setServerName(pName);
+            return this;
+        }
+
+        public ServerBuilder atPath(String pPath) {
+            mServer.setServerPath(new File(pPath));
+            return this;
+        }
+
+        public ServerBuilder atPath(File pPath) {
+            mServer.setServerPath(pPath);
+            return this;
+        }
+
+        public ServerBuilder withVersion(Version pVersion) {
+            mServer.setVersion(pVersion);
+            return this;
+        }
+
+        public ServerBuilder withVersion(String pVersion) {
+            mServer.setVersion(new Version(pVersion));
+            return this;
+        }
+
+        public ServerBuilder withUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+            mServer.setUpdatePolicy(pUpdatePolicy);
+            return this;
+        }
+
+        public ServerBuilder withUpdatePolicy(String pUpdatePolicy) {
+            mServer.setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy.toUpperCase()));
+            return this;
         }
 
         public ServerBuilder withProfiles(String... pProfiles) {
@@ -307,6 +346,10 @@ public class ConfigurationBuilder {
             mConfig.addProfile(pProfile);
         }
 
+        public ProfileBuilder alternativeNames(String... pAlternativeNames) {
+            mProfile.addAlternativeNames(pAlternativeNames);
+            return this;
+        }
 
         public ProfileBuilder dependency(String pDependency) {
             mProfile.addDependency(pDependency);
@@ -318,15 +361,46 @@ public class ConfigurationBuilder {
             return this;
         }
 
-        public ProfileBuilder path(String pDependencyPath) {
-            mProfile.addPath(pDependencyPath);
+        public ProfileBuilder dependencies(String... pDependencies) {
+            mProfile.addDependencies(pDependencies);
             return this;
         }
 
-        public ProfileBuilder path(File pDependencyPath) {
-            mProfile.addPath(pDependencyPath);
+        public ProfileBuilder file(String pDependencyPath) {
+            mProfile.addFile(pDependencyPath);
             return this;
         }
+
+        public ProfileBuilder file(File pDependencyPath) {
+            mProfile.addFile(pDependencyPath);
+            return this;
+        }
+
+        public ProfileBuilder files(File... pFiles) {
+            mProfile.addFiles(pFiles);
+            return this;
+        }
+
+        public ProfileBuilder withVersion(Version pVersion) {
+            mProfile.setVersion(pVersion);
+            return this;
+        }
+
+        public ProfileBuilder withVersion(String pVersion) {
+            mProfile.setVersion(new Version(pVersion));
+            return this;
+        }
+
+        public ProfileBuilder withUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+            mProfile.setUpdatePolicy(pUpdatePolicy);
+            return this;
+        }
+
+        public ProfileBuilder withUpdatePolicy(String pUpdatePolicy) {
+            mProfile.setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy.toUpperCase()));
+            return this;
+        }
+
     }
 
     /*
@@ -347,6 +421,10 @@ public class ConfigurationBuilder {
         return this;
     }
 
+    public CompositeBuilder addComposite(String pName) {
+        return new CompositeBuilder(mConfig, new Composite(pName, (String) null, null));
+    }
+
     public CompositeBuilder addComposite(String pName, String pDependency) {
         return new CompositeBuilder(mConfig, new Composite(pName, pDependency, null));
     }
@@ -362,6 +440,21 @@ public class ConfigurationBuilder {
         public CompositeBuilder(AssemblyConfig pConfig, Composite pComposite) {
             super(pConfig);
             mComposite = pComposite;
+        }
+
+        public CompositeBuilder dependency(String pDependency) {
+            mComposite.setDependency(pDependency);
+            return this;
+        }
+
+        public CompositeBuilder file(File pPath) {
+            mComposite.setPath(pPath);
+            return this;
+        }
+
+        public CompositeBuilder file(String pPath) {
+            mComposite.setPath(new File(pPath));
+            return this;
         }
 
         public CompositeBuilder withUpdatePolicy(UpdatePolicy pUpdatePolicy) {
