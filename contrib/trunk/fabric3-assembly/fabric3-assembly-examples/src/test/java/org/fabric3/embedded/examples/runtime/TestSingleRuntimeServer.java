@@ -6,6 +6,7 @@ import org.fabric3.assembly.factory.ConfigurationBuilder;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michal Capo
@@ -26,7 +27,10 @@ public class TestSingleRuntimeServer {
                 .createConfiguration();
         // config.process();
 
-        new AssemblyRunner(config).startServer("server1");
+        AssemblyRunner runner = new AssemblyRunner(config);
+        runner.startServer("server1");
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10));
+        runner.stopServer("server1");
     }
 
 }

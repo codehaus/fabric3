@@ -12,7 +12,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michal Capo
@@ -23,7 +25,13 @@ public class AssemblyRunner {
 
     private ConcurrentMap<String, Process> mRunningServers = new ConcurrentHashMap<String, Process>();
 
-    private ExecutorService mPool = Executors.newCachedThreadPool();
+    private ExecutorService mPool = new ThreadPoolExecutor(
+            0,
+            100,
+            1L,
+            TimeUnit.SECONDS,
+            new SynchronousQueue<Runnable>()
+    );
 
     public AssemblyRunner(AssemblyConfig pConfig) {
         mHelper = new RunnerHelper(pConfig);
@@ -81,10 +89,14 @@ public class AssemblyRunner {
     }
 
     public void stopServer(String pServerName) {
-        LoggerUtils.log("stopping server ''{0}''", pServerName);
-
         Process p = mRunningServers.get(pServerName);
-        p.destroy();
+
+        if (null != p) {
+            LoggerUtils.log("stopping server ''{0}''", pServerName);
+            p.destroy();
+        }
+
+        mRunningServers.remove(pServerName);
     }
 
 }
