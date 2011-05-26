@@ -4,8 +4,10 @@ import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.factory.ConfigurationBuilder;
+import org.fabric3.assembly.runner.AssemblyRunner;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michal Capo
@@ -23,8 +25,16 @@ public class TestMultiRuntimeServer {
                 .addRuntime("server1", "par2", RuntimeMode.PARTICIPANT).withProfiles("web-service")
 
                 .createConfiguration();
+        // config.process();
 
-        config.process();
+        //TODO <capo> fix starting non VM runtime
+
+        AssemblyRunner runner = new AssemblyRunner(config);
+        runner.startServer("server1");
+
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10));
+        runner.stopServer("server1");
+
     }
 
 }

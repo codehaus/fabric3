@@ -29,6 +29,7 @@ public class TestSingleRuntimeServer {
 
         AssemblyRunner runner = new AssemblyRunner(config);
         runner.startServer("server1");
+
         Thread.sleep(TimeUnit.SECONDS.toMillis(10));
         runner.stopServer("server1");
     }
