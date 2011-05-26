@@ -59,6 +59,10 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
                 server.setVersion(mHelper.computeMissingVersion(server));
             }
 
+            for (String s : server.getProfileNames()) {
+                server.addProfile(mHelper.findProfileByName(s));
+            }
+
             for (Profile profile : server.getProfiles()) {
                 if (null == profile.getVersion()) {
                     profile.setVersion(server.getVersion());
@@ -78,6 +82,10 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
             }
             if (null == runtime.getServerPath()) {
                 runtime.setServerPath(mHelper.computeServerPath(runtime));
+            }
+
+            for (String s : runtime.getProfileNames()) {
+                runtime.addProfile(mHelper.findProfileByName(s));
             }
 
             Server server = mHelper.getServerByRuntime(runtime);

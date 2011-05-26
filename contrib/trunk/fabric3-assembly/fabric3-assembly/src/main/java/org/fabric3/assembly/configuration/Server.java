@@ -20,13 +20,15 @@ public class Server {
 
     private File mServerPath;
 
+    private List<String> mProfileNames = new ArrayList<String>();
+
     private List<Profile> mProfiles = new ArrayList<Profile>();
 
     private Version mVersion;
 
     private UpdatePolicy mUpdatePolicy;
 
-    public Server(String pServerName, File pServerPath, Version pVersion, UpdatePolicy pUpdatePolicy, Profile... pProfiles) {
+    public Server(String pServerName, File pServerPath, Version pVersion, UpdatePolicy pUpdatePolicy, String... pProfileNames) {
         if (null == pServerName) {
             this.mServerName = SERVER_DEFAULT_NAME;
         } else {
@@ -35,8 +37,8 @@ public class Server {
         mServerPath = pServerPath;
         mVersion = pVersion;
         mUpdatePolicy = pUpdatePolicy;
-        if (null != pProfiles) {
-            mProfiles.addAll(Arrays.asList(pProfiles));
+        if (null != pProfileNames) {
+            mProfileNames.addAll(Arrays.asList(pProfileNames));
         }
     }
 
@@ -48,8 +50,28 @@ public class Server {
         return mServerPath;
     }
 
+    public void addProfile(Profile pProfile) {
+        mProfiles.add(pProfile);
+    }
+
+    public void addProfiles(Profile... pProfiles) {
+        if (null != mProfiles) {
+            mProfiles.addAll(Arrays.asList(pProfiles));
+        }
+    }
+
+    public void addProfileNames(String... pProfiles) {
+        if (null != pProfiles) {
+            mProfileNames.addAll(Arrays.asList(pProfiles));
+        }
+    }
+
     public List<Profile> getProfiles() {
         return mProfiles;
+    }
+
+    public List<String> getProfileNames() {
+        return mProfileNames;
     }
 
     public void setVersion(Version pVersion) {

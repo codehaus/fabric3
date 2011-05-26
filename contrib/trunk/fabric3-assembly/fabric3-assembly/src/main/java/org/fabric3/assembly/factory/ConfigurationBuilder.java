@@ -5,6 +5,7 @@ import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.Server;
+import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.ValidationException;
@@ -20,12 +21,14 @@ import java.util.List;
  */
 public class ConfigurationBuilder {
 
-    //TODO <capo> change builder to fluent builder
+    protected AssemblyConfig mConfig;
 
-    private AssemblyConfig mConfig = new AssemblyConfig();
+    protected ConfigurationBuilder(AssemblyConfig pConfig) {
+        mConfig = pConfig;
+    }
 
     public static ConfigurationBuilder getBuilder() {
-        return new ConfigurationBuilder();
+        return new ConfigurationBuilder(new AssemblyConfig());
     }
 
     public AssemblyConfig createConfiguration() {
@@ -62,29 +65,42 @@ public class ConfigurationBuilder {
     *
     */
 
-    public ConfigurationBuilder addServer(String pPath) {
+    public ServerBuilder addServer(String pPath) {
         return addServer(Server.SERVER_DEFAULT_NAME, pPath);
     }
 
-    public ConfigurationBuilder addServer(String pPath, Profile... pProfiles) {
-        return addServer(Server.SERVER_DEFAULT_NAME, pPath, pProfiles);
+    public ServerBuilder addServer(String pName, String pPath) {
+        return addServer(pName, pPath, null);
     }
 
-    public ConfigurationBuilder addServer(String pName, String pPath) {
-        return addServer(pName, pPath, (Profile[]) null);
+    public ServerBuilder addServer(String pName, String pPath, Version pVersion) {
+        return addServer(pName, pPath, pVersion, null);
     }
 
-    public ConfigurationBuilder addServer(String pName, String pPath, Profile... pProfiles) {
-        return addServer(pName, pPath, null, null, pProfiles);
+    public ServerBuilder addServer(String pName, String pPath, Version pVersion, UpdatePolicy pUpdatePolicy) {
+        return new ServerBuilder(mConfig, new Server(pName, new File(pPath), pVersion, pUpdatePolicy));
     }
 
-    public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion, Profile... pProfiles) {
-        return addServer(pName, pPath, pVersion, null, pProfiles);
-    }
+    public static class ServerBuilder extends ConfigurationBuilder {
 
-    public ConfigurationBuilder addServer(String pName, String pPath, Version pVersion, UpdatePolicy pUpdatePolicy, Profile... pProfiles) {
-        mConfig.addServer(new Server(pName, new File(pPath), pVersion, pUpdatePolicy, pProfiles));
-        return this;
+        private Server mServer;
+
+        public ServerBuilder(AssemblyConfig pConfig, Server pServer) {
+            super(pConfig);
+            mServer = pServer;
+
+            mConfig.addServer(pServer);
+        }
+
+        public ServerBuilder withProfiles(String... pProfiles) {
+            mServer.addProfileNames(pProfiles);
+            return this;
+        }
+
+        public ServerBuilder withProfiles(Profile... pProfiles) {
+            mServer.addProfiles(pProfiles);
+            return this;
+        }
     }
 
     /*
@@ -95,46 +111,62 @@ public class ConfigurationBuilder {
     *
     */
 
-    public ConfigurationBuilder addRuntime(Profile... pProfiles) {
-        return addRuntime(RuntimeMode.VM, null, pProfiles);
+    public RuntimeBuilder addRuntime() {
+        return addRuntime(RuntimeMode.VM, null);
     }
 
-    public ConfigurationBuilder addRuntime(RuntimeMode pMode, Profile... pProfiles) {
-        return addRuntime(pMode, null, pProfiles);
+    public RuntimeBuilder addRuntime(String pServerName) {
+        return addRuntime(pServerName, Runtime.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, null);
     }
 
-    public ConfigurationBuilder addRuntime(RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
-        return addRuntime(Runtime.RUNTIME_DEFAULT_NAME, pMode, pConfigFile, pProfiles);
+    public RuntimeBuilder addRuntime(RuntimeMode pMode) {
+        return addRuntime(pMode, null);
     }
 
-    public ConfigurationBuilder addRuntime(String pRuntimeName) {
-        return addRuntime(pRuntimeName, (Profile[]) null);
+    public RuntimeBuilder addRuntime(RuntimeMode pMode, String pConfigFile) {
+        return addRuntime(Runtime.RUNTIME_DEFAULT_NAME, pMode, pConfigFile);
     }
 
-    public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
-        return addRuntime(Server.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, null, pProfiles);
+    public RuntimeBuilder addRuntime(String pRuntimeName, RuntimeMode pMode) {
+        return addRuntime(Server.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, null);
     }
 
-    public ConfigurationBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile, Profile... pProfiles) {
-        return addRuntime(Server.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, pConfigFile, pProfiles);
+    public RuntimeBuilder addRuntime(String pRuntimeName, RuntimeMode pMode, String pConfigFile) {
+        return addRuntime(Server.SERVER_DEFAULT_NAME, pRuntimeName, pMode, null, pConfigFile);
     }
 
-    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName) {
-        return addRuntime(pServerName, pRuntimeName, RuntimeMode.VM, (Profile[]) null);
+    public RuntimeBuilder addRuntime(String pServerName, String pRuntimeName) {
+        return addRuntime(pServerName, pRuntimeName, RuntimeMode.VM);
     }
 
-    public ConfigurationBuilder addRuntime(String pServerName, Profile... pProfiles) {
-        return addRuntime(pServerName, Runtime.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, null, pProfiles);
+    public RuntimeBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode) {
+        return addRuntime(pServerName, pRuntimeName, pMode, null, null);
     }
 
-    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, Profile... pProfiles) {
-        return addRuntime(pServerName, pRuntimeName, pMode, null, null, pProfiles);
+    public RuntimeBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, UpdatePolicy pUpdatePolicy, String pConfigFile) {
+        return new RuntimeBuilder(mConfig, new Runtime(pServerName, pRuntimeName, pMode, pUpdatePolicy, null == pConfigFile ? null : new File(pConfigFile)));
     }
 
-    public ConfigurationBuilder addRuntime(String pServerName, String pRuntimeName, RuntimeMode pMode, UpdatePolicy pUpdatePolicy, String pConfigFile, Profile... pProfiles) {
+    public static class RuntimeBuilder extends ConfigurationBuilder {
 
-        mConfig.addRuntime(new Runtime(pServerName, pRuntimeName, pMode, pUpdatePolicy, null == pConfigFile ? null : new File(pConfigFile), pProfiles));
-        return this;
+        private Runtime mRuntime;
+
+        public RuntimeBuilder(AssemblyConfig pConfig, Runtime pRuntime) {
+            super(pConfig);
+            mRuntime = pRuntime;
+
+            mConfig.addRuntime(pRuntime);
+        }
+
+        public RuntimeBuilder withProfiles(String... pProfiles) {
+            mRuntime.addProfileNames(pProfiles);
+            return this;
+        }
+
+        public RuntimeBuilder withProfiles(Profile... pProfiles) {
+            mRuntime.addProfiles(pProfiles);
+            return this;
+        }
     }
 
     /*
@@ -151,7 +183,7 @@ public class ConfigurationBuilder {
     }
 
     public ConfigurationBuilder setUpdatePolicy(String pPolicy) {
-        mConfig.setUpdatePolicy(UpdatePolicy.valueOf(pPolicy).name());
+        mConfig.setUpdatePolicy(pPolicy);
         return this;
     }
 
@@ -167,4 +199,93 @@ public class ConfigurationBuilder {
         mConfig.setVersion(new Version(pVersion));
         return this;
     }
+
+    public ConfigurationBuilder setVersion(Version pVersion) {
+        mConfig.setVersion(pVersion);
+        return this;
+    }
+
+    /*
+     *
+     *
+     * Profile
+     *
+     *
+     */
+
+    public ConfigurationBuilder setProfilesUpdatePolicy(UpdatePolicy pPolicy) {
+        mConfig.getProfileConfig().setUpdatePolicy(pPolicy);
+        return this;
+    }
+
+    public ConfigurationBuilder setProfilesUpdatePolicy(String pPolicy) {
+        mConfig.getProfileConfig().setUpdatePolicy(UpdatePolicy.valueOf(pPolicy));
+        return this;
+    }
+
+    public ConfigurationBuilder setProfilesVersion(String pVersion) {
+        mConfig.getProfileConfig().setVersion(new Version(pVersion));
+        return this;
+    }
+
+    public ConfigurationBuilder setProfilesVersion(Version pVersion) {
+        mConfig.getProfileConfig().setVersion(pVersion);
+        return this;
+    }
+
+
+    public ProfileBuilder addProfile(String pName) {
+        return new ProfileBuilder(mConfig, new Profile(pName, null, null));
+    }
+
+    public ProfileBuilder addProfile(String pName, String... pAlternativeNames) {
+        return new ProfileBuilder(mConfig, new Profile(pName, null, null, pAlternativeNames));
+    }
+
+    public ProfileBuilder addProfile(String pName, UpdatePolicy pUpdatePolicy, String... pAlternativeNames) {
+        return new ProfileBuilder(mConfig, new Profile(pName, pUpdatePolicy, null, pAlternativeNames));
+    }
+
+    public ProfileBuilder addProfile(String pName, Version pVersion, String... pAlternativeNames) {
+        return new ProfileBuilder(mConfig, new Profile(pName, null, pVersion, pAlternativeNames));
+    }
+
+    public ProfileBuilder addProfile(String pName, UpdatePolicy pUpdatePolicy, Version pVersion, String... pAlternativeNames) {
+        return new ProfileBuilder(mConfig, new Profile(pName, pUpdatePolicy, pVersion, pAlternativeNames));
+    }
+
+    public static class ProfileBuilder extends ConfigurationBuilder {
+
+        private Profile mProfile;
+
+        public ProfileBuilder(AssemblyConfig pConfig, Profile pProfile) {
+            super(pConfig);
+            mProfile = pProfile;
+
+            mConfig.addProfile(pProfile);
+        }
+
+
+        public ProfileBuilder dependency(String pDependency) {
+            mProfile.addDependency(pDependency);
+            return this;
+        }
+
+        public ProfileBuilder dependency(Dependency pDependency) {
+            mProfile.addDependency(pDependency);
+            return this;
+        }
+
+        public ProfileBuilder path(String pDependencyPath) {
+            mProfile.addPath(pDependencyPath);
+            return this;
+        }
+
+        public ProfileBuilder path(File pDependencyPath) {
+            mProfile.addPath(pDependencyPath);
+            return this;
+        }
+    }
+
+
 }

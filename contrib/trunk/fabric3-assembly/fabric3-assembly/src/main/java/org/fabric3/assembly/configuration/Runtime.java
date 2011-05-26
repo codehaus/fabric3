@@ -27,11 +27,13 @@ public class Runtime {
 
     private List<Profile> mProfiles = new ArrayList<Profile>();
 
+    private List<String> mProfileNames = new ArrayList<String>();
+
     private List<Composite> mComposites = new ArrayList<Composite>();
 
     private UpdatePolicy mUpdatePolicy;
 
-    public Runtime(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, UpdatePolicy pUpdatePolicy, File pSystemConfig, Profile... pProfiles) {
+    public Runtime(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, UpdatePolicy pUpdatePolicy, File pSystemConfig, String... pProfileNames) {
         if (null == pServerName) {
             mServerName = Server.SERVER_DEFAULT_NAME;
         } else {
@@ -45,8 +47,8 @@ public class Runtime {
         mRuntimeMode = pRuntimeMode;
         mSystemConfig = pSystemConfig;
         mUpdatePolicy = pUpdatePolicy;
-        if (null != pProfiles) {
-            mProfiles = Arrays.asList(pProfiles);
+        if (null != pProfileNames) {
+            mProfileNames.addAll(Arrays.asList(pProfileNames));
         }
     }
 
@@ -86,8 +88,28 @@ public class Runtime {
         return mSystemConfig;
     }
 
+    public void addProfile(Profile pProfile) {
+        mProfiles.add(pProfile);
+    }
+
+    public void addProfiles(Profile... pProfiles) {
+        if (null != pProfiles) {
+            mProfiles.addAll(Arrays.asList(pProfiles));
+        }
+    }
+
     public List<Profile> getProfiles() {
         return mProfiles;
+    }
+
+    public void addProfileNames(String... pProfiles) {
+        if (null != pProfiles) {
+            mProfileNames.addAll(Arrays.asList(pProfiles));
+        }
+    }
+
+    public List<String> getProfileNames() {
+        return mProfileNames;
     }
 
     public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {

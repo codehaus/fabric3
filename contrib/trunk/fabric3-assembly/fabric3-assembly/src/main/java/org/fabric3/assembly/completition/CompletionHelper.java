@@ -8,6 +8,8 @@ import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
+import org.fabric3.assembly.dependency.fabric.FabricProfiles;
+import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ServerNotFoundException;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.Closure;
@@ -190,5 +192,21 @@ public class CompletionHelper {
 
     public File computeServerPath(Runtime pRuntime) {
         return getServerByRuntime(pRuntime).getServerPath();
+    }
+
+    public Profile findProfileByName(String pProfileName) {
+        for (Profile profile : mConfig.getProfiles()) {
+            if (profile.getAllNames().contains(pProfileName)) {
+                return profile;
+            }
+        }
+
+        for (Profile profile : FabricProfiles.all()) {
+            if (profile.getAllNames().contains(pProfileName)) {
+                return profile;
+            }
+        }
+
+        throw new AssemblyException("Profile ''{0}'' not found. Is this a typo?", pProfileName);
     }
 }

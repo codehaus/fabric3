@@ -33,7 +33,7 @@ public class Profile {
         mName = pName;
         mUpdatePolicy = pUpdatePolicy;
         mVersion = pVersion;
-        if (null == pAlternativeNames) {
+        if (null != pAlternativeNames) {
             mAlternativeNames = Arrays.asList(pAlternativeNames);
         }
     }
@@ -69,6 +69,12 @@ public class Profile {
 
     public List<String> getAlternativeNames() {
         return mAlternativeNames;
+    }
+
+    public List<String> getAllNames() {
+        ArrayList<String> list = new ArrayList<String>(mAlternativeNames);
+        list.add(mName);
+        return list;
     }
 
     public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
