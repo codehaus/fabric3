@@ -116,8 +116,8 @@ public class ConfigurationBuilder {
         return addRuntime(RuntimeMode.VM, null);
     }
 
-    public RuntimeBuilder addRuntime(String pServerName) {
-        return addRuntime(pServerName, Runtime.RUNTIME_DEFAULT_NAME, RuntimeMode.VM, null, null);
+    public RuntimeBuilder addRuntime(String pRuntimeName) {
+        return addRuntime(Server.SERVER_DEFAULT_NAME, pRuntimeName, RuntimeMode.VM, null, null);
     }
 
     public RuntimeBuilder addRuntime(RuntimeMode pMode) {
@@ -168,6 +168,47 @@ public class ConfigurationBuilder {
             mRuntime.addProfiles(pProfiles);
             return this;
         }
+
+        public RuntimeBuilder asType(RuntimeMode pRuntimeMode) {
+            mRuntime.setRuntimeMode(pRuntimeMode);
+            return this;
+        }
+
+        public RuntimeBuilder asType(String pRuntimeMode) {
+            mRuntime.setRuntimeMode(RuntimeMode.valueOf(pRuntimeMode.toUpperCase()));
+            return this;
+        }
+
+        public RuntimeBuilder configFile(File pConfigFile) {
+            mRuntime.setSystemConfig(pConfigFile);
+            return this;
+        }
+
+        public RuntimeBuilder configFile(String pConfigFile) {
+            mRuntime.setSystemConfig(new File(pConfigFile));
+            return this;
+        }
+
+        public RuntimeBuilder deployComposite(String pComposite) {
+            mRuntime.addComposite(pComposite);
+            return this;
+        }
+
+        public RuntimeBuilder deployComposite(String... pComposites) {
+            mRuntime.addComposites(pComposites);
+            return this;
+        }
+
+        public RuntimeBuilder deployComposite(Composite pComposite) {
+            mRuntime.addComposite(pComposite);
+            return this;
+        }
+
+        public RuntimeBuilder deployComposite(Composite... pComposites) {
+            mRuntime.addComposites(pComposites);
+            return this;
+        }
+
     }
 
     /*

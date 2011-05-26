@@ -31,6 +31,8 @@ public class Runtime {
 
     private List<Composite> mComposites = new ArrayList<Composite>();
 
+    private List<String> mCompositeNames = new ArrayList<String>();
+
     private UpdatePolicy mUpdatePolicy;
 
     public Runtime(String pServerName, String pRuntimeName, RuntimeMode pRuntimeMode, UpdatePolicy pUpdatePolicy, File pSystemConfig, String... pProfileNames) {
@@ -56,8 +58,28 @@ public class Runtime {
         mComposites.add(pComposite);
     }
 
+    public void addComposites(Composite... pComposites) {
+        if (null != pComposites) {
+            mComposites.addAll(Arrays.asList(pComposites));
+        }
+    }
+
+    public void addComposite(String pCompositeName) {
+        mCompositeNames.add(pCompositeName);
+    }
+
+    public void addComposites(String... pCompositeNames) {
+        if (null != pCompositeNames) {
+            mCompositeNames.addAll(Arrays.asList(pCompositeNames));
+        }
+    }
+
     public List<Composite> getComposites() {
         return mComposites;
+    }
+
+    public List<String> getCompositeNames() {
+        return mCompositeNames;
     }
 
     public File getServerPath() {
@@ -78,6 +100,10 @@ public class Runtime {
 
     public String getRuntimeName() {
         return mRuntimeName;
+    }
+
+    public void setRuntimeMode(RuntimeMode pRuntimeMode) {
+        mRuntimeMode = pRuntimeMode;
     }
 
     public RuntimeMode getRuntimeMode() {

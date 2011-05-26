@@ -194,6 +194,7 @@ public class CompletionHelper {
         return getServerByRuntime(pRuntime).getServerPath();
     }
 
+
     public Profile findProfileByName(String pProfileName) {
         for (Profile profile : mConfig.getProfiles()) {
             if (profile.getAllNames().contains(pProfileName)) {
@@ -208,5 +209,15 @@ public class CompletionHelper {
         }
 
         throw new AssemblyException("Profile ''{0}'' not found. Is this a typo?", pProfileName);
+    }
+
+    public Composite findCompositeByName(String pCompositeName) {
+        for (Composite composite : mConfig.getComposites()) {
+            if (composite.getName().equals(pCompositeName)) {
+                return composite;
+            }
+        }
+
+        throw new AssemblyException("Composite ''{0}'' not found. Is this a typo?", pCompositeName);
     }
 }
