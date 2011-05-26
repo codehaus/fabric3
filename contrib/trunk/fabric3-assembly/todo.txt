@@ -7,13 +7,16 @@ Done
 - single runtime
 - multi runtime
 - possibility to specify own systemConfig file
-- support for addding extensions on runtimes
+- support for adding extensions on runtimes
+- create servers/configuration from source code
 
 Ideas
 ==============
+- support json configuration
+- start server from source code
 - add support for pointing fabric3 to existing server instance (and take extensions from)
 - support for installing/deploying composites from classpath
-- add feature to run junit tests agains embedded server
+- add feature to run jUnit tests against embedded server
 - add support to define custom extensions
-- undeploy/uninstall composites
+- unDeploy/uninstall composites
 - redeploy composites
