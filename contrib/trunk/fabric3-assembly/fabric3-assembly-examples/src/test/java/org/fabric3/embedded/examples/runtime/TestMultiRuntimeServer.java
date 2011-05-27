@@ -24,14 +24,19 @@ public class TestMultiRuntimeServer {
                 .addRuntime("server1", "par1", RuntimeMode.PARTICIPANT).withProfiles("web")
                 .addRuntime("server1", "par2", RuntimeMode.PARTICIPANT).withProfiles("web-service")
 
+                .addServer("server2", "/tmp/fabric3_test_multi2")
+                .addRuntime("server2", "par1", RuntimeMode.PARTICIPANT).withProfiles("web")
+
                 .createConfiguration();
         // config.process();
 
         AssemblyRunner runner = new AssemblyRunner(config);
         runner.startServer("server1");
+        runner.startServer("server2");
 
-        Thread.sleep(TimeUnit.SECONDS.toMillis(30));
+        Thread.sleep(TimeUnit.MINUTES.toMillis(1));
         runner.stopServer("server1");
+        runner.stopServer("server2");
 
     }
 
