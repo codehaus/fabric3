@@ -27,12 +27,10 @@ public class TestMultiRuntimeServer {
                 .createConfiguration();
         // config.process();
 
-        //TODO <capo> fix starting non VM runtime
-
         AssemblyRunner runner = new AssemblyRunner(config);
         runner.startServer("server1");
 
-        Thread.sleep(TimeUnit.SECONDS.toMillis(10));
+        Thread.sleep(TimeUnit.SECONDS.toMillis(30));
         runner.stopServer("server1");
 
     }

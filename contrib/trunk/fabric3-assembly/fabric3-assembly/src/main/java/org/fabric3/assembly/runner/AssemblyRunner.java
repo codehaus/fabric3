@@ -1,20 +1,18 @@
 package org.fabric3.assembly.runner;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
+import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.Server;
+import org.fabric3.assembly.exception.RunnerException;
 import org.fabric3.assembly.utils.LoggerUtils;
+import org.fabric3.assembly.utils.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * @author Michal Capo
@@ -43,15 +41,26 @@ public class AssemblyRunner {
     }
 
     public void startServer(final String pServerName) throws IOException {
-        LoggerUtils.log("starting server ''{0}''", pServerName);
+        List<org.fabric3.assembly.configuration.Runtime> runtimes = mHelper.getRuntimesByServerName(pServerName);
+        for (Runtime runtime : runtimes) {
+            startServer(pServerName, runtime.getRuntimeName());
+        }
+    }
+
+    public void startServer(final String pServerName, final String pRuntimeName) throws IOException {
+        if (StringUtils.isBlank(pRuntimeName)) {
+            throw new RunnerException("You specified a 'null' runtime for server ''{0}'' to start.");
+        }
+
+        LoggerUtils.log("starting server ''{0}'', runtime ''{1}''", pServerName, pRuntimeName);
 
         Server server = mHelper.getServerByName(pServerName);
 
-        ProcessBuilder pb = new ProcessBuilder("java", "-jar", "server.jar");
+        ProcessBuilder pb = new ProcessBuilder("java", "-jar", "server.jar", pRuntimeName);
         pb.directory(new File(server.getServerPath().getAbsoluteFile() + "/bin"));
 
         final Process p = pb.start();
-        mRunningServers.put(pServerName, p);
+        mRunningServers.put(pServerName + pRuntimeName, p);
 
         mPool.submit(new Callable<Object>() {
             @Override
@@ -80,7 +89,7 @@ public class AssemblyRunner {
             }
         });
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        java.lang.Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 stopServer(pServerName);
@@ -89,14 +98,23 @@ public class AssemblyRunner {
     }
 
     public void stopServer(String pServerName) {
-        Process p = mRunningServers.get(pServerName);
+        List<org.fabric3.assembly.configuration.Runtime> runtimes = mHelper.getRuntimesByServerName(pServerName);
+        for (Runtime runtime : runtimes) {
+            stopServer(pServerName, runtime.getRuntimeName());
+        }
+    }
+
+    public void stopServer(String pServerName, String pRuntimeName) {
+        String key = pServerName + pRuntimeName;
+
+        Process p = mRunningServers.get(key);
 
         if (null != p) {
-            LoggerUtils.log("stopping server ''{0}''", pServerName);
+            LoggerUtils.log("stopping server ''{0}'' with runtime ''{1}''", pServerName, pRuntimeName);
             p.destroy();
+            mRunningServers.remove(key);
         }
 
-        mRunningServers.remove(pServerName);
     }
 
 }
