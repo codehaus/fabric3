@@ -5,7 +5,6 @@ import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.factory.AssemblyConfigBuilder;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +23,8 @@ public class TestSingleRuntimeServer {
                 .addServer("server1", "/tmp/fabric3_test_single")
                 .addRuntime().withProfiles("web").toServer("server1")
 
-                .addComposite("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
+//                .addComposite("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
+                .addComposite("composite1", "a:a:1.0").deployToServer("server1")
 
                 .createConfiguration();
         // config.process();
