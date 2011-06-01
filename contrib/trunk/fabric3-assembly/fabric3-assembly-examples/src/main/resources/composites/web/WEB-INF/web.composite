@@ -5,7 +5,7 @@
            targetNamespace="urn:test"
            name="webComp">
 
-    <component name="testWeb">
+    <component name="web">
         <implementation.web/>
     </component>
 

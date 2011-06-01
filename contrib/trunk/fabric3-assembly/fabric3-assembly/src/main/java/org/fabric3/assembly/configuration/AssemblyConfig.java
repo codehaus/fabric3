@@ -6,10 +6,10 @@ import org.fabric3.assembly.completition.AssemblyConfigCompletion;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.utils.LoggerUtils;
 import org.jboss.shrinkwrap.api.Archive;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Michal Capo
@@ -26,7 +26,7 @@ public class AssemblyConfig implements IAssemblyStep {
 
     private CompositeConfig mComposites = new CompositeConfig();
 
-    private List<Archive> mArchives = new ArrayList<Archive>();
+    private Map<String, Archive> mArchives = new HashMap<String, Archive>();
 
     private ProfileConfig mProfiles = new ProfileConfig();
 
@@ -65,10 +65,22 @@ public class AssemblyConfig implements IAssemblyStep {
     }
 
     public void addArchive(Archive pArchive) {
-        mArchives.add(pArchive);
+        if (null != mArchives.put(pArchive.getName(), pArchive)) {
+            LoggerUtils.logWarn("Archive name ''{0}'' already defined. Now the previous archive is overridden.", pArchive.getName());
+        }
     }
 
-    public List<Archive> getArchives() {
+    public void addArchive(String pName, Archive pArchive) {
+        if (null != mArchives.put(pName, pArchive)) {
+            LoggerUtils.logWarn("Archive name ''{0}'' already defined. Now the previous archive is overridden.", pName);
+        }
+    }
+
+    public Collection<Archive> getArchives() {
+        return mArchives.values();
+    }
+
+    public Map<String, Archive> getArchivesMap() {
         return mArchives;
     }
 

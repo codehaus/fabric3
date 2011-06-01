@@ -64,8 +64,8 @@ public class FabricProfiles {
         {
             addDependency(FabricDependencyFactory.jar("fabric3-junit"));
             addDependency(FabricDependencyFactory.jar("fabric3-test-spi"));
-            addDependency(FabricDependencyFactory.jar("fabric3-ant-api"));
             addDependency(FabricDependencyFactory.jar("fabric3-ant-extension"));
+            addDependency(FabricDependencyFactory.jar("fabric3-ant-api"));
         }
     };
 

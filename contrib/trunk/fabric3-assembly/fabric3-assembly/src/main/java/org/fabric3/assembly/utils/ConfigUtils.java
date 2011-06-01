@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class ConfigUtils {
 
-    public static Server getServerByRuntime(AssemblyConfig pConfig, final Runtime pRuntime) {
+    public static Server findServerByRuntime(AssemblyConfig pConfig, final Runtime pRuntime) {
         String serverLookupName = pRuntime.getServerName();
         if (null == serverLookupName) {
             throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is not assigned to any server. Please check your configuration.", pRuntime.getRuntimeName()));
@@ -38,7 +38,7 @@ public class ConfigUtils {
         throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is assigned to {1} server. But no such server found. Is this a typo?", pRuntime.getRuntimeName(), serverLookupName));
     }
 
-    public static List<Runtime> getRuntimesByServerName(AssemblyConfig pConfig, final String pServerName) {
+    public static List<Runtime> findRuntimesByServerName(AssemblyConfig pConfig, final String pServerName) {
         final List<Runtime> runtimes = new ArrayList<Runtime>();
 
         ClosureUtils.each(pConfig.getRuntimes(), new Closure<Runtime>() {
@@ -53,7 +53,7 @@ public class ConfigUtils {
         return runtimes;
     }
 
-    public static Server getServerByComposite(AssemblyConfig pConfig, Composite pComposite) {
+    public static Server findServerByComposite(AssemblyConfig pConfig, Composite pComposite) {
         for (Server server : pConfig.getServers()) {
             for (String name : server.getCompositeNames()) {
                 if (pComposite.getName().equals(name)) {
@@ -65,7 +65,7 @@ public class ConfigUtils {
         return null;
     }
 
-    public static Server getServerByComposite(AssemblyConfig pConfig, String pCompositeName) {
+    public static Server findServerByCompositeName(AssemblyConfig pConfig, String pCompositeName) {
         for (Server server : pConfig.getServers()) {
             for (String name : server.getCompositeNames()) {
                 if (pCompositeName.equals(name)) {
@@ -78,7 +78,7 @@ public class ConfigUtils {
     }
 
 
-    public static Map<RuntimeMode, Integer> getRuntimeModesByServerName(AssemblyConfig pConfig, final String pServerName) {
+    public static Map<RuntimeMode, Integer> findRuntimeModesByServerName(AssemblyConfig pConfig, final String pServerName) {
         final Map<RuntimeMode, Integer> runtimes = new HashMap<RuntimeMode, Integer>();
 
         ClosureUtils.each(pConfig.getRuntimes(), new Closure<Runtime>() {
@@ -98,7 +98,7 @@ public class ConfigUtils {
         return runtimes;
     }
 
-    public static List<Server> getServersByName(AssemblyConfig pConfig, final String pServerName) {
+    public static List<Server> findServersByName(AssemblyConfig pConfig, final String pServerName) {
         final List<Server> servers = new ArrayList<Server>();
 
         ClosureUtils.each(pConfig.getServers(), new Closure<Server>() {
@@ -113,7 +113,7 @@ public class ConfigUtils {
         return servers;
     }
 
-    public static Server getServerByName(AssemblyConfig pConfig, final String pServerName) {
+    public static Server findServerByName(AssemblyConfig pConfig, final String pServerName) {
         for (Server server : pConfig.getServers()) {
             if (server.getServerName().equals(pServerName)) {
                 return server;
@@ -123,7 +123,7 @@ public class ConfigUtils {
         throw new ServerNotFoundException("Server ''{0}'' not found.", pServerName);
     }
 
-    public static Runtime getRuntimeByName(AssemblyConfig pConfig, final String pRuntimeName) {
+    public static Runtime findRuntimeByName(AssemblyConfig pConfig, final String pRuntimeName) {
         for (Runtime runtime : pConfig.getRuntimes()) {
             if (pRuntimeName.equals(runtime.getRuntimeName())) {
                 return runtime;
@@ -133,7 +133,7 @@ public class ConfigUtils {
         throw new RuntimeNotFoundException(pRuntimeName);
     }
 
-    public static List<Runtime> getRuntimesByName(AssemblyConfig pConfig, final String pRuntimeName) {
+    public static List<Runtime> findRuntimesByName(AssemblyConfig pConfig, final String pRuntimeName) {
         final List<Runtime> runtimes = new ArrayList<Runtime>();
 
         ClosureUtils.each(pConfig.getRuntimes(), new Closure<Runtime>() {
@@ -194,7 +194,7 @@ public class ConfigUtils {
         }
 
         try {
-            Server server = getServerByRuntime(pConfig, pRuntime);
+            Server server = findServerByRuntime(pConfig, pRuntime);
             if (null != server.getUpdatePolicy()) {
                 return server.getUpdatePolicy();
             }
@@ -206,7 +206,7 @@ public class ConfigUtils {
     }
 
     public static File computeServerPath(AssemblyConfig pConfig, Runtime pRuntime) {
-        return getServerByRuntime(pConfig, pRuntime).getServerPath();
+        return findServerByRuntime(pConfig, pRuntime).getServerPath();
     }
 
 
@@ -237,7 +237,7 @@ public class ConfigUtils {
     }
 
     public static Runtime findRuntimeForCompositeDeployOnServer(AssemblyConfig pConfig, Server pServer) {
-        List<Runtime> runtimes = getRuntimesByServerName(pConfig, pServer.getServerName());
+        List<Runtime> runtimes = findRuntimesByServerName(pConfig, pServer.getServerName());
         for (Runtime runtime : runtimes) {
             if (RuntimeMode.VM == runtime.getRuntimeMode() || RuntimeMode.CONTROLLER == runtime.getRuntimeMode()) {
                 return runtime;
@@ -247,7 +247,7 @@ public class ConfigUtils {
         throw new AssemblyException("No CONTROLLER or VM runtime found on server: ''{0}''.", pServer.getServerName());
     }
 
-    public static Server getServerByArchive(AssemblyConfig pConfig, Archive pArchive) {
+    public static Server findServerByArchive(AssemblyConfig pConfig, Archive pArchive) {
         String name = pArchive.getName();
 
         for (Server server : pConfig.getServers()) {
@@ -258,4 +258,39 @@ public class ConfigUtils {
 
         throw new AssemblyException("Composite ''{0}'' not found. Is this a typo?", name);
     }
+
+    public static Archive findArchiveByName(AssemblyConfig pConfig, String pArchiveName) {
+        if (StringUtils.isBlank(pArchiveName)) {
+            throw new AssemblyException("Archive name is null.");
+        }
+
+        Archive result = pConfig.getArchivesMap().get(pArchiveName);
+        if (null == result) {
+            throw new AssemblyException("Archive ''{0}'' not found. It is added?", pArchiveName);
+        }
+
+        return result;
+    }
+
+    public static File computeDeployPath(AssemblyConfig pConfig, Archive pArchive) {
+        return computeDeployPath(pConfig, findServerByArchive(pConfig, pArchive), pArchive.getName());
+    }
+
+    public static File computeDeployPath(AssemblyConfig pConfig, Composite pComposite) {
+        if (null != pComposite.getPath()) {
+            return computeDeployPath(pConfig, findServerByComposite(pConfig, pComposite), pComposite.getPath().getName());
+        }
+
+        throw new AssemblyException("Composite ''{0}'' is not specified via path. Try to use method with File parameter.", pComposite.getName());
+    }
+
+    public static File computeDeployPath(AssemblyConfig pConfig, Composite pComposite, File pCompositeFile) {
+        return computeDeployPath(pConfig, findServerByComposite(pConfig, pComposite), pCompositeFile.getPath());
+    }
+
+    private static File computeDeployPath(AssemblyConfig pConfig, Server pServer, String pFilePath) {
+        Runtime runtime = findRuntimeForCompositeDeployOnServer(pConfig, pServer);
+        return FileUtils.file(runtime.getDeployFolder(), pFilePath);
+    }
+
 }

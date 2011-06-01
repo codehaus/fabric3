@@ -27,17 +27,21 @@ public class AssemblyComposite {
     }
 
     public void doAssembly(Composite pComposite) {
-        Server server = ConfigUtils.getServerByComposite(mConfig, pComposite);
+        Server server = null;
+        try {
+            server = ConfigUtils.findServerByComposite(mConfig, pComposite);
+        } catch (AssemblyException e) {
+            // no-op, composite is just not deployed
+        }
 
         if (null == server) {
             LoggerUtils.logWarn("Composite ''{0}'' not bound to any server. Will not be deployed.", pComposite.getName());
             return;
         }
 
-        org.fabric3.assembly.configuration.Runtime runtime = ConfigUtils.findRuntimeForCompositeDeployOnServer(mConfig, server);
         if (null != pComposite.getPath()) {
             try {
-                FileUtils.copy(pComposite.getPath(), FileUtils.file(runtime.getDeployFolder(), pComposite.getPath().getName()));
+                FileUtils.copy(pComposite.getPath(), ConfigUtils.computeDeployPath(mConfig, pComposite));
             } catch (IOException e) {
                 LoggerUtils.log(e, "Cannot deploy ''{0}'' composite.", pComposite.getName());
                 throw new AssemblyException("Cannot deploy composite.", e);
@@ -47,7 +51,7 @@ public class AssemblyComposite {
         if (null != pComposite.getDependency()) {
             try {
                 File file = mDependencyResolver.findFile(DependencyUtils.parseDependency(pComposite.getDependency()));
-                FileUtils.copy(file, FileUtils.file(runtime.getDeployFolder(), file.getName()));
+                FileUtils.copy(file, ConfigUtils.computeDeployPath(mConfig, pComposite, file));
             } catch (IOException e) {
                 LoggerUtils.log(e, "Cannot deploy ''{0}'' composite.", pComposite.getDependency());
                 throw new AssemblyException("Cannot deploy composite.", e);

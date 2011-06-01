@@ -5,6 +5,7 @@ import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
+import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
@@ -399,10 +400,6 @@ public class AssemblyConfigBuilder {
      *
      */
 
-    public CompositeBuilder addComposite(String pName) {
-        return new CompositeBuilder(mConfig, new Composite(pName, (String) null));
-    }
-
     public CompositeBuilder addComposite(String pName, String pDependency) {
         return new CompositeBuilder(mConfig, new Composite(pName, pDependency));
     }
@@ -411,8 +408,12 @@ public class AssemblyConfigBuilder {
         return new CompositeBuilder(mConfig, new Composite(pName, pFile));
     }
 
-    public ShrinkWrapBuilder addComposite(Archive pArchive) {
+    public ShrinkWrapBuilder addArchive(Archive pArchive) {
         return new ShrinkWrapBuilder(mConfig, pArchive);
+    }
+
+    public ShrinkWrapBuilder addArchive(String pName, Archive pArchive) {
+        return new ShrinkWrapBuilder(mConfig, pName, pArchive);
     }
 
     public static class ShrinkWrapBuilder extends AssemblyConfigBuilder {
@@ -426,9 +427,44 @@ public class AssemblyConfigBuilder {
             mConfig.addArchive(pArchive);
         }
 
+        public ShrinkWrapBuilder(AssemblyConfig pConfig, String pName) {
+            super(pConfig);
+            mArchive = ConfigUtils.findArchiveByName(pConfig, pName);
+        }
+
+        public ShrinkWrapBuilder(AssemblyConfig pConfig, String pName, Archive pArchive) {
+            super(pConfig);
+            mArchive = pArchive;
+
+            mConfig.addArchive(pName, pArchive);
+        }
+
         public ShrinkWrapBuilder deployToServer(String pServerName) {
-            Server server = ConfigUtils.getServerByName(mConfig, pServerName);
+            //TODO <capo> split all of the deploy/undeploy stuff to config and modifier part
+            Server server = ConfigUtils.findServerByName(mConfig, pServerName);
             server.addArchive(mArchive.getName());
+
+            return this;
+        }
+
+        public ShrinkWrapBuilder undeploy() {
+            File fileLocation = ConfigUtils.computeDeployPath(mConfig, mArchive);
+            if (fileLocation.exists()) {
+                if (!fileLocation.delete()) {
+                    throw new AssemblyException("Cannot undeploy archive: {0}", fileLocation.getAbsolutePath());
+                }
+            }
+
+            return this;
+        }
+
+        public ShrinkWrapBuilder redeploy() {
+            try {
+                undeploy();
+                deployToServer(ConfigUtils.findServerByArchive(mConfig, mArchive).getServerName());
+            } catch (AssemblyException e) {
+                throw new AssemblyException("Archive ''{0}'' is not deployed. You cannot redeploy it.", mArchive.getName());
+            }
 
             return this;
         }
@@ -438,6 +474,11 @@ public class AssemblyConfigBuilder {
 
         protected Composite mComposite;
 
+        public CompositeBuilder(AssemblyConfig pConfig, String pName) {
+            super(pConfig);
+            mComposite = ConfigUtils.findCompositeByName(pConfig, pName);
+        }
+
         public CompositeBuilder(AssemblyConfig pConfig, Composite pComposite) {
             super(pConfig);
             mComposite = pComposite;
@@ -445,27 +486,35 @@ public class AssemblyConfigBuilder {
             mConfig.addComposite(pComposite);
         }
 
-        public CompositeBuilder dependency(String pDependency) {
-            mComposite.setDependency(pDependency);
-            return this;
-        }
-
-        public CompositeBuilder file(File pPath) {
-            mComposite.setPath(pPath);
-            return this;
-        }
-
-        public CompositeBuilder file(String pPath) {
-            mComposite.setPath(new File(pPath));
-            return this;
-        }
-
         public CompositeBuilder deployToServer(String pServerName) {
-            Server server = ConfigUtils.getServerByName(mConfig, pServerName);
+            Server server = ConfigUtils.findServerByName(mConfig, pServerName);
             server.addComposite(mComposite.getName());
 
             return this;
         }
+
+        public CompositeBuilder undeploy() {
+            File fileLocation = ConfigUtils.computeDeployPath(mConfig, mComposite);
+            if (fileLocation.exists()) {
+                if (!fileLocation.delete()) {
+                    throw new AssemblyException("Cannot undeploy composite: {0}", fileLocation.getAbsolutePath());
+                }
+            }
+
+            return this;
+        }
+
+        public CompositeBuilder redeploy() {
+            try {
+                undeploy();
+                deployToServer(ConfigUtils.findServerByComposite(mConfig, mComposite).getServerName());
+            } catch (AssemblyException e) {
+                throw new AssemblyException("Composite ''{0}'' is not deployed. You cannot redeploy it.", mComposite.getName());
+            }
+
+            return this;
+        }
+
     }
 
 }

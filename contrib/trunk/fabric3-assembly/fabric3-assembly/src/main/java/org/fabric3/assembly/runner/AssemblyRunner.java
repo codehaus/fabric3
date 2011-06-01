@@ -42,7 +42,7 @@ public class AssemblyRunner {
     }
 
     public void startServer(final String pServerName) throws IOException {
-        List<org.fabric3.assembly.configuration.Runtime> runtimes = ConfigUtils.getRuntimesByServerName(mConfig, pServerName);
+        List<org.fabric3.assembly.configuration.Runtime> runtimes = ConfigUtils.findRuntimesByServerName(mConfig, pServerName);
         for (Runtime runtime : runtimes) {
             startServer(pServerName, runtime.getRuntimeName());
         }
@@ -55,7 +55,7 @@ public class AssemblyRunner {
 
         LoggerUtils.log("Starting server ''{0}'', runtime ''{1}''", pServerName, pRuntimeName);
 
-        Server server = ConfigUtils.getServerByName(mConfig, pServerName);
+        Server server = ConfigUtils.findServerByName(mConfig, pServerName);
 
         ProcessBuilder pb = new ProcessBuilder("java", "-Djava.net.preferIPv4Stack=true", "-jar", "server.jar", pRuntimeName);
         pb.directory(new File(server.getServerPath().getAbsoluteFile() + "/bin"));
@@ -99,7 +99,7 @@ public class AssemblyRunner {
     }
 
     public void stopServer(String pServerName) {
-        List<org.fabric3.assembly.configuration.Runtime> runtimes = ConfigUtils.getRuntimesByServerName(mConfig, pServerName);
+        List<org.fabric3.assembly.configuration.Runtime> runtimes = ConfigUtils.findRuntimesByServerName(mConfig, pServerName);
         for (Runtime runtime : runtimes) {
             stopServer(pServerName, runtime.getRuntimeName());
         }

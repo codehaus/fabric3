@@ -2,8 +2,10 @@ package org.fabric3.embedded.examples.runtime;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.dependency.UpdatePolicy;
+import org.fabric3.assembly.examples.Composite1Archive;
 import org.fabric3.assembly.examples.Web1Archive;
 import org.fabric3.assembly.factory.AssemblyConfigBuilder;
+import org.fabric3.assembly.modifier.AssemblyModifier;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
 import java.io.IOException;
@@ -19,26 +21,27 @@ public class TestSingleRuntimeServer {
                 .setUpdatePolicy(UpdatePolicy.ALWAYS)
 
                 .addServer("server1", "/tmp/fabric3_test_single")
-
-                        //TODO <capo> test if test suite can be running on this server
-//                .addRuntime().withProfiles("web", "test").toServer("server1")
-//                .addRuntime().withProfiles("web").toServer("server1")
                 .addRuntime().withProfiles("web").toServer("server1")
 
-//                .addComposite("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
-//                .addComposite("composite1", "a:a:1.0").deployToServer("server1")
-//                .addComposite(Composite1Archive.create()).deployToServer("server1")
-//                .addComposite(Test1Archive.create()).deployToServer("server1")
-                .addComposite(Web1Archive.create()).deployToServer("server1")
+//                .addArchive("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
+//                .addArchive("composite1", "a:a:1.0").deployToServer("server1")
+//                .addArchive(Test1Archive.create()).deployToServer("server1")
+                .addArchive("comp", Composite1Archive.create())
+                .addArchive("web", Web1Archive.create())
 
                 .createConfiguration();
-        // config.process();
 
         AssemblyRunner runner = new AssemblyRunner(config);
         runner.startServer("server1");
 
 //        Thread.sleep(TimeUnit.SECONDS.toMillis(10));
 //        runner.stopServer("server1");
+
+        AssemblyModifier modifier = new AssemblyModifier(config);
+        modifier.archive("comp").deployToServer("server1");
+//        modifier.archive("comp").deployToServer("server1").undeploy().redeploy();
+//        modifier.archive("web").deployToServer("server1").undeploy().redeploy();
+
     }
 
 }

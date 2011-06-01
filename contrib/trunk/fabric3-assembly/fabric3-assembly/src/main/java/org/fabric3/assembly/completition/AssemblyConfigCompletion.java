@@ -84,7 +84,7 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
                 runtime.addProfile(ConfigUtils.findProfileByName(mConfig, s));
             }
 
-            Server server = ConfigUtils.getServerByRuntime(mConfig, runtime);
+            Server server = ConfigUtils.findServerByRuntime(mConfig, runtime);
             for (Profile profile : runtime.getProfiles()) {
                 if (null == profile.getVersion()) {
                     profile.setVersion(server.getVersion());

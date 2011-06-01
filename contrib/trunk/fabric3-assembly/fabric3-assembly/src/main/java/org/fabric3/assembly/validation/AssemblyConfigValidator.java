@@ -63,7 +63,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
         }
         for (Server server : mConfig.getServers()) {
             // check for same server name
-            if (1 < ConfigUtils.getServersByName(mConfig, server.getServerName()).size()) {
+            if (1 < ConfigUtils.findServersByName(mConfig, server.getServerName()).size()) {
                 throw new ServerAlreadyExistsException(MessageFormat.format("You defined two servers with the same name: ''{0}''.", server.getServerName()));
             }
 
@@ -79,7 +79,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
         for (Runtime runtime : mConfig.getRuntimes()) {
             String serverName = runtime.getServerName();
 
-            Map<RuntimeMode, Integer> result = ConfigUtils.getRuntimeModesByServerName(mConfig, serverName);
+            Map<RuntimeMode, Integer> result = ConfigUtils.findRuntimeModesByServerName(mConfig, serverName);
             Integer countVM = null == result.get(RuntimeMode.VM) ? 0 : result.get(RuntimeMode.VM);
             Integer countController = null == result.get(RuntimeMode.CONTROLLER) ? 0 : result.get(RuntimeMode.CONTROLLER);
             Integer countParticipant = null == result.get(RuntimeMode.PARTICIPANT) ? 0 : result.get(RuntimeMode.PARTICIPANT);
@@ -99,7 +99,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
                 throw new ValidationException("Your server ''{0}'' doesn't contain any runtime.", serverName);
             }
 
-            ValidationHelper.validateSameRuntimeName(serverName, ConfigUtils.getRuntimesByServerName(mConfig, serverName));
+            ValidationHelper.validateSameRuntimeName(serverName, ConfigUtils.findRuntimesByServerName(mConfig, serverName));
 
 
             // check if specified profiles are available/exists
