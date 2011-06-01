@@ -11,12 +11,12 @@ Done
 - create servers/configuration from source code
 - start server from source code
 - add support to define custom extensions
+- support for installing/deploying composites from classpath
 
 Ideas
 ==============
-- support json configuration
-- add support for pointing fabric3 to existing server instance (and take extensions from)
-- support for installing/deploying composites from classpath
 - add feature to run jUnit tests against embedded server
+- support json configuration
 - unDeploy/uninstall composites
 - redeploy composites
+- add support for pointing fabric3 to existing server instance (and take extensions from)
