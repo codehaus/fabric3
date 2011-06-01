@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 public class TestSingleRuntimeServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
         AssemblyConfig config = ConfigurationBuilder.getBuilder()
                 .setVersion("1.8")
                 .setUpdatePolicy(UpdatePolicy.ALWAYS)
