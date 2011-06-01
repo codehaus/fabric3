@@ -30,12 +30,15 @@ public class Assembly implements IAssemblyStep {
     }
 
     public void process() {
-        for (Server server : mConfig.getServers()) {
-            mServerAssembly.doAssembly(server);
-        }
 
-        for (Runtime runtime : mConfig.getRuntimes()) {
-            mRuntimeAssembly.doAssembly(runtime);
+        if (!mConfig.isIsModifyProcess()) {
+            for (Server server : mConfig.getServers()) {
+                mServerAssembly.doAssembly(server);
+            }
+
+            for (Runtime runtime : mConfig.getRuntimes()) {
+                mRuntimeAssembly.doAssembly(runtime);
+            }
         }
 
         for (Composite composite : mConfig.getComposites()) {

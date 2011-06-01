@@ -9,7 +9,11 @@ import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.utils.LoggerUtils;
 import org.jboss.shrinkwrap.api.Archive;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Michal Capo
@@ -31,6 +35,16 @@ public class AssemblyConfig implements IAssemblyStep {
     private ProfileConfig mProfiles = new ProfileConfig();
 
     private boolean mAlreadyProcessed = false;
+
+    private boolean mIsModifyProcess = false;
+
+    public boolean isIsModifyProcess() {
+        return mIsModifyProcess;
+    }
+
+    public void setIsModifyProcess(boolean pIsModifyProcess) {
+        mIsModifyProcess = pIsModifyProcess;
+    }
 
     public boolean isAlreadyProcessed() {
         return mAlreadyProcessed;

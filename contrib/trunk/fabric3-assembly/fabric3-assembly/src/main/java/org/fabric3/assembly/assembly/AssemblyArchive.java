@@ -28,7 +28,9 @@ public class AssemblyArchive {
         }
 
         if (null == server) {
-            LoggerUtils.logWarn("Composite ''{0}'' not bound to any server. Will not be deployed.", pArchive.getName());
+            if (!mConfig.isIsModifyProcess()) {
+                LoggerUtils.logWarn("Composite ''{0}'' not bound to any server. Will not be deployed.", pArchive.getName());
+            }
             return;
         }
 

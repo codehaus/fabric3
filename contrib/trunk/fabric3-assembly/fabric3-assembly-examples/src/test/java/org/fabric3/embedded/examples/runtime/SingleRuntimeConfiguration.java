@@ -5,19 +5,14 @@ import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.examples.Composite1Archive;
 import org.fabric3.assembly.examples.Web1Archive;
 import org.fabric3.assembly.factory.AssemblyConfigBuilder;
-import org.fabric3.assembly.modifier.AssemblyModifier;
-import org.fabric3.assembly.runner.AssemblyRunner;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michal Capo
  */
-public class TestSingleRuntimeServer {
+public class SingleRuntimeConfiguration {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        AssemblyConfig config = AssemblyConfigBuilder.getBuilder()
+    public static AssemblyConfig create() {
+        return AssemblyConfigBuilder.getBuilder()
                 .setVersion("1.8")
                 .setUpdatePolicy(UpdatePolicy.ALWAYS)
 
@@ -31,25 +26,6 @@ public class TestSingleRuntimeServer {
                 .addArchive("web", Web1Archive.create())
 
                 .createConfiguration();
-
-
-        AssemblyRunner runner = new AssemblyRunner(config);
-        AssemblyModifier modifier = new AssemblyModifier(config);
-
-        runner.startServer("server1");
-
-        modifier.archive("comp").deployToServer("server1");
-
-        Thread.sleep(TimeUnit.SECONDS.toMillis(5));
-        modifier.archive("comp").redeploy();
-
-        Thread.sleep(TimeUnit.SECONDS.toMillis(5));
-        modifier.archive("comp").undeploy();
-
-        Thread.sleep(TimeUnit.SECONDS.toMillis(5));
-        runner.stopServer("server1");
-
-
     }
 
 }

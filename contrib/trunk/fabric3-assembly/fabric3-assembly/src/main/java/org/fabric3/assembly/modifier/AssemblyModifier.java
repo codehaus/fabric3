@@ -11,6 +11,13 @@ public class AssemblyModifier {
 
     public AssemblyModifier(AssemblyConfig pConfig) {
         mConfig = pConfig;
+
+        mConfig.setIsModifyProcess(true);
+
+        // run assembly if not processed
+        if (!pConfig.isAlreadyProcessed()) {
+            pConfig.process();
+        }
     }
 
     public AssemblyModifierArchiveBuilder archive(String pName) {
