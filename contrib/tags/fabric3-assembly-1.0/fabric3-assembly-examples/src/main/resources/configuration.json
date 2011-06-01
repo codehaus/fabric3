@@ -1,0 +1,25 @@
+{
+    "version" : "1.8-SNAPSHOT",
+    "server" : {
+        "name" : "server1",
+        "type" : "['singe','multi']",
+        "path" : "/tmp/fabric3-test1"
+    },
+    "runtime" : {
+        "server" : "server1",
+        "name" : "runtime1",
+        "type" : "['vm','controller','participant']",
+        "sysConfig" : "/tmp/config/runtime1.xml",
+        "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+    },
+    "composites" : {
+        "composite1" : {
+            "runtime" : "runtime1",
+            "path" : "/tmp/composite1"
+        },
+        "composite2" : {
+            "runtime" : "runtime1",
+            "path" : "/tmp/composite2"
+        }
+    }
+}

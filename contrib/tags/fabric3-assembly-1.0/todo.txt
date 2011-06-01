@@ -1,0 +1,24 @@
+Done
+=============
+- cross IDE support (not specific code)
+- don't use maven for resolving runtime (standalone, profiles) dependencies -> create download mechanism
+- reusing maven dependency location
+- reduce fabric3 dependency usage (just standalone, jms, ...)
+- single runtime
+- multi runtime
+- possibility to specify own systemConfig file
+- support for adding extensions on runtimes
+- create servers/configuration from source code
+- start server from source code
+- add support to define custom extensions
+- added shrink wrap support
+- support for installing/deploying composites from classpath
+- unDeploy/uninstall composites
+- redeploy composites
+- accessing the same configuration via several processes
+
+Ideas
+==============
+- add feature to run jUnit tests against server
+- support json configuration
+- add support for pointing fabric3 to existing server instance (and take extensions from)

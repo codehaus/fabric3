@@ -1,0 +1,61 @@
+{
+    "version" : "1.8",
+    "update" : "daily",
+
+    "server" : {
+        "version" : "1.8",
+        "name" : "server1",
+        "path" : "/tmp/fabric3-test1",
+        "update" : "daily",
+        "profiles": "['web','rest']",
+
+        "runtime1" : {
+            "type" : "['vm','controller','participant']",
+            "sysConfig" : "/tmp/config/runtime1.xml",
+            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']",
+            "composites" : "['user', 'bank-account', 'monitoring']"
+        },
+        "runtime2" : {
+            "update" : "always",
+            "type" : "['vm','controller','participant']",
+            "sysConfig" : "/tmp/config/runtime1.xml",
+            "profiles" : "['WEB','JMS','JPA','REST','SPRING','WEB_SERVICE','TIMER','INFINISPAN','FTP']"
+
+        }
+    },
+
+    "composites" : {
+        "update" : "always",
+        "user" : {
+            "update" : "daily",
+            "dependency" : "org.fabric3:user:1.0-SNAPSHOT"
+        },
+        "bank-account" : {
+            "dependency" : "org.fabric3:bAccount:1.0-SNAPSHOT:bin@zip"
+        },
+        "monitoring" : {
+            "path" : "/tmp/monitoring.zip"
+        }
+    },
+
+    "profiles" : {
+        "version" : "1.0",
+        "update" : "always",
+        "profile-connector" : {
+            "alternative-name" : "['connector','b-connector','bank-connector']",
+            "dependencies" : "org.fabric3:profile-bank-connector"
+        },
+        "profile-reporting" : {
+            "update" : "daily",
+            "version" : "2.0",
+            "alternative-name" : "reporting",
+            "dependencies" : "org.fabric3:reporting:bin@zip",
+            "files" : "/tmp/reporting-adds.jar"
+        },
+        "profile-reporting-old" : {
+            "alternative-name" : "reporting-old",
+            "version" : "0.9.7",
+            "dependencies" : "['org.fabric3:reporting-old','org.fabric3:reporting-old-adds']"
+        }
+    }
+}
