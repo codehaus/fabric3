@@ -23,7 +23,6 @@ public class TestSingleRuntimeServer {
 
                 .addServer("server1", "/tmp/fabric3_test_single")
                 .addRuntime().withProfiles("web").toServer("server1")
-//                .deployComposite("composite1")
 
                 .addComposite("composite1", new File("/tmp/composite1.jar")).deployToRuntime("vm")
 

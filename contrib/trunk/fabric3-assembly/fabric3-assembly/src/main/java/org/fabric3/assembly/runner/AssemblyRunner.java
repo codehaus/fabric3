@@ -57,7 +57,7 @@ public class AssemblyRunner {
 
         Server server = ConfigUtils.getServerByName(mConfig, pServerName);
 
-        ProcessBuilder pb = new ProcessBuilder("java", "-jar", "server.jar", pRuntimeName);
+        ProcessBuilder pb = new ProcessBuilder("java", "-Djava.net.preferIPv4Stack=true", "-jar", "server.jar", pRuntimeName);
         pb.directory(new File(server.getServerPath().getAbsoluteFile() + "/bin"));
 
         final Process p = pb.start();

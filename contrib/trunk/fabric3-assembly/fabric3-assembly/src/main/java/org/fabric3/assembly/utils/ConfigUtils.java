@@ -6,6 +6,7 @@ import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.dependency.fabric.FabricProfiles;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.exception.RuntimeNotFoundException;
 import org.fabric3.assembly.exception.ServerNotFoundException;
 import org.fabric3.assembly.exception.ValidationException;
 
@@ -63,6 +64,18 @@ public class ConfigUtils {
         return null;
     }
 
+    public static Runtime getRuntimeByComposite(AssemblyConfig pConfig, String pCompositeName) {
+        for (Runtime runtime : pConfig.getRuntimes()) {
+            for (String name : runtime.getCompositeNames()) {
+                if (pCompositeName.equals(name)) {
+                    return runtime;
+                }
+            }
+        }
+
+        return null;
+    }
+
 
     public static Map<RuntimeMode, Integer> getRuntimeModesByServerName(AssemblyConfig pConfig, final String pServerName) {
         final Map<RuntimeMode, Integer> runtimes = new HashMap<RuntimeMode, Integer>();
@@ -107,6 +120,16 @@ public class ConfigUtils {
         }
 
         throw new ServerNotFoundException("Server ''{0}'' not found.", pServerName);
+    }
+
+    public static Runtime getRuntimeByName(AssemblyConfig pConfig, final String pRuntimeName) {
+        for (Runtime runtime : pConfig.getRuntimes()) {
+            if (pRuntimeName.equals(runtime.getRuntimeName())) {
+                return runtime;
+            }
+        }
+
+        throw new RuntimeNotFoundException(pRuntimeName);
     }
 
     public static List<Runtime> getRuntimesByName(AssemblyConfig pConfig, final String pRuntimeName) {

@@ -6,6 +6,7 @@ import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.factory.ConfigurationBuilder;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -24,20 +25,17 @@ public class TestMultiRuntimeServer {
                 .addRuntime("server1", "par1", RuntimeMode.PARTICIPANT).withProfiles("web")
                 .addRuntime("server1", "par2", RuntimeMode.PARTICIPANT).withProfiles("web-service")
 
-                .addServer("server2", "/tmp/fabric3_test_multi2")
-                .addRuntime("server2", "par1", RuntimeMode.PARTICIPANT).withProfiles("web")
+                .addComposite("composite1", new File("/tmp/composite1.jar"))
+                .deployToRuntime("controller")
 
                 .createConfiguration();
         // config.process();
 
         AssemblyRunner runner = new AssemblyRunner(config);
         runner.startServer("server1");
-        runner.startServer("server2");
 
-        Thread.sleep(TimeUnit.MINUTES.toMillis(1));
+        Thread.sleep(TimeUnit.SECONDS.toMillis(300));
         runner.stopServer("server1");
-        runner.stopServer("server2");
-
     }
 
 }

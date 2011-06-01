@@ -8,6 +8,7 @@ import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
+import org.fabric3.assembly.utils.ConfigUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -230,21 +231,25 @@ public class ConfigurationBuilder {
         }
 
         public RuntimeBuilder deployComposite(String pComposite) {
+            //TODO <capo> deploy to server not runtime
             mRuntime.addComposite(pComposite);
             return this;
         }
 
         public RuntimeBuilder deployComposite(String... pComposites) {
+            //TODO <capo> deploy to server not runtime
             mRuntime.addComposites(pComposites);
             return this;
         }
 
         public RuntimeBuilder deployComposite(Composite pComposite) {
+            //TODO <capo> deploy to server not runtime
             mRuntime.addComposite(pComposite);
             return this;
         }
 
         public RuntimeBuilder deployComposite(Composite... pComposites) {
+            //TODO <capo> deploy to server not runtime
             mRuntime.addComposites(pComposites);
             return this;
         }
@@ -471,7 +476,10 @@ public class ConfigurationBuilder {
         }
 
         public CompositeBuilder deployToRuntime(String pRuntimeName) {
-            //TODO <capo> implement deploy to runtime (of composite)
+            //TODO <capo> rename: deployToServer
+            Runtime runtime = ConfigUtils.getRuntimeByName(mConfig, pRuntimeName);
+            runtime.addComposite(mComposite.getName());
+
             return this;
         }
     }
