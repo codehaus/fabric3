@@ -59,10 +59,10 @@ public class ValidationHelper {
 
     }
 
-    public static void validateCompositeExistence(Runtime pRuntime, List<Composite> pFoundComposites) {
-        for (Composite composite : pRuntime.getComposites()) {
+    public static void validateCompositeExistence(Server pServer, List<Composite> pFoundComposites) {
+        for (Composite composite : pServer.getComposites()) {
             if (!pFoundComposites.contains(composite)) {
-                throw new ValidationException("Composite ''{0}'' deployed into ''{1}'' runtime doesn''t exists.", composite.getName(), pRuntime.getRuntimeName());
+                throw new ValidationException("Composite ''{0}'' deployed into ''{1}'' server doesn''t exists.", composite.getName(), pServer.getServerName());
             }
         }
     }

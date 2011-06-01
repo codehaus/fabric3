@@ -24,6 +24,10 @@ public class Server {
 
     private List<Profile> mProfiles = new ArrayList<Profile>();
 
+    private List<String> mCompositeNames = new ArrayList<String>();
+
+    private List<Composite> mComposites = new ArrayList<Composite>();
+
     private Version mVersion;
 
     private UpdatePolicy mUpdatePolicy;
@@ -40,6 +44,22 @@ public class Server {
         if (null != pProfileNames) {
             mProfileNames.addAll(Arrays.asList(pProfileNames));
         }
+    }
+
+    public void addComposite(String pCompositeName) {
+        mCompositeNames.add(pCompositeName);
+    }
+
+    public void addComposite(Composite pComposite) {
+        mComposites.add(pComposite);
+    }
+
+    public List<String> getCompositeNames() {
+        return mCompositeNames;
+    }
+
+    public List<Composite> getComposites() {
+        return mComposites;
     }
 
     public void setServerName(String pServerName) {

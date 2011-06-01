@@ -57,7 +57,10 @@ public class AssemblyConfigValidator implements IAssemblyStep {
         // validate servers
         //
         for (Server server : mConfig.getServers()) {
-            mServerValidator.validate(server, mProfileValidator);
+            mServerValidator.validate(server, mProfileValidator, mCompositeValidator);
+
+            // check if specified composites are available/exists
+            ValidationHelper.validateCompositeExistence(server, mConfig.getComposites());
         }
         for (Server server : mConfig.getServers()) {
             // check for same server name
@@ -72,7 +75,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
         // validate runtimes
         //
         for (Runtime runtime : mConfig.getRuntimes()) {
-            mRuntimeValidator.validate(runtime, mProfileValidator, mCompositeValidator);
+            mRuntimeValidator.validate(runtime, mProfileValidator);
         }
         for (Runtime runtime : mConfig.getRuntimes()) {
             String serverName = runtime.getServerName();
@@ -99,8 +102,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
 
             ValidationHelper.validateSameRuntimeName(serverName, ConfigUtils.getRuntimesByServerName(mConfig, serverName));
 
-            // check if specified composites are available/exists
-            ValidationHelper.validateCompositeExistence(runtime, mConfig.getComposites());
+
             // check if specified profiles are available/exists
             ValidationHelper.validateProfileExistence(runtime, mConfig.getProfiles(), FabricProfiles.all());
         }

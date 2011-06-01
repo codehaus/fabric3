@@ -2,7 +2,7 @@ package org.fabric3.embedded.examples.runtime;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.dependency.UpdatePolicy;
-import org.fabric3.assembly.factory.ConfigurationBuilder;
+import org.fabric3.assembly.factory.AssemblyConfigBuilder;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
 import java.io.File;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class TestSingleRuntimeServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        AssemblyConfig config = ConfigurationBuilder.getBuilder()
+        AssemblyConfig config = AssemblyConfigBuilder.getBuilder()
                 .setVersion("1.8")
                 .setUpdatePolicy(UpdatePolicy.ALWAYS)
 
@@ -24,7 +24,7 @@ public class TestSingleRuntimeServer {
                 .addServer("server1", "/tmp/fabric3_test_single")
                 .addRuntime().withProfiles("web").toServer("server1")
 
-                .addComposite("composite1", new File("/tmp/composite1.jar")).deployToRuntime("vm")
+                .addComposite("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
 
                 .createConfiguration();
         // config.process();

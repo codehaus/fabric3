@@ -2,6 +2,8 @@ package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.Composite;
+import org.fabric3.assembly.configuration.Server;
+import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.utils.ConfigUtils;
 import org.fabric3.assembly.utils.FileUtils;
 import org.fabric3.assembly.utils.LoggerUtils;
@@ -20,18 +22,20 @@ public class AssemblyComposite {
     }
 
     public void doAssembly(Composite pComposite) {
-        org.fabric3.assembly.configuration.Runtime runtime = ConfigUtils.getRuntimeByComposite(mConfig, pComposite);
+        Server server = ConfigUtils.getServerByComposite(mConfig, pComposite);
 
-        if (null == runtime) {
-            LoggerUtils.logWarn("Composite ''{0}'' not bound to any runtime. Will not be available.", pComposite.getName());
+        if (null == server) {
+            LoggerUtils.logWarn("Composite ''{0}'' not bound to any server. Will not be deployed.", pComposite.getName());
             return;
         }
 
         if (null != pComposite.getPath()) {
             try {
+                org.fabric3.assembly.configuration.Runtime runtime = ConfigUtils.findRuntimeForCompositeDeployOnServer(mConfig, server);
                 FileUtils.copy(pComposite.getPath(), FileUtils.file(runtime.getDeployFolder(), pComposite.getPath().getName()));
             } catch (IOException e) {
                 LoggerUtils.log(e, "Cannot deploy ''{0}'' composite.", pComposite.getName());
+                throw new AssemblyException("Cannot deploy composite.", e);
             }
         }
 

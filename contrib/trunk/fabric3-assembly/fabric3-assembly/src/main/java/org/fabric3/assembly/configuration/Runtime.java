@@ -20,8 +20,6 @@ public class Runtime {
 
     private File mServerPath;
 
-    private File mRuntimePath;
-
     private String mRuntimeName;
 
     private RuntimeMode mRuntimeMode;
@@ -31,10 +29,6 @@ public class Runtime {
     private List<Profile> mProfiles = new ArrayList<Profile>();
 
     private List<String> mProfileNames = new ArrayList<String>();
-
-    private List<Composite> mComposites = new ArrayList<Composite>();
-
-    private List<String> mCompositeNames = new ArrayList<String>();
 
     private UpdatePolicy mUpdatePolicy;
 
@@ -57,41 +51,12 @@ public class Runtime {
         }
     }
 
-    public void addComposite(Composite pComposite) {
-        mComposites.add(pComposite);
-    }
-
-    public void addComposites(Composite... pComposites) {
-        if (null != pComposites) {
-            mComposites.addAll(Arrays.asList(pComposites));
-        }
-    }
-
-    public void addComposite(String pCompositeName) {
-        mCompositeNames.add(pCompositeName);
-    }
-
-    public void addComposites(String... pCompositeNames) {
-        if (null != pCompositeNames) {
-            mCompositeNames.addAll(Arrays.asList(pCompositeNames));
-        }
-    }
-
-    public List<Composite> getComposites() {
-        return mComposites;
-    }
-
-    public List<String> getCompositeNames() {
-        return mCompositeNames;
-    }
-
     public File getServerPath() {
         return mServerPath;
     }
 
     public void setServerPath(File pServerPath) {
         mServerPath = pServerPath;
-        mRuntimePath = FileUtils.file(pServerPath, "runtimes", mRuntimeName);
     }
 
     public void setSystemConfig(File pSystemConfig) {
@@ -99,11 +64,11 @@ public class Runtime {
     }
 
     public File getRuntimeExtensionFolder() {
-        return FileUtils.file(mRuntimePath, "repository", "runtime");
+        return FileUtils.file(mServerPath, "runtimes", mRuntimeName, "repository", "runtime");
     }
 
     public File getDeployFolder() {
-        return FileUtils.file(mRuntimePath, "deploy");
+        return FileUtils.file(mServerPath, "runtimes", mRuntimeName, "deploy");
     }
 
     public void setServerName(String pServerName) {

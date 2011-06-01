@@ -17,16 +17,16 @@ import java.util.List;
 /**
  * @author Michal Capo
  */
-public class ConfigurationBuilder {
+public class AssemblyConfigBuilder {
 
     protected AssemblyConfig mConfig;
 
-    protected ConfigurationBuilder(AssemblyConfig pConfig) {
+    protected AssemblyConfigBuilder(AssemblyConfig pConfig) {
         mConfig = pConfig;
     }
 
-    public static ConfigurationBuilder getBuilder() {
-        return new ConfigurationBuilder(new AssemblyConfig());
+    public static AssemblyConfigBuilder getBuilder() {
+        return new AssemblyConfigBuilder(new AssemblyConfig());
     }
 
     public AssemblyConfig createConfiguration() {
@@ -83,7 +83,7 @@ public class ConfigurationBuilder {
         return new ServerBuilder(mConfig, new Server(pName, new File(pPath), pVersion, pUpdatePolicy));
     }
 
-    public static class ServerBuilder extends ConfigurationBuilder {
+    public static class ServerBuilder extends AssemblyConfigBuilder {
 
         private Server mServer;
 
@@ -138,6 +138,12 @@ public class ConfigurationBuilder {
             mServer.addProfiles(pProfiles);
             return this;
         }
+
+        public ServerBuilder deployComposite(String pComposite) {
+            mServer.addComposite(pComposite);
+            return this;
+        }
+
     }
 
     /*
@@ -184,7 +190,7 @@ public class ConfigurationBuilder {
         return new RuntimeBuilder(mConfig, new Runtime(pServerName, pRuntimeName, pMode, pUpdatePolicy, null == pConfigFile ? null : new File(pConfigFile)));
     }
 
-    public static class RuntimeBuilder extends ConfigurationBuilder {
+    public static class RuntimeBuilder extends AssemblyConfigBuilder {
 
         private Runtime mRuntime;
 
@@ -230,29 +236,6 @@ public class ConfigurationBuilder {
             return this;
         }
 
-        public RuntimeBuilder deployComposite(String pComposite) {
-            //TODO <capo> deploy to server not runtime
-            mRuntime.addComposite(pComposite);
-            return this;
-        }
-
-        public RuntimeBuilder deployComposite(String... pComposites) {
-            //TODO <capo> deploy to server not runtime
-            mRuntime.addComposites(pComposites);
-            return this;
-        }
-
-        public RuntimeBuilder deployComposite(Composite pComposite) {
-            //TODO <capo> deploy to server not runtime
-            mRuntime.addComposite(pComposite);
-            return this;
-        }
-
-        public RuntimeBuilder deployComposite(Composite... pComposites) {
-            //TODO <capo> deploy to server not runtime
-            mRuntime.addComposites(pComposites);
-            return this;
-        }
 
     }
 
@@ -264,12 +247,12 @@ public class ConfigurationBuilder {
     *
     */
 
-    public ConfigurationBuilder setUpdatePolicy(UpdatePolicy pPolicy) {
+    public AssemblyConfigBuilder setUpdatePolicy(UpdatePolicy pPolicy) {
         mConfig.setUpdatePolicy(pPolicy.name());
         return this;
     }
 
-    public ConfigurationBuilder setUpdatePolicy(String pPolicy) {
+    public AssemblyConfigBuilder setUpdatePolicy(String pPolicy) {
         mConfig.setUpdatePolicy(pPolicy);
         return this;
     }
@@ -282,12 +265,12 @@ public class ConfigurationBuilder {
      *
      */
 
-    public ConfigurationBuilder setVersion(String pVersion) {
+    public AssemblyConfigBuilder setVersion(String pVersion) {
         mConfig.setVersion(new Version(pVersion));
         return this;
     }
 
-    public ConfigurationBuilder setVersion(Version pVersion) {
+    public AssemblyConfigBuilder setVersion(Version pVersion) {
         mConfig.setVersion(pVersion);
         return this;
     }
@@ -300,22 +283,22 @@ public class ConfigurationBuilder {
      *
      */
 
-    public ConfigurationBuilder setProfilesUpdatePolicy(UpdatePolicy pPolicy) {
+    public AssemblyConfigBuilder setProfilesUpdatePolicy(UpdatePolicy pPolicy) {
         mConfig.getProfileConfig().setUpdatePolicy(pPolicy);
         return this;
     }
 
-    public ConfigurationBuilder setProfilesUpdatePolicy(String pPolicy) {
+    public AssemblyConfigBuilder setProfilesUpdatePolicy(String pPolicy) {
         mConfig.getProfileConfig().setUpdatePolicy(UpdatePolicy.valueOf(pPolicy));
         return this;
     }
 
-    public ConfigurationBuilder setProfilesVersion(String pVersion) {
+    public AssemblyConfigBuilder setProfilesVersion(String pVersion) {
         mConfig.getProfileConfig().setVersion(new Version(pVersion));
         return this;
     }
 
-    public ConfigurationBuilder setProfilesVersion(Version pVersion) {
+    public AssemblyConfigBuilder setProfilesVersion(Version pVersion) {
         mConfig.getProfileConfig().setVersion(pVersion);
         return this;
     }
@@ -341,7 +324,7 @@ public class ConfigurationBuilder {
         return new ProfileBuilder(mConfig, new Profile(pName, pUpdatePolicy, pVersion, pAlternativeNames));
     }
 
-    public static class ProfileBuilder extends ConfigurationBuilder {
+    public static class ProfileBuilder extends AssemblyConfigBuilder {
 
         private Profile mProfile;
 
@@ -417,12 +400,12 @@ public class ConfigurationBuilder {
      *
      */
 
-    public ConfigurationBuilder setCompositesUpdatePolicy(UpdatePolicy pUpdatePolicy) {
+    public AssemblyConfigBuilder setCompositesUpdatePolicy(UpdatePolicy pUpdatePolicy) {
         mConfig.getCompositeConfig().setUpdatePolicy(pUpdatePolicy);
         return this;
     }
 
-    public ConfigurationBuilder setCompositesUpdatePolicy(String pUpdatePolicy) {
+    public AssemblyConfigBuilder setCompositesUpdatePolicy(String pUpdatePolicy) {
         mConfig.getCompositeConfig().setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy));
         return this;
     }
@@ -439,7 +422,7 @@ public class ConfigurationBuilder {
         return new CompositeBuilder(mConfig, new Composite(pName, pFile, null));
     }
 
-    public static class CompositeBuilder extends ConfigurationBuilder {
+    public static class CompositeBuilder extends AssemblyConfigBuilder {
 
         private Composite mComposite;
 
@@ -475,10 +458,9 @@ public class ConfigurationBuilder {
             return this;
         }
 
-        public CompositeBuilder deployToRuntime(String pRuntimeName) {
-            //TODO <capo> rename: deployToServer
-            Runtime runtime = ConfigUtils.getRuntimeByName(mConfig, pRuntimeName);
-            runtime.addComposite(mComposite.getName());
+        public CompositeBuilder deployToServer(String pServerName) {
+            Server server = ConfigUtils.getServerByName(mConfig, pServerName);
+            server.addComposite(mComposite.getName());
 
             return this;
         }

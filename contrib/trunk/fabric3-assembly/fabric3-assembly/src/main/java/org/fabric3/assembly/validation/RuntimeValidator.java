@@ -1,6 +1,5 @@
 package org.fabric3.assembly.validation;
 
-import org.fabric3.assembly.configuration.Composite;
 import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.StringUtils;
@@ -12,7 +11,7 @@ import java.text.MessageFormat;
  */
 public class RuntimeValidator {
 
-    public void validate(org.fabric3.assembly.configuration.Runtime pRuntime, ProfileValidator pProfileValidator, CompositeValidator pCompositeValidator) {
+    public void validate(org.fabric3.assembly.configuration.Runtime pRuntime, ProfileValidator pProfileValidator) {
         String runtimeName = pRuntime.getRuntimeName();
 
         if (StringUtils.isBlank(runtimeName)) {
@@ -40,10 +39,6 @@ public class RuntimeValidator {
         }
         ValidationHelper.validateSameProfileName(runtimeName, pRuntime.getProfiles());
 
-        for (Composite composite : pRuntime.getComposites()) {
-            pCompositeValidator.validate(composite);
-        }
-        ValidationHelper.validateSameCompositeName(runtimeName, pRuntime.getComposites());
 
     }
 

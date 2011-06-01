@@ -52,11 +52,11 @@ public class ConfigUtils {
         return runtimes;
     }
 
-    public static Runtime getRuntimeByComposite(AssemblyConfig pConfig, Composite pComposite) {
-        for (Runtime runtime : pConfig.getRuntimes()) {
-            for (String name : runtime.getCompositeNames()) {
+    public static Server getServerByComposite(AssemblyConfig pConfig, Composite pComposite) {
+        for (Server server : pConfig.getServers()) {
+            for (String name : server.getCompositeNames()) {
                 if (pComposite.getName().equals(name)) {
-                    return runtime;
+                    return server;
                 }
             }
         }
@@ -64,11 +64,11 @@ public class ConfigUtils {
         return null;
     }
 
-    public static Runtime getRuntimeByComposite(AssemblyConfig pConfig, String pCompositeName) {
-        for (Runtime runtime : pConfig.getRuntimes()) {
-            for (String name : runtime.getCompositeNames()) {
+    public static Server getServerByComposite(AssemblyConfig pConfig, String pCompositeName) {
+        for (Server server : pConfig.getServers()) {
+            for (String name : server.getCompositeNames()) {
                 if (pCompositeName.equals(name)) {
-                    return runtime;
+                    return server;
                 }
             }
         }
@@ -245,5 +245,16 @@ public class ConfigUtils {
         }
 
         throw new AssemblyException("Composite ''{0}'' not found. Is this a typo?", pCompositeName);
+    }
+
+    public static Runtime findRuntimeForCompositeDeployOnServer(AssemblyConfig pConfig, Server pServer) {
+        List<Runtime> runtimes = getRuntimesByServerName(pConfig, pServer.getServerName());
+        for (Runtime runtime : runtimes) {
+            if (RuntimeMode.VM == runtime.getRuntimeMode() || RuntimeMode.CONTROLLER == runtime.getRuntimeMode()) {
+                return runtime;
+            }
+        }
+
+        throw new AssemblyException("No CONTROLLER or VM runtime found on server: ''{0}''.", pServer.getServerName());
     }
 }

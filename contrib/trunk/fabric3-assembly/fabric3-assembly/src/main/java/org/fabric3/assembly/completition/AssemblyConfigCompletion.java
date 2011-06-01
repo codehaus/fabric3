@@ -61,6 +61,11 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
                 server.addProfile(ConfigUtils.findProfileByName(mConfig, s));
             }
 
+            // find existing composite by name and add them into runtime
+            for (String s : server.getCompositeNames()) {
+                server.addComposite(ConfigUtils.findCompositeByName(mConfig, s));
+            }
+
             for (Profile profile : server.getProfiles()) {
                 if (null == profile.getVersion()) {
                     profile.setVersion(server.getVersion());
@@ -85,11 +90,6 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
             // find existing profile by his name and add them into runtime
             for (String s : runtime.getProfileNames()) {
                 runtime.addProfile(ConfigUtils.findProfileByName(mConfig, s));
-            }
-
-            // find existing composite by name and add them into runtime
-            for (String s : runtime.getCompositeNames()) {
-                runtime.addComposite(ConfigUtils.findCompositeByName(mConfig, s));
             }
 
             Server server = ConfigUtils.getServerByRuntime(mConfig, runtime);
