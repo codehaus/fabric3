@@ -13,6 +13,8 @@ public class Web1Archive {
         return ShrinkWrap.create(WebArchive.class, "web1.war")
                 .addClass(WebComposite.class)
 
+                .addAsResource("composites/web/index.html", "index.html")
+
                 .addAsWebInfResource("composites/web/WEB-INF/plan.xml", "plan.xml")
                 .addAsWebInfResource("composites/web/WEB-INF/sca-contribution.xml", "sca-contribution.xml")
                 .addAsWebInfResource("composites/web/WEB-INF/web.componentType", "web.componentType")
