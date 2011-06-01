@@ -4,6 +4,7 @@ import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.exception.RunnerException;
+import org.fabric3.assembly.utils.ConfigUtils;
 import org.fabric3.assembly.utils.LoggerUtils;
 import org.fabric3.assembly.utils.StringUtils;
 
@@ -19,7 +20,7 @@ import java.util.concurrent.*;
  */
 public class AssemblyRunner {
 
-    private RunnerHelper mHelper;
+    private AssemblyConfig mConfig;
 
     private ConcurrentMap<String, Process> mRunningServers = new ConcurrentHashMap<String, Process>();
 
@@ -32,7 +33,7 @@ public class AssemblyRunner {
     );
 
     public AssemblyRunner(AssemblyConfig pConfig) {
-        mHelper = new RunnerHelper(pConfig);
+        mConfig = pConfig;
 
         // run assembly if not processed
         if (!pConfig.isAlreadyProcessed()) {
@@ -41,7 +42,7 @@ public class AssemblyRunner {
     }
 
     public void startServer(final String pServerName) throws IOException {
-        List<org.fabric3.assembly.configuration.Runtime> runtimes = mHelper.getRuntimesByServerName(pServerName);
+        List<org.fabric3.assembly.configuration.Runtime> runtimes = ConfigUtils.getRuntimesByServerName(mConfig, pServerName);
         for (Runtime runtime : runtimes) {
             startServer(pServerName, runtime.getRuntimeName());
         }
@@ -54,7 +55,7 @@ public class AssemblyRunner {
 
         LoggerUtils.log("starting server ''{0}'', runtime ''{1}''", pServerName, pRuntimeName);
 
-        Server server = mHelper.getServerByName(pServerName);
+        Server server = ConfigUtils.getServerByName(mConfig, pServerName);
 
         ProcessBuilder pb = new ProcessBuilder("java", "-jar", "server.jar", pRuntimeName);
         pb.directory(new File(server.getServerPath().getAbsoluteFile() + "/bin"));
@@ -98,7 +99,7 @@ public class AssemblyRunner {
     }
 
     public void stopServer(String pServerName) {
-        List<org.fabric3.assembly.configuration.Runtime> runtimes = mHelper.getRuntimesByServerName(pServerName);
+        List<org.fabric3.assembly.configuration.Runtime> runtimes = ConfigUtils.getRuntimesByServerName(mConfig, pServerName);
         for (Runtime runtime : runtimes) {
             stopServer(pServerName, runtime.getRuntimeName());
         }

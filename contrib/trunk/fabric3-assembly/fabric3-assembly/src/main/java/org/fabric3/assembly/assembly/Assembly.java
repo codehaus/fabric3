@@ -2,6 +2,7 @@ package org.fabric3.assembly.assembly;
 
 import org.fabric3.assembly.IAssemblyStep;
 import org.fabric3.assembly.configuration.AssemblyConfig;
+import org.fabric3.assembly.configuration.Composite;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.utils.LoggerUtils;
@@ -15,10 +16,13 @@ public class Assembly implements IAssemblyStep {
 
     private AssemblyRuntime mRuntimeAssembly = new AssemblyRuntime();
 
+    private AssemblyComposite mCompositeAssembly;
+
     private AssemblyConfig mConfig;
 
     public Assembly(AssemblyConfig pConfig) {
         mConfig = pConfig;
+        mCompositeAssembly = new AssemblyComposite(pConfig);
     }
 
     public void process() {
@@ -30,7 +34,9 @@ public class Assembly implements IAssemblyStep {
             mRuntimeAssembly.doAssembly(runtime);
         }
 
-        //TODO <capo> add composite assembly
+        for (Composite composite : mConfig.getComposites()) {
+            mCompositeAssembly.doAssembly(composite);
+        }
 
         LoggerUtils.log("assembling done at ''{0,time}''", System.currentTimeMillis());
     }

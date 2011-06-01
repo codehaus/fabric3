@@ -2,6 +2,7 @@ package org.fabric3.assembly.configuration;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.fabric3.assembly.dependency.UpdatePolicy;
+import org.fabric3.assembly.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class Runtime {
     private String mServerName;
 
     private File mServerPath;
+
+    private File mRuntimePath;
 
     private String mRuntimeName;
 
@@ -88,10 +91,19 @@ public class Runtime {
 
     public void setServerPath(File pServerPath) {
         mServerPath = pServerPath;
+        mRuntimePath = FileUtils.file(pServerPath, "runtimes", mRuntimeName);
     }
 
     public void setSystemConfig(File pSystemConfig) {
         mSystemConfig = pSystemConfig;
+    }
+
+    public File getRuntimeExtensionFolder() {
+        return FileUtils.file(mRuntimePath, "repository", "runtime");
+    }
+
+    public File getDeployFolder() {
+        return FileUtils.file(mRuntimePath, "deploy");
     }
 
     public void setServerName(String pServerName) {
@@ -169,10 +181,7 @@ public class Runtime {
 
         Runtime runtime = (Runtime) o;
 
-        if (mRuntimeName != null ? !mRuntimeName.equals(runtime.mRuntimeName) : runtime.mRuntimeName != null)
-            return false;
-
-        return true;
+        return !(mRuntimeName != null ? !mRuntimeName.equals(runtime.mRuntimeName) : runtime.mRuntimeName != null);
     }
 
     @Override

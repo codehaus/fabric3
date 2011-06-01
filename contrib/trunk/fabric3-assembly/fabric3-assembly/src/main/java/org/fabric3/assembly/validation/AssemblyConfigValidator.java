@@ -2,16 +2,12 @@ package org.fabric3.assembly.validation;
 
 import org.fabric3.assembly.IAssemblyStep;
 import org.fabric3.assembly.assembly.Assembly;
-import org.fabric3.assembly.completition.CompletionHelper;
-import org.fabric3.assembly.configuration.AssemblyConfig;
-import org.fabric3.assembly.configuration.Composite;
-import org.fabric3.assembly.configuration.Profile;
+import org.fabric3.assembly.configuration.*;
 import org.fabric3.assembly.configuration.Runtime;
-import org.fabric3.assembly.configuration.RuntimeMode;
-import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.fabric.FabricProfiles;
 import org.fabric3.assembly.exception.ServerAlreadyExistsException;
 import org.fabric3.assembly.exception.ValidationException;
+import org.fabric3.assembly.utils.ConfigUtils;
 import org.fabric3.assembly.utils.LoggerUtils;
 
 import java.text.MessageFormat;
@@ -32,11 +28,8 @@ public class AssemblyConfigValidator implements IAssemblyStep {
 
     private AssemblyConfig mConfig;
 
-    private CompletionHelper mHelper;
-
     public AssemblyConfigValidator(AssemblyConfig pConfig) {
         mConfig = pConfig;
-        mHelper = new CompletionHelper(pConfig);
     }
 
     public void process() {
@@ -68,7 +61,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
         }
         for (Server server : mConfig.getServers()) {
             // check for same server name
-            if (1 < mHelper.getServersByName(server.getServerName()).size()) {
+            if (1 < ConfigUtils.getServersByName(mConfig, server.getServerName()).size()) {
                 throw new ServerAlreadyExistsException(MessageFormat.format("You defined two servers with the same name: ''{0}''.", server.getServerName()));
             }
 
@@ -84,7 +77,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
         for (Runtime runtime : mConfig.getRuntimes()) {
             String serverName = runtime.getServerName();
 
-            Map<RuntimeMode, Integer> result = mHelper.getRuntimeModesByServerName(serverName);
+            Map<RuntimeMode, Integer> result = ConfigUtils.getRuntimeModesByServerName(mConfig, serverName);
             Integer countVM = null == result.get(RuntimeMode.VM) ? 0 : result.get(RuntimeMode.VM);
             Integer countController = null == result.get(RuntimeMode.CONTROLLER) ? 0 : result.get(RuntimeMode.CONTROLLER);
             Integer countParticipant = null == result.get(RuntimeMode.PARTICIPANT) ? 0 : result.get(RuntimeMode.PARTICIPANT);
@@ -104,7 +97,7 @@ public class AssemblyConfigValidator implements IAssemblyStep {
                 throw new ValidationException("Your server ''{0}'' doesn't contain any runtime.", serverName);
             }
 
-            ValidationHelper.validateSameRuntimeName(serverName, mHelper.getRuntimesByServerName(serverName));
+            ValidationHelper.validateSameRuntimeName(serverName, ConfigUtils.getRuntimesByServerName(mConfig, serverName));
 
             // check if specified composites are available/exists
             ValidationHelper.validateCompositeExistence(runtime, mConfig.getComposites());

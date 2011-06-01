@@ -1,19 +1,13 @@
-package org.fabric3.assembly.completition;
+package org.fabric3.assembly.utils;
 
-import org.fabric3.assembly.configuration.AssemblyConfig;
-import org.fabric3.assembly.configuration.Composite;
-import org.fabric3.assembly.configuration.Profile;
+import org.fabric3.assembly.configuration.*;
 import org.fabric3.assembly.configuration.Runtime;
-import org.fabric3.assembly.configuration.RuntimeMode;
-import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.dependency.fabric.FabricProfiles;
 import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.ServerNotFoundException;
 import org.fabric3.assembly.exception.ValidationException;
-import org.fabric3.assembly.utils.Closure;
-import org.fabric3.assembly.utils.ClosureUtils;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -25,29 +19,15 @@ import java.util.Map;
 /**
  * @author Michal Capo
  */
-public class CompletionHelper {
+public class ConfigUtils {
 
-    private AssemblyConfig mConfig;
-
-    public CompletionHelper(AssemblyConfig pConfig) {
-        mConfig = pConfig;
-    }
-
-    /*
-     *
-     *
-     * Service methods.
-     *
-     *
-     */
-
-    public Server getServerByRuntime(final Runtime pRuntime) {
+    public static Server getServerByRuntime(AssemblyConfig pConfig, final Runtime pRuntime) {
         String serverLookupName = pRuntime.getServerName();
         if (null == serverLookupName) {
             throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is not assigned to any server. Please check your configuration.", pRuntime.getRuntimeName()));
         }
 
-        for (Server server : mConfig.getServers()) {
+        for (Server server : pConfig.getServers()) {
             if (serverLookupName.equals(server.getServerName())) {
                 return server;
             }
@@ -56,10 +36,10 @@ public class CompletionHelper {
         throw new ServerNotFoundException(MessageFormat.format("Runtime {0} is assigned to {1} server. But no such server found. Is this a typo?", pRuntime.getRuntimeName(), serverLookupName));
     }
 
-    public List<Runtime> getRuntimesByServerName(final String pServerName) {
+    public static List<Runtime> getRuntimesByServerName(AssemblyConfig pConfig, final String pServerName) {
         final List<Runtime> runtimes = new ArrayList<Runtime>();
 
-        ClosureUtils.each(mConfig.getRuntimes(), new Closure<Runtime>() {
+        ClosureUtils.each(pConfig.getRuntimes(), new Closure<Runtime>() {
             @Override
             public void exec(Runtime pParam) {
                 if (pServerName.equals(pParam.getServerName())) {
@@ -71,10 +51,23 @@ public class CompletionHelper {
         return runtimes;
     }
 
-    public Map<RuntimeMode, Integer> getRuntimeModesByServerName(final String pServerName) {
+    public static Runtime getRuntimeByComposite(AssemblyConfig pConfig, Composite pComposite) {
+        for (Runtime runtime : pConfig.getRuntimes()) {
+            for (String name : runtime.getCompositeNames()) {
+                if (pComposite.getName().equals(name)) {
+                    return runtime;
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    public static Map<RuntimeMode, Integer> getRuntimeModesByServerName(AssemblyConfig pConfig, final String pServerName) {
         final Map<RuntimeMode, Integer> runtimes = new HashMap<RuntimeMode, Integer>();
 
-        ClosureUtils.each(mConfig.getRuntimes(), new Closure<Runtime>() {
+        ClosureUtils.each(pConfig.getRuntimes(), new Closure<Runtime>() {
             @Override
             public void exec(Runtime pParam) {
                 if (pServerName.equals(pParam.getServerName())) {
@@ -91,10 +84,10 @@ public class CompletionHelper {
         return runtimes;
     }
 
-    public List<Server> getServersByName(final String pServerName) {
+    public static List<Server> getServersByName(AssemblyConfig pConfig, final String pServerName) {
         final List<Server> servers = new ArrayList<Server>();
 
-        ClosureUtils.each(mConfig.getServers(), new Closure<Server>() {
+        ClosureUtils.each(pConfig.getServers(), new Closure<Server>() {
             @Override
             public void exec(Server pParam) {
                 if (pServerName.equals(pParam.getServerName())) {
@@ -106,10 +99,20 @@ public class CompletionHelper {
         return servers;
     }
 
-    public List<Runtime> getRuntimesByName(final String pRuntimeName) {
+    public static Server getServerByName(AssemblyConfig pConfig, final String pServerName) {
+        for (Server server : pConfig.getServers()) {
+            if (server.getServerName().equals(pServerName)) {
+                return server;
+            }
+        }
+
+        throw new ServerNotFoundException("Server ''{0}'' not found.", pServerName);
+    }
+
+    public static List<Runtime> getRuntimesByName(AssemblyConfig pConfig, final String pRuntimeName) {
         final List<Runtime> runtimes = new ArrayList<Runtime>();
 
-        ClosureUtils.each(mConfig.getRuntimes(), new Closure<Runtime>() {
+        ClosureUtils.each(pConfig.getRuntimes(), new Closure<Runtime>() {
             @Override
             public void exec(Runtime pParam) {
                 if (pRuntimeName.equals(pParam.getServerName())) {
@@ -121,65 +124,65 @@ public class CompletionHelper {
         return runtimes;
     }
 
-    public Version computeMissingVersion(Profile pProfile) {
+    public static Version computeMissingVersion(AssemblyConfig pConfig, Profile pProfile) {
         if (null != pProfile.getVersion()) {
             throw new ValidationException("Profile ''{0}'' already has a version.", pProfile.getName());
         }
 
-        if (null != mConfig.getProfileConfig().getVersion()) {
-            return mConfig.getProfileConfig().getVersion();
+        if (null != pConfig.getProfileConfig().getVersion()) {
+            return pConfig.getProfileConfig().getVersion();
         }
 
-        return mConfig.getVersion();
+        return pConfig.getVersion();
     }
 
-    public Version computeMissingVersion(Server pServer) {
+    public static Version computeMissingVersion(AssemblyConfig pConfig, Server pServer) {
         if (null != pServer.getVersion()) {
             throw new ValidationException("Server ''{0}'' already has a version.", pServer.getServerName());
         }
 
-        return mConfig.getVersion();
+        return pConfig.getVersion();
     }
 
-    public UpdatePolicy computeMissingUpdatePolicy(Composite pComposite) {
+    public static UpdatePolicy computeMissingUpdatePolicy(AssemblyConfig pConfig, Composite pComposite) {
         if (null != pComposite.getUpdatePolicy()) {
             throw new ValidationException("Composite ''{0}'' already has a update policy.", pComposite.getName());
         }
 
-        if (null != mConfig.getCompositeConfig().getUpdatePolicy()) {
-            return mConfig.getCompositeConfig().getUpdatePolicy();
+        if (null != pConfig.getCompositeConfig().getUpdatePolicy()) {
+            return pConfig.getCompositeConfig().getUpdatePolicy();
         }
 
-        return mConfig.getUpdatePolicy();
+        return pConfig.getUpdatePolicy();
     }
 
-    public UpdatePolicy computeMissingUpdatePolicy(Profile pProfile) {
+    public static UpdatePolicy computeMissingUpdatePolicy(AssemblyConfig pConfig, Profile pProfile) {
         if (null != pProfile.getUpdatePolicy()) {
             throw new ValidationException("Profile ''{0}'' already has a update policy.", pProfile.getName());
         }
 
-        if (null != mConfig.getProfileConfig().getUpdatePolicy()) {
-            return mConfig.getProfileConfig().getUpdatePolicy();
+        if (null != pConfig.getProfileConfig().getUpdatePolicy()) {
+            return pConfig.getProfileConfig().getUpdatePolicy();
         }
 
-        return mConfig.getUpdatePolicy();
+        return pConfig.getUpdatePolicy();
     }
 
-    public UpdatePolicy computeMissingUpdatePolicy(Server pServer) {
+    public static UpdatePolicy computeMissingUpdatePolicy(AssemblyConfig pConfig, Server pServer) {
         if (null != pServer.getUpdatePolicy()) {
             throw new ValidationException("Server ''{0}'' already has a update policy.", pServer.getServerName());
         }
 
-        return mConfig.getUpdatePolicy();
+        return pConfig.getUpdatePolicy();
     }
 
-    public UpdatePolicy computeMissingUpdatePolicy(Runtime pRuntime) {
+    public static UpdatePolicy computeMissingUpdatePolicy(AssemblyConfig pConfig, Runtime pRuntime) {
         if (null != pRuntime.getUpdatePolicy()) {
             throw new ValidationException("Runtime ''{0}'' already has a update policy.", pRuntime.getRuntimeName());
         }
 
         try {
-            Server server = getServerByRuntime(pRuntime);
+            Server server = getServerByRuntime(pConfig, pRuntime);
             if (null != server.getUpdatePolicy()) {
                 return server.getUpdatePolicy();
             }
@@ -187,16 +190,16 @@ public class CompletionHelper {
             // no-op
         }
 
-        return mConfig.getUpdatePolicy();
+        return pConfig.getUpdatePolicy();
     }
 
-    public File computeServerPath(Runtime pRuntime) {
-        return getServerByRuntime(pRuntime).getServerPath();
+    public static File computeServerPath(AssemblyConfig pConfig, Runtime pRuntime) {
+        return getServerByRuntime(pConfig, pRuntime).getServerPath();
     }
 
 
-    public Profile findProfileByName(String pProfileName) {
-        for (Profile profile : mConfig.getProfiles()) {
+    public static Profile findProfileByName(AssemblyConfig pConfig, String pProfileName) {
+        for (Profile profile : pConfig.getProfiles()) {
             if (profile.getAllNames().contains(pProfileName)) {
                 return profile;
             }
@@ -211,8 +214,8 @@ public class CompletionHelper {
         throw new AssemblyException("Profile ''{0}'' not found. Is this a typo?", pProfileName);
     }
 
-    public Composite findCompositeByName(String pCompositeName) {
-        for (Composite composite : mConfig.getComposites()) {
+    public static Composite findCompositeByName(AssemblyConfig pConfig, String pCompositeName) {
+        for (Composite composite : pConfig.getComposites()) {
             if (composite.getName().equals(pCompositeName)) {
                 return composite;
             }

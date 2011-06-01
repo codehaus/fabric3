@@ -1,4 +1,4 @@
-package org.fabric3.embedded.examples.components.component1;
+package org.fabric3.assembly.examples.web;
 
 import org.fabric3.api.annotation.scope.Scopes;
 import org.oasisopen.sca.annotation.EagerInit;
@@ -10,10 +10,10 @@ import org.oasisopen.sca.annotation.Scope;
  */
 @EagerInit
 @Scope(Scopes.COMPOSITE)
-public class PutSomethingToSystemOut {
+public class WebComposite {
 
     @Init
     public void init() {
-        System.out.println("Hello from test composite");
+        System.out.println("Hello from web composite");
     }
 }

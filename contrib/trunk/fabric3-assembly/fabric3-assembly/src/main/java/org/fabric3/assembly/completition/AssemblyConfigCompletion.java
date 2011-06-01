@@ -1,11 +1,9 @@
 package org.fabric3.assembly.completition;
 
 import org.fabric3.assembly.IAssemblyStep;
-import org.fabric3.assembly.configuration.AssemblyConfig;
-import org.fabric3.assembly.configuration.Composite;
-import org.fabric3.assembly.configuration.Profile;
+import org.fabric3.assembly.configuration.*;
 import org.fabric3.assembly.configuration.Runtime;
-import org.fabric3.assembly.configuration.Server;
+import org.fabric3.assembly.utils.ConfigUtils;
 import org.fabric3.assembly.utils.LoggerUtils;
 import org.fabric3.assembly.validation.AssemblyConfigValidator;
 
@@ -16,11 +14,8 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
 
     private AssemblyConfig mConfig;
 
-    private CompletionHelper mHelper;
-
     public AssemblyConfigCompletion(AssemblyConfig pConfig) {
         mConfig = pConfig;
-        mHelper = new CompletionHelper(mConfig);
     }
 
     @Override
@@ -32,7 +27,7 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
         //
         for (Composite composite : mConfig.getCompositeConfig().getComposites()) {
             if (null == composite.getUpdatePolicy()) {
-                composite.setUpdatePolicy(mHelper.computeMissingUpdatePolicy(composite));
+                composite.setUpdatePolicy(ConfigUtils.computeMissingUpdatePolicy(mConfig, composite));
             }
         }
 
@@ -41,11 +36,11 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
         //
         for (Profile profile : mConfig.getProfileConfig().getProfiles()) {
             if (null == profile.getVersion()) {
-                profile.setVersion(mHelper.computeMissingVersion(profile));
+                profile.setVersion(ConfigUtils.computeMissingVersion(mConfig, profile));
             }
 
             if (null == profile.getUpdatePolicy()) {
-                profile.setUpdatePolicy(mHelper.computeMissingUpdatePolicy(profile));
+                profile.setUpdatePolicy(ConfigUtils.computeMissingUpdatePolicy(mConfig, profile));
             }
         }
 
@@ -54,16 +49,16 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
         //
         for (Server server : mConfig.getServers()) {
             if (null == server.getUpdatePolicy()) {
-                server.setUpdatePolicy(mHelper.computeMissingUpdatePolicy(server));
+                server.setUpdatePolicy(ConfigUtils.computeMissingUpdatePolicy(mConfig, server));
             }
 
             if (null == server.getVersion()) {
-                server.setVersion(mHelper.computeMissingVersion(server));
+                server.setVersion(ConfigUtils.computeMissingVersion(mConfig, server));
             }
 
             // find existing profile by his name and add them into server
             for (String s : server.getProfileNames()) {
-                server.addProfile(mHelper.findProfileByName(s));
+                server.addProfile(ConfigUtils.findProfileByName(mConfig, s));
             }
 
             for (Profile profile : server.getProfiles()) {
@@ -81,23 +76,23 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
         //
         for (Runtime runtime : mConfig.getRuntimes()) {
             if (null == runtime.getUpdatePolicy()) {
-                runtime.setUpdatePolicy(mHelper.computeMissingUpdatePolicy(runtime));
+                runtime.setUpdatePolicy(ConfigUtils.computeMissingUpdatePolicy(mConfig, runtime));
             }
             if (null == runtime.getServerPath()) {
-                runtime.setServerPath(mHelper.computeServerPath(runtime));
+                runtime.setServerPath(ConfigUtils.computeServerPath(mConfig, runtime));
             }
 
             // find existing profile by his name and add them into runtime
             for (String s : runtime.getProfileNames()) {
-                runtime.addProfile(mHelper.findProfileByName(s));
+                runtime.addProfile(ConfigUtils.findProfileByName(mConfig, s));
             }
 
             // find existing composite by name and add them into runtime
             for (String s : runtime.getCompositeNames()) {
-                runtime.addComposite(mHelper.findCompositeByName(s));
+                runtime.addComposite(ConfigUtils.findCompositeByName(mConfig, s));
             }
 
-            Server server = mHelper.getServerByRuntime(runtime);
+            Server server = ConfigUtils.getServerByRuntime(mConfig, runtime);
             for (Profile profile : runtime.getProfiles()) {
                 if (null == profile.getVersion()) {
                     profile.setVersion(server.getVersion());

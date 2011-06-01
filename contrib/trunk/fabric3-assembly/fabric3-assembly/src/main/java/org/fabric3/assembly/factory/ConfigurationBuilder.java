@@ -1,11 +1,7 @@
 package org.fabric3.assembly.factory;
 
-import org.fabric3.assembly.configuration.AssemblyConfig;
-import org.fabric3.assembly.configuration.Composite;
-import org.fabric3.assembly.configuration.Profile;
+import org.fabric3.assembly.configuration.*;
 import org.fabric3.assembly.configuration.Runtime;
-import org.fabric3.assembly.configuration.RuntimeMode;
-import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.dependency.Dependency;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
@@ -445,6 +441,8 @@ public class ConfigurationBuilder {
         public CompositeBuilder(AssemblyConfig pConfig, Composite pComposite) {
             super(pConfig);
             mComposite = pComposite;
+
+            mConfig.addComposite(pComposite);
         }
 
         public CompositeBuilder dependency(String pDependency) {
@@ -469,6 +467,11 @@ public class ConfigurationBuilder {
 
         public CompositeBuilder withUpdatePolicy(String pUpdatePolicy) {
             mComposite.setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy));
+            return this;
+        }
+
+        public CompositeBuilder deployToRuntime(String pRuntimeName) {
+            //TODO <capo> implement deploy to runtime (of composite)
             return this;
         }
     }

@@ -2,11 +2,7 @@ package org.fabric3.assembly.utils;
 
 import org.fabric3.assembly.exception.AssemblyException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -87,16 +83,18 @@ public class FileUtils {
         return folder;
     }
 
-    public static void copy(File sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
+    public static void copy(File sourceFile, File destinationFile) throws IOException {
+        if (!destinationFile.exists()) {
+            if (!destinationFile.createNewFile()) {
+                throw new AssemblyException("Cannot create file/folder: {0}", destinationFile.getAbsoluteFile());
+            }
         }
 
         FileChannel source = null;
         FileChannel destination = null;
         try {
             source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
+            destination = new FileOutputStream(destinationFile).getChannel();
             destination.transferFrom(source, 0, source.size());
         } finally {
             if (source != null) {
@@ -108,20 +106,22 @@ public class FileUtils {
         }
     }
 
-    public static void copy(URL sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
+    public static void copy(URL sourceFile, File destinationFile) throws IOException {
+        if (!destinationFile.exists()) {
+            if (!destinationFile.createNewFile()) {
+                throw new AssemblyException("Cannot create file/folder: {0}", destinationFile.getAbsoluteFile());
+            }
         }
 
         URLConnection url = sourceFile.openConnection();
         InputStream source = url.getInputStream();
-        FileOutputStream target = new FileOutputStream(destFile);
+        FileOutputStream target = new FileOutputStream(destinationFile);
         try {
             url.connect();
 
             final int BUF_SIZE = 1 << 8;
             byte[] buffer = new byte[BUF_SIZE];
-            int bytesRead = -1;
+            int bytesRead;
             while ((bytesRead = source.read(buffer)) > -1) {
                 target.write(buffer, 0, bytesRead);
             }
@@ -154,6 +154,14 @@ public class FileUtils {
 
     public static File file(File path, String fileName) {
         return new File(path.getAbsolutePath() + File.separator + fileName);
+    }
+
+    public static File file(File path, String... fileName) {
+        String temp = "";
+        for (String s : fileName) {
+            temp += File.separator + s;
+        }
+        return new File(path.getAbsolutePath() + temp);
     }
 
     public static URL fileAtClassPath(String fileClassPath) throws URISyntaxException, MalformedURLException {
@@ -224,7 +232,9 @@ public class FileUtils {
                     if (file.isDirectory()) {
                         delete(file);
                     } else {
-                        file.delete();
+                        if (!file.delete()) {
+                            LoggerUtils.logWarn("Cannot delete file/folder: {0}", file.getAbsoluteFile());
+                        }
                     }
                 }
             }

@@ -20,8 +20,13 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-assembly-composite</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-api</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.8</version>
         </dependency>
     </dependencies>
 
