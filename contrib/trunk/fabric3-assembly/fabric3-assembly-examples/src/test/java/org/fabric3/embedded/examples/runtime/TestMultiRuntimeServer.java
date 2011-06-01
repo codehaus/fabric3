@@ -31,7 +31,6 @@ public class TestMultiRuntimeServer {
                 .addArchive(Composite1Archive.create()).addToServer("server1")
 
                 .createConfiguration();
-        // config.process();
 
         AssemblyRunner runner = new AssemblyRunner(config);
         runner.startServer("server1");
