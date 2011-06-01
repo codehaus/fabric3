@@ -19,9 +19,6 @@ public class SingleRuntimeConfiguration {
                 .addServer("server1", "/tmp/fabric3_test_single")
                 .addRuntime().withProfiles("web").toServer("server1")
 
-//                .addArchive("composite1", new File("/tmp/composite1.jar")).addToServer("server1")
-//                .addArchive("composite1", "a:a:1.0").addToServer("server1")
-//                .addArchive(Test1Archive.create()).addToServer("server1")
                 .addArchive("comp", Composite1Archive.create())
                 .addArchive("web", Web1Archive.create())
 

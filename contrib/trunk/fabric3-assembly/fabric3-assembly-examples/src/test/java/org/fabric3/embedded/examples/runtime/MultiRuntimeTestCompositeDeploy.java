@@ -12,7 +12,6 @@ public class MultiRuntimeTestCompositeDeploy {
         MultiRuntimeConfiguration.create().asModifier()
                 .getArchive("comp").deployToServer("server1");
 
-
     }
 
 }
