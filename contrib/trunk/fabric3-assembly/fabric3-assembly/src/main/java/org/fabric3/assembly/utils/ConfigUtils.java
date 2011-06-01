@@ -168,18 +168,6 @@ public class ConfigUtils {
         return pConfig.getVersion();
     }
 
-    public static UpdatePolicy computeMissingUpdatePolicy(AssemblyConfig pConfig, Composite pComposite) {
-        if (null != pComposite.getUpdatePolicy()) {
-            throw new ValidationException("Composite ''{0}'' already has a update policy.", pComposite.getName());
-        }
-
-        if (null != pConfig.getCompositeConfig().getUpdatePolicy()) {
-            return pConfig.getCompositeConfig().getUpdatePolicy();
-        }
-
-        return pConfig.getUpdatePolicy();
-    }
-
     public static UpdatePolicy computeMissingUpdatePolicy(AssemblyConfig pConfig, Profile pProfile) {
         if (null != pProfile.getUpdatePolicy()) {
             throw new ValidationException("Profile ''{0}'' already has a update policy.", pProfile.getName());

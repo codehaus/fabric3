@@ -1,7 +1,6 @@
 package org.fabric3.assembly.configuration;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.fabric3.assembly.dependency.UpdatePolicy;
 
 import java.io.File;
 
@@ -16,18 +15,14 @@ public class Composite {
 
     private String mDependency;
 
-    private UpdatePolicy mUpdatePolicy;
-
-    public Composite(String pName, String pDependency, UpdatePolicy pUpdatePolicy) {
+    public Composite(String pName, String pDependency) {
         mName = pName;
         mDependency = pDependency;
-        mUpdatePolicy = pUpdatePolicy;
     }
 
-    public Composite(String pName, File pPath, UpdatePolicy pUpdatePolicy) {
+    public Composite(String pName, File pPath) {
         mName = pName;
         mPath = pPath;
-        mUpdatePolicy = pUpdatePolicy;
     }
 
     public String getName() {
@@ -40,14 +35,6 @@ public class Composite {
 
     public File getPath() {
         return mPath;
-    }
-
-    public void setUpdatePolicy(UpdatePolicy pUpdatePolicy) {
-        mUpdatePolicy = pUpdatePolicy;
-    }
-
-    public UpdatePolicy getUpdatePolicy() {
-        return mUpdatePolicy;
     }
 
     public void setDependency(String pDependency) {
@@ -64,7 +51,6 @@ public class Composite {
                 append("name", mName).
                 append("path", mPath).
                 append("dependency", mDependency).
-                append("updatePolicy", mUpdatePolicy).
                 toString();
     }
 
@@ -75,9 +61,7 @@ public class Composite {
 
         Composite composite = (Composite) o;
 
-        if (mName != null ? !mName.equals(composite.mName) : composite.mName != null) return false;
-
-        return true;
+        return !(mName != null ? !mName.equals(composite.mName) : composite.mName != null);
     }
 
     @Override

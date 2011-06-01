@@ -1,8 +1,10 @@
 package org.fabric3.assembly.completition;
 
 import org.fabric3.assembly.IAssemblyStep;
-import org.fabric3.assembly.configuration.*;
+import org.fabric3.assembly.configuration.AssemblyConfig;
+import org.fabric3.assembly.configuration.Profile;
 import org.fabric3.assembly.configuration.Runtime;
+import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.utils.ConfigUtils;
 import org.fabric3.assembly.validation.AssemblyConfigValidator;
 
@@ -20,15 +22,6 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
     @Override
     public void process() {
         // LoggerUtils.log("Computing missing configuration data");
-
-        //
-        // composites - set missing update policy
-        //
-        for (Composite composite : mConfig.getCompositeConfig().getComposites()) {
-            if (null == composite.getUpdatePolicy()) {
-                composite.setUpdatePolicy(ConfigUtils.computeMissingUpdatePolicy(mConfig, composite));
-            }
-        }
 
         //
         // profiles - set missing version and update policy

@@ -399,26 +399,16 @@ public class AssemblyConfigBuilder {
      *
      */
 
-    public AssemblyConfigBuilder setCompositesUpdatePolicy(UpdatePolicy pUpdatePolicy) {
-        mConfig.getCompositeConfig().setUpdatePolicy(pUpdatePolicy);
-        return this;
-    }
-
-    public AssemblyConfigBuilder setCompositesUpdatePolicy(String pUpdatePolicy) {
-        mConfig.getCompositeConfig().setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy));
-        return this;
-    }
-
     public CompositeBuilder addComposite(String pName) {
-        return new CompositeBuilder(mConfig, new Composite(pName, (String) null, null));
+        return new CompositeBuilder(mConfig, new Composite(pName, (String) null));
     }
 
     public CompositeBuilder addComposite(String pName, String pDependency) {
-        return new CompositeBuilder(mConfig, new Composite(pName, pDependency, null));
+        return new CompositeBuilder(mConfig, new Composite(pName, pDependency));
     }
 
     public CompositeBuilder addComposite(String pName, File pFile) {
-        return new CompositeBuilder(mConfig, new Composite(pName, pFile, null));
+        return new CompositeBuilder(mConfig, new Composite(pName, pFile));
     }
 
     public ShrinkWrapBuilder addComposite(Archive pArchive) {
@@ -467,16 +457,6 @@ public class AssemblyConfigBuilder {
 
         public CompositeBuilder file(String pPath) {
             mComposite.setPath(new File(pPath));
-            return this;
-        }
-
-        public CompositeBuilder withUpdatePolicy(UpdatePolicy pUpdatePolicy) {
-            mComposite.setUpdatePolicy(pUpdatePolicy);
-            return this;
-        }
-
-        public CompositeBuilder withUpdatePolicy(String pUpdatePolicy) {
-            mComposite.setUpdatePolicy(UpdatePolicy.valueOf(pUpdatePolicy));
             return this;
         }
 

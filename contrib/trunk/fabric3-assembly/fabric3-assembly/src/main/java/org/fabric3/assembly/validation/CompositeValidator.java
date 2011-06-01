@@ -18,10 +18,6 @@ public class CompositeValidator {
             throw new AssemblyException("Name not found for configuration: {0}", pConfiguration);
         }
 
-        if (null == pConfiguration.getUpdatePolicy()) {
-            throw new AssemblyException("Update policy on configuration ''{0}'' is null.", pConfiguration.getName());
-        }
-
         if (StringUtils.isBlank(pConfiguration.getDependency()) && (null == pConfiguration.getPath() && !pConfiguration.getPath().exists())) {
             throw new AssemblyException("You need to specify 'path' or 'dependency' for ''{0}'' configuration.", pConfiguration.getName());
         }
