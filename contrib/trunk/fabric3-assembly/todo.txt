@@ -11,6 +11,7 @@ Done
 - create servers/configuration from source code
 - start server from source code
 - add support to define custom extensions
+- added shrink wrap support
 - support for installing/deploying composites from classpath
 
 Ideas
