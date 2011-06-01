@@ -13,11 +13,12 @@ Done
 - add support to define custom extensions
 - added shrink wrap support
 - support for installing/deploying composites from classpath
+- unDeploy/uninstall composites
+- redeploy composites
+- accessing the same configuration via several processes
 
 Ideas
 ==============
-- add feature to run jUnit tests against embedded server
+- add feature to run jUnit tests against server
 - support json configuration
-- unDeploy/uninstall composites
-- redeploy composites
 - add support for pointing fabric3 to existing server instance (and take extensions from)
