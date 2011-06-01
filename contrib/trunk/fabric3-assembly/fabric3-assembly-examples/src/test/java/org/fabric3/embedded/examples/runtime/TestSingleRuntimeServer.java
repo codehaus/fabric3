@@ -9,6 +9,7 @@ import org.fabric3.assembly.modifier.AssemblyModifier;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michal Capo
@@ -23,24 +24,31 @@ public class TestSingleRuntimeServer {
                 .addServer("server1", "/tmp/fabric3_test_single")
                 .addRuntime().withProfiles("web").toServer("server1")
 
-//                .addArchive("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
-//                .addArchive("composite1", "a:a:1.0").deployToServer("server1")
-//                .addArchive(Test1Archive.create()).deployToServer("server1")
+//                .addArchive("composite1", new File("/tmp/composite1.jar")).addToServer("server1")
+//                .addArchive("composite1", "a:a:1.0").addToServer("server1")
+//                .addArchive(Test1Archive.create()).addToServer("server1")
                 .addArchive("comp", Composite1Archive.create())
                 .addArchive("web", Web1Archive.create())
 
                 .createConfiguration();
 
+
         AssemblyRunner runner = new AssemblyRunner(config);
+        AssemblyModifier modifier = new AssemblyModifier(config);
+
         runner.startServer("server1");
 
-//        Thread.sleep(TimeUnit.SECONDS.toMillis(10));
-//        runner.stopServer("server1");
-
-        AssemblyModifier modifier = new AssemblyModifier(config);
         modifier.archive("comp").deployToServer("server1");
-//        modifier.archive("comp").deployToServer("server1").undeploy().redeploy();
-//        modifier.archive("web").deployToServer("server1").undeploy().redeploy();
+
+        Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+        modifier.archive("comp").redeploy();
+
+        Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+        modifier.archive("comp").undeploy();
+
+        Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+        runner.stopServer("server1");
+
 
     }
 

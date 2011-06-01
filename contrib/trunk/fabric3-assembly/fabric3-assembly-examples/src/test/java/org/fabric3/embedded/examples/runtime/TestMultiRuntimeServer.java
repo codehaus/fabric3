@@ -25,10 +25,10 @@ public class TestMultiRuntimeServer {
                 .addRuntime("server1", "par1", RuntimeMode.PARTICIPANT).withProfiles("web")
                 .addRuntime("server1", "par2", RuntimeMode.PARTICIPANT).withProfiles("web-service")
 
-//                .addArchive("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
-//                .addArchive("composite1", "a:a:1.0").deployToServer("server1")
+//                .addArchive("composite1", new File("/tmp/composite1.jar")).addToServer("server1")
+//                .addArchive("composite1", "a:a:1.0").addToServer("server1")
 
-                .addArchive(Composite1Archive.create()).deployToServer("server1")
+                .addArchive(Composite1Archive.create()).addToServer("server1")
 
                 .createConfiguration();
         // config.process();
