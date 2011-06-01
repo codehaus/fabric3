@@ -9,7 +9,7 @@ import java.text.MessageFormat;
  */
 public class LoggerUtils {
 
-    private static final String NORMAL = "      I : ";
+    private static final String NORMAL = "      A : ";
     private static final String WARN = "WARNING : ";
     private static final String ERROR = "ERROR   : ";
 
