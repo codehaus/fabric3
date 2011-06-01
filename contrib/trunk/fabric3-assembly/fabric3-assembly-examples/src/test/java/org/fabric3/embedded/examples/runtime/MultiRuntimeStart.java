@@ -1,7 +1,6 @@
 package org.fabric3.embedded.examples.runtime;
 
-import org.fabric3.assembly.configuration.AssemblyConfig;
-import org.fabric3.assembly.runner.AssemblyRunner;
+import org.fabric3.assembly.modifier.AssemblyModifier;
 
 import java.io.IOException;
 
@@ -11,10 +10,10 @@ import java.io.IOException;
 public class MultiRuntimeStart {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        AssemblyConfig config = MultiRuntimeConfiguration.create();
 
-        AssemblyRunner runner = new AssemblyRunner(config);
+        AssemblyModifier runner = new AssemblyModifier(MultiRuntimeConfiguration.create());
         runner.startServer("server1");
+
     }
 
 }

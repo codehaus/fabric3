@@ -1,6 +1,5 @@
 package org.fabric3.embedded.examples.runtime;
 
-import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.modifier.AssemblyModifier;
 
 import java.io.IOException;
@@ -11,10 +10,10 @@ import java.io.IOException;
 public class MultiRuntimeTestCompositeDeploy {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        AssemblyConfig config = MultiRuntimeConfiguration.create();
-        AssemblyModifier modifier = new AssemblyModifier(config);
 
+        AssemblyModifier modifier = new AssemblyModifier(MultiRuntimeConfiguration.create());
         modifier.archive("comp").deployToServer("server1");
+
     }
 
 }

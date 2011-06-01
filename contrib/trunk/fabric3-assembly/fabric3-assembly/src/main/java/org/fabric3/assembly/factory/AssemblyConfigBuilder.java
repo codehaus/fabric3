@@ -34,6 +34,10 @@ public class AssemblyConfigBuilder {
         return new AssemblyConfigBuilder(new AssemblyConfig());
     }
 
+    public static AssemblyConfigBuilder getBuilder(AssemblyConfig pConfig) {
+        return new AssemblyConfigBuilder(pConfig);
+    }
+
     public AssemblyConfig createConfiguration() {
         final List<String> serverNames = new ArrayList<String>();
 

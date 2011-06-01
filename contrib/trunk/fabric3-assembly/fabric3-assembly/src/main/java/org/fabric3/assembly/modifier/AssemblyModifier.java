@@ -5,12 +5,10 @@ import org.fabric3.assembly.configuration.AssemblyConfig;
 /**
  * @author Michal Capo
  */
-public class AssemblyModifier {
-
-    protected AssemblyConfig mConfig;
+public class AssemblyModifier extends AssemblyRunner {
 
     public AssemblyModifier(AssemblyConfig pConfig) {
-        mConfig = pConfig;
+        super(pConfig);
 
         mConfig.setIsModifyProcess(true);
 

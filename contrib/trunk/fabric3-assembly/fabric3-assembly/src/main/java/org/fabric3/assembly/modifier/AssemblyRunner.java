@@ -1,4 +1,4 @@
-package org.fabric3.assembly.runner;
+package org.fabric3.assembly.modifier;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.Runtime;
@@ -13,14 +13,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michal Capo
  */
 public class AssemblyRunner {
 
-    private AssemblyConfig mConfig;
+    protected AssemblyConfig mConfig;
 
     private ConcurrentMap<String, Process> mRunningServers = new ConcurrentHashMap<String, Process>();
 
