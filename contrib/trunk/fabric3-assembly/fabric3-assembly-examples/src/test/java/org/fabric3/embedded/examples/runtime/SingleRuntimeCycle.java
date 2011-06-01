@@ -19,11 +19,11 @@ public class SingleRuntimeCycle {
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
 
         // deploy composite
-        modifier.archive("comp").deployToServer("server1");
+        modifier.getArchive("comp").deployToServer("server1");
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
 
         // undeploy composite
-        modifier.archive("comp").undeploy();
+        modifier.getArchive("comp").undeploy();
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
 
         // stop server

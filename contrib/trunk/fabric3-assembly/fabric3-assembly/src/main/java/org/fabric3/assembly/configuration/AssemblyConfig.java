@@ -6,6 +6,7 @@ import org.fabric3.assembly.completition.AssemblyConfigCompletion;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
+import org.fabric3.assembly.modifier.AssemblyModifier;
 import org.fabric3.assembly.utils.LoggerUtils;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -37,6 +38,10 @@ public class AssemblyConfig implements IAssemblyStep {
     private boolean mAlreadyProcessed = false;
 
     private boolean mIsModifyProcess = false;
+
+    public AssemblyModifier asModifier() {
+        return new AssemblyModifier(this);
+    }
 
     public boolean isIsModifyProcess() {
         return mIsModifyProcess;

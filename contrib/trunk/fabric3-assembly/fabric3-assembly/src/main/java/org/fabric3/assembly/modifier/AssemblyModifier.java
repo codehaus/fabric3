@@ -18,11 +18,11 @@ public class AssemblyModifier extends AssemblyRunner {
         }
     }
 
-    public AssemblyModifierArchiveBuilder archive(String pName) {
+    public AssemblyModifierArchiveBuilder getArchive(String pName) {
         return new AssemblyModifierArchiveBuilder(mConfig, pName);
     }
 
-    public AssemblyModifierCompositeBuilder composite(String pName) {
+    public AssemblyModifierCompositeBuilder getComposite(String pName) {
         return new AssemblyModifierCompositeBuilder(mConfig, pName);
     }
 

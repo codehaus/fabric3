@@ -1,7 +1,5 @@
 package org.fabric3.embedded.examples.runtime;
 
-import org.fabric3.assembly.modifier.AssemblyModifier;
-
 import java.io.IOException;
 
 /**
@@ -11,8 +9,8 @@ public class SingleRuntimeTestCompositeDeploy {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        AssemblyModifier modifier = new AssemblyModifier(SingleRuntimeConfiguration.create());
-        modifier.archive("comp").deployToServer("server1");
+        SingleRuntimeConfiguration.create().asModifier()
+                .getArchive("comp").deployToServer("server1");
 
     }
 
