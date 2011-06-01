@@ -2,6 +2,7 @@ package org.fabric3.embedded.examples.runtime;
 
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.dependency.UpdatePolicy;
+import org.fabric3.assembly.examples.Composite1Archive;
 import org.fabric3.assembly.factory.AssemblyConfigBuilder;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
@@ -24,7 +25,9 @@ public class TestSingleRuntimeServer {
                 .addRuntime().withProfiles("web").toServer("server1")
 
 //                .addComposite("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
-                .addComposite("composite1", "a:a:1.0").deployToServer("server1")
+//                .addComposite("composite1", "a:a:1.0").deployToServer("server1")
+
+                .addComposite(Composite1Archive.create()).deployToServer("server1")
 
                 .createConfiguration();
         // config.process();

@@ -4,7 +4,6 @@ import org.fabric3.assembly.IAssemblyStep;
 import org.fabric3.assembly.configuration.*;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.utils.ConfigUtils;
-import org.fabric3.assembly.utils.LoggerUtils;
 import org.fabric3.assembly.validation.AssemblyConfigValidator;
 
 /**
@@ -20,7 +19,7 @@ public class AssemblyConfigCompletion implements IAssemblyStep {
 
     @Override
     public void process() {
-        LoggerUtils.log("computing missing configuration data");
+        // LoggerUtils.log("Computing missing configuration data");
 
         //
         // composites - set missing update policy

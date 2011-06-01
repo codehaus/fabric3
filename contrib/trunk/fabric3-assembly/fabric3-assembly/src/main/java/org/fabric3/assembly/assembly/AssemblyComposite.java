@@ -53,8 +53,6 @@ public class AssemblyComposite {
                 throw new AssemblyException("Cannot deploy composite.", e);
             }
         }
-
-        //TODO <capo> add assembling composite from classpath (shrinkwrap)
     }
 
 }

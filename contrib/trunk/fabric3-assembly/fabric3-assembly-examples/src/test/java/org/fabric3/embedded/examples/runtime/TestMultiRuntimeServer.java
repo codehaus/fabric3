@@ -3,10 +3,10 @@ package org.fabric3.embedded.examples.runtime;
 import org.fabric3.assembly.configuration.AssemblyConfig;
 import org.fabric3.assembly.configuration.RuntimeMode;
 import org.fabric3.assembly.dependency.UpdatePolicy;
+import org.fabric3.assembly.examples.Composite1Archive;
 import org.fabric3.assembly.factory.AssemblyConfigBuilder;
 import org.fabric3.assembly.runner.AssemblyRunner;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +25,10 @@ public class TestMultiRuntimeServer {
                 .addRuntime("server1", "par1", RuntimeMode.PARTICIPANT).withProfiles("web")
                 .addRuntime("server1", "par2", RuntimeMode.PARTICIPANT).withProfiles("web-service")
 
-                .addComposite("composite1", new File("/tmp/composite1.jar"))
-                .deployToServer("server1")
+//                .addComposite("composite1", new File("/tmp/composite1.jar")).deployToServer("server1")
+//                .addComposite("composite1", "a:a:1.0").deployToServer("server1")
+
+                .addComposite(Composite1Archive.create()).deployToServer("server1")
 
                 .createConfiguration();
         // config.process();

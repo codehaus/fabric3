@@ -93,6 +93,15 @@
         </dependency>
 
         <!--
+            Shrink wrap
+        -->
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+            <version>${version.shrinkwrap}</version>
+        </dependency>
+
+        <!--
             Logger
         -->
         <dependency>

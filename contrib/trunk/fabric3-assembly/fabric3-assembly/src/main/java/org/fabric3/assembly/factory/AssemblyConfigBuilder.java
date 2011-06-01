@@ -9,6 +9,7 @@ import org.fabric3.assembly.exception.ValidationException;
 import org.fabric3.assembly.utils.Closure;
 import org.fabric3.assembly.utils.ClosureUtils;
 import org.fabric3.assembly.utils.ConfigUtils;
+import org.jboss.shrinkwrap.api.Archive;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -235,8 +236,6 @@ public class AssemblyConfigBuilder {
             mRuntime.setSystemConfig(new File(pConfigFile));
             return this;
         }
-
-
     }
 
     /*
@@ -422,9 +421,32 @@ public class AssemblyConfigBuilder {
         return new CompositeBuilder(mConfig, new Composite(pName, pFile, null));
     }
 
+    public ShrinkWrapBuilder addComposite(Archive pArchive) {
+        return new ShrinkWrapBuilder(mConfig, pArchive);
+    }
+
+    public static class ShrinkWrapBuilder extends AssemblyConfigBuilder {
+
+        protected Archive mArchive;
+
+        public ShrinkWrapBuilder(AssemblyConfig pConfig, Archive pArchive) {
+            super(pConfig);
+            mArchive = pArchive;
+
+            mConfig.addArchive(pArchive);
+        }
+
+        public ShrinkWrapBuilder deployToServer(String pServerName) {
+            Server server = ConfigUtils.getServerByName(mConfig, pServerName);
+            server.addArchive(mArchive.getName());
+
+            return this;
+        }
+    }
+
     public static class CompositeBuilder extends AssemblyConfigBuilder {
 
-        private Composite mComposite;
+        protected Composite mComposite;
 
         public CompositeBuilder(AssemblyConfig pConfig, Composite pComposite) {
             super(pConfig);

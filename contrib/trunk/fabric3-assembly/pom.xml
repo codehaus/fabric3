@@ -46,6 +46,10 @@
         <module>fabric3-assembly-examples</module>
     </modules>
 
+    <properties>
+        <version.shrinkwrap>1.0.0-beta-3-SNAPSHOT</version.shrinkwrap>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

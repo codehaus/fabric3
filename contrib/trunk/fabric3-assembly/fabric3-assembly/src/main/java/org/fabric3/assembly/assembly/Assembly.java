@@ -6,6 +6,7 @@ import org.fabric3.assembly.configuration.Composite;
 import org.fabric3.assembly.configuration.Runtime;
 import org.fabric3.assembly.configuration.Server;
 import org.fabric3.assembly.utils.LoggerUtils;
+import org.jboss.shrinkwrap.api.Archive;
 
 /**
  * @author Michal Capo
@@ -18,11 +19,14 @@ public class Assembly implements IAssemblyStep {
 
     private AssemblyComposite mCompositeAssembly;
 
+    private AssemblyArchive mArchiveAssembly;
+
     private AssemblyConfig mConfig;
 
     public Assembly(AssemblyConfig pConfig) {
         mConfig = pConfig;
         mCompositeAssembly = new AssemblyComposite(pConfig);
+        mArchiveAssembly = new AssemblyArchive(pConfig);
     }
 
     public void process() {
@@ -38,7 +42,11 @@ public class Assembly implements IAssemblyStep {
             mCompositeAssembly.doAssembly(composite);
         }
 
-        LoggerUtils.log("assembling done at ''{0,time}''", System.currentTimeMillis());
+        for (Archive archive : mConfig.getArchives()) {
+            mArchiveAssembly.doAssembly(archive);
+        }
+
+        LoggerUtils.log("Assembling done at ''{0,time}''", System.currentTimeMillis());
     }
 
 }

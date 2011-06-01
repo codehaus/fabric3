@@ -6,7 +6,7 @@ import org.fabric3.assembly.completition.AssemblyConfigCompletion;
 import org.fabric3.assembly.dependency.UpdatePolicy;
 import org.fabric3.assembly.dependency.Version;
 import org.fabric3.assembly.exception.AssemblyException;
-import org.fabric3.assembly.utils.LoggerUtils;
+import org.jboss.shrinkwrap.api.Archive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,8 @@ public class AssemblyConfig implements IAssemblyStep {
     private List<Runtime> mRuntimes = new ArrayList<Runtime>();
 
     private CompositeConfig mComposites = new CompositeConfig();
+
+    private List<Archive> mArchives = new ArrayList<Archive>();
 
     private ProfileConfig mProfiles = new ProfileConfig();
 
@@ -60,6 +62,14 @@ public class AssemblyConfig implements IAssemblyStep {
 
     public List<Runtime> getRuntimes() {
         return mRuntimes;
+    }
+
+    public void addArchive(Archive pArchive) {
+        mArchives.add(pArchive);
+    }
+
+    public List<Archive> getArchives() {
+        return mArchives;
     }
 
     public void addComposite(Composite pComposite) {
@@ -107,7 +117,7 @@ public class AssemblyConfig implements IAssemblyStep {
     }
 
     public void process() {
-        LoggerUtils.log("assembling started at ''{0,time}''", System.currentTimeMillis());
+        // LoggerUtils.log("Assembling started at ''{0,time}''", System.currentTimeMillis());
 
         mAlreadyProcessed = true;
         new AssemblyConfigCompletion(this).process();

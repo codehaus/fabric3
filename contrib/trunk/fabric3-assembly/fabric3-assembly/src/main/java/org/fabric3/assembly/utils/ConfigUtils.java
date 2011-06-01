@@ -9,6 +9,7 @@ import org.fabric3.assembly.exception.AssemblyException;
 import org.fabric3.assembly.exception.RuntimeNotFoundException;
 import org.fabric3.assembly.exception.ServerNotFoundException;
 import org.fabric3.assembly.exception.ValidationException;
+import org.jboss.shrinkwrap.api.Archive;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -256,5 +257,17 @@ public class ConfigUtils {
         }
 
         throw new AssemblyException("No CONTROLLER or VM runtime found on server: ''{0}''.", pServer.getServerName());
+    }
+
+    public static Server getServerByArchive(AssemblyConfig pConfig, Archive pArchive) {
+        String name = pArchive.getName();
+
+        for (Server server : pConfig.getServers()) {
+            if (server.getArchiveNames().contains(name)) {
+                return server;
+            }
+        }
+
+        throw new AssemblyException("Composite ''{0}'' not found. Is this a typo?", name);
     }
 }

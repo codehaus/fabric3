@@ -53,7 +53,7 @@ public class AssemblyRunner {
             throw new RunnerException("You specified a 'null' runtime for server ''{0}'' to start.");
         }
 
-        LoggerUtils.log("starting server ''{0}'', runtime ''{1}''", pServerName, pRuntimeName);
+        LoggerUtils.log("Starting server ''{0}'', runtime ''{1}''", pServerName, pRuntimeName);
 
         Server server = ConfigUtils.getServerByName(mConfig, pServerName);
 

@@ -28,6 +28,8 @@ public class Server {
 
     private List<Composite> mComposites = new ArrayList<Composite>();
 
+    private List<String> mArchiveNames = new ArrayList<String>();
+
     private Version mVersion;
 
     private UpdatePolicy mUpdatePolicy;
@@ -44,6 +46,14 @@ public class Server {
         if (null != pProfileNames) {
             mProfileNames.addAll(Arrays.asList(pProfileNames));
         }
+    }
+
+    public void addArchive(String pArchiveName) {
+        mArchiveNames.add(pArchiveName);
+    }
+
+    public List<String> getArchiveNames() {
+        return mArchiveNames;
     }
 
     public void addComposite(String pCompositeName) {
@@ -136,9 +146,7 @@ public class Server {
 
         Server server = (Server) o;
 
-        if (mServerName != null ? !mServerName.equals(server.mServerName) : server.mServerName != null) return false;
-
-        return true;
+        return !(mServerName != null ? !mServerName.equals(server.mServerName) : server.mServerName != null);
     }
 
     @Override

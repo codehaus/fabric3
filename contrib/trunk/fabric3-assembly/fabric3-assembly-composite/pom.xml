@@ -48,12 +48,12 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap</groupId>
             <artifactId>shrinkwrap-api</artifactId>
-            <version>1.0.0-beta-3-SNAPSHOT</version>
+            <version>${version.shrinkwrap}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.shrinkwrap</groupId>
             <artifactId>shrinkwrap-impl-base</artifactId>
-            <version>1.0.0-beta-3-SNAPSHOT</version>
+            <version>${version.shrinkwrap}</version>
         </dependency>
     </dependencies>
 
