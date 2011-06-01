@@ -1,4 +1,4 @@
-package org.fabric3.embedded.examples.tests;
+package org.fabric3.embedded.examples.test1;
 
 import junit.framework.TestCase;
 
