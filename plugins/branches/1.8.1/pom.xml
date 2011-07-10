@@ -35,9 +35,9 @@
         <module>fabric3-assembly-plugin</module>
     </modules>
 
-  <scm>
-    <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-1.8</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-1.8</developerConnection>
-    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/plugins/tags/fabric3-plugins-parent-pom-1.8</url>
+  <scm>                             
+    <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/branches/1.8.1</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/branches/1.8.1</developerConnection>
+    <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/plugins/branches/1.8.1</url>
   </scm>
 </project>
