@@ -135,9 +135,9 @@
     </repositories>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.8</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-1.8</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-1.8</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/branches/1.8.1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/branches/1.8.1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/branches/1.8.1</url>
     </scm>
 
 </project>
