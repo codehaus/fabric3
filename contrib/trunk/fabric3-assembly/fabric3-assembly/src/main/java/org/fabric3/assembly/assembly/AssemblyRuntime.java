@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.MessageFormat;
 
 /**
@@ -23,6 +24,8 @@ public class AssemblyRuntime extends AbstractAssemblyProfiles {
         // setup config path
         String configPath;
         if (null == pConfiguration.getSystemConfig()) {
+            FileUtils.createFolder(FileUtils.folder(runtimeFolder + "/config"));
+
             switch (pConfiguration.getRuntimeMode()) {
                 case VM:
                     configPath = "/config/defaultSystemConfigVm.xml";
@@ -38,11 +41,16 @@ public class AssemblyRuntime extends AbstractAssemblyProfiles {
             }
 
             try {
-                pConfiguration.setSystemConfig(new File(FileUtils.fileAtClassPath(configPath).toURI()));
+                URL fileAtClassPath = FileUtils.fileAtClassPath(configPath);
+                File cfgFile = new File(runtimeFolder, configPath);
+                FileUtils.copy(fileAtClassPath, cfgFile);
+                pConfiguration.setSystemConfig(cfgFile);
             } catch (URISyntaxException e) {
                 throw new AssemblyException(MessageFormat.format("Cannot find runtime configuration file: {0}", configPath));
             } catch (MalformedURLException e) {
                 throw new AssemblyException(MessageFormat.format("Cannot find runtime configuration file: {0}", configPath));
+            } catch (IOException e) {
+                throw new AssemblyException(MessageFormat.format("Cannot create configuration file: {0}", configPath));
             }
         } else {
             if (!pConfiguration.getSystemConfig().exists()) {
