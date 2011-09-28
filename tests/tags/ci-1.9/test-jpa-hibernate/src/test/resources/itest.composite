@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright (c) 2009 Metaform Systems
+
+ Fabric3 integration tests are licensed under the Apache 2.0 license.
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3="urn:fabric3.org"
+           targetNamespace="urn:fabric3.org"
+           name="TestComposite">
+
+    <component name="EmployeeServiceImplTest">
+        <f3:junit class="org.fabric3.jpa.service.EmployeeServiceImplTest"/>
+        <reference name="employeeService" target="EmployeeService"/>
+        <reference name="employeeEMFService" target="EmployeeEMFService"/>
+        <reference name="employeeMultiThreadedService" target="EmployeeMultiThreadedService"/>
+        <reference name="conversationEmployeeService" target="ConversationEmployeeService"/>
+        <reference name="employeeSessionService" target="EmployeeServiceSession"/>
+        <reference name="employeeMultiThreadedSessionService" target="MultiThreadedEmployeeSessionService"/>
+    </component>
+
+    <component name="EmployeeService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceImpl"/>
+    </component>
+
+    <component name="EmployeeEMFService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceEMFImpl"/>
+    </component>
+
+    <component name="EmployeeMultiThreadedService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.MultiThreadedEmployeeServiceImpl"/>
+    </component>
+
+    <component name="ConversationEmployeeService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.ConversationEmployeeServiceImpl"/>
+    </component>
+
+
+    <component name="EmployeeServiceSession" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceSessionImpl"/>
+    </component>
+
+    <component name="MultiThreadedEmployeeSessionService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.MultiThreadedEmployeeSessionServiceImpl"/>
+    </component>
+
+    <f3:persistence>
+        <f3:persistenceUnit name="employee">
+            <f3:properties>
+                <f3:property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+                <f3:property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            </f3:properties>
+        </f3:persistenceUnit>
+        <f3:persistenceUnit name="ex-employee">
+            <f3:properties>
+                <f3:property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+                <f3:property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            </f3:properties>
+        </f3:persistenceUnit>
+    </f3:persistence>
+</composite>
