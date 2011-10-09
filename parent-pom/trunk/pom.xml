@@ -17,7 +17,7 @@ Public License. See the accompanying license file for details.
     <description>Parent POM defining project wide settings.</description>
 
     <prerequisites>
-        <maven>2.0.7</maven>
+        <maven>3.0.1</maven>
     </prerequisites>
 
     <organization>
@@ -97,17 +97,6 @@ Public License. See the accompanying license file for details.
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
-        <repository>
-            <id>com.springsource.repository.bundles.release</id>
-            <name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/release</url>
-        </repository>
-
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
         </repository>
     </repositories>
 
