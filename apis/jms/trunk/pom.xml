@@ -13,6 +13,20 @@
     <name>JMS API v1.1</name>
     <description>JTA API v1.1</description>
 
+    <build>
+       <plugins>
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-jar-plugin</artifactId>
+           <configuration>
+              <archive>
+                 <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+              </archive>
+           </configuration>
+         </plugin>
+       </plugins>
+    </build>
+
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/apis/jms/trunk</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/apis/jms/trunk</developerConnection>
