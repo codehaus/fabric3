@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.api</groupId>
     <artifactId>javax-jms</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>JMS API v1.1</name>
     <description>JTA API v1.1</description>
@@ -28,9 +28,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/apis/jms/tags/javax-jms-1.1.1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/apis/jms/tags/javax-jms-1.1.1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/apis/jms/tags/javax-jms-1.1.1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/apis/jms/trunk</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/apis/jms/trunk</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/apis/jms/trunk</url>
     </scm>
 
 </project>
