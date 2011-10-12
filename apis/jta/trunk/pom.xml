@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.api</groupId>
     <artifactId>javax-jta</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
     <name>JTA API v1.1</name>
     <description>JTA API v1.1</description>
@@ -28,9 +28,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/apis/jta/trunk</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/apis/jta/trunk</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/apis/jta/trunk</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/apis/jta/tags/javax-jta-1.1.1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/apis/jta/tags/javax-jta-1.1.1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/apis/jta/tags/javax-jta-1.1.1</url>
     </scm>
 
 </project>
