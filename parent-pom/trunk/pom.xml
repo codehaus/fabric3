@@ -95,6 +95,7 @@ Public License. See the accompanying license file for details.
                 <enabled>false</enabled>
             </releases>
             <snapshots>
+                <updatePolicy>never</updatePolicy>
                 <enabled>true</enabled>
             </snapshots>
         </repository>
