@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.spec</groupId>
     <artifactId>sca-api</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.4-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>SCA API Version 1.1</name>
     <description>Service Component Architecture V1.1 Java API and Annotations</description>
@@ -101,9 +101,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/spec/tags/sca-api-1.1.3</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/spec/tags/sca-api-1.1.3</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/spec/tags/sca-api-1.1.3</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/spec/trunk</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/spec/trunk</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/spec/trunk</url>
     </scm>
 
     <profiles>
