@@ -51,7 +51,7 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
-import org.osoa.sca.annotations.Intent;
+import org.oasisopen.sca.annotation.Intent;
 
 /**
  * Annotation that allows the attachment of any intent to a Java Class or interface or to members of that
