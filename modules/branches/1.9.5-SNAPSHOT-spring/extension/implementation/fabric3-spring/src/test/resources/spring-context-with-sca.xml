@@ -1,0 +1,31 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912/f3"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://docs.oasis-open.org/ns/opencsa/sca/200912/f3
+        http://docs.oasis-open.org/ns/opencsa/sca/200912/f3/f3-sca-core.xsd">
+        
+    <sca:service name="TestService" type="org.fabric3.implementation.spring.introspection.TestBean" target="Service1"/>
+
+    <sca:service name="TestNoTypeService" target="Service3"/>
+
+
+    <bean name="Service1"
+          class="org.fabric3.implementation.spring.introspection.TestBean">
+        <property name="service" ref="Service2"/>
+    </bean>
+    
+     <bean name="Service3"
+          class="org.fabric3.implementation.spring.introspection.TestBean">
+        <property name="service">
+          <bean class="org.fabric3.implementation.spring.introspection.TestBean" />
+        </property>
+    </bean>
+
+    <bean name="Service2" class="org.fabric3.implementation.spring.introspection.TestBean">
+        <property name="property1" value="test"/>
+    </bean>
+
+    <sca:reference name="TestReference" type="org.fabric3.implementation.spring.introspection.TestBean"/>
+</beans>
