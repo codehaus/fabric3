@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright (c) 2009 Metaform Systems
+
+ Fabric3 integration tests are licensed under the Apache 2.0 license.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.codehaus.fabric3.tests</groupId>
+        <artifactId>ci</artifactId>
+        <version>1.9.5</version>
+    </parent>
+
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>test-spring</artifactId>
+    <version>1.9.5</version>
+    <name>Fabric3 Spring Integration Tests</name>
+    <packaging>jar</packaging>
+    <description>Fabric3 Spring Tests.</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+            <version>${fabric3.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>${fabric3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3.tests</groupId>
+            <artifactId>test-binding-harness</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spring-library</artifactId>
+            <version>${fabric3.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spring</artifactId>
+            <version>${fabric3.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+    
+    <properties>
+      <fabric3.standalone>${basedir}/standalone</fabric3.standalone>
+    </properties>
+
+    <build>
+
+        <defaultGoal>verify</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-itest-plugin</artifactId>
+                <version>${fabric3.version}</version>
+                <configuration>
+                    <runtimeVersion>${fabric3.version}</runtimeVersion>
+                    <systemConfig>
+                        <![CDATA[
+                        <config xmlns="urn:fabric3.org">
+                            <web.server>
+                                <http port="8900"/>
+                            </web.server>
+                            <thread.pool size="100"/>
+                            <jms>
+                               <connection.factories>
+                                  <connection.factory name="xaDefault" broker.url="vm://broker" type="xa"/>
+                                  <connection.factory name="default" broker.url="vm://broker" type="local"/>
+                               </connection.factories>
+                            </jms>
+                            <datasources>
+                                <datasource name="SecurityDS" driver="org.h2.Driver" url="jdbc:h2:mem:SECURITY;INIT=RUNSCRIPT FROM './target/classes/create.sql';DB_CLOSE_DELAY=-1" type="non_xa"/>
+                            </datasources>
+                            <spring validating="false"/>
+                            <security>
+                                <spring.security>
+                                    <authentication-manager>
+                                       <authentication-provider>
+                                            <jdbc-user-service data-source-ref="SecurityDS"/>
+                                       </authentication-provider>
+                                    <!--
+                                       <ldap-server url="ldap://localhost:1389/dc=example,dc=com" manager-dn="cn=Directory Manager" manager-password="password"/>
+                                       <ldap-authentication-provider user-search-base="ou=people" user-search-filter="uid={0}" group-search-filter="member={0}" group-search-base="ou=groups"/>
+                                    -->
+                                    </authentication-manager>
+                                </spring.security>
+                            </security>
+                        </config>
+                        ]]>
+                    </systemConfig>
+                    <shared>
+                        <dependency>
+                            <groupId>com.h2database</groupId>
+                            <artifactId>h2</artifactId>
+                            <version>1.2.140</version>
+                        </dependency>
+                    </shared>
+                    <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jetty</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-security</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
+                    </extensions>
+                    <profiles>
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-ws</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-spring</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-jms</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                    </profiles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-assembly-plugin</artifactId>
+                <version>${fabric3.version}</version>
+                <executions>
+                    <execution>
+                        <id>fabric3-assembly</id>
+                        <goals>
+                            <goal>fabric3-assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <buildDirectory>${fabric3.standalone}</buildDirectory>
+                    <runtimeVersion>${fabric3.version}</runtimeVersion>
+                    <profiles>
+                       <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-ws</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-spring</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                        <profile>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>profile-jms</artifactId>
+                            <version>${fabric3.version}</version>
+                        </profile>
+                    </profiles>
+                </configuration>
+            </plugin>
+            <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-clean-plugin</artifactId>
+			    <configuration>
+			      <filesets>
+			        <fileset>
+			          <directory>${fabric3.standalone}</directory>			          
+			        </fileset>
+			      </filesets>
+			    </configuration>
+		  </plugin>
+        </plugins>
+    </build>
+
+</project>
