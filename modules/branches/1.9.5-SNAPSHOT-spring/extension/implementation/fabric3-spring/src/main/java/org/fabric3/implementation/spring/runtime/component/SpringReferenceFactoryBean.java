@@ -12,10 +12,11 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 
 /**
- * @org.apache.xbean.XBean element="reference" rootElement="true"
+ * @org.apache.xbean.XBean element="reference"
  * @author palmalcheg
  * 
  */
@@ -23,6 +24,7 @@ public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, Applicatio
 	
 	private String name;
 	private ApplicationContext applicationContext;
+	private ComponentManager componentManager;
 	private T scaReference;
 	private Class<T> type;	
 	
@@ -38,20 +40,23 @@ public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, Applicatio
 		this.applicationContext = ctx;
 	}
 	
+	public void setComponentManager(ComponentManager componentManager) {
+		this.componentManager = componentManager;
+	}
+	
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(type, "No reference type.");
 		Assert.notNull(name, "No reference name specified.");
 		Assert.notNull(applicationContext, "No application context specified.");
-		ComponentManager cm = applicationContext.getBean(ComponentManager.class);
-		if (cm==null){
+		if (componentManager==null){
 			// search in parent context if any
-			cm = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
+			componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
 		}
-		Assert.notNull(cm, "No Fabric3 Component manager is available.");
-		ScopedComponent component = (ScopedComponent) cm.getComponent(URI.create(name));
+		Assert.notNull(componentManager, "No Fabric3 Component manager is available.");
+		ScopedComponent component = (ScopedComponent) componentManager.getComponent(URI.create(name));
 		if (component == null && !name.startsWith("fabric3://domain/")){
 			// Find with a 'fabric3://domain/' prefix
-			component = (ScopedComponent) cm.getComponent(URI.create("fabric3://domain/"+name));
+			component = (ScopedComponent) componentManager.getComponent(URI.create("fabric3://domain/"+name));
 		}
 		Assert.notNull(component, String.format("No SCA component found for {%s}:%s ", type.getName() , name));
 		this.scaReference = (T) component.getInstance(WorkContextTunnel.getThreadWorkContext());

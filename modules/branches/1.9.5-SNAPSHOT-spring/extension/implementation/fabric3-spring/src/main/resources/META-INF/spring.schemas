@@ -6,4 +6,5 @@ http\://www.springframework.org/schema/security/spring-security-2.0.xsd=org/spri
 http\://www.springframework.org/schema/security/spring-security-2.0.1.xsd=org/springframework/security/config/spring-security-2.0.1.xsd
 http\://www.springframework.org/schema/security/spring-security-2.0.2.xsd=org/springframework/security/config/spring-security-2.0.2.xsd
 http\://www.springframework.org/schema/security/spring-security-2.0.4.xsd=org/springframework/security/config/spring-security-2.0.4.xsd
+http\://docs.oasis-open.org/ns/opencsa/sca/200912/f3/f3-sca-core.xsd=META-INF/f3-sca-core.xsd
 

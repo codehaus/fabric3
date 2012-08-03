@@ -40,8 +40,10 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 
@@ -50,7 +52,7 @@ import org.w3c.dom.Document;
  * @author ievdokimov
  * 
  */
-public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentManager>, InitializingBean, DisposableBean, ApplicationContextAware {
+public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentManager>, InitializingBean, DisposableBean, ApplicationContextAware, Ordered {
 
 	private ComponentManager componentManager;
 	private File runtimeLocation;
@@ -69,14 +71,17 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 	public void afterPropertiesSet() throws Exception {
 		
 		if(applicationContext != null) {
-			componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
+			try {
+			   componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
+			}
+			catch (NoSuchBeanDefinitionException e) { }
 		}
 		
 		if (componentManager == null) {
 			
 			Assert.notNull(runtimeLocation, "Standalone runtime location must be specified");
 			
-			Assert.isTrue(runtimeLocation.exists(), "Runtime directory doesn't exists" + runtimeLocation.getAbsolutePath());
+			Assert.isTrue(runtimeLocation.exists(), "Runtime directory doesn't exists " + runtimeLocation.getAbsolutePath());
 			
 			start(runtimeLocation, new File(runtimeLocation, "config"), new File(runtimeLocation, "extentions"));
 		}
@@ -87,7 +92,7 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 	}
 
 	public Class<?> getObjectType() {
-		return Fabric3Runtime.class;
+		return ComponentManager.class;
 	}
 
 	public boolean isSingleton() {
@@ -225,6 +230,10 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 
 	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
 		this.applicationContext = ctx;
-	}	
+	}
+
+	public int getOrder() {
+		return Ordered.HIGHEST_PRECEDENCE;
+	}
 
 }

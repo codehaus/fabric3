@@ -22,10 +22,11 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 
 /**
- * @org.apache.xbean.XBean element="service" rootElement="true"
+ * @org.apache.xbean.XBean element="service"
  * @author palmalcheg
  * 
  */
@@ -37,6 +38,8 @@ public class SpringServiceBeanComponent implements ScopedComponent, Initializing
 	private Class<?> type;
 	private String name;
 	private ApplicationContext applicationContext;
+	private ComponentManager componentManager;
+
 	private QName deployable;
 	
 	public void setTarget(QName target) {
@@ -68,14 +71,17 @@ public class SpringServiceBeanComponent implements ScopedComponent, Initializing
 		
 		Assert.notNull(name, "No reference name specified.");
 		Assert.notNull(applicationContext, "No application context specified.");
-		ComponentManager cm = applicationContext.getBean(ComponentManager.class);
-		if (cm==null){
+		if (componentManager==null){
 			// search in parent context if any
-			cm = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
+			componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
 		}
 		deployable = new QName(Constants.SCA_NS,applicationContext.getDisplayName());
-		Assert.notNull(cm, "Component Manager is not found, may be Fabric 3 wasn't fully initialized");
-		cm.register(this);
+		Assert.notNull(componentManager, "Component Manager is not found, may be Fabric 3 wasn't fully initialized");
+		componentManager.register(this);
+	}
+	
+	public void setComponentManager(ComponentManager componentManager) {
+		this.componentManager = componentManager;
 	}
 
 	public void endUpdate() {
