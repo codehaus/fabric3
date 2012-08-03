@@ -139,6 +139,7 @@ public class SpringComponentBuilder implements ComponentBuilder<SpringComponentD
     						.getBeanDefinition());
     		genCtx.refresh();
     		parent.getBeanFactory().setParentBeanFactory(genCtx);
+    		parent.setParent(genCtx);
             for (ApplicationContextListener listener : listeners) {
                 listener.onCreate(parent);
             }
