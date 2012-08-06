@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
  */
 public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, ApplicationContextAware, InitializingBean, BeanNameAware {
 	
+	private static final String FABRIC3_DOMAIN = "fabric3://domain/";
 	private String name;
 	private ApplicationContext applicationContext;
 	private ComponentManager componentManager;
@@ -38,11 +39,7 @@ public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, Applicatio
 	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
 		this.applicationContext = ctx;
 	}
-	
-	public void setComponentManager(ComponentManager componentManager) {
-		this.componentManager = componentManager;
-	}
-	
+		
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(type, "No reference type.");
 		Assert.notNull(name, "No reference name specified.");
@@ -53,9 +50,9 @@ public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, Applicatio
 		}
 		Assert.notNull(componentManager, "No Fabric3 Component manager is available.");
 		ScopedComponent component = (ScopedComponent) componentManager.getComponent(URI.create(name));
-		if (component == null && !name.startsWith("fabric3://domain/")){
+		if (component == null && !name.startsWith(FABRIC3_DOMAIN)){
 			// Find with a 'fabric3://domain/' prefix
-			component = (ScopedComponent) componentManager.getComponent(URI.create("fabric3://domain/"+name));
+			component = (ScopedComponent) componentManager.getComponent(URI.create(FABRIC3_DOMAIN+name));
 		}
 		Assert.notNull(component, String.format("No SCA component found for {%s}:%s ", type.getName() , name));
 		this.scaReference = (T) component.getInstance(WorkContextTunnel.getThreadWorkContext());
