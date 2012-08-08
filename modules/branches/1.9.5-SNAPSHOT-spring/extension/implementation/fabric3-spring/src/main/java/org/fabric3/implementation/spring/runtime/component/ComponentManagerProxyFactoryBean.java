@@ -8,6 +8,7 @@ import static org.fabric3.host.runtime.BootConstants.RUNTIME_MONITOR;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.management.MBeanServer;
@@ -34,6 +35,7 @@ import org.fabric3.host.runtime.RuntimeCoordinator;
 import org.fabric3.host.runtime.ScanResult;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.util.FileHelper;
+import org.fabric3.implementation.spring.api.SpringMXBean;
 import org.fabric3.spi.cm.ComponentManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -52,7 +54,7 @@ import org.w3c.dom.Document;
  * @author ievdokimov
  * 
  */
-public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentManager>, InitializingBean, DisposableBean, ApplicationContextAware, Ordered {
+public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentManager>, InitializingBean, DisposableBean, ApplicationContextAware, Ordered, SpringMXBean {
 
 	private ComponentManager componentManager;
 	private File runtimeLocation;
@@ -61,28 +63,27 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 
 	private RuntimeCoordinator coordinator;
 	private ServerMonitor monitor;
-	private URL systemComposite;
-	private ApplicationContext applicationContext;	
+	private ApplicationContext applicationContext;
 
 	public void setRuntimeLocation(File loc) {
 		this.runtimeLocation = loc;
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		
-		if(applicationContext != null) {
+
+		if (applicationContext != null) {
 			try {
-			   componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
+				componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
+			} catch (NoSuchBeanDefinitionException e) {
 			}
-			catch (NoSuchBeanDefinitionException e) { }
 		}
-		
+
 		if (componentManager == null) {
-			
+
 			Assert.notNull(runtimeLocation, "Standalone runtime location must be specified");
-			
+
 			Assert.isTrue(runtimeLocation.exists(), "Runtime directory doesn't exists " + runtimeLocation.getAbsolutePath());
-			
+
 			start(runtimeLocation, new File(runtimeLocation, "config"), new File(runtimeLocation, "extentions"));
 		}
 	}
@@ -114,14 +115,28 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 	 */
 	private void start(File runtimeDir, File configDir, File extensionsDir) throws Fabric3Exception {
 		try {
+			List<File> requiredDirectories = Arrays.asList(
+					new File(runtimeDir, "repository"),
+					new File(runtimeDir, "tmp"), 
+					new File(runtimeDir, "data"));
+			for (File file : requiredDirectories) {
+				if (!file.exists()) {
+					file.mkdir();
+				}
+			}
 
+			File bootDir = BootstrapHelper.getDirectory(runtimeDir, "boot");
+			File hostDir = BootstrapHelper.getDirectory(runtimeDir, "host");
 			// add LogBack to exports
 			BootExports.addExport("org.slf4j.*", "1.6.4");
 
+			// create the classloaders for booting the runtime
 			ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 			ClassLoader maskingClassLoader = new MaskingClassLoader(systemClassLoader, HiddenPackages.getPackages());
+			ClassLoader hostLoader = BootstrapHelper.createClassLoader(maskingClassLoader, hostDir);
+			ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 
-			BootstrapService bootstrapService = BootstrapFactory.getService(maskingClassLoader);
+			BootstrapService bootstrapService = BootstrapFactory.getService(bootLoader);
 
 			// load the system configuration
 			Document systemConfig = bootstrapService.createDefaultSystemConfig();
@@ -158,9 +173,11 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 
 			ScanResult result = bootstrapService.scanRepository(hostInfo);
 
+			URL systemComposite = new File(bootDir, "system.composite").toURI().toURL();
+
 			configuration.setRuntime(runtime);
-			configuration.setHostClassLoader(maskingClassLoader);
-			configuration.setBootClassLoader(maskingClassLoader);
+			configuration.setHostClassLoader(hostLoader);
+			configuration.setBootClassLoader(bootLoader);
 			configuration.setSystemCompositeUrl(systemComposite);
 			configuration.setSystemConfig(systemConfig);
 			configuration.setExtensionContributions(result.getExtensionContributions());
@@ -186,8 +203,6 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 			handleStartException(ex);
 		}
 	}
-
-	
 
 	private void shutdown() {
 		try {
