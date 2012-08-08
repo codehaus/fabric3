@@ -40,8 +40,8 @@ public class SpringStandaloneLaunchTestCase extends TestCase {
 		testBean.setProperty1("bean from f3");
 		
 		expect(testBeanScopedComponent.getInstance((WorkContext) anyObject())).andReturn(testBean);
-		
-		expect(mockedCm.getComponent(URI.create("TestReference"))).andReturn(testBeanScopedComponent);
+		expect(mockedCm.getComponent(URI.create("fabric3://runtime/"+testBean.getClass().getSimpleName()))).andReturn(null);
+		expect(mockedCm.getComponent(URI.create("fabric3://domain/TestReference"))).andReturn(testBeanScopedComponent);
 		
 		mockedCm.register((Component) anyObject());
 		expectLastCall().atLeastOnce();

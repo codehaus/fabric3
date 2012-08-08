@@ -14,15 +14,15 @@
                            http://docs.oasis-open.org/ns/opencsa/sca/200912/f3
                            http://docs.oasis-open.org/ns/opencsa/sca/200912/f3/f3-sca-core.xsd">
 
-    <sca:reference name="SCAService1" type="org.fabric3.tests.spring.TestService"/>    
-    <sca:service name="F3TestService" target="F3SpringService" />
+    <sca:reference name="ClassLoaderRegistry" type="org.fabric3.spi.classloader.ClassLoaderRegistry"/>
+    <!--sca:service name="F3TestService" target="F3SpringService" /-->
       
     <!-- XBean context beans -->
     <bean name="F3SpringService" class="org.fabric3.tests.spring.SpringServiceImpl">
-        <property name="service" ref="SCAService1" />
+        <!-- property name="service" ref="SCAService1" / -->
     </bean>
     
-    <sca:fabric3 runtimeLocation="standalone"/>
+    <sca:fabric3 runtimeLocation="standalone/image"/>
     
 
 </beans>

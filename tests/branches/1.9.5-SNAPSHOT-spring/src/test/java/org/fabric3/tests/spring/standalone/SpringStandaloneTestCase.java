@@ -7,11 +7,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class SpringStandaloneTestCase extends TestCase {	
 	
-	public void tes1tStandloneStartBootstrap() {
+	public void testStandloneStartBootstrap() {
 		new ClassPathXmlApplicationContext("classpath:external.application.context.xml");
 	}
 	
-	public void test() {
-	}
+	public void test() {}
 
 }

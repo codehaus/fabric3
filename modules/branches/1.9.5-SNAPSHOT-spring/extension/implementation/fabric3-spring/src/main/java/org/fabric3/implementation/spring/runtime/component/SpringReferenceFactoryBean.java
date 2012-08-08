@@ -49,10 +49,12 @@ public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, Applicatio
 			componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
 		}
 		Assert.notNull(componentManager, "No Fabric3 Component manager is available.");
-		ScopedComponent component = (ScopedComponent) componentManager.getComponent(URI.create(name));
-		if (component == null && !name.startsWith(FABRIC3_DOMAIN)){
+		URI runtimeService = URI.create("fabric3://runtime/"+type.getSimpleName());
+		ScopedComponent component = (ScopedComponent) componentManager.getComponent(runtimeService);		
+		if (component == null) {
 			// Find with a 'fabric3://domain/' prefix
-			component = (ScopedComponent) componentManager.getComponent(URI.create(FABRIC3_DOMAIN+name));
+			URI domainService = URI.create(FABRIC3_DOMAIN+name);
+			component = (ScopedComponent) componentManager.getComponent(domainService);
 		}
 		Assert.notNull(component, String.format("No SCA component found for {%s}:%s ", type.getName() , name));
 		this.scaReference = (T) component.getInstance(WorkContextTunnel.getThreadWorkContext());
