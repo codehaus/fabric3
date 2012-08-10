@@ -37,7 +37,6 @@ public class SpringServiceBeanComponent implements ScopedComponent, Initializing
 	private Class<?> type;
 	private String name;
 	private ApplicationContext applicationContext;
-	private ComponentManager componentManager;
 
 	private QName deployable;
 	
@@ -70,18 +69,11 @@ public class SpringServiceBeanComponent implements ScopedComponent, Initializing
 		
 		Assert.notNull(name, "No reference name specified.");
 		Assert.notNull(applicationContext, "No application context specified.");
-		if (componentManager==null){
-			// search in parent context if any
-			componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
-		}
+		ComponentManager componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
 		deployable = new QName(Constants.SCA_NS,applicationContext.getDisplayName());
 		Assert.notNull(componentManager, "Component Manager is not found, may be Fabric 3 wasn't fully initialized");
 		componentManager.register(this);
-	}
-	
-	public void setComponentManager(ComponentManager componentManager) {
-		this.componentManager = componentManager;
-	}
+	}	
 
 	public void endUpdate() {
 	}

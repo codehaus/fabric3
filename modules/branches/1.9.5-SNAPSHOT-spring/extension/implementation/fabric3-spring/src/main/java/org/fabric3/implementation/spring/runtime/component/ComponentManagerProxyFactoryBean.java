@@ -45,7 +45,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 
@@ -54,7 +53,7 @@ import org.w3c.dom.Document;
  * @author ievdokimov
  * 
  */
-public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentManager>, InitializingBean, DisposableBean, ApplicationContextAware, Ordered, SpringMXBean {
+public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentManager>, InitializingBean, DisposableBean, ApplicationContextAware, SpringMXBean {
 
 	private ComponentManager componentManager;
 	private File runtimeLocation;
@@ -245,10 +244,6 @@ public class ComponentManagerProxyFactoryBean implements FactoryBean<ComponentMa
 
 	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
 		this.applicationContext = ctx;
-	}
-
-	public int getOrder() {
-		return Ordered.HIGHEST_PRECEDENCE;
 	}
 
 }

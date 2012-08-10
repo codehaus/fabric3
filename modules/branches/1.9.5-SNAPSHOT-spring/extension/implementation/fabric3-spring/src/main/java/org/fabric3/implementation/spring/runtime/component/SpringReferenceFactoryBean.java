@@ -24,7 +24,6 @@ public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, Applicatio
 	private static final String FABRIC3_DOMAIN = "fabric3://domain/";
 	private String name;
 	private ApplicationContext applicationContext;
-	private ComponentManager componentManager;
 	private T scaReference;
 	private Class<T> type;	
 	
@@ -44,10 +43,7 @@ public class SpringReferenceFactoryBean<T> implements FactoryBean<T>, Applicatio
 		Assert.notNull(type, "No reference type.");
 		Assert.notNull(name, "No reference name specified.");
 		Assert.notNull(applicationContext, "No application context specified.");
-		if (componentManager==null){
-			// search in parent context if any
-			componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
-		}
+		ComponentManager componentManager = BeanFactoryUtils.beanOfTypeIncludingAncestors(applicationContext, ComponentManager.class);
 		Assert.notNull(componentManager, "No Fabric3 Component manager is available.");
 		URI runtimeService = URI.create("fabric3://runtime/"+type.getSimpleName());
 		ScopedComponent component = (ScopedComponent) componentManager.getComponent(runtimeService);		
