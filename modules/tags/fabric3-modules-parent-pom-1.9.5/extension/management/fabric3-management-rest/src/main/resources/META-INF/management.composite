@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (c) 2009-2012 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3="urn:fabric3.org"
+           targetNamespace="urn:fabric3.org"
+           name="ManagementExtension"
+           autowire="true">
+
+    <component name="RestfulManagementExtension">
+        <f3:implementation.system class="org.fabric3.management.rest.runtime.RestfulManagementExtension"/>
+        <property name="security" source="$systemConfig//f3:runtime/@management.security"/>
+    </component>
+
+    <component name="Marshaller">
+        <f3:implementation.system class="org.fabric3.management.rest.runtime.MarshallerImpl"/>
+    </component>
+
+    <component name="ResourceHost">
+        <f3:implementation.system class="org.fabric3.management.rest.runtime.ResourceHostImpl"/>
+        <property name="security" source="$systemConfig//f3:runtime/@management.security"/>
+        <property name="roles" source="$systemConfig//f3:runtime/@management.access.roles"/>
+        <property name="disableHttp" source="$systemConfig//f3:runtime/@management.http.disabled"/>
+    </component>
+
+    <component name="TransformerPairService">
+        <f3:implementation.system class="org.fabric3.management.rest.runtime.TransformerPairServiceImpl"/>
+    </component>
+
+    <component name="ZoneResourceService">
+        <f3:implementation.system class="org.fabric3.management.rest.framework.zone.ZoneResourceService"/>
+    </component>
+
+    <component name="RuntimeResourceService">
+        <f3:implementation.system class="org.fabric3.management.rest.framework.runtime.RuntimeResourceService"/>
+    </component>
+
+</composite>
