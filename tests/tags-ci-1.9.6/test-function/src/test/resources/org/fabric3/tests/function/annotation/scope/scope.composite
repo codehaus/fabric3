@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fabric3
+Copyright (C) 2009 Metaform Systems
+
+Fabric3 is licensed under modified terms of the GNU General
+Public License. See the accompanying license file for details.
+
+
+
+-->
+<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+           xmlns:f3="urn:fabric3.org"
+           targetNamespace="urn:fabric3.org"
+           name="ScopeComposite">
+
+    <component name="ScopeTest">
+        <f3:junit class="org.fabric3.tests.function.annotation.scope.ScopeTest"/>
+        <reference name="annotatedStatelessService" target="AnnotatedStatelessService"/>
+        <reference name="statelessService" target="StatelessService"/>
+        <reference name="compositeServiceOne" target="SimpleCompositeService"/>
+        <reference name="compositeServiceTwo" target="SimpleCompositeService"/>
+        <reference name="annotatedCompositeServiceOne" target="AnnotatedCompositeService"/>
+        <reference name="annotatedCompositeServiceTwo" target="AnnotatedCompositeService"/>
+        <reference name="domainService" target=".DomainScopedService"/>
+    </component>
+
+    <component name="AnnotatedStatelessService">
+        <implementation.java class="org.fabric3.tests.function.annotation.scope.AnnotatedStatelessService"/>
+    </component>
+
+    <component name="StatelessService">
+        <implementation.java class="org.fabric3.tests.function.annotation.scope.StatelessServiceImpl"/>
+    </component>
+
+    <component name="SimpleCompositeService">
+        <implementation.java class="org.fabric3.tests.function.annotation.scope.CompositeServiceImpl"/>
+    </component>
+
+    <component name="AnnotatedCompositeService">
+        <implementation.java class="org.fabric3.tests.function.annotation.scope.AnnotatedCompositeService"/>
+    </component>
+
+    <component name=".DomainScopedService">
+        <implementation.java class="org.fabric3.tests.function.annotation.scope.DomainScopedServiceImpl"/>
+    </component>
+
+</composite>

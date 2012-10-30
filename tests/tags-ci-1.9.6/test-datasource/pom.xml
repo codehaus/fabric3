@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright (c) 2009 Metaform Systems
+
+ Fabric3 integration tests are licensed under the Apache 2.0 license.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.codehaus.fabric3.tests</groupId>
+        <artifactId>ci</artifactId>
+        <version>1.9.6</version>
+    </parent>
+
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>test-datasource</artifactId>
+    <version>1.9.6</version>
+    <name>Fabric3 DataSource Extension Test</name>
+    <packaging>jar</packaging>
+    <description>Fabric3 DataSource Extension Test.</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api</artifactId>
+            <version>${sca.api.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+            <version>${fabric3.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <defaultGoal>verify</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-itest-plugin</artifactId>
+                <version>${fabric3.version}</version>
+                <configuration>
+                    <runtimeVersion>${fabric3.version}</runtimeVersion>
+                    <shared>
+                        <dependency>
+                            <groupId>com.h2database</groupId>
+                            <artifactId>h2</artifactId>
+                            <version>1.2.140</version>
+                        </dependency>
+                    </shared>
+                    <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-atomikos-library</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
+                        
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-atomikos</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
+
+                        <!-- JMS is needed for Atomikos -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3.api</groupId>
+                            <artifactId>javax-jms</artifactId>
+                            <version>${jms.version}</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-resource</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-datasource</artifactId>
+                            <version>${fabric3.version}</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.codehaus.fabric3.api</groupId>
+                            <artifactId>javax-jta</artifactId>
+                            <version>${jta.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3.api</groupId>
+                            <artifactId>javax-annotation</artifactId>
+                            <version>${annotations.version}</version>
+                        </dependency>
+                    </extensions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
